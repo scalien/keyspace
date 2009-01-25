@@ -1,0 +1,61 @@
+int main(int argc, char* argv[])
+{
+	IOProc*		ioproc;
+	EventLoop*	eventloop;
+	
+	if (argc != 2)
+	{
+		printf("usage: %s <config-file>\n", argv[0]);
+		return 1;
+	}
+	
+	ioproc = IOProc::New();
+	eventloop = new EventLoop(ioproc);
+	
+	ioproc->Init();
+
+	MasterLease ls;
+	ls.ReadConfig(argv[1]);
+	ls.Init(ioproc, eventloop);
+	
+	eventloop->Run();	
+}
+
+
+
+
+
+#include "MemoServer.h"
+#include "EventLoop.h"
+
+int main(int argc, char* argv[])
+{
+	IOProc*		ioproc;
+	EventLoop*	eventloop;
+	
+	if (argc != 2)
+	{
+		printf("usage: %s <config-file>\n", argv[0]);
+		return 1;
+	}
+	
+	ioproc = IOProc::New();
+	eventloop = new EventLoop(ioproc);
+	
+	ioproc->Init();
+
+	MemoDB db;
+	db.ReadConfig(argv[1]);
+	db.Init(ioproc, eventloop);
+	MemoServer server;
+	server.Init(ioproc, eventloop, &db, db.config.port);
+
+	eventloop->Run();	
+}
+
+
+//	UDPEchoServer udpechoserver;
+//	udpechoserver.Init(ioproc, scheduler);
+	
+//	TCPEchoServer tcpechoserver;
+//	tcpechoserver.Init(ioproc, scheduler);

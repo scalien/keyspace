@@ -1,0 +1,505 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 44;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8DD76F6A0486A84900D96B5E /* Scalien.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* Scalien.1 */; };
+		9A89F1750F27DA450041D4A1 /* TCPEchoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1310F27DA450041D4A1 /* TCPEchoConn.cpp */; };
+		9A89F1760F27DA450041D4A1 /* TCPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1330F27DA450041D4A1 /* TCPEchoServer.cpp */; };
+		9A89F1770F27DA450041D4A1 /* UDPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1350F27DA450041D4A1 /* UDPEchoServer.cpp */; };
+		9A89F1780F27DA450041D4A1 /* MemoClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1380F27DA450041D4A1 /* MemoClientMsg.cpp */; };
+		9A89F1790F27DA450041D4A1 /* MemoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F13A0F27DA450041D4A1 /* MemoConn.cpp */; };
+		9A89F17A0F27DA450041D4A1 /* MemoDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F13C0F27DA450041D4A1 /* MemoDB.cpp */; };
+		9A89F17B0F27DA450041D4A1 /* MemoMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F13E0F27DA450041D4A1 /* MemoMsg.cpp */; };
+		9A89F17C0F27DA450041D4A1 /* MemoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1400F27DA450041D4A1 /* MemoServer.cpp */; };
+		9A89F17D0F27DA450041D4A1 /* MasterLease.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1470F27DA450041D4A1 /* MasterLease.cpp */; };
+		9A89F17E0F27DA450041D4A1 /* MasterLeaseMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1490F27DA450041D4A1 /* MasterLeaseMsg.cpp */; };
+		9A89F17F0F27DA450041D4A1 /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F14C0F27DA450041D4A1 /* PaxosConfig.cpp */; };
+		9A89F1800F27DA450041D4A1 /* PaxosInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F14E0F27DA450041D4A1 /* PaxosInstance.cpp */; };
+		9A89F1820F27DA450041D4A1 /* MemLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1540F27DA450041D4A1 /* MemLog.cpp */; };
+		9A89F1830F27DA450041D4A1 /* ReplicatedLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1560F27DA450041D4A1 /* ReplicatedLog.cpp */; };
+		9A89F1840F27DA450041D4A1 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1580F27DA450041D4A1 /* Main.cpp */; };
+		9A89F1850F27DA450041D4A1 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F15B0F27DA450041D4A1 /* Common.cpp */; };
+		9A89F1860F27DA450041D4A1 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1630F27DA450041D4A1 /* Scheduler.cpp */; };
+		9A89F1870F27DA450041D4A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1670F27DA450041D4A1 /* Endpoint.cpp */; };
+		9A89F1880F27DA450041D4A1 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F16B0F27DA450041D4A1 /* IOProcessor_Darwin.cpp */; };
+		9A89F1890F27DA450041D4A1 /* IOProcessor_Linux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F16C0F27DA450041D4A1 /* IOProcessor_Linux.cpp */; };
+		9A89F18A0F27DA450041D4A1 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F16D0F27DA450041D4A1 /* Socket.cpp */; };
+		9A89F18B0F27DA450041D4A1 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F16F0F27DA450041D4A1 /* Log.cpp */; };
+		9A89F26F0F27FA300041D4A1 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F26B0F27FA300041D4A1 /* Database.cpp */; };
+		9A89F2700F27FA300041D4A1 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F26D0F27FA300041D4A1 /* Table.cpp */; };
+		9A89F2D60F27FFFC0041D4A1 /* PaxosMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F2D50F27FFFC0041D4A1 /* PaxosMsg.cpp */; };
+		9A89F3070F28916A0041D4A1 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A89F3060F28916A0041D4A1 /* libdb_cxx.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76F690486A84900D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8DD76F6A0486A84900D96B5E /* Scalien.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8DD76F6C0486A84900D96B5E /* Scalien */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Scalien; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A89F1310F27DA450041D4A1 /* TCPEchoConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPEchoConn.cpp; sourceTree = "<group>"; };
+		9A89F1320F27DA450041D4A1 /* TCPEchoConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPEchoConn.h; sourceTree = "<group>"; };
+		9A89F1330F27DA450041D4A1 /* TCPEchoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPEchoServer.cpp; sourceTree = "<group>"; };
+		9A89F1340F27DA450041D4A1 /* TCPEchoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPEchoServer.h; sourceTree = "<group>"; };
+		9A89F1350F27DA450041D4A1 /* UDPEchoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPEchoServer.cpp; sourceTree = "<group>"; };
+		9A89F1360F27DA450041D4A1 /* UDPEchoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPEchoServer.h; sourceTree = "<group>"; };
+		9A89F1380F27DA450041D4A1 /* MemoClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoClientMsg.cpp; sourceTree = "<group>"; };
+		9A89F1390F27DA450041D4A1 /* MemoClientMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoClientMsg.h; sourceTree = "<group>"; };
+		9A89F13A0F27DA450041D4A1 /* MemoConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoConn.cpp; sourceTree = "<group>"; };
+		9A89F13B0F27DA450041D4A1 /* MemoConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoConn.h; sourceTree = "<group>"; };
+		9A89F13C0F27DA450041D4A1 /* MemoDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoDB.cpp; sourceTree = "<group>"; };
+		9A89F13D0F27DA450041D4A1 /* MemoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoDB.h; sourceTree = "<group>"; };
+		9A89F13E0F27DA450041D4A1 /* MemoMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoMsg.cpp; sourceTree = "<group>"; };
+		9A89F13F0F27DA450041D4A1 /* MemoMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoMsg.h; sourceTree = "<group>"; };
+		9A89F1400F27DA450041D4A1 /* MemoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoServer.cpp; sourceTree = "<group>"; };
+		9A89F1410F27DA450041D4A1 /* MemoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoServer.h; sourceTree = "<group>"; };
+		9A89F1420F27DA450041D4A1 /* bugs.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bugs.txt; sourceTree = "<group>"; };
+		9A89F1430F27DA450041D4A1 /* dump.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dump.txt; sourceTree = "<group>"; };
+		9A89F1440F27DA450041D4A1 /* filesystem.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = filesystem.txt; sourceTree = "<group>"; };
+		9A89F1470F27DA450041D4A1 /* MasterLease.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterLease.cpp; sourceTree = "<group>"; };
+		9A89F1480F27DA450041D4A1 /* MasterLease.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterLease.h; sourceTree = "<group>"; };
+		9A89F1490F27DA450041D4A1 /* MasterLeaseMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterLeaseMsg.cpp; sourceTree = "<group>"; };
+		9A89F14A0F27DA450041D4A1 /* MasterLeaseMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterLeaseMsg.h; sourceTree = "<group>"; };
+		9A89F14C0F27DA450041D4A1 /* PaxosConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosConfig.cpp; sourceTree = "<group>"; };
+		9A89F14D0F27DA450041D4A1 /* PaxosConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConfig.h; sourceTree = "<group>"; };
+		9A89F14E0F27DA450041D4A1 /* PaxosInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosInstance.cpp; sourceTree = "<group>"; };
+		9A89F14F0F27DA450041D4A1 /* PaxosInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosInstance.h; sourceTree = "<group>"; };
+		9A89F1510F27DA450041D4A1 /* PaxosMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosMsg.h; sourceTree = "<group>"; };
+		9A89F1520F27DA450041D4A1 /* PaxosState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosState.h; sourceTree = "<group>"; };
+		9A89F1540F27DA450041D4A1 /* MemLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemLog.cpp; sourceTree = "<group>"; };
+		9A89F1550F27DA450041D4A1 /* MemLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemLog.h; sourceTree = "<group>"; };
+		9A89F1560F27DA450041D4A1 /* ReplicatedLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedLog.cpp; sourceTree = "<group>"; };
+		9A89F1570F27DA450041D4A1 /* ReplicatedLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedLog.h; sourceTree = "<group>"; };
+		9A89F1580F27DA450041D4A1 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
+		9A89F15A0F27DA450041D4A1 /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
+		9A89F15B0F27DA450041D4A1 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
+		9A89F15C0F27DA450041D4A1 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		9A89F15E0F27DA450041D4A1 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		9A89F15F0F27DA450041D4A1 /* SortedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortedList.h; sourceTree = "<group>"; };
+		9A89F1610F27DA450041D4A1 /* Callable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Callable.h; sourceTree = "<group>"; };
+		9A89F1620F27DA450041D4A1 /* EventLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventLoop.h; sourceTree = "<group>"; };
+		9A89F1630F27DA450041D4A1 /* Scheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scheduler.cpp; sourceTree = "<group>"; };
+		9A89F1640F27DA450041D4A1 /* Scheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scheduler.h; sourceTree = "<group>"; };
+		9A89F1650F27DA450041D4A1 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		9A89F1670F27DA450041D4A1 /* Endpoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Endpoint.cpp; sourceTree = "<group>"; };
+		9A89F1680F27DA450041D4A1 /* Endpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Endpoint.h; sourceTree = "<group>"; };
+		9A89F1690F27DA450041D4A1 /* IOOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOOperation.h; sourceTree = "<group>"; };
+		9A89F16A0F27DA450041D4A1 /* IOProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOProcessor.h; sourceTree = "<group>"; };
+		9A89F16B0F27DA450041D4A1 /* IOProcessor_Darwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Darwin.cpp; sourceTree = "<group>"; };
+		9A89F16C0F27DA450041D4A1 /* IOProcessor_Linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Linux.cpp; sourceTree = "<group>"; };
+		9A89F16D0F27DA450041D4A1 /* Socket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Socket.cpp; sourceTree = "<group>"; };
+		9A89F16E0F27DA450041D4A1 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
+		9A89F16F0F27DA450041D4A1 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
+		9A89F1700F27DA450041D4A1 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
+		9A89F1710F27DA450041D4A1 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		9A89F1720F27DA450041D4A1 /* Stopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stopwatch.h; sourceTree = "<group>"; };
+		9A89F1730F27DA450041D4A1 /* Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Time.h; sourceTree = "<group>"; };
+		9A89F1740F27DA450041D4A1 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
+		9A89F1BB0F27DBCE0041D4A1 /* Makefile.Linux */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.Linux; sourceTree = SOURCE_ROOT; };
+		9A89F24A0F27F35D0041D4A1 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = SOURCE_ROOT; };
+		9A89F24D0F27F7110041D4A1 /* Makefile.Darwin */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.Darwin; sourceTree = SOURCE_ROOT; };
+		9A89F26B0F27FA300041D4A1 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Database.cpp; sourceTree = "<group>"; };
+		9A89F26C0F27FA300041D4A1 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
+		9A89F26D0F27FA300041D4A1 /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Table.cpp; sourceTree = "<group>"; };
+		9A89F26E0F27FA300041D4A1 /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
+		9A89F2D50F27FFFC0041D4A1 /* PaxosMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosMsg.cpp; sourceTree = "<group>"; };
+		9A89F3060F28916A0041D4A1 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
+		C6859E8B029090EE04C91782 /* Scalien.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Scalien.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76F660486A84900D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A89F3070F28916A0041D4A1 /* libdb_cxx.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* Scalien */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F3060F28916A0041D4A1 /* libdb_cxx.dylib */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6859E8C029090F304C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = Scalien;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F12A0F27DA450041D4A1 /* src */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76F6C0486A84900D96B5E /* Scalien */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9A89F12A0F27DA450041D4A1 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F12F0F27DA450041D4A1 /* Application */,
+				9A89F1450F27DA450041D4A1 /* Framework */,
+				9A89F1590F27DA450041D4A1 /* System */,
+				9A89F24A0F27F35D0041D4A1 /* Makefile */,
+				9A89F24D0F27F7110041D4A1 /* Makefile.Darwin */,
+				9A89F1BB0F27DBCE0041D4A1 /* Makefile.Linux */,
+				9A89F1420F27DA450041D4A1 /* bugs.txt */,
+				9A89F1430F27DA450041D4A1 /* dump.txt */,
+				9A89F1440F27DA450041D4A1 /* filesystem.txt */,
+				9A89F1740F27DA450041D4A1 /* todo.txt */,
+				9A89F1580F27DA450041D4A1 /* Main.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		9A89F12F0F27DA450041D4A1 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F1300F27DA450041D4A1 /* EchoServer */,
+				9A89F1370F27DA450041D4A1 /* MemoDB */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		9A89F1300F27DA450041D4A1 /* EchoServer */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F1310F27DA450041D4A1 /* TCPEchoConn.cpp */,
+				9A89F1320F27DA450041D4A1 /* TCPEchoConn.h */,
+				9A89F1330F27DA450041D4A1 /* TCPEchoServer.cpp */,
+				9A89F1340F27DA450041D4A1 /* TCPEchoServer.h */,
+				9A89F1350F27DA450041D4A1 /* UDPEchoServer.cpp */,
+				9A89F1360F27DA450041D4A1 /* UDPEchoServer.h */,
+			);
+			path = EchoServer;
+			sourceTree = "<group>";
+		};
+		9A89F1370F27DA450041D4A1 /* MemoDB */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F1380F27DA450041D4A1 /* MemoClientMsg.cpp */,
+				9A89F1390F27DA450041D4A1 /* MemoClientMsg.h */,
+				9A89F13A0F27DA450041D4A1 /* MemoConn.cpp */,
+				9A89F13B0F27DA450041D4A1 /* MemoConn.h */,
+				9A89F13C0F27DA450041D4A1 /* MemoDB.cpp */,
+				9A89F13D0F27DA450041D4A1 /* MemoDB.h */,
+				9A89F13E0F27DA450041D4A1 /* MemoMsg.cpp */,
+				9A89F13F0F27DA450041D4A1 /* MemoMsg.h */,
+				9A89F1400F27DA450041D4A1 /* MemoServer.cpp */,
+				9A89F1410F27DA450041D4A1 /* MemoServer.h */,
+			);
+			path = MemoDB;
+			sourceTree = "<group>";
+		};
+		9A89F1450F27DA450041D4A1 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F26A0F27FA300041D4A1 /* Database */,
+				9A89F1460F27DA450041D4A1 /* MasterLease */,
+				9A89F14B0F27DA450041D4A1 /* Paxos */,
+				9A89F1530F27DA450041D4A1 /* ReplicatedLog */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
+		9A89F1460F27DA450041D4A1 /* MasterLease */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F1470F27DA450041D4A1 /* MasterLease.cpp */,
+				9A89F1480F27DA450041D4A1 /* MasterLease.h */,
+				9A89F1490F27DA450041D4A1 /* MasterLeaseMsg.cpp */,
+				9A89F14A0F27DA450041D4A1 /* MasterLeaseMsg.h */,
+			);
+			path = MasterLease;
+			sourceTree = "<group>";
+		};
+		9A89F14B0F27DA450041D4A1 /* Paxos */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F14C0F27DA450041D4A1 /* PaxosConfig.cpp */,
+				9A89F14D0F27DA450041D4A1 /* PaxosConfig.h */,
+				9A89F14E0F27DA450041D4A1 /* PaxosInstance.cpp */,
+				9A89F14F0F27DA450041D4A1 /* PaxosInstance.h */,
+				9A89F2D50F27FFFC0041D4A1 /* PaxosMsg.cpp */,
+				9A89F1510F27DA450041D4A1 /* PaxosMsg.h */,
+				9A89F1520F27DA450041D4A1 /* PaxosState.h */,
+			);
+			path = Paxos;
+			sourceTree = "<group>";
+		};
+		9A89F1530F27DA450041D4A1 /* ReplicatedLog */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F1540F27DA450041D4A1 /* MemLog.cpp */,
+				9A89F1550F27DA450041D4A1 /* MemLog.h */,
+				9A89F1560F27DA450041D4A1 /* ReplicatedLog.cpp */,
+				9A89F1570F27DA450041D4A1 /* ReplicatedLog.h */,
+			);
+			path = ReplicatedLog;
+			sourceTree = "<group>";
+		};
+		9A89F1590F27DA450041D4A1 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F15D0F27DA450041D4A1 /* Containers */,
+				9A89F1600F27DA450041D4A1 /* Events */,
+				9A89F1660F27DA450041D4A1 /* IO */,
+				9A89F15B0F27DA450041D4A1 /* Common.cpp */,
+				9A89F15C0F27DA450041D4A1 /* Common.h */,
+				9A89F15A0F27DA450041D4A1 /* Buffer.h */,
+				9A89F16F0F27DA450041D4A1 /* Log.cpp */,
+				9A89F1700F27DA450041D4A1 /* Log.h */,
+				9A89F1710F27DA450041D4A1 /* Platform.h */,
+				9A89F1720F27DA450041D4A1 /* Stopwatch.h */,
+				9A89F1730F27DA450041D4A1 /* Time.h */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		9A89F15D0F27DA450041D4A1 /* Containers */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F15E0F27DA450041D4A1 /* List.h */,
+				9A89F15F0F27DA450041D4A1 /* SortedList.h */,
+			);
+			path = Containers;
+			sourceTree = "<group>";
+		};
+		9A89F1600F27DA450041D4A1 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F1610F27DA450041D4A1 /* Callable.h */,
+				9A89F1620F27DA450041D4A1 /* EventLoop.h */,
+				9A89F1630F27DA450041D4A1 /* Scheduler.cpp */,
+				9A89F1640F27DA450041D4A1 /* Scheduler.h */,
+				9A89F1650F27DA450041D4A1 /* Timer.h */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		9A89F1660F27DA450041D4A1 /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F1670F27DA450041D4A1 /* Endpoint.cpp */,
+				9A89F1680F27DA450041D4A1 /* Endpoint.h */,
+				9A89F1690F27DA450041D4A1 /* IOOperation.h */,
+				9A89F16A0F27DA450041D4A1 /* IOProcessor.h */,
+				9A89F16B0F27DA450041D4A1 /* IOProcessor_Darwin.cpp */,
+				9A89F16C0F27DA450041D4A1 /* IOProcessor_Linux.cpp */,
+				9A89F16D0F27DA450041D4A1 /* Socket.cpp */,
+				9A89F16E0F27DA450041D4A1 /* Socket.h */,
+			);
+			path = IO;
+			sourceTree = "<group>";
+		};
+		9A89F26A0F27FA300041D4A1 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				9A89F26B0F27FA300041D4A1 /* Database.cpp */,
+				9A89F26C0F27FA300041D4A1 /* Database.h */,
+				9A89F26D0F27FA300041D4A1 /* Table.cpp */,
+				9A89F26E0F27FA300041D4A1 /* Table.h */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		C6859E8C029090F304C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				C6859E8B029090EE04C91782 /* Scalien.1 */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76F620486A84900D96B5E /* Scalien */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "Scalien" */;
+			buildPhases = (
+				8DD76F640486A84900D96B5E /* Sources */,
+				8DD76F660486A84900D96B5E /* Frameworks */,
+				8DD76F690486A84900D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Scalien;
+			productInstallPath = "$(HOME)/bin";
+			productName = Scalien;
+			productReference = 8DD76F6C0486A84900D96B5E /* Scalien */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "Scalien" */;
+			compatibilityVersion = "Xcode 3.0";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* Scalien */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76F620486A84900D96B5E /* Scalien */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76F640486A84900D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A89F1750F27DA450041D4A1 /* TCPEchoConn.cpp in Sources */,
+				9A89F1760F27DA450041D4A1 /* TCPEchoServer.cpp in Sources */,
+				9A89F1770F27DA450041D4A1 /* UDPEchoServer.cpp in Sources */,
+				9A89F1780F27DA450041D4A1 /* MemoClientMsg.cpp in Sources */,
+				9A89F1790F27DA450041D4A1 /* MemoConn.cpp in Sources */,
+				9A89F17A0F27DA450041D4A1 /* MemoDB.cpp in Sources */,
+				9A89F17B0F27DA450041D4A1 /* MemoMsg.cpp in Sources */,
+				9A89F17C0F27DA450041D4A1 /* MemoServer.cpp in Sources */,
+				9A89F17D0F27DA450041D4A1 /* MasterLease.cpp in Sources */,
+				9A89F17E0F27DA450041D4A1 /* MasterLeaseMsg.cpp in Sources */,
+				9A89F17F0F27DA450041D4A1 /* PaxosConfig.cpp in Sources */,
+				9A89F1800F27DA450041D4A1 /* PaxosInstance.cpp in Sources */,
+				9A89F1820F27DA450041D4A1 /* MemLog.cpp in Sources */,
+				9A89F1830F27DA450041D4A1 /* ReplicatedLog.cpp in Sources */,
+				9A89F1840F27DA450041D4A1 /* Main.cpp in Sources */,
+				9A89F1850F27DA450041D4A1 /* Common.cpp in Sources */,
+				9A89F1860F27DA450041D4A1 /* Scheduler.cpp in Sources */,
+				9A89F1870F27DA450041D4A1 /* Endpoint.cpp in Sources */,
+				9A89F1880F27DA450041D4A1 /* IOProcessor_Darwin.cpp in Sources */,
+				9A89F1890F27DA450041D4A1 /* IOProcessor_Linux.cpp in Sources */,
+				9A89F18A0F27DA450041D4A1 /* Socket.cpp in Sources */,
+				9A89F18B0F27DA450041D4A1 /* Log.cpp in Sources */,
+				9A89F26F0F27FA300041D4A1 /* Database.cpp in Sources */,
+				9A89F2700F27FA300041D4A1 /* Table.cpp in Sources */,
+				9A89F2D60F27FFFC0041D4A1 /* PaxosMsg.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB923208733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"_GLIBCXX_DEBUG=1",
+					"_GLIBCXX_DEBUG_PEDANTIC=1",
+				);
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PRODUCT_NAME = Scalien;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB923308733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PRODUCT_NAME = Scalien;
+			};
+			name = Release;
+		};
+		1DEB923608733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include/db46,
+					src,
+				);
+				LIBRARY_SEARCH_PATHS = /opt/local/lib/db46;
+				PREBINDING = NO;
+				PRELINK_LIBS = db_cxx;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+			};
+			name = Debug;
+		};
+		1DEB923708733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "Scalien" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923208733DC60010E9CD /* Debug */,
+				1DEB923308733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "Scalien" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923608733DC60010E9CD /* Debug */,
+				1DEB923708733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
