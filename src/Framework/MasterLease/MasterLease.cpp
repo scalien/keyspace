@@ -1,5 +1,6 @@
 #include "MasterLease.h"
 #include <assert.h>
+#include <stdlib.h>
 
 MasterLease::MasterLease() :
 onAppend(this, &MasterLease::OnAppend),
@@ -23,8 +24,8 @@ bool MasterLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	scheduler = scheduler_;
 	
 	masterID = MASTER_UNKNOWN;
-	srandom(Now());
-	epochID = random(); // todo: just a hack
+	srand(Now());
+	epochID = rand(); // todo: just a hack
 
 	designated = (config.nodeID == 0);
 	if (designated)

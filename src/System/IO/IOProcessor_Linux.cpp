@@ -7,10 +7,10 @@
 #include <unistd.h>
 #include <signal.h>
 #include <math.h>
-#include "IOProcessor.h"
-#include "Common.h"
-#include "Log.h"
-#include "Time.h"
+#include "System/IO/IOProcessor.h"
+#include "System/Common.h"
+#include "System/Log.h"
+#include "System/Time.h"
 
 #define EPOLL_EVENT_SIZE	1024
 #define	MAX_EVENTS			256
@@ -21,7 +21,7 @@ static IOProcessor	ioproc;
 static int			epollfd;
 static int			asyncPipe[2];
 
-static bool			AddEvent(int fd, uint32_t filter, IOOp* ioop);
+static bool			AddEvent(int fd, uint32_t filter, IOOperation* ioop);
 static bool			AddAio(FileOp* ioop);
 
 static void			ProcessAsyncEvent();
@@ -41,7 +41,7 @@ static void IOProc_sigev_thread_handler(union sigval value)
 	FileOp *fileop = (FileOp *) value.sival_ptr;
 	ssize_t ret;
 
-	ret = write(fileop->pipefd, &fileop, sizeof(FileOp *));
+	ret = write(asyncPipe[1], &fileop, sizeof(FileOp *));
 	
 	Log_Message("ret = %d", ret);
 }
@@ -83,7 +83,7 @@ void IOProcessor::Shutdown()
 	close(asyncPipe[1]);
 }
 
-bool IOProcessor::Add(IOOp* ioop)
+bool IOProcessor::Add(IOOperation* ioop)
 {
 	uint32_t	filter;
 	
@@ -102,7 +102,7 @@ bool IOProcessor::Add(IOOp* ioop)
 	}
 }
 
-bool IOProcessor::AddAio(FileOp* fileop)
+bool AddAio(FileOp* fileop)
 {
 	memset(&(fileop->cb), 0, sizeof(struct aiocb));
 	
@@ -117,8 +117,6 @@ bool IOProcessor::AddAio(FileOp* fileop)
 	fileop->cb.aio_sigevent.sigev_notify_function = IOProc_sigev_thread_handler;
 	Log_Message("fileop = %p\n", fileop->cb.aio_sigevent.sigev_value.sival_ptr);
 
-	fileop->pipefd = asyncPipe[1];
-	
 	if (fileop->type == FILE_READ)
 	{
 		if (aio_read(&(fileop->cb)) < 0)
@@ -139,7 +137,7 @@ bool IOProcessor::AddAio(FileOp* fileop)
 	return true;
 }
 
-bool IOProcessor::AddEvent(int fd, uint32_t event, IOOp* ioop)
+bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 {
 	int				nev;
 	struct epoll_event	ev;
@@ -167,7 +165,7 @@ bool IOProcessor::AddEvent(int fd, uint32_t event, IOOp* ioop)
 	return true;
 }
 
-bool IOProcessor::Remove(IOOp* ioop)
+bool IOProcessor::Remove(IOOperation* ioop)
 {
 	int				nev;
 	struct epoll_event	ev;
@@ -204,7 +202,7 @@ bool IOProcessor::Poll(int sleep)
 	long long				called;
 	int						i, nevents, wait;
 	static struct epoll_event	events[MAX_EVENTS];
-	IOOp*					ioop;
+	IOOperation*					ioop;
 	
 	called = Now();
 	
@@ -229,7 +227,7 @@ bool IOProcessor::Poll(int sleep)
 				continue;
 			}
 
-			ioop = (IOOp*) events[i].data.ptr;
+			ioop = (IOOperation *) events[i].data.ptr;
 			
 			ioop->active = false;
 			

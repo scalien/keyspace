@@ -1,6 +1,8 @@
 #include "Socket.h"
 #include "System/Log.h"
+#ifdef PLATFORM_DARWIN
 #include <machine/types.h>
+#endif
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>

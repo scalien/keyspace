@@ -6,7 +6,7 @@
 # directories
 #
 BASE_DIR = .
-SCALIEN_DIR = ../scalien
+SCALIEN_DIR = .
 
 SCRIPT_DIR = $(BASE_DIR)/scripts
 DIST_DIR = $(BASE_DIR)/dist
@@ -29,10 +29,12 @@ CXX = g++
 
 INCLUDE = \
 	-I$(SCALIEN_DIR)/src \
+	-I/opt/local/include/db46 \
 
-BASE_CFLAGS = -Wall $(INCLUDE)
+PLATFORM_UCASE=$(shell echo $(PLATFORM) | tr [a-z] [A-Z])
+BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE)
 BASE_CXXFLAGS = $(BASE_CFLAGS)
-BASE_LDFLAGS = -lpthread -lrt -ldl
+BASE_LDFLAGS = -L/opt/local/lib/db46 -lpthread -ldl -ldb_cxx -lrt
 
 DEBUG_CFLAGS = -g -DDEBUG_SUPPORT #-pg
 DEBUG_LDFLAGS = #-pg -lc_p
@@ -78,15 +80,27 @@ targets: $(BUILD_DIR) $(BASE_DIR)/scalien
 
 SCALIEN_LIBS =
 	
+SYSTEM_OBJECTS = \
+	$(BUILD_DIR)/System/Events/Scheduler.o \
+	$(BUILD_DIR)/System/IO/Endpoint.o \
+	$(BUILD_DIR)/System/IO/IOProcessor_$(PLATFORM).o \
+	$(BUILD_DIR)/System/IO/Socket.o \
+	$(BUILD_DIR)/System/Log.o \
+	$(BUILD_DIR)/System/Common.o \
+
 FRAMEWORK_OBJECTS = \
-	$(BUILD_DIR)/Framework/Events/Scheduler.o \
-	$(BUILD_DIR)/Framework/IO/Endpoint.o \
-	$(BUILD_DIR)/Framework/IO/IOProc_Linux.o \
-	$(BUILD_DIR)/Framework/IO/Socket.o \
-	$(BUILD_DIR)/Framework/Log.o \
-	$(BUILD_DIR)/Framework/Common.o \
+	$(BUILD_DIR)/Framework/MasterLease/MasterLease.o \
+	$(BUILD_DIR)/Framework/MasterLease/MasterLeaseMsg.o \
+	$(BUILD_DIR)/Framework/Paxos/PaxosConfig.o \
+	$(BUILD_DIR)/Framework/Paxos/PaxosInstance.o \
+	$(BUILD_DIR)/Framework/Paxos/PaxosMsg.o \
+	$(BUILD_DIR)/Framework/ReplicatedLog/MemLog.o \
+	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLog.o \
+	$(BUILD_DIR)/Framework/Database/Database.o \
+	$(BUILD_DIR)/Framework/Database/Table.o \
 
 OBJECTS = \
+	$(SYSTEM_OBJECTS) \
 	$(FRAMEWORK_OBJECTS) \
 	$(BUILD_DIR)/Main.o
 
@@ -95,14 +109,20 @@ LIBS = \
 
 $(BUILD_DIR):
 	-mkdir -p $(BUILD_DIR) \
+		$(BUILD_DIR)/System \
+		$(BUILD_DIR)/System/Events \
+		$(BUILD_DIR)/System/IO \
 		$(BUILD_DIR)/Framework \
-		$(BUILD_DIR)/Framework/Events \
-		$(BUILD_DIR)/Framework/IO \
+		$(BUILD_DIR)/Framework/MasterLease \
+		$(BUILD_DIR)/Framework/Paxos \
+		$(BUILD_DIR)/Framework/ReplicatedLog \
+		$(BUILD_DIR)/Framework/Database \
+
 
 $(SCALIEN_LIBS):
 	cd $(SCALIEN_DIR); $(MAKE) targets BUILD=$(BUILD)
 	
-$(BASE_DIR)/scalien: $(LIBS) $(OBJECTS)
+$(BASE_DIR)/scalien: $(BUILD_DIR) $(LIBS) $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
@@ -129,35 +149,17 @@ clean-release:
 	-rm -f $(BASE_DIR)/scalien
 	-rm -r -f $(BUILD_RELEASE_DIR)
 	
-clean-libs: clean-scalien clean-libresample clean-resiprocate clean-speex
+clean-libs: clean-scalien
 
 clean-scalien:
 	cd $(SCALIEN_DIR); $(MAKE) clean
 
-clean-resiprocate:
-	cd $(RESIPROCATE_DIR); $(MAKE) clean
-
-clean-libresample:
-	cd $(LIBRESAMPLE_DIR); $(MAKE) clean
-
-clean-speex:
-	cd $(SPEEX_DIR); $(MAKE) clean
-
 distclean: clean distclean-libs
 
-distclean-libs: distclean-scalien distclean-libresample distclean-speex
+distclean-libs: distclean-scalien
 
 distclean-scalien:
 	cd $(SCALIEN_DIR); $(MAKE) distclean
-
-distclean-resiprocate:
-	cd $(RESIPROCATE_DIR); $(MAKE) distclean
-
-distclean-libresample:
-	cd $(LIBRESAMPLE_DIR); $(MAKE) distclean
-
-distclean-speex:
-	cd $(SPEEX_DIR); $(MAKE) distclean
 
 
 ##############################################################################

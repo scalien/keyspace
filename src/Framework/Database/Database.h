@@ -3,6 +3,8 @@
 
 #include <db_cxx.h>
 
+class Table;
+
 class Database
 {
 	friend class Table;

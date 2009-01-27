@@ -1,7 +1,13 @@
 #ifndef IOOPERATION_H
 #define IOOPERATION_H
 
+#ifdef PLATFORM_LINUX
+#include <aio.h>
+#endif
+#ifdef PLATFORM_DARWIN
 #include <sys/aio.h>
+#endif
+
 #include <unistd.h>
 #include "System/Events/Callable.h"
 #include "System/Buffer.h"
@@ -27,6 +33,7 @@ public:
 	
 	char			type;
 	int				fd;
+	int				offset;
 	
 	bool			active;
 
@@ -39,7 +46,6 @@ class FileOp : public IOOperation
 public:
 	FileOp() : IOOperation() { offset = 0; nbytes = 0; }
 	
-	int				offset;
 	int				nbytes;
 	
 	struct aiocb	cb;
@@ -77,10 +83,10 @@ public:
 class TCPWrite : public IOOperation
 {
 public:
-	TCPWrite() : IOOperation() { type = TCP_WRITE; transfered = 0; }
+	TCPWrite() : IOOperation() { type = TCP_WRITE; transferred = 0; }
 	
-	int				transfered;		/*	the IO subsystem has given the first 'transfered'
-										bytes to the kernel */
+	int				transferred;		/*	the IO subsystem has given the first 'transferred'
+										    bytes to the kernel */
 };
 
 class TCPRead : public IOOperation

@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 	ba.buffer[ba.size - 1] = '\n';
 	ba.length = ba.size;
 	
-	if ((fw.fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600)) < 0)
+	if ((fw.fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC | O_DIRECT, 0600)) < 0)
 	{
 		Log_Errno();
 		return 1;
