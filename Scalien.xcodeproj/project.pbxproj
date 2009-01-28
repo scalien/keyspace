@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8DD76F6A0486A84900D96B5E /* Scalien.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* Scalien.1 */; };
 		9A89F1750F27DA450041D4A1 /* TCPEchoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1310F27DA450041D4A1 /* TCPEchoConn.cpp */; };
 		9A89F1760F27DA450041D4A1 /* TCPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1330F27DA450041D4A1 /* TCPEchoServer.cpp */; };
 		9A89F1770F27DA450041D4A1 /* UDPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1350F27DA450041D4A1 /* UDPEchoServer.cpp */; };
@@ -43,7 +42,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				8DD76F6A0486A84900D96B5E /* Scalien.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -118,7 +116,6 @@
 		9A89F26E0F27FA300041D4A1 /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
 		9A89F2D50F27FFFC0041D4A1 /* PaxosMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosMsg.cpp; sourceTree = "<group>"; };
 		9A89F3060F28916A0041D4A1 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
-		C6859E8B029090EE04C91782 /* Scalien.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Scalien.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -332,7 +329,6 @@
 		C6859E8C029090F304C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
-				C6859E8B029090EE04C91782 /* Scalien.1 */,
 			);
 			name = Documentation;
 			sourceTree = "<group>";
@@ -451,6 +447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -458,6 +455,11 @@
 					src,
 				);
 				LIBRARY_SEARCH_PATHS = /opt/local/lib/db46;
+				OTHER_CFLAGS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DPLATFORM_DARWIN",
+				);
 				PREBINDING = NO;
 				PRELINK_LIBS = db_cxx;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
