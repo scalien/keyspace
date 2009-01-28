@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 #ifdef PLATFORM_DARWIN
 	const int	DIRECT_MODE = 0;
 #else
-	const int	DIRECT_MODE = O_DIRECT;
+	const int	DIRECT_MODE = 0;
 #endif
 	
 	if (argc > 2)
@@ -71,6 +71,7 @@ int main(int argc, char* argv[])
 	}
 	
 	fw.data = ba;
+	fw.nbytes = ba.length;
 	CFunc onFileWrite(&OnFileWrite);
 	fw.onComplete = &onFileWrite;
 	ioproc->Add(&fw);
