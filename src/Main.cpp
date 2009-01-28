@@ -43,6 +43,11 @@ int main(int argc, char* argv[])
 {
 	EventLoop*	eventloop;
 	char*		filename = "test.txt";
+#ifdef PLATFORM_DARWIN
+	const int	DIRECT_MODE = 0;
+#else
+	const int	DIRECT_MODE = O_DIRECT;
+#endif
 	
 	if (argc > 2)
 	{
@@ -59,7 +64,7 @@ int main(int argc, char* argv[])
 	ba.buffer[ba.size - 1] = '\n';
 	ba.length = ba.size;
 	
-	if ((fw.fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC | O_DIRECT, 0600)) < 0)
+	if ((fw.fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC | DIRECT_MODE, 0600)) < 0)
 	{
 		Log_Errno();
 		return 1;

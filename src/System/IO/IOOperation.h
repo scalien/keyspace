@@ -1,13 +1,7 @@
 #ifndef IOOPERATION_H
 #define IOOPERATION_H
 
-#ifdef PLATFORM_LINUX
 #include <aio.h>
-#endif
-#ifdef PLATFORM_DARWIN
-#include <sys/aio.h>
-#endif
-
 #include <unistd.h>
 #include "System/Events/Callable.h"
 #include "System/Buffer.h"

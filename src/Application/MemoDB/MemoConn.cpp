@@ -88,7 +88,7 @@ void MemoConn::OnRead()
 		MemoClientMsg::Write(&msg, tcpwrite.data); // todo: retval
 		if (tcpwrite.data.length > 0)
 		{
-			tcpwrite.transfered = 0;
+			tcpwrite.transferred = 0;
 			ioproc->Add(&tcpwrite);
 		}
 		else
@@ -135,7 +135,7 @@ void MemoConn::OnMemoDBComplete()
 	
 	if (tcpwrite.data.length > 0)
 	{
-		tcpwrite.transfered = 0;
+		tcpwrite.transferred = 0;
 		ioproc->Add(&tcpwrite);
 	}
 	else
