@@ -5,6 +5,7 @@
 #define __TEST_H
 
 #include <stdio.h>
+#include <string.h>
 
 #ifdef _MSC_VER
 #define __func__ __FUNCTION__
@@ -18,12 +19,41 @@ extern "C" {
 #define TEST_LOG(fmt, ...) {printf("%s:%d: " fmt "\n", __func__, __LINE__, ##__VA_ARGS__);}
 #define TEST(testfn) test(testfn, #testfn)
 #define TESTARG(testfn) (testfn),(#testfn)
+#define TEST_MAIN(...) \
+	int main(int argc, char *argv[]) { \
+		testfn_t test_functions[] = {__VA_ARGS__}; \
+		char test_names[] = #__VA_ARGS__; \
+		int size = sizeof(test_functions) / sizeof(void *); \
+		int names[size]; \
+		test_names_parse(test_functions, test_names, names, size); \
+		int i; \
+		int ret = 0; \
+		for (i = 0; i < sizeof(test_functions) / sizeof(void *); i++) { \
+			ret += test(test_functions[i], (const char *) &test_names[names[i]]); \
+		} \
+		return test_eval(__FILE__, ret); \
+	}
+
+//		int i = 0; \
+//		int ret = 0; \
+//		char *p = test_names; \
+//		TEST_LOG("test_names = %s", test_names); \
+//		while (*p) { \
+//			names[i++] = p - test_names; \
+//			char *comma = strstr(test_names, ","); \
+//			if (comma) { \
+//				*comma = '\0'; \
+//				p = comma + 1; \
+//				while (*p && *p < ' ') p++; \
+//			} \
+//		} \
 
 #define TEST_SUCCESS 0
 #define TEST_FAILURE 1
 
 typedef int (*testfn_t)(void);
 
+int test_names_parse(testfn_t *test_functions, char *test_names, int *names, int size);
 int test(testfn_t testfn, const char *testname);
 int test_iter(testfn_t testfn, const char *testname, unsigned long niter);
 int test_time(testfn_t testfn, const char *testname);

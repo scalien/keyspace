@@ -20,7 +20,7 @@ int main(void)
 	me.sin_family = AF_INET;
 	me.sin_port = htons((uint16_t)20066);
 	me.sin_addr.s_addr = htonl(INADDR_ANY);
-	if (bind(s, (const sockaddr*) &me, sizeof(me)) < 0)
+	if (bind(s, (const struct sockaddr*) &me, sizeof(me)) < 0)
 		exit(1);
 
 	memset((char *) &to, 0, sizeof(to));
@@ -32,13 +32,15 @@ int main(void)
 	for (i = 0; i < 3; i++)
 	{
 		sprintf(buf, "Message %d", i);
-		if (sendto(s, buf, strlen(buf), 0, (const sockaddr*) &to, slen) < 0)
+		if (sendto(s, buf, strlen(buf), 0, (const struct sockaddr*) &to, slen) < 0)
 			exit(1);
 		
 		slen = sizeof(from);
-		if ((nread = recvfrom(s, buf, sizeof(buf), 0, (sockaddr*) &from, (socklen_t*) &slen)) < 0)
+		if ((nread = recvfrom(s, buf, sizeof(buf), 0, (struct sockaddr*) &from, (socklen_t*) &slen)) < 0)
 			exit(1);
 		buf[nread] = '\0';
 		printf("Message from %s:%d: %s\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port),  buf);
 	}
+	
+	return 0;
 }
