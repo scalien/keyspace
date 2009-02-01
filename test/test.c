@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 
 #define TEST_HEAD(testfn, testname) \
 	{ \
@@ -55,25 +55,32 @@ test_iter(testfn_t testfn, const char *testname, unsigned long niter)
 	}
 }
 
+static long
+elapsed_usec(struct timeval start, struct timeval end)
+{
+	return ((end.tv_sec - start.tv_sec) * 1000000 + end.tv_usec - start.tv_usec);	
+}
 
+#define elapsed_msec(start, end) (elapsed_usec((start), (end)) / 1000)
+#define elapsed_sec(start, end) (elapsed_usec((start), (end)) / 1000000)
 
 int
 test_time(testfn_t testfn, const char *testname)
 {
 	int res;
-	time_t t0, t1;
-
+	struct timeval start, end;
+	
 	TEST_HEAD(testfn, testname);
 
-	t0 = time(NULL);
+	gettimeofday(&start, NULL);
 	res = testfn();
-	t1 = time(NULL);
+	gettimeofday(&end, NULL);
 
 	if (res == 0) {
-		printf("test: %s succeeded (elapsed time = %d s).\n", testname, (int)(t1 - t0));
+		printf("test: %s succeeded (elapsed time = %ld ms).\n", testname, elapsed_msec(start, end));
 		return 0;
 	} else {
-		printf("test: %s failed (elapsed time = %d s)!\n", testname, (int)(t1 - t0));
+		printf("test: %s failed (elapsed time = %ld ms)!\n", testname, elapsed_msec(start, end));
 		return 1;
 	}
 }
@@ -83,21 +90,21 @@ test_iter_time(testfn_t testfn, const char *testname, unsigned long niter)
 {
 	unsigned long i;
 	int res = 0;
-	time_t t0, t1;
-
+	struct timeval start, end;
+	
 	TEST_HEAD(testfn, testname);
 
-	t0 = time(NULL);
+	gettimeofday(&start, NULL);
 	for (i = 0; i < niter; i++) {
 		res += testfn();
 	}
-	t1 = time(NULL);
+	gettimeofday(&end, NULL);
 
 	if (res == 0) {
-		printf("test: %s succeeded (elapsed time = %d s).\n", testname, (int)(t1 - t0));
+		printf("test: %s succeeded (elapsed time = %ld ms).\n", testname, elapsed_msec(start, end));
 		return 0;
 	} else {
-		printf("test: %s failed (elapsed time = %d s)!\n", testname, (int)(t1 - t0));
+		printf("test: %s failed (elapsed time = %ld ms)!\n", testname, elapsed_msec(start, end));
 		return 1;
 	}
 }

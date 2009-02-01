@@ -37,7 +37,7 @@
 		9A89F3AA0F31E8980041D4A1 /* OpenDirect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F3830F31E4FC0041D4A1 /* OpenDirect.cpp */; };
 		9A89F3C30F31E9650041D4A1 /* UDPEchoClient.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F3870F31E4FC0041D4A1 /* UDPEchoClient.c */; };
 		9A89F3C50F31E9780041D4A1 /* PaxosTester.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F3840F31E4FC0041D4A1 /* PaxosTester.c */; };
-		9A89F3CD0F31EBBA0041D4A1 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F3850F31E4FC0041D4A1 /* test.c */; };
+		9A89F4AA0F3654170041D4A1 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F3850F31E4FC0041D4A1 /* test.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -126,7 +126,6 @@
 		9A89F3850F31E4FC0041D4A1 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = test.c; path = test/test.c; sourceTree = "<group>"; };
 		9A89F3860F31E4FC0041D4A1 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = test/test.h; sourceTree = "<group>"; };
 		9A89F3870F31E4FC0041D4A1 /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = UDPEchoClient.c; path = test/UDPEchoClient.c; sourceTree = "<group>"; };
-		9A89F39A0F31E84C0041D4A1 /* RingBufferTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RingBufferTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A89F3A60F31E8910041D4A1 /* DirectOpenTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DirectOpenTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A89F3B30F31E8D20041D4A1 /* PaxosTester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PaxosTester; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A89F3BB0F31E8F60041D4A1 /* Untitled */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Untitled; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,13 +137,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A89F3070F28916A0041D4A1 /* libdb_cxx.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9A89F3980F31E84C0041D4A1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				8DD76F6C0486A84900D96B5E /* Scalien */,
-				9A89F39A0F31E84C0041D4A1 /* RingBufferTest */,
 				9A89F3A60F31E8910041D4A1 /* DirectOpenTest */,
 				9A89F3B30F31E8D20041D4A1 /* PaxosTester */,
 				9A89F3BB0F31E8F60041D4A1 /* Untitled */,
@@ -413,22 +404,6 @@
 			productReference = 8DD76F6C0486A84900D96B5E /* Scalien */;
 			productType = "com.apple.product-type.tool";
 		};
-		9A89F3990F31E84C0041D4A1 /* RingBufferTest */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9A89F3AE0F31E8BF0041D4A1 /* Build configuration list for PBXNativeTarget "RingBufferTest" */;
-			buildPhases = (
-				9A89F3970F31E84C0041D4A1 /* Sources */,
-				9A89F3980F31E84C0041D4A1 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = RingBufferTest;
-			productName = RingBufferTest;
-			productReference = 9A89F39A0F31E84C0041D4A1 /* RingBufferTest */;
-			productType = "com.apple.product-type.tool";
-		};
 		9A89F3A50F31E8910041D4A1 /* DirectOpenTest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A89F3AF0F31E8BF0041D4A1 /* Build configuration list for PBXNativeTarget "DirectOpenTest" */;
@@ -490,7 +465,6 @@
 			projectRoot = "";
 			targets = (
 				8DD76F620486A84900D96B5E /* Keyspace */,
-				9A89F3990F31E84C0041D4A1 /* RingBufferTest */,
 				9A89F3A50F31E8910041D4A1 /* DirectOpenTest */,
 				9A89F3B20F31E8D20041D4A1 /* PaxosTester */,
 				9A89F3BA0F31E8F60041D4A1 /* UDPEchoClient */,
@@ -532,19 +506,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9A89F3970F31E84C0041D4A1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9A89F3CD0F31EBBA0041D4A1 /* test.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A89F3A30F31E8910041D4A1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				9A89F3AA0F31E8980041D4A1 /* OpenDirect.cpp in Sources */,
+				9A89F4AA0F3654170041D4A1 /* test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -637,36 +604,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
-			};
-			name = Release;
-		};
-		9A89F39C0F31E84E0041D4A1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
-				PRODUCT_NAME = RingBufferTest;
-			};
-			name = Debug;
-		};
-		9A89F39D0F31E84E0041D4A1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
-				PRODUCT_NAME = RingBufferTest;
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -777,15 +714,6 @@
 			buildConfigurations = (
 				1DEB923608733DC60010E9CD /* Debug */,
 				1DEB923708733DC60010E9CD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9A89F3AE0F31E8BF0041D4A1 /* Build configuration list for PBXNativeTarget "RingBufferTest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9A89F39C0F31E84E0041D4A1 /* Debug */,
-				9A89F39D0F31E84E0041D4A1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
