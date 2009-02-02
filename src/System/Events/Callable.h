@@ -17,6 +17,7 @@ public:
 	Callback	callback;
 	
 	MFunc(T* object_, Callback callback_) { object = object_; callback = callback_; }
+	
 	void Execute() { (object->*callback)(); }
 };
 
@@ -28,6 +29,7 @@ public:
 	Callback	callback;
 	
 	CFunc(Callback callback_) { callback = callback_; }
+	
 	void Execute() { (*callback)(); }
 };
 

@@ -1,16 +1,17 @@
-#ifndef PAXOSINSTANCE_H
-#define PAXOSINSTANCE_H
+#ifndef PAXOS_H
+#define PAXOS_H
 
 #include "System/IO/IOProcessor.h"
 #include "System/IO/Socket.h"
 #include "System/Events/Scheduler.h"
+#include "Framework/Database/Table.h"
 #include "PaxosMsg.h"
 #include "PaxosState.h"
 #include "PaxosConfig.h"
 
-#define PAXOS_TIMEOUT	100
+#define PAXOS_TIMEOUT	500 // TODO: I increased this for testing
 
-class PaxosInstance
+class Paxos
 {
 public:
 	IOProcessor*		ioproc;
@@ -20,18 +21,20 @@ public:
 	UDPRead				udpread;
 	UDPWrite			udpwrite;
 	
-	ByteArray<1024>		rdata;
-	ByteArray<1024>		wdata;
+	ByteArray<1024>		rdata; // TODO: do I need two of these?
+	ByteArray<1024>		wdata; // TODO: this size should be matched to the one in PaxosMsg.h
 	
 	PaxosConfig			config;
 
-						PaxosInstance();
+						Paxos();
 	
 	bool				Start(ByteString value);
 
 	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_);
 	
 	bool				ReadConfig(char* filename) { return config.Read(filename); }
+	
+	bool				PersistState(Transaction* transaction);
 	
 	bool				SendMsg();
 	void				SendMsgToAll();
@@ -41,9 +44,8 @@ public:
 	void				OnRead();
 	void				OnWrite();
 
-	MFunc<PaxosInstance>readCallable;
-	MFunc<PaxosInstance>writeCallable;
-
+	MFunc<Paxos>		onRead;
+	MFunc<Paxos>		onWrite;
 		
 // events:
 	void				ProcessMsg();
@@ -65,30 +67,29 @@ public:
 // timeout related:
 	void				OnPrepareTimeout();
 	void				OnProposeTimeout();
-	MFunc<PaxosInstance>onPrepareTimeout;
-	MFunc<PaxosInstance>onProposeTimeout;
+	MFunc<Paxos>		onPrepareTimeout;
+	MFunc<Paxos>		onProposeTimeout;
 	Timer				prepareTimeout;
 	Timer				proposeTimeout;
 
 // single paxos specific:
 	int					paxosID;
-	long				highest_promised;
 
 	bool				sendtoall;
-	Endpoint*			sending_to;		// todo: don't let the list change
+	Endpoint*			sending_to;
 
 	PaxosMsg			msg;
 
-	PreparerState		preparer;
 	ProposerState		proposer;
 	AcceptorState		acceptor;
-	LearnerState		learner;
 		
 // keeping track of messages during prepare and propose phases
 	int					numSent;
 	int					numReceived;
 	int					numAccepted;
 	int					numRejected;
+	
+	Table*				table;
 };
 
 #endif

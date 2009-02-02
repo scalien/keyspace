@@ -1,8 +1,8 @@
 #ifndef MASTERLEASE_H
 #define MASTERLEASE_H
 
+#include "System/IO/IOProcessor.h"
 #include "System/Events/Scheduler.h"
-#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "MasterLeaseMsg.h"
 
 #define SEND_LEASE_EXTEND_TIMEOUT	1000
@@ -12,10 +12,17 @@
 
 #define MASTER_UNKNOWN	-1
 
-class MasterLease : public ReplicatedLog
+#include "Framework/Database/Transaction.h"
+#include "Framework/ReplicatedLog/LogCache.h"
+
+class ReplicatedLog;
+
+class MasterLease
 {
 public:
 	MasterLease();
+
+	ReplicatedLog*		replicatedLog;
 
 	Scheduler*			scheduler;
 	
@@ -29,11 +36,11 @@ public:
 	bool				master;
 	bool				designated;
 
-	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_);
+	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_,
+							ReplicatedLog* replicatedLog_);
 	
-	void				OnAppend();
-	MFunc<MasterLease>	onAppend;
-	
+	void				OnAppend(Transaction*, Entry* entry);
+
 	void				Execute(ByteString command);
 	
 	void				ExtendLease();

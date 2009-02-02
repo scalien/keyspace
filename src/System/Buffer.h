@@ -12,12 +12,27 @@ public:
 	
 	ByteString() : size(0), length(0), buffer(NULL) {}
 	
-	ByteString(int size_, int length_, char* buffer_) : size(size_), length(length_), buffer(buffer_) {}
+	ByteString(int size_, int length_, char* buffer_)
+		: size(size_), length(length_), buffer(buffer_) {}
+	
+	bool Set(char* str)
+	{
+		int len = strlen(str);
+		if (len > size)
+			return false;
+		
+		memcpy(buffer, str, len);
+		length = len;
+		
+		return true;
+	}
 	
 	bool operator==(const ByteString& other)
 	{
 		return MEMCMP(buffer, length, other.buffer, other.length);
 	}
+	
+	void Clear() { length = 0; }
 };
 
 template<int n>
@@ -27,7 +42,9 @@ public:
 	char	data[n];
 	
 	ByteArray() { size = n; length = 0; buffer = data; }
-			
+	
+	ByteArray(char* str) { size = n; length = strlen(str); memcpy(data, str, length); }
+							
 	bool Set(ByteString bs)
 	{
 		if (bs.length > size)

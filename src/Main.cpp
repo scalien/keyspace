@@ -1,88 +1,26 @@
-#include <fcntl.h>
-#include <signal.h>
-#include <stdlib.h>
-
 #include "System/Events/EventLoop.h"
-
-IOProcessor* ioproc;
-ByteArray<32> ba;
-FileWrite fw;
-FileRead fr;
-char c = 'a';
-
-void OnFileWrite()
-{
-	if (c++ < 'z')
-	{
-		for (int i = 0; i < ba.size - 1; i++)
-			ba.buffer[i] = c;
-		ba.buffer[ba.size - 1] = '\n';
-		
-		fw.offset += fw.nbytes;
-		ioproc->Add(&fw);
-	}
-	else
-	{
-		exit(0);
-	}
-}
-
-void OnFileRead()
-{
-	if (fr.data.length < 1)
-		exit(0);
-		
-	printf("%d, %.32s", fr.data.length, fr.data.buffer);
-	
-	fr.nbytes = fr.data.size;
-	fr.offset += fr.data.length;
-	ioproc->Add(&fr);
-}
+#include "System/IO/IOProcessor.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 
 int main(int argc, char* argv[])
 {
+	IOProcessor*	ioproc;
 	EventLoop*	eventloop;
-	char*		filename = "test.txt";
 	
-	if (argc > 2)
+	if (argc != 2)
 	{
-		filename = argv[1];
+		printf("usage: %s <config-file>\n", argv[0]);
+		return 1;
 	}
 	
 	ioproc = IOProcessor::New();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();
-		
-	for (int i = 0; i < ba.size - 1; i++)
-		ba.buffer[i] = c;
-	ba.buffer[ba.size - 1] = '\n';
-	ba.length = ba.size;
-	
-	if ((fw.fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC | O_DIRECT, 0600)) < 0)
-	{
-		Log_Errno();
-		return 1;
-	}
-	
-	fw.data = ba;
-	CFunc onFileWrite(&OnFileWrite);
-	fw.onComplete = &onFileWrite;
-	ioproc->Add(&fw);
-	/*
-	
-	if ((fr.fd = open(filename, O_RDONLY)) < 0)
-	{
-		Log_Errno();
-		return 1;
-	}
-	
-	fr.data = ba;
-	fr.nbytes = ba.size;
-	CFunc onFileRead(&OnFileRead);
-	fr.onComplete = &onFileRead;
-	ioproc->Add(&fr);
-	*/
+
+	ReplicatedLog rl;
+	rl.ReadConfig(argv[1]);
+	rl.Init(ioproc, eventloop, true /* multiPaxos */);
 	
 	eventloop->Run();	
 }

@@ -3,6 +3,8 @@
 
 #include "Buffer.h"
 
+#define PROTOCOL_MEMODB			'A'
+
 #define GET_REQUEST				'1'
 #define	GET_RESPONSE			'2'
 #define SET_REQUEST				'3'

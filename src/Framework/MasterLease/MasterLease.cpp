@@ -1,9 +1,10 @@
 #include "MasterLease.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include <assert.h>
 #include <stdlib.h>
 
 MasterLease::MasterLease() :
-onAppend(this, &MasterLease::OnAppend),
+//onAppend(this, &MasterLease::OnAppend),
 onMasterTimeout(this, &MasterLease::OnMasterTimeout),
 onSendLeaseExtendTimeout(this, &MasterLease::OnSendLeaseExtendTimeout),
 onRecvLeaseExtendTimeout(this, &MasterLease::OnRecvLeaseExtendTimeout),
@@ -15,28 +16,27 @@ report(500, &onReport)
 {
 }
 
-bool MasterLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
+bool MasterLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_,
+		ReplicatedLog* replicatedLog_)
 {
-	ReplicatedLog::Init(ioproc_, scheduler_);
-
-	ReplicatedLog::appendCallback = &onAppend;
+	replicatedLog = replicatedLog_;
 
 	scheduler = scheduler_;
 	
 	masterID = MASTER_UNKNOWN;
 	srand(Now());
-	epochID = rand(); // todo: just a hack
+	epochID = rand(); // TODO: persist
 
-	designated = (config.nodeID == 0);
+	designated = (replicatedLog->NodeID() == 0);
 	if (designated)
 		Log_Message("designated!");
 	
 	// start timeouts
 	if (designated)
 	{
-		msg.YieldLease(config.nodeID, epochID);
+		msg.YieldLease(replicatedLog->NodeID(), epochID);
 		MasterLeaseMsg::Write(&msg, data);
-		ReplicatedLog::Append(data);
+		replicatedLog->Append(data);
 	}
 	
 	scheduler->Add(&recvLeaseExtendTimeout);
@@ -45,19 +45,12 @@ bool MasterLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	scheduler->Add(&report);
 	
 	master = false;
-	
+	replicatedLog->SetMaster(master);	
 	return true;
 }
 
-void MasterLease::OnAppend()
+void MasterLease::OnAppend(Transaction*, Entry* entry)
 {
-	// called back by the replicated log when a new value is appended 
-	// this may not be ours
-
-	Entry* entry;
-	
-	entry = memlog.Head();
-	
 	Execute(entry->value);
 }
 
@@ -77,15 +70,15 @@ void MasterLease::ExtendLease()
 	
 	masterID = msg.nodeID;
 	
-	if (ReplicatedLog::appending)
-		ReplicatedLog::Remove();
+	replicatedLog->Cancel();
 	
-	if (config.nodeID == masterID && msg.epochID == epochID)
+	if (replicatedLog->NodeID() == masterID && msg.epochID == epochID)
 	{
 		master = true;
+		replicatedLog->SetMaster(master);
 		
 		Log_Message(
-		"+++ node %d thinks it is the master +++", config.nodeID, masterID
+		"+++ node %d thinks it is the master +++", replicatedLog->NodeID(), masterID
 		);
 	
 		// node is the master
@@ -98,9 +91,9 @@ void MasterLease::ExtendLease()
 		
 		if (designated)
 		{
-			msg.YieldLease(config.nodeID, epochID);
+			msg.YieldLease(replicatedLog->NodeID(), epochID);
 			MasterLeaseMsg::Write(&msg, data);
-			ReplicatedLog::Append(data);
+			replicatedLog->Append(data);
 		}
 	}
 	
@@ -114,7 +107,7 @@ void MasterLease::YieldLease()
 	
 	// received a 'yield lease' msg
 	
-	if (msg.nodeID == config.nodeID && msg.epochID == epochID)
+	if (msg.nodeID == replicatedLog->NodeID() && msg.epochID == epochID)
 	{
 		// this node's yield msg
 		
@@ -140,6 +133,7 @@ void MasterLease::OnMasterTimeout()
 	
 	// master was unable to extend its lease
 	master = false;
+	replicatedLog->SetMaster(master);
 	
 	masterID = MASTER_UNKNOWN;
 }
@@ -150,11 +144,11 @@ void MasterLease::OnSendLeaseExtendTimeout()
 	
 	// node is the master and needs to send the 'lease extend' message
 	
-	assert(config.nodeID == masterID);
+	assert(replicatedLog->NodeID() == masterID);
 	
-	msg.ExtendLease(config.nodeID, epochID);
+	msg.ExtendLease(replicatedLog->NodeID(), epochID);
 	MasterLeaseMsg::Write(&msg, data);
-	ReplicatedLog::Append(data);
+	replicatedLog->Append(data);
 }
 
 void MasterLease::OnRecvLeaseExtendTimeout()
@@ -167,9 +161,9 @@ void MasterLease::OnRecvLeaseExtendTimeout()
 	
 	masterID = MASTER_UNKNOWN;
 	
-	msg.ExtendLease(config.nodeID, epochID);
+	msg.ExtendLease(replicatedLog->NodeID(), epochID);
 	MasterLeaseMsg::Write(&msg, data);
-	ReplicatedLog::Append(data);
+	replicatedLog->Append(data);
 	
 	recvLeaseExtendTimeout.delay = RECV_LEASE_EXTEND_TIMEOUT;
 	scheduler->Reset(&recvLeaseExtendTimeout);
@@ -178,10 +172,10 @@ void MasterLease::OnRecvLeaseExtendTimeout()
 void MasterLease::OnReport()
 {
 	if (master)
-		Log_Message("+++ node %d thinks it is the master +++", config.nodeID);
+		Log_Message("+++ node %d thinks it is the master +++", replicatedLog->NodeID());
 	else
 		Log_Message("+++ node %d thinks the master may be %d +++",
-			config.nodeID, masterID);
+			replicatedLog->NodeID(), masterID);
 
 	scheduler->Reset(&report);
 }

@@ -27,16 +27,18 @@ bool MasterLeaseMsg::Read(ByteString data, MasterLeaseMsg* msg)
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
 #define ValidateLength()	if (pos - data.buffer != data.length) return false;
 
-	char			type;
-	int				nodeID;
-	int				epochID;
-	
-	char			*pos;
-	int				nread;
+	char			protocol, type;
+	int				nodeID, epochID, nread;
+	char*			pos;
 
 	pos = data.buffer;
 	CheckOverflow();
+	ReadChar(protocol); CheckOverflow();
+	ReadSeparator() CheckOverflow();
 	ReadChar(type);
+	
+	if (protocol != PROTOCOL_MASTERLEASE)
+		return false;
 	
 	if (type == EXTEND_LEASE)
 	{
@@ -74,13 +76,13 @@ bool MasterLeaseMsg::Write(MasterLeaseMsg* msg, ByteString& data)
 	
 	if (msg->type == EXTEND_LEASE)
 	{
-		required  = snprintf(data.buffer, data.size, "%c:%d:%d",
-			msg->type, msg->nodeID, msg->epochID);
+		required  = snprintf(data.buffer, data.size, "%c:%c:%d:%d",
+			PROTOCOL_MASTERLEASE, msg->type, msg->nodeID, msg->epochID);
 	}
 	else if(msg->type == YIELD_LEASE)
 	{
-		required  = snprintf(data.buffer, data.size, "%c:%d:%d",
-			msg->type, msg->nodeID, msg->epochID);
+		required  = snprintf(data.buffer, data.size, "%c:%c:%d:%d",
+			PROTOCOL_MASTERLEASE, msg->type, msg->nodeID, msg->epochID);
 	}
 	else
 		return false;

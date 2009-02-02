@@ -3,12 +3,14 @@
 void Scheduler::Add(Timer* timer)
 {
 	timer->Set();
+	timer->active = true;
 	timers.Add(timer);
 }
 
 void Scheduler::Remove(Timer* timer)
 {
 	timers.Remove(timer);
+	timer->active = false;
 }
 
 void Scheduler::Reset(Timer* timer)

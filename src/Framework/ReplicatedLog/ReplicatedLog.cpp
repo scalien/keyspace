@@ -1,10 +1,51 @@
 #include "ReplicatedLog.h"
 #include <string.h>
 
-bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
+ReplicatedLog::ReplicatedLog()
+: catchupTimeout(CATCHUP_TIMEOUT, this, &ReplicatedLog::OnCatchupTimeout)
 {
-	PaxosInstance::Init(ioproc_, scheduler_);
+}
+
+bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, bool multiPaxos)
+{
+	Paxos::Init(ioproc_, scheduler_);
 	appending = false;
+	
+	if (multiPaxos)
+		masterLease.Init(ioproc_, scheduler_, this);
+	
+	return true;
+}
+
+bool ReplicatedLog::PersistState(Transaction* transaction)
+{
+	return Paxos::PersistState(transaction);
+}
+
+bool ReplicatedLog::ReadConfig(char* filename)
+{
+	return Paxos::ReadConfig(filename);
+}
+
+bool ReplicatedLog::Stop()
+{
+	PersistState(NULL);
+	
+	sendtoall = false;
+	
+	if (udpread.active)
+		ioproc->Remove(&udpread);
+
+	if (udpwrite.active)
+		ioproc->Remove(&udpwrite);
+		
+	return true;
+}
+
+bool ReplicatedLog::Continue()
+{
+	ioproc->Add(&udpwrite);
+
 	return true;
 }
 
@@ -14,17 +55,41 @@ bool ReplicatedLog::Append(ByteString value_)
 	{
 		value = value_;
 		appending = true;
-		return PaxosInstance::Start(value);
+		return Paxos::Start(value);
 	}
 	else
 		return false;
 }
 
-bool ReplicatedLog::Remove()
+bool ReplicatedLog::Cancel()
 {
 	appending = false;
-	
 	return true;
+}
+
+void ReplicatedLog::SetReplicatedDB(ReplicatedDB* replicatedDB_)
+{
+	replicatedDB = replicatedDB_;
+}
+
+Entry* ReplicatedLog::LastEntry()
+{
+	return logCache.Last();
+}
+
+void ReplicatedLog::SetMaster(bool master)
+{
+	proposer.leader = true;
+}
+
+bool ReplicatedLog::IsMaster()
+{
+	return proposer.leader;
+}
+
+int ReplicatedLog::NodeID()
+{
+	return config.nodeID;
 }
 
 void ReplicatedLog::OnPrepareRequest()
@@ -32,27 +97,47 @@ void ReplicatedLog::OnPrepareRequest()
 	Log_Trace();
 	
 	if (msg.paxosID == paxosID)
-		return PaxosInstance::OnPrepareRequest();
+		return Paxos::OnPrepareRequest();
 
 	if (msg.paxosID < paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		Entry* record = memlog.Get(msg.paxosID);
+		Entry* record = logCache.Get(msg.paxosID);
 		if (record != NULL)
-			msg.LearnChosen(msg.paxosID, record->value);
+		{
+			if (!msg.LearnChosen(msg.paxosID, record->value))
+			{
+				ioproc->Add(&udpread);
+				return;
+			}
+		}
+		else
+		{
+			ioproc->Add(&udpread);
+			return;
+		}
 	}
-	else
+	else // paxosID < msg.paxosID
 	{
 		/*	I am lagging and need to catch-up
 			I will send a prepare request which will
 			trigger the other node to send me the chosen value
 		*/
+		
+		if (!catchupTimeout.active)
+			scheduler->Add(&catchupTimeout);
+		
 		msg.PrepareRequest(paxosID, 1);
 	}
 
 	udpwrite.endpoint = udpread.endpoint;
-	PaxosMsg::Write(&msg, udpwrite.data); // todo: retval
-	PaxosInstance::SendMsg();
+	if (!msg.Write(udpwrite.data))
+	{
+		ioproc->Add(&udpread);
+		return;
+	}
+	
+	Paxos::SendMsg();
 }
 
 void ReplicatedLog::OnPrepareResponse()
@@ -65,7 +150,7 @@ void ReplicatedLog::OnPrepareResponse()
 		return;
 	}
 	
-	PaxosInstance::OnPrepareResponse();
+	Paxos::OnPrepareResponse();
 }
 
 void ReplicatedLog::OnProposeRequest()
@@ -73,27 +158,35 @@ void ReplicatedLog::OnProposeRequest()
 	Log_Trace();
 	
 	if (msg.paxosID == paxosID)
-		return PaxosInstance::OnProposeRequest();
+		return Paxos::OnProposeRequest();
 
 	if (msg.paxosID < paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		Entry* record = memlog.Get(msg.paxosID);
+		Entry* record = logCache.Get(msg.paxosID);
 		if (record != NULL)
 			msg.LearnChosen(msg.paxosID, record->value); // todo: retval
 	}
-	else
+	else // paxosID < msg.paxosID
 	{
 		/*	I am lagging and need to catch-up
 			I will send a prepare request which will
 			trigger the other node to send me the chosen value
 		*/
+		
+		if (!catchupTimeout.active)
+			scheduler->Add(&catchupTimeout);
+		
 		msg.PrepareRequest(paxosID, 1);
 	}
 
 	udpwrite.endpoint = udpread.endpoint;
-	PaxosMsg::Write(&msg, udpwrite.data); // todo: retval
-	PaxosInstance::SendMsg();
+	if (!msg.Write(udpwrite.data))
+	{
+		ioproc->Add(&udpread);
+		return;
+	}
+	Paxos::SendMsg();
 }
 
 void ReplicatedLog::OnProposeResponse()
@@ -106,14 +199,14 @@ void ReplicatedLog::OnProposeResponse()
 		return;
 	}
 	
-	PaxosInstance::OnProposeResponse();
+	Paxos::OnProposeResponse();
 }
 
 void ReplicatedLog::OnLearnChosen()
 {
 	bool myappend = false;
 	
-	if (msg.paxosID < paxosID || (msg.paxosID == paxosID && learner.learned))
+	if (msg.paxosID < paxosID || (msg.paxosID == paxosID && acceptor.learned))
 	{
 		ioproc->Add(&udpread);
 		return;
@@ -121,15 +214,28 @@ void ReplicatedLog::OnLearnChosen()
 
 	if (msg.paxosID == paxosID)
 	{
-		PaxosInstance::OnLearnChosen();
-		memlog.Push(paxosID, learner.value);
-		paxosID++;
-		PaxosInstance::Reset(); // in new round of paxos
+		if (catchupTimeout.active)
+			scheduler->Remove(&catchupTimeout);
 		
-		if (appending && value == learner.value)
+		Paxos::OnLearnChosen();
+		logCache.Push(paxosID, acceptor.value);
+		paxosID++;
+		Paxos::Reset(); // in new round of paxos
+		
+		if (appending && value == acceptor.value)
 			myappend = true;
 		
-		Call(appendCallback); // application must be notified of *all* log appends
+		if (value.length > 0)
+		{
+			Transaction tx(table);
+			
+			if (value.buffer[0] == PROTOCOL_MASTERLEASE)
+				masterLease.OnAppend(&tx, LastEntry());
+			else
+				replicatedDB->OnAppend(&tx, LastEntry());
+			
+			tx.Commit();
+		}
 		
 		// see if the chosen value is my application's
 		if (appending)
@@ -139,7 +245,7 @@ void ReplicatedLog::OnLearnChosen()
 			else
 			{
 				// my application's value has not yet been chosen, start another round of paxos
-				PaxosInstance::Start(value);
+				Paxos::Start(value);
 				return;
 			}
 		}
@@ -150,12 +256,28 @@ void ReplicatedLog::OnLearnChosen()
 			I will send a prepare request which will
 			trigger the other node to send me the chosen value
 		*/
-		msg.PrepareRequest(paxosID, 1);
+		
+		if (!catchupTimeout.active)
+			scheduler->Add(&catchupTimeout);
+		
+		msg.PrepareRequest(paxosID, 0);
 		udpwrite.endpoint = udpread.endpoint;
-		PaxosMsg::Write(&msg, udpwrite.data); // todo: retval
-		PaxosInstance::SendMsg();
+		if (!msg.Write(udpwrite.data))
+		{
+			ioproc->Add(&udpread);
+			return;
+		}
+		Paxos::SendMsg();
 		return;
 	}
 
 	ioproc->Add(&udpread);
+}
+
+void ReplicatedLog::OnCatchupTimeout()
+{
+	Log_Trace();
+
+	if (replicatedDB)
+		replicatedDB->OnDoCatchup();
 }

@@ -1,67 +1,88 @@
-#include "PaxosInstance.h"
+#include "Paxos.h"
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "Framework/Database/Transaction.h"
 
-PaxosInstance::PaxosInstance() :
-	readCallable(this, &PaxosInstance::OnRead),
-	writeCallable(this, &PaxosInstance::OnWrite),
-	onPrepareTimeout(this, &PaxosInstance::OnPrepareTimeout),
-	onProposeTimeout(this, &PaxosInstance::OnProposeTimeout),
+Paxos::Paxos() :
+	onRead(this, &Paxos::OnRead),
+	onWrite(this, &Paxos::OnWrite),
+	onPrepareTimeout(this, &Paxos::OnPrepareTimeout),
+	onProposeTimeout(this, &Paxos::OnProposeTimeout),
 	prepareTimeout(PAXOS_TIMEOUT, &onPrepareTimeout),
 	proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout)
 {
 }
 
-bool PaxosInstance::Start(ByteString value)
+bool Paxos::Start(ByteString value)
 {
 	if (!proposer.value.Set(value))
 		return false;
-
-	Prepare();
+	
+	if (!proposer.leader)
+		Prepare();
+	else
+		Propose(); // multi paxos, skip prepare
 	
 	return true;
 }
 
-bool PaxosInstance::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
+bool Paxos::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 {
 	// I/O framework
 	ioproc = ioproc_;
 	scheduler = scheduler_;
 
 	// Paxos variables
-	paxosID = 0;
+	paxosID = 0; //TODO: read from persistent storage
 	Reset();
+	proposer.leader = false;
 		
-	socket.Create(UDP);
-	socket.Bind(config.port);
-	socket.SetNonblocking();
-	Log_Message("Bound to socket %d", socket.fd);
+	if (!socket.Create(UDP)) return false;
+	if (!socket.Bind(config.port)) return false;
+	if (!socket.SetNonblocking()) return false;
 	
 	udpread.fd = socket.fd;
 	udpread.data = rdata;
-	udpread.onComplete = &readCallable;
+	udpread.onComplete = &onRead;
 	
 	udpwrite.fd = socket.fd;
 	udpwrite.data = wdata;
-	udpwrite.onComplete = &writeCallable;
+	udpwrite.onComplete = &onWrite;
 	
 	return ioproc->Add(&udpread);
 }
 
-bool PaxosInstance::SendMsg()
+bool Paxos::PersistState(Transaction* transaction)
+{
+	if (table == NULL)
+		return false;
+
+	// TODO: check return values
+	
+	table->Put(transaction, "paxosID", rprintf("%llu", paxosID));
+	table->Put(transaction, "accepted", rprintf("%d", acceptor.accepted));
+	table->Put(transaction, "n_highest_promised", rprintf("%llu", acceptor.n_highest_promised));
+	table->Put(transaction, "n_accepted", rprintf("%llu", acceptor.n_accepted));
+	table->Put(transaction, "value", acceptor.value);
+
+	return true;
+}
+
+
+bool Paxos::SendMsg()
 {
 	Log_Trace();
 		
-	if (!PaxosMsg::Write(&msg, udpwrite.data))
+	if (!msg.Write(udpwrite.data))
 		return false;
 	
 	if (udpwrite.data.length > 0)
 	{
-		udpwrite.data.buffer[udpwrite.data.length] = '\0'; // todo: remove
-		Log_Message("Participant %d sending message %s to %s",
-			config.nodeID, udpwrite.data.buffer, udpwrite.endpoint.ToString());
+		Log_Message("Participant %d sending message %.*s to %s",
+			config.nodeID, udpwrite.data.length, udpwrite.data.buffer,
+			udpwrite.endpoint.ToString());
 		
 		ioproc->Add(&udpwrite);
 		
@@ -71,7 +92,7 @@ bool PaxosInstance::SendMsg()
 	return false;
 }
 
-void PaxosInstance::SendMsgToAll()
+void Paxos::SendMsgToAll()
 {
 	Log_Trace();
 
@@ -93,38 +114,35 @@ void PaxosInstance::SendMsgToAll()
 	}
 }
 
-void PaxosInstance::Reset()
+void Paxos::Reset()
 {
-	highest_promised = 0;
-	preparer.n_highest_received = -1;
+	proposer.Reset();
+	acceptor.Reset();
+
 	StopPreparer();
-	preparer.numOpen = 0;
 	StopProposer();
-	proposer.n = 0;
-	acceptor.accepted = false;
-	acceptor.n = 0;
-	learner.learned = false;
+
 	sendtoall = false;
 }
 
-void PaxosInstance::OnRead()
+void Paxos::OnRead()
 {
 	Log_Trace();
+		
+	Log_Message("Participant %d received message %.*s from %s",
+		config.nodeID, udpread.data.length, udpread.data.buffer, udpread.endpoint.ToString());
 	
-	udpread.data.buffer[udpread.data.length] = '\0'; // todo: remove
-	
-	Log_Message("Participant %d received message %s from %s",
-		config.nodeID, udpread.data.buffer, udpread.endpoint.ToString());
-	
-	if (!PaxosMsg::Read(udpread.data, &msg))
+	if (!msg.Read(udpread.data))
 	{
 		Log_Message("PaxosMsg::Read() failed: invalid message format");
 		ioproc->Add(&udpread); // read again
 	} else
 		ProcessMsg();
+		
+	assert((udpread.active || udpwrite.active) && !(udpread.active && udpwrite.active));
 }
 
-void PaxosInstance::OnWrite()
+void Paxos::OnWrite()
 {
 	Log_Trace();
 
@@ -136,9 +154,9 @@ void PaxosInstance::OnWrite()
 		{
 			udpwrite.endpoint = *sending_to;
 
-			udpwrite.data.buffer[udpwrite.data.length] = '\0'; // todo: remove
-			Log_Message("Participant %d sending message %s to %s",
-				config.nodeID, udpwrite.data.buffer, udpwrite.endpoint.ToString());
+			Log_Message("Participant %d sending message %.*s to %s",
+				config.nodeID, udpwrite.data.length, udpwrite.data.buffer,
+				udpwrite.endpoint.ToString());
 
 			ioproc->Add(&udpwrite);
 		}
@@ -151,9 +169,11 @@ void PaxosInstance::OnWrite()
 		Log_Trace();
 		ioproc->Add(&udpread);
 	}
+	
+	assert((udpread.active || udpwrite.active) && !(udpread.active && udpwrite.active));
 }
 
-void PaxosInstance::ProcessMsg()
+void Paxos::ProcessMsg()
 {
 	if (msg.type == PREPARE_REQUEST)
 		OnPrepareRequest();
@@ -165,14 +185,23 @@ void PaxosInstance::ProcessMsg()
 		OnProposeResponse();
 	else if (msg.type == LEARN_CHOSEN)
 		OnLearnChosen();
+	else
+		ASSERT_FAIL();
 }
 
-void PaxosInstance::OnPrepareRequest()
+void Paxos::OnPrepareRequest()
 {
 	Log_Trace();
 	
-	if (learner.learned)
-		msg.LearnChosen(msg.paxosID, learner.value); // todo: retval
+	if (acceptor.learned)
+	{
+		if (!msg.LearnChosen(msg.paxosID, acceptor.value))
+		{
+			Log_Trace();
+			ioproc->Add(&udpread);
+			return;
+		}
+	}
 	else
 	{
 		/*	Lamport: If an acceptor receives a prepare request with number n greater 
@@ -181,26 +210,32 @@ void PaxosInstance::OnPrepareRequest()
 			proposals numbered less than n and with the highest-numbered pro- 
 			posal (if any) that it has accepted.
 		*/
-		if (msg.n < highest_promised)
+		if (msg.n < acceptor.n_highest_promised)
 			msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_REJECTED);
 		else
 		{
-			highest_promised = msg.n;
+			acceptor.n_highest_promised = msg.n;
 		
 			if (!acceptor.accepted)
 				msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_CURRENTLY_OPEN);
 			else
 				msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_PREVIOUSLY_ACCEPTED,
-					acceptor.n, acceptor.value);
+					acceptor.n_accepted, acceptor.value);
 		}
 	}
 	
 	udpwrite.endpoint = udpread.endpoint;
-	PaxosMsg::Write(&msg, udpwrite.data); // todo: retval
+	if (!msg.Write(udpwrite.data))
+	{
+		Log_Trace();
+		ioproc->Add(&udpread);
+		return;
+	}
+	
 	SendMsg();
 }
 
-void PaxosInstance::OnPrepareResponse()
+void Paxos::OnPrepareResponse()
 {
 	Log_Trace();
 
@@ -211,7 +246,7 @@ void PaxosInstance::OnPrepareResponse()
 		the responses, or is any value if the responses reported no proposals.
 	*/
 	
-	if (!preparer.active || msg.n != preparer.n)
+	if (!proposer.preparing || msg.n != proposer.n_proposing)
 	{
 		ioproc->Add(&udpread);
 		return;
@@ -223,14 +258,21 @@ void PaxosInstance::OnPrepareResponse()
 		numRejected++;
 	else if (msg.response == PREPARE_PREVIOUSLY_ACCEPTED)
 	{
-		if (msg.n_accepted > preparer.n_highest_received)
+		if (msg.n_accepted >= proposer.n_highest_received)
 		{
-			preparer.n_highest_received = msg.n_accepted;
-			preparer.value.Set(msg.value); // todo: retval
+			/* the >= could be replaced by > which would result in less copys
+			 * however this would result in complications in multi paxos
+			 * in the multi paxos steady state this branch is inactive
+			 * it only runs after leader failure
+			 * so it's ok
+			 */
+			proposer.n_highest_received = msg.n_accepted;
+			if (!proposer.value.Set(msg.value))
+				ASSERT_FAIL();
 		}
 	}
 	else
-		preparer.numOpen++;
+		proposer.numOpen++;
 	
 	bool read = TryFinishPrepare();
 		
@@ -238,12 +280,12 @@ void PaxosInstance::OnPrepareResponse()
 		ioproc->Add(&udpread);
 }
 
-void PaxosInstance::OnProposeRequest()
+void Paxos::OnProposeRequest()
 {
 	Log_Trace();
 	
-	if (learner.learned)
-		msg.LearnChosen(msg.paxosID, learner.value);
+	if (acceptor.learned)
+		msg.LearnChosen(msg.paxosID, acceptor.value);
 	else
 	{
 		/*	Lamport: An acceptor can accept a proposal numbered n iﬀ it has not responded 
@@ -253,27 +295,34 @@ void PaxosInstance::OnProposeRequest()
 			it accepts the proposal unless it has already responded to a prepare 
 			request having a number greater than n .
 		*/
-		if (msg.n < highest_promised)
+		if (msg.n < acceptor.n_highest_promised)
 			msg.ProposeResponse(msg.paxosID, msg.n, PROPOSE_REJECTED);
 		else
 		{
 			acceptor.accepted = true;
-			acceptor.n = msg.n;
-			acceptor.value.Set(msg.value); // todo: retval
+			acceptor.n_accepted = msg.n;
+			if (!acceptor.value.Set(msg.value))
+				ASSERT_FAIL();
 			msg.ProposeResponse(msg.paxosID, msg.n, PROPOSE_ACCEPTED);
 		}
 	}
 	
 	udpwrite.endpoint = udpread.endpoint;
-	PaxosMsg::Write(&msg, udpwrite.data); // todo: retval
+	if (!msg.Write(udpwrite.data))
+	{
+		Log_Trace();
+		ioproc->Add(&udpread);
+		return;
+	}
+	
 	SendMsg();
 }
 
-void PaxosInstance::OnProposeResponse()
+void Paxos::OnProposeResponse()
 {
 	Log_Trace();
 	
-	if (!proposer.active || msg.n != proposer.n)
+	if (!proposer.proposing || msg.n != proposer.n_proposing)
 	{
 		ioproc->Add(&udpread);
 		return;
@@ -290,46 +339,48 @@ void PaxosInstance::OnProposeResponse()
 		ioproc->Add(&udpread);
 }
 
-void PaxosInstance::OnLearnChosen()
+void Paxos::OnLearnChosen()
 {
 	Log_Trace();
 		
-	learner.learned = true;
-	learner.value.Set(msg.value); // todo: retval
+	acceptor.learned = true;
+	if (!acceptor.value.Set(msg.value))
+		ASSERT_FAIL();
 
-	learner.value.buffer[learner.value.length] = '\0'; // todo: remove
-	Log_Message("*** Pariticipart %d says consensus for paxosID = %d is: %s ***",
-				config.nodeID, paxosID, learner.value.buffer);
+	Log_Message("*** Node %d: consensus for paxosID = %d is: %.*s ***",
+				config.nodeID, paxosID, acceptor.value.length, acceptor.value.buffer);
 }
 
-void PaxosInstance::StopPreparer()
+void Paxos::StopPreparer()
 {
 	Log_Trace();
 
-	preparer.active = false;
+	proposer.preparing = false;
 	scheduler->Remove(&prepareTimeout);
 }
 
-void PaxosInstance::StopProposer()
+void Paxos::StopProposer()
 {
 	Log_Trace();
 	
-	proposer.active = false;
+	proposer.proposing = false;
 	scheduler->Remove(&proposeTimeout);
 }
 
-void PaxosInstance::Prepare()
+void Paxos::Prepare()
 {
 	Log_Trace();
 
 	StopProposer();
-	preparer.active = true;
+	proposer.preparing = true;
 	
-	preparer.n = config.NextHighest(highest_promised);
-	preparer.n_highest_received = -1;
-	preparer.numOpen = 0;
+	if (!(proposer.leader && acceptor.n_highest_promised == 0))
+		proposer.n_proposing = config.NextHighest(acceptor.n_highest_promised);
 	
-	msg.PrepareRequest(paxosID, preparer.n);
+	proposer.n_highest_received = 0; // TODO: should be -1 ?
+	proposer.numOpen = 0;
+	
+	msg.PrepareRequest(paxosID, proposer.n_proposing);
 	
 	SendMsgToAll();
 	
@@ -337,7 +388,7 @@ void PaxosInstance::Prepare()
 }
 
 // returns whether to put out an IORead
-bool PaxosInstance::TryFinishPrepare()
+bool Paxos::TryFinishPrepare()
 {
 	Log_Trace();
 	
@@ -348,7 +399,8 @@ bool PaxosInstance::TryFinishPrepare()
 		the responses, or is any value if the responses reported no proposals.
 	*/
 		
-	if (preparer.n < highest_promised || numRejected >= ceil(config.numNodes / 2))
+	if (proposer.n_proposing < acceptor.n_highest_promised ||
+			numRejected >= ceil(config.numNodes / 2))
 	{
 		Prepare();
 		return false;
@@ -358,7 +410,7 @@ bool PaxosInstance::TryFinishPrepare()
 	int numPositive = numReceived - numRejected;
 	if (numPositive >= config.MinMajority())
 	{
-		if (preparer.numOpen == numPositive)
+		if (proposer.numOpen == numPositive)
 		{
 			// free to propose my value, stored in proposer, set by the application
 			Propose();
@@ -366,8 +418,6 @@ bool PaxosInstance::TryFinishPrepare()
 		}
 		else
 		{
-			// use the highest numbered proposal returned to me, this is stored in the preparer
-			proposer.value.Set(preparer.value); // todo: retval
 			Propose();
 			return false;
 		}
@@ -382,24 +432,22 @@ bool PaxosInstance::TryFinishPrepare()
 	return true;
 }
 
-void PaxosInstance::Propose()
+void Paxos::Propose()
 {
 	Log_Trace();
 	
 	StopPreparer();
 
-	proposer.active = true;
-	proposer.n = preparer.n;
+	proposer.proposing = true;
 
-	// proposer.length and proposer.value are filled out by FinishPrepare()
-	msg.ProposeRequest(paxosID, preparer.n, proposer.value);
+	msg.ProposeRequest(paxosID, proposer.n_proposing, proposer.value);
 	SendMsgToAll();
 	
 	scheduler->Reset(&proposeTimeout);
 }
 
 // returns whether to put out an IORead
-bool PaxosInstance::TryFinishPropose()
+bool Paxos::TryFinishPropose()
 {
 	Log_Trace();
 	
@@ -422,20 +470,20 @@ bool PaxosInstance::TryFinishPropose()
 	return true;
 }
 
-void PaxosInstance::OnPrepareTimeout()
+void Paxos::OnPrepareTimeout()
 {
 	Log_Trace();
 	
-	assert(preparer.active);
+	assert(proposer.preparing);
 	
 	Prepare();
 }
 
-void PaxosInstance::OnProposeTimeout()
+void Paxos::OnProposeTimeout()
 {
 	Log_Trace();
 	
-	assert(proposer.active);
+	assert(proposer.proposing);
 	
 	Prepare();
 }

@@ -2,10 +2,6 @@
 -	I switched to using 'long long' to store the milliseconds since 1970,
 	but it's not required --- a simple long is enough, even if it overflows!
 
--	write HashMap
-
--	port to Linux
-
 -	memory allocator
 
 -	Scheduler data structure is currently a list
@@ -14,7 +10,14 @@
 		given time, and it only fires if the majority of nodes are *down* or very slow:
 		... -> no timer -> OnPrepareTimeout() -> OnProposeTimeout() -> no timer -> ...
 
--	look into git to avoid .svn folders
 
--	use guard pattern to make sure there's always an IOOp out
 
+
+
+
+
+
+- bdb: open must be inside a tx when using tx
+- during catchup, the sender does not need to use tx
+- the receiver stops the ReplicatedLog and does not serve clients,
+  so he only needs atomicity

@@ -4,7 +4,8 @@ MemoDB::MemoDB() :
 onAppend(this, &MemoDB::OnAppend)
 {
 	msgID = 0;
-	appendCallback = &onAppend;
+//	ReplicatedLog::SetAppendCallback(PROTOCOL_MEMODB, &onAppend);
+// TODO
 }
 
 // called by the client to add a command to the log and have it executed
@@ -31,7 +32,7 @@ void MemoDB::OnAppend()
 
 	Entry* entry;
 	
-	entry = memlog.Head();
+	entry = logCache.Last();
 	
 	Execute(entry->value);
 	

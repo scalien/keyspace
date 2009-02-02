@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		548146400F310FCE00F3D2B6 /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548146390F310FCE00F3D2B6 /* PaxosConfig.cpp */; };
+		548146410F310FCE00F3D2B6 /* PaxosInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481463B0F310FCE00F3D2B6 /* PaxosInstance.cpp */; };
+		548146420F310FCE00F3D2B6 /* PaxosMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481463D0F310FCE00F3D2B6 /* PaxosMsg.cpp */; };
 		8DD76F6A0486A84900D96B5E /* Scalien.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* Scalien.1 */; };
 		9A89F1750F27DA450041D4A1 /* TCPEchoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1310F27DA450041D4A1 /* TCPEchoConn.cpp */; };
 		9A89F1760F27DA450041D4A1 /* TCPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1330F27DA450041D4A1 /* TCPEchoServer.cpp */; };
@@ -18,8 +21,6 @@
 		9A89F17C0F27DA450041D4A1 /* MemoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1400F27DA450041D4A1 /* MemoServer.cpp */; };
 		9A89F17D0F27DA450041D4A1 /* MasterLease.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1470F27DA450041D4A1 /* MasterLease.cpp */; };
 		9A89F17E0F27DA450041D4A1 /* MasterLeaseMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1490F27DA450041D4A1 /* MasterLeaseMsg.cpp */; };
-		9A89F17F0F27DA450041D4A1 /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F14C0F27DA450041D4A1 /* PaxosConfig.cpp */; };
-		9A89F1800F27DA450041D4A1 /* PaxosInstance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F14E0F27DA450041D4A1 /* PaxosInstance.cpp */; };
 		9A89F1820F27DA450041D4A1 /* MemLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1540F27DA450041D4A1 /* MemLog.cpp */; };
 		9A89F1830F27DA450041D4A1 /* ReplicatedLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1560F27DA450041D4A1 /* ReplicatedLog.cpp */; };
 		9A89F1840F27DA450041D4A1 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F1580F27DA450041D4A1 /* Main.cpp */; };
@@ -32,7 +33,6 @@
 		9A89F18B0F27DA450041D4A1 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F16F0F27DA450041D4A1 /* Log.cpp */; };
 		9A89F26F0F27FA300041D4A1 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F26B0F27FA300041D4A1 /* Database.cpp */; };
 		9A89F2700F27FA300041D4A1 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F26D0F27FA300041D4A1 /* Table.cpp */; };
-		9A89F2D60F27FFFC0041D4A1 /* PaxosMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F2D50F27FFFC0041D4A1 /* PaxosMsg.cpp */; };
 		9A89F3070F28916A0041D4A1 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A89F3060F28916A0041D4A1 /* libdb_cxx.dylib */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +50,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		548144870F30F09C00F3D2B6 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		548146390F310FCE00F3D2B6 /* PaxosConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosConfig.cpp; sourceTree = "<group>"; };
+		5481463A0F310FCE00F3D2B6 /* PaxosConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConfig.h; sourceTree = "<group>"; };
+		5481463B0F310FCE00F3D2B6 /* PaxosInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosInstance.cpp; sourceTree = "<group>"; };
+		5481463C0F310FCE00F3D2B6 /* PaxosInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosInstance.h; sourceTree = "<group>"; };
+		5481463D0F310FCE00F3D2B6 /* PaxosMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosMsg.cpp; sourceTree = "<group>"; };
+		5481463E0F310FCE00F3D2B6 /* PaxosMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosMsg.h; sourceTree = "<group>"; };
+		5481463F0F310FCE00F3D2B6 /* PaxosState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosState.h; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* Scalien */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Scalien; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A89F1310F27DA450041D4A1 /* TCPEchoConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPEchoConn.cpp; sourceTree = "<group>"; };
 		9A89F1320F27DA450041D4A1 /* TCPEchoConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPEchoConn.h; sourceTree = "<group>"; };
@@ -74,12 +82,6 @@
 		9A89F1480F27DA450041D4A1 /* MasterLease.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterLease.h; sourceTree = "<group>"; };
 		9A89F1490F27DA450041D4A1 /* MasterLeaseMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterLeaseMsg.cpp; sourceTree = "<group>"; };
 		9A89F14A0F27DA450041D4A1 /* MasterLeaseMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterLeaseMsg.h; sourceTree = "<group>"; };
-		9A89F14C0F27DA450041D4A1 /* PaxosConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosConfig.cpp; sourceTree = "<group>"; };
-		9A89F14D0F27DA450041D4A1 /* PaxosConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConfig.h; sourceTree = "<group>"; };
-		9A89F14E0F27DA450041D4A1 /* PaxosInstance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosInstance.cpp; sourceTree = "<group>"; };
-		9A89F14F0F27DA450041D4A1 /* PaxosInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosInstance.h; sourceTree = "<group>"; };
-		9A89F1510F27DA450041D4A1 /* PaxosMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosMsg.h; sourceTree = "<group>"; };
-		9A89F1520F27DA450041D4A1 /* PaxosState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosState.h; sourceTree = "<group>"; };
 		9A89F1540F27DA450041D4A1 /* MemLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemLog.cpp; sourceTree = "<group>"; };
 		9A89F1550F27DA450041D4A1 /* MemLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemLog.h; sourceTree = "<group>"; };
 		9A89F1560F27DA450041D4A1 /* ReplicatedLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedLog.cpp; sourceTree = "<group>"; };
@@ -116,7 +118,6 @@
 		9A89F26C0F27FA300041D4A1 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
 		9A89F26D0F27FA300041D4A1 /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Table.cpp; sourceTree = "<group>"; };
 		9A89F26E0F27FA300041D4A1 /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
-		9A89F2D50F27FFFC0041D4A1 /* PaxosMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosMsg.cpp; sourceTree = "<group>"; };
 		9A89F3060F28916A0041D4A1 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
 		C6859E8B029090EE04C91782 /* Scalien.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Scalien.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,6 +159,20 @@
 				8DD76F6C0486A84900D96B5E /* Scalien */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		548146380F310FCE00F3D2B6 /* Paxos */ = {
+			isa = PBXGroup;
+			children = (
+				548146390F310FCE00F3D2B6 /* PaxosConfig.cpp */,
+				5481463A0F310FCE00F3D2B6 /* PaxosConfig.h */,
+				5481463D0F310FCE00F3D2B6 /* PaxosMsg.cpp */,
+				5481463E0F310FCE00F3D2B6 /* PaxosMsg.h */,
+				5481463F0F310FCE00F3D2B6 /* PaxosState.h */,
+				5481463C0F310FCE00F3D2B6 /* PaxosInstance.h */,
+				5481463B0F310FCE00F3D2B6 /* PaxosInstance.cpp */,
+			);
+			path = Paxos;
 			sourceTree = "<group>";
 		};
 		9A89F12A0F27DA450041D4A1 /* src */ = {
@@ -220,9 +235,9 @@
 		9A89F1450F27DA450041D4A1 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				548146380F310FCE00F3D2B6 /* Paxos */,
 				9A89F26A0F27FA300041D4A1 /* Database */,
 				9A89F1460F27DA450041D4A1 /* MasterLease */,
-				9A89F14B0F27DA450041D4A1 /* Paxos */,
 				9A89F1530F27DA450041D4A1 /* ReplicatedLog */,
 			);
 			path = Framework;
@@ -231,35 +246,21 @@
 		9A89F1460F27DA450041D4A1 /* MasterLease */ = {
 			isa = PBXGroup;
 			children = (
-				9A89F1470F27DA450041D4A1 /* MasterLease.cpp */,
-				9A89F1480F27DA450041D4A1 /* MasterLease.h */,
-				9A89F1490F27DA450041D4A1 /* MasterLeaseMsg.cpp */,
 				9A89F14A0F27DA450041D4A1 /* MasterLeaseMsg.h */,
+				9A89F1490F27DA450041D4A1 /* MasterLeaseMsg.cpp */,
+				9A89F1480F27DA450041D4A1 /* MasterLease.h */,
+				9A89F1470F27DA450041D4A1 /* MasterLease.cpp */,
 			);
 			path = MasterLease;
-			sourceTree = "<group>";
-		};
-		9A89F14B0F27DA450041D4A1 /* Paxos */ = {
-			isa = PBXGroup;
-			children = (
-				9A89F14C0F27DA450041D4A1 /* PaxosConfig.cpp */,
-				9A89F14D0F27DA450041D4A1 /* PaxosConfig.h */,
-				9A89F14E0F27DA450041D4A1 /* PaxosInstance.cpp */,
-				9A89F14F0F27DA450041D4A1 /* PaxosInstance.h */,
-				9A89F2D50F27FFFC0041D4A1 /* PaxosMsg.cpp */,
-				9A89F1510F27DA450041D4A1 /* PaxosMsg.h */,
-				9A89F1520F27DA450041D4A1 /* PaxosState.h */,
-			);
-			path = Paxos;
 			sourceTree = "<group>";
 		};
 		9A89F1530F27DA450041D4A1 /* ReplicatedLog */ = {
 			isa = PBXGroup;
 			children = (
-				9A89F1540F27DA450041D4A1 /* MemLog.cpp */,
 				9A89F1550F27DA450041D4A1 /* MemLog.h */,
-				9A89F1560F27DA450041D4A1 /* ReplicatedLog.cpp */,
+				9A89F1540F27DA450041D4A1 /* MemLog.cpp */,
 				9A89F1570F27DA450041D4A1 /* ReplicatedLog.h */,
+				9A89F1560F27DA450041D4A1 /* ReplicatedLog.cpp */,
 			);
 			path = ReplicatedLog;
 			sourceTree = "<group>";
@@ -278,6 +279,7 @@
 				9A89F1710F27DA450041D4A1 /* Platform.h */,
 				9A89F1720F27DA450041D4A1 /* Stopwatch.h */,
 				9A89F1730F27DA450041D4A1 /* Time.h */,
+				548144870F30F09C00F3D2B6 /* Types.h */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -390,8 +392,6 @@
 				9A89F17C0F27DA450041D4A1 /* MemoServer.cpp in Sources */,
 				9A89F17D0F27DA450041D4A1 /* MasterLease.cpp in Sources */,
 				9A89F17E0F27DA450041D4A1 /* MasterLeaseMsg.cpp in Sources */,
-				9A89F17F0F27DA450041D4A1 /* PaxosConfig.cpp in Sources */,
-				9A89F1800F27DA450041D4A1 /* PaxosInstance.cpp in Sources */,
 				9A89F1820F27DA450041D4A1 /* MemLog.cpp in Sources */,
 				9A89F1830F27DA450041D4A1 /* ReplicatedLog.cpp in Sources */,
 				9A89F1840F27DA450041D4A1 /* Main.cpp in Sources */,
@@ -404,7 +404,9 @@
 				9A89F18B0F27DA450041D4A1 /* Log.cpp in Sources */,
 				9A89F26F0F27FA300041D4A1 /* Database.cpp in Sources */,
 				9A89F2700F27FA300041D4A1 /* Table.cpp in Sources */,
-				9A89F2D60F27FFFC0041D4A1 /* PaxosMsg.cpp in Sources */,
+				548146400F310FCE00F3D2B6 /* PaxosConfig.cpp in Sources */,
+				548146410F310FCE00F3D2B6 /* PaxosInstance.cpp in Sources */,
+				548146420F310FCE00F3D2B6 /* PaxosMsg.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +453,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -458,6 +461,7 @@
 					src,
 				);
 				LIBRARY_SEARCH_PATHS = /opt/local/lib/db46;
+				OTHER_CPLUSPLUSFLAGS = "-DPLATFORM_DARWIN";
 				PREBINDING = NO;
 				PRELINK_LIBS = db_cxx;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";

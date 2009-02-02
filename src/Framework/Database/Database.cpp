@@ -4,16 +4,16 @@
 #include "Table.h"
 
 Database::Database() :
-env(0)
+env(DB_CXX_NO_EXCEPTIONS)
 {
 	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL;
 	int mode = 0;
-	const char *db_home = ".";
+	const char* db_home = ".";
 	
 	env.open(db_home, flags, mode);
 	
-	state = new Table(*this, "state");
-	versionDB = new Table(*this, "versionDB");
+	state = new Table(this, "state");
+	versionDB = new Table(this, "versionDB");
 }
 
 Database::~Database()
@@ -24,9 +24,8 @@ Database::~Database()
 	env.close(0);
 }
 
-Table * Database::GetTable(const char *name)
+Table* Database::GetTable(const char* name)
 {
-	// TODO use a hashtable
 	if (strcmp(name, "state") == 0)
 		return state;
 	

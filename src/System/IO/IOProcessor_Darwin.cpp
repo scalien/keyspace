@@ -288,7 +288,7 @@ void ProcessTCPWrite(struct kevent* ev)
 	
 	tcpwrite = (TCPWrite*) ev->udata;
 
-	writelen = tcpwrite->data.length - tcpwrite->transfered;
+	writelen = tcpwrite->data.length - tcpwrite->transferred;
 	writelen = min(ev->data, writelen);
 	if (writelen > 0)
 	{
@@ -302,8 +302,8 @@ void ProcessTCPWrite(struct kevent* ev)
 				Log_Errno();
 		} else
 		{
-			tcpwrite->transfered += nwrite;
-			if (tcpwrite->transfered == tcpwrite->data.length)
+			tcpwrite->transferred += nwrite;
+			if (tcpwrite->transferred == tcpwrite->data.length)
 				Call(tcpwrite->onComplete);
 			else
 				ioproc.Add(tcpwrite);

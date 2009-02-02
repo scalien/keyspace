@@ -54,7 +54,7 @@ void TCPEchoConn::OnRead()
 	Log_Trace();
 	
 	tcpwrite.data.length = tcpread.data.length;
-	tcpwrite.transfered = 0;
+	tcpwrite.transferred = 0;
 	ioproc->Add(&tcpwrite);
 }
 

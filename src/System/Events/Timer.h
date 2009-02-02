@@ -7,7 +7,8 @@
 class Timer
 {
 public:
-    long long		when;
+    bool			active;
+	long long		when;
 	int				delay;
     Callable*		callable;
     
@@ -22,6 +23,7 @@ public:
 	{
 		delay = delay_;
 		callable = callable_;
+		active = false;
 	}
 	
 	~Timer() { }
@@ -35,6 +37,33 @@ public:
 	{
 		Call(callable);
 	}
+};
+
+template<class T>
+class TimerM : public Timer
+{
+public:
+	typedef void (T::*Callback)();
+	
+	TimerM(long delay, T* object, Callback callback)
+	: callable(object, callback), Timer(delay, &callable)
+	{}
+	
+private:
+	MFunc<T>	callable;
+};
+
+class TimerC : public Timer
+{
+public:
+	typedef void (*Callback)();
+	
+	TimerC(long delay, Callback callback)
+	: callable(callback), Timer(delay, &callable)
+	{}
+
+private:
+	CFunc		callable;
 };
 
 inline bool LessThan(Timer* a, Timer* b)

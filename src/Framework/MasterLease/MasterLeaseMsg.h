@@ -3,8 +3,9 @@
 
 #include "System/Buffer.h"
 
-#define EXTEND_LEASE		'l'
-#define YIELD_LEASE			'y'
+#define PROTOCOL_MASTERLEASE	'M'
+#define EXTEND_LEASE			'l'
+#define YIELD_LEASE				'y'
 
 class MasterLeaseMsg
 {
