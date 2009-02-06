@@ -6,7 +6,7 @@
 
 #define CACHE_SIZE		10*1000
 
-class Entry
+class LogItem
 {
 public:
 	ulong64					paxosID;
@@ -18,13 +18,13 @@ class LogCache
 public:
 	LogCache()			{ count = 0; next = 0; size = SIZE(array); }
 
-	Entry*				Last();
+	LogItem*			Last();
 
 	bool				Push(ulong64 paxosID, ByteString value);
-	Entry*				Get(ulong64 paxosID);
+	LogItem*			Get(ulong64 paxosID);
 
 private:
-	Entry				array[CACHE_SIZE];
+	LogItem				array[CACHE_SIZE];
 	int					count;
 	int					next;
 	int					size;

@@ -56,6 +56,7 @@ bool Paxos::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 
 bool Paxos::PersistState(Transaction* transaction)
 {
+/*
 	if (table == NULL)
 		return false;
 
@@ -66,7 +67,7 @@ bool Paxos::PersistState(Transaction* transaction)
 	table->Put(transaction, "n_highest_promised", rprintf("%llu", acceptor.n_highest_promised));
 	table->Put(transaction, "n_accepted", rprintf("%llu", acceptor.n_accepted));
 	table->Put(transaction, "value", acceptor.value);
-
+*/
 	return true;
 }
 

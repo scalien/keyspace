@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 MasterLease::MasterLease() :
-//onAppend(this, &MasterLease::OnAppend),
 onMasterTimeout(this, &MasterLease::OnMasterTimeout),
 onSendLeaseExtendTimeout(this, &MasterLease::OnSendLeaseExtendTimeout),
 onRecvLeaseExtendTimeout(this, &MasterLease::OnRecvLeaseExtendTimeout),
@@ -20,6 +19,8 @@ bool MasterLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_,
 		ReplicatedLog* replicatedLog_)
 {
 	replicatedLog = replicatedLog_;
+	
+	replicatedLog->Register(PROTOCOL_MASTERLEASE, this);
 
 	scheduler = scheduler_;
 	
@@ -28,6 +29,7 @@ bool MasterLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_,
 	epochID = rand(); // TODO: persist
 
 	designated = (replicatedLog->NodeID() == 0);
+	
 	if (designated)
 		Log_Message("designated!");
 	
@@ -45,13 +47,14 @@ bool MasterLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_,
 	scheduler->Add(&report);
 	
 	master = false;
-	replicatedLog->SetMaster(master);	
+	replicatedLog->SetMaster(master);
+	
 	return true;
 }
 
-void MasterLease::OnAppend(Transaction*, Entry* entry)
+void MasterLease::OnAppend(Transaction*, LogItem* li)
 {
-	Execute(entry->value);
+	Execute(li->value);
 }
 
 void MasterLease::Execute(ByteString command)
@@ -62,6 +65,8 @@ void MasterLease::Execute(ByteString command)
 		ExtendLease();
 	else if (msg.type == YIELD_LEASE)
 		YieldLease();
+	else
+		Log_Trace();
 }
 
 void MasterLease::ExtendLease()
@@ -70,7 +75,7 @@ void MasterLease::ExtendLease()
 	
 	masterID = msg.nodeID;
 	
-	replicatedLog->Cancel();
+	replicatedLog->RemoveAll(PROTOCOL_MASTERLEASE);
 	
 	if (replicatedLog->NodeID() == masterID && msg.epochID == epochID)
 	{
@@ -163,6 +168,8 @@ void MasterLease::OnRecvLeaseExtendTimeout()
 	
 	msg.ExtendLease(replicatedLog->NodeID(), epochID);
 	MasterLeaseMsg::Write(&msg, data);
+	
+	replicatedLog->RemoveAll(PROTOCOL_MASTERLEASE);
 	replicatedLog->Append(data);
 	
 	recvLeaseExtendTimeout.delay = RECV_LEASE_EXTEND_TIMEOUT;

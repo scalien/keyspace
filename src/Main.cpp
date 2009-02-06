@@ -1,6 +1,7 @@
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
+#include "Application/TestDB/TestDB.h"
 
 int main(int argc, char* argv[])
 {
@@ -21,6 +22,9 @@ int main(int argc, char* argv[])
 	ReplicatedLog rl;
 	rl.ReadConfig(argv[1]);
 	rl.Init(ioproc, eventloop, true /* multiPaxos */);
+	
+	TestDB testdb;
+	testdb.Init(ioproc, eventloop, &rl);
 	
 	eventloop->Run();	
 }

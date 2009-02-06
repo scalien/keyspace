@@ -14,14 +14,33 @@
 
 #include "Framework/Database/Transaction.h"
 #include "Framework/ReplicatedLog/LogCache.h"
+#include "Framework/ReplicatedDB/ReplicatedDB.h"
 
 class ReplicatedLog;
 
-class MasterLease
+class MasterLease : public ReplicatedDB
 {
 public:
 	MasterLease();
+		
+	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_,
+							ReplicatedLog* replicatedLog_);
+	
+	/* the ReplicatedDB interface follows */
+	
+	void				OnAppend(Transaction*, LogItem* entry);
+	
+	void				OnMaster() { /* empty */ }
+	
+	void				OnSlave() { /* empty */ }
+	
+	void				OnDoCatchup() { /* empty */ }
+	
+	void				OnStop() { /* TODO */ }
+	
+	void				OnContinue() { /* TODO */ }
 
+private:
 	ReplicatedLog*		replicatedLog;
 
 	Scheduler*			scheduler;
@@ -35,11 +54,6 @@ public:
 	int					masterID;
 	bool				master;
 	bool				designated;
-
-	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_,
-							ReplicatedLog* replicatedLog_);
-	
-	void				OnAppend(Transaction*, Entry* entry);
 
 	void				Execute(ByteString command);
 	

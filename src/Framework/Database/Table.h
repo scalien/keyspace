@@ -2,7 +2,7 @@
 #define TABLE_H
 
 #include "Database.h"
-#include "Buffer.h"
+#include "System/Buffer.h"
 
 class Table
 {

@@ -21,3 +21,4 @@
 - during catchup, the sender does not need to use tx
 - the receiver stops the ReplicatedLog and does not serve clients,
   so he only needs atomicity
+- get rid of rprintf

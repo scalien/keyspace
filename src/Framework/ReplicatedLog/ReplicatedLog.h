@@ -8,6 +8,7 @@
 #include "Framework/ReplicatedDB/ReplicatedDB.h"
 #include "Framework/MasterLease/MasterLease.h"
 #include "LogCache.h"
+#include "LogQueue.h"
 
 #define CATCHUP_TIMEOUT	5000
 
@@ -19,11 +20,11 @@ public:
 	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_, bool multiPaxos);
 	
 	bool				Append(ByteString value);
-	bool				Cancel();
+	bool				RemoveAll(char protocol);
 	
-	void				SetReplicatedDB(ReplicatedDB* replicatedDB);
+	void				Register(char protocol, ReplicatedDB* replicatedDB);
 	
-	Entry*				LastEntry();
+	LogItem*			LastLogItem();
 	
 	void				SetMaster(bool master);	// multi paxos
 	bool				IsMaster();				// multi paxos
@@ -35,11 +36,14 @@ public:
 	bool				Stop();
 	bool				Continue();
 
-protected:
+private:
 	bool				appending;
 	ByteString			value;
 	
+	ulong64				highest_paxosID_seen;
+	
 	LogCache			logCache;
+	LogQueue			logQueue;
 	
 	bool				PersistState(Transaction* transaction); // TODO: call after OnAppend()
 	
@@ -50,11 +54,11 @@ protected:
 	virtual void		OnLearnChosen();
 	
 	void				OnCatchupTimeout();
-	TimerM<ReplicatedLog>catchupTimeout;
+	TimerM<ReplicatedLog> catchupTimeout;
 
 	MasterLease			masterLease;
-	
-	ReplicatedDB*		replicatedDB;
+
+	ReplicatedDB*		replicatedDBs[256];
 };
 
 #endif

@@ -45,7 +45,7 @@ bool PaxosConfig::Read(char *filename)
 		endpoints.Add(endpoint);
 	}
 	
-	numNodes = endpoints.size;
+	numNodes = endpoints.Size();
 	
 	return true;
 }
