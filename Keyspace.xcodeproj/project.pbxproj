@@ -37,6 +37,7 @@
 		54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
 		54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
 		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
+		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -125,6 +126,8 @@
 		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
 		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* Keyspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Keyspace; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
+		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -308,6 +311,8 @@
 				548147460F31B6B200F3D2B6 /* Stopwatch.h */,
 				548147470F31B6B200F3D2B6 /* Time.h */,
 				548147480F31B6B200F3D2B6 /* Types.h */,
+				9A89F5860F3F444C0041D4A1 /* ThreadPool.h */,
+				9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -435,6 +440,7 @@
 				54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */,
 				54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */,
 				5406777E0F3C48FD00E80088 /* TestDB.cpp in Sources */,
+				9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

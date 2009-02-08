@@ -24,6 +24,13 @@
 
 #define IO_READ_ANY -1
 
+class AsyncOperation
+{
+public:
+	AsyncOperation() { onComplete = NULL; }
+	Callable*		onComplete;
+};
+
 class IOOperation
 {
 public:

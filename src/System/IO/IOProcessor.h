@@ -15,6 +15,8 @@ public:
 	bool Add(IOOperation* ioop);
 	bool Remove(IOOperation* ioop);
 	
+	bool Complete(AsyncOperation *aop);
+	
 	bool Poll(int sleep);
 };
 
