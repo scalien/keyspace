@@ -37,6 +37,8 @@
 		54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
 		54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
 		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
+		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
+		9A22A4340F422FFC002648C6 /* AsyncDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4320F422FFC002648C6 /* AsyncDatabaseOp.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -126,6 +128,17 @@
 		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
 		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* Keyspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Keyspace; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncDatabase.h; path = AsyncDatabase/AsyncDatabase.h; sourceTree = "<group>"; };
+		9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabase.cpp; path = AsyncDatabase/AsyncDatabase.cpp; sourceTree = "<group>"; };
+		9A22A4320F422FFC002648C6 /* AsyncDatabaseOp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabaseOp.cpp; path = AsyncDatabase/AsyncDatabaseOp.cpp; sourceTree = "<group>"; };
+		9A22A4330F422FFC002648C6 /* AsyncDatabaseOp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncDatabaseOp.h; path = AsyncDatabase/AsyncDatabaseOp.h; sourceTree = "<group>"; };
+		9A22A4360F4230AE002648C6 /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IOTest.cpp; path = test/IOTest.cpp; sourceTree = "<group>"; };
+		9A22A4370F4230AE002648C6 /* OpenDirect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenDirect.cpp; path = test/OpenDirect.cpp; sourceTree = "<group>"; };
+		9A22A4380F4230AE002648C6 /* PaxosTester.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PaxosTester.c; path = test/PaxosTester.c; sourceTree = "<group>"; };
+		9A22A4390F4230AE002648C6 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = test.c; path = test/test.c; sourceTree = "<group>"; };
+		9A22A43A0F4230AE002648C6 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = test/test.h; sourceTree = "<group>"; };
+		9A22A43B0F4230AE002648C6 /* ThreadPoolTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadPoolTest.cpp; path = test/ThreadPoolTest.cpp; sourceTree = "<group>"; };
+		9A22A43C0F4230AE002648C6 /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = UDPEchoClient.c; path = test/UDPEchoClient.c; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
@@ -157,6 +170,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				9A22A4350F423094002648C6 /* test */,
 				548146F90F31B6B200F3D2B6 /* src */,
 			);
 			name = Source;
@@ -236,6 +250,7 @@
 		548147140F31B6B200F3D2B6 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */,
 				548147150F31B6B200F3D2B6 /* Database */,
 				5481471F0F31B6B200F3D2B6 /* Paxos */,
 				5481471A0F31B6B200F3D2B6 /* MasterLease */,
@@ -361,6 +376,31 @@
 			path = ReplicatedDB;
 			sourceTree = "<group>";
 		};
+		9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */ = {
+			isa = PBXGroup;
+			children = (
+				9A22A4320F422FFC002648C6 /* AsyncDatabaseOp.cpp */,
+				9A22A4330F422FFC002648C6 /* AsyncDatabaseOp.h */,
+				9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */,
+				9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */,
+			);
+			name = AsyncDatabase;
+			sourceTree = "<group>";
+		};
+		9A22A4350F423094002648C6 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				9A22A4360F4230AE002648C6 /* IOTest.cpp */,
+				9A22A4370F4230AE002648C6 /* OpenDirect.cpp */,
+				9A22A4380F4230AE002648C6 /* PaxosTester.c */,
+				9A22A4390F4230AE002648C6 /* test.c */,
+				9A22A43A0F4230AE002648C6 /* test.h */,
+				9A22A43B0F4230AE002648C6 /* ThreadPoolTest.cpp */,
+				9A22A43C0F4230AE002648C6 /* UDPEchoClient.c */,
+			);
+			name = test;
+			sourceTree = "<group>";
+		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -441,6 +481,8 @@
 				54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */,
 				5406777E0F3C48FD00E80088 /* TestDB.cpp in Sources */,
 				9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */,
+				9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */,
+				9A22A4340F422FFC002648C6 /* AsyncDatabaseOp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
