@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/event.h>
 #include <sys/time.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <math.h>
 
@@ -20,10 +21,12 @@ static IOProcessor		ioproc;
 
 static int				kq;			// the kqueue
 static List<FileOp*>	fileops;	// the list of aio ops
+static int				asyncOpPipe[2];
 
 static bool AddKq(int ident, short filter, IOOperation* ioop);
 static bool AddAio(FileOp* ioop);
 
+static void ProcessAsyncOp();
 static void ProcessTCPRead(struct kevent* ev);
 static void ProcessTCPWrite(struct kevent* ev);
 static void ProcessUDPRead(struct kevent* ev);
@@ -49,12 +52,29 @@ bool IOProcessor::Init()
 	if (!AddKq(SIGIO, EVFILT_SIGNAL, NULL))
 		return false;
 	
+	// setup async pipe
+	if (pipe(asyncOpPipe) < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+	
+	fcntl(asyncOpPipe[0], F_SETFD, FD_CLOEXEC);
+	fcntl(asyncOpPipe[0], F_SETFL, O_NONBLOCK);
+	
+	fcntl(asyncOpPipe[1], F_SETFD, FD_CLOEXEC);
+	fcntl(asyncOpPipe[1], F_SETFL, O_NONBLOCK);
+
+	AddKq(asyncOpPipe[0], EVFILT_READ, NULL);
+	
 	return true;
 }
 
 void IOProcessor::Shutdown()
 {
 	close(kq);
+	close(asyncOpPipe[0]);
+	close(asyncOpPipe[1]);
 }
 
 bool IOProcessor::Add(IOOperation* ioop)
@@ -217,6 +237,16 @@ bool IOProcessor::Poll(int sleep)
 			}
 			else
 			{
+				if (events[i].udata == NULL)
+				{
+					// re-register for notification
+					if (!AddEvent(asyncOpPipe[0], EVFILT_READ, NULL))
+						return false;
+					
+					ProcessAsyncOp();
+					continue;
+				}
+				
 				ioop = (IOOperation*) events[i].udata;
 				
 				ioop->active = false;
@@ -237,6 +267,29 @@ bool IOProcessor::Poll(int sleep)
 	} while (nevents > 0 && wait > 0);
 	
 	return true;
+}
+
+void ProcessAsyncOp()
+{
+	static Callable	*callables[256];
+	int size;
+	int count;
+	int i;
+	
+	while (1)
+	{
+		size = read(asyncOpPipe[0], callables, SIZE(callables));
+		count = size / sizeof(Callable *);
+		
+		for (i = 0; i < count; i++)
+		{
+			Call(callables[i]);
+		}
+		
+		if (count < sizeof(callables))
+			break;
+	}
+	
 }
 
 void ProcessTCPRead(struct kevent* ev)
@@ -412,6 +465,12 @@ void ProcessFileOp(struct kevent* ev)
 		
 		it = fileops.Head();		
 	}
+}
+
+
+bool IOProcessor::Complete(Callable* callable)
+{
+	return write(asyncOpPipe[1], &callable, sizeof(Callable *)) >= 0 ? true : false;
 }
 
 #endif // PLATFORM_DARWIN

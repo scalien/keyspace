@@ -277,7 +277,7 @@ void ProcessAsyncEvent()
 			ProcessFileCompletion(fileop);
 		}
 		
-		if ((size_t) size < sizeof(ops))
+		if ((size_t) size < SIZE(ops))
 			break;
 	}
 }

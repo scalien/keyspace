@@ -4,6 +4,8 @@
 #include "IOOperation.h"
 #include "System/Common.h"
 
+class Callable;
+
 class IOProcessor
 {
 public:
@@ -14,10 +16,10 @@ public:
 	
 	bool Add(IOOperation* ioop);
 	bool Remove(IOOperation* ioop);
-	
-	bool Complete(AsyncOperation *aop);
-	
+		
 	bool Poll(int sleep);
+
+	static bool Complete(Callable* callable);
 };
 
 #endif
