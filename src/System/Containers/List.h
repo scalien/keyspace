@@ -43,6 +43,11 @@ class List
 			}
 		}
 		
+		int Size()
+		{
+			return size;
+		}
+		
 		T* Head()
 		{
 			if (head == NULL)
