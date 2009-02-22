@@ -43,7 +43,13 @@ public:
 	
 	ByteArray() { size = n; length = 0; buffer = data; }
 	
-	ByteArray(char* str) { size = n; length = strlen(str); memcpy(data, str, length); }
+	ByteArray(char* str)
+	{
+		size = n;
+		length = strlen(str);
+		memcpy(data, str, length);
+		buffer = data;
+	}
 							
 	bool Set(ByteString bs)
 	{
