@@ -5,6 +5,7 @@
 AsyncDatabase::AsyncDatabase(int numThread) :
 threadPool(numThread)
 {
+	threadPool.Start();
 }
 
 void AsyncDatabase::Add(MultiDatabaseOp* mdbOp)

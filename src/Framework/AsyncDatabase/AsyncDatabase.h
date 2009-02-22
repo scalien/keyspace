@@ -1,6 +1,7 @@
 #ifndef ASYNCDATABASE_H
 #define ASYNCDATABASE_H
 
+#include "MultiDatabaseOp.h"
 #include "System/ThreadPool.h"
 #include "System/Events/Callable.h"
 
