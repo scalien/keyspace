@@ -10,6 +10,7 @@ class ThreadPool
 {
 public:
 	ThreadPool(int numThread);
+	~ThreadPool();
 
 	void			Start();
 	void			Stop();
