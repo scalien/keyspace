@@ -266,6 +266,7 @@ void ReplicatedLog::OnLearnChosen()
 		logCache.Push(paxosID, acceptor.value);
 		
 		ByteString acceptedValue = acceptor.value; // Paxos::Reset() will clear acceptor.value
+		// TODO: is this extra variable nessecary?
 		
 		paxosID++;
 		Paxos::Reset(); // in new round of paxos
