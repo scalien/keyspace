@@ -20,6 +20,7 @@ private:
 	DbEnv env;
 	Table* state;
 	Table* versionDB;
+	Table* test;
 };
 
 #endif

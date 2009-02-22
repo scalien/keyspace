@@ -6,7 +6,7 @@
 Database::Database() :
 env(DB_CXX_NO_EXCEPTIONS)
 {
-	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL;
+	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL;
 	int mode = 0;
 	const char* db_home = ".";
 	
@@ -14,6 +14,7 @@ env(DB_CXX_NO_EXCEPTIONS)
 	
 	state = new Table(this, "state");
 	versionDB = new Table(this, "versionDB");
+	test = new Table(this, "test");
 }
 
 Database::~Database()
@@ -32,5 +33,8 @@ Table* Database::GetTable(const char* name)
 	if (strcmp(name, "versionDB") == 0)
 		return versionDB;
 	
+	if (strcmp(name, "test") == 0)
+		return test;
+		
 	return NULL;
 }
