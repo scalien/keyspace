@@ -240,7 +240,7 @@ bool IOProcessor::Poll(int sleep)
 				if (events[i].udata == NULL)
 				{
 					// re-register for notification
-					if (!AddEvent(asyncOpPipe[0], EVFILT_READ, NULL))
+					if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
 						return false;
 					
 					ProcessAsyncOp();
