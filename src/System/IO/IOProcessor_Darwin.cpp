@@ -60,10 +60,8 @@ bool IOProcessor::Init()
 	}
 	
 	fcntl(asyncOpPipe[0], F_SETFD, FD_CLOEXEC);
-	fcntl(asyncOpPipe[0], F_SETFL, O_NONBLOCK);
-	
+	fcntl(asyncOpPipe[0], F_SETFD, O_NONBLOCK);
 	fcntl(asyncOpPipe[1], F_SETFD, FD_CLOEXEC);
-	fcntl(asyncOpPipe[1], F_SETFL, O_NONBLOCK);
 
 	AddKq(asyncOpPipe[0], EVFILT_READ, NULL);
 	
@@ -470,7 +468,14 @@ void ProcessFileOp(struct kevent* ev)
 
 bool IOProcessor::Complete(Callable* callable)
 {
-	return write(asyncOpPipe[1], &callable, sizeof(Callable *)) >= 0 ? true : false;
+	int ret;
+	
+	ret = write(asyncOpPipe[1], &callable, sizeof(Callable *));
+	
+	if (ret >= 0)
+		return true;
+	
+	return false;
 }
 
 #endif // PLATFORM_DARWIN
