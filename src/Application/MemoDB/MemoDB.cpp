@@ -4,7 +4,8 @@ MemoDB::MemoDB() :
 onAppend(this, &MemoDB::OnAppend)
 {
 	msgID = 0;
-	appendCallback = &onAppend;
+//	ReplicatedLog::SetAppendCallback(PROTOCOL_MEMODB, &onAppend);
+// TODO
 }
 
 // called by the client to add a command to the log and have it executed
@@ -15,13 +16,14 @@ void MemoDB::Add(ByteString command, Callable* onComplete)
 	j.command = command;
 	j.onComplete = onComplete;
 	
-	if (appending)
+	// TODO
+	/*if (appending)
 		backlog.Add(j);
 	else
 	{
 		job = j;
 		ReplicatedLog::Append(command);
-	}
+	}*/
 }
 
 void MemoDB::OnAppend()
@@ -29,13 +31,14 @@ void MemoDB::OnAppend()
 // called back by the replicated log when a new value is appended 
 // this may not be our client's
 
-	Entry* entry;
+	LogItem* entry;
 	
-	entry = memlog.Head();
+	// TODO
+	//entry = logCache.Last();
 	
 	Execute(entry->value);
 	
-	if (backlog.size > 0)
+	if (backlog.Size() > 0)
 	{
 		job = *(backlog.Head());
 		if (ReplicatedLog::Append(job.command))
@@ -47,9 +50,10 @@ void MemoDB::Execute(ByteString command)
 {
 	bool callback = false;
 	
-	if (appending)
+	// TODO
+	/*if (appending)
 		if (job.command == command)
-			callback = true;
+			callback = true;*/
 
 	MemoClientMsg::Read(command, &msg);
 	

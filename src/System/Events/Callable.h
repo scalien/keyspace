@@ -17,7 +17,23 @@ public:
 	Callback	callback;
 	
 	MFunc(T* object_, Callback callback_) { object = object_; callback = callback_; }
+	
 	void Execute() { (object->*callback)(); }
+};
+
+template<class T, class P>
+class MFuncParam : public Callable
+{
+public:
+	typedef void (T::*Callback)(P param);
+	
+	T*			object;
+	Callback	callback;
+	P			param;
+	
+	MFuncParam(T* object_, Callback callback_) { object = object_; callback = callback_; }
+	
+	void Execute() { (object->*callback)(param); }
 };
 
 class CFunc : public Callable
@@ -28,6 +44,7 @@ public:
 	Callback	callback;
 	
 	CFunc(Callback callback_) { callback = callback_; }
+	
 	void Execute() { (*callback)(); }
 };
 

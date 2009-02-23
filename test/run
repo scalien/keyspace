@@ -1,0 +1,2 @@
+cd $1
+../../build/Debug/Keyspace $1.conf

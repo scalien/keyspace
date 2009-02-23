@@ -3,33 +3,63 @@
 
 #include "System/Containers/List.h"
 #include "System/Events/Callable.h"
-#include "Framework/Paxos/PaxosInstance.h"
+#include "Framework/Paxos/Paxos.h"
 #include "Framework/Paxos/PaxosMsg.h"
-#include "MemLog.h"
+#include "Framework/ReplicatedDB/ReplicatedDB.h"
+#include "Framework/MasterLease/MasterLease.h"
+#include "LogCache.h"
+#include "LogQueue.h"
 
-class ReplicatedLog : public PaxosInstance
+#define CATCHUP_TIMEOUT	5000
+
+class ReplicatedLog : private Paxos
 {
 public:
-	ReplicatedLog()		{ appendCallback = NULL; }
-		
-	Callable*			appendCallback; // called when a new log entry is learned
+	ReplicatedLog();
+
+	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_, bool multiPaxos);
 	
+	bool				Append(ByteString value);
+	bool				RemoveAll(char protocol);
+	
+	void				Register(char protocol, ReplicatedDB* replicatedDB);
+	
+	LogItem*			LastLogItem();
+	
+	void				SetMaster(bool master);	// multi paxos
+	bool				IsMaster();				// multi paxos
+	
+	int					NodeID();
+	
+	bool				ReadConfig(char* filename);
+
+	bool				Stop();
+	bool				Continue();
+
+private:
 	bool				appending;
 	ByteString			value;
 	
-	MemLog				memlog;
+	ulong64				highest_paxosID_seen;
 	
-	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_);
+	LogCache			logCache;
+	LogQueue			logQueue;
 	
-	bool				Append(ByteString value); // called by the client
-	bool				Remove(); // called by the client 
-
-// multi-paxos:
+	bool				WriteState(Transaction* transaction);
+	// TODO: call after OnAppend()
+	
 	virtual void		OnPrepareRequest();
 	virtual void		OnPrepareResponse();
 	virtual void		OnProposeRequest();
 	virtual void		OnProposeResponse();
 	virtual void		OnLearnChosen();
+	
+	void				OnCatchupTimeout();
+	TimerM<ReplicatedLog> catchupTimeout;
+
+	MasterLease			masterLease;
+
+	ReplicatedDB*		replicatedDBs[256];
 };
 
 #endif

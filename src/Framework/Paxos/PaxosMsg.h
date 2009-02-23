@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "System/Buffer.h"
+#include "System/Types.h"
 
 // paxos message types:
 #define PREPARE_REQUEST				'1'
@@ -23,16 +24,16 @@
 
 #define	VALUE_SIZE					64
 
-// todo: see if static value buffer is necessary, to avoid memcopy()
+// TODO: see if static value buffer is necessary, to avoid memcopy()
 
 class PaxosMsg
 {
 public:
-	long					paxosID;
+	ulong64					paxosID;
 	char					type;
-	long					n;
+	ulong64					n;
 	char					response;
-	long					n_accepted;
+	ulong64					n_accepted;
 	ByteArray<VALUE_SIZE>	value;
 
 	/*	if type == PREPARE_RESPONSE and
@@ -40,20 +41,20 @@ public:
 		then it contains the previously accepted value
 	*/
 	
-	void			Init(long paxosID_, char type_);
+	void			Init(ulong64 paxosID_, char type_);
 		
-	void			PrepareRequest(long paxosID_, long n_);
-	void			PrepareResponse(long paxosID_, long n_, char response_);
-	bool			PrepareResponse(long paxosID_, long n_, char response_,
-						long n_accepted_, ByteString value_);
+	bool			PrepareRequest(ulong64 paxosID_, ulong64 n_);
+	bool			PrepareResponse(ulong64 paxosID_, ulong64 n_, char response_);
+	bool			PrepareResponse(ulong64 paxosID_, ulong64 n_, char response_,
+						ulong64 n_accepted_, ByteString value_);
 	
-	bool			ProposeRequest(long paxosID_, long n_, ByteString value_);
-	void			ProposeResponse(long paxosID_, long n_, char response_);
+	bool			ProposeRequest(ulong64 paxosID_, ulong64 n_, ByteString value_);
+	bool			ProposeResponse(ulong64 paxosID_, ulong64 n_, char response_);
 	
-	bool			LearnChosen(long paxosID_, ByteString value_);
+	bool			LearnChosen(ulong64 paxosID_, ByteString value_);
 
-	static bool		Read(ByteString data, PaxosMsg* msg);
-	static bool		Write(PaxosMsg* msg, ByteString& data);
+	bool			Read(ByteString& data);
+	bool			Write(ByteString& data);
 };
 
 #endif

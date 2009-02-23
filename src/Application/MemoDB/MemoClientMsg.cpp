@@ -61,13 +61,11 @@ void MemoClientMsg::Error()
 
 int MemoClientMsg::Read(ByteString data, MemoClientMsg* msg)
 {
-	char			type;
-	ByteString		key;
-	ByteString		value;
-	ByteString		test;
-	
-	char			*pos;
+	char			protocol, type;
 	int				nread;
+	char*			pos;
+	ByteString		key, value, test;
+	
 	
 	/*	format for memo messages, numbers are textual:
 		get request:		<type>:<key-length>:<key>
@@ -87,7 +85,12 @@ int MemoClientMsg::Read(ByteString data, MemoClientMsg* msg)
 
 	pos = data.buffer;
 	CheckOverflow();
+	ReadChar(protocol); CheckOverflow();
+	ReadSeparator(); CheckOverflow();
 	ReadChar(type); CheckOverflow();
+	
+	if (protocol != PROTOCOL_MEMODB)
+		return 0;
 	
 	if (type != GET_REQUEST	&&
 		type != GET_RESPONSE &&
@@ -208,13 +211,13 @@ bool MemoClientMsg::Write(MemoClientMsg* msg, ByteString& data)
 		{
 			if (msg->response == RESPONSE_OK)
 			{
-				required  = snprintf(data.buffer, data.size, "%c:%c:%c:%d:", msg->type,
-					msg->exec, msg->response, msg->value.length);
+				required  = snprintf(data.buffer, data.size, "%c:%c:%c:%c:%d:",
+					PROTOCOL_MEMODB, msg->type, msg->exec, msg->response, msg->value.length);
 				WRITE_VALUE();
 			}
 			else
-				required = snprintf(data.buffer, data.size, "%c:%c:%c", msg->type,
-					msg->exec, msg->response);
+				required = snprintf(data.buffer, data.size, "%c:%c:%c:%c",
+					PROTOCOL_MEMODB, msg->type, msg->exec, msg->response);
 		}
 		else
 			required = snprintf(data.buffer, data.size, "%c:%c", msg->type, msg->exec);
@@ -229,10 +232,11 @@ bool MemoClientMsg::Write(MemoClientMsg* msg, ByteString& data)
 		// set response		<type>:<exec>:<reponse>
 		
 		if (msg->exec == EXEC_OK)
-			required = snprintf(data.buffer, data.size, "%c:%c:%c", msg->type,
-				msg->exec, msg->response);
+			required = snprintf(data.buffer, data.size, "%c:%c:%c:%c",
+				PROTOCOL_MEMODB, msg->type, msg->exec, msg->response);
 		else
-			required = snprintf(data.buffer, data.size, "%c:%c", msg->type, msg->exec);
+			required = snprintf(data.buffer, data.size, "%c:%c:%c",
+				PROTOCOL_MEMODB, msg->type, msg->exec);
 	}
 	else if (msg->type == TESTANDSET_REQUEST)
 	{
@@ -244,14 +248,15 @@ bool MemoClientMsg::Write(MemoClientMsg* msg, ByteString& data)
 		// testandset response:		<type>:<exec>:<response>
 		
 		if (msg->exec == EXEC_OK)
-			required = snprintf(data.buffer, data.size, "%c:%c:%c", msg->type,
-				msg->exec, msg->response);
+			required = snprintf(data.buffer, data.size, "%c:%c:%c:%c",
+				PROTOCOL_MEMODB, msg->type, msg->exec, msg->response);
 		else
-			required = snprintf(data.buffer, data.size, "%c:%c", msg->type, msg->exec);
+			required = snprintf(data.buffer, data.size, "%c:%c:%c",
+				PROTOCOL_MEMODB, msg->type, msg->exec);
 	}
 	else if (msg->type == ERROR)
 	{
-		required = snprintf(data.buffer, data.size, "%c", msg->type);
+		required = snprintf(data.buffer, data.size, "%c:%c", PROTOCOL_MEMODB, msg->type);
 	}
 	else
 		return -1;

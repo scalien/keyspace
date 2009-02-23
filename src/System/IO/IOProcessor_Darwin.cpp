@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/event.h>
 #include <sys/time.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <math.h>
 
@@ -20,10 +21,12 @@ static IOProcessor		ioproc;
 
 static int				kq;			// the kqueue
 static List<FileOp*>	fileops;	// the list of aio ops
+static int				asyncOpPipe[2];
 
 static bool AddKq(int ident, short filter, IOOperation* ioop);
 static bool AddAio(FileOp* ioop);
 
+static void ProcessAsyncOp();
 static void ProcessTCPRead(struct kevent* ev);
 static void ProcessTCPWrite(struct kevent* ev);
 static void ProcessUDPRead(struct kevent* ev);
@@ -49,12 +52,28 @@ bool IOProcessor::Init()
 	if (!AddKq(SIGIO, EVFILT_SIGNAL, NULL))
 		return false;
 	
+	// setup async pipe
+	if (pipe(asyncOpPipe) < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+	
+	fcntl(asyncOpPipe[0], F_SETFD, FD_CLOEXEC);
+	fcntl(asyncOpPipe[0], F_SETFD, O_NONBLOCK);
+	fcntl(asyncOpPipe[1], F_SETFD, FD_CLOEXEC);
+
+	if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
+		return false;
+	
 	return true;
 }
 
 void IOProcessor::Shutdown()
 {
 	close(kq);
+	close(asyncOpPipe[0]);
+	close(asyncOpPipe[1]);
 }
 
 bool IOProcessor::Add(IOOperation* ioop)
@@ -217,6 +236,17 @@ bool IOProcessor::Poll(int sleep)
 			}
 			else
 			{
+				if (events[i].udata == NULL)
+				{
+					ProcessAsyncOp();
+
+					// re-register for notification
+					if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
+						return false;
+					
+					continue;
+				}
+				
 				ioop = (IOOperation*) events[i].udata;
 				
 				ioop->active = false;
@@ -237,6 +267,44 @@ bool IOProcessor::Poll(int sleep)
 	} while (nevents > 0 && wait > 0);
 	
 	return true;
+}
+
+bool IOProcessor::Complete(Callable* callable)
+{
+	Log_Trace();
+
+	int nwrite;
+	
+	nwrite = write(asyncOpPipe[1], &callable, sizeof(Callable*));
+	if (nwrite < 0)
+		Log_Errno();
+	
+	if (nwrite >= 0)
+		return true;
+	
+	return false;
+}
+
+void ProcessAsyncOp()
+{
+	Log_Trace();
+	
+	static Callable	*callables[256];
+	int nread;
+	int count;
+	int i;
+	
+	while (1)
+	{
+		nread = read(asyncOpPipe[0], callables, SIZE(callables));
+		count = nread / sizeof(Callable*);
+		
+		for (i = 0; i < count; i++)
+			Call(callables[i]);
+		
+		if (count < SIZE(callables))
+			break;
+	}
 }
 
 void ProcessTCPRead(struct kevent* ev)

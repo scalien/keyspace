@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 	me.sin_family = AF_INET;
 	me.sin_port = htons((uint16_t)11000);
 	me.sin_addr.s_addr = htonl(INADDR_ANY);
-	if (bind(s, (const struct sockaddr*) &me, sizeof(me)) < 0)
+	if (bind(s, (const sockaddr*) &me, sizeof(me)) < 0)
 		exit(1);
 
 	memset((char *) &to, 0, sizeof(to));
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < 1; i++)
 	{
-		if (sendto(s, argv[1], strlen(argv[1]), 0, (const struct sockaddr*) &to, slen) < 0)
+		if (sendto(s, argv[1], strlen(argv[1]), 0, (const sockaddr*) &to, slen) < 0)
 			exit(1);
 		
 		/*

@@ -1,0 +1,690 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 44;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5406777E0F3C48FD00E80088 /* TestDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5406777C0F3C48FD00E80088 /* TestDB.cpp */; };
+		54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
+		54460CF10F519A8000EFBBDE /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
+		54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
+		54460CF40F519A9200EFBBDE /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
+		54460CF50F519A9700EFBBDE /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
+		54460CF60F519A9F00EFBBDE /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
+		54460CF80F519AAB00EFBBDE /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
+		54460CFA0F519AB600EFBBDE /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
+		54460CFC0F519AC200EFBBDE /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
+		54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
+		544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */; };
+		544611FB0F533FAB00EFBBDE /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* test.c */; };
+		5481474A0F31B6B200F3D2B6 /* TCPEchoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */; };
+		5481474B0F31B6B200F3D2B6 /* TCPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */; };
+		5481474C0F31B6B200F3D2B6 /* UDPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */; };
+		5481474D0F31B6B200F3D2B6 /* MemoClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147070F31B6B200F3D2B6 /* MemoClientMsg.cpp */; };
+		5481474E0F31B6B200F3D2B6 /* MemoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147090F31B6B200F3D2B6 /* MemoConn.cpp */; };
+		5481474F0F31B6B200F3D2B6 /* MemoDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481470B0F31B6B200F3D2B6 /* MemoDB.cpp */; };
+		548147500F31B6B200F3D2B6 /* MemoMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481470D0F31B6B200F3D2B6 /* MemoMsg.cpp */; };
+		548147510F31B6B200F3D2B6 /* MemoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481470F0F31B6B200F3D2B6 /* MemoServer.cpp */; };
+		548147520F31B6B300F3D2B6 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
+		548147530F31B6B300F3D2B6 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
+		548147540F31B6B300F3D2B6 /* MasterLease.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481471B0F31B6B200F3D2B6 /* MasterLease.cpp */; };
+		548147550F31B6B300F3D2B6 /* MasterLeaseMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481471D0F31B6B200F3D2B6 /* MasterLeaseMsg.cpp */; };
+		548147560F31B6B300F3D2B6 /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */; };
+		548147570F31B6B300F3D2B6 /* Paxos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147220F31B6B200F3D2B6 /* Paxos.cpp */; };
+		548147580F31B6B300F3D2B6 /* PaxosMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */; };
+		548147590F31B6B300F3D2B6 /* LogCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147280F31B6B200F3D2B6 /* LogCache.cpp */; };
+		5481475A0F31B6B300F3D2B6 /* ReplicatedLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */; };
+		5481475B0F31B6B300F3D2B6 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472C0F31B6B200F3D2B6 /* Main.cpp */; };
+		5481475C0F31B6B300F3D2B6 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
+		5481475D0F31B6B300F3D2B6 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
+		5481475E0F31B6B300F3D2B6 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
+		5481475F0F31B6B300F3D2B6 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
+		548147600F31B6B300F3D2B6 /* IOProcessor_Linux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147400F31B6B200F3D2B6 /* IOProcessor_Linux.cpp */; };
+		548147610F31B6B300F3D2B6 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
+		548147620F31B6B300F3D2B6 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
+		548147750F31B8BE00F3D2B6 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
+		54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
+		54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
+		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
+		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
+		9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
+		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76FAF0486AB0100D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5406777C0F3C48FD00E80088 /* TestDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestDB.cpp; sourceTree = "<group>"; };
+		5406777D0F3C48FD00E80088 /* TestDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestDB.h; sourceTree = "<group>"; };
+		54460CD40F5198E800EFBBDE /* AsyncDBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncDBTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncDBTest.cpp; sourceTree = "<group>"; };
+		544611F00F533FAB00EFBBDE /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOTest.cpp; sourceTree = "<group>"; };
+		544611F10F533FAB00EFBBDE /* OpenDirect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenDirect.cpp; sourceTree = "<group>"; };
+		544611F20F533FAB00EFBBDE /* PaxosTester.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PaxosTester.c; sourceTree = "<group>"; };
+		544611F30F533FAB00EFBBDE /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+		544611F40F533FAB00EFBBDE /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPoolTest.cpp; sourceTree = "<group>"; };
+		544611F60F533FAB00EFBBDE /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPEchoClient.c; sourceTree = "<group>"; };
+		548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPEchoConn.cpp; sourceTree = "<group>"; };
+		548147010F31B6B200F3D2B6 /* TCPEchoConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPEchoConn.h; sourceTree = "<group>"; };
+		548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPEchoServer.cpp; sourceTree = "<group>"; };
+		548147030F31B6B200F3D2B6 /* TCPEchoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPEchoServer.h; sourceTree = "<group>"; };
+		548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPEchoServer.cpp; sourceTree = "<group>"; };
+		548147050F31B6B200F3D2B6 /* UDPEchoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPEchoServer.h; sourceTree = "<group>"; };
+		548147070F31B6B200F3D2B6 /* MemoClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoClientMsg.cpp; sourceTree = "<group>"; };
+		548147080F31B6B200F3D2B6 /* MemoClientMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoClientMsg.h; sourceTree = "<group>"; };
+		548147090F31B6B200F3D2B6 /* MemoConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoConn.cpp; sourceTree = "<group>"; };
+		5481470A0F31B6B200F3D2B6 /* MemoConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoConn.h; sourceTree = "<group>"; };
+		5481470B0F31B6B200F3D2B6 /* MemoDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoDB.cpp; sourceTree = "<group>"; };
+		5481470C0F31B6B200F3D2B6 /* MemoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoDB.h; sourceTree = "<group>"; };
+		5481470D0F31B6B200F3D2B6 /* MemoMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoMsg.cpp; sourceTree = "<group>"; };
+		5481470E0F31B6B200F3D2B6 /* MemoMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoMsg.h; sourceTree = "<group>"; };
+		5481470F0F31B6B200F3D2B6 /* MemoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoServer.cpp; sourceTree = "<group>"; };
+		548147100F31B6B200F3D2B6 /* MemoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoServer.h; sourceTree = "<group>"; };
+		548147110F31B6B200F3D2B6 /* bugs.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bugs.txt; sourceTree = "<group>"; };
+		548147120F31B6B200F3D2B6 /* dump.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dump.txt; sourceTree = "<group>"; };
+		548147160F31B6B200F3D2B6 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Database.cpp; sourceTree = "<group>"; };
+		548147170F31B6B200F3D2B6 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
+		548147180F31B6B200F3D2B6 /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Table.cpp; sourceTree = "<group>"; };
+		548147190F31B6B200F3D2B6 /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
+		5481471B0F31B6B200F3D2B6 /* MasterLease.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterLease.cpp; sourceTree = "<group>"; };
+		5481471C0F31B6B200F3D2B6 /* MasterLease.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterLease.h; sourceTree = "<group>"; };
+		5481471D0F31B6B200F3D2B6 /* MasterLeaseMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MasterLeaseMsg.cpp; sourceTree = "<group>"; };
+		5481471E0F31B6B200F3D2B6 /* MasterLeaseMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterLeaseMsg.h; sourceTree = "<group>"; };
+		548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosConfig.cpp; sourceTree = "<group>"; };
+		548147210F31B6B200F3D2B6 /* PaxosConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConfig.h; sourceTree = "<group>"; };
+		548147220F31B6B200F3D2B6 /* Paxos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Paxos.cpp; sourceTree = "<group>"; };
+		548147230F31B6B200F3D2B6 /* Paxos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Paxos.h; sourceTree = "<group>"; };
+		548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosMsg.cpp; sourceTree = "<group>"; };
+		548147250F31B6B200F3D2B6 /* PaxosMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosMsg.h; sourceTree = "<group>"; };
+		548147260F31B6B200F3D2B6 /* PaxosState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosState.h; sourceTree = "<group>"; };
+		548147280F31B6B200F3D2B6 /* LogCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogCache.cpp; sourceTree = "<group>"; };
+		548147290F31B6B200F3D2B6 /* LogCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogCache.h; sourceTree = "<group>"; };
+		5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedLog.cpp; sourceTree = "<group>"; };
+		5481472B0F31B6B200F3D2B6 /* ReplicatedLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedLog.h; sourceTree = "<group>"; };
+		5481472C0F31B6B200F3D2B6 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
+		5481472E0F31B6B200F3D2B6 /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
+		5481472F0F31B6B200F3D2B6 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
+		548147300F31B6B200F3D2B6 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		548147320F31B6B200F3D2B6 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		548147330F31B6B200F3D2B6 /* SortedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortedList.h; sourceTree = "<group>"; };
+		548147350F31B6B200F3D2B6 /* Callable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Callable.h; sourceTree = "<group>"; };
+		548147360F31B6B200F3D2B6 /* EventLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventLoop.h; sourceTree = "<group>"; };
+		548147370F31B6B200F3D2B6 /* Scheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scheduler.cpp; sourceTree = "<group>"; };
+		548147380F31B6B200F3D2B6 /* Scheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scheduler.h; sourceTree = "<group>"; };
+		548147390F31B6B200F3D2B6 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Endpoint.cpp; sourceTree = "<group>"; };
+		5481473C0F31B6B200F3D2B6 /* Endpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Endpoint.h; sourceTree = "<group>"; };
+		5481473D0F31B6B200F3D2B6 /* IOOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOOperation.h; sourceTree = "<group>"; };
+		5481473E0F31B6B200F3D2B6 /* IOProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOProcessor.h; sourceTree = "<group>"; };
+		5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Darwin.cpp; sourceTree = "<group>"; };
+		548147400F31B6B200F3D2B6 /* IOProcessor_Linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Linux.cpp; sourceTree = "<group>"; };
+		548147410F31B6B200F3D2B6 /* Socket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Socket.cpp; sourceTree = "<group>"; };
+		548147420F31B6B200F3D2B6 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
+		548147430F31B6B200F3D2B6 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
+		548147440F31B6B200F3D2B6 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
+		548147450F31B6B200F3D2B6 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		548147460F31B6B200F3D2B6 /* Stopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stopwatch.h; sourceTree = "<group>"; };
+		548147470F31B6B200F3D2B6 /* Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Time.h; sourceTree = "<group>"; };
+		548147480F31B6B200F3D2B6 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		548147490F31B6B200F3D2B6 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
+		548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
+		54814BFE0F35084500F3D2B6 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
+		54814BFF0F35084500F3D2B6 /* Transaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Transaction.cpp; sourceTree = "<group>"; };
+		54814D450F35DD9400F3D2B6 /* ReplicatedDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedDB.h; sourceTree = "<group>"; };
+		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
+		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
+		8DD76FB20486AB0100D96B5E /* Keyspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Keyspace; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncDatabase.h; path = AsyncDatabase/AsyncDatabase.h; sourceTree = "<group>"; };
+		9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabase.cpp; path = AsyncDatabase/AsyncDatabase.cpp; sourceTree = "<group>"; };
+		9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiDatabaseOp.cpp; path = AsyncDatabase/MultiDatabaseOp.cpp; sourceTree = "<group>"; };
+		9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiDatabaseOp.h; path = AsyncDatabase/MultiDatabaseOp.h; sourceTree = "<group>"; };
+		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
+		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
+		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		54460CD20F5198E800EFBBDE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54460CF80F519AAB00EFBBDE /* libdb_cxx.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76FAD0486AB0100D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				548147750F31B8BE00F3D2B6 /* libdb_cxx.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* Keyspace */ = {
+			isa = PBXGroup;
+			children = (
+				548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = Keyspace;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				548146F90F31B6B200F3D2B6 /* src */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76FB20486AB0100D96B5E /* Keyspace */,
+				54460CD40F5198E800EFBBDE /* AsyncDBTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5406777B0F3C48FD00E80088 /* TestDB */ = {
+			isa = PBXGroup;
+			children = (
+				5406777D0F3C48FD00E80088 /* TestDB.h */,
+				5406777C0F3C48FD00E80088 /* TestDB.cpp */,
+			);
+			path = TestDB;
+			sourceTree = "<group>";
+		};
+		544611EE0F533FAB00EFBBDE /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */,
+				544611F00F533FAB00EFBBDE /* IOTest.cpp */,
+				544611F10F533FAB00EFBBDE /* OpenDirect.cpp */,
+				544611F20F533FAB00EFBBDE /* PaxosTester.c */,
+				544611F30F533FAB00EFBBDE /* test.c */,
+				544611F40F533FAB00EFBBDE /* test.h */,
+				544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */,
+				544611F60F533FAB00EFBBDE /* UDPEchoClient.c */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		548146F90F31B6B200F3D2B6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				548146FE0F31B6B200F3D2B6 /* Application */,
+				548147140F31B6B200F3D2B6 /* Framework */,
+				5481472D0F31B6B200F3D2B6 /* System */,
+				544611EE0F533FAB00EFBBDE /* Test */,
+				548147110F31B6B200F3D2B6 /* bugs.txt */,
+				548147120F31B6B200F3D2B6 /* dump.txt */,
+				548147490F31B6B200F3D2B6 /* todo.txt */,
+				5481472C0F31B6B200F3D2B6 /* Main.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		548146FE0F31B6B200F3D2B6 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				5406777B0F3C48FD00E80088 /* TestDB */,
+				548146FF0F31B6B200F3D2B6 /* EchoServer */,
+				548147060F31B6B200F3D2B6 /* MemoDB */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		548146FF0F31B6B200F3D2B6 /* EchoServer */ = {
+			isa = PBXGroup;
+			children = (
+				548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */,
+				548147010F31B6B200F3D2B6 /* TCPEchoConn.h */,
+				548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */,
+				548147030F31B6B200F3D2B6 /* TCPEchoServer.h */,
+				548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */,
+				548147050F31B6B200F3D2B6 /* UDPEchoServer.h */,
+			);
+			path = EchoServer;
+			sourceTree = "<group>";
+		};
+		548147060F31B6B200F3D2B6 /* MemoDB */ = {
+			isa = PBXGroup;
+			children = (
+				5481470E0F31B6B200F3D2B6 /* MemoMsg.h */,
+				5481470D0F31B6B200F3D2B6 /* MemoMsg.cpp */,
+				548147080F31B6B200F3D2B6 /* MemoClientMsg.h */,
+				548147070F31B6B200F3D2B6 /* MemoClientMsg.cpp */,
+				5481470A0F31B6B200F3D2B6 /* MemoConn.h */,
+				548147090F31B6B200F3D2B6 /* MemoConn.cpp */,
+				5481470F0F31B6B200F3D2B6 /* MemoServer.cpp */,
+				548147100F31B6B200F3D2B6 /* MemoServer.h */,
+				5481470C0F31B6B200F3D2B6 /* MemoDB.h */,
+				5481470B0F31B6B200F3D2B6 /* MemoDB.cpp */,
+			);
+			path = MemoDB;
+			sourceTree = "<group>";
+		};
+		548147140F31B6B200F3D2B6 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */,
+				548147150F31B6B200F3D2B6 /* Database */,
+				5481471F0F31B6B200F3D2B6 /* Paxos */,
+				5481471A0F31B6B200F3D2B6 /* MasterLease */,
+				548147270F31B6B200F3D2B6 /* ReplicatedLog */,
+				54814D440F35DD7400F3D2B6 /* ReplicatedDB */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
+		548147150F31B6B200F3D2B6 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				548147190F31B6B200F3D2B6 /* Table.h */,
+				548147180F31B6B200F3D2B6 /* Table.cpp */,
+				54814BFE0F35084500F3D2B6 /* Transaction.h */,
+				54814BFF0F35084500F3D2B6 /* Transaction.cpp */,
+				548147170F31B6B200F3D2B6 /* Database.h */,
+				548147160F31B6B200F3D2B6 /* Database.cpp */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		5481471A0F31B6B200F3D2B6 /* MasterLease */ = {
+			isa = PBXGroup;
+			children = (
+				5481471E0F31B6B200F3D2B6 /* MasterLeaseMsg.h */,
+				5481471D0F31B6B200F3D2B6 /* MasterLeaseMsg.cpp */,
+				5481471C0F31B6B200F3D2B6 /* MasterLease.h */,
+				5481471B0F31B6B200F3D2B6 /* MasterLease.cpp */,
+			);
+			path = MasterLease;
+			sourceTree = "<group>";
+		};
+		5481471F0F31B6B200F3D2B6 /* Paxos */ = {
+			isa = PBXGroup;
+			children = (
+				548147210F31B6B200F3D2B6 /* PaxosConfig.h */,
+				548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */,
+				548147250F31B6B200F3D2B6 /* PaxosMsg.h */,
+				548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */,
+				548147260F31B6B200F3D2B6 /* PaxosState.h */,
+				548147230F31B6B200F3D2B6 /* Paxos.h */,
+				548147220F31B6B200F3D2B6 /* Paxos.cpp */,
+			);
+			path = Paxos;
+			sourceTree = "<group>";
+		};
+		548147270F31B6B200F3D2B6 /* ReplicatedLog */ = {
+			isa = PBXGroup;
+			children = (
+				548147290F31B6B200F3D2B6 /* LogCache.h */,
+				548147280F31B6B200F3D2B6 /* LogCache.cpp */,
+				54AFE4670F39B241001EE6B4 /* LogQueue.h */,
+				54AFE4680F39B241001EE6B4 /* LogQueue.cpp */,
+				5481472B0F31B6B200F3D2B6 /* ReplicatedLog.h */,
+				5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */,
+			);
+			path = ReplicatedLog;
+			sourceTree = "<group>";
+		};
+		5481472D0F31B6B200F3D2B6 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				548147310F31B6B200F3D2B6 /* Containers */,
+				548147340F31B6B200F3D2B6 /* Events */,
+				5481473A0F31B6B200F3D2B6 /* IO */,
+				5481472E0F31B6B200F3D2B6 /* Buffer.h */,
+				548147300F31B6B200F3D2B6 /* Common.h */,
+				5481472F0F31B6B200F3D2B6 /* Common.cpp */,
+				548147440F31B6B200F3D2B6 /* Log.h */,
+				548147430F31B6B200F3D2B6 /* Log.cpp */,
+				548147450F31B6B200F3D2B6 /* Platform.h */,
+				548147460F31B6B200F3D2B6 /* Stopwatch.h */,
+				548147470F31B6B200F3D2B6 /* Time.h */,
+				548147480F31B6B200F3D2B6 /* Types.h */,
+				9A89F5860F3F444C0041D4A1 /* ThreadPool.h */,
+				9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		548147310F31B6B200F3D2B6 /* Containers */ = {
+			isa = PBXGroup;
+			children = (
+				548147320F31B6B200F3D2B6 /* List.h */,
+				548147330F31B6B200F3D2B6 /* SortedList.h */,
+			);
+			path = Containers;
+			sourceTree = "<group>";
+		};
+		548147340F31B6B200F3D2B6 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				548147350F31B6B200F3D2B6 /* Callable.h */,
+				548147360F31B6B200F3D2B6 /* EventLoop.h */,
+				548147380F31B6B200F3D2B6 /* Scheduler.h */,
+				548147370F31B6B200F3D2B6 /* Scheduler.cpp */,
+				548147390F31B6B200F3D2B6 /* Timer.h */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		5481473A0F31B6B200F3D2B6 /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				5481473C0F31B6B200F3D2B6 /* Endpoint.h */,
+				5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */,
+				5481473D0F31B6B200F3D2B6 /* IOOperation.h */,
+				5481473E0F31B6B200F3D2B6 /* IOProcessor.h */,
+				5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */,
+				548147400F31B6B200F3D2B6 /* IOProcessor_Linux.cpp */,
+				548147410F31B6B200F3D2B6 /* Socket.cpp */,
+				548147420F31B6B200F3D2B6 /* Socket.h */,
+			);
+			path = IO;
+			sourceTree = "<group>";
+		};
+		54814D440F35DD7400F3D2B6 /* ReplicatedDB */ = {
+			isa = PBXGroup;
+			children = (
+				54814D450F35DD9400F3D2B6 /* ReplicatedDB.h */,
+			);
+			path = ReplicatedDB;
+			sourceTree = "<group>";
+		};
+		9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */ = {
+			isa = PBXGroup;
+			children = (
+				9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */,
+				9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */,
+				9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */,
+				9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */,
+			);
+			name = AsyncDatabase;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				C6A0FF2C0290799A04C91782 /* Keyspace.1 */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		54460CD30F5198E800EFBBDE /* AsyncDBTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54460CD90F51990600EFBBDE /* Build configuration list for PBXNativeTarget "AsyncDBTest" */;
+			buildPhases = (
+				54460CD10F5198E800EFBBDE /* Sources */,
+				54460CD20F5198E800EFBBDE /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AsyncDBTest;
+			productName = AsyncDBTest;
+			productReference = 54460CD40F5198E800EFBBDE /* AsyncDBTest */;
+			productType = "com.apple.product-type.tool";
+		};
+		8DD76FA90486AB0100D96B5E /* Keyspace */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Keyspace" */;
+			buildPhases = (
+				8DD76FAB0486AB0100D96B5E /* Sources */,
+				8DD76FAD0486AB0100D96B5E /* Frameworks */,
+				8DD76FAF0486AB0100D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Keyspace;
+			productInstallPath = "$(HOME)/bin";
+			productName = Keyspace;
+			productReference = 8DD76FB20486AB0100D96B5E /* Keyspace */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Keyspace" */;
+			compatibilityVersion = "Xcode 3.0";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* Keyspace */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76FA90486AB0100D96B5E /* Keyspace */,
+				54460CD30F5198E800EFBBDE /* AsyncDBTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		54460CD10F5198E800EFBBDE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */,
+				54460CF10F519A8000EFBBDE /* ThreadPool.cpp in Sources */,
+				54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */,
+				54460CF40F519A9200EFBBDE /* Table.cpp in Sources */,
+				54460CF50F519A9700EFBBDE /* Transaction.cpp in Sources */,
+				54460CF60F519A9F00EFBBDE /* Database.cpp in Sources */,
+				54460CFA0F519AB600EFBBDE /* IOProcessor_Darwin.cpp in Sources */,
+				54460CFC0F519AC200EFBBDE /* Log.cpp in Sources */,
+				54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */,
+				544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */,
+				544611FB0F533FAB00EFBBDE /* test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8DD76FAB0486AB0100D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5481474A0F31B6B200F3D2B6 /* TCPEchoConn.cpp in Sources */,
+				5481474B0F31B6B200F3D2B6 /* TCPEchoServer.cpp in Sources */,
+				5481474C0F31B6B200F3D2B6 /* UDPEchoServer.cpp in Sources */,
+				5481474D0F31B6B200F3D2B6 /* MemoClientMsg.cpp in Sources */,
+				5481474E0F31B6B200F3D2B6 /* MemoConn.cpp in Sources */,
+				5481474F0F31B6B200F3D2B6 /* MemoDB.cpp in Sources */,
+				548147500F31B6B200F3D2B6 /* MemoMsg.cpp in Sources */,
+				548147510F31B6B200F3D2B6 /* MemoServer.cpp in Sources */,
+				548147520F31B6B300F3D2B6 /* Database.cpp in Sources */,
+				548147530F31B6B300F3D2B6 /* Table.cpp in Sources */,
+				548147540F31B6B300F3D2B6 /* MasterLease.cpp in Sources */,
+				548147550F31B6B300F3D2B6 /* MasterLeaseMsg.cpp in Sources */,
+				548147560F31B6B300F3D2B6 /* PaxosConfig.cpp in Sources */,
+				548147570F31B6B300F3D2B6 /* Paxos.cpp in Sources */,
+				548147580F31B6B300F3D2B6 /* PaxosMsg.cpp in Sources */,
+				548147590F31B6B300F3D2B6 /* LogCache.cpp in Sources */,
+				5481475A0F31B6B300F3D2B6 /* ReplicatedLog.cpp in Sources */,
+				5481475B0F31B6B300F3D2B6 /* Main.cpp in Sources */,
+				5481475C0F31B6B300F3D2B6 /* Common.cpp in Sources */,
+				5481475D0F31B6B300F3D2B6 /* Scheduler.cpp in Sources */,
+				5481475E0F31B6B300F3D2B6 /* Endpoint.cpp in Sources */,
+				5481475F0F31B6B300F3D2B6 /* IOProcessor_Darwin.cpp in Sources */,
+				548147600F31B6B300F3D2B6 /* IOProcessor_Linux.cpp in Sources */,
+				548147610F31B6B300F3D2B6 /* Socket.cpp in Sources */,
+				548147620F31B6B300F3D2B6 /* Log.cpp in Sources */,
+				54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */,
+				54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */,
+				5406777E0F3C48FD00E80088 /* TestDB.cpp in Sources */,
+				9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */,
+				9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */,
+				9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB928608733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PRODUCT_NAME = Keyspace;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB928708733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PRODUCT_NAME = Keyspace;
+			};
+			name = Release;
+		};
+		1DEB928A08733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include/db46,
+					src,
+				);
+				LIBRARY_SEARCH_PATHS = /opt/local/lib/db46;
+				OTHER_CPLUSPLUSFLAGS = "-DPLATFORM_DARWIN";
+				PREBINDING = NO;
+				PRELINK_LIBS = db_cxx;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+			};
+			name = Debug;
+		};
+		1DEB928B08733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(NATIVE_ARCH)";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include/db46,
+					src,
+				);
+				LIBRARY_SEARCH_PATHS = /opt/local/lib/db46;
+				OTHER_CPLUSPLUSFLAGS = "-DPLATFORM_DARWIN";
+				PREBINDING = NO;
+				PRELINK_LIBS = db_cxx;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+			};
+			name = Release;
+		};
+		54460CD60F5198E800EFBBDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AsyncDBTest;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		54460CD70F5198E800EFBBDE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AsyncDBTest;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Keyspace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928608733DD80010E9CD /* Debug */,
+				1DEB928708733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Keyspace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928A08733DD80010E9CD /* Debug */,
+				1DEB928B08733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		54460CD90F51990600EFBBDE /* Build configuration list for PBXNativeTarget "AsyncDBTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				54460CD60F5198E800EFBBDE /* Debug */,
+				54460CD70F5198E800EFBBDE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

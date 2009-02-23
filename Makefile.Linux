@@ -92,12 +92,13 @@ FRAMEWORK_OBJECTS = \
 	$(BUILD_DIR)/Framework/MasterLease/MasterLease.o \
 	$(BUILD_DIR)/Framework/MasterLease/MasterLeaseMsg.o \
 	$(BUILD_DIR)/Framework/Paxos/PaxosConfig.o \
-	$(BUILD_DIR)/Framework/Paxos/PaxosInstance.o \
+	$(BUILD_DIR)/Framework/Paxos/Paxos.o \
 	$(BUILD_DIR)/Framework/Paxos/PaxosMsg.o \
-	$(BUILD_DIR)/Framework/ReplicatedLog/MemLog.o \
+	$(BUILD_DIR)/Framework/ReplicatedLog/LogCache.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLog.o \
 	$(BUILD_DIR)/Framework/Database/Database.o \
 	$(BUILD_DIR)/Framework/Database/Table.o \
+	$(BUILD_DIR)/Framework/Database/Transaction.o \
 
 OBJECTS = \
 	$(SYSTEM_OBJECTS) \

@@ -73,7 +73,7 @@ void MemoConn::OnRead()
 	{
 		p = bs.buffer + nread;
 		
-		msg.nodeID = memodb->config.nodeID;
+		msg.nodeID = memodb->NodeID();
 		msg.msgID = memodb->msgID++;
 		
 		nwrite = MemoMsg::Write(&msg, p, bs.size - bs.length);

@@ -1,7 +1,13 @@
 #ifndef IOOPERATION_H
 #define IOOPERATION_H
 
+#ifdef PLATFORM_LINUX
 #include <aio.h>
+#endif
+#ifdef PLATFORM_DARWIN
+#include <sys/aio.h>
+#endif
+
 #include <unistd.h>
 #include "System/Events/Callable.h"
 #include "System/Buffer.h"
@@ -17,6 +23,13 @@
 #define FILE_WRITE	'w'
 
 #define IO_READ_ANY -1
+
+class AsyncOperation
+{
+public:
+	AsyncOperation() { onComplete = NULL; }
+	Callable*		onComplete;
+};
 
 class IOOperation
 {

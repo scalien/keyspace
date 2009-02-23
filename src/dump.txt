@@ -1,6 +1,11 @@
+#include "System/Events/EventLoop.h"
+#include "System/IO/IOProcessor.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
+#include "Application/TestDB/TestDB.h"
+
 int main(int argc, char* argv[])
 {
-	IOProc*		ioproc;
+	IOProcessor*	ioproc;
 	EventLoop*	eventloop;
 	
 	if (argc != 2)
@@ -9,14 +14,17 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
-	ioproc = IOProc::New();
+	ioproc = IOProcessor::New();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();
 
-	MasterLease ls;
-	ls.ReadConfig(argv[1]);
-	ls.Init(ioproc, eventloop);
+	ReplicatedLog rl;
+	rl.ReadConfig(argv[1]);
+	rl.Init(ioproc, eventloop, true /* multiPaxos */);
+	
+	TestDB testdb;
+	testdb.Init(ioproc, eventloop, &rl);
 	
 	eventloop->Run();	
 }
@@ -25,37 +33,83 @@ int main(int argc, char* argv[])
 
 
 
-#include "MemoServer.h"
-#include "EventLoop.h"
+// ---------- BDB test
+
+#include <db_cxx.h>
+#include "Time.h"
+#include "Log.h"
+#include "Common.h"
+
+#define NUM 19
+
+#define VALSIZE 100
+
+#define NUMPUT	10000
 
 int main(int argc, char* argv[])
 {
-	IOProc*		ioproc;
-	EventLoop*	eventloop;
+	u_int32_t flags, txflags;
+	int mode;
+	const char* db_home = "/Users/mtrencseni/Temporary";
+	DbEnv env(DB_CXX_NO_EXCEPTIONS);
+	DbTxn* txn;
+	DBTYPE type;
+	int i;
+	char buf[VALSIZE];
+	Dbt key(buf, SIZE(buf));
+	Dbt value(buf, SIZE(buf));
 	
-	if (argc != 2)
+	txflags = DB_TXN_SYNC;
+	
+	mode = 0;
+	flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN;
+	if (env.open(db_home, flags, mode) != 0)
+		Log_Errno();
+		
+	type = DB_BTREE;
+	flags = DB_CREATE;
+	mode = 0;
+
+	if (env.txn_begin(NULL, &txn, txflags) != 0)
+		Log_Errno();
+
+	Db db(&env, 0);
+	if (db.open(txn, "test-bdb", "test", type, flags, mode) != 0)
+		Log_Errno();
+
+	if (txn->commit(txflags) != 0)
+		Log_Errno();
+
+	long start = Now();
+
+	for (i = 0; i < NUM; i++)
 	{
-		printf("usage: %s <config-file>\n", argv[0]);
-		return 1;
+		sprintf(buf, "%d", i);
+		printf("%s\n", buf);
+
+		if (env.txn_begin(NULL, &txn, txflags) != 0)
+			Log_Errno();
+
+//		Db db(&env, 0);
+//		if (db.open(txn, "test-bdb", "test", type, flags, mode) != 0)
+//			Log_Errno();
+		
+		for (int j = 0; j < NUMPUT; j++)
+			if (db.put(txn, &key, &value, 0) != 0)
+				Log_Errno();
+
+		if (txn->commit(txflags) != 0)
+			Log_Errno();
+			
+
+//		if (env.txn_checkpoint(0, 0, 0) != 0)
+//			Log_Errno();
 	}
 	
-	ioproc = IOProc::New();
-	eventloop = new EventLoop(ioproc);
+	long elapsed = Now() - start;
 	
-	ioproc->Init();
-
-	MemoDB db;
-	db.ReadConfig(argv[1]);
-	db.Init(ioproc, eventloop);
-	MemoServer server;
-	server.Init(ioproc, eventloop, &db, db.config.port);
-
-	eventloop->Run();	
+	printf("%d transactions took %d msec *** %f tps\n", NUM, elapsed, (double)1000*NUM/elapsed);
+	
+	db.close(0);
+	
 }
-
-
-//	UDPEchoServer udpechoserver;
-//	udpechoserver.Init(ioproc, scheduler);
-	
-//	TCPEchoServer tcpechoserver;
-//	tcpechoserver.Init(ioproc, scheduler);

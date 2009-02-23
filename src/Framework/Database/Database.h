@@ -4,19 +4,26 @@
 #include <db_cxx.h>
 
 class Table;
+class Transaction;
 
 class Database
 {
 	friend class Table;
+	friend class Transaction;
 public:
 	Database();
 	~Database();
 	
-	Table * GetTable(const char *name);
+	Table* GetTable(const char* name);
+	
 private:
 	DbEnv env;
-	Table *state;
-	Table *versionDB;
+	Table* state;
+	Table* versionDB;
+	Table* test;
 };
+
+// the global database object
+extern Database database;
 
 #endif

@@ -104,8 +104,6 @@ bool IOProcessor::Add(IOOperation* ioop)
 
 bool AddAio(FileOp* fileop)
 {
-	Log_Message("data.length = %d", fileop->data.length);
-
 	memset(&(fileop->cb), 0, sizeof(struct aiocb));
 	
 	fileop->cb.aio_fildes	= fileop->fd;
@@ -117,9 +115,7 @@ bool AddAio(FileOp* fileop)
 	fileop->cb.aio_sigevent.sigev_value.sival_ptr = fileop;
 	fileop->cb.aio_sigevent.sigev_notify_attributes = NULL;
 	fileop->cb.aio_sigevent.sigev_notify_function = IOProc_sigev_thread_handler;
-	Log_Message("fileop = %p", fileop->cb.aio_sigevent.sigev_value.sival_ptr);
-
-	fileop->active = true;
+	Log_Message("fileop = %p\n", fileop->cb.aio_sigevent.sigev_value.sival_ptr);
 
 	if (fileop->type == FILE_READ)
 	{
@@ -137,6 +133,7 @@ bool AddAio(FileOp* fileop)
 		}
 	}
 	
+	fileop->active = true;
 	return true;
 }
 
@@ -276,21 +273,18 @@ void ProcessAsyncEvent()
 			numBytes = aio_return(&fileop->cb);
 			if (numBytes == EINPROGRESS)
 				continue;
-
-			Log_Message("numBytes = %d", numBytes);			
+			
 			ProcessFileCompletion(fileop);
 		}
 		
-		if ((size_t) size < sizeof(ops))
+		if ((size_t) size < SIZE(ops))
 			break;
 	}
 }
 
 void ProcessFileCompletion(FileOp *fileop)
 {
-	Log_Message("fileop = %p", fileop);
-
-	fileop->active = false;
+	Log_Message("fileop = %p\n", fileop);
 	Call(fileop->onComplete);
 }
 

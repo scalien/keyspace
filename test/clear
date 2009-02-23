@@ -1,0 +1,19 @@
+rm 0/__*
+rm 0/log*
+rm 0/state
+rm 0/test
+
+rm 1/__*
+rm 1/log*
+rm 1/state
+rm 1/test
+
+rm 2/__*
+rm 2/log*
+rm 2/state
+rm 2/test
+
+rm 3/__*
+rm 3/log*
+rm 3/state
+rm 3/test

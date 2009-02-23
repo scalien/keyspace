@@ -1,21 +1,26 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-class Db;
-class Database;
-class ByteString;
+#include "Database.h"
+#include "System/Buffer.h"
 
 class Table
 {
+	friend class Transaction;
 public:
-	Table(Database &database, const char *name);
+	Table(Database* database, const char *name);
 	~Table();
 	
-	const ByteString * Get(const ByteString &key, ByteString &value);
-	const ByteString * Put(const ByteString &key, const ByteString &value);
+	bool Get(Transaction* transaction, const ByteString &key, ByteString &value);
+	bool Get(Transaction* transaction, char* key, ByteString &value);
+	
+	bool Put(Transaction* transaction, const ByteString &key, const ByteString &value);
+	bool Put(Transaction* transaction, char* key, const ByteString &value);
+	bool Put(Transaction* transaction, char* key, char* value);
+	
 private:
-	Database &database;
-	Db *db;
+	Database*	database;
+	Db*			db;
 };
 
 
