@@ -289,15 +289,22 @@ void ProcessAsyncOp()
 {
 	Log_Trace();
 	
-	Callable* callable;
+	static Callable	*callables[256];
 	int nread;
-
-	nread = read(asyncOpPipe[0], &callable, sizeof(Callable*));
-	if (nread < 0)
-		Log_Errno();
+	int count;
+	int i;
 	
-	if (nread == sizeof(Callable*))
-		Call(callable);
+	while (1)
+	{
+		nread = read(asyncOpPipe[0], callables, SIZE(callables));
+		count = nread / sizeof(Callable*);
+		
+		for (i = 0; i < count; i++)
+			Call(callables[i]);
+		
+		if (count < SIZE(callables))
+			break;
+	}
 }
 
 void ProcessTCPRead(struct kevent* ev)
