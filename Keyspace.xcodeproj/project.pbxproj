@@ -79,7 +79,7 @@
 		544611F40F533FAB00EFBBDE /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPoolTest.cpp; sourceTree = "<group>"; };
 		544611F60F533FAB00EFBBDE /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPEchoClient.c; sourceTree = "<group>"; };
-		544612270F5343F900EFBBDE /* KeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceDB.h; sourceTree = "<group>"; };
+		5446122C0F53488D00EFBBDE /* KeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceDB.h; sourceTree = "<group>"; };
 		548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPEchoConn.cpp; sourceTree = "<group>"; };
 		548147010F31B6B200F3D2B6 /* TCPEchoConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPEchoConn.h; sourceTree = "<group>"; };
 		548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPEchoServer.cpp; sourceTree = "<group>"; };
@@ -231,12 +231,28 @@
 			path = Test;
 			sourceTree = "<group>";
 		};
-		544612260F5343D900EFBBDE /* KeyspaceDB */ = {
+		5446122A0F53488D00EFBBDE /* Keyspace */ = {
 			isa = PBXGroup;
 			children = (
-				544612270F5343F900EFBBDE /* KeyspaceDB.h */,
+				5446122B0F53488D00EFBBDE /* Database */,
+				5446122D0F53488D00EFBBDE /* Protocol */,
 			);
-			path = KeyspaceDB;
+			path = Keyspace;
+			sourceTree = "<group>";
+		};
+		5446122B0F53488D00EFBBDE /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				5446122C0F53488D00EFBBDE /* KeyspaceDB.h */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		5446122D0F53488D00EFBBDE /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		548146F90F31B6B200F3D2B6 /* src */ = {
@@ -257,7 +273,7 @@
 		548146FE0F31B6B200F3D2B6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				544612260F5343D900EFBBDE /* KeyspaceDB */,
+				5446122A0F53488D00EFBBDE /* Keyspace */,
 				5406777B0F3C48FD00E80088 /* TestDB */,
 				548146FF0F31B6B200F3D2B6 /* EchoServer */,
 				548147060F31B6B200F3D2B6 /* MemoDB */,

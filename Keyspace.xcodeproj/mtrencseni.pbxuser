@@ -6,6 +6,7 @@
 		activeExecutable = 548146EF0F31B69800F3D2B6 /* Keyspace */;
 		activeTarget = 8DD76FA90486AB0100D96B5E /* Keyspace */;
 		addToTargets = (
+			8DD76FA90486AB0100D96B5E /* Keyspace */,
 		);
 		breakpoints = (
 			5406782E0F3C50B500E80088 /* info */,
@@ -4604,7 +4605,7 @@
 		rLen = 0;
 		rLoc = 2419;
 		rType = 0;
-		vrLen = 693;
+		vrLen = 689;
 		vrLoc = 1754;
 	};
 	5446103D0F52DAC800EFBBDE /* PBXTextBookmark */ = {
@@ -4744,7 +4745,7 @@
 		rLen = 0;
 		rLoc = 2322;
 		rType = 0;
-		vrLen = 671;
+		vrLen = 669;
 		vrLoc = 1774;
 	};
 	5446104B0F52DAC800EFBBDE /* PBXTextBookmark */ = {
@@ -4774,7 +4775,7 @@
 		rLen = 0;
 		rLoc = 2419;
 		rType = 0;
-		vrLen = 693;
+		vrLen = 689;
 		vrLoc = 1754;
 	};
 	5446104E0F52DAC800EFBBDE /* PBXTextBookmark */ = {
@@ -7051,9 +7052,9 @@
 	};
 	54814BFE0F35084500F3D2B6 /* Transaction.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {780, 850}}";
+			sepNavIntBoundsRect = "{{0, 0}, {779, 425}}";
 			sepNavSelRange = "{274, 0}";
-			sepNavVisRange = "{0, 379}";
+			sepNavVisRange = "{250, 27}";
 		};
 	};
 	54814BFF0F35084500F3D2B6 /* Transaction.cpp */ = {
@@ -7317,8 +7318,8 @@
 	9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {780, 2618}}";
-			sepNavSelRange = "{2047, 0}";
-			sepNavVisRange = "{811, 865}";
+			sepNavSelRange = "{1116, 10}";
+			sepNavVisRange = "{659, 799}";
 		};
 	};
 	9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */ = {
