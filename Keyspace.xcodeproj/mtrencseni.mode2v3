@@ -259,29 +259,20 @@
 										<string>08FB7794FE84155DC02AAC07</string>
 										<string>08FB7795FE84155DC02AAC07</string>
 										<string>548146F90F31B6B200F3D2B6</string>
-										<string>548147140F31B6B200F3D2B6</string>
-										<string>9A22A3FA0F40AD2C002648C6</string>
-										<string>548147150F31B6B200F3D2B6</string>
-										<string>5481471F0F31B6B200F3D2B6</string>
-										<string>5481471A0F31B6B200F3D2B6</string>
-										<string>548147270F31B6B200F3D2B6</string>
-										<string>5481472D0F31B6B200F3D2B6</string>
-										<string>548147340F31B6B200F3D2B6</string>
-										<string>5481473A0F31B6B200F3D2B6</string>
+										<string>544611EE0F533FAB00EFBBDE</string>
 									</array>
 									<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 									<array>
 										<array>
-											<integer>51</integer>
-											<integer>48</integer>
-											<integer>40</integer>
-											<integer>4</integer>
+											<integer>9</integer>
+											<integer>7</integer>
+											<integer>3</integer>
 											<integer>2</integer>
 											<integer>0</integer>
 										</array>
 									</array>
 									<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-									<string>{{0, 44}, {242, 1061}}</string>
+									<string>{{0, 0}, {242, 1061}}</string>
 								</dict>
 								<key>PBXTopSmartGroupGIDs</key>
 								<array/>
@@ -452,7 +443,7 @@
 	<key>PerspectivesBarVisible</key>
 	<false/>
 	<key>PinnedNavigatorIdentifier</key>
-	<string>54460CA80F51965000EFBBDE</string>
+	<string>544612060F53401900EFBBDE</string>
 	<key>ShelfIsVisible</key>
 	<false/>
 	<key>SourceDescription</key>
@@ -478,12 +469,11 @@
 		<string>54460DC90F51A0D000EFBBDE</string>
 		<string>54460DCA0F51A0D000EFBBDE</string>
 		<string>54460DCB0F51A0D000EFBBDE</string>
-		<string>54460CA80F51965000EFBBDE</string>
 		<string>1C530D57069F1CE1000CFCEE</string>
-		<string>1C530D52069F1CE1000CFCEE</string>
 		<string>1C530D54069F1CE1000CFCEE</string>
 		<string>1C530D5B069F1CE1000CFCEE</string>
 		<string>/Users/mtrencseni/Code/Keyspace/Keyspace.xcodeproj</string>
+		<string>1C530D52069F1CE1000CFCEE</string>
 	</array>
 	<key>WindowString</key>
 	<string>5 31 259 1147 0 0 1920 1178 </string>

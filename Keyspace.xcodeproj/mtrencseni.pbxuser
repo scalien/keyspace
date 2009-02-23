@@ -3,8 +3,8 @@
 	08FB7793FE84155DC02AAC07 /* Project object */ = {
 		activeArchitecture = i386;
 		activeBuildConfigurationName = Debug;
-		activeExecutable = 548146EF0F31B69800F3D2B6 /* Keyspace */;
-		activeTarget = 8DD76FA90486AB0100D96B5E /* Keyspace */;
+		activeExecutable = 54460CD50F5198E800EFBBDE /* AsyncDBTest */;
+		activeTarget = 54460CD30F5198E800EFBBDE /* AsyncDBTest */;
 		addToTargets = (
 			54460CD30F5198E800EFBBDE /* AsyncDBTest */,
 		);
@@ -824,6 +824,12 @@
 		};
 	};
 	54460CDA0F51991800EFBBDE /* AsyncDBTest.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = AsyncDBTest.cpp;
+		path = /Users/mtrencseni/Code/Keyspace/test/AsyncDBTest.cpp;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {780, 1088}}";
 			sepNavSelRange = "{757, 0}";
@@ -6631,6 +6637,14 @@
 		vrLen = 879;
 		vrLoc = 5415;
 	};
+	544611F20F533FAB00EFBBDE /* PaxosTester.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {792, 850}}";
+			sepNavSelRange = "{539, 53}";
+			sepNavVisRange = "{0, 1135}";
+			sepNavWindowFrame = "{{65, 153}, {839, 978}}";
+		};
+	};
 	548146EF0F31B69800F3D2B6 /* Keyspace */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -7267,6 +7281,12 @@
 		};
 	};
 	9A22A4360F4230AE002648C6 /* IOTest.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = IOTest.cpp;
+		path = /Users/mtrencseni/Code/Keyspace/test/IOTest.cpp;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {780, 1615}}";
 			sepNavSelRange = "{1264, 0}";
@@ -7274,6 +7294,12 @@
 		};
 	};
 	9A22A4370F4230AE002648C6 /* OpenDirect.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = OpenDirect.cpp;
+		path = /Users/mtrencseni/Code/Keyspace/test/OpenDirect.cpp;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {780, 850}}";
 			sepNavSelRange = "{0, 0}";
@@ -7281,6 +7307,12 @@
 		};
 	};
 	9A22A4380F4230AE002648C6 /* PaxosTester.c */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.c;
+		name = PaxosTester.c;
+		path = /Users/mtrencseni/Code/Keyspace/test/PaxosTester.c;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {792, 850}}";
 			sepNavSelRange = "{0, 0}";
@@ -7288,6 +7320,12 @@
 		};
 	};
 	9A22A4390F4230AE002648C6 /* test.c */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.c;
+		name = test.c;
+		path = /Users/mtrencseni/Code/Keyspace/test/test.c;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {808, 2703}}";
 			sepNavSelRange = "{468, 0}";
@@ -7295,6 +7333,12 @@
 		};
 	};
 	9A22A43A0F4230AE002648C6 /* test.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = test.h;
+		path = /Users/mtrencseni/Code/Keyspace/test/test.h;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {780, 969}}";
 			sepNavSelRange = "{0, 0}";
