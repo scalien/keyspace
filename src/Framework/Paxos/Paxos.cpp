@@ -11,8 +11,10 @@ Paxos::Paxos() :
 	onPrepareTimeout(this, &Paxos::OnPrepareTimeout),
 	onProposeTimeout(this, &Paxos::OnProposeTimeout),
 	prepareTimeout(PAXOS_TIMEOUT, &onPrepareTimeout),
-	proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout)
+	proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout),
+	onDBComplete(this, &Paxos::OnDBComplete)
 {
+	dbop.SetCallback(&onDBComplete);
 }
 
 bool Paxos::Start(ByteString value)
@@ -33,12 +35,25 @@ bool Paxos::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	// I/O framework
 	ioproc = ioproc_;
 	scheduler = scheduler_;
+	
+	table = database.GetTable("state");
+	if (table == NULL)
+	{
+		Log_Trace();
+		return false;
+	}
+	transaction.Set(table);
 
 	// Paxos variables
-	paxosID = 0; //TODO: read from persistent storage
+	paxosID = 0;
 	Reset();
 	proposer.leader = false;
-		
+
+	//if (!ReadState())
+	{
+		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
+	}
+	
 	if (!socket.Create(UDP)) return false;
 	if (!socket.Bind(config.port)) return false;
 	if (!socket.SetNonblocking()) return false;
@@ -54,20 +69,87 @@ bool Paxos::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	return ioproc->Add(&udpread);
 }
 
-bool Paxos::PersistState(Transaction* transaction)
+bool Paxos::ReadState()
 {
-/*
+	Log_Trace();
+	
+	bool ret;
+	int nread;
+	
 	if (table == NULL)
 		return false;
 
-	// TODO: check return values
+	ret = true;
+	ret = ret && table->Get(NULL, "paxosID",			bytearrays[0]);
+	ret = ret && table->Get(NULL, "accepted",			bytearrays[1]);
+	ret = ret && table->Get(NULL, "n_highest_promised",	bytearrays[2]);
+	ret = ret && table->Get(NULL, "n_accepted",			bytearrays[3]);
+	ret = ret && table->Get(NULL, "accepted",			acceptor.value);
+
+	if (!ret)
+		return false;
+
+	paxosID = strntoulong64(bytearrays[0].buffer, bytearrays[0].length, &nread);
+	if (nread != bytearrays[0].length)
+	{
+		Log_Trace();
+		return false;
+	}
 	
-	table->Put(transaction, "paxosID", rprintf("%llu", paxosID));
-	table->Put(transaction, "accepted", rprintf("%d", acceptor.accepted));
-	table->Put(transaction, "n_highest_promised", rprintf("%llu", acceptor.n_highest_promised));
-	table->Put(transaction, "n_accepted", rprintf("%llu", acceptor.n_accepted));
-	table->Put(transaction, "value", acceptor.value);
-*/
+	acceptor.accepted = strntol(bytearrays[1].buffer, bytearrays[1].length, &nread);
+	if (nread != bytearrays[1].length)
+	{
+		Log_Trace();
+		return false;
+	}
+	
+	acceptor.n_highest_promised = strntoulong64(bytearrays[2].buffer, bytearrays[2].length, &nread);
+	if (nread != bytearrays[2].length)
+	{
+		Log_Trace();
+		return false;
+	}
+	
+	acceptor.n_accepted = strntoulong64(bytearrays[3].buffer, bytearrays[3].length, &nread);
+	if (nread != bytearrays[3].length)
+	{
+		Log_Trace();
+		return false;
+	}
+	
+	return true;
+}
+
+bool Paxos::WriteState(Transaction* transaction)
+{
+	Log_Trace();
+
+	bool ret;
+	
+	if (table == NULL)
+		return false;
+	
+	bytearrays[0].Set(rprintf("%llu",			paxosID));
+	bytearrays[1].Set(rprintf("%d",				acceptor.accepted));
+	bytearrays[2].Set(rprintf("%llu",			acceptor.n_highest_promised));
+	bytearrays[3].Set(rprintf("%llu",			acceptor.n_accepted));
+	
+	dbop.Init();
+	
+	ret = true;
+	ret = ret && dbop.Put(table, "paxosID",				bytearrays[0]);
+	ret = ret && dbop.Put(table, "accepted",			bytearrays[1]);
+	ret = ret && dbop.Put(table, "n_highest_promised",	bytearrays[2]);
+	ret = ret && dbop.Put(table, "n_accepted",			bytearrays[3]);
+	ret = ret && dbop.Put(table, "value",				acceptor.value);
+
+	if (!ret)
+		return false;
+	
+	dbop.SetTransaction(transaction);
+	
+	dbWriter.Add(&dbop);
+
 	return true;
 }
 
@@ -139,8 +221,8 @@ void Paxos::OnRead()
 		ioproc->Add(&udpread); // read again
 	} else
 		ProcessMsg();
-		
-	assert((udpread.active || udpwrite.active) && !(udpread.active && udpwrite.active));
+	
+	assert(EXACTLY_ONE(udpread.active, udpwrite.active, dbop.active));
 }
 
 void Paxos::OnWrite()
@@ -171,7 +253,7 @@ void Paxos::OnWrite()
 		ioproc->Add(&udpread);
 	}
 	
-	assert((udpread.active || udpwrite.active) && !(udpread.active && udpwrite.active));
+	assert(EXACTLY_ONE(udpread.active, udpwrite.active, dbop.active));
 }
 
 void Paxos::ProcessMsg()
@@ -202,38 +284,51 @@ void Paxos::OnPrepareRequest()
 			ioproc->Add(&udpread);
 			return;
 		}
-	}
-	else
-	{
-		/*	Lamport: If an acceptor receives a prepare request with number n greater 
-			than that of any prepare request to which it has already responded, 
-			then it responds to the request with a promise not to accept any more 
-			proposals numbered less than n and with the highest-numbered pro- 
-			posal (if any) that it has accepted.
-		*/
-		if (msg.n < acceptor.n_highest_promised)
-			msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_REJECTED);
-		else
-		{
-			acceptor.n_highest_promised = msg.n;
 		
-			if (!acceptor.accepted)
-				msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_CURRENTLY_OPEN);
-			else
-				msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_PREVIOUSLY_ACCEPTED,
-					acceptor.n_accepted, acceptor.value);
+		udpwrite.endpoint = udpread.endpoint;
+		if (!msg.Write(udpwrite.data))
+		{
+			Log_Trace();
+			ioproc->Add(&udpread);
+			return;
 		}
-	}
-	
-	udpwrite.endpoint = udpread.endpoint;
-	if (!msg.Write(udpwrite.data))
-	{
-		Log_Trace();
-		ioproc->Add(&udpread);
+		
+		SendMsg();
 		return;
 	}
+
+	/*	Lamport: If an acceptor receives a prepare request with number n greater 
+		than that of any prepare request to which it has already responded, 
+		then it responds to the request with a promise not to accept any more 
+		proposals numbered less than n and with the highest-numbered pro- 
+		posal (if any) that it has accepted.
+	*/
 	
-	SendMsg();
+	if (msg.n < acceptor.n_highest_promised)
+	{
+		msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_REJECTED);
+		
+		udpwrite.endpoint = udpread.endpoint;
+		if (!msg.Write(udpwrite.data))
+		{
+			Log_Trace();
+			ioproc->Add(&udpread);
+			return;
+		}
+		
+		SendMsg();
+		return;
+	}
+
+	acceptor.n_highest_promised = msg.n;
+
+	if (!acceptor.accepted)
+		msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_CURRENTLY_OPEN);
+	else
+		msg.PrepareResponse(msg.paxosID, msg.n, PREPARE_PREVIOUSLY_ACCEPTED,
+			acceptor.n_accepted, acceptor.value);
+	
+	WriteState(&transaction);
 }
 
 void Paxos::OnPrepareResponse()
@@ -286,37 +381,50 @@ void Paxos::OnProposeRequest()
 	Log_Trace();
 	
 	if (acceptor.learned)
+	{
 		msg.LearnChosen(msg.paxosID, acceptor.value);
-	else
-	{
-		/*	Lamport: An acceptor can accept a proposal numbered n iﬀ it has not responded 
-			to a prepare request having a number greater than n .
-			
-			Lamport: If an acceptor receives an accept request for a proposal numbered n,
-			it accepts the proposal unless it has already responded to a prepare 
-			request having a number greater than n .
-		*/
-		if (msg.n < acceptor.n_highest_promised)
-			msg.ProposeResponse(msg.paxosID, msg.n, PROPOSE_REJECTED);
-		else
+		udpwrite.endpoint = udpread.endpoint;
+		if (!msg.Write(udpwrite.data))
 		{
-			acceptor.accepted = true;
-			acceptor.n_accepted = msg.n;
-			if (!acceptor.value.Set(msg.value))
-				ASSERT_FAIL();
-			msg.ProposeResponse(msg.paxosID, msg.n, PROPOSE_ACCEPTED);
+			Log_Trace();
+			ioproc->Add(&udpread);
+			return;
 		}
-	}
-	
-	udpwrite.endpoint = udpread.endpoint;
-	if (!msg.Write(udpwrite.data))
-	{
-		Log_Trace();
-		ioproc->Add(&udpread);
+		
+		SendMsg();
 		return;
 	}
+
+	/*	Lamport: An acceptor can accept a proposal numbered n iﬀ it has not responded 
+		to a prepare request having a number greater than n .
+		
+		Lamport: If an acceptor receives an accept request for a proposal numbered n,
+		it accepts the proposal unless it has already responded to a prepare 
+		request having a number greater than n .
+	*/
+	if (msg.n < acceptor.n_highest_promised)
+	{
+		msg.ProposeResponse(msg.paxosID, msg.n, PROPOSE_REJECTED);
+		
+		udpwrite.endpoint = udpread.endpoint;
+		if (!msg.Write(udpwrite.data))
+		{
+			Log_Trace();
+			ioproc->Add(&udpread);
+			return;
+		}
+		
+		SendMsg();
+		return;
+	}
+
+	acceptor.accepted = true;
+	acceptor.n_accepted = msg.n;
+	if (!acceptor.value.Set(msg.value))
+		ASSERT_FAIL();
+	msg.ProposeResponse(msg.paxosID, msg.n, PROPOSE_ACCEPTED);
 	
-	SendMsg();
+	WriteState(&transaction);	
 }
 
 void Paxos::OnProposeResponse()
@@ -477,6 +585,13 @@ void Paxos::OnPrepareTimeout()
 	
 	assert(proposer.preparing);
 	
+	if (dbop.active)
+	{
+		Log_Message("Waiting for dbop to complete...");
+		scheduler->Reset(&prepareTimeout);
+		return;
+	}
+	
 	Prepare();
 }
 
@@ -486,5 +601,32 @@ void Paxos::OnProposeTimeout()
 	
 	assert(proposer.proposing);
 	
+	if (dbop.active)
+	{
+		Log_Message("Waiting for dbop to complete...");
+		scheduler->Reset(&proposeTimeout);
+		return;
+	}
+
+	
 	Prepare();
+}
+
+void Paxos::OnDBComplete()
+{
+	Log_Trace();
+
+	// TODO: check that the transaction commited
+
+	udpwrite.endpoint = udpread.endpoint;
+	if (!msg.Write(udpwrite.data))
+	{
+		Log_Trace();
+		ioproc->Add(&udpread);
+		return;
+	}
+	
+	SendMsg();
+	
+	assert(EXACTLY_ONE(udpread.active, udpwrite.active, dbop.active));
 }

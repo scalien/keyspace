@@ -45,7 +45,8 @@ private:
 	LogCache			logCache;
 	LogQueue			logQueue;
 	
-	bool				PersistState(Transaction* transaction); // TODO: call after OnAppend()
+	bool				WriteState(Transaction* transaction);
+	// TODO: call after OnAppend()
 	
 	virtual void		OnPrepareRequest();
 	virtual void		OnPrepareResponse();

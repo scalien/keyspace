@@ -6,7 +6,9 @@
 #include "Framework/Database/Transaction.h"
 
 MultiDatabaseOp::MultiDatabaseOp() :
-operation(this, &MultiDatabaseOp::Operation)
+operation(this, &MultiDatabaseOp::Operation),
+onComplete(this, &MultiDatabaseOp::OnComplete),
+active(false)
 {
 	Init();
 }
@@ -15,7 +17,7 @@ operation(this, &MultiDatabaseOp::Operation)
 void MultiDatabaseOp::Init()
 {
 	numop = 0;
-	onComplete = NULL;
+	//userCallback = NULL;
 	tx = NULL;
 }
 
@@ -30,8 +32,8 @@ bool MultiDatabaseOp::Get(Table* table, const ByteString &key, ByteString& value
 	op = &op[numop];
 	op->op = DatabaseOp::GET;
 	op->table = table;
-	op->key = &key;
-	op->value = &value;
+	op->key = key;
+	op->value = value;
 	
 	numop++;
 	
@@ -49,23 +51,46 @@ bool MultiDatabaseOp::Put(Table* table, const ByteString& key, ByteString& value
 	op = &ops[numop];
 	op->op = DatabaseOp::PUT;
 	op->table = table;
-	op->key = &key;
-	op->value = &value;
+	op->key = key;
+	op->value = value;
 	
 	numop++;
 	
 	return true;
 }
 
+bool MultiDatabaseOp::Put(Table* table, char* key, ByteString &value)
+{
+	int len;
+	
+	len = strlen(key);
+	const ByteString bsKey(len, len, key);
+	
+	return MultiDatabaseOp::Put(table, bsKey, value);
+}
+
+bool MultiDatabaseOp::Put(Table* table, char* key, char* value)
+{
+	int len;
+	
+	len = strlen(key);
+	ByteString bsKey(len, len, key);
+	
+	len = strlen(value);
+	ByteString bsValue(len, len, value);
+	
+	return MultiDatabaseOp::Put(table, bsKey, bsValue);
+
+}
 
 void MultiDatabaseOp::SetTransaction(Transaction* tx)
 {
 	this->tx = tx;
 }
 
-void MultiDatabaseOp::SetCallback(Callable* onComplete)
+void MultiDatabaseOp::SetCallback(Callable* userCallback_)
 {
-	this->onComplete = onComplete;
+	this->userCallback = userCallback_;
 }
 
 Callable* MultiDatabaseOp::GetOperation()
@@ -75,13 +100,13 @@ Callable* MultiDatabaseOp::GetOperation()
 
 const ByteString* MultiDatabaseOp::GetKey(int i)
 {
-	return ops[i].key;
+	return &ops[i].key;
 }
 
 
 ByteString*	MultiDatabaseOp::GetValue(int i)
 {
-	return ops[i].value;
+	return &ops[i].value;
 }
 
 
@@ -109,13 +134,20 @@ void MultiDatabaseOp::Operation()
 	{
 		op = &ops[i];
 		if (op->op == DatabaseOp::GET)
-			op->ret = op->table->Get(tx, *op->key, *op->value);
+			op->ret = op->table->Get(tx, op->key, op->value);
 		else if (op->op == DatabaseOp::PUT)
-			op->ret = op->table->Put(tx, *op->key, *op->value);
+			op->ret = op->table->Put(tx, op->key, op->value);
 	}
 	
 	if (tx)
 		tx->Commit();
 		
-	IOProcessor::Complete(onComplete);
+	IOProcessor::Complete(&onComplete);
+}
+
+void MultiDatabaseOp::OnComplete()
+{
+	active = false;
+	
+	Call(userCallback);
 }

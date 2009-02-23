@@ -402,8 +402,8 @@
 		9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */ = {
 			isa = PBXGroup;
 			children = (
-				9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */,
 				9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */,
+				9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */,
 				9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */,
 				9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */,
 			);
@@ -413,11 +413,11 @@
 		9A22A4350F423094002648C6 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				9A22A43A0F4230AE002648C6 /* test.h */,
+				9A22A4390F4230AE002648C6 /* test.c */,
 				9A22A4360F4230AE002648C6 /* IOTest.cpp */,
 				9A22A4370F4230AE002648C6 /* OpenDirect.cpp */,
 				9A22A4380F4230AE002648C6 /* PaxosTester.c */,
-				9A22A4390F4230AE002648C6 /* test.c */,
-				9A22A43A0F4230AE002648C6 /* test.h */,
 				9A22A43B0F4230AE002648C6 /* ThreadPoolTest.cpp */,
 				9A22A43C0F4230AE002648C6 /* UDPEchoClient.c */,
 				54460CDA0F51991800EFBBDE /* AsyncDBTest.cpp */,

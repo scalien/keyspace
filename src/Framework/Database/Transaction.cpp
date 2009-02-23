@@ -10,6 +10,16 @@ Transaction::Transaction(Table* table)
 	database = table->database;
 }
 
+void Transaction::Set(Database* database_)
+{
+	database = database_;
+}
+
+void Transaction::Set(Table* table)
+{
+	database = table->database;
+}
+
 bool Transaction::Begin()
 {
 	if (database->env.txn_begin(NULL, &txn, DB_TXN_SYNC) != 0)

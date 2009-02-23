@@ -26,4 +26,6 @@ char* rprintf(const char* format, ...);
 
 #define ASSERT_FAIL() assert(false)
 
+#define EXACTLY_ONE(a, b, c) ((((int)(a)) + ((int)(b)) + ((int)(c))) == 1)
+
 #endif

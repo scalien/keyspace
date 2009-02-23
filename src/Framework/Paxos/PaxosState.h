@@ -25,11 +25,12 @@ public:
 	
 	void Reset()
 	{
-		preparing = false;
-		proposing = false;
-		n_proposing = 0;
-		n_highest_received = 0;
-		numOpen = 0;
+		preparing =				false;
+		proposing =				false;
+		n_proposing =			0;
+		n_highest_received =	0;
+		numOpen =				0;
+		
 		value.Clear();
 	}	
 };
@@ -47,9 +48,10 @@ public:
 	
 	void Reset()
 	{
-		accepted = false;
-		learned = false;
-		n_highest_promised = 0;
+		accepted =				false;
+		learned =				false;
+		n_highest_promised =	0;
+		
 		value.Clear();
 	}
 };

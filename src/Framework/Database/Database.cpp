@@ -3,6 +3,9 @@
 #include "Database.h"
 #include "Table.h"
 
+// the global database
+Database database;
+
 Database::Database() :
 env(DB_CXX_NO_EXCEPTIONS)
 {
@@ -13,7 +16,6 @@ env(DB_CXX_NO_EXCEPTIONS)
 	env.open(db_home, flags, mode);
 	
 	state = new Table(this, "state");
-	versionDB = new Table(this, "versionDB");
 	test = new Table(this, "test");
 }
 
@@ -29,10 +31,7 @@ Table* Database::GetTable(const char* name)
 {
 	if (strcmp(name, "state") == 0)
 		return state;
-	
-	if (strcmp(name, "versionDB") == 0)
-		return versionDB;
-	
+		
 	if (strcmp(name, "test") == 0)
 		return test;
 		

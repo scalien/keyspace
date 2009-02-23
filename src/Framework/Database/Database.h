@@ -23,4 +23,7 @@ private:
 	Table* test;
 };
 
+// the global database object
+extern Database database;
+
 #endif

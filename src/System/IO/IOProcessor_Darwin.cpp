@@ -63,7 +63,8 @@ bool IOProcessor::Init()
 	fcntl(asyncOpPipe[0], F_SETFD, O_NONBLOCK);
 	fcntl(asyncOpPipe[1], F_SETFD, FD_CLOEXEC);
 
-	AddKq(asyncOpPipe[0], EVFILT_READ, NULL);
+	if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
+		return false;
 	
 	return true;
 }
@@ -237,11 +238,12 @@ bool IOProcessor::Poll(int sleep)
 			{
 				if (events[i].udata == NULL)
 				{
+					ProcessAsyncOp();
+
 					// re-register for notification
 					if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
 						return false;
 					
-					ProcessAsyncOp();
 					continue;
 				}
 				
@@ -267,27 +269,35 @@ bool IOProcessor::Poll(int sleep)
 	return true;
 }
 
+bool IOProcessor::Complete(Callable* callable)
+{
+	Log_Trace();
+
+	int nwrite;
+	
+	nwrite = write(asyncOpPipe[1], &callable, sizeof(Callable*));
+	if (nwrite < 0)
+		Log_Errno();
+	
+	if (nwrite >= 0)
+		return true;
+	
+	return false;
+}
+
 void ProcessAsyncOp()
 {
-	static Callable	*callables[256];
-	int size;
-	int count;
-	int i;
+	Log_Trace();
 	
-	while (1)
-	{
-		size = read(asyncOpPipe[0], callables, SIZE(callables));
-		count = size / sizeof(Callable *);
-		
-		for (i = 0; i < count; i++)
-		{
-			Call(callables[i]);
-		}
-		
-		if (count < sizeof(callables))
-			break;
-	}
+	Callable* callable;
+	int nread;
+
+	nread = read(asyncOpPipe[0], &callable, sizeof(Callable*));
+	if (nread < 0)
+		Log_Errno();
 	
+	if (nread == sizeof(Callable*))
+		Call(callable);
 }
 
 void ProcessTCPRead(struct kevent* ev)
@@ -463,19 +473,6 @@ void ProcessFileOp(struct kevent* ev)
 		
 		it = fileops.Head();		
 	}
-}
-
-
-bool IOProcessor::Complete(Callable* callable)
-{
-	int ret;
-	
-	ret = write(asyncOpPipe[1], &callable, sizeof(Callable *));
-	
-	if (ret >= 0)
-		return true;
-	
-	return false;
 }
 
 #endif // PLATFORM_DARWIN

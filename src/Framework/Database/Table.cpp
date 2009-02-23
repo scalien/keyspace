@@ -37,15 +37,26 @@ bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &val
 		
 	ret = db->get(txn, &dbtKey, &dbtValue, 0);
 	if (ret == DB_KEYEMPTY || ret == DB_NOTFOUND)
-		false;
+		return false;
 	
 	if (dbtValue.get_size() > value.size)
-		false;
+		return false;
 
 	value.length = dbtValue.get_size();
 	memcpy(value.buffer, dbtValue.get_data(), value.length);
 	
 	return true;
+}
+
+bool Table::Get(Transaction* transaction, char* key, ByteString &value)
+{
+	int len;
+	
+	len = strlen(key);
+	
+	ByteString bsKey(len, len, key);
+	
+	return Table::Get(transaction, bsKey, value);
 }
 
 bool Table::Put(Transaction* transaction, const ByteString &key, const ByteString &value)
@@ -67,34 +78,24 @@ bool Table::Put(Transaction* transaction, const ByteString &key, const ByteStrin
 
 bool Table::Put(Transaction* transaction, char* key, const ByteString &value)
 {
-	Dbt dbtKey(key, strlen(key));
-	Dbt dbtValue(value.buffer, value.length);
-	DbTxn* txn = NULL;
-	int ret;
-
-	if (transaction)
-		txn = transaction->txn;
+	int len;
 	
-	ret = db->put(txn, &dbtKey, &dbtValue, 0);
-	if (ret < 0)
-		return false;
+	len = strlen(key);
 	
-	return true;
+	ByteString bsKey(len, len, key);
+	
+	return Table::Put(transaction, bsKey, value);
 }
 
 bool Table::Put(Transaction* transaction, char* key, char* value)
 {
-	Dbt dbtKey(key, strlen(key));
-	Dbt dbtValue(value, strlen(value));
-	DbTxn* txn = NULL;
-	int ret;
-
-	if (transaction)
-		txn = transaction->txn;
+	int len;
 	
-	ret = db->put(txn, &dbtKey, &dbtValue, 0);
-	if (ret < 0)
-		return false;
+	len = strlen(key);
+	ByteString bsKey(len, len, key);
 	
-	return true;
+	len = strlen(value);
+	ByteString bsValue(len, len, value);
+	
+	return Table::Put(transaction, bsKey, bsValue);
 }

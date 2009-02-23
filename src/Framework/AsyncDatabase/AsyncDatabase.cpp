@@ -2,13 +2,20 @@
 #include "MultiDatabaseOp.h"
 
 
+// the global database writer
+AsyncDatabase dbWriter(NUM_DB_WRITERS);
+AsyncDatabase dbReader(NUM_DB_READERS);
+
+
 AsyncDatabase::AsyncDatabase(int numThread) :
 threadPool(numThread)
 {
 	threadPool.Start();
 }
 
-void AsyncDatabase::Add(MultiDatabaseOp* mdbOp)
+void AsyncDatabase::Add(MultiDatabaseOp* dbop)
 {
-	threadPool.Execute(mdbOp->GetOperation());
+	dbop->active = true;
+	
+	threadPool.Execute(dbop->GetOperation());
 }

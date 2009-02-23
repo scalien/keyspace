@@ -12,6 +12,7 @@ public:
 	~Table();
 	
 	bool Get(Transaction* transaction, const ByteString &key, ByteString &value);
+	bool Get(Transaction* transaction, char* key, ByteString &value);
 	
 	bool Put(Transaction* transaction, const ByteString &key, const ByteString &value);
 	bool Put(Transaction* transaction, char* key, const ByteString &value);

@@ -20,9 +20,9 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, bool multi
 	return true;
 }
 
-bool ReplicatedLog::PersistState(Transaction* transaction)
+bool ReplicatedLog::WriteState(Transaction* transaction)
 {
-	return Paxos::PersistState(transaction);
+	return Paxos::WriteState(transaction);
 }
 
 bool ReplicatedLog::ReadConfig(char* filename)
@@ -32,8 +32,6 @@ bool ReplicatedLog::ReadConfig(char* filename)
 
 bool ReplicatedLog::Stop()
 {
-	PersistState(NULL);
-	
 	sendtoall = false;
 	
 	if (udpread.active)

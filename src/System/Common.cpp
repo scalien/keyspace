@@ -51,7 +51,7 @@ long strntol(char* buffer, int size, int* nread)
 #undef ADVANCE
 }
 
-ulong64 strntoulong64(char* buffer, int size, int* nread)
+ulong64 strntoulong64(char* buffer, int length, int* nread)
 {
 	long i, digit;
 	ulong64 n;
@@ -59,7 +59,7 @@ ulong64 strntoulong64(char* buffer, int size, int* nread)
 
 #define ADVANCE()	i++; c = buffer[i];	
 
-	if (buffer == NULL || size < 1)
+	if (buffer == NULL || length < 1)
 	{
 		*nread = 0;
 		return 0;
@@ -69,7 +69,7 @@ ulong64 strntoulong64(char* buffer, int size, int* nread)
 	i = 0;
 	c = *buffer;
 	
-	while(c >= '0' && c <= '9' && i < size)
+	while(c >= '0' && c <= '9' && i < length)
 	{
 		digit = c - '0';
 		n = n * 10 + digit;

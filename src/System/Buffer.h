@@ -22,6 +22,7 @@ public:
 			return false;
 		
 		memcpy(buffer, str, len);
+		
 		length = len;
 		
 		return true;
@@ -50,6 +51,8 @@ public:
 		memcpy(data, str, length);
 		buffer = data;
 	}
+	
+	bool Set(char* str) { return ByteString::Set(str); }
 							
 	bool Set(ByteString bs)
 	{
