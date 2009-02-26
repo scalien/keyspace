@@ -35,6 +35,8 @@ MemcacheConn::~MemcacheConn()
 
 void MemcacheConn::Init(IOProcessor* ioproc_, KeyspaceDB* kdb_, MemcacheServer* server_)
 {
+	Log_Trace();
+
 	server = server_;
 	ioproc = ioproc_;
 	kdb = kdb_;
@@ -57,6 +59,8 @@ void MemcacheConn::Init(IOProcessor* ioproc_, KeyspaceDB* kdb_, MemcacheServer* 
 
 void MemcacheConn::Write(const char *data, int count)
 {
+	Log_Trace();
+
 	WriteBuffer* buf;
 	WriteBuffer* head;
 	
@@ -78,9 +82,12 @@ void MemcacheConn::Write(const char *data, int count)
 
 void MemcacheConn::TryClose()
 {
+	Log_Trace();
+
 	if (!closed)
 	{
 		ioproc->Remove(&tcpread);
+		socket.Close();
 	}
 
 	closed = true;
@@ -93,6 +100,8 @@ void MemcacheConn::TryClose()
 
 void MemcacheConn::OnRead()
 {
+	Log_Trace();
+
 	const char *p;
 	int newlen;
 	
@@ -117,6 +126,8 @@ void MemcacheConn::OnRead()
 
 void MemcacheConn::OnWrite()
 {
+	Log_Trace();
+
 	WriteBuffer** it;
 	WriteBuffer* buf;
 	WriteBuffer* last;
@@ -142,11 +153,15 @@ void MemcacheConn::OnWrite()
 
 void MemcacheConn::OnClose()
 {
+	Log_Trace();
+
 	TryClose();
 }
 
 void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 {
+	Log_Trace();
+
 	const char stored[] = "STORED" CS_CRLF;
 	
 	Write(stored, sizeof(stored) - 1);
@@ -155,6 +170,8 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 
 int MemcacheConn::Tokenize(const char *data, int size, Token *tokens, int maxtokens)
 {
+	Log_Trace();
+
 	const char *p;
 	const char *token;
 	int	numtoken = -1;
@@ -189,6 +206,8 @@ int MemcacheConn::Tokenize(const char *data, int size, Token *tokens, int maxtok
 
 const char* MemcacheConn::Process(const char* data, int size)
 {
+	Log_Trace();
+
 	Token tokens[MAX_TOKENS];
 	int numtoken;
 	
@@ -214,6 +233,8 @@ const char* MemcacheConn::Process(const char* data, int size)
 
 const char* MemcacheConn::ProcessGetCommand(const char* data, int size, Token* tokens, int numtoken)
 {
+	Log_Trace();
+
 	const char *data_start;
 	KeyspaceOp op;
 	int i;
@@ -242,6 +263,8 @@ const char* MemcacheConn::ProcessGetCommand(const char* data, int size, Token* t
 
 const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* tokens, int numtoken)
 {
+	Log_Trace();
+
 	const char *data_start;
 	KeyspaceOp op;
 	long num;
@@ -277,12 +300,16 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 
 void MemcacheConn::Add(KeyspaceOp& op)
 {
+	Log_Trace();
+
 	kdb->Add(op);
 	numpending++;
 }
 
 void MemcacheConn::WritePending()
 {
+	Log_Trace();
+
 	WriteBuffer* buf;
 	
 	buf = *writeQueue.Head();

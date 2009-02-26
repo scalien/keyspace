@@ -46,7 +46,7 @@ void TCPEchoConn::Shutdown()
 {
 	Log_Trace();
 
-	close(socket.fd);
+	socket.Close();
 }
 
 void TCPEchoConn::OnRead()

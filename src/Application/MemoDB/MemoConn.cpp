@@ -49,7 +49,7 @@ void MemoConn::Shutdown()
 {
 	Log_Trace();
 
-	close(socket.fd);
+	socket.Close();
 }
 
 void MemoConn::OnRead()

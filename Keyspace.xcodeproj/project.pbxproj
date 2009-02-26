@@ -267,8 +267,8 @@
 				9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */,
 				9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */,
 				9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */,
-				9AE3DEFD0F55E45A00B0EB03 /* TCPServer.cpp */,
 				9AE3DEFE0F55E45A00B0EB03 /* TCPServer.h */,
+				9AE3DEFD0F55E45A00B0EB03 /* TCPServer.cpp */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -444,8 +444,8 @@
 				5481473E0F31B6B200F3D2B6 /* IOProcessor.h */,
 				5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */,
 				548147400F31B6B200F3D2B6 /* IOProcessor_Linux.cpp */,
-				548147410F31B6B200F3D2B6 /* Socket.cpp */,
 				548147420F31B6B200F3D2B6 /* Socket.h */,
+				548147410F31B6B200F3D2B6 /* Socket.cpp */,
 			);
 			path = IO;
 			sourceTree = "<group>";

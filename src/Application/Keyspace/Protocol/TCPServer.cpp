@@ -8,6 +8,8 @@ onConnect(this, &TCPServer::OnConnect)
 
 bool TCPServer::Init(IOProcessor* ioproc_, int port)
 {
+	Log_Trace();
+
 	ioproc = ioproc_;
 	
 	listener.Create(TCP);

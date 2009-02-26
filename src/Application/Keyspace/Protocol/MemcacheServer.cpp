@@ -2,16 +2,24 @@
 
 void MemcacheServer::Init(KeyspaceDB* kdb_)
 {
+	Log_Trace();
+
+	TCPServer::Init(IOProcessor::New(), MEMCACHE_PORT);
+
 	kdb = kdb_;
 }
 
 void MemcacheServer::OnDisconnect(MemcacheConn* conn)
 {
+	Log_Trace();
+
 	conns.Remove(conn);
 }
 
 void MemcacheServer::OnConnect()
 {
+	Log_Trace();
+
 	// FIXME
 	IOProcessor* ioproc = IOProcessor::New();
 	
