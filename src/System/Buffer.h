@@ -10,10 +10,12 @@ public:
 	int		length;
 	char*	buffer;
 	
-	ByteString() : size(0), length(0), buffer(NULL) {}
+	ByteString() { Init(); }
 	
 	ByteString(int size_, int length_, char* buffer_)
 		: size(size_), length(length_), buffer(buffer_) {}
+	
+	Init() { size = 0; length = 0; buffer = 0; }
 	
 	bool Set(char* str)
 	{
