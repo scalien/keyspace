@@ -24,6 +24,7 @@ bool KeyspaceDB::Init()
 bool KeyspaceDB::Add(KeyspaceOp& op_)
 {
 	Log_Trace();
+	
 	KeyspaceOp op = op_;
 
 	assert(queuedOps.Size() == queuedOpBuffers.Size());
@@ -35,23 +36,31 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 
 	OpBuffers opBuffers;
 	
-	// allocate buffers for the values
+	// allocate and copy buffers for the values
 	
-	opBuffers.key =		(char*) Alloc(op.key.length);
-	opBuffers.value =	(char*) Alloc(op.value.length);
-	opBuffers.test =	(char*) Alloc(op.test.length);
-
-	// copy values
-
+	opBuffers.key =	(char*) Alloc(op.key.length);
+	op.key.size = op.key.length;
 	memcpy(opBuffers.key, op.key.buffer, op.key.length);
 	op.key.buffer = opBuffers.key;
 	
+	if (op.type == KeyspaceOp::GET)
+	{
+		opBuffers.value = (char*) Alloc(MAX_VALUE_SIZE);
+		op.value.size = MAX_VALUE_SIZE;
+	}
+	else
+	{
+		opBuffers.value = (char*) Alloc(op.value.length);
+		op.value.size = op.value.length;
+	}
 	memcpy(opBuffers.value, op.value.buffer, op.value.length);
 	op.value.buffer = opBuffers.value;
-
+	
+	opBuffers.test = (char*) Alloc(op.test.length);
+	op.test.size = op.test.length;
 	memcpy(opBuffers.test, op.test.buffer, op.test.length);
 	op.test.buffer = opBuffers.test;
-	
+
 	// enqueue
 	
 	queuedOps.Append(op);

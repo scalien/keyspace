@@ -10,7 +10,8 @@
 		breakpoints = (
 			5406782E0F3C50B500E80088 /* info */,
 			5406782F0F3C50BD00E80088 /* OnLearnChosen */,
-			5421D0890F57496A004BBDB4 /* MemcacheConn.cpp:105 */,
+			5421D0DF0F5751AD004BBDB4 /* KeyspaceDB.cpp:28 */,
+			5421D0E30F575245004BBDB4 /* KeyspaceDB.cpp:127 */,
 		);
 		codeSenseManager = 548146F80F31B6A900F3D2B6 /* Code sense */;
 		executables = (
@@ -390,6 +391,36 @@
 			5421D0A70F574A04004BBDB4 /* PBXTextBookmark */ = 5421D0A70F574A04004BBDB4 /* PBXTextBookmark */;
 			5421D0A80F574A04004BBDB4 /* PBXTextBookmark */ = 5421D0A80F574A04004BBDB4 /* PBXTextBookmark */;
 			5421D0A90F574A04004BBDB4 /* PBXTextBookmark */ = 5421D0A90F574A04004BBDB4 /* PBXTextBookmark */;
+			5421D0AD0F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0AD0F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0AE0F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0AE0F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0AF0F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0AF0F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0B00F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0B00F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0B10F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0B10F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0B20F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0B20F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0B30F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0B30F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0B40F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0B40F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0B50F574AAC004BBDB4 /* PBXTextBookmark */ = 5421D0B50F574AAC004BBDB4 /* PBXTextBookmark */;
+			5421D0B70F574AE6004BBDB4 /* PBXTextBookmark */ = 5421D0B70F574AE6004BBDB4 /* PBXTextBookmark */;
+			5421D0C70F575051004BBDB4 /* PBXTextBookmark */ = 5421D0C70F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0C80F575051004BBDB4 /* PBXTextBookmark */ = 5421D0C80F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0C90F575051004BBDB4 /* PBXTextBookmark */ = 5421D0C90F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0CA0F575051004BBDB4 /* PBXTextBookmark */ = 5421D0CA0F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0CB0F575051004BBDB4 /* PBXTextBookmark */ = 5421D0CB0F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0CC0F575051004BBDB4 /* PBXTextBookmark */ = 5421D0CC0F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0CD0F575051004BBDB4 /* PBXTextBookmark */ = 5421D0CD0F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0CE0F575051004BBDB4 /* PBXTextBookmark */ = 5421D0CE0F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0CF0F575051004BBDB4 /* PBXTextBookmark */ = 5421D0CF0F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D00F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D00F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D10F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D10F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D20F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D20F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D30F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D30F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D40F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D40F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D50F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D50F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D60F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D60F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D70F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D70F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D80F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D80F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0D90F575051004BBDB4 /* PBXTextBookmark */ = 5421D0D90F575051004BBDB4 /* PBXTextBookmark */;
+			5421D0DC0F575190004BBDB4 /* PBXTextBookmark */ = 5421D0DC0F575190004BBDB4 /* PBXTextBookmark */;
 			544612330F55CED700EFBBDE = 544612330F55CED700EFBBDE /* PBXTextBookmark */;
 			544612340F55CED700EFBBDE = 544612340F55CED700EFBBDE /* PBXTextBookmark */;
 			544612350F55CED700EFBBDE = 544612350F55CED700EFBBDE /* PBXTextBookmark */;
@@ -426,7 +457,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = "";
-		modificationTime = 257378671.44178;
+		modificationTime = 257380787.078829;
 		state = 0;
 		symbolName = info;
 	};
@@ -441,7 +472,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = "";
-		modificationTime = 257378671.456868;
+		modificationTime = 257380787.095121;
 		state = 0;
 		symbolName = OnLearnChosen;
 	};
@@ -489,7 +520,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 44";
 		rLen = 0;
-		rLoc = 662;
+		rLoc = 692;
 		rType = 0;
 		vrLen = 571;
 		vrLoc = 218;
@@ -519,7 +550,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 33";
 		rLen = 0;
-		rLoc = 724;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 468;
 		vrLoc = 0;
@@ -539,7 +570,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 33";
 		rLen = 0;
-		rLoc = 724;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 503;
 		vrLoc = 0;
@@ -558,7 +589,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 33";
 		rLen = 242;
-		rLoc = 707;
+		rLoc = 737;
 		rType = 0;
 		vrLen = 503;
 		vrLoc = 0;
@@ -596,7 +627,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 44";
 		rLen = 0;
-		rLoc = 662;
+		rLoc = 692;
 		rType = 0;
 		vrLen = 572;
 		vrLoc = 0;
@@ -616,7 +647,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 44";
 		rLen = 0;
-		rLoc = 662;
+		rLoc = 692;
 		rType = 0;
 		vrLen = 571;
 		vrLoc = 218;
@@ -676,7 +707,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 54";
 		rLen = 0;
-		rLoc = 717;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 584;
 		vrLoc = 218;
@@ -714,7 +745,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 44";
 		rLen = 0;
-		rLoc = 662;
+		rLoc = 692;
 		rType = 0;
 		vrLen = 571;
 		vrLoc = 218;
@@ -743,7 +774,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 57";
 		rLen = 0;
-		rLoc = 950;
+		rLoc = 980;
 		rType = 0;
 		vrLen = 578;
 		vrLoc = 218;
@@ -762,7 +793,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 54";
 		rLen = 0;
-		rLoc = 717;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 584;
 		vrLoc = 218;
@@ -781,7 +812,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 42";
 		rLen = 0;
-		rLoc = 662;
+		rLoc = 692;
 		rType = 0;
 		vrLen = 676;
 		vrLoc = 107;
@@ -829,7 +860,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 54";
 		rLen = 0;
-		rLoc = 717;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 584;
 		vrLoc = 218;
@@ -867,7 +898,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 54";
 		rLen = 0;
-		rLoc = 717;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 584;
 		vrLoc = 218;
@@ -886,7 +917,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 54";
 		rLen = 0;
-		rLoc = 717;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 584;
 		vrLoc = 218;
@@ -905,7 +936,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 42";
 		rLen = 0;
-		rLoc = 662;
+		rLoc = 692;
 		rType = 0;
 		vrLen = 676;
 		vrLoc = 107;
@@ -993,7 +1024,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 41";
 		rLen = 0;
-		rLoc = 979;
+		rLoc = 1009;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 0;
@@ -1052,7 +1083,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 43";
 		rLen = 0;
-		rLoc = 990;
+		rLoc = 1020;
 		rType = 0;
 		vrLen = 618;
 		vrLoc = 0;
@@ -1071,7 +1102,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 43";
 		rLen = 0;
-		rLoc = 990;
+		rLoc = 1020;
 		rType = 0;
 		vrLen = 618;
 		vrLoc = 0;
@@ -1109,7 +1140,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 41";
 		rLen = 0;
-		rLoc = 979;
+		rLoc = 1009;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 0;
@@ -1359,7 +1390,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 48";
 		rLen = 16;
-		rLoc = 810;
+		rLoc = 840;
 		rType = 0;
 		vrLen = 628;
 		vrLoc = 125;
@@ -1378,7 +1409,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 43";
 		rLen = 15;
-		rLoc = 1009;
+		rLoc = 1039;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 0;
@@ -1407,7 +1438,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 43";
 		rLen = 15;
-		rLoc = 1009;
+		rLoc = 1039;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 0;
@@ -1426,7 +1457,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 43";
 		rLen = 15;
-		rLoc = 1009;
+		rLoc = 1039;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 0;
@@ -1455,7 +1486,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 43";
 		rLen = 15;
-		rLoc = 1009;
+		rLoc = 1039;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 0;
@@ -1503,7 +1534,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 51";
 		rLen = 0;
-		rLoc = 1009;
+		rLoc = 1039;
 		rType = 0;
 		vrLen = 589;
 		vrLoc = 106;
@@ -1522,7 +1553,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 49";
 		rLen = 0;
-		rLoc = 989;
+		rLoc = 1019;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 79;
@@ -1541,7 +1572,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 49";
 		rLen = 0;
-		rLoc = 989;
+		rLoc = 1019;
 		rType = 0;
 		vrLen = 650;
 		vrLoc = 43;
@@ -1560,7 +1591,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 39";
 		rLen = 0;
-		rLoc = 661;
+		rLoc = 691;
 		rType = 0;
 		vrLen = 651;
 		vrLoc = 43;
@@ -1579,7 +1610,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 48";
 		rLen = 0;
-		rLoc = 949;
+		rLoc = 979;
 		rType = 0;
 		vrLen = 612;
 		vrLoc = 79;
@@ -1599,7 +1630,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 48";
 		rLen = 0;
-		rLoc = 948;
+		rLoc = 978;
 		rType = 0;
 		vrLen = 624;
 		vrLoc = 125;
@@ -1619,7 +1650,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 48";
 		rLen = 0;
-		rLoc = 948;
+		rLoc = 978;
 		rType = 0;
 		vrLen = 624;
 		vrLoc = 125;
@@ -1638,7 +1669,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 54";
 		rLen = 0;
-		rLoc = 1100;
+		rLoc = 1130;
 		rType = 0;
 		vrLen = 623;
 		vrLoc = 126;
@@ -1657,7 +1688,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 48";
 		rLen = 16;
-		rLoc = 810;
+		rLoc = 840;
 		rType = 0;
 		vrLen = 628;
 		vrLoc = 125;
@@ -1695,7 +1726,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 50";
 		rLen = 0;
-		rLoc = 948;
+		rLoc = 978;
 		rType = 0;
 		vrLen = 648;
 		vrLoc = 125;
@@ -1775,7 +1806,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 16";
 		rLen = 10;
-		rLoc = 345;
+		rLoc = 375;
 		rType = 0;
 		vrLen = 644;
 		vrLoc = 411;
@@ -1804,7 +1835,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 44";
 		rLen = 0;
-		rLoc = 704;
+		rLoc = 734;
 		rType = 0;
 		vrLen = 675;
 		vrLoc = 149;
@@ -1862,7 +1893,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 54";
 		rLen = 0;
-		rLoc = 833;
+		rLoc = 863;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 307;
@@ -1881,7 +1912,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 51";
 		rLen = 0;
-		rLoc = 799;
+		rLoc = 829;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 307;
@@ -1967,7 +1998,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 35";
 		rLen = 9;
-		rLoc = 588;
+		rLoc = 618;
 		rType = 0;
 		vrLen = 614;
 		vrLoc = 307;
@@ -1986,7 +2017,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 35";
 		rLen = 9;
-		rLoc = 588;
+		rLoc = 618;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2005,7 +2036,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 35";
 		rLen = 9;
-		rLoc = 588;
+		rLoc = 618;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2034,7 +2065,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 46";
 		rLen = 0;
-		rLoc = 704;
+		rLoc = 734;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2082,7 +2113,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 46";
 		rLen = 0;
-		rLoc = 704;
+		rLoc = 734;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2130,7 +2161,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 46";
 		rLen = 0;
-		rLoc = 704;
+		rLoc = 734;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2150,7 +2181,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 50";
 		rLen = 14;
-		rLoc = 741;
+		rLoc = 771;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2170,7 +2201,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 17";
 		rLen = 187;
-		rLoc = 394;
+		rLoc = 424;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2189,7 +2220,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 50";
 		rLen = 0;
-		rLoc = 743;
+		rLoc = 773;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2267,7 +2298,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 50";
 		rLen = 0;
-		rLoc = 743;
+		rLoc = 773;
 		rType = 0;
 		vrLen = 617;
 		vrLoc = 304;
@@ -2316,7 +2347,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 62";
 		rLen = 0;
-		rLoc = 1075;
+		rLoc = 1105;
 		rType = 0;
 		vrLen = 657;
 		vrLoc = 304;
@@ -2345,7 +2376,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 62";
 		rLen = 0;
-		rLoc = 1075;
+		rLoc = 1105;
 		rType = 0;
 		vrLen = 657;
 		vrLoc = 304;
@@ -2385,7 +2416,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 23";
 		rLen = 0;
-		rLoc = 434;
+		rLoc = 464;
 		rType = 0;
 		vrLen = 644;
 		vrLoc = 410;
@@ -2414,7 +2445,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 23";
 		rLen = 0;
-		rLoc = 434;
+		rLoc = 464;
 		rType = 0;
 		vrLen = 661;
 		vrLoc = 393;
@@ -2433,7 +2464,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 23";
 		rLen = 0;
-		rLoc = 434;
+		rLoc = 464;
 		rType = 0;
 		vrLen = 661;
 		vrLoc = 393;
@@ -2452,7 +2483,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 26";
 		rLen = 12;
-		rLoc = 451;
+		rLoc = 481;
 		rType = 0;
 		vrLen = 661;
 		vrLoc = 393;
@@ -2491,7 +2522,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 49";
 		rLen = 0;
-		rLoc = 706;
+		rLoc = 736;
 		rType = 0;
 		vrLen = 644;
 		vrLoc = 410;
@@ -2577,7 +2608,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 49";
 		rLen = 0;
-		rLoc = 706;
+		rLoc = 736;
 		rType = 0;
 		vrLen = 644;
 		vrLoc = 410;
@@ -2597,7 +2628,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 16";
 		rLen = 10;
-		rLoc = 345;
+		rLoc = 375;
 		rType = 0;
 		vrLen = 756;
 		vrLoc = 43;
@@ -2654,7 +2685,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 16";
 		rLen = 0;
-		rLoc = 376;
+		rLoc = 406;
 		rType = 0;
 		vrLen = 757;
 		vrLoc = 43;
@@ -2673,7 +2704,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 16";
 		rLen = 0;
-		rLoc = 376;
+		rLoc = 406;
 		rType = 0;
 		vrLen = 757;
 		vrLoc = 43;
@@ -2692,7 +2723,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 61";
 		rLen = 0;
-		rLoc = 1015;
+		rLoc = 1045;
 		rType = 0;
 		vrLen = 644;
 		vrLoc = 411;
@@ -2711,7 +2742,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 61";
 		rLen = 0;
-		rLoc = 1015;
+		rLoc = 1045;
 		rType = 0;
 		vrLen = 644;
 		vrLoc = 411;
@@ -2730,7 +2761,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 16";
 		rLen = 10;
-		rLoc = 345;
+		rLoc = 375;
 		rType = 0;
 		vrLen = 725;
 		vrLoc = 0;
@@ -2749,7 +2780,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 16";
 		rLen = 10;
-		rLoc = 345;
+		rLoc = 375;
 		rType = 0;
 		vrLen = 725;
 		vrLoc = 0;
@@ -2768,7 +2799,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 16";
 		rLen = 10;
-		rLoc = 345;
+		rLoc = 375;
 		rType = 0;
 		vrLen = 644;
 		vrLoc = 411;
@@ -2825,7 +2856,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 29";
 		rLen = 4;
-		rLoc = 471;
+		rLoc = 501;
 		rType = 0;
 		vrLen = 661;
 		vrLoc = 394;
@@ -2893,7 +2924,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 29";
 		rLen = 4;
-		rLoc = 471;
+		rLoc = 501;
 		rType = 0;
 		vrLen = 661;
 		vrLoc = 394;
@@ -2989,7 +3020,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 67";
 		rLen = 0;
-		rLoc = 1096;
+		rLoc = 1126;
 		rType = 0;
 		vrLen = 692;
 		vrLoc = 421;
@@ -3094,7 +3125,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 59";
 		rLen = 0;
-		rLoc = 909;
+		rLoc = 939;
 		rType = 0;
 		vrLen = 703;
 		vrLoc = 394;
@@ -3113,7 +3144,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 59";
 		rLen = 0;
-		rLoc = 921;
+		rLoc = 951;
 		rType = 0;
 		vrLen = 709;
 		vrLoc = 394;
@@ -3132,7 +3163,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 59";
 		rLen = 0;
-		rLoc = 948;
+		rLoc = 978;
 		rType = 0;
 		vrLen = 691;
 		vrLoc = 421;
@@ -3170,7 +3201,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 67";
 		rLen = 0;
-		rLoc = 1096;
+		rLoc = 1126;
 		rType = 0;
 		vrLen = 692;
 		vrLoc = 421;
@@ -3199,7 +3230,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 67";
 		rLen = 0;
-		rLoc = 1096;
+		rLoc = 1126;
 		rType = 0;
 		vrLen = 692;
 		vrLoc = 421;
@@ -3218,7 +3249,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 67";
 		rLen = 0;
-		rLoc = 1096;
+		rLoc = 1126;
 		rType = 0;
 		vrLen = 692;
 		vrLoc = 421;
@@ -3254,9 +3285,9 @@
 	};
 	5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {780, 2601}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 929}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 2822}}";
+			sepNavSelRange = "{2338, 0}";
+			sepNavVisRange = "{2212, 846}";
 		};
 	};
 	5421D01F0F5743A3004BBDB4 /* PBXBookmark */ = {
@@ -3458,7 +3489,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 67";
 		rLen = 0;
-		rLoc = 1096;
+		rLoc = 1126;
 		rType = 0;
 		vrLen = 722;
 		vrLoc = 227;
@@ -3548,7 +3579,7 @@
 		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
 		name = "KeyspaceDB.h: 67";
 		rLen = 0;
-		rLoc = 1096;
+		rLoc = 1126;
 		rType = 0;
 		vrLen = 722;
 		vrLoc = 227;
@@ -3807,23 +3838,6 @@
 		vrLen = 1159;
 		vrLoc = 3234;
 	};
-	5421D0890F57496A004BBDB4 /* MemcacheConn.cpp:105 */ = {
-		isa = PBXFileBreakpoint;
-		actions = (
-		);
-		breakpointStyle = 0;
-		continueAfterActions = 0;
-		countType = 0;
-		delayBeforeContinue = 0;
-		fileReference = 9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */;
-		functionName = "MemcacheConn::OnRead()";
-		hitCount = 0;
-		ignoreCount = 0;
-		lineNumber = 105;
-		location = Keyspace;
-		modificationTime = 257378671.298816;
-		state = 1;
-	};
 	5421D08D0F57499E004BBDB4 /* PBXBookmark */ = {
 		isa = PBXBookmark;
 		fRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */;
@@ -4028,6 +4042,340 @@
 		vrLen = 709;
 		vrLoc = 1423;
 	};
+	5421D0AD0F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */;
+		name = "MemcacheServer.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 153;
+		vrLoc = 0;
+	};
+	5421D0AE0F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */;
+		name = "MemcacheServer.cpp: 26";
+		rLen = 0;
+		rLoc = 398;
+		rType = 0;
+		vrLen = 115;
+		vrLoc = 28;
+	};
+	5421D0AF0F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */;
+		name = "MemcacheServer.cpp: 26";
+		rLen = 0;
+		rLoc = 398;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	5421D0B00F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */;
+		name = "MemcacheServer.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	5421D0B10F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */;
+		name = "MemcacheServer.cpp: 26";
+		rLen = 0;
+		rLoc = 398;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	5421D0B20F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */;
+		name = "MemcacheServer.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	5421D0B30F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */;
+		name = "MemcacheServer.cpp: 26";
+		rLen = 0;
+		rLoc = 398;
+		rType = 0;
+		vrLen = 115;
+		vrLoc = 28;
+	};
+	5421D0B40F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */;
+		name = "MemcacheServer.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 153;
+		vrLoc = 0;
+	};
+	5421D0B50F574AAC004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */;
+		name = "MemcacheServer.cpp: 26";
+		rLen = 0;
+		rLoc = 398;
+		rType = 0;
+		vrLen = 115;
+		vrLoc = 28;
+	};
+	5421D0B70F574AE6004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */;
+		name = "MemcacheConn.cpp: 90";
+		rLen = 0;
+		rLoc = 1635;
+		rType = 0;
+		vrLen = 711;
+		vrLoc = 1423;
+	};
+	5421D0C70F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */;
+		name = "MemcacheConn.cpp: 219";
+		rLen = 0;
+		rLoc = 3517;
+		rType = 0;
+		vrLen = 869;
+		vrLoc = 2889;
+	};
+	5421D0C80F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472C0F31B6B200F3D2B6 /* Main.cpp */;
+		name = "Main.cpp: 23";
+		rLen = 0;
+		rLoc = 458;
+		rType = 0;
+		vrLen = 530;
+		vrLoc = 0;
+	};
+	5421D0C90F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */;
+		name = "MultiDatabaseOp.h: 20";
+		rLen = 0;
+		rLoc = 258;
+		rType = 0;
+		vrLen = 947;
+		vrLoc = 52;
+	};
+	5421D0CA0F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147220F31B6B200F3D2B6 /* Paxos.cpp */;
+		name = "Paxos.cpp: 83";
+		rLen = 13;
+		rLoc = 1625;
+		rType = 0;
+		vrLen = 1174;
+		vrLoc = 986;
+	};
+	5421D0CB0F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */;
+		name = "MultiDatabaseOp.cpp: 149";
+		rLen = 5;
+		rLoc = 2424;
+		rType = 0;
+		vrLen = 672;
+		vrLoc = 1912;
+	};
+	5421D0CC0F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147180F31B6B200F3D2B6 /* Table.cpp */;
+		name = "Table.cpp: 43";
+		rLen = 0;
+		rLoc = 877;
+		rType = 0;
+		vrLen = 993;
+		vrLoc = 0;
+	};
+	5421D0CD0F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 11";
+		rLen = 14;
+		rLoc = 289;
+		rType = 0;
+		vrLen = 735;
+		vrLoc = 0;
+	};
+	5421D0CE0F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 42";
+		rLen = 0;
+		rLoc = 635;
+		rType = 0;
+		vrLen = 1015;
+		vrLoc = 315;
+	};
+	5421D0CF0F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */;
+		name = "MemcacheConn.cpp: 219";
+		rLen = 0;
+		rLoc = 3517;
+		rType = 0;
+		vrLen = 869;
+		vrLoc = 2889;
+	};
+	5421D0D00F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472C0F31B6B200F3D2B6 /* Main.cpp */;
+		name = "Main.cpp: 23";
+		rLen = 0;
+		rLoc = 458;
+		rType = 0;
+		vrLen = 530;
+		vrLoc = 0;
+	};
+	5421D0D10F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 67";
+		rLen = 0;
+		rLoc = 1126;
+		rType = 0;
+		vrLen = 669;
+		vrLoc = 280;
+	};
+	5421D0D20F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */;
+		name = "MultiDatabaseOp.h: 20";
+		rLen = 0;
+		rLoc = 258;
+		rType = 0;
+		vrLen = 947;
+		vrLoc = 52;
+	};
+	5421D0D30F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */;
+		name = "MultiDatabaseOp.cpp: 20";
+		rLen = 22;
+		rLoc = 409;
+		rType = 0;
+		vrLen = 874;
+		vrLoc = 0;
+	};
+	5421D0D40F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147220F31B6B200F3D2B6 /* Paxos.cpp */;
+		name = "Paxos.cpp: 83";
+		rLen = 13;
+		rLoc = 1625;
+		rType = 0;
+		vrLen = 1174;
+		vrLoc = 986;
+	};
+	5421D0D50F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */;
+		name = "MultiDatabaseOp.cpp: 149";
+		rLen = 5;
+		rLoc = 2424;
+		rType = 0;
+		vrLen = 672;
+		vrLoc = 1912;
+	};
+	5421D0D60F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147180F31B6B200F3D2B6 /* Table.cpp */;
+		name = "Table.cpp: 43";
+		rLen = 0;
+		rLoc = 877;
+		rType = 0;
+		vrLen = 993;
+		vrLoc = 0;
+	};
+	5421D0D70F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 42";
+		rLen = 0;
+		rLoc = 635;
+		rType = 0;
+		vrLen = 1015;
+		vrLoc = 315;
+	};
+	5421D0D80F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 11";
+		rLen = 14;
+		rLoc = 289;
+		rType = 0;
+		vrLen = 735;
+		vrLoc = 0;
+	};
+	5421D0D90F575051004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 39";
+		rLen = 0;
+		rLoc = 635;
+		rType = 0;
+		vrLen = 997;
+		vrLoc = 315;
+	};
+	5421D0DC0F575190004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 59";
+		rLen = 0;
+		rLoc = 1116;
+		rType = 0;
+		vrLen = 1208;
+		vrLoc = 541;
+	};
+	5421D0DF0F5751AD004BBDB4 /* KeyspaceDB.cpp:28 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		functionName = "KeyspaceDB::Add(KeyspaceOp& op_)";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 28;
+		location = Keyspace;
+		modificationTime = 257380791.050701;
+		state = 1;
+	};
+	5421D0E30F575245004BBDB4 /* KeyspaceDB.cpp:127 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		functionName = "KeyspaceDB::OnDBComplete()";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 127;
+		location = Keyspace;
+		modificationTime = 257380941.318197;
+		state = 1;
+	};
 	54460CD30F5198E800EFBBDE /* AsyncDBTest */ = {
 		activeExec = 0;
 		executables = (
@@ -4072,9 +4420,9 @@
 	};
 	5446122C0F53488D00EFBBDE /* KeyspaceDB.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {818, 1207}}";
-			sepNavSelRange = "{1096, 0}";
-			sepNavVisRange = "{227, 722}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 1241}}";
+			sepNavSelRange = "{289, 14}";
+			sepNavVisRange = "{0, 735}";
 		};
 	};
 	544612330F55CED700EFBBDE /* PBXTextBookmark */ = {
@@ -4303,9 +4651,9 @@
 	};
 	548147180F31B6B200F3D2B6 /* Table.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {780, 1734}}";
-			sepNavSelRange = "{1279, 0}";
-			sepNavVisRange = "{40, 1039}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 1734}}";
+			sepNavSelRange = "{877, 0}";
+			sepNavVisRange = "{0, 993}";
 			sepNavWindowFrame = "{{19, -5}, {880, 1178}}";
 		};
 	};
@@ -4362,9 +4710,9 @@
 	};
 	548147220F31B6B200F3D2B6 /* Paxos.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {812, 10965}}";
-			sepNavSelRange = "{12703, 0}";
-			sepNavVisRange = "{12009, 711}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 10948}}";
+			sepNavSelRange = "{1625, 13}";
+			sepNavVisRange = "{986, 1174}";
 		};
 	};
 	548147230F31B6B200F3D2B6 /* Paxos.h */ = {
@@ -4425,8 +4773,8 @@
 	};
 	5481472C0F31B6B200F3D2B6 /* Main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {818, 826}}";
-			sepNavSelRange = "{270, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 849}}";
+			sepNavSelRange = "{458, 0}";
 			sepNavVisRange = "{0, 530}";
 			sepNavWindowFrame = "{{88, 132}, {839, 978}}";
 		};
@@ -4625,22 +4973,22 @@
 	};
 	9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {780, 850}}";
-			sepNavSelRange = "{263, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 826}}";
+			sepNavSelRange = "{313, 0}";
 			sepNavVisRange = "{0, 382}";
 		};
 	};
 	9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {780, 2822}}";
-			sepNavSelRange = "{2358, 0}";
-			sepNavVisRange = "{1889, 695}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 2754}}";
+			sepNavSelRange = "{2034, 0}";
+			sepNavVisRange = "{1669, 710}";
 			sepNavWindowFrame = "{{268, 200}, {839, 978}}";
 		};
 	};
 	9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {780, 1122}}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 1122}}";
 			sepNavSelRange = "{258, 0}";
 			sepNavVisRange = "{52, 947}";
 		};
@@ -4661,9 +5009,9 @@
 	};
 	9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {818, 5457}}";
-			sepNavSelRange = "{1635, 0}";
-			sepNavVisRange = "{1423, 709}";
+			sepNavIntBoundsRect = "{{0, 0}, {711, 5525}}";
+			sepNavSelRange = "{5286, 0}";
+			sepNavVisRange = "{5215, 159}";
 		};
 	};
 	9AE3DEFA0F55E45A00B0EB03 /* MemcacheConn.h */ = {
@@ -4675,16 +5023,16 @@
 	};
 	9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {779, 697}}";
+			sepNavIntBoundsRect = "{{0, 0}, {820, 612}}";
 			sepNavSelRange = "{398, 0}";
-			sepNavVisRange = "{0, 0}";
+			sepNavVisRange = "{230, 22}";
 		};
 	};
 	9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {818, 826}}";
+			sepNavIntBoundsRect = "{{0, 0}, {820, 459}}";
 			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 515}";
+			sepNavVisRange = "{0, 52}";
 		};
 	};
 	9AE3DEFD0F55E45A00B0EB03 /* TCPServer.cpp */ = {

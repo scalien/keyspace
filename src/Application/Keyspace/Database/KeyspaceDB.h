@@ -8,6 +8,8 @@
 #include "Framework/Database/Transaction.h"
 #include "Framework/AsyncDatabase/MultiDatabaseOp.h"
 
+#define MAX_VALUE_SIZE 64000
+
 class KeyspaceOp;
 
 class KeyspaceClient
