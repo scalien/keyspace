@@ -14,12 +14,26 @@ onRead(this, &MemcacheConn::OnRead),
 onWrite(this, &MemcacheConn::OnWrite),
 onClose(this, &MemcacheConn::OnClose)
 {
+	WriteBuffer* buffer;
+	
 	server = NULL;
 	ioproc = NULL;
 	kdb = NULL;
+
+	// preallocate a buffer for writeQueue
+	buffer = new WriteBuffer;
+	writeQueue.Append(buffer);
 }
 
-void MemcacheConn::Init(MemcacheServer* server_, IOProcessor* ioproc_, KeyspaceDB* kdb_)
+MemcacheConn::~MemcacheConn()
+{
+	WriteBuffer** it;
+	
+	for (it = writeQueue.Head(); it != NULL; it = writeQueue.Next(it))
+		delete *it;
+}
+
+void MemcacheConn::Init(IOProcessor* ioproc_, KeyspaceDB* kdb_, MemcacheServer* server_)
 {
 	server = server_;
 	ioproc = ioproc_;
@@ -33,17 +47,33 @@ void MemcacheConn::Init(MemcacheServer* server_, IOProcessor* ioproc_, KeyspaceD
 	ioproc->Add(&tcpread);
 	
 	tcpwrite.fd = socket.fd;
-	tcpwrite.data = writeBuffer;
 	tcpwrite.onComplete = &onWrite;
 	tcpwrite.onClose = &onClose;
 	
 	numpending = 0;
 	closed = false;
+	
 }
 
-void MemcacheConn::Write(const char *data, int size)
+void MemcacheConn::Write(const char *data, int count)
 {
+	WriteBuffer* buf;
+	WriteBuffer* head;
 	
+	head = *writeQueue.Head();
+	buf = *writeQueue.Tail();
+	if ((tcpwrite.active && head == buf) || buf->size - buf->length < count)
+	{
+		// TODO max queue size
+		buf = new WriteBuffer;
+		writeQueue.Append(buf);
+	}
+	
+	memcpy(buf->buffer, data, count);
+	buf->length = count;
+	
+	if (!tcpwrite.active)
+		WritePending();
 }
 
 void MemcacheConn::TryClose()
@@ -87,6 +117,27 @@ void MemcacheConn::OnRead()
 
 void MemcacheConn::OnWrite()
 {
+	WriteBuffer** it;
+	WriteBuffer* buf;
+	WriteBuffer* last;
+	
+	it = writeQueue.Head();
+	buf = *it;
+	buf->Clear();
+	tcpwrite.data.Clear();
+	
+	it = writeQueue.Remove(it);
+	if (it)
+	{
+		it = writeQueue.Tail();
+		last = *it;
+		if (last->length)
+			writeQueue.Append(buf);
+		else
+			delete buf;
+		
+		WritePending();
+	}
 }
 
 void MemcacheConn::OnClose()
@@ -182,7 +233,7 @@ const char* MemcacheConn::ProcessGetCommand(const char* data, int size, Token* t
 		op.value.Init();
 		op.test.Init();
 		
-		kdb->Add(op);
+		Add(op);
 	}
 		
 	return data_start;
@@ -219,7 +270,7 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	op.value.size = num;
 	op.value.length = num;
 	
-	kdb->Add(op);
+	Add(op);
 	
 	return data_start + num;
 }
@@ -228,4 +279,17 @@ void MemcacheConn::Add(KeyspaceOp& op)
 {
 	kdb->Add(op);
 	numpending++;
+}
+
+void MemcacheConn::WritePending()
+{
+	WriteBuffer* buf;
+	
+	buf = *writeQueue.Head();
+
+	if (buf->length)
+	{
+		tcpwrite.data = *buf;
+		ioproc->Add(&tcpwrite);		
+	}
 }

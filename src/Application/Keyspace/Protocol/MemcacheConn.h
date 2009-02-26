@@ -1,6 +1,7 @@
 #ifndef MEMCACHE_CONN_H
 #define MEMCACHE_CONN_H
 
+#include "System/Containers/List.h"
 #include "System/Events/Callable.h"
 #include "System/IO/Socket.h"
 #include "System/IO/IOOperation.h"
@@ -13,6 +14,7 @@ class MemcacheServer;
 class MemcacheConn : public KeyspaceClient
 {
 public:
+	typedef ByteArray<4096> WriteBuffer;
 	class Token
 	{
 	public:
@@ -26,14 +28,15 @@ public:
 	IOProcessor*	ioproc;
 	MemcacheServer*	server;
 	ByteArray<1024>	readBuffer;
-	ByteArray<1024>	writeBuffer;
+	List<WriteBuffer*> writeQueue;
 	int				numpending;
 	bool			closed;
 	KeyspaceDB*		kdb;
 	
 	MemcacheConn();
+	~MemcacheConn();
 	
-	void			Init(MemcacheServer* server_, IOProcessor* ioproc_, KeyspaceDB* kdb_);
+	void			Init(IOProcessor* ioproc_, KeyspaceDB* kdb_, MemcacheServer* server_);
 	void			Write(const char *data, int size);
 	void			OnRead();
 	void			OnWrite();
@@ -53,6 +56,7 @@ private:
 	const char* ProcessSetCommand(const char* data, int size, Token* tokens, int numtoken);
 	void		Add(KeyspaceOp& op);
 	void		TryClose();
+	void		WritePending();
 };
 
 #endif
