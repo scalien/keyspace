@@ -303,7 +303,7 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	
 	Add(op);
 	
-	return data_start + num;
+	return data_start + num + 2;
 }
 
 void MemcacheConn::Add(KeyspaceOp& op)
