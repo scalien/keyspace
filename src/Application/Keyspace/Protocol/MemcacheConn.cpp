@@ -86,7 +86,12 @@ void MemcacheConn::TryClose()
 
 	if (!closed)
 	{
-		ioproc->Remove(&tcpread);
+		if (tcpread.active)
+			ioproc->Remove(&tcpread);
+		
+		if (tcpwrite.active)
+			ioproc->Remove(&tcpwrite);
+		
 		socket.Close();
 	}
 
@@ -220,8 +225,8 @@ const char* MemcacheConn::Process(const char* data, int size)
 	{
 		return ProcessGetCommand(data, size, tokens, numtoken);
 	}
-	else if ((numtoken == 5 || numtoken == 6) &&
-			 strncmp(tokens[0].value, "set", tokens[0].len) == 0 &&
+	else if ((numtoken == 6 || numtoken == 7) &&
+			 strcmp(tokens[0].value, "set") == 0 &&
 			 tokens[0].len == 3)
 	{
 		return ProcessSetCommand(data, size, tokens, numtoken);
