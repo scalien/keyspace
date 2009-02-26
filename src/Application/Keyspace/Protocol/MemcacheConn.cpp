@@ -1,8 +1,8 @@
 #include "MemcacheConn.h"
 #include "MemcacheServer.h"
 
-#define CR		0x13
-#define LF		0x10
+#define CR		13
+#define LF		10
 #define CS_CR	"\015"
 #define CS_LF	"\012"
 #define CS_CRLF	CS_CR CS_LF
@@ -182,20 +182,21 @@ int MemcacheConn::Tokenize(const char *data, int size, Token *tokens, int maxtok
 	token = data;
 	while (p - data < size - 1)
 	{
-		if (p[0] == CR && p[1] == LF)
-		{
-			numtoken = i;
-			break;			
-		}
-		
-		if (p[0] == ' ')
+		if (p[0] == ' ' || (p[0] == CR && p[1] == LF))
 		{
 			tokens[i].value = token;
 			tokens[i].len = p - token;
 			i++;
+			token = p + 1;
 			
 			if (i > maxtokens)
 				return -1;
+		}
+		
+		if (p[0] == CR && p[1] == LF)
+		{
+			numtoken = i;
+			break;			
 		}
 		
 		p++;
@@ -215,7 +216,7 @@ const char* MemcacheConn::Process(const char* data, int size)
 	if (numtoken == -1)
 		return data;
 
-	if (numtoken >= 2 && strcmp(tokens[0].value, "get") == 0 && tokens[0].len == 3)
+	if (numtoken >= 2 && strncmp(tokens[0].value, "get", tokens[0].len) == 0 && tokens[0].len == 3)
 	{
 		return ProcessGetCommand(data, size, tokens, numtoken);
 	}

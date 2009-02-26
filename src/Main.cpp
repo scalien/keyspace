@@ -21,9 +21,9 @@ int main(int argc, char* argv[])
 	ioproc->Init();
 
 	KeyspaceDB kdb;
+	kdb.Init();
 	
 	MemcacheServer mcache;
-	
 	mcache.Init(&kdb);
 	
 	eventloop->Run();	

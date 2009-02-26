@@ -21,9 +21,10 @@ bool KeyspaceDB::Init()
 	return true;
 }
 
-bool KeyspaceDB::Add(KeyspaceOp& op)
+bool KeyspaceDB::Add(KeyspaceOp& op_)
 {
 	Log_Trace();
+	KeyspaceOp op = op_;
 
 	assert(queuedOps.Size() == queuedOpBuffers.Size());
 
