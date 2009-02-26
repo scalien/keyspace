@@ -52,6 +52,9 @@
 		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
+		9AE3DEFF0F55E45A00B0EB03 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */; };
+		9AE3DF000F55E45A00B0EB03 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */; };
+		9AE3DF010F55E45A00B0EB03 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE3DEFD0F55E45A00B0EB03 /* TCPServer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -156,6 +159,12 @@
 		9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiDatabaseOp.h; path = AsyncDatabase/MultiDatabaseOp.h; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
+		9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheConn.cpp; sourceTree = "<group>"; };
+		9AE3DEFA0F55E45A00B0EB03 /* MemcacheConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheConn.h; sourceTree = "<group>"; };
+		9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheServer.cpp; sourceTree = "<group>"; };
+		9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheServer.h; sourceTree = "<group>"; };
+		9AE3DEFD0F55E45A00B0EB03 /* TCPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPServer.cpp; sourceTree = "<group>"; };
+		9AE3DEFE0F55E45A00B0EB03 /* TCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPServer.h; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -251,6 +260,12 @@
 		5446122D0F53488D00EFBBDE /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
+				9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */,
+				9AE3DEFA0F55E45A00B0EB03 /* MemcacheConn.h */,
+				9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */,
+				9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */,
+				9AE3DEFD0F55E45A00B0EB03 /* TCPServer.cpp */,
+				9AE3DEFE0F55E45A00B0EB03 /* TCPServer.h */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -568,6 +583,9 @@
 				9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */,
 				9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */,
 				9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */,
+				9AE3DEFF0F55E45A00B0EB03 /* MemcacheConn.cpp in Sources */,
+				9AE3DF000F55E45A00B0EB03 /* MemcacheServer.cpp in Sources */,
+				9AE3DF010F55E45A00B0EB03 /* TCPServer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
