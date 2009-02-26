@@ -259,15 +259,23 @@
 										<string>08FB7794FE84155DC02AAC07</string>
 										<string>08FB7795FE84155DC02AAC07</string>
 										<string>548146F90F31B6B200F3D2B6</string>
+										<string>548146FE0F31B6B200F3D2B6</string>
+										<string>5446122A0F53488D00EFBBDE</string>
+										<string>5446122B0F53488D00EFBBDE</string>
+										<string>5446122D0F53488D00EFBBDE</string>
 										<string>548147140F31B6B200F3D2B6</string>
 										<string>9A22A3FA0F40AD2C002648C6</string>
-										<string>548147150F31B6B200F3D2B6</string>
+										<string>5481471F0F31B6B200F3D2B6</string>
+										<string>5481472D0F31B6B200F3D2B6</string>
+										<string>548147310F31B6B200F3D2B6</string>
 									</array>
 									<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 									<array>
 										<array>
-											<integer>11</integer>
+											<integer>8</integer>
+											<integer>6</integer>
 											<integer>5</integer>
+											<integer>4</integer>
 											<integer>3</integer>
 											<integer>2</integer>
 											<integer>0</integer>
@@ -378,7 +386,7 @@
 								<dict>
 									<key>PBXSmartGroupTreeModuleColumnWidthsKey</key>
 									<array>
-										<real>555</real>
+										<real>242</real>
 									</array>
 									<key>PBXSmartGroupTreeModuleColumnsKey_v4</key>
 									<array>
@@ -396,7 +404,7 @@
 										</array>
 									</array>
 									<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-									<string>{{0, 0}, {555, 301}}</string>
+									<string>{{0, 0}, {242, 1061}}</string>
 								</dict>
 								<key>PBXTopSmartGroupGIDs</key>
 								<array/>
@@ -406,11 +414,11 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {572, 319}}</string>
+								<string>{{10, 27}, {259, 1079}}</string>
 								<key>GroupTreeTableConfiguration</key>
 								<array>
 									<string>MainColumn</string>
-									<real>555</real>
+									<real>242</real>
 								</array>
 							</dict>
 							<key>Module</key>
@@ -431,8 +439,8 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>544612160F53423F00EFBBDE</string>
-				<string>544612170F53423F00EFBBDE</string>
+				<string>5421D0050F573DC0004BBDB4</string>
+				<string>5421D0060F573DC0004BBDB4</string>
 				<string>1C9437FD063B20B00039CFAC</string>
 				<string>1C9437FE063B20B00039CFAC</string>
 				<string>1C9437FF063B20B00039CFAC</string>
@@ -444,7 +452,7 @@
 	<key>PerspectivesBarVisible</key>
 	<false/>
 	<key>PinnedNavigatorIdentifier</key>
-	<string>544612060F53401900EFBBDE</string>
+	<string>5421D00D0F573DD1004BBDB4</string>
 	<key>ShelfIsVisible</key>
 	<false/>
 	<key>SourceDescription</key>
@@ -467,10 +475,8 @@
 	<integer>0</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1C530D52069F1CE1000CFCEE</string>
 		<string>1C530D54069F1CE1000CFCEE</string>
 		<string>/Users/mtrencseni/Code/Keyspace/Keyspace.xcodeproj</string>
-		<string>1C530D5B069F1CE1000CFCEE</string>
 	</array>
 	<key>WindowString</key>
 	<string>5 31 259 1147 0 0 1920 1178 </string>
@@ -631,7 +637,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string></string>
+								<string>&lt;No Editor&gt;</string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -648,6 +654,8 @@
 							<string>0pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -687,7 +695,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C530D52069F1CE1000CFCEE</string>
-				<string>544612180F53423F00EFBBDE</string>
+				<string>5421CD860F5723C7004BBDB4</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -698,7 +706,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C530D52069F1CE1000CFCEE</string>
 			<key>WindowToolIsVisible</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
@@ -807,13 +815,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C530D54069F1CE1000CFCEE</string>
-				<string>544612190F53423F00EFBBDE</string>
+				<string>5421D0070F573DC0004BBDB4</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>5446121A0F53423F00EFBBDE</string>
-				<string>5446121B0F53423F00EFBBDE</string>
-				<string>5446121C0F53423F00EFBBDE</string>
-				<string>5446121D0F53423F00EFBBDE</string>
-				<string>5446121E0F53423F00EFBBDE</string>
+				<string>5421D0080F573DC0004BBDB4</string>
+				<string>5421D0090F573DC0004BBDB4</string>
+				<string>5421D00A0F573DC0004BBDB4</string>
+				<string>5421D00B0F573DC0004BBDB4</string>
+				<string>5421D00C0F573DC0004BBDB4</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>

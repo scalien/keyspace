@@ -44,7 +44,7 @@ public:
 	MFunc<MemcacheConn>	onClose;
 
 	// KeyspaceClient interface
-	virtual void	OnComplete(KeyspaceOp* op, int status);
+	virtual void	OnComplete(KeyspaceOp* op, bool status);
 	
 private:
 	int			Tokenize(const char* data, int size, Token* tokens, int maxtokens);

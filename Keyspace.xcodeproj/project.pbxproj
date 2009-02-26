@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5406777E0F3C48FD00E80088 /* TestDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5406777C0F3C48FD00E80088 /* TestDB.cpp */; };
+		5421D00F0F573DD7004BBDB4 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
 		54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		54460CF10F519A8000EFBBDE /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
@@ -73,6 +74,7 @@
 /* Begin PBXFileReference section */
 		5406777C0F3C48FD00E80088 /* TestDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestDB.cpp; sourceTree = "<group>"; };
 		5406777D0F3C48FD00E80088 /* TestDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestDB.h; sourceTree = "<group>"; };
+		5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceDB.cpp; sourceTree = "<group>"; };
 		54460CD40F5198E800EFBBDE /* AsyncDBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncDBTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncDBTest.cpp; sourceTree = "<group>"; };
 		544611F00F533FAB00EFBBDE /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOTest.cpp; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				5446122C0F53488D00EFBBDE /* KeyspaceDB.h */,
+				5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -260,10 +263,10 @@
 		5446122D0F53488D00EFBBDE /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
-				9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */,
 				9AE3DEFA0F55E45A00B0EB03 /* MemcacheConn.h */,
-				9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */,
+				9AE3DEF90F55E45A00B0EB03 /* MemcacheConn.cpp */,
 				9AE3DEFC0F55E45A00B0EB03 /* MemcacheServer.h */,
+				9AE3DEFB0F55E45A00B0EB03 /* MemcacheServer.cpp */,
 				9AE3DEFD0F55E45A00B0EB03 /* TCPServer.cpp */,
 				9AE3DEFE0F55E45A00B0EB03 /* TCPServer.h */,
 			);
@@ -586,6 +589,7 @@
 				9AE3DEFF0F55E45A00B0EB03 /* MemcacheConn.cpp in Sources */,
 				9AE3DF000F55E45A00B0EB03 /* MemcacheServer.cpp in Sources */,
 				9AE3DF010F55E45A00B0EB03 /* TCPServer.cpp in Sources */,
+				5421D00F0F573DD7004BBDB4 /* KeyspaceDB.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

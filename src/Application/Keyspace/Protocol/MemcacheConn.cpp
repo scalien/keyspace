@@ -94,7 +94,7 @@ void MemcacheConn::OnClose()
 	TryClose();
 }
 
-void MemcacheConn::OnComplete(KeyspaceOp* op, int status)
+void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 {
 	const char stored[] = "STORED" CS_CRLF;
 	
