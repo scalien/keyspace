@@ -99,6 +99,7 @@ void MemcacheConn::TryClose()
 	if (numpending == 0)
 	{
 		server->OnDisconnect(this);
+		Log_Message("before delete this");
 		delete this;		
 	}
 }
@@ -108,25 +109,34 @@ void MemcacheConn::OnRead()
 	Log_Trace();
 
 	const char *p;
+	const char *last = NULL;
 	int newlen;
-	
-	p = Process(tcpread.data.buffer, tcpread.data.length);
-	if (!p)
-	{
-		TryClose();
-		return;
-	}
+	int remaining;
 
-	if (p == tcpread.data.buffer)
+	p = last = tcpread.data.buffer;
+	remaining = tcpread.data.length;
+
+	while (true)
 	{
-		// need more data
-		ioproc->Add(&tcpread);
-		return;
+		p = Process(p, tcpread.data.length);
+		if (!p)
+		{
+			TryClose();
+			return;
+		}
+		
+		if (p == last)
+		{
+			newlen = tcpread.data.length - (p - tcpread.data.buffer);
+			memmove(tcpread.data.buffer, p, newlen);
+			tcpread.data.length = newlen;
+
+			ioproc->Add(&tcpread);
+			return;
+		}
+		
+		last = p;
 	}
-	
-	newlen = tcpread.data.length - (p - tcpread.data.buffer);
-	memmove(tcpread.data.buffer, p, newlen);
-	tcpread.data.length = newlen;
 }
 
 void MemcacheConn::OnWrite()
@@ -168,9 +178,28 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 	Log_Trace();
 
 	const char stored[] = "STORED" CS_CRLF;
+	char buf[128];
+	const char *p;
+	int size;
+	
+	if (op->type == KeyspaceOp::GET && status)
+	{
+		size = snprintf(buf, sizeof(buf), "VALUE %.*s %d %d" CS_CRLF "%.*s" CS_CRLF, 
+				 op->key.length, op->key.buffer,
+				 0,
+				 op->value.length,
+				 op->value.length, op->value.buffer);
+		
+		p = buf;
+	}
+	else if (op->type == KeyspaceOp::SET && status)
+	{
+		p = stored;
+		size = sizeof(stored) - 1;
+	}
 
 	if (!closed)
-		Write(stored, sizeof(stored) - 1);
+		Write(p, size);
 
 	numpending--;
 }
