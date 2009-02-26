@@ -41,7 +41,7 @@ bool MultiDatabaseOp::Get(Table* table, const ByteString &key, ByteString& value
 }
 
 
-bool MultiDatabaseOp::Put(Table* table, const ByteString& key, ByteString& value)
+bool MultiDatabaseOp::Set(Table* table, const ByteString& key, ByteString& value)
 {
 	DatabaseOp* op;
 
@@ -49,7 +49,7 @@ bool MultiDatabaseOp::Put(Table* table, const ByteString& key, ByteString& value
 		return false;
 	
 	op = &ops[numop];
-	op->op = DatabaseOp::PUT;
+	op->op = DatabaseOp::SET;
 	op->table = table;
 	op->key = key;
 	op->value = value;
@@ -59,17 +59,17 @@ bool MultiDatabaseOp::Put(Table* table, const ByteString& key, ByteString& value
 	return true;
 }
 
-bool MultiDatabaseOp::Put(Table* table, char* key, ByteString &value)
+bool MultiDatabaseOp::Set(Table* table, char* key, ByteString &value)
 {
 	int len;
 	
 	len = strlen(key);
 	const ByteString bsKey(len, len, key);
 	
-	return MultiDatabaseOp::Put(table, bsKey, value);
+	return MultiDatabaseOp::Set(table, bsKey, value);
 }
 
-bool MultiDatabaseOp::Put(Table* table, char* key, char* value)
+bool MultiDatabaseOp::Set(Table* table, char* key, char* value)
 {
 	int len;
 	
@@ -79,8 +79,18 @@ bool MultiDatabaseOp::Put(Table* table, char* key, char* value)
 	len = strlen(value);
 	ByteString bsValue(len, len, value);
 	
-	return MultiDatabaseOp::Put(table, bsKey, bsValue);
+	return MultiDatabaseOp::Set(table, bsKey, bsValue);
+}
 
+bool MultiDatabaseOp::Add(DatabaseOp& op)
+{
+	if (numop >= SIZE(ops))
+		return false;
+	
+	ops[numop] = op;
+	numop++;
+	
+	return true;
 }
 
 void MultiDatabaseOp::SetTransaction(Transaction* tx)
@@ -135,7 +145,7 @@ void MultiDatabaseOp::Operation()
 		op = &ops[i];
 		if (op->op == DatabaseOp::GET)
 			op->ret = op->table->Get(tx, op->key, op->value);
-		else if (op->op == DatabaseOp::PUT)
+		else if (op->op == DatabaseOp::SET)
 			op->ret = op->table->Put(tx, op->key, op->value);
 	}
 	

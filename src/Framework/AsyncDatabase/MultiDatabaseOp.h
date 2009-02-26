@@ -14,7 +14,7 @@ class DatabaseOp
 public:
 	enum Operation {
 		GET,
-		PUT
+		SET
 	};
 	
 	Operation			op;
@@ -32,9 +32,10 @@ public:
 	void					Init();
 
 	bool					Get(Table* table, const ByteString& key, ByteString& value);
-	bool					Put(Table* table, const ByteString& key, ByteString& value);
-	bool					Put(Table* table, char* key, ByteString &value);
-	bool					Put(Table* table, char* key, char* value);
+	bool					Set(Table* table, const ByteString& key, ByteString& value);
+	bool					Set(Table* table, char* key, ByteString &value);
+	bool					Set(Table* table, char* key, char* value);
+	bool					Add(DatabaseOp& op);
 
 	void					SetTransaction(Transaction* tx = 0);
 

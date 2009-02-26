@@ -14,7 +14,9 @@ onRead(this, &MemcacheConn::OnRead),
 onWrite(this, &MemcacheConn::OnWrite),
 onClose(this, &MemcacheConn::OnClose)
 {
-	op.client = this;
+	server = NULL;
+	ioproc = NULL;
+	kdb = NULL;
 }
 
 void MemcacheConn::Init(MemcacheServer* server_, IOProcessor* ioproc_, KeyspaceDB* kdb_)

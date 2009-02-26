@@ -30,7 +30,6 @@ public:
 	int				numpending;
 	bool			closed;
 	KeyspaceDB*		kdb;
-	KeyspaceOp		op;
 	
 	MemcacheConn();
 	
