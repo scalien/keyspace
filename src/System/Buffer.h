@@ -15,7 +15,7 @@ public:
 	ByteString(int size_, int length_, char* buffer_)
 		: size(size_), length(length_), buffer(buffer_) {}
 	
-	Init() { size = 0; length = 0; buffer = 0; }
+	void Init() { size = 0; length = 0; buffer = 0; }
 	
 	bool Set(char* str)
 	{
@@ -51,6 +51,14 @@ public:
 		size = n;
 		length = strlen(str);
 		memcpy(data, str, length);
+		buffer = data;
+	}
+
+	ByteArray(ByteString& bs)
+	{
+		size = n;
+		length = bs.length;
+		memcpy(data, bs.buffer, length);
 		buffer = data;
 	}
 	

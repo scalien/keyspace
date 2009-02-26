@@ -24,6 +24,8 @@ ulong64 strntoulong64(char* buffer, int size, int* nread);
 
 char* rprintf(const char* format, ...);
 
+void* Alloc(int num, int size = 1);
+
 #define ASSERT_FAIL() assert(false)
 
 #define EXACTLY_ONE(a, b, c) ((((int)(a)) + ((int)(b)) + ((int)(c))) == 1)

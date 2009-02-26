@@ -1,6 +1,7 @@
 #include "Common.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include <string>
 
 long strntol(char* buffer, int size, int* nread)
 {
@@ -92,4 +93,12 @@ char* rprintf(const char* format, ...)
 	vsprintf(buffer, format, ap);
 	
 	return buffer;
+}
+
+void* Alloc(int num, int size)
+{
+	if (num == 0 || size == 0)
+		return NULL;
+		
+	return malloc(num * size);
 }
