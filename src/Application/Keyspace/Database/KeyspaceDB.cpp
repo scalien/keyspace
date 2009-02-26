@@ -141,7 +141,10 @@ void KeyspaceDB::OnDBComplete()
 	for (i = 0; i < numOp; i++)
 	{
 		bool ret = mdbop.GetReturnValue(i);
-		
+
+		if (ret)
+			opit->value = *mdbop.GetValue(i);
+
 		// call client's callback
 		
 		opit->client->OnComplete(opit, ret);
