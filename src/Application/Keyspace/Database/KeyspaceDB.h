@@ -1,10 +1,12 @@
 #ifndef KEYSPACEDB_H
 #define KEYSPACEDB_H
 
-class Client
+class KeyspaceOp;
+
+class KeyspaceClient
 {
 public:
-	virtual	void	OnComplete(KeyspaceOp* op) = 0;
+	virtual	void	OnComplete(KeyspaceOp* op, int status) = 0;
 };
 
 class KeyspaceOp
@@ -17,12 +19,12 @@ public:
 		TEST_AND_SET
 	};
 	
-	Type		type;
-	ByteString	key;
-	ByteString	value;
-	ByteString	test;
+	Type			type;
+	ByteString		key;
+	ByteString		value;
+	ByteString		test;
 	
-	Client*		client;
+	KeyspaceClient*	client;
 };
 
 class KeyspaceDB
