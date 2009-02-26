@@ -53,14 +53,6 @@ public:
 		memcpy(data, str, length);
 		buffer = data;
 	}
-
-	ByteArray(ByteString& bs)
-	{
-		size = n;
-		length = bs.length;
-		memcpy(data, bs.buffer, length);
-		buffer = data;
-	}
 	
 	bool Set(char* str) { return ByteString::Set(str); }
 							

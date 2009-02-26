@@ -93,7 +93,7 @@ public:
 	
 	Table*					table;
 	Transaction				transaction;
-	MultiDatabaseOp			dbop;
+	MultiDatabaseOp			mdbop;
 	ByteArray<VALUE_SIZE>	bytearrays[4];
 	void					OnDBComplete();
 	MFunc<Paxos>			onDBComplete;

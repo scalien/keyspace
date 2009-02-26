@@ -12,12 +12,12 @@ class ThreadPool;
 class DatabaseOp
 {
 public:
-	enum Operation {
+	enum Type {
 		GET,
 		SET
 	};
 	
-	Operation			op;
+	Type				type;
 	Table*				table;
 	ByteString			key;
 	ByteString			value;

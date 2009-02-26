@@ -30,7 +30,7 @@ bool MultiDatabaseOp::Get(Table* table, const ByteString &key, ByteString& value
 		return false;
 	
 	op = &op[numop];
-	op->op = DatabaseOp::GET;
+	op->type = DatabaseOp::GET;
 	op->table = table;
 	op->key = key;
 	op->value = value;
@@ -49,7 +49,7 @@ bool MultiDatabaseOp::Set(Table* table, const ByteString& key, ByteString& value
 		return false;
 	
 	op = &ops[numop];
-	op->op = DatabaseOp::SET;
+	op->type = DatabaseOp::SET;
 	op->table = table;
 	op->key = key;
 	op->value = value;
@@ -143,9 +143,9 @@ void MultiDatabaseOp::Operation()
 	for (i = 0; i < numop; i++)
 	{
 		op = &ops[i];
-		if (op->op == DatabaseOp::GET)
+		if (op->type == DatabaseOp::GET)
 			op->ret = op->table->Get(tx, op->key, op->value);
-		else if (op->op == DatabaseOp::SET)
+		else if (op->type == DatabaseOp::SET)
 			op->ret = op->table->Put(tx, op->key, op->value);
 	}
 	

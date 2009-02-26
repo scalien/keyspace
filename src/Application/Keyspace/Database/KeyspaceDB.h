@@ -1,12 +1,19 @@
 #ifndef KEYSPACEDB_H
 #define KEYSPACEDB_H
 
+#include "System/Containers/List.h"
+#include "System/Buffer.h"
+#include "System/Events/Callable.h"
+#include "Framework/Database/Database.h"
+#include "Framework/Database/Transaction.h"
+#include "Framework/AsyncDatabase/MultiDatabaseOp.h"
+
 class KeyspaceOp;
 
 class KeyspaceClient
 {
 public:
-	virtual	void	OnComplete(KeyspaceOp* op, int status) = 0;
+	virtual	void	OnComplete(KeyspaceOp* op, bool status) = 0;
 };
 
 class KeyspaceOp
@@ -19,18 +26,45 @@ public:
 		TEST_AND_SET
 	};
 	
-	Type			type;
-	ByteString		key;
-	ByteString		value;
-	ByteString		test;
+	Type					type;
+	ByteString				key;
+	ByteString				value;
+	ByteString				test;
 	
-	KeyspaceClient*	client;
+	KeyspaceClient*			client;
+};
+
+class OpBuffers
+{
+public:
+	char*					key;
+	char*					value;
+	char*					test;
 };
 
 class KeyspaceDB
 {
 public:
-	bool Add(KeyspaceOp& op);
+	KeyspaceDB();
+	
+	bool					Init();
+	
+	bool					Add(KeyspaceOp& op);	// the interface used by KeyspaceClient
+	
+	bool					StartDBOperation();
+	
+	void					OnDBComplete();
+	MFunc<KeyspaceDB>		onDBComplete;
+	
+	DatabaseOp				MakeDatabaseOp(KeyspaceOp* keyspaceOp);
+	
+private:
+	List<KeyspaceOp>		queuedOps;
+	List<OpBuffers>			queuedOpBuffers;
+	
+	Table*					table;
+	Transaction				transaction;
+	MultiDatabaseOp			mdbop;
 };
 
 #endif

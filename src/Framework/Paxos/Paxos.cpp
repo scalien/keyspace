@@ -14,7 +14,7 @@ Paxos::Paxos() :
 	proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout),
 	onDBComplete(this, &Paxos::OnDBComplete)
 {
-	dbop.SetCallback(&onDBComplete);
+	mdbop.SetCallback(&onDBComplete);
 }
 
 bool Paxos::Start(ByteString value)
@@ -134,21 +134,21 @@ bool Paxos::WriteState(Transaction* transaction)
 	bytearrays[2].Set(rprintf("%llu",			acceptor.n_highest_promised));
 	bytearrays[3].Set(rprintf("%llu",			acceptor.n_accepted));
 	
-	dbop.Init();
+	mdbop.Init();
 	
 	ret = true;
-	ret = ret && dbop.Put(table, "paxosID",				bytearrays[0]);
-	ret = ret && dbop.Put(table, "accepted",			bytearrays[1]);
-	ret = ret && dbop.Put(table, "n_highest_promised",	bytearrays[2]);
-	ret = ret && dbop.Put(table, "n_accepted",			bytearrays[3]);
-	ret = ret && dbop.Put(table, "value",				acceptor.value);
+	ret = ret && mdbop.Set(table, "paxosID",				bytearrays[0]);
+	ret = ret && mdbop.Set(table, "accepted",			bytearrays[1]);
+	ret = ret && mdbop.Set(table, "n_highest_promised",	bytearrays[2]);
+	ret = ret && mdbop.Set(table, "n_accepted",			bytearrays[3]);
+	ret = ret && mdbop.Set(table, "value",				acceptor.value);
 
 	if (!ret)
 		return false;
 	
-	dbop.SetTransaction(transaction);
+	mdbop.SetTransaction(transaction);
 	
-	dbWriter.Add(&dbop);
+	dbWriter.Add(&mdbop);
 
 	return true;
 }
@@ -222,7 +222,7 @@ void Paxos::OnRead()
 	} else
 		ProcessMsg();
 	
-	assert(EXACTLY_ONE(udpread.active, udpwrite.active, dbop.active));
+	assert(EXACTLY_ONE(udpread.active, udpwrite.active, mdbop.active));
 }
 
 void Paxos::OnWrite()
@@ -253,7 +253,7 @@ void Paxos::OnWrite()
 		ioproc->Add(&udpread);
 	}
 	
-	assert(EXACTLY_ONE(udpread.active, udpwrite.active, dbop.active));
+	assert(EXACTLY_ONE(udpread.active, udpwrite.active, mdbop.active));
 }
 
 void Paxos::ProcessMsg()
@@ -585,7 +585,7 @@ void Paxos::OnPrepareTimeout()
 	
 	assert(proposer.preparing);
 	
-	if (dbop.active)
+	if (mdbop.active)
 	{
 		Log_Message("Waiting for dbop to complete...");
 		scheduler->Reset(&prepareTimeout);
@@ -601,7 +601,7 @@ void Paxos::OnProposeTimeout()
 	
 	assert(proposer.proposing);
 	
-	if (dbop.active)
+	if (mdbop.active)
 	{
 		Log_Message("Waiting for dbop to complete...");
 		scheduler->Reset(&proposeTimeout);
@@ -628,5 +628,5 @@ void Paxos::OnDBComplete()
 	
 	SendMsg();
 	
-	assert(EXACTLY_ONE(udpread.active, udpwrite.active, dbop.active));
+	assert(EXACTLY_ONE(udpread.active, udpwrite.active, mdbop.active));
 }
