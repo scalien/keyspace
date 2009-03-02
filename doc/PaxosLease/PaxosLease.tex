@@ -163,13 +163,13 @@ In the formulation of PaxosLease (and Paxos) so far, a value was chosen if a maj
 In the full formulation of PaxosLease, $PaxosLease_{acquire, extend, release}$, we change the definition of chosen value: a proposal $p$ containing value $v$ is chosen if the proposer receives propose response messages from a majority of acceptors.
 Note that this definition is stronger then the previous, so all proofs presented so far remain valid.
 
-Now we can complete PaxosLease by introducing special $"release, t_r"$ values. Both the proposer's and acceptor's rules are amended.
+Now we can complete PaxosLease by introducing special $"release, k, t_r"$ values. Both the proposer's and acceptor's rules are amended.
 
 \begin{enumerate}
 
-\item An acceptor, receiving a proposal $p$ with ballot number $b$ (such that $highest \; ballot \; promised <= b$) and value $"release, t_r"$, if $t_r < t$ must reset its accepted proposal at time $t_r$: $accepted \; proposal := empty \; proposal$.
+\item An acceptor, receiving a proposal $p$ with ballot number $b$ (such that $highest \; ballot \; promised <= b$) and value $"release, k, t_r"$, if currently holding accepted value $"acquire, k, t_e"$ where $t_r < t_e < t$ must change $t_e$ to $t_r$ in its accepted value and reset its timer to $t_r$.
 
-\item Proposer $k$, at time $t$ learning that its value $"acquire, k, t_e"$ was chosen, where $t < t_e < t + T$, may either extend its lease as described above or release its lease at time $t'$ by issuing a proposal with value $"release, t_r"$ where $t < t' <  t_r < t_e < t + T$.
+\item Proposer $k$, at time $t$ learning that its value $"acquire, k, t_e"$ was chosen, where $t < t_e < t + T$, may either extend its lease as described above or release its lease at time $t'$ by issuing a proposal with value $"release, k, t_r"$ where $t < t' <  t_r < t_e < t + T$.
 
 \end{enumerate}
 
@@ -193,7 +193,7 @@ What remains is to inform learners of leases. Only the proposer's algorithm chan
 
 \item If proposer $k$ receives propose response messages from a majority of acceptors containing value $v = "acquire, k, t_e"$, then it sends this learn messages containing $v$ to the learners. Learners, upon receiving this value, assume that $k$ holds the lease until time $t_e$.
 
-\item If proposer $k$, who is currently holding the lease wants to release it at time $t_r$, it sends learn messages containing the value $v = "release, t_r"$ to learners \emph{before issuing the proposal for $v$}. Learners, upon receiving this value, if they knew $k$ currently holds the value, assume that $k$ holds the lease until time $t_r$.
+\item If proposer $k$, who is currently holding the lease wants to release it at time $t_r$, it sends learn messages containing the value $v = "release, k, t_r"$ to learners \emph{before issuing the proposal for $v$}. Learners, upon receiving this value, if they knew $k$ currently holds the value, assume that $k$ holds the lease until time $t_r$.
 
 \end{enumerate}
 
@@ -212,5 +212,28 @@ So far, we have assumed that all nodes know some global time $t$. In practice th
 \item the global maximal lease time $T$ is chosen such that $S < T$.
 
 \end{enumerate}
+
+Changes are required to handle clock skew:
+
+\begin{enumerate}
+
+\item When restarting, proposers and acceptors must wait for $T + S$ time
+
+\item If a proposer $k$ wants to acquire a lease until local time $t_e$. It must take into account that acceptors' clocks may be ahead of its own by $S$ time. It does this by proposing the value $"acquire, k, t_e'"$, where $c_k(t) + S < t_e' = t_e + S < c_k(t) + T$. This ensures that an acceptor, even if its clock is ahead of k's by $S$ time, does not delete the accepted value before k's local time reaches $t_e$.
+ 
+\item After a proposer has acquired a lease until time $t_e$, it may notify learners, but it must take into account that learners clocks' may be behind the acceptor's clock by $S$ time. If value $"acquire, k, t_e'"$ ($t_e' = t_e + S$) is accepted by a majority of acceptors, proposer $k$ sends learn messages containing time $t_e$. This ensures that a learner, even if its clock is behind the acceptors' by $S$ time, does not falsely believe that $k$ owns the lease after acceptor's local time reaches $t_e'$ and they discard their state.
+
+\item If proposer $k$ wishes to release a lease at local time $t_r$ that it holds until local time $t_e$ (the previously accepted value is $"acquire, k, t_e + S"$), it must issue proposal $"release, k, t_r'"$ where $c_k(t) + S < t_r' = t_r + S < t_e$. This ensures that an acceptor, even if its clock is ahead of k's by $S$ time, does not delete the accepted value before k's local time reaches $t_e$.
+
+\item Proposals must send $"release..."$ values to learners before proposing the value. If it wishes to release the resource at local time $t_r$, it sends the value $"release, k, t_r"$ to the proposers. Since it will propose the value $"release, k, t_r' = t_r + S"$ to the acceptors, this ensures that learner's do not falsely believe $k$ holds the lease after acceptor's local time reashes $t_r'$ and they discard their state.
+
+\end{enumerate}
+
+
+\section{ Leases for many resources }
+
+The algorithm defines lease actions concerning a single resource $R$. In practice, nodes wish to deal with several resources, such as write locks for files in a distributed filesystem. The solution is to run several independent instances of PaxosLease in parallel, each with its own proposer, acceptor and learner states. To identify leases in messages, prefix each messages with a \emph{resources identifier}.
+
+A node acting as proposer, acceptor and learner (a common setup in distributed systems) requires ~ 50-100 bytes of memory for each PaxosLease instance, or 10-20 million resource leases per gigabyte of main memory.
 
 \end{document}
