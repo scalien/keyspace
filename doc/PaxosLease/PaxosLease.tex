@@ -1,27 +1,23 @@
 \documentclass[12pt]{article}
 
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
-\geometry{a4paper} % or letter or a5paper or ... etc
-
-% See the ``Article customise'' template for come common customisations
+\geometry{a4paper} % or letter
+\geometry{margin=1in}
 
 \title{ PaxosLease: Diskless Paxos for Leases }
 \author{ Marton Trencseni }
-%\date{} % delete this line to display the current date
+%\date{}
 
-%%% BEGIN DOCUMENT
 \begin{document}
 
 \maketitle
-%\tableofcontents
-
-
 
 
 \section{ Introduction }
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{ Failure conditions }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 PaxosLease handles the following failure conditions:
 
 \begin{enumerate}
@@ -35,9 +31,9 @@ PaxosLease handles the following failure conditions:
 PaxosLease does not handle Byzantine failures and messages corruption.
 
 \section{ Preliminaries }
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{ Definitions }
-%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{ Actors }
 A PaxosLease cell consists of \emph{proposers}, \emph{acceptors} and \emph{learners}. We assume there are $n$ acceptors and any number of proposers and learners. In practice nodes often act as all three, but this is an implementation issue and does not affect the discussion.
@@ -71,7 +67,6 @@ $ballot \; number \; mod \; n = proposer \; id$.
 A proposal $p$ containing value $v$ is chosen if $ accepted \; proposal = p $ for a majority of acceptors.
 
 \subsection{ Algorithm }
-%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{ Basic flow }
 
@@ -99,6 +94,7 @@ Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $
 Proof of lemma. Let $p_1 = (b_1, v_1)$ be the proposal with the lowest ballot number such that $b_0 < b_1$. Let $A_0$ be a majority of acceptors who accepted $p_0$ and let $A_1$ be a majority of acceptors who sent prepare responses to $p_1$. There must be an acceptor $a$ who is in both sets, who must have \emph{first} accepted $p_0$ and \emph{later} replied to the prepare request with $b_1$. In the prepare reply $a$ indicated that it accepted $p_0$, and since $p_1$ is the lowest numbered proposal after $p_0$ the proposer could not have recieved a reply containing a higher numbered proposal, it must have used the value $v_0$ from proposal $p_0$, thus $v_0 = v_1$. Repeating this argument for the next proposal $p_2$, if a majority of nodes sent prepare replys, at least one must have contained $p_0$ or $p_1$, thus $p_2$ must contain the value $v_0$. Continuing \emph{ad infinitum} proves the lemma.
 
 \section{ PaxosLease with perfect clocks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{ Acquiring leases }
 
@@ -201,6 +197,7 @@ If the proposer sends the learn messages containing $"release..."$ values to the
 On the other hand, if the proposer does not fail and sends enough propose messages containing $"release..."$ values, other proposers will be able to acquire the lease before the proposer's previously held lease's expire time.
 
 \section{ PaxosLease with skewed clocks }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 So far, we have assumed that all nodes know some global time $t$. In practice this is not true, so we assume the $kth$ node has a local clock $c_k(t)$ with a maximal skew $S$ such that
 
@@ -228,8 +225,8 @@ Changes are required to handle clock skew:
 
 \end{enumerate}
 
-
 \section{ Leases for many resources }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The algorithm defines lease actions concerning a single resource $R$. In practice, nodes wish to deal with several resources, such as write locks for files in a distributed filesystem. The solution is to run several independent instances of PaxosLease in parallel, each with its own proposer, acceptor and learner states. To identify leases in messages, prefix each messages with a \emph{resources identifier}.
 
