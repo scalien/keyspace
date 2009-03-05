@@ -2,6 +2,7 @@
 #include "System/IO/IOProcessor.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Protocol/MemcacheServer.h"
+#include "Application/Keyspace/Protocol/HttpServer.h"
 
 int main(int argc, char* argv[])
 {
@@ -25,6 +26,9 @@ int main(int argc, char* argv[])
 	
 	MemcacheServer mcache;
 	mcache.Init(&kdb);
+	
+	HttpServer httpServer;
+	httpServer.Init(&kdb);
 	
 	eventloop->Run();	
 }

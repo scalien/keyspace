@@ -4,6 +4,7 @@
 #include "System/Events/Callable.h"
 #include "System/IO/Socket.h"
 #include "System/IO/IOOperation.h"
+#include "System/IO/IOProcessor.h"
 
 class TCPServer
 {

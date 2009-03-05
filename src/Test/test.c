@@ -145,7 +145,6 @@ test_names_parse(testfn_t *test_functions, char *test_names, int *names, int siz
 {
 	int i = 0;
 	char *p = test_names;
-	TEST_LOG("test_names = %s", test_names);
 	while (*p) {
 		names[i++] = p - test_names;
 		char *comma = strstr(test_names, ",");

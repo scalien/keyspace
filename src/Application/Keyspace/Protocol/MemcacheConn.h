@@ -32,6 +32,7 @@ public:
 	int				numpending;
 	bool			closed;
 	KeyspaceDB*		kdb;
+	const char*		newline;
 	
 	MemcacheConn();
 	~MemcacheConn();

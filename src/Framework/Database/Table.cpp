@@ -48,13 +48,13 @@ bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &val
 	return true;
 }
 
-bool Table::Get(Transaction* transaction, char* key, ByteString &value)
+bool Table::Get(Transaction* transaction, const char* key, ByteString &value)
 {
 	int len;
 	
 	len = strlen(key);
 	
-	ByteString bsKey(len, len, key);
+	ByteString bsKey(len, len, (char*) key);
 	
 	return Table::Get(transaction, bsKey, value);
 }
@@ -76,26 +76,59 @@ bool Table::Put(Transaction* transaction, const ByteString &key, const ByteStrin
 	return true;
 }
 
-bool Table::Put(Transaction* transaction, char* key, const ByteString &value)
+bool Table::Put(Transaction* transaction, const char* key, const ByteString &value)
 {
 	int len;
 	
 	len = strlen(key);
 	
-	ByteString bsKey(len, len, key);
+	ByteString bsKey(len, len, (char*) key);
 	
 	return Table::Put(transaction, bsKey, value);
 }
 
-bool Table::Put(Transaction* transaction, char* key, char* value)
+bool Table::Put(Transaction* transaction, const char* key, const char* value)
 {
 	int len;
 	
 	len = strlen(key);
-	ByteString bsKey(len, len, key);
+	ByteString bsKey(len, len, (char*) key);
 	
 	len = strlen(value);
-	ByteString bsValue(len, len, value);
+	ByteString bsValue(len, len, (char*) value);
 	
 	return Table::Put(transaction, bsKey, bsValue);
+}
+
+bool Table::Visit(TableVisitor &tv)
+{
+	Dbc* cursor = NULL;
+	bool ret = true;
+
+	try {
+		db->cursor(NULL, &cursor, 0);
+		
+		Dbt key, value;
+		
+		while (cursor->get(&key, &value, DB_NEXT) == 0)
+		{
+			ByteString bsKey(key.get_size(), key.get_size(), (char*) key.get_data());
+			ByteString bsValue(value.get_size(), value.get_size(), (char*) value.get_data());
+
+			tv.Accept(bsKey, bsValue);
+		}
+	}
+	catch (DbException &e) 
+	{
+		ret = false;
+	}
+	catch (std::exception &e)
+	{
+		ret = false;
+	}
+	
+	if (cursor)
+		cursor->close();
+	
+	return ret;
 }
