@@ -10,15 +10,17 @@ class Endpoint
 public:
 	struct sockaddr_in	sa;
 	
-	bool Init(struct sockaddr_in &sa_);
+	bool	Set(struct sockaddr_in &sa_);
 	
-	bool Init(char* ip, int port);
+	bool	Set(char* ip, int port);
 	
-	bool Init(char* ip_port);
+	bool	Set(char* ip_port);
 	
-	char* ToString();
+	bool	SetPort(int port);
+		
+	int		GetPort();
 	
-	int Port();
+	char*	ToString();
 	
 private:
 	char			buffer[32];

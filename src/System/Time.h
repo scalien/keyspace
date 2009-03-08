@@ -4,10 +4,11 @@
 #include <sys/timeb.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "Types.h"
 
-inline long long Now()
+inline ulong64 Now()
 {
-	long long now;
+	ulong64 now;
 	struct timeb tp;
 	
     ftime(&tp);

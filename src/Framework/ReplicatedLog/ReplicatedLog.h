@@ -3,26 +3,25 @@
 
 #include "System/Containers/List.h"
 #include "System/Events/Callable.h"
-#include "Framework/Paxos/Paxos.h"
-#include "Framework/Paxos/PaxosMsg.h"
+#include "Framework/Paxos/PaxosProposer.h"
+#include "Framework/Paxos/PaxosAcceptor.h"
+#include "Framework/Paxos/PaxosLearner.h"
 #include "Framework/ReplicatedDB/ReplicatedDB.h"
-#include "Framework/MasterLease/MasterLease.h"
 #include "LogCache.h"
 #include "LogQueue.h"
 
 #define CATCHUP_TIMEOUT	5000
 
-class ReplicatedLog : private Paxos
+class ReplicatedLog : private PaxosProposer, private PaxosAcceptor, private PaxosLearner
 {
 public:
 	ReplicatedLog();
 
-	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_, bool multiPaxos);
+	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* filename);
 	
 	bool				Append(ByteString value);
-	bool				RemoveAll(char protocol);
 	
-	void				Register(char protocol, ReplicatedDB* replicatedDB);
+	void				SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	
 	LogItem*			LastLogItem();
 	
@@ -31,35 +30,36 @@ public:
 	
 	int					NodeID();
 	
-	bool				ReadConfig(char* filename);
-
 	bool				Stop();
 	bool				Continue();
 
 private:
-	bool				appending;
-	ByteString			value;
-	
-	ulong64				highest_paxosID_seen;
-	
-	LogCache			logCache;
-	LogQueue			logQueue;
-	
-	bool				WriteState(Transaction* transaction);
-	// TODO: call after OnAppend()
-	
 	virtual void		OnPrepareRequest();
 	virtual void		OnPrepareResponse();
 	virtual void		OnProposeRequest();
 	virtual void		OnProposeResponse();
 	virtual void		OnLearnChosen();
+	virtual void		OnRequestChosen();
+
+	void				OnRequest();
+
+	IOProcessor*		ioproc;
+	Scheduler*			scheduler;
+
+	bool				appending;
+	ByteString			value;
 	
+	ulong64				highestPaxosID;
+	
+	LogCache			logCache;
+	LogQueue			logQueue;
+		
 	void				OnCatchupTimeout();
-	TimerM<ReplicatedLog> catchupTimeout;
+	MFunc<ReplicatedLog>onCatchupTimeout;
+	CdownTimer			catchupTimeout;
 
-	MasterLease			masterLease;
-
-	ReplicatedDB*		replicatedDBs[256];
+	ReplicatedDB*		replicatedDB;
+	
+	PaxosConfig			config;
 };
-
 #endif

@@ -1,8 +1,10 @@
 #include "PaxosConfig.h"
 #include <stdlib.h>
 #include <math.h>
+#include "Framework/Database/Table.h"
+#include "PaxosConsts.h"
 
-bool PaxosConfig::Read(char *filename)
+bool PaxosConfig::Init(char *filename)
 {
 	FILE*		f;
 	char		buffer[1024];
@@ -32,8 +34,8 @@ bool PaxosConfig::Read(char *filename)
 	// next line is my host specification
 	ReadLine();
 	
-	endpoint.Init(buffer);
-	port = endpoint.Port();
+	endpoint.Set(buffer);
+	port = endpoint.GetPort();
 	
 	// read empty line
 	ReadLine();
@@ -41,13 +43,50 @@ bool PaxosConfig::Read(char *filename)
 	// now read other nodes, including myself
 	while (fgets(buffer, sizeof(buffer), f) != NULL)
 	{
-		endpoint.Init(buffer);
+		endpoint.Set(buffer);
 		endpoints.Add(endpoint);
 	}
 	
 	numNodes = endpoints.Size();
 	
+	InitRestartCounter();
+	
 	return true;
+}
+
+void PaxosConfig::InitRestartCounter()
+{
+	Log_Trace();
+	
+	bool			ret;
+	int				nread;
+	ByteArray<32>	baRestartCounter;
+	Table*			table;
+	
+	table = database.GetTable("state");
+	if (table == NULL)
+	{
+		restartCounter = 0;
+		return;
+	}
+
+	ret = table->Get(NULL, "restartCounter", baRestartCounter);
+
+	if (ret)
+	{
+		restartCounter = strntoulong64(baRestartCounter.buffer, baRestartCounter.length, &nread);
+		if (nread != baRestartCounter.length)
+			restartCounter = 0;
+	}
+	else
+		restartCounter = 0;
+	
+	restartCounter++;
+	
+	baRestartCounter.length =
+		snprintf(baRestartCounter.buffer, baRestartCounter.size, "%llu", restartCounter);
+	
+	table->Put(NULL, "restartCounter", baRestartCounter);
 }
 
 int PaxosConfig::MinMajority()
@@ -55,13 +94,21 @@ int PaxosConfig::MinMajority()
 	return (floor(numNodes / 2) + 1);
 }
 
-long PaxosConfig::NextHighest(long highest_promised)
+ulong64 PaxosConfig::NextHighest(ulong64 proposalID)
 {
-	long round, n;
+	ulong64 left, middle, right, nextProposalID;
 	
-	round = floor(highest_promised / numNodes);
-	round++;
-	n = round * numNodes + nodeID;
+	left = proposalID >> (WIDTH_NODEID + WIDTH_RESTART_COUNTER);
 	
-	return n;
+	left++;
+	
+	left = left << (WIDTH_NODEID + WIDTH_RESTART_COUNTER);
+
+	middle = restartCounter << WIDTH_NODEID;
+
+	right = nodeID;
+
+	nextProposalID = left + middle + right;
+	
+	return nextProposalID;
 }

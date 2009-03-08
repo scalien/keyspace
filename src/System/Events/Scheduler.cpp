@@ -2,7 +2,7 @@
 
 void Scheduler::Add(Timer* timer)
 {
-	timer->Set();
+	timer->OnAdd();
 	timer->active = true;
 	timers.Add(timer);
 }

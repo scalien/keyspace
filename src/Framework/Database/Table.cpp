@@ -105,26 +105,16 @@ bool Table::Visit(TableVisitor &tv)
 	Dbc* cursor = NULL;
 	bool ret = true;
 
-	try {
-		db->cursor(NULL, &cursor, 0);
-		
-		Dbt key, value;
-		
-		while (cursor->get(&key, &value, DB_NEXT) == 0)
-		{
-			ByteString bsKey(key.get_size(), key.get_size(), (char*) key.get_data());
-			ByteString bsValue(value.get_size(), value.get_size(), (char*) value.get_data());
+	db->cursor(NULL, &cursor, 0);
+	
+	Dbt key, value;
+	
+	while (cursor->get(&key, &value, DB_NEXT) == 0)
+	{
+		ByteString bsKey(key.get_size(), key.get_size(), (char*) key.get_data());
+		ByteString bsValue(value.get_size(), value.get_size(), (char*) value.get_data());
 
-			tv.Accept(bsKey, bsValue);
-		}
-	}
-	catch (DbException &e) 
-	{
-		ret = false;
-	}
-	catch (std::exception &e)
-	{
-		ret = false;
+		tv.Accept(bsKey, bsValue);
 	}
 	
 	if (cursor)

@@ -5,53 +5,59 @@
 #include "System/Buffer.h"
 #include "System/Types.h"
 
-class ProposerState
+class PaxosProposerState
 {
 public:
 	bool					preparing;
 	bool					proposing;
 	
-	ulong64					n_proposing;
-	ulong64					n_highest_received;
-	int						numOpen;
+	ulong64					proposalID;
+	ulong64					highestReceivedProposalID;
 	ByteArray<VALUE_SIZE>	value;
 	
-	// multi paxos
-	bool					leader;
+	bool					leader; // multi paxos
 	
 	bool Active() { return (preparing || proposing); }
 	
-	bool Valid() { return !(preparing && proposing); }
-	
-	void Reset()
+	void Init()
 	{
-		preparing =				false;
-		proposing =				false;
-		n_proposing =			0;
-		n_highest_received =	0;
-		numOpen =				0;
+		preparing =					false;
+		proposing =					false;
+		proposalID =				0;
+		highestReceivedProposalID =	0;
 		
 		value.Clear();
 	}	
 };
 
-class AcceptorState
+class PaxosAcceptorState
 {
 public:
-	bool					accepted;
+	ulong64					promisedProposalID;
+	
+	bool					accepted;	
+	ulong64					acceptedProposalID;
+	ByteArray<VALUE_SIZE>	acceptedValue;
+	
+	void Init()
+	{
+		promisedProposalID =	0;
+
+		accepted =				false;
+		acceptedProposalID =	0;
+		acceptedValue.Clear();
+	}
+};
+
+class PaxosLearnerState
+{
+public:
 	bool					learned;
-	
-	ulong64					n_highest_promised;
-	
-	ulong64					n_accepted;
 	ByteArray<VALUE_SIZE>	value;
 	
-	void Reset()
+	void Init()
 	{
-		accepted =				false;
-		learned =				false;
-		n_highest_promised =	0;
-		
+		learned =		0;
 		value.Clear();
 	}
 };

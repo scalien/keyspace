@@ -1,74 +1,88 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "Callable.h"
 #include "System/Time.h"
+#include "Callable.h"
 
 class Timer
 {
+friend class Scheduler;
+
 public:
-    bool			active;
-	long long		when;
-	int				delay;
-    Callable*		callable;
-    
 	Timer()
 	{
 		when = 0;
-		delay = 0;
 		callable = NULL;
+		active = false;
 	}
-	
-	Timer(long delay_, Callable* callable_)
+		
+	Timer(Callable* callable_)
 	{
-		delay = delay_;
+		when = 0;
 		callable = callable_;
 		active = false;
 	}
-	
-	~Timer() { }
-	
-	void Set()
+		
+	void Set(ulong64 when_)
 	{
-		when = Now() + delay;
+		when = when_;
+	}
+	
+	bool IsActive()
+	{
+		return active;
+	}
+	
+	ulong64 When()
+	{
+		return when;
 	}
 	
 	void Execute()
 	{
 		Call(callable);
 	}
+	
+	virtual void OnAdd()
+	{
+	}
+
+protected:
+    bool			active;
+	ulong64			when;
+    Callable*		callable;
 };
 
-template<class T>
-class TimerM : public Timer
+class CdownTimer : public Timer
 {
 public:
-	typedef void (T::*Callback)();
+	CdownTimer() : Timer()
+	{
+		delay = 0;
+	}
 	
-	TimerM(long delay, T* object, Callback callback)
-	: callable(object, callback), Timer(delay, &callable)
-	{}
+	CdownTimer(Callable* callable_) : Timer(callable_)
+	{
+		delay = 0;
+	}
 	
-private:
-	MFunc<T>	callable;
-};
+	CdownTimer(long delay_, Callable* callable_) : Timer(callable_)
+	{
+		delay = delay_;
+	}
+		
+	void OnAdd()
+	{
+		when = Now() + delay;
+	}
 
-class TimerC : public Timer
-{
-public:
-	typedef void (*Callback)();
-	
-	TimerC(long delay, Callback callback)
-	: callable(callback), Timer(delay, &callable)
-	{}
-
 private:
-	CFunc		callable;
+	unsigned delay;
 };
 
 inline bool LessThan(Timer* a, Timer* b)
 {
-    return (a->when < b->when);
+    return (a->When() < b->When());
 }
 
 #endif

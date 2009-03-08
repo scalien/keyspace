@@ -1,13 +1,13 @@
 #include "Endpoint.h"
 #include <stdlib.h>
 
-bool Endpoint::Init(struct sockaddr_in &sa_)
+bool Endpoint::Set(struct sockaddr_in &sa_)
 {
 	sa = sa_;
 	return true;
 }
 
-bool Endpoint::Init(char* ip, int port)
+bool Endpoint::Set(char* ip, int port)
 {
 	memset((char *) &sa, 0, sizeof(sa));
 	sa.sin_family = AF_INET;
@@ -20,7 +20,7 @@ bool Endpoint::Init(char* ip, int port)
 	return true;
 }
 
-bool Endpoint::Init(char* ip_port)
+bool Endpoint::Set(char* ip_port)
 {
 	char*	p;
 	int		port;
@@ -48,7 +48,7 @@ bool Endpoint::Init(char* ip_port)
 		return false;
 	}
 
-	ret = Init(ip_port, port);
+	ret = Set(ip_port, port);
 	
 	p--;
 	*p = ':';
@@ -56,13 +56,19 @@ bool Endpoint::Init(char* ip_port)
 	return ret;
 }
 
+bool Endpoint::SetPort(int port)
+{
+	sa.sin_port = htons((uint16_t)port);
+	return true;
+}
+
+int Endpoint::GetPort()
+{
+	return ntohs(sa.sin_port);
+}
+
 char* Endpoint::ToString()
 {
 	sprintf(buffer, "%s:%u", inet_ntoa(sa.sin_addr), ntohs(sa.sin_port));
 	return buffer;
-}
-
-int Endpoint::Port()
-{
-	return ntohs(sa.sin_port);ntohs(sa.sin_port);
 }

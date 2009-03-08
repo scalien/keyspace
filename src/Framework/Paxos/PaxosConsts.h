@@ -1,0 +1,13 @@
+#ifndef PAXOSCONSTS_H
+#define PAXOSCONSTS_H
+
+#define PAXOS_PROPOSER_PORT_OFFSET	0
+#define PAXOS_ACCEPTOR_PORT_OFFSET	1
+#define PAXOS_LEARNER_PORT_OFFSET	2
+
+#define PAXOS_TIMEOUT				1000 // TODO: I increased this for testing
+
+#define WIDTH_NODEID				8
+#define WIDTH_RESTART_COUNTER		16
+
+#endif

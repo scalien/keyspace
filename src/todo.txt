@@ -1,24 +1,13 @@
+proposers should be learners
 
--	I switched to using 'long long' to store the milliseconds since 1970,
-	but it's not required --- a simple long is enough, even if it overflows!
+if it received a learn message, it will stop proposing and stop accepting proposals
 
--	memory allocator
-
--	Scheduler data structure is currently a list
-  
-		I don't think this is a big problem right now, as only << 100 timer is active at any
-		given time, and it only fires if the majority of nodes are *down* or very slow:
-		... -> no timer -> OnPrepareTimeout() -> OnProposeTimeout() -> no timer -> ...
+the ReplicatedLog will override this and notify the ReplicatedDB and in a transaction
+set the initial state for the next paxos round, then actually change the in-memory
+paxos state of the acceptor, proposer and learner
 
 
 
+proposers must guarantee the ballot numbers are unique:
 
-
-
-
-
-- bdb: open must be inside a tx when using tx
-- during catchup, the sender does not need to use tx
-- the receiver stops the ReplicatedLog and does not serve clients,
-  so he only needs atomicity
-- get rid of rprintf
+<incrementor, 40 bits> <nodeID, 8 bits> <restart counter, 16 bits>

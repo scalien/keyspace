@@ -26,13 +26,13 @@ public:
 			timer = *it;
 			now = Now();
 			
-			if (timer->when <= now)
+			if (timer->When() <= now)
 			{
 				Remove(timer);
 				timer->Execute();
 			}
 			else
-				return timer->when - now;
+				return timer->When() - now;
 		}
 		
 		return -1; // no timers to wait for

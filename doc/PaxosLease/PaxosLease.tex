@@ -70,7 +70,7 @@ A proposal $p$ containing value $v$ is chosen if $ accepted \; proposal = p $ fo
 
 \subsubsection{ Basic flow }
 
-A proposer wishing to propose a value first generates a ballot number and sends prepare request messages to a majority of acceptors.
+A proposer wishing to propose a value first generates a \emph{globally unique ballot number} and sends prepare request messages to a majority of acceptors.
 
 The acceptor, upon receiving a prepare request with \emph{ballot number}, checks whether $ballot \; number > highest \; ballot \; promised$. If not, the acceptor does not respond to the message.
 If yes, the acceptor constructs a prepare response containing the \emph{ballot number} and the currently accepted proposal. If it has not accepted a proposal, it sends special \emph{empty proposal}. The acceptor sets $highest \; ballot \; promised := ballot \; number$ and then sends the prepare response to the proposer.
@@ -83,15 +83,15 @@ Finally it sends a propose response with the ballot number.
 
 \subsection{ Paxos }
 
-Augmenting the above rules by two requirements we get Paxos. First, proposers, using stable storage, must guarantee that proposals issued at a later time carry higher ballot numbers. Second, acceptors store their state to stable storage before sending responses.
+Augmenting the above rules we get Paxos: acceptors store their state to stable storage before sending responses.
 
 \subsubsection{ Consistency } Paxos guarantees that only one value is chosen.
 
-Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v$ and $v'$ are chosen. Since ballot numbers are unique, if $b = b'$ then $p = p'$ and $v = v'$. Suppose $b < b'$. For value $v'$ to be chosen, $p'$ must be proposed.
+PROOF. Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v$ and $v'$ are chosen. Since ballot numbers are unique, if $b = b'$ then $p = p'$ and $v = v'$. Suppose $b < b'$. For value $v'$ to be chosen, $p'$ must be proposed.
 
 \subsubsection{ Lemma } If a proposal $p_0$ with ballot number $b_0$ and value $v_0$ is chosen, then all higher numbered proposals must contain $v_0$.
 
-Proof of lemma. Let $p_1 = (b_1, v_1)$ be the proposal with the lowest ballot number such that $b_0 < b_1$. Let $A_0$ be a majority of acceptors who accepted $p_0$ and let $A_1$ be a majority of acceptors who sent prepare responses to $p_1$. There must be an acceptor $a$ who is in both sets, who must have \emph{first} accepted $p_0$ and \emph{later} replied to the prepare request with $b_1$. In the prepare reply $a$ indicated that it accepted $p_0$, and since $p_1$ is the lowest numbered proposal after $p_0$ the proposer could not have recieved a reply containing a higher numbered proposal, it must have used the value $v_0$ from proposal $p_0$, thus $v_0 = v_1$. Repeating this argument for the next proposal $p_2$, if a majority of nodes sent prepare replys, at least one must have contained $p_0$ or $p_1$, thus $p_2$ must contain the value $v_0$. Continuing \emph{ad infinitum} proves the lemma.
+PROOF OF LEMMA. Let $p_1 = (b_1, v_1)$ be the proposal with the lowest ballot number such that $b_0 < b_1$. Let $A_0$ be a majority of acceptors who accepted $p_0$ and let $A_1$ be a majority of acceptors who sent prepare responses to $p_1$. There must be an acceptor $a$ who is in both sets, who must have \emph{first} accepted $p_0$ and \emph{later} replied to the prepare request with $b_1$. In the prepare reply $a$ indicated that it accepted $p_0$, and since $p_1$ is the lowest numbered proposal after $p_0$ the proposer could not have recieved a reply containing a higher numbered proposal, it must have used the value $v_0$ from proposal $p_0$, thus $v_0 = v_1$. Repeating this argument for the next proposal $p_2$, if a majority of nodes sent prepare replys, at least one must have contained $p_0$ or $p_1$, thus $p_2$ must contain the value $v_0$. Continuing \emph{ad infinitum} proves the lemma.
 
 \section{ PaxosLease with perfect clocks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -101,21 +101,23 @@ Proof of lemma. Let $p_1 = (b_1, v_1)$ be the proposal with the lowest ballot nu
 Augmenting the basic flow with the following rules we get $PaxosLease_{acquire}$ (in the perfectly synchronized clock case):
 
 \begin{enumerate}
-\item there is a global maximal lease time $T$ known to all nodes
+\item There is a global maximal lease time $T$ known to all nodes.
 
-\item upon restart, nodes do not rejoin the network for $T$ time
+\item Upon restart, nodes do not rejoin the network for $T$ time.
 
-\item for proposals issued within time T, proposals issued at a later time carry higher ballot numbers
+\item Proposers use increasing ballot numbers for their proposals, until they restart: for proposals issued within time $T$, proposals issued at a later time carry higher ballot numbers.
 
-%\item every proposer is a learner and every learner is a proposer
+\item Since proposers may reuse ballot numbers across restarts, in order to distuingish messages (eg. prepare responses) from previous proposals, all messages are tagged with a $t_{tag}$ time so that this timestamp and the ballot number together are unique. Using the expiry time $t_e$ of leases as a tag time is a safe choice, since ballot numbers are not reused if the proposer does not restart, and if it does, the expiry time $t_e$ will always be different than in a previous proposal. Acceptors, when replying to messages, simply copy the timetag of the request into the response. Proposers, when collecting responses, discard ones where this timetag doesn't match the current proposal's.
 
-\item proposers can only propose themselves as lease owners and must honor the global maximal lease time: all values proposed by the kth proposer are of the form $"acquire, k, t_e"$ where $t < t_e < t + T$
+\item Proposers can only propose themselves as lease owners.
 
-\item messages concerning expired leases are discarded: if an acceptor, proposer or learner receives a message with value $"acquire, k, t_e"$ and $t_e < t$ then the message is automatically discarded
+\item Proposers abandon proposals after $T$ seconds: if a proposer sends propose requests at time $t'$ with value $"acquire, k, t_e"$, it sent out all the appropriate prepare requests in the time interval $(t, t')$ where $t' - T < t$ and $t_e < t + T$.
 
-\item acceptors use a timer and discard their state: before sending a propose response for a value $"acquire, k, _e"$ the node resets its timer to expire at $t_e$
+\item Messages concerning expired leases are discarded: if an acceptor, proposer or learner receives a message with value $"acquire, k, t_e"$ and $t_e < t$ then the message is automatically discarded.
 
-\item if an acceptor's timer expires at $t_e$, it discards any accepted proposals by setting $accepted \; proposal := empty \; proposal$
+\item Acceptors use a timer and discard their state: before sending a propose response for a value $"acquire, k, _e"$ the node resets its timer to expire at $t_e$.
+
+\item If an acceptor's timer expires at $t_e$, it discards any accepted proposals by setting $accepted \; proposal := empty \; proposal$.
 
 \end{enumerate}
 
@@ -123,17 +125,15 @@ Note that nodes do not have to store their state on stable storage, hence the ti
 
 \subsubsection{ Consistency } $PaxosLease_{acquire}$ guarantees that if value $"acquire, k, t_e"$ is chosen at time $t$, then no other value is chosen until time $t_e$.
 
-Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v = "acquire, k, t_e"$ and $v' = "acquire, k', t_e'"$ are chosen at times $t$ and $t'$ such that $t < t' < t_e < t + T$ and $t < t' < t_e' < t' + T$.
+PROOF. Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v = "acquire, k, t_e"$ and $v' = "acquire, k', t_e'"$ are chosen at times $t$ and $t'$ such that $t < t' < t_e < t + T$ and $t < t' < t_e' < t' + T$.
 
-Proposal $p$ was issued within the time interval $(t_e - T, t)$, proposal $p'$ was issued within the time interval $(t_e' - T, t')$. By the above inequalities, the union of these intervals is contained in the interval $(t' - T, t')$, which has length $T$. Since $v'$ was proposed within $T$ time of $t$ and proposers guarantee not to reuse ballot numbers for $T$ time, if $b = b'$ then $v = v'$.
+%Proposal $p$ was issued within time interval $(t_e - T, t)$, proposal $p'$ within the time interval $(t_e' - T, t')$. By the above inequalities, the union of these intervals is contained in the interval $(t' - T, t')$, which has length $T$. Since $p'$ was proposed within $T$ time of $p$ and proposers guarantee not to reuse ballot numbers for $T$ time, if $b = b'$ then $v = v'$.
 
-Let $A$ be a majority of acceptors who accepted $p$ at time $t$ and let $A'$ be a majority of acceptors who accepted $p'$ at time $t'$.  There must be an acceptor $a$ who is in both sets and since $t < t' < t + T$ node $a$ did not restart in the meantime. Acceptors, within time $T$ accept proposals with increasing ballot numbers, thus $b < b'$.
+Let $A$ be a majority of acceptors who accepted $p$ at time $t$ and let $A'$ be a majority of acceptors who accepted $p'$ at time $t'$.  There must be an acceptor $a$ who is in both sets and since $t < t' < t + T$ node $a$ did not restart in the meantime. Acceptors, within time $T$ accept proposals with increasing ballot numbers, thus $b \leq b'$.
 
 \subsubsection{ Lemma } If a proposal $p_0$ with ballot number $b_0$ and value $v_0 = "acquire, k, t_e"$ is chosen at time $t$, then all higher numbered proposals chosen at time $t'$, such that $t < t' < t_e$, must contain $v_0$.
 
-Proof of lemma. See proof of previous lemma and note that $a$ could not have restarted.
-
-%Proof of lemma. Let $p_1 = (b_1, v_1)$ be the proposal with the lowest ballot number such that $b_0 < b_1$. Let $A_0$ be a majority of acceptors who accepted $p_0$ and let $A_1$ be a majority of acceptors who sent prepare responses to $p_1$. There must be an acceptor $a$ who is in both sets, who must have \emph{first} accepted $p_0$ and \emph{later} replied to the prepare request with $b_1$. In the prepare reply $a$ indicated that it accepted $p_0$, and since $p_1$ is the lowest numbered proposal after $p_0$ the proposer could not have recieved a reply containing a higher numbered proposal, it must have used the value $v_0$ from proposal $p_0$, thus $v_0 = v_1$. Repeating this argument for the next proposal $p_2$, if a majority of nodes sent prepare replys, at least one must have contained $p_0$ or $p_1$, thus $p_2$ must contain the value $v_0$. Continuing \emph{ad infinitum} proves the lemma.
+PROOF OF LEMMA. Proposals accepted at time t' must have been issued within the time interval $(t' - T, t')$. Let $p_1 = (b_1, v_1)$ be the proposal issued within time interval $(t' - T, t')$ with the lowest ballot number such that $b_0 < b_1$. Let $A_0$ be a majority of acceptors who accepted $p_0$ and let $A_1$ be a majority of acceptors who sent prepare responses to $p_1$. There must be an acceptor $a$ who is in both sets and could not have restarted, thus $a$ must have \emph{first} accepted $p_0$ and \emph{later} replied to the prepare request with $b_1$. In the prepare reply $a$ indicated that it accepted $p_0$, and since $p_1$ is the lowest numbered proposal after $p_0$ and issued in the time interval $(t' - T, t')$ the proposer could not have recieved a reply containing a higher numbered proposal that would be accepted at time $t'$ by acceptors, it must have used the value $v_0$ from proposal $p_0$, thus $v_0 = v_1$. Repeating this argument for the next proposal, as in the previous lemma, and continuing \emph{ad infinitum} proves the lemma.
 
 \subsection{ Extending leases }
 
@@ -141,15 +141,17 @@ $PaxosLease_{acquire, extend}$: The above algorithm can be extended to allow pro
 
 \subsubsection{ Consistency } $PaxosLease_{acquire, extend}$ guarantees that if value $"acquire, k, t_e"$ is chosen at time $t$ and value $"acquire, k', t_e'"$ is chosen at time $t'$ such that $t < t' < t_e$ then $k = k'$.
 
-The proof is similar as above. Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v = "acquire, k, t_e"$ and $v' = "acquire, k', t_e'"$ are chosen at times $t$ and $t'$ such that $t < t' < t_e < t + T$ and $t < t' < t_e' < t' + T$.
+PROOF. Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v = "acquire, k, t_e"$ and $v' = "acquire, k', t_e'"$ are chosen at times $t$ and $t'$ such that $t < t' < t_e < t + T$ and $t < t' < t_e' < t' + T$.
 
-Proposal $p$ was issued within the time interval $(t_e - T, t)$, proposal $p'$ was issued within the time interval $(t_e' - T, t')$. By the above inequalities, the union of these intervals is contained in the interval $(t' - T, t')$, which has length $T$. Since $v'$ was proposed within $T$ time of $t$ and proposers guarantee not to reuse ballot numbers for $T$ time, if $b = b'$ then $v = v'$.
+The first part of the proof showing the $b \leq b'$ is the same as in the previous lemma.
 
-Let $A$ be a majority of acceptors who accepted $p$ at time $t$ and let $A'$ be a majority of acceptors who accepted $p'$ at time $t'$.  There must be an acceptor $a$ who is in both sets and since $t < t' < t + T$ node $a$ did not restart in the meantime. Acceptors, within time $T$ accept proposals with increasing ballot numbers, thus $b < b'$.
+%Proposal $p$ was issued within the time interval $(t_e - T, t)$, proposal $p'$ was issued within the time interval $(t_e' - T, t')$. By the above inequalities, the union of these intervals is contained in the interval $(t' - T, t')$, which has length $T$. Since $v'$ was proposed within $T$ time of $t$ and proposers guarantee not to reuse ballot numbers for $T$ time, if $b = b'$ then $v = v'$.
+
+%Let $A$ be a majority of acceptors who accepted $p$ at time $t$ and let $A'$ be a majority of acceptors who accepted $p'$ at time $t'$.  There must be an acceptor $a$ who is in both sets and since $t < t' < t + T$ node $a$ did not restart in the meantime. Acceptors, within time $T$ accept proposals with increasing ballot numbers, thus $b < b'$.
 
 \subsubsection{ Lemma } If a proposal $p_0$ with ballot number $b_0$ and value $v_0 = "acquire, k, t_e"$ is chosen at time $t$, then all higher numbered proposals chosen at time $t'$, such that $t < t' < t_e$, must contain values $"acquire, k', t_e'"$ such that $k = k'$.
 
-Proof of lemma. The proof is similar as the previous two lemmas. Let $p_1 = (b_1, v_1)$ be the chosen proposal (at time $t'$ such that $t < t' < t_e$) with the lowest ballot number such that $b_0 < b_1$. Let $A_0$ be a majority of acceptors who accepted $p_0$ and let $A_1$ be a majority of acceptors who sent prepare responses to $p_1$. There must be an acceptor $a$ who is in both sets, who must have \emph{first} accepted $p_0$ and \emph{later} replied to the prepare request with $b_1$. In the prepare reply $a$ indicated that it accepted $p_0$, and since $p_1$ is the lowest numbered proposal after $p_0$ the proposer could not have recieved a reply containing a higher numbered proposal, it must have used the value $v_0$ from proposal $p_0$, or if the proposer was node $k$, issued another proposal for itself. Repeating this argument for the next proposal $p_2$, if a majority of nodes sent prepare replys, at least one must have contained $p_0$ or $p_1$, thus $p_2$ must contain a value proposing $k$ as the leaseholder. Continuing \emph{ad infinitum} proves the lemma.
+PROOF OF LEMMA. Proposals accepted at time t' must have been issued within the time interval $(t' - T, t')$. Let $p_1 = (b_1, v_1)$ be the proposal issued within time interval $(t' - T, t')$ with the lowest ballot number such that $b_0 < b_1$. Let $A_0$ be a majority of acceptors who accepted $p_0$ and let $A_1$ be a majority of acceptors who sent prepare responses to $p_1$. There must be an acceptor $a$ who is in both sets and could not have restarted, thus $a$ must have \emph{first} accepted $p_0$ and \emph{later} replied to the prepare request with $b_1$. In the prepare reply $a$ indicated that it accepted $p_0$, and since $p_1$ is the lowest numbered proposal after $p_0$ and issued in the time interval $(t' - T, t')$ the proposer could not have recieved a reply containing a higher numbered proposal that would be accepted at time $t'$ by acceptors, it must have used the value $v_0$ from proposal $p_0$, \emph{or if the proposer is the $kth$, issued a different proposal containing itself}. Repeating this argument for the next proposal, as in the previous lemma, and continuing \emph{ad infinitum} proves the lemma.
 
 \subsection{ Releasing leases }
 
@@ -170,31 +172,21 @@ Now we can complete PaxosLease by introducing special $"release, k, t_r"$ values
 
 \subsubsection{ Consistency } $PaxosLease_{acquire, extend, release}$ guarantees that if value $"acquire, k, t_e"$ is chosen at time $t$ and value $"acquire, k', t_e'"$ is chosen at time $t'$ such that $t < t' < t_e$ and proposer $k$ did not issue proposals containing $release$ messages in the meantime, then $k = k'$.
 
-The proof is almost the same as above. Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v = "acquire, k, t_e"$ and $v' = "acquire, k', t_e'"$ are chosen at times $t$ and $t'$ such that $t < t' < t_e < t + T$ and $t < t' < t_e' < t' + T$.
+PROOF. The proof is the same as above. %Suppose two proposals $p$ and $p'$ with ballot numbers $b$ and $b'$ and values $v = "acquire, k, t_e"$ and $v' = "acquire, k', t_e'"$ are chosen at times $t$ and $t'$ such that $t < t' < t_e < t + T$ and $t < t' < t_e' < t' + T$.
 
-Proposal $p$ was issued within the time interval $(t_e - T, t)$, proposal $p'$ was issued within the time interval $(t_e' - T, t')$. By the above inequalities, the union of these intervals is contained in the interval $(t' - T, t')$, which has length $T$. Since $v'$ was proposed within $T$ time of $t$ and proposers guarantee not to reuse ballot numbers for $T$ time, if $b = b'$ then $v = v'$.
+%Proposal $p$ was issued within the time interval $(t_e - T, t)$, proposal $p'$ was issued within the time interval $(t_e' - T, t')$. By the above inequalities, the union of these intervals is contained in the interval $(t' - T, t')$, which has length $T$. Since $v'$ was proposed within $T$ time of $t$ and proposers guarantee not to reuse ballot numbers for $T$ time, if $b = b'$ then $v = v'$.
 
-Let $A$ be a majority of acceptors who accepted $p$ at time $t$ and let $A'$ be a majority of acceptors who accepted $p'$ at time $t'$.  There must be an acceptor $a$ who is in both sets and since $t < t' < t + T$ node $a$ did not restart in the meantime. Acceptors, within time $T$ accept proposals with increasing ballot numbers, thus $b < b'$.
+%Let $A$ be a majority of acceptors who accepted $p$ at time $t$ and let $A'$ be a majority of acceptors who accepted $p'$ at time $t'$.  There must be an acceptor $a$ who is in both sets and since $t < t' < t + T$ node $a$ did not restart in the meantime. Acceptors, within time $T$ accept proposals with increasing ballot numbers, thus $b \leq b'$.
 
-\subsubsection{ Lemma } If a proposal $p_0$ with ballot number $b_0$ and value $v_0 = "acquire, k, t_e"$ is chosen at time $t$, then all higher numbered proposals chosen at time $t'$, such that $t < t' < t_e$, must contain values $"acquire, k', t_e'"$ such that $k = k'$, \emph{provided proposer $k$ did not issue $release$ proposals between $t$ and $t'$}.
+%\subsubsection{ Lemma } If a proposal $p_0$ with ballot number $b_0$ and value $v_0 = "acquire, k, t_e"$ is chosen at time $t$, then all higher numbered proposals chosen at time $t'$, such that $t < t' < t_e$, must contain values $"acquire, k', t_e'"$ such that $k = k'$, \emph{provided proposer $k$ did not issue $release$ proposals between $t$ and $t'$}.
 
-The proof of the lemma is the same as in the $PaxosLease_{acquire, extend}$ case.
+%The proof of the lemma is the same as in the $PaxosLease_{acquire, extend}$ case.
 
 \subsection{ Learning }
 
-What remains is to inform learners of leases. Only the proposer's algorithm changes:
+The Paxos notion of learners cannot be supported in PaxosLease \emph{if proposers can release leases}. To see why, suppose proposer $k$ acquires the lease until time $t_e$, informs a learner, and later releases the lease at time $t_r < t_e$. If the learner is cut off from the rest of the nodes, it will not get notified of the release, and incorrectly assume $k$ is holding it until $t_e$, even though another proposer may have acquired it after $t_r$.
 
-\begin{enumerate}
-
-\item If proposer $k$ receives propose response messages from a majority of acceptors containing value $v = "acquire, k, t_e"$, then it sends this learn messages containing $v$ to the learners. Learners, upon receiving this value, assume that $k$ holds the lease until time $t_e$.
-
-\item If proposer $k$, who is currently holding the lease wants to release it at time $t_r$, it sends learn messages containing the value $v = "release, k, t_r"$ to learners \emph{before issuing the proposal for $v$}. Learners, upon receiving this value, if they knew $k$ currently holds the value, assume that $k$ holds the lease until time $t_r$.
-
-\end{enumerate}
-
-If the proposer sends the learn messages containing $"release..."$ values to the learners and then fails, then there may be an interim period (of length less than $T$ time) when, according to the learners, noone holds the lease, but no other proposer will be able to acquire it. This does not affect correctness.
-
-On the other hand, if the proposer does not fail and sends enough propose messages containing $"release..."$ values, other proposers will be able to acquire the lease before the proposer's previously held lease's expire time.
+If the learner is a client who is \emph{issuing commands} to the proposer to acquire and release leases, it will always have safe information regarding the lease. However, in this case the client can be regarded as a process on the proposer, so this distinction is irrelevant for PaxosLease.
 
 \section{ PaxosLease with skewed clocks }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

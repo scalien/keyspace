@@ -1,6 +1,7 @@
 #ifndef PAXOSCONFIG_H
 #define PAXOSCONFIG_H
 
+#include "System/Types.h"
 #include "System/Containers/List.h"
 #include "System/IO/Endpoint.h"
 
@@ -14,11 +15,16 @@ public:
 
 	List<Endpoint>	endpoints;
 
-	bool			Read(char* filename);
+	bool			Init(char* filename);
 	
 	int				MinMajority();
 	
-	long			NextHighest(long highest_promised);
+	ulong64			NextHighest(ulong64 proposalID);
+
+private:
+	void			InitRestartCounter();
+	
+	ulong64			restartCounter;
 };
 
 #endif

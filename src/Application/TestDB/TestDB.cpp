@@ -7,7 +7,7 @@ void TestDB::Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* re
 	replicatedLog = replicatedLog_;
 	seq = 0;
 	
-	replicatedLog->Register(PROTOCOL_TESTDB, this);
+	replicatedLog->SetReplicatedDB(this);
 	
 	OnAppend(NULL, NULL);
 }

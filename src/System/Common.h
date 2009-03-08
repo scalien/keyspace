@@ -1,8 +1,11 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "assert.h"
 #include <string.h>
 #include "Types.h"
+
+#define KB 1000
 
 #define MEMCMP(b1, l1, b2, l2) ((l1) == (l2) && memcmp((b1), (b2), l1) == 0)
 
@@ -28,6 +31,8 @@ void* Alloc(int num, int size = 1);
 
 #define ASSERT_FAIL() assert(false)
 
-#define EXACTLY_ONE(a, b, c) ((((int)(a)) + ((int)(b)) + ((int)(c))) == 1)
+inline bool Xor(bool a, bool b, bool c) { return (((int)a + (int)b + (int)c) == 1); }
+
+inline bool Xor(bool a, bool b) { return Xor(a, b, false); }
 
 #endif

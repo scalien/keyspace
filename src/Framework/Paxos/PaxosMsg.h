@@ -12,6 +12,7 @@
 #define PROPOSE_REQUEST				'3'
 #define PROPOSE_RESPONSE			'4'
 #define LEARN_CHOSEN				'5'
+#define REQUEST_CHOSEN				'6'
 
 // prepare responses:
 #define PREPARE_REJECTED			'r'
@@ -24,37 +25,31 @@
 
 #define	VALUE_SIZE					64
 
-// TODO: see if static value buffer is necessary, to avoid memcopy()
-
 class PaxosMsg
 {
 public:
 	ulong64					paxosID;
 	char					type;
-	ulong64					n;
+	ulong64					proposalID;
 	char					response;
-	ulong64					n_accepted;
+	ulong64					acceptedProposalID;
 	ByteArray<VALUE_SIZE>	value;
-
-	/*	if type == PREPARE_RESPONSE and
-		response == PREPARE_PREVIOUSLY_ACCEPTED
-		then it contains the previously accepted value
-	*/
 	
-	void			Init(ulong64 paxosID_, char type_);
+	void					Init(ulong64 paxosID_, char type_);
 		
-	bool			PrepareRequest(ulong64 paxosID_, ulong64 n_);
-	bool			PrepareResponse(ulong64 paxosID_, ulong64 n_, char response_);
-	bool			PrepareResponse(ulong64 paxosID_, ulong64 n_, char response_,
-						ulong64 n_accepted_, ByteString value_);
+	bool					PrepareRequest(ulong64 paxosID_, ulong64 proposalID_);
+	bool					PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char response_);
+	bool					PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char response_,
+								ulong64 acceptedProposalID_, ByteString value_);
 	
-	bool			ProposeRequest(ulong64 paxosID_, ulong64 n_, ByteString value_);
-	bool			ProposeResponse(ulong64 paxosID_, ulong64 n_, char response_);
+	bool					ProposeRequest(ulong64 paxosID_, ulong64 proposalID_, ByteString value_);
+	bool					ProposeResponse(ulong64 paxosID_, ulong64 proposalID_, char response_);
 	
-	bool			LearnChosen(ulong64 paxosID_, ByteString value_);
+	bool					LearnChosen(ulong64 paxosID_, ByteString value_);
+	bool					RequestChosen(ulong64 paxosID_);
 
-	bool			Read(ByteString& data);
-	bool			Write(ByteString& data);
+	bool					Read(ByteString& data);
+	bool					Write(ByteString& data);
 };
 
 #endif
