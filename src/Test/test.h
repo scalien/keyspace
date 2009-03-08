@@ -29,7 +29,7 @@ extern "C" {
 		int i; \
 		int ret = 0; \
 		for (i = 0; i < sizeof(test_functions) / sizeof(void *); i++) { \
-			ret += test(test_functions[i], (const char *) &test_names[names[i]]); \
+			ret += test_time(test_functions[i], (const char *) &test_names[names[i]]); \
 		} \
 		return test_eval(__FILE__, ret); \
 	}
