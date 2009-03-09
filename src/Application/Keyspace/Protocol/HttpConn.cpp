@@ -137,6 +137,7 @@ int HttpConn::ProcessGetRequest()
 	else
 	{
 		// 404
+		Response(404, "Not found", 9);
 	}
 	
 	return -1;
@@ -152,7 +153,7 @@ const char* HttpConn::Status(int code)
 	return "";
 }
 
-void HttpConn::Response(int code, char* data, int len, char* header)
+void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 {	
 	char buf[MAX_MESSAGE_SIZE];	// TODO can be bigger than that
 	const char *p;
@@ -162,13 +163,14 @@ void HttpConn::Response(int code, char* data, int len, char* header)
 					"%s %d %s" CS_CRLF
 					"Accept-Range: bytes" CS_CRLF
 					"Content-Length: %d" CS_CRLF
-					"Connection: close" CS_CRLF
+					"%s"
 					"%s"
 					CS_CRLF
 					"%s"
 					, 
 					request.line.version, code, Status(code),
 					len,
+					close ? "Connection: close" CS_CRLF : "",
 					header ? header : "",
 					data);
 		

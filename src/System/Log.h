@@ -20,5 +20,6 @@
 #endif
 
 void Log(char* file, int line, const char* func, int type, const char* fmt, ...) ATTRIBUTE_FORMAT_PRINTF(5, 6);
+void Log_SetTimestamping(bool ts);
 
 #endif

@@ -31,7 +31,7 @@ private:
 	int				Parse(char* buf, int len);
 	int				ProcessGetRequest();
 	const char*		Status(int code);
-	void			Response(int code, char* buf, int len, char* header = NULL);
+	void			Response(int code, char* buf, int len, bool close = true, char* header = NULL);
 };
 
 #endif
