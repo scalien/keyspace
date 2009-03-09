@@ -3,12 +3,12 @@
 
 #ifdef __APPLE__
 #ifdef __MACH__
-#define PLATFORM_DARWIN
+// Apple specific stuff
 #endif
 #endif
 
 #ifdef __linux__
-#define PLATFORM_LINUX
+// Linux specific stuff
 #endif
 
 #endif

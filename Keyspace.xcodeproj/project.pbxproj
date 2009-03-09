@@ -69,6 +69,27 @@
 		9A2723230F5F9D8900EE25E2 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
 		9A2723240F5F9D9F00EE25E2 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		9A2723270F5F9DB600EE25E2 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
+		9A2724310F654C5400EE25E2 /* Test.agazso.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A2724300F654C5400EE25E2 /* Test.agazso.cpp */; };
+		9A2724340F654FEA00EE25E2 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
+		9A2724350F654FF100EE25E2 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */; };
+		9A27245E0F6550B300EE25E2 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */; };
+		9A27245F0F6550B300EE25E2 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */; };
+		9A2724600F6550B300EE25E2 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC70F648B86004BBDB4 /* IMF.cpp */; };
+		9A2724610F6550B300EE25E2 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCE0F648B86004BBDB4 /* TCPServer.cpp */; };
+		9A2724630F6550E000EE25E2 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */; };
+		9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
+		9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
+		9A2724660F6550E000EE25E2 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
+		9A2724680F6550FB00EE25E2 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
+		9A2724690F6550FB00EE25E2 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
+		9A27246A0F6550FB00EE25E2 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
+		9A27246C0F65517100EE25E2 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
+		9A27246D0F65517100EE25E2 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
+		9A27246F0F6551B100EE25E2 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
+		9A2724700F6551B100EE25E2 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
+		9A2724720F6551C600EE25E2 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
+		9A2724730F6551C600EE25E2 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
+		9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC50F648B86004BBDB4 /* HttpServer.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -207,6 +228,8 @@
 		9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiDatabaseOp.h; path = AsyncDatabase/MultiDatabaseOp.h; sourceTree = "<group>"; };
 		9A2723170F5F9B9F00EE25E2 /* TableVisitorTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TableVisitorTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableVisitorTest.cpp; sourceTree = "<group>"; };
+		9A27242A0F65480E00EE25E2 /* Test.agazso */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Test.agazso; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A2724300F654C5400EE25E2 /* Test.agazso.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test.agazso.cpp; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
@@ -234,6 +257,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A2723270F5F9DB600EE25E2 /* libdb_cxx.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A2724280F65480E00EE25E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A27246C0F65517100EE25E2 /* libdb_cxx.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +296,7 @@
 				8DD76FB20486AB0100D96B5E /* Keyspace */,
 				54460CD40F5198E800EFBBDE /* AsyncDBTest */,
 				9A2723170F5F9B9F00EE25E2 /* TableVisitorTest */,
+				9A27242A0F65480E00EE25E2 /* Test.agazso */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -331,6 +363,7 @@
 				544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */,
 				544611F60F533FAB00EFBBDE /* UDPEchoClient.c */,
 				9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */,
+				9A2724300F654C5400EE25E2 /* Test.agazso.cpp */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -616,6 +649,22 @@
 			productReference = 9A2723170F5F9B9F00EE25E2 /* TableVisitorTest */;
 			productType = "com.apple.product-type.tool";
 		};
+		9A2724290F65480E00EE25E2 /* Test.agazso */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9A27242E0F65482D00EE25E2 /* Build configuration list for PBXNativeTarget "Test.agazso" */;
+			buildPhases = (
+				9A2724270F65480E00EE25E2 /* Sources */,
+				9A2724280F65480E00EE25E2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Test.agazso;
+			productName = Test.agazso;
+			productReference = 9A27242A0F65480E00EE25E2 /* Test.agazso */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -631,6 +680,7 @@
 				8DD76FA90486AB0100D96B5E /* Keyspace */,
 				54460CD30F5198E800EFBBDE /* AsyncDBTest */,
 				9A2723160F5F9B9F00EE25E2 /* TableVisitorTest */,
+				9A2724290F65480E00EE25E2 /* Test.agazso */,
 			);
 		};
 /* End PBXProject section */
@@ -713,6 +763,33 @@
 				9A2723220F5F9D7900EE25E2 /* test.c in Sources */,
 				9A2723230F5F9D8900EE25E2 /* Database.cpp in Sources */,
 				9A2723240F5F9D9F00EE25E2 /* Table.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A2724270F65480E00EE25E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A2724310F654C5400EE25E2 /* Test.agazso.cpp in Sources */,
+				9A2724340F654FEA00EE25E2 /* KeyspaceDB.cpp in Sources */,
+				9A2724350F654FF100EE25E2 /* MemcacheServer.cpp in Sources */,
+				9A27245E0F6550B300EE25E2 /* HttpConn.cpp in Sources */,
+				9A27245F0F6550B300EE25E2 /* HttpRequest.cpp in Sources */,
+				9A2724600F6550B300EE25E2 /* IMF.cpp in Sources */,
+				9A2724610F6550B300EE25E2 /* TCPServer.cpp in Sources */,
+				9A2724630F6550E000EE25E2 /* MemcacheConn.cpp in Sources */,
+				9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */,
+				9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */,
+				9A2724660F6550E000EE25E2 /* Socket.cpp in Sources */,
+				9A2724680F6550FB00EE25E2 /* Table.cpp in Sources */,
+				9A2724690F6550FB00EE25E2 /* Transaction.cpp in Sources */,
+				9A27246A0F6550FB00EE25E2 /* Database.cpp in Sources */,
+				9A27246D0F65517100EE25E2 /* Log.cpp in Sources */,
+				9A27246F0F6551B100EE25E2 /* AsyncDatabase.cpp in Sources */,
+				9A2724700F6551B100EE25E2 /* Scheduler.cpp in Sources */,
+				9A2724720F6551C600EE25E2 /* Common.cpp in Sources */,
+				9A2724730F6551C600EE25E2 /* ThreadPool.cpp in Sources */,
+				9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -863,6 +940,44 @@
 			};
 			name = Release;
 		};
+		9A27242C0F65480F00EE25E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Test.agazso;
+			};
+			name = Debug;
+		};
+		9A27242D0F65480F00EE25E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Test.agazso;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -898,6 +1013,15 @@
 			buildConfigurations = (
 				9A2723190F5F9BA100EE25E2 /* Debug */,
 				9A27231A0F5F9BA100EE25E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9A27242E0F65482D00EE25E2 /* Build configuration list for PBXNativeTarget "Test.agazso" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9A27242C0F65480F00EE25E2 /* Debug */,
+				9A27242D0F65480F00EE25E2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
