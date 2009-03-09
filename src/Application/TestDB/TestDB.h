@@ -27,6 +27,8 @@ private:
 	ReplicatedLog*	replicatedLog;
 	int				seq;
 	ByteArray<1024>	ba;
+	
+	bool			master;
 };
 
 #endif

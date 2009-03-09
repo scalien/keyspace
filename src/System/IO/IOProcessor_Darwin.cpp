@@ -200,7 +200,7 @@ bool IOProcessor::Poll(int sleep)
 {
 #define	MAX_KEVENTS 1
 	
-	long long				called;
+	ulong64				called;
 	int						i, nevents, wait;
 	static struct kevent	events[MAX_KEVENTS];
 	struct timespec			timeout;
@@ -447,7 +447,7 @@ void ProcessUDPWrite(struct kevent* ev)
 		Call(udpwrite->onClose);
 }
 
-void ProcessFileOp(struct kevent* ev)
+void ProcessFileOp(struct kevent*)
 {
 	int			ret, nbytes;
 	FileOp**	it;

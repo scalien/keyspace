@@ -29,7 +29,7 @@ static char* GetFullTimestamp(char ts[27])
 			tm.tm_hour,
 			tm.tm_min,
 			tm.tm_sec,
-			tv.tv_usec);
+			(long unsigned int)tv.tv_usec);
 	
 	return ts;
 }

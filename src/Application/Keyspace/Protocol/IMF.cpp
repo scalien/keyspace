@@ -54,7 +54,7 @@ static char* SeekCrlf(char* p)
 	return p;	
 }
 
-static int LineParse(char* buf, int len, int offs, const char** values[3])
+static int LineParse(char* buf, int /*len*/, int offs, const char** values[3])
 {
 	char* p;
 	

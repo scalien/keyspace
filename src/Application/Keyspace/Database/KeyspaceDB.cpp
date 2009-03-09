@@ -166,3 +166,4 @@ void KeyspaceDB::OnDBComplete()
 	if (queuedOps.Size() > 0)
 		StartDBOperation();
 }
+

@@ -9,7 +9,7 @@ Database database;
 Database::Database() :
 env(DB_CXX_NO_EXCEPTIONS)
 {
-	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL;
+	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL | DB_THREAD;
 	int mode = 0;
 	const char* db_home = ".";
 	

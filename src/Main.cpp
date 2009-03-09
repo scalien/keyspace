@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
+	Log_SetTimestamping(true);
+	
 	ioproc = IOProcessor::New();
 	eventloop = new EventLoop(ioproc);
 	
@@ -25,5 +27,5 @@ int main(int argc, char* argv[])
 	TestDB testdb;
 	testdb.Init(ioproc, eventloop, &rl);
 	
-	eventloop->Run();	
+	eventloop->Run();
 }

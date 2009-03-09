@@ -11,7 +11,7 @@ public:
 	{
 		REQUEST_LINE,
 		HEADER,
-		CONTENT,
+		CONTENT
 	};
 
 	IMFHeader		header;

@@ -19,7 +19,7 @@ public:
 	{
 		Timer** it;
 		Timer* timer;
-		long long now;
+		ulong64 now;
 		
 		for (it = timers.Head(); it != NULL; it = timers.Head())
 		{

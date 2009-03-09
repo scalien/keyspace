@@ -39,11 +39,6 @@
 		5481474A0F31B6B200F3D2B6 /* TCPEchoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */; };
 		5481474B0F31B6B200F3D2B6 /* TCPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */; };
 		5481474C0F31B6B200F3D2B6 /* UDPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */; };
-		5481474D0F31B6B200F3D2B6 /* MemoClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147070F31B6B200F3D2B6 /* MemoClientMsg.cpp */; };
-		5481474E0F31B6B200F3D2B6 /* MemoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147090F31B6B200F3D2B6 /* MemoConn.cpp */; };
-		5481474F0F31B6B200F3D2B6 /* MemoDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481470B0F31B6B200F3D2B6 /* MemoDB.cpp */; };
-		548147500F31B6B200F3D2B6 /* MemoMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481470D0F31B6B200F3D2B6 /* MemoMsg.cpp */; };
-		548147510F31B6B200F3D2B6 /* MemoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481470F0F31B6B200F3D2B6 /* MemoServer.cpp */; };
 		548147520F31B6B300F3D2B6 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
 		548147530F31B6B300F3D2B6 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		548147560F31B6B300F3D2B6 /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */; };
@@ -160,16 +155,6 @@
 		548147030F31B6B200F3D2B6 /* TCPEchoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPEchoServer.h; sourceTree = "<group>"; };
 		548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPEchoServer.cpp; sourceTree = "<group>"; };
 		548147050F31B6B200F3D2B6 /* UDPEchoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPEchoServer.h; sourceTree = "<group>"; };
-		548147070F31B6B200F3D2B6 /* MemoClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoClientMsg.cpp; sourceTree = "<group>"; };
-		548147080F31B6B200F3D2B6 /* MemoClientMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoClientMsg.h; sourceTree = "<group>"; };
-		548147090F31B6B200F3D2B6 /* MemoConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoConn.cpp; sourceTree = "<group>"; };
-		5481470A0F31B6B200F3D2B6 /* MemoConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoConn.h; sourceTree = "<group>"; };
-		5481470B0F31B6B200F3D2B6 /* MemoDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoDB.cpp; sourceTree = "<group>"; };
-		5481470C0F31B6B200F3D2B6 /* MemoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoDB.h; sourceTree = "<group>"; };
-		5481470D0F31B6B200F3D2B6 /* MemoMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoMsg.cpp; sourceTree = "<group>"; };
-		5481470E0F31B6B200F3D2B6 /* MemoMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoMsg.h; sourceTree = "<group>"; };
-		5481470F0F31B6B200F3D2B6 /* MemoServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoServer.cpp; sourceTree = "<group>"; };
-		548147100F31B6B200F3D2B6 /* MemoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoServer.h; sourceTree = "<group>"; };
 		548147110F31B6B200F3D2B6 /* bugs.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bugs.txt; sourceTree = "<group>"; };
 		548147120F31B6B200F3D2B6 /* dump.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dump.txt; sourceTree = "<group>"; };
 		548147160F31B6B200F3D2B6 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Database.cpp; sourceTree = "<group>"; };
@@ -407,7 +392,6 @@
 				5446122A0F53488D00EFBBDE /* Keyspace */,
 				5406777B0F3C48FD00E80088 /* TestDB */,
 				548146FF0F31B6B200F3D2B6 /* EchoServer */,
-				548147060F31B6B200F3D2B6 /* MemoDB */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -423,23 +407,6 @@
 				548147050F31B6B200F3D2B6 /* UDPEchoServer.h */,
 			);
 			path = EchoServer;
-			sourceTree = "<group>";
-		};
-		548147060F31B6B200F3D2B6 /* MemoDB */ = {
-			isa = PBXGroup;
-			children = (
-				5481470E0F31B6B200F3D2B6 /* MemoMsg.h */,
-				5481470D0F31B6B200F3D2B6 /* MemoMsg.cpp */,
-				548147080F31B6B200F3D2B6 /* MemoClientMsg.h */,
-				548147070F31B6B200F3D2B6 /* MemoClientMsg.cpp */,
-				5481470A0F31B6B200F3D2B6 /* MemoConn.h */,
-				548147090F31B6B200F3D2B6 /* MemoConn.cpp */,
-				5481470F0F31B6B200F3D2B6 /* MemoServer.cpp */,
-				548147100F31B6B200F3D2B6 /* MemoServer.h */,
-				5481470C0F31B6B200F3D2B6 /* MemoDB.h */,
-				5481470B0F31B6B200F3D2B6 /* MemoDB.cpp */,
-			);
-			path = MemoDB;
 			sourceTree = "<group>";
 		};
 		548147140F31B6B200F3D2B6 /* Framework */ = {
@@ -711,11 +678,6 @@
 				5481474A0F31B6B200F3D2B6 /* TCPEchoConn.cpp in Sources */,
 				5481474B0F31B6B200F3D2B6 /* TCPEchoServer.cpp in Sources */,
 				5481474C0F31B6B200F3D2B6 /* UDPEchoServer.cpp in Sources */,
-				5481474D0F31B6B200F3D2B6 /* MemoClientMsg.cpp in Sources */,
-				5481474E0F31B6B200F3D2B6 /* MemoConn.cpp in Sources */,
-				5481474F0F31B6B200F3D2B6 /* MemoDB.cpp in Sources */,
-				548147500F31B6B200F3D2B6 /* MemoMsg.cpp in Sources */,
-				548147510F31B6B200F3D2B6 /* MemoServer.cpp in Sources */,
 				548147520F31B6B300F3D2B6 /* Database.cpp in Sources */,
 				548147530F31B6B300F3D2B6 /* Table.cpp in Sources */,
 				548147560F31B6B300F3D2B6 /* PaxosConfig.cpp in Sources */,
@@ -832,7 +794,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include/db46,
@@ -851,7 +825,19 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(NATIVE_ARCH)";
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include/db46,

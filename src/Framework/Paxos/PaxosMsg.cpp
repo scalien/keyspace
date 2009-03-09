@@ -225,7 +225,7 @@ bool PaxosMsg::Write(ByteString& data)
 			required = snprintf(data.buffer, data.size, "%llu#%c#%llu#%c", paxosID, type,
 				proposalID, response);
 		else
-			required = snprintf(data.buffer, data.size, "%llu#%c#%llu#%c#%llu#%d#%*.s", paxosID,
+			required = snprintf(data.buffer, data.size, "%llu#%c#%llu#%c#%llu#%d#%.*s", paxosID,
 				type, proposalID, response, acceptedProposalID, 
 				value.length, value.length, value.buffer);
 	}
