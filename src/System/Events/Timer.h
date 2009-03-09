@@ -71,7 +71,7 @@ public:
 		delay = delay_;
 	}
 		
-	void OnAdd()
+	virtual void OnAdd()
 	{
 		when = Now() + delay;
 	}

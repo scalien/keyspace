@@ -3,8 +3,6 @@
 
 void PaxosLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
 {
-	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
-
 	proposer.Init(ioproc_, scheduler_, config_);
 	acceptor.Init(ioproc_, scheduler_, config_);
 	learner.Init(ioproc_, scheduler_, config_);

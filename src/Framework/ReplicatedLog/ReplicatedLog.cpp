@@ -4,7 +4,9 @@
 
 ReplicatedLog::ReplicatedLog()
 :	onCatchupTimeout(this, &ReplicatedLog::OnCatchupTimeout),
-	catchupTimeout(CATCHUP_TIMEOUT, &onCatchupTimeout)
+	catchupTimeout(CATCHUP_TIMEOUT, &onCatchupTimeout),
+	onLearnLease(this, &ReplicatedLog::OnLearnLease),
+	onLeaseTimeout(this, &ReplicatedLog::OnLearnLease)
 {
 }
 
@@ -20,6 +22,12 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 	PaxosProposer::Init(ioproc_, scheduler_, &config);
 	PaxosAcceptor::Init(ioproc_, scheduler_, &config);
 	PaxosLearner::Init(ioproc_, scheduler_, &config);
+	
+	masterLease.Init(ioproc_, scheduler_, &config);
+	masterLease.SetOnLearnLease(&onLearnLease);
+	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
+	masterLease.AcquireLease();
+	
 	appending = false;
 	
 	return true;
@@ -78,25 +86,9 @@ LogItem* ReplicatedLog::LastLogItem()
 	return logCache.Last();
 }
 
-void ReplicatedLog::SetMaster(bool master)
-{
-	Log_Trace();
-
-	PaxosProposer::state.leader = master;
-
-	if (replicatedDB != NULL)
-	{
-		if (master)
-			replicatedDB->OnMaster();
-		else
-			replicatedDB->OnSlave();
-	}
-}
-
 bool ReplicatedLog::IsMaster()
 {
-	return  (config.nodeID == 0);
-//	return PaxosProposer::state.leader; // TODO
+	return masterLease.IsLeaseOwner();
 }
 
 int ReplicatedLog::NodeID()
@@ -115,6 +107,8 @@ void ReplicatedLog::OnPrepareRequest()
 		highestPaxosID = PaxosAcceptor::msg.paxosID;
 	
 	OnRequest();
+	
+	PaxosAcceptor::ioproc->Add(&(PaxosAcceptor::udpread));
 }
 
 void ReplicatedLog::OnPrepareResponse()
@@ -131,13 +125,15 @@ void ReplicatedLog::OnProposeRequest()
 {
 	Log_Trace();
 	
-	if (PaxosAcceptor::msg.paxosID > highestPaxosID)
-		highestPaxosID = PaxosAcceptor::msg.paxosID;
-	
 	if (PaxosAcceptor::msg.paxosID == PaxosAcceptor::paxosID)
 		return PaxosAcceptor::OnProposeRequest();
+	
+	if (PaxosAcceptor::msg.paxosID > highestPaxosID)
+		highestPaxosID = PaxosAcceptor::msg.paxosID;
 
 	OnRequest();
+	
+	PaxosAcceptor::ioproc->Add(&(PaxosAcceptor::udpread));
 }
 
 void ReplicatedLog::OnProposeResponse()
@@ -169,33 +165,21 @@ void ReplicatedLog::OnLearnChosen()
 		PaxosLearner::OnLearnChosen();
 		logCache.Push(PaxosLearner::paxosID, PaxosLearner::state.value);
 		
-		//ByteString acceptedValue = acceptor.value; // Paxos::Reset() will clear acceptor.value
-		// TODO: is this extra variable nessecary?
-		
-		// TODO: increment paxos state
-		PaxosProposer::paxosID++;
-		PaxosProposer::state.Init();
-		PaxosAcceptor::paxosID++;
-		PaxosAcceptor::state.Init();
-		PaxosLearner::paxosID++;
-		PaxosLearner::state.Init();
+		NewPaxosRound();
 		
 		if (highestPaxosID > PaxosLearner::msg.paxosID)
 		{
-			Endpoint endpoint = PaxosLearner::udpread.endpoint;
-			endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
-												+ PAXOS_LEARNER_PORT_OFFSET);
-			PaxosLearner::RequestChosen(endpoint);
+			PaxosLearner::RequestChosen(PaxosLearner::udpread.endpoint);
 			return;
 		}
 		
-		if (appending && value == LastLogItem()->value/*acceptedValue*/)
+		if (appending && value == LastLogItem()->value)
 		{
 			myappend = true;
 			logQueue.Pop();
 		}
 		
-		if (/*acceptedValue*/LastLogItem()->value.length > 0)
+		if (LastLogItem()->value.length > 0)
 		{
 			//Transaction tx(table);
 			
@@ -213,9 +197,7 @@ void ReplicatedLog::OnLearnChosen()
 			return;
 		}
 		else
-		{
 			appending = false;
-		}
 	}
 	else if (PaxosLearner::msg.paxosID > PaxosLearner::paxosID)
 	{
@@ -236,22 +218,31 @@ void ReplicatedLog::OnLearnChosen()
 			PaxosLearner::RequestChosen(endpoint);
 			return;
 	}
-	else if (PaxosLearner::msg.paxosID < PaxosLearner::paxosID ||
-		(PaxosLearner::msg.paxosID == PaxosLearner::paxosID && PaxosLearner::state.learned))
-	{
-		PaxosLearner::ioproc->Add(&(PaxosLearner::udpread));
-		return;
-	}
-
-	PaxosLearner::ioproc->Add(&(PaxosLearner::udpread));
 }
 
 void ReplicatedLog::OnRequestChosen()
 {
+	if (PaxosLearner::msg.paxosID == PaxosLearner::paxosID)
+		return PaxosLearner::OnRequestChosen();
+	
+	if (PaxosLearner::msg.paxosID > highestPaxosID)
+		highestPaxosID = PaxosLearner::msg.paxosID;
+
+	// same as OnRequest but with the learner's message
+	if (PaxosLearner::msg.paxosID < PaxosLearner::paxosID)
+	{
+		// the node is lagging and needs to catch-up
+		LogItem* li = logCache.Get(PaxosLearner::msg.paxosID);
+		if (li != NULL)
+			PaxosLearner::SendChosen(PaxosLearner::udpread.endpoint,
+				PaxosLearner::msg.paxosID, li->value);
+	}
 }
 
 void ReplicatedLog::OnRequest()
 {
+	Log_Trace();
+
 	if (PaxosAcceptor::msg.paxosID < PaxosAcceptor::paxosID)
 	{
 		// the node is lagging and needs to catch-up
@@ -262,12 +253,6 @@ void ReplicatedLog::OnRequest()
 			endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
 												+ PAXOS_LEARNER_PORT_OFFSET);
 			PaxosLearner::SendChosen(endpoint, PaxosAcceptor::msg.paxosID, li->value);
-			return;
-		}
-		else
-		{
-			PaxosAcceptor::ioproc->Add(&(PaxosAcceptor::udpread));
-			return;
 		}
 	}
 	else // paxosID < msg.paxosID
@@ -285,10 +270,36 @@ void ReplicatedLog::OnRequest()
 	}
 }
 
+void ReplicatedLog::NewPaxosRound()
+{
+	PaxosProposer::scheduler->Remove(&(PaxosProposer::prepareTimeout));
+	PaxosProposer::scheduler->Remove(&(PaxosProposer::proposeTimeout));
+	PaxosProposer::paxosID++;
+	PaxosProposer::state.Init();
+
+	PaxosAcceptor::paxosID++;
+	PaxosAcceptor::state.Init();
+
+	PaxosLearner::paxosID++;
+	PaxosLearner::state.Init();
+}
+
 void ReplicatedLog::OnCatchupTimeout()
 {
 	Log_Trace();
 
 	if (replicatedDB != NULL)
 		replicatedDB->OnDoCatchup();
+}
+
+void ReplicatedLog::OnLearnLease()
+{
+	if (replicatedDB)
+		replicatedDB->OnMasterLease(masterLease.LeaseOwner());
+}
+
+void ReplicatedLog::OnLeaseTimeout()
+{
+	if (replicatedDB)
+		replicatedDB->OnMasterLeaseExpired();
 }

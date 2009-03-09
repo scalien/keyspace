@@ -10,7 +10,9 @@ PLeaseProposer::PLeaseProposer() :
 	onRead(this, &PLeaseProposer::OnRead),
 	onWrite(this, &PLeaseProposer::OnWrite),
 	onAcquireLeaseTimeout(this, &PLeaseProposer::OnAcquireLeaseTimeout),
-	acquireLeaseTimeout(MAX_LEASE_TIME, &onAcquireLeaseTimeout)
+	acquireLeaseTimeout(MAX_LEASE_TIME, &onAcquireLeaseTimeout),
+	onExtendLeaseTimeout(this, &PLeaseProposer::OnExtendLeaseTimeout),
+	extendLeaseTimeout(&onExtendLeaseTimeout)
 {
 }
 
@@ -47,6 +49,8 @@ bool PLeaseProposer::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConf
 
 void PLeaseProposer::AcquireLease()
 {
+	scheduler->Remove(&extendLeaseTimeout);
+	
 	if (!(state.preparing || state.proposing))
 		StartPreparing();
 }
@@ -150,9 +154,11 @@ void PLeaseProposer::OnPrepareResponse()
 	else if (msg.response == PREPARE_PREVIOUSLY_ACCEPTED && 
 			 msg.acceptedProposalID >= state.highestReceivedProposalID)
 	{
-		state.highestReceivedProposalID = msg.acceptedProposalID;
-		state.leaseOwner = msg.leaseOwner;
-		state.expireTime = msg.expireTime;
+		if (msg.expireTime > Now())
+		{
+			state.highestReceivedProposalID = msg.acceptedProposalID;
+			state.leaseOwner = msg.leaseOwner;
+		}
 	}
 	
 	bool read = TryFinishPreparing();
@@ -215,6 +221,12 @@ bool PLeaseProposer::TryFinishProposing()
 		// a majority have accepted our proposal, we have consensus
 		state.proposing = false;
 		msg.LearnChosen(state.leaseOwner, state.expireTime);
+		
+		scheduler->Remove(&acquireLeaseTimeout);
+		
+		extendLeaseTimeout.Set(Now() + (state.expireTime - Now()) / 2);
+		scheduler->Reset(&extendLeaseTimeout);
+		
 		BroadcastMessage();
 		return false;
 	}
@@ -275,5 +287,14 @@ void PLeaseProposer::OnAcquireLeaseTimeout()
 {
 	Log_Trace();
 		
+	StartPreparing();
+}
+
+void PLeaseProposer::OnExtendLeaseTimeout()
+{
+	Log_Trace();
+	
+	assert(!(state.preparing || state.proposing));
+	
 	StartPreparing();
 }

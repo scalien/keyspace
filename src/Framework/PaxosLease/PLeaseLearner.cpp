@@ -61,12 +61,15 @@ void PLeaseLearner::OnLearnChosen()
 {
 	Log_Trace();
 	
-	if (msg.expireTime < Now())
+	if (msg.expireTime > Now())
 	{
 		state.learned = true;
 		state.leaseOwner = msg.leaseOwner;
 		state.expireTime = msg.expireTime;
 		
+		Log_Message("+++ Node %d has the lease for %llu msec +++",
+			state.leaseOwner, state.expireTime - Now());
+
 		leaseTimeout.Set(state.expireTime);
 		scheduler->Reset(&leaseTimeout);
 		

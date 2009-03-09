@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Framework/Database/Table.h"
+#include "Framework/Database/Transaction.h"
 #include "PaxosConsts.h"
 
 bool PaxosConfig::Init(char *filename)
 {
 	FILE*		f;
 	char		buffer[1024];
-	Endpoint	endpoint;
+	Endpoint	endpoint, me;
 
 #define ReadLine()	if (fgets(buffer, sizeof(buffer), f) == NULL) \
 					{ Log_Message("fgets() failed"); return false; }
@@ -34,8 +35,8 @@ bool PaxosConfig::Init(char *filename)
 	// next line is my host specification
 	ReadLine();
 	
-	endpoint.Set(buffer);
-	port = endpoint.GetPort();
+	me.Set(buffer);
+	port = me.GetPort();
 	
 	// read empty line
 	ReadLine();
@@ -44,7 +45,10 @@ bool PaxosConfig::Init(char *filename)
 	while (fgets(buffer, sizeof(buffer), f) != NULL)
 	{
 		endpoint.Set(buffer);
-		endpoints.Add(endpoint);
+		if (endpoint == me)
+			endpoints.Append(endpoint);
+		else
+			endpoints.Add(endpoint);
 	}
 	
 	numNodes = endpoints.Size();
@@ -69,8 +73,11 @@ void PaxosConfig::InitRestartCounter()
 		restartCounter = 0;
 		return;
 	}
-
-	ret = table->Get(NULL, "restartCounter", baRestartCounter);
+	
+	Transaction tx(table);
+	tx.Begin();
+	
+	ret = table->Get(&tx, "restartCounter", baRestartCounter);
 
 	if (ret)
 	{
@@ -86,7 +93,10 @@ void PaxosConfig::InitRestartCounter()
 	baRestartCounter.length =
 		snprintf(baRestartCounter.buffer, baRestartCounter.size, "%llu", restartCounter);
 	
-	table->Put(NULL, "restartCounter", baRestartCounter);
+	table->Put(&tx, "restartCounter", baRestartCounter);
+	tx.Commit();
+	
+	Log_Message("Running with restartCounter = %llu", restartCounter);
 }
 
 int PaxosConfig::MinMajority()
@@ -108,7 +118,7 @@ ulong64 PaxosConfig::NextHighest(ulong64 proposalID)
 
 	right = nodeID;
 
-	nextProposalID = left + middle + right;
+	nextProposalID = left | middle | right;
 	
 	return nextProposalID;
 }

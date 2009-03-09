@@ -118,6 +118,8 @@ bool PaxosAcceptor::WriteState(Transaction* transaction)
 	if (table == NULL)
 		return false;
 	
+	writtenPaxosID = paxosID;
+	
 	bytearrays[0].Set(rprintf("%llu",			paxosID));
 	bytearrays[1].Set(rprintf("%d",				state.accepted));
 	bytearrays[2].Set(rprintf("%llu",			state.promisedProposalID));
@@ -265,17 +267,22 @@ void PaxosAcceptor::OnDBComplete()
 {
 	Log_Trace();
 
-	// TODO: check that the transaction commited
-
-	udpwrite.endpoint = udpread.endpoint;
-	if (!msg.Write(udpwrite.data))
+	if (writtenPaxosID == paxosID)
 	{
-		Log_Trace();
-		ioproc->Add(&udpread);
-		return;
+		// TODO: check that the transaction commited
+
+		udpwrite.endpoint = udpread.endpoint;
+		if (!msg.Write(udpwrite.data))
+		{
+			Log_Trace();
+			ioproc->Add(&udpread);
+			return;
+		}
+		
+		SendReply();
 	}
-	
-	SendReply();
-	
+	else
+		ioproc->Add(&udpread);
+
 	assert(Xor(udpread.active, udpwrite.active, mdbop.active));
 }

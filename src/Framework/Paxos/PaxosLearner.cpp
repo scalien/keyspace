@@ -43,11 +43,11 @@ void PaxosLearner::OnRead()
 		config->nodeID, udpread.data.length, udpread.data.buffer, udpread.endpoint.ToString());
 	
 	if (!msg.Read(udpread.data))
-	{
-		Log_Message("PLeaseMsg::Read() failed: invalid message format");
-		ioproc->Add(&udpread); // read again
-	} else
+		Log_Message("PaxosLeaseMsg::Read() failed: invalid message format");
+	else
 		ProcessMsg();
+	
+	ioproc->Add(&udpread);
 	
 	assert(udpread.active);
 }
@@ -84,7 +84,7 @@ bool PaxosLearner::SendChosen(Endpoint endpoint, ulong64 paxosID, ByteString& va
 {
 	Log_Trace();
 	
-	if (udpwrite.active || !state.learned)
+	if (udpwrite.active)
 		return false;
 		
 	msg.LearnChosen(paxosID, value);
@@ -124,34 +124,14 @@ void PaxosLearner::OnLearnChosen()
 		state.value.length, state.value.buffer);
 	
 	Call(onLearnValueCallback);
-	
-	ioproc->Add(&udpread);
 }
 
 void PaxosLearner::OnRequestChosen()
 {
 	Log_Trace();
 
-	if (state.learned && !udpwrite.active)
-	{
-		msg.LearnChosen(paxosID, state.value);
-		
-		if (!msg.Write(udpwrite.data))
-		{
-			ioproc->Add(&udpread);
-			return;
-		}
-	
-		udpwrite.endpoint = udpread.endpoint;
-	
-		Log_Message("Participant %d sending message %.*s to %s",
-			config->nodeID, udpwrite.data.length, udpwrite.data.buffer,
-			udpwrite.endpoint.ToString());
-	
-		ioproc->Add(&udpwrite);
-	}
-	else
-		ioproc->Add(&udpread);
+	if (state.learned)
+		SendChosen(udpread.endpoint, paxosID, state.value);
 }
 
 bool PaxosLearner::Learned()

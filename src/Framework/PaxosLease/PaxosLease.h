@@ -9,8 +9,6 @@
 class PaxosLease
 {
 public:
-					PaxosLease();
-	
 	void			Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
 	
 	void			AcquireLease();

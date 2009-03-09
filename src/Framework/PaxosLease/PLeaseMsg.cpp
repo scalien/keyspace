@@ -89,7 +89,8 @@ bool PLeaseMsg::Read(ByteString& data)
 	if (type != PREPARE_REQUEST	&&
 		type != PREPARE_RESPONSE &&
 		type != PROPOSE_REQUEST &&
-		type != PROPOSE_RESPONSE)
+		type != PROPOSE_RESPONSE &&
+		type != LEARN_CHOSEN)
 			return false;
 	
 	ReadSeparator(); CheckOverflow();
@@ -135,7 +136,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		ReadSeparator(); CheckOverflow();
 		ReadNumber(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(expireTime); CheckOverflow();
+		ReadNumber(expireTime);
 		
 		ValidateLength();
 		PrepareResponse(proposalID, response, acceptedProposalID, leaseOwner, expireTime);
@@ -150,7 +151,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		ReadSeparator(); CheckOverflow();
 		ReadNumber(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(expireTime); CheckOverflow();
+		ReadNumber(expireTime);
 		
 		ValidateLength();
 		ProposeRequest(proposalID, leaseOwner, expireTime);
@@ -178,7 +179,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	{
 		ReadNumber(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(expireTime); CheckOverflow();
+		ReadNumber(expireTime);
 		
 		ValidateLength();
 		LearnChosen(leaseOwner, expireTime);

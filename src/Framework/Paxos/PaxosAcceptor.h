@@ -62,6 +62,7 @@ protected:
 	Transaction				transaction;
 	MultiDatabaseOp			mdbop;
 	ByteArray<VALUE_SIZE>	bytearrays[4];
+	ulong64					writtenPaxosID;
 
 	MFunc<PaxosAcceptor>	onDBComplete;
 };

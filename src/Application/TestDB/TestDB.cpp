@@ -8,8 +8,6 @@ void TestDB::Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* re
 	seq = 0;
 	
 	replicatedLog->SetReplicatedDB(this);
-	
-	OnAppend(NULL, NULL);
 }
 
 void TestDB::OnAppend(Transaction*, LogItem*)
@@ -25,7 +23,9 @@ void TestDB::OnAppend(Transaction*, LogItem*)
 	}
 }
 
-void TestDB::OnMaster()
+void TestDB::OnMasterLease(int nodeID)
 {
+	Log_Trace();
+	
 	OnAppend(NULL, NULL);
 }

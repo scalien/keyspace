@@ -20,6 +20,7 @@ public:
 	void					OnWrite();
 	
 	void					OnAcquireLeaseTimeout();
+	void					OnExtendLeaseTimeout();
 	
 	void					AcquireLease();
 
@@ -60,6 +61,9 @@ private:
 	
 	MFunc<PLeaseProposer>	onAcquireLeaseTimeout;
 	CdownTimer				acquireLeaseTimeout;
+	
+	MFunc<PLeaseProposer>	onExtendLeaseTimeout;
+	Timer					extendLeaseTimeout;
 	
 // keeping track of messages during prepare and propose phases
 	int						numSent;

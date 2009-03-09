@@ -11,9 +11,8 @@ class ReplicatedDB
 public:
 	virtual void OnAppend(Transaction* transaction, LogItem* entry) = 0;
 	
-	virtual void OnMaster() = 0;
-	
-	virtual void OnSlave() = 0;
+	virtual void OnMasterLease(int nodeID) = 0;
+	virtual void OnMasterLeaseExpired() = 0;
 	
 	virtual void OnDoCatchup() = 0;
 	

@@ -6,6 +6,7 @@
 #include "Framework/Paxos/PaxosProposer.h"
 #include "Framework/Paxos/PaxosAcceptor.h"
 #include "Framework/Paxos/PaxosLearner.h"
+#include "Framework/PaxosLease/PaxosLease.h"
 #include "Framework/ReplicatedDB/ReplicatedDB.h"
 #include "LogCache.h"
 #include "LogQueue.h"
@@ -25,7 +26,6 @@ public:
 	
 	LogItem*			LastLogItem();
 	
-	void				SetMaster(bool master);	// multi paxos
 	bool				IsMaster();				// multi paxos
 	
 	int					NodeID();
@@ -42,9 +42,18 @@ private:
 	virtual void		OnRequestChosen();
 
 	void				OnRequest();
+	
+	void				OnCatchupTimeout();
+	
+	void				OnLearnLease();
+	void				OnLeaseTimeout();
+	
+	void				NewPaxosRound();
 
 	IOProcessor*		ioproc;
 	Scheduler*			scheduler;
+	
+	PaxosLease			masterLease;
 
 	bool				appending;
 	ByteString			value;
@@ -53,10 +62,12 @@ private:
 	
 	LogCache			logCache;
 	LogQueue			logQueue;
-		
-	void				OnCatchupTimeout();
+	
 	MFunc<ReplicatedLog>onCatchupTimeout;
 	CdownTimer			catchupTimeout;
+	
+	MFunc<ReplicatedLog>onLearnLease;
+	MFunc<ReplicatedLog>onLeaseTimeout;
 
 	ReplicatedDB*		replicatedDB;
 	

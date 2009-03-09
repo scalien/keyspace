@@ -13,15 +13,15 @@ public:
 
 	void OnAppend(Transaction* transaction, LogItem* entry);
 	
-	void OnMaster();
+	void OnMasterLease(int nodeID);
 	
-	void OnSlave()		{ /* empty */ };
+	void OnMasterLeaseExpired()		{ /* empty */ };
 	
-	void OnDoCatchup()	{ /* empty */ };
+	void OnDoCatchup()				{ /* empty */ };
 	
-	void OnStop()		{ /* empty */ };
+	void OnStop()					{ /* empty */ };
 	
-	void OnContinue()	{ /* empty */ };
+	void OnContinue()				{ /* empty */ };
 
 private:
 	ReplicatedLog*	replicatedLog;

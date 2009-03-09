@@ -15,7 +15,8 @@ PLeaseAcceptor::PLeaseAcceptor() :
 
 bool PLeaseAcceptor::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
 {
-	// I/O framework
+	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
+
 	ioproc = ioproc_;
 	scheduler = scheduler_;
 	config = config_;
@@ -122,7 +123,7 @@ void PLeaseAcceptor::OnProposeRequest()
 {
 	Log_Trace();
 	
-	if (msg.expireTime < Now())
+	if (msg.expireTime > Now())
 	{
 		if (msg.proposalID < state.promisedProposalID)
 			msg.ProposeResponse(msg.proposalID, PROPOSE_REJECTED);
@@ -142,10 +143,16 @@ void PLeaseAcceptor::OnProposeRequest()
 		SendReply();
 	}
 	else
+	{
+		Log_Message("Expired propose request received (msg.expireTime = %llu | Now = %llu)",
+			msg.expireTime, Now());
 		ioproc->Add(&udpread);
+	}
 }
 
 void PLeaseAcceptor::OnLeaseTimeout()
 {
+	Log_Trace();
+	
 	state.OnLeaseTimeout();
 }

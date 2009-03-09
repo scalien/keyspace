@@ -167,6 +167,9 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	struct kevent	ev;
 	struct timespec timeout = { 0, 0 };
 	
+	if (!ioop->active)
+		return true;
+	
 	if (kq < 0)
 	{
 		Log_Message("kq < 0");
