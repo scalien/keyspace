@@ -103,6 +103,12 @@ void PLeaseAcceptor::OnPrepareRequest()
 {
 	Log_Trace();
 	
+	if (state.acceptedExpireTime < Now())
+	{
+		scheduler->Remove(&leaseTimeout);
+		OnLeaseTimeout();
+	}
+	
 	if (msg.proposalID < state.promisedProposalID)
 		msg.PrepareResponse(msg.proposalID, PREPARE_REJECTED);
 	else
@@ -123,6 +129,12 @@ void PLeaseAcceptor::OnProposeRequest()
 {
 	Log_Trace();
 	
+	if (state.acceptedExpireTime < Now())
+	{
+		scheduler->Remove(&leaseTimeout);
+		OnLeaseTimeout();
+	}
+
 	if (msg.expireTime > Now())
 	{
 		if (msg.proposalID < state.promisedProposalID)

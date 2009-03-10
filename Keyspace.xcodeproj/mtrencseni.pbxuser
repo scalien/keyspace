@@ -2226,6 +2226,10 @@
 			5421E0630F65D242004BBDB4 /* PBXTextBookmark */ = 5421E0630F65D242004BBDB4 /* PBXTextBookmark */;
 			5421E0640F65D242004BBDB4 /* PBXTextBookmark */ = 5421E0640F65D242004BBDB4 /* PBXTextBookmark */;
 			5421E0650F65D242004BBDB4 /* PBXTextBookmark */ = 5421E0650F65D242004BBDB4 /* PBXTextBookmark */;
+			5421E0660F65D2C6004BBDB4 /* PBXBookmark */ = 5421E0660F65D2C6004BBDB4 /* PBXBookmark */;
+			5421E0680F65D2D0004BBDB4 /* PBXTextBookmark */ = 5421E0680F65D2D0004BBDB4 /* PBXTextBookmark */;
+			5421E0690F65D2D0004BBDB4 /* PBXTextBookmark */ = 5421E0690F65D2D0004BBDB4 /* PBXTextBookmark */;
+			5421E06A0F65D2D0004BBDB4 /* PBXTextBookmark */ = 5421E06A0F65D2D0004BBDB4 /* PBXTextBookmark */;
 			544612330F55CED700EFBBDE = 544612330F55CED700EFBBDE /* PBXTextBookmark */;
 			544612340F55CED700EFBBDE = 544612340F55CED700EFBBDE /* PBXTextBookmark */;
 			544612350F55CED700EFBBDE = 544612350F55CED700EFBBDE /* PBXTextBookmark */;
@@ -9227,9 +9231,9 @@
 	};
 	5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {822, 5151}}";
-			sepNavSelRange = "{5593, 0}";
-			sepNavVisRange = "{5005, 1029}";
+			sepNavIntBoundsRect = "{{0, 0}, {822, 5219}}";
+			sepNavSelRange = "{3225, 0}";
+			sepNavVisRange = "{5153, 1031}";
 			sepNavWindowFrame = "{{266, 207}, {879, 971}}";
 		};
 	};
@@ -9242,9 +9246,9 @@
 	};
 	5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {822, 2703}}";
-			sepNavSelRange = "{3336, 0}";
-			sepNavVisRange = "{0, 1348}";
+			sepNavIntBoundsRect = "{{0, 0}, {822, 2907}}";
+			sepNavSelRange = "{2174, 0}";
+			sepNavVisRange = "{1824, 1288}";
 		};
 	};
 	5421D4360F617AF0004BBDB4 /* PLeaseConsts.h */ = {
@@ -9612,7 +9616,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 293";
 		rLen = 0;
-		rLoc = 5291;
+		rLoc = 5441;
 		rType = 0;
 		vrLen = 286;
 		vrLoc = 5747;
@@ -9652,7 +9656,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 317";
 		rLen = 0;
-		rLoc = 5697;
+		rLoc = 5847;
 		rType = 0;
 		vrLen = 1373;
 		vrLoc = 3262;
@@ -9692,7 +9696,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 316";
 		rLen = 0;
-		rLoc = 5801;
+		rLoc = 5951;
 		rType = 0;
 		vrLen = 54;
 		vrLoc = 5979;
@@ -9712,7 +9716,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 260";
 		rLen = 0;
-		rLoc = 5022;
+		rLoc = 5172;
 		rType = 0;
 		vrLen = 905;
 		vrLoc = 5128;
@@ -10260,7 +10264,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 269";
 		rLen = 0;
-		rLoc = 2671;
+		rLoc = 2876;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 3348;
@@ -10420,7 +10424,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 152";
 		rLen = 0;
-		rLoc = 2671;
+		rLoc = 2876;
 		rType = 0;
 		vrLen = 586;
 		vrLoc = 2762;
@@ -10440,7 +10444,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 159";
 		rLen = 0;
-		rLoc = 2671;
+		rLoc = 2876;
 		rType = 0;
 		vrLen = 792;
 		vrLoc = 2556;
@@ -10480,7 +10484,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 126";
 		rLen = 0;
-		rLoc = 2338;
+		rLoc = 2441;
 		rType = 0;
 		vrLen = 1040;
 		vrLoc = 2308;
@@ -10880,7 +10884,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 159";
 		rLen = 0;
-		rLoc = 2671;
+		rLoc = 2876;
 		rType = 0;
 		vrLen = 1247;
 		vrLoc = 2101;
@@ -10900,7 +10904,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 159";
 		rLen = 0;
-		rLoc = 2671;
+		rLoc = 2876;
 		rType = 0;
 		vrLen = 1202;
 		vrLoc = 2146;
@@ -10980,7 +10984,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 167";
 		rLen = 0;
-		rLoc = 3363;
+		rLoc = 3568;
 		rType = 0;
 		vrLen = 1190;
 		vrLoc = 2158;
@@ -11000,7 +11004,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 167";
 		rLen = 0;
-		rLoc = 3361;
+		rLoc = 3566;
 		rType = 0;
 		vrLen = 1222;
 		vrLoc = 2126;
@@ -11020,7 +11024,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 167";
 		rLen = 0;
-		rLoc = 3351;
+		rLoc = 3556;
 		rType = 0;
 		vrLen = 1208;
 		vrLoc = 2140;
@@ -11080,7 +11084,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 127";
 		rLen = 83;
-		rLoc = 2476;
+		rLoc = 2579;
 		rType = 0;
 		vrLen = 1293;
 		vrLoc = 2055;
@@ -11100,7 +11104,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 127";
 		rLen = 0;
-		rLoc = 2547;
+		rLoc = 2650;
 		rType = 0;
 		vrLen = 1294;
 		vrLoc = 0;
@@ -11210,7 +11214,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 127";
 		rLen = 0;
-		rLoc = 2547;
+		rLoc = 2650;
 		rType = 0;
 		vrLen = 1294;
 		vrLoc = 0;
@@ -12137,7 +12141,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 165";
 		rLen = 0;
-		rLoc = 3124;
+		rLoc = 3329;
 		rType = 0;
 		vrLen = 1053;
 		vrLoc = 2295;
@@ -12627,7 +12631,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 165";
 		rLen = 0;
-		rLoc = 3124;
+		rLoc = 3329;
 		rType = 0;
 		vrLen = 1053;
 		vrLoc = 2295;
@@ -13929,7 +13933,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 157";
 		rLen = 0;
-		rLoc = 3595;
+		rLoc = 3670;
 		rType = 0;
 		vrLen = 988;
 		vrLoc = 4610;
@@ -14119,7 +14123,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 171";
 		rLen = 0;
-		rLoc = 3774;
+		rLoc = 3849;
 		rType = 0;
 		vrLen = 1490;
 		vrLoc = 0;
@@ -14139,7 +14143,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 157";
 		rLen = 0;
-		rLoc = 3595;
+		rLoc = 3670;
 		rType = 0;
 		vrLen = 988;
 		vrLoc = 4610;
@@ -16721,7 +16725,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 246";
 		rLen = 0;
-		rLoc = 5350;
+		rLoc = 5500;
 		rType = 0;
 		vrLen = 1112;
 		vrLoc = 4074;
@@ -16861,7 +16865,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 246";
 		rLen = 0;
-		rLoc = 5350;
+		rLoc = 5500;
 		rType = 0;
 		vrLen = 1112;
 		vrLoc = 4074;
@@ -20100,7 +20104,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 246";
 		rLen = 0;
-		rLoc = 5352;
+		rLoc = 5502;
 		rType = 0;
 		vrLen = 989;
 		vrLoc = 4594;
@@ -20150,7 +20154,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 246";
 		rLen = 0;
-		rLoc = 5352;
+		rLoc = 5502;
 		rType = 0;
 		vrLen = 1490;
 		vrLoc = 0;
@@ -20170,7 +20174,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 246";
 		rLen = 0;
-		rLoc = 5352;
+		rLoc = 5502;
 		rType = 0;
 		vrLen = 989;
 		vrLoc = 4594;
@@ -20210,7 +20214,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 148";
 		rLen = 0;
-		rLoc = 3226;
+		rLoc = 3431;
 		rType = 0;
 		vrLen = 1389;
 		vrLoc = 1917;
@@ -20220,7 +20224,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 148";
 		rLen = 0;
-		rLoc = 3247;
+		rLoc = 3452;
 		rType = 0;
 		vrLen = 1402;
 		vrLoc = 1917;
@@ -20250,7 +20254,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 126";
 		rLen = 5;
-		rLoc = 2661;
+		rLoc = 2866;
 		rType = 0;
 		vrLen = 1361;
 		vrLoc = 1987;
@@ -20270,7 +20274,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 148";
 		rLen = 0;
-		rLoc = 3247;
+		rLoc = 3452;
 		rType = 0;
 		vrLen = 1402;
 		vrLoc = 1917;
@@ -20290,7 +20294,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 126";
 		rLen = 5;
-		rLoc = 2661;
+		rLoc = 2866;
 		rType = 0;
 		vrLen = 1339;
 		vrLoc = 2009;
@@ -20320,7 +20324,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 126";
 		rLen = 5;
-		rLoc = 2661;
+		rLoc = 2866;
 		rType = 0;
 		vrLen = 1361;
 		vrLoc = 1987;
@@ -20520,7 +20524,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 218";
 		rLen = 0;
-		rLoc = 4910;
+		rLoc = 5060;
 		rType = 0;
 		vrLen = 1126;
 		vrLoc = 4151;
@@ -20540,7 +20544,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 218";
 		rLen = 0;
-		rLoc = 4910;
+		rLoc = 5060;
 		rType = 0;
 		vrLen = 1124;
 		vrLoc = 3954;
@@ -20570,7 +20574,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 218";
 		rLen = 0;
-		rLoc = 4910;
+		rLoc = 5060;
 		rType = 0;
 		vrLen = 1438;
 		vrLoc = 2226;
@@ -20590,7 +20594,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 242";
 		rLen = 16;
-		rLoc = 5210;
+		rLoc = 5360;
 		rType = 0;
 		vrLen = 1085;
 		vrLoc = 3956;
@@ -20620,7 +20624,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 242";
 		rLen = 16;
-		rLoc = 5210;
+		rLoc = 5360;
 		rType = 0;
 		vrLen = 1070;
 		vrLoc = 4035;
@@ -20640,7 +20644,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 236";
 		rLen = 0;
-		rLoc = 5021;
+		rLoc = 5171;
 		rType = 0;
 		vrLen = 1030;
 		vrLoc = 4035;
@@ -21031,7 +21035,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1353;
 		vrLoc = 2009;
@@ -21045,7 +21049,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1353;
 		vrLoc = 2009;
@@ -21065,7 +21069,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 158";
 		rLen = 0;
-		rLoc = 3485;
+		rLoc = 3560;
 		rType = 0;
 		vrLen = 1185;
 		vrLoc = 2883;
@@ -21075,7 +21079,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1353;
 		vrLoc = 2009;
@@ -21095,7 +21099,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 158";
 		rLen = 0;
-		rLoc = 3485;
+		rLoc = 3560;
 		rType = 0;
 		vrLen = 1185;
 		vrLoc = 2883;
@@ -21585,7 +21589,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1294;
 		vrLoc = 2070;
@@ -21635,7 +21639,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1294;
 		vrLoc = 2070;
@@ -22547,7 +22551,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1316;
 		vrLoc = 2048;
@@ -22687,7 +22691,7 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1316;
 		vrLoc = 2048;
@@ -23495,7 +23499,7 @@
 		fRef = 548147160F31B6B200F3D2B6 /* Database.cpp */;
 		name = "Database.cpp: 12";
 		rLen = 0;
-		rLoc = 240;
+		rLoc = 242;
 		rType = 0;
 		vrLen = 640;
 		vrLoc = 0;
@@ -23586,7 +23590,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 273";
 		rLen = 0;
-		rLoc = 5593;
+		rLoc = 5743;
 		rType = 0;
 		vrLen = 1029;
 		vrLoc = 5005;
@@ -23716,7 +23720,7 @@
 		fRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */;
 		name = "PLeaseProposer.cpp: 273";
 		rLen = 0;
-		rLoc = 5593;
+		rLoc = 5743;
 		rType = 0;
 		vrLen = 1029;
 		vrLoc = 5005;
@@ -23898,9 +23902,43 @@
 		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
 		name = "PLeaseAcceptor.cpp: 156";
 		rLen = 0;
-		rLoc = 3336;
+		rLoc = 3541;
 		rType = 0;
 		vrLen = 1348;
+		vrLoc = 0;
+	};
+	5421E0660F65D2C6004BBDB4 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 548147160F31B6B200F3D2B6 /* Database.cpp */;
+	};
+	5421E0680F65D2D0004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
+		name = "PLeaseAcceptor.cpp: 156";
+		rLen = 0;
+		rLoc = 3541;
+		rType = 0;
+		vrLen = 1348;
+		vrLoc = 0;
+	};
+	5421E0690F65D2D0004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */;
+		name = "PLeaseAcceptor.cpp: 156";
+		rLen = 0;
+		rLoc = 3541;
+		rType = 0;
+		vrLen = 1348;
+		vrLoc = 0;
+	};
+	5421E06A0F65D2D0004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147160F31B6B200F3D2B6 /* Database.cpp */;
+		name = "Database.cpp: 28";
+		rLen = 0;
+		rLoc = 479;
+		rType = 0;
+		vrLen = 644;
 		vrLoc = 0;
 	};
 	54460CD30F5198E800EFBBDE /* AsyncDBTest */ = {
@@ -24141,9 +24179,9 @@
 	};
 	548147160F31B6B200F3D2B6 /* Database.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {824, 1027}}";
-			sepNavSelRange = "{240, 0}";
-			sepNavVisRange = "{0, 640}";
+			sepNavIntBoundsRect = "{{0, 0}, {822, 1050}}";
+			sepNavSelRange = "{315, 0}";
+			sepNavVisRange = "{0, 644}";
 			sepNavWindowFrame = "{{19, -5}, {880, 1178}}";
 		};
 	};

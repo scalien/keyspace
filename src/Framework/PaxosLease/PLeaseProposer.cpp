@@ -141,6 +141,9 @@ void PLeaseProposer::OnPrepareResponse()
 {
 	Log_Trace();
 
+	if (state.expireTime < Now())
+		ioproc->Add(&udpread); // wait for timer
+
 	if (!state.preparing || msg.proposalID != state.proposalID)
 	{
 		ioproc->Add(&udpread);
@@ -192,6 +195,9 @@ bool PLeaseProposer::TryFinishPreparing()
 void PLeaseProposer::OnProposeResponse()
 {
 	Log_Trace();
+
+	if (state.expireTime < Now())
+		ioproc->Add(&udpread); // wait for timer
 	
 	if (!state.proposing || msg.proposalID != state.proposalID)
 	{
