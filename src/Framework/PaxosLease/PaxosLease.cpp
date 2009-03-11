@@ -28,6 +28,11 @@ unsigned PaxosLease::LeaseOwner()
 	return learner.LeaseOwner();
 }
 
+ulong64 PaxosLease::LeaseEpoch()
+{
+	return learner.LeaseEpoch();
+}
+
 void PaxosLease::SetOnLearnLease(Callable* onLearnLeaseCallback)
 {
 	learner.SetOnLearnLease(onLearnLeaseCallback);

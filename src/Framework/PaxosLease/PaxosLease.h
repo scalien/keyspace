@@ -15,10 +15,11 @@ public:
 	bool			IsLeaseOwner();
 	bool			LeaseKnown();
 	unsigned		LeaseOwner();
+	ulong64			LeaseEpoch();
 	
 	void			SetOnLearnLease(Callable* onLearnLeaseCallback);
 	void			SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback);
-
+	
 private:
  	PLeaseProposer	proposer;
 	PLeaseAcceptor	acceptor;

@@ -3,6 +3,7 @@
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "Framework/Paxos/PaxosConsts.h"
 #include "PLeaseConsts.h"
 
 PLeaseLearner::PLeaseLearner() :
@@ -18,7 +19,7 @@ bool PLeaseLearner::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfi
 	ioproc = ioproc_;
 	scheduler = scheduler_;
 	config = config_;
-	
+		
 	state.Init();
 	
 	if (!socket.Create(UDP)) return false;
@@ -105,6 +106,29 @@ bool PLeaseLearner::LeaseKnown()
 unsigned PLeaseLearner::LeaseOwner()
 {
 	return state.leaseOwner;
+}
+
+ulong64 PLeaseLearner::LeaseEpoch()
+{
+	if (msg.expireTime < Now())
+		state.OnLeaseTimeout();
+
+	/*ulong64 left, middle, right, leaseEpoch;
+
+	// <leaseEpoch since last restart> <restartCounter> <nodeID>
+	
+	left = state.leaseEpoch << (WIDTH_NODEID + WIDTH_RESTART_COUNTER);
+
+	middle = config->restartCounter << WIDTH_NODEID;
+
+	right = config->nodeID;
+
+	leaseEpoch = left | middle | right;
+	
+	return leaseEpoch;*/
+	
+	return state.leaseEpoch;
+
 }
 
 void PLeaseLearner::SetOnLearnLease(Callable* onLearnLeaseCallback_)

@@ -64,12 +64,14 @@ public:
 	bool		learned;
 	int			leaseOwner;
 	ulong64		expireTime;
+	ulong64		leaseEpoch;
 	
 	void Init()
 	{
 		learned =		0;
 		leaseOwner =	0;
 		expireTime =	0;
+		leaseEpoch =	0;
 	}
 	
 	void OnLeaseTimeout()
@@ -77,6 +79,7 @@ public:
 		learned =		0;
 		leaseOwner =	0;
 		expireTime =	0;
+		leaseEpoch++;
 	}
 };
 

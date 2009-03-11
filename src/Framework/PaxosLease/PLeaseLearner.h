@@ -25,6 +25,7 @@ public:
 	bool					IsLeaseOwner();
 	bool					LeaseKnown();
 	unsigned				LeaseOwner();
+	ulong64					LeaseEpoch();
 	
 	void					SetOnLearnLease(Callable* onLearnLeaseCallback_);
 	void					SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_);
