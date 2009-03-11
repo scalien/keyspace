@@ -8,6 +8,7 @@
 #include "Framework/Paxos/PaxosLearner.h"
 #include "Framework/PaxosLease/PaxosLease.h"
 #include "Framework/ReplicatedDB/ReplicatedDB.h"
+#include "ReplicatedLogMsg.h"
 #include "LogCache.h"
 #include "LogQueue.h"
 
@@ -26,7 +27,7 @@ public:
 	
 	LogItem*			LastLogItem();
 	
-	bool				IsMaster();				// multi paxos
+	bool				IsMaster();
 	
 	int					NodeID();
 	
@@ -56,7 +57,8 @@ private:
 	PaxosLease			masterLease;
 
 	bool				appending;
-	ByteString			value;
+	ReplicatedLogMsg	msg;
+	ByteArray<65*KB>	value;
 	
 	ulong64				highestPaxosID;
 	

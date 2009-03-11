@@ -6,7 +6,7 @@ ReplicatedLog::ReplicatedLog()
 :	onCatchupTimeout(this, &ReplicatedLog::OnCatchupTimeout),
 	catchupTimeout(CATCHUP_TIMEOUT, &onCatchupTimeout),
 	onLearnLease(this, &ReplicatedLog::OnLearnLease),
-	onLeaseTimeout(this, &ReplicatedLog::OnLearnLease)
+	onLeaseTimeout(this, &ReplicatedLog::OnLeaseTimeout)
 {
 }
 
@@ -68,7 +68,13 @@ bool ReplicatedLog::Append(ByteString value_)
 	
 	if (!appending)
 	{
-		value = value_;
+		if (!ReplicatedLog::msg.Init(config.nodeID, config.restartCounter, 
+			masterLease.LeaseEpoch(), value_))
+				return false;
+		
+		if (!ReplicatedLog::msg.Write(value))
+			return false;
+		
 		appending = true;
 		return PaxosProposer::Propose(value);
 	}
@@ -149,62 +155,73 @@ void ReplicatedLog::OnProposeResponse()
 void ReplicatedLog::OnLearnChosen()
 {
 	Log_Trace();
+
+	ulong64 paxosID;
 	
 	if (PaxosLearner::msg.paxosID > highestPaxosID)
 		highestPaxosID = PaxosLearner::msg.paxosID;
 
-	bool myappend;
-	
-	 myappend = false;
-	
 	if (PaxosLearner::msg.paxosID == PaxosLearner::paxosID)
 	{
 		if (catchupTimeout.IsActive())
 			scheduler->Remove(&catchupTimeout);
 		
 		PaxosLearner::OnLearnChosen();
+		// save it in the logCache (includes the epoch info)
 		logCache.Push(PaxosLearner::paxosID, PaxosLearner::state.value);
 		
-		NewPaxosRound();
+		msg.Read(PaxosLearner::state.value);	// msg.value holds the 'user value'
+		paxosID = PaxosLearner::paxosID;		// this is the value we pass to the ReplicatedDB
 		
-		if (highestPaxosID > PaxosLearner::msg.paxosID)
+		NewPaxosRound(); // increments paxosID, clears proposer, acceptor, learner
+		
+		if (highestPaxosID > paxosID)
 		{
 			PaxosLearner::RequestChosen(PaxosLearner::udpread.endpoint);
 			return;
 		}
-		
-		if (appending && value == LastLogItem()->value)
+
+		if (msg.nodeID == config.nodeID && msg.restartCounter == config.restartCounter)
+			logQueue.Pop(); // we just appended this
+
+		if (msg.nodeID == config.nodeID && msg.restartCounter == config.restartCounter &&
+			msg.leaseEpoch == masterLease.LeaseEpoch() && masterLease.IsLeaseOwner())
 		{
-			myappend = true;
-			logQueue.Pop();
+			PaxosProposer::state.leader = true;
+			Log_Message("Multi paxos enabled!");
 		}
-		
-		if (LastLogItem()->value.length > 0)
+		else
 		{
-			//Transaction tx(table);
-			
-			if (replicatedDB != NULL)
-				replicatedDB->OnAppend(NULL, LastLogItem());
-			
-			//tx.Commit();
+			PaxosProposer::state.leader = false;
 		}
-				
+
+		
 		if (logQueue.Size() > 0)
 		{
-			value = logQueue.Next()->value;
+			if (!ReplicatedLog::msg.Init(config.nodeID, config.restartCounter, 
+				masterLease.LeaseEpoch(), logQueue.Next()->value))
+					ASSERT_FAIL();
+		
+			if (!ReplicatedLog::msg.Write(value))
+				ASSERT_FAIL();
+			
 			appending = true;
 			PaxosProposer::Propose(value);
-			return;
 		}
 		else
 			appending = false;
+		
+		if (msg.nodeID == config.nodeID && msg.restartCounter == config.restartCounter &&
+			replicatedDB != NULL && msg.value.length > 0)
+		{
+			//Transaction tx(table);
+			replicatedDB->OnAppend(NULL, paxosID, msg.value); // user will call Append() here
+			//tx.Commit();
+		}		
 	}
 	else if (PaxosLearner::msg.paxosID > PaxosLearner::paxosID)
 	{
-		/*	I am lagging and need to catch-up
-			I will send a prepare request which will
-			trigger the other node to send me the chosen value
-		*/
+		//	I am lagging and need to catch-up
 		
 		if (PaxosLearner::msg.paxosID > highestPaxosID)
 			highestPaxosID = PaxosLearner::msg.paxosID;
@@ -216,7 +233,6 @@ void ReplicatedLog::OnLearnChosen()
 			endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
 												+ PAXOS_LEARNER_PORT_OFFSET);
 			PaxosLearner::RequestChosen(endpoint);
-			return;
 	}
 }
 
@@ -257,8 +273,7 @@ void ReplicatedLog::OnRequest()
 	}
 	else // paxosID < msg.paxosID
 	{
-		/*	I am lagging and need to catch-up
-		*/
+		//	I am lagging and need to catch-up
 		
 		if (!catchupTimeout.IsActive())
 			scheduler->Add(&catchupTimeout);
