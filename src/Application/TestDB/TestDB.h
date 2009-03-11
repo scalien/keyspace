@@ -11,7 +11,7 @@ class TestDB : public ReplicatedDB
 public:
 	void Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* replicatedLog_);
 
-	void OnAppend(Transaction* transaction, LogItem* entry);
+	void OnAppend(Transaction* transaction, ulong64 paxosID, ByteString entry);
 	
 	void OnMasterLease(int nodeID);
 	

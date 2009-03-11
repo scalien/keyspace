@@ -11,7 +11,7 @@ void TestDB::Init(IOProcessor*, Scheduler*, ReplicatedLog* replicatedLog_)
 	replicatedLog->SetReplicatedDB(this);
 }
 
-void TestDB::OnAppend(Transaction*, LogItem*)
+void TestDB::OnAppend(Transaction*, ulong64, ByteString)
 {
 	Log_Trace();
 	
@@ -33,6 +33,6 @@ void TestDB::OnMasterLease(int nodeID)
 	if (!master && nodeID == replicatedLog->NodeID())
 	{
 		master = true;
-		OnAppend(NULL, NULL);
+		OnAppend(NULL, 0, ByteString());
 	}
 }

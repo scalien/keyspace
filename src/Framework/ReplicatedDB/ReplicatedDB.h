@@ -9,7 +9,7 @@ class Entry;
 class ReplicatedDB
 {
 public:
-	virtual void OnAppend(Transaction* transaction, LogItem* entry) = 0;
+	virtual void OnAppend(Transaction* transaction, ulong64 paxosID, ByteString value) = 0;
 	
 	virtual void OnMasterLease(int nodeID) = 0;
 	virtual void OnMasterLeaseExpired() = 0;
