@@ -10,6 +10,7 @@ class PaxosConfig
 public:
 	int				nodeID;
 	int				numNodes; // same as endpoints.size
+	ulong64			restartCounter;
 	
 	int				port;
 
@@ -23,8 +24,6 @@ public:
 
 private:
 	void			InitRestartCounter();
-	
-	ulong64			restartCounter;
 };
 
 #endif

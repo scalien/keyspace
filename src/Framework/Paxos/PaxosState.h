@@ -16,6 +16,7 @@ public:
 	ByteArray<VALUE_SIZE>	value;
 	
 	bool					leader; // multi paxos
+	unsigned				numProposals; // number of proposal runs in this Paxos round
 	
 	bool Active() { return (preparing || proposing); }
 	
@@ -25,8 +26,9 @@ public:
 		proposing =					false;
 		proposalID =				0;
 		highestReceivedProposalID =	0;
-		
 		value.Clear();
+		leader = false;
+		numProposals = 0;
 	}	
 };
 
@@ -34,7 +36,6 @@ class PaxosAcceptorState
 {
 public:
 	ulong64					promisedProposalID;
-	
 	bool					accepted;	
 	ulong64					acceptedProposalID;
 	ByteArray<VALUE_SIZE>	acceptedValue;
@@ -42,7 +43,6 @@ public:
 	void Init()
 	{
 		promisedProposalID =	0;
-
 		accepted =				false;
 		acceptedProposalID =	0;
 		acceptedValue.Clear();

@@ -28,8 +28,6 @@ protected:
 	ByteString				Value();
 	
 	void					SetPaxosID(ulong64 paxosID_);
-	
-	void					SetOnLearnValue(Callable* onLearnValueCallback_);
 
 protected:
 	void					ProcessMsg();
@@ -57,7 +55,6 @@ protected:
 	
 	PaxosLearnerState		state;
 	
-	Callable*				onLearnValueCallback;
 };
 
 #endif

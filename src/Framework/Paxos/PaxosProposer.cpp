@@ -55,7 +55,15 @@ bool PaxosProposer::Propose(ByteString& value)
 	if (!state.value.Set(value))
 		return false;
 
-	StartPreparing();
+	if (state.leader && state.numProposals == 0)
+	{
+		state.numProposals++;
+		StartProposing();
+	}
+	else
+	{
+		StartPreparing();
+	}
 	
 	return true;
 }
@@ -278,8 +286,9 @@ void PaxosProposer::StartPreparing()
 	StopProposing();
 	state.preparing = true;
 	
-	if (!state.leader)
-		state.proposalID = config->NextHighest(state.proposalID);
+	state.numProposals++;
+	
+	state.proposalID = config->NextHighest(state.proposalID);
 	
 	state.highestReceivedProposalID = 0; // TODO: should be -1 ?
 	

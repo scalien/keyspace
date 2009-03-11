@@ -106,6 +106,8 @@ int PaxosConfig::MinMajority()
 
 ulong64 PaxosConfig::NextHighest(ulong64 proposalID)
 {
+	// <proposal count since restart> <restartCounter> <nodeID>
+	
 	ulong64 left, middle, right, nextProposalID;
 	
 	left = proposalID >> (WIDTH_NODEID + WIDTH_RESTART_COUNTER);

@@ -207,7 +207,19 @@ void PaxosAcceptor::OnPrepareRequest()
 {
 	Log_Trace();
 	
-	if (msg.proposalID < state.promisedProposalID)
+	if (msg.proposalID >= state.promisedProposalID)
+	{
+		state.promisedProposalID = msg.proposalID;
+
+		if (!state.accepted)
+			msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
+		else
+			msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
+				state.acceptedProposalID, state.acceptedValue);
+		
+		WriteState(&transaction);
+	}
+	else
 	{
 		msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_REJECTED);
 		
@@ -222,16 +234,6 @@ void PaxosAcceptor::OnPrepareRequest()
 		SendReply();
 		return;
 	}
-
-	state.promisedProposalID = msg.proposalID;
-
-	if (!state.accepted)
-		msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
-	else
-		msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
-			state.acceptedProposalID, state.acceptedValue);
-	
-	WriteState(&transaction);
 }
 
 void PaxosAcceptor::OnProposeRequest()

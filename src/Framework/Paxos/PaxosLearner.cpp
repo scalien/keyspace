@@ -122,8 +122,6 @@ void PaxosLearner::OnLearnChosen()
 
 	Log_Message("+++ Consensus for paxosID = %llu is %.*s +++", paxosID,
 		state.value.length, state.value.buffer);
-	
-	Call(onLearnValueCallback);
 }
 
 void PaxosLearner::OnRequestChosen()
@@ -142,9 +140,4 @@ bool PaxosLearner::Learned()
 ByteString PaxosLearner::Value()
 {
 	return state.value;
-}
-
-void PaxosLearner::SetOnLearnValue(Callable* onLearnValueCallback_)
-{
-	onLearnValueCallback = onLearnValueCallback_;
 }
