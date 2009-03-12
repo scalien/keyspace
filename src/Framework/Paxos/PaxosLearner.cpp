@@ -87,7 +87,7 @@ bool PaxosLearner::SendChosen(Endpoint endpoint, ulong64 paxosID, ByteString& va
 	if (udpwrite.active)
 		return false;
 		
-	msg.LearnChosen(paxosID, value);
+	msg.LearnChosen(paxosID, LEARN_VALUE, value);
 	
 	if (!msg.Write(udpwrite.data))
 		return false;

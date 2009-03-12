@@ -168,9 +168,9 @@ void PaxosProposer::OnPrepareResponse()
 		
 	numReceived++;
 	
-	if (msg.response == PREPARE_REJECTED)
+	if (msg.subtype == PREPARE_REJECTED)
 		numRejected++;
-	else if (msg.response == PREPARE_PREVIOUSLY_ACCEPTED &&
+	else if (msg.subtype == PREPARE_PREVIOUSLY_ACCEPTED &&
 			 msg.acceptedProposalID >= state.highestReceivedProposalID)
 	{
 		/* the >= could be replaced by > which would result in less copys
@@ -230,7 +230,7 @@ void PaxosProposer::OnProposeResponse()
 	
 	numReceived++;
 	
-	if (msg.response == PROPOSE_ACCEPTED)
+	if (msg.subtype == PROPOSE_ACCEPTED)
 		numAccepted++;
 
 	bool read = TryFinishProposing();
@@ -249,7 +249,7 @@ bool PaxosProposer::TryFinishProposing()
 	{
 		// a majority have accepted our proposal, we have consensus
 		StopProposing();
-		msg.LearnChosen(paxosID, state.value);
+		msg.LearnChosen(paxosID, LEARN_PROPOSAL, state.proposalID);
 		BroadcastMessage();
 		return false;
 	}

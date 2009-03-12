@@ -23,7 +23,11 @@
 #define PROPOSE_REJECTED			'r'
 #define PROPOSE_ACCEPTED			'a'
 
-#define	VALUE_SIZE					64
+// learn types
+#define LEARN_PROPOSAL				'p'
+#define LEARN_VALUE					'c'
+
+#define	VALUE_SIZE					64*KB
 
 class PaxosMsg
 {
@@ -31,21 +35,23 @@ public:
 	ulong64					paxosID;
 	char					type;
 	ulong64					proposalID;
-	char					response;
+	char					subtype;
 	ulong64					acceptedProposalID;
 	ByteArray<VALUE_SIZE>	value;
 	
 	void					Init(ulong64 paxosID_, char type_);
 		
 	bool					PrepareRequest(ulong64 paxosID_, ulong64 proposalID_);
-	bool					PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char response_);
-	bool					PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char response_,
+	bool					PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char subtype_);
+	bool					PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char subtype_,
 								ulong64 acceptedProposalID_, ByteString value_);
 	
 	bool					ProposeRequest(ulong64 paxosID_, ulong64 proposalID_, ByteString value_);
-	bool					ProposeResponse(ulong64 paxosID_, ulong64 proposalID_, char response_);
+	bool					ProposeResponse(ulong64 paxosID_, ulong64 proposalID_, char subtype_);
 	
-	bool					LearnChosen(ulong64 paxosID_, ByteString value_);
+	bool					LearnChosen(ulong64 paxosID_, char subtype_, ByteString value_);
+	bool					LearnChosen(ulong64 paxosID_, char subtype_, ulong64 proposalID_);
+
 	bool					RequestChosen(ulong64 paxosID_);
 
 	bool					Read(ByteString& data);

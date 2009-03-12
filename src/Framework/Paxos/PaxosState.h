@@ -15,8 +15,8 @@ public:
 	ulong64					highestReceivedProposalID;
 	ByteArray<VALUE_SIZE>	value;
 	
-	bool					leader; // multi paxos
-	unsigned				numProposals; // number of proposal runs in this Paxos round
+	bool					leader;			// multi paxos
+	unsigned				numProposals;	// number of proposal runs in this Paxos round
 	
 	bool Active() { return (preparing || proposing); }
 	

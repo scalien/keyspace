@@ -166,7 +166,25 @@ void ReplicatedLog::OnLearnChosen()
 		if (catchupTimeout.IsActive())
 			scheduler->Remove(&catchupTimeout);
 		
-		PaxosLearner::OnLearnChosen();
+		if (PaxosLearner::msg.subtype == LEARN_PROPOSAL &&
+			PaxosAcceptor::state.accepted &&
+			PaxosAcceptor::state.acceptedProposalID == PaxosLearner::msg.proposalID)
+		{
+			PaxosLearner::msg.LearnChosen(PaxosLearner::msg.paxosID,
+				LEARN_VALUE, PaxosAcceptor::state.acceptedValue);
+		}
+		
+		if (PaxosLearner::msg.subtype == LEARN_VALUE)
+			PaxosLearner::OnLearnChosen();
+		else
+		{
+			Endpoint endpoint = PaxosLearner::udpread.endpoint;
+			endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
+												+ PAXOS_LEARNER_PORT_OFFSET);
+			PaxosLearner::RequestChosen(endpoint);
+			return;
+		}
+		
 		// save it in the logCache (includes the epoch info)
 		logCache.Push(PaxosLearner::paxosID, PaxosLearner::state.value);
 		
@@ -177,7 +195,7 @@ void ReplicatedLog::OnLearnChosen()
 		
 		if (highestPaxosID > paxosID)
 		{
-			PaxosLearner::RequestChosen(PaxosLearner::udpread.endpoint);
+			PaxosLearner::RequestChosen(PaxosLearner::udpread.endpoint); //TODO: why?
 			return;
 		}
 

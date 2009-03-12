@@ -1,0 +1,10 @@
+-	coordinate ReplicatedDB and Paxos commits
+-	only sync to disk on Paxos rounds flagged with commit?
+
+-	proposers send special learn messages containing the proposal number only
+
+-	commit and non-commit rounds
+
+-	get rid of bdb
+
+-	softclocks
