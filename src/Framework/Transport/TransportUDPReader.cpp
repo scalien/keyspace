@@ -32,6 +32,8 @@ void TransportUDPReader::GetMessage(ByteString& bs_)
 
 void TransportUDPReader::OnRead()
 {
+	Log_Message("received from: %s", udpread.endpoint.ToString());
+
 	Call(userCallback);
 	
 	ioproc->Add(&udpread);
