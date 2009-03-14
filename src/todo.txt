@@ -8,3 +8,5 @@
 -	get rid of bdb
 
 -	softclocks
+
+-	fix gcc pedantic warnings

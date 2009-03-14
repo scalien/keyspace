@@ -23,7 +23,6 @@
 		5421DCD30F648B86004BBDB4 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC70F648B86004BBDB4 /* IMF.cpp */; };
 		5421DCD40F648B86004BBDB4 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */; };
 		5421DCD50F648B86004BBDB4 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */; };
-		5421DCD60F648B86004BBDB4 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCE0F648B86004BBDB4 /* TCPServer.cpp */; };
 		5421E1060F68121B004BBDB4 /* ReplicatedLogMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */; };
 		54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		54460CF10F519A8000EFBBDE /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
@@ -71,7 +70,6 @@
 		9A27245E0F6550B300EE25E2 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */; };
 		9A27245F0F6550B300EE25E2 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */; };
 		9A2724600F6550B300EE25E2 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC70F648B86004BBDB4 /* IMF.cpp */; };
-		9A2724610F6550B300EE25E2 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCE0F648B86004BBDB4 /* TCPServer.cpp */; };
 		9A2724630F6550E000EE25E2 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */; };
 		9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
 		9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
@@ -93,6 +91,7 @@
 		9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DB0F6C09B0009576A1 /* HubSim.cpp */; };
 		9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DE0F6C09B0009576A1 /* Main.cpp */; };
+		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -144,9 +143,6 @@
 		5421DCCA0F648B86004BBDB4 /* MemcacheConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheConn.h; sourceTree = "<group>"; };
 		5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheServer.cpp; sourceTree = "<group>"; };
 		5421DCCC0F648B86004BBDB4 /* MemcacheServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheServer.h; sourceTree = "<group>"; };
-		5421DCCD0F648B86004BBDB4 /* TCPConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPConn.h; sourceTree = "<group>"; };
-		5421DCCE0F648B86004BBDB4 /* TCPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPServer.cpp; sourceTree = "<group>"; };
-		5421DCCF0F648B86004BBDB4 /* TCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPServer.h; sourceTree = "<group>"; };
 		5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedLogMsg.h; sourceTree = "<group>"; };
 		5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedLogMsg.cpp; sourceTree = "<group>"; };
 		54460CD40F5198E800EFBBDE /* AsyncDBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncDBTest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -233,6 +229,10 @@
 		9A6204DC0F6C09B0009576A1 /* HubSim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HubSim.h; path = HubSim/HubSim.h; sourceTree = "<group>"; };
 		9A6204DD0F6C09B0009576A1 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Link.h; path = HubSim/Link.h; sourceTree = "<group>"; };
 		9A6204DE0F6C09B0009576A1 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Main.cpp; path = HubSim/Main.cpp; sourceTree = "<group>"; };
+		9A6205070F6C13EB009576A1 /* TransportWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportWriter.h; sourceTree = "<group>"; };
+		9A6205090F6C1789009576A1 /* TCPConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPConn.h; sourceTree = "<group>"; };
+		9A62050A0F6C1789009576A1 /* TCPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPServer.cpp; sourceTree = "<group>"; };
+		9A62050B0F6C1789009576A1 /* TCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPServer.h; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
@@ -355,9 +355,6 @@
 				5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */,
 				5421DCCC0F648B86004BBDB4 /* MemcacheServer.h */,
 				5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */,
-				5421DCCD0F648B86004BBDB4 /* TCPConn.h */,
-				5421DCCF0F648B86004BBDB4 /* TCPServer.h */,
-				5421DCCE0F648B86004BBDB4 /* TCPServer.cpp */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -365,6 +362,10 @@
 		5421E3440F6C130E004BBDB4 /* Transport */ = {
 			isa = PBXGroup;
 			children = (
+				9A6205090F6C1789009576A1 /* TCPConn.h */,
+				9A62050A0F6C1789009576A1 /* TCPServer.cpp */,
+				9A62050B0F6C1789009576A1 /* TCPServer.h */,
+				9A6205070F6C13EB009576A1 /* TransportWriter.h */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
@@ -781,7 +782,6 @@
 				5421DCD30F648B86004BBDB4 /* IMF.cpp in Sources */,
 				5421DCD40F648B86004BBDB4 /* MemcacheConn.cpp in Sources */,
 				5421DCD50F648B86004BBDB4 /* MemcacheServer.cpp in Sources */,
-				5421DCD60F648B86004BBDB4 /* TCPServer.cpp in Sources */,
 				5421E1060F68121B004BBDB4 /* ReplicatedLogMsg.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -807,7 +807,6 @@
 				9A27245E0F6550B300EE25E2 /* HttpConn.cpp in Sources */,
 				9A27245F0F6550B300EE25E2 /* HttpRequest.cpp in Sources */,
 				9A2724600F6550B300EE25E2 /* IMF.cpp in Sources */,
-				9A2724610F6550B300EE25E2 /* TCPServer.cpp in Sources */,
 				9A2724630F6550E000EE25E2 /* MemcacheConn.cpp in Sources */,
 				9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */,
 				9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */,
@@ -821,6 +820,7 @@
 				9A2724720F6551C600EE25E2 /* Common.cpp in Sources */,
 				9A2724730F6551C600EE25E2 /* ThreadPool.cpp in Sources */,
 				9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */,
+				9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
