@@ -11,6 +11,10 @@ connectTimeout(CONNECT_TIMEOUT, &onConnectTimeout)
 	state = DISCONNECTED;
 }
 
+TransportTCPWriter::~TransportTCPWriter()
+{
+}
+
 void TransportTCPWriter::Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_)
 {
 	TCPConn<MAX_TCP_MESSAGE_SIZE>::Init(ioproc_, false);

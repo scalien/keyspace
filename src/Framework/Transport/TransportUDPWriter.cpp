@@ -6,6 +6,11 @@ TransportUDPWriter::TransportUDPWriter()
 	ioproc = NULL;
 }
 
+TransportUDPWriter::~TransportUDPWriter()
+{
+	socket.Close();
+}
+
 void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*, Endpoint &ep)
 {
 	ioproc = ioproc_;

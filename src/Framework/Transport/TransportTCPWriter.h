@@ -14,6 +14,7 @@ class TransportTCPWriter :
 {
 public:
 	TransportTCPWriter();
+	~TransportTCPWriter();
 	
 	// TransportWriter interface
 	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_);

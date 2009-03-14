@@ -59,6 +59,8 @@ TCPConn<bufferSize>::~TCPConn()
 	
 	for (it = writeQueue.Head(); it != NULL; it = writeQueue.Next(it))
 		delete *it;	
+	
+	Close();
 }
 
 

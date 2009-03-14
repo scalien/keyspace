@@ -7,7 +7,12 @@
 #include "Framework/Transport/TransportUDPWriter.h"
 #include "System/Time.h"
 
-TransportUDPWriter writer;
+void Write();
+
+TransportUDPWriter	writer;
+CFunc				writeCallback(&Write);
+CdownTimer			writeTimeout(1000, &writeCallback);
+EventLoop*			eventloop;
 
 void Write()
 {
@@ -15,15 +20,13 @@ void Write()
 	hello.Set("hello");
 
 	writer.Write(hello);
+	eventloop->Reset(&writeTimeout);
 }
 
 int
 main(int argc, char* argv[])
 {
 	IOProcessor*	ioproc;
-	EventLoop*		eventloop;
-	CFunc			writeCallback(&Write);
-	CdownTimer		writeTimeout(1000, &writeCallback);
 	
 	ioproc = IOProcessor::New();
 	eventloop = new EventLoop(ioproc);
