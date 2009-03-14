@@ -10,14 +10,14 @@ void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*, Endpoint &ep)
 {
 	ioproc = ioproc_;
 	endpoint = ep;
+	
+	socket.Create(UDP);
+	socket.SetNonblocking();
 }
 
 void TransportUDPWriter::Write(ByteString &bs)
 {
 	int ret;
-	
-	socket.Create(UDP);
-	socket.SetNonblocking();
 
 	// We use direct sendto here because otherwise
 	//  we should buffer the packets here.
@@ -27,7 +27,5 @@ void TransportUDPWriter::Write(ByteString &bs)
 	
 	if (ret < 0)
 		Log_Errno();
-	
-	socket.Close();
 }
 
