@@ -19,12 +19,18 @@ public:
 	
 	bool Set(char* str)
 	{
+		if (buffer == NULL)
+			ASSERT_FAIL();
+		
 		int len = strlen(str);
 		return Set(str, len);
 	}
 	
 	bool Set(char* str, int len)
 	{
+		if (buffer == NULL)
+			ASSERT_FAIL();
+	
 		if (len > size)
 			return false;
 		
