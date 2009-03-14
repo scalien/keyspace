@@ -371,13 +371,13 @@
 		5421E3440F6C130E004BBDB4 /* Transport */ = {
 			isa = PBXGroup;
 			children = (
-				9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */,
 				9A6205120F6C1C3A009576A1 /* Transport.h */,
 				5421E3EC0F6C1DD5004BBDB4 /* TransportReader.h */,
 				5421E35E0F6C13CC004BBDB4 /* TransportTCPReader.h */,
 				5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */,
 				9A6205070F6C13EB009576A1 /* TransportWriter.h */,
 				9A6205110F6C1A11009576A1 /* TransportTCPWriter.h */,
+				9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */,
 				9A62050B0F6C1789009576A1 /* TCPServer.h */,
 				9A62050A0F6C1789009576A1 /* TCPServer.cpp */,
 				9A6205090F6C1789009576A1 /* TCPConn.h */,

@@ -124,6 +124,23 @@ bool Socket::Connect(Endpoint &endpoint)
 	return ret < 0 ? false : true;
 }
 
+bool Socket::GetEndpoint(Endpoint &endpoint)
+{
+	int ret;
+	socklen_t len;
+	
+	ret = getpeername(fd, (sockaddr*) &endpoint.sa, &len);
+	
+	if (ret < 0)
+	{
+		Log_Errno();
+		Close();
+		return false;
+	}
+	
+	return true;
+}
+
 void Socket::Close()
 {
 	if (fd != -1)

@@ -24,6 +24,8 @@ public:
 	bool Listen(int port, int backlog = 1024);
 	bool Accept(Socket* newSocket);
 	bool Connect(Endpoint &endpoint);
+
+	bool GetEndpoint(Endpoint &endpoint);
 	
 	void Close();	
 };

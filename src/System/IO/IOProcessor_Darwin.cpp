@@ -256,14 +256,11 @@ bool IOProcessor::Poll(int sleep)
 				
 				if (ioop && ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))
 					ProcessTCPRead(&events[i]);
-				
-				if (ioop && ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
+				else if (ioop && ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
 					ProcessTCPWrite(&events[i]);
-				
-				if (ioop && ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
+				else if (ioop && ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
 					ProcessUDPRead(&events[i]);
-				
-				if (ioop && ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
+				else if (ioop && ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
 					ProcessUDPWrite(&events[i]);
 			}
 		}

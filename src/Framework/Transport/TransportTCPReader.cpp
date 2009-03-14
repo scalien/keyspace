@@ -6,40 +6,44 @@ void TransportTCPConn::OnRead()
 {
 	int msglength, nread, msgbegin, msgend;
 	
-	msglength = strntol(tcpread.data.buffer, tcpread.data.length, &nread);
-	if (nread > 0 && tcpread.data.length > nread)
-	{
-		if (tcpread.data.buffer[nread] == ':')
-		{
-			msgbegin = nread + 1;
-			msgend = nread + 1 + msglength;
-
-			if (tcpread.data.length >= nread + 1 + msglength)
-			{
-				
-				reader->SetMessage(
-					ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)
-					);
-				Call(onRead);
-				
-				// move the rest back to the beginning of the buffer
-				memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
-					tcpread.data.length - msgend);
-				tcpread.data.length = tcpread.data.length - msgend;
-			}
-			else
-			{
-				// request just the right amount
-				tcpread.requested = msgend - tcpread.data.length;
-				ioproc->Add(&tcpread);
-				return;
-			}
-		}
-		else
-			ASSERT_FAIL();
-	}
-	
 	tcpread.requested = IO_READ_ANY;
+	
+	do
+	{
+		msglength = strntol(tcpread.data.buffer, tcpread.data.length, &nread);
+		
+		if (nread == 0 || tcpread.data.length <= nread)
+			break;
+			
+		if (tcpread.data.buffer[nread] != ':')
+			ASSERT_FAIL();
+	
+		msgbegin = nread + 1;
+		msgend = nread + 1 + msglength;
+
+		if (tcpread.data.length < msgend)
+		{
+			// request just the right amount
+			tcpread.requested = msgend - tcpread.data.length;
+			break;
+		}
+
+			
+		reader->SetMessage(
+			ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)
+			);
+		Call(onRead);
+		
+		// move the rest back to the beginning of the buffer
+		memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
+			tcpread.data.length - msgend);
+		tcpread.data.length = tcpread.data.length - msgend;
+		
+		if (tcpread.data.length == 0)
+			break;
+	}
+	while (true);
+	
 	ioproc->Add(&tcpread);
 }
 	
@@ -78,6 +82,11 @@ void TransportTCPReader::OnConnect()
 	
 	if (listener.Accept(&(conn->GetSocket())))
 	{
+		Endpoint endpoint;
+		conn->GetSocket().GetEndpoint(endpoint);
+		
+		Log_Message("%s connected", endpoint.ToString());
+		
 		conn->GetSocket().SetNonblocking();
 		conn->Init(ioproc);
 	}
