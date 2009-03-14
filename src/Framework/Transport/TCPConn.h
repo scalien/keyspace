@@ -36,7 +36,7 @@ protected:
 	virtual void	OnWrite();
 	virtual void	OnClose() = 0;
 	
-	void			Write(const char* data, int count);
+	void			Write(const char* data, int count, bool activate = true);
 	void			WritePending();
 	void			Close();
 };
@@ -110,7 +110,7 @@ void TCPConn<bufferSize>::OnWrite()
 }
 
 template<int bufferSize>
-void TCPConn<bufferSize>::Write(const char *data, int count)
+void TCPConn<bufferSize>::Write(const char *data, int count, bool activate)
 {
 	Log_Trace();
 	
@@ -129,7 +129,7 @@ void TCPConn<bufferSize>::Write(const char *data, int count)
 	memcpy(buf->buffer, data, count);
 	buf->length = count;
 	
-	if (!tcpwrite.active)
+	if (!tcpwrite.active && activate)
 		WritePending();
 }
 

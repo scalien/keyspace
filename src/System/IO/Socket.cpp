@@ -115,6 +115,15 @@ bool Socket::Accept(Socket *newSocket)
 	return true;
 }
 
+bool Socket::Connect(Endpoint &endpoint)
+{
+	int ret;
+	
+	ret = connect(fd, (struct sockaddr *) &endpoint.sa, sizeof(endpoint.sa));
+	
+	return ret < 0 ? false : true;
+}
+
 void Socket::Close()
 {
 	if (fd != -1)

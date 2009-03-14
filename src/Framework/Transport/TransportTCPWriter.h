@@ -1,6 +1,9 @@
 #ifndef TRANSPORT_TCP_WRITER_H
 #define TRANSPORT_TCP_WRITER_H
 
+#include "System/Events/Scheduler.h"
+#include "System/Events/Timer.h"
+#include "System/IO/IOProcessor.h"
 #include "Transport.h"
 #include "TransportWriter.h"
 #include "TCPConn.h"
@@ -10,13 +13,32 @@ class TransportTCPWriter :
 	public TCPConn<MAX_TCP_MESSAGE_SIZE>
 {
 public:
-	void			Init(Endpoint &endpoint);
+	enum State 
+	{
+		DISCONNECTED,
+		CONNECTED,
+		CONNECTING
+	};
+	
+	State						state;
+	Endpoint					endpoint;
+	Scheduler*					scheduler;	
+	MFunc<TransportTCPWriter>	onConnect;
+	MFunc<TransportTCPWriter>	onConnectTimeout;
+	CdownTimer					connectTimeout;
+	
+	TransportTCPWriter();
+	
+	// TransportWriter interface
+	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_);
+	virtual void	Write(ByteString &bs);
 	
 	void			Connect();
+	void			OnConnect();
+	void			OnConnectTimeout();
 	
 	// TCPConn interface
 	virtual void	OnRead();
-	virtual void	OnWrite();
 	virtual void	OnClose();
 	
 };

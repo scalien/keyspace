@@ -2,6 +2,7 @@
 #define SOCKET_H
 
 #include <sys/socket.h>
+#include "Endpoint.h"
 
 #define TCP SOCK_STREAM
 #define UDP SOCK_DGRAM
@@ -22,6 +23,7 @@ public:
 	bool Bind(int port);
 	bool Listen(int port, int backlog = 1024);
 	bool Accept(Socket* newSocket);
+	bool Connect(Endpoint &endpoint);
 	
 	void Close();	
 };

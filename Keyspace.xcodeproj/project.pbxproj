@@ -94,6 +94,7 @@
 		9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DB0F6C09B0009576A1 /* HubSim.cpp */; };
 		9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DE0F6C09B0009576A1 /* Main.cpp */; };
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
+		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -240,6 +241,7 @@
 		9A62050B0F6C1789009576A1 /* TCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPServer.h; sourceTree = "<group>"; };
 		9A6205110F6C1A11009576A1 /* TransportTCPWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportTCPWriter.h; sourceTree = "<group>"; };
 		9A6205120F6C1C3A009576A1 /* Transport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transport.h; sourceTree = "<group>"; };
+		9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportTCPWriter.cpp; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 		5421E3440F6C130E004BBDB4 /* Transport */ = {
 			isa = PBXGroup;
 			children = (
+				9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */,
 				9A6205120F6C1C3A009576A1 /* Transport.h */,
 				5421E3EC0F6C1DD5004BBDB4 /* TransportReader.h */,
 				5421E35E0F6C13CC004BBDB4 /* TransportTCPReader.h */,
@@ -835,6 +838,7 @@
 				9A2724730F6551C600EE25E2 /* ThreadPool.cpp in Sources */,
 				9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */,
 				9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */,
+				9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
