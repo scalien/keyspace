@@ -91,6 +91,8 @@
 		9A2725B10F66E45800EE25E2 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
 		9A2725B20F66E45800EE25E2 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
 		9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
+		9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DB0F6C09B0009576A1 /* HubSim.cpp */; };
+		9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DE0F6C09B0009576A1 /* Main.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -227,6 +229,10 @@
 		9A27252A0F65CA9300EE25E2 /* HashTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashTable.h; sourceTree = "<group>"; };
 		9A27252B0F65CA9F00EE25E2 /* BlockAlloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockAlloc.h; sourceTree = "<group>"; };
 		9A2727000F692B4800EE25E2 /* UDPTestClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPTestClient.c; sourceTree = "<group>"; };
+		9A6204DB0F6C09B0009576A1 /* HubSim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HubSim.cpp; path = HubSim/HubSim.cpp; sourceTree = "<group>"; };
+		9A6204DC0F6C09B0009576A1 /* HubSim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HubSim.h; path = HubSim/HubSim.h; sourceTree = "<group>"; };
+		9A6204DD0F6C09B0009576A1 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Link.h; path = HubSim/Link.h; sourceTree = "<group>"; };
+		9A6204DE0F6C09B0009576A1 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Main.cpp; path = HubSim/Main.cpp; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
@@ -410,6 +416,7 @@
 		548146FE0F31B6B200F3D2B6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				9A6204DA0F6C098F009576A1 /* HubSim */,
 				5446122A0F53488D00EFBBDE /* Keyspace */,
 				5406777B0F3C48FD00E80088 /* TestDB */,
 				548146FF0F31B6B200F3D2B6 /* EchoServer */,
@@ -578,6 +585,17 @@
 				9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */,
 			);
 			name = AsyncDatabase;
+			sourceTree = "<group>";
+		};
+		9A6204DA0F6C098F009576A1 /* HubSim */ = {
+			isa = PBXGroup;
+			children = (
+				9A6204DB0F6C09B0009576A1 /* HubSim.cpp */,
+				9A6204DC0F6C09B0009576A1 /* HubSim.h */,
+				9A6204DD0F6C09B0009576A1 /* Link.h */,
+				9A6204DE0F6C09B0009576A1 /* Main.cpp */,
+			);
+			name = HubSim;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
@@ -807,6 +825,8 @@
 				9A2725B10F66E45800EE25E2 /* Socket.cpp in Sources */,
 				9A2725B20F66E45800EE25E2 /* Log.cpp in Sources */,
 				9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */,
+				9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */,
+				9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
