@@ -12,17 +12,17 @@ class UDPEchoServer
 public:
 	UDPEchoServer();
 
-	IOProcessor*		ioproc;
-	Scheduler*			scheduler;
-	Socket				socket;
-	UDPRead				udpread;
-	UDPWrite			udpwrite;
-	ByteArray<1024>		data;
+	IOProcessor*			ioproc;
+	Scheduler*				scheduler;
+	Socket					socket;
+	UDPRead					udpread;
+	UDPWrite				udpwrite;
+	ByteArray<1024>			data;
 
-	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_);
+	bool					Init(IOProcessor* ioproc_, Scheduler* scheduler_);
 	
-	void				OnRead();
-	void				OnWrite();
+	void					OnRead();
+	void					OnWrite();
 	
 	MFunc<UDPEchoServer>	onRead;
 	MFunc<UDPEchoServer>	onWrite;

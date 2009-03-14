@@ -12,14 +12,14 @@ class TCPEchoServer
 public:
 	TCPEchoServer();
 	
-	IOProcessor*	ioproc;
-	Scheduler*		scheduler;
-	Socket			listener;
-	TCPRead			tcpread;
+	IOProcessor*		ioproc;
+	Scheduler*			scheduler;
+	Socket				listener;
+	TCPRead				tcpread;
 
-	bool			Init(IOProcessor* ioproc_, Scheduler* scheduler_);
+	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_);
 	
-	void			OnConnect();
+	void				OnConnect();
 
 	MFunc<TCPEchoServer> onConnect;
 };

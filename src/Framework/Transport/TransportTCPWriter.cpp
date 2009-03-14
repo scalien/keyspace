@@ -16,6 +16,8 @@ void TransportTCPWriter::Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpo
 	TCPConn<MAX_TCP_MESSAGE_SIZE>::Init(ioproc_, false);
 	scheduler = scheduler_;
 	endpoint = endpoint_;
+	
+	Connect();
 }
 
 void TransportTCPWriter::Write(ByteString &bs)

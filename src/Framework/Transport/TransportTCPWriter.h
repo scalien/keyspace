@@ -13,6 +13,21 @@ class TransportTCPWriter :
 	public TCPConn<MAX_TCP_MESSAGE_SIZE>
 {
 public:
+	TransportTCPWriter();
+	
+	// TransportWriter interface
+	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_);
+	virtual void	Write(ByteString &bs);
+
+private:
+	void			Connect();
+	void			OnConnect();
+	void			OnConnectTimeout();
+	
+	// TCPConn interface
+	virtual void	OnRead();
+	virtual void	OnClose();
+
 	enum State 
 	{
 		DISCONNECTED,
@@ -26,21 +41,6 @@ public:
 	MFunc<TransportTCPWriter>	onConnect;
 	MFunc<TransportTCPWriter>	onConnectTimeout;
 	CdownTimer					connectTimeout;
-	
-	TransportTCPWriter();
-	
-	// TransportWriter interface
-	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_);
-	virtual void	Write(ByteString &bs);
-	
-	void			Connect();
-	void			OnConnect();
-	void			OnConnectTimeout();
-	
-	// TCPConn interface
-	virtual void	OnRead();
-	virtual void	OnClose();
-	
 };
 
 
