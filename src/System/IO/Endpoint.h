@@ -12,9 +12,9 @@ public:
 	
 	bool	Set(struct sockaddr_in &sa_);
 	
-	bool	Set(char* ip, int port);
+	bool	Set(const char* ip, int port);
 	
-	bool	Set(char* ip_port);
+	bool	Set(const char* ip_port);
 	
 	bool	SetPort(int port);
 		

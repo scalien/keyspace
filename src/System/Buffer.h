@@ -20,6 +20,11 @@ public:
 	bool Set(char* str)
 	{
 		int len = strlen(str);
+		return Set(str, len);
+	}
+	
+	bool Set(char* str, int len)
+	{
 		if (len > size)
 			return false;
 		
@@ -27,7 +32,7 @@ public:
 		
 		length = len;
 		
-		return true;
+		return true;		
 	}
 	
 	bool operator==(const ByteString& other)
@@ -55,6 +60,7 @@ public:
 	}
 	
 	bool Set(char* str) { return ByteString::Set(str); }
+	bool Set(char* str, int len) { return ByteString::Set(str, len); }
 							
 	bool Set(ByteString bs)
 	{

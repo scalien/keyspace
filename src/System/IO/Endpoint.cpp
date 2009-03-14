@@ -7,7 +7,7 @@ bool Endpoint::Set(struct sockaddr_in &sa_)
 	return true;
 }
 
-bool Endpoint::Set(char* ip, int port)
+bool Endpoint::Set(const char* ip, int port)
 {
 	memset((char *) &sa, 0, sizeof(sa));
 	sa.sin_family = AF_INET;
@@ -20,11 +20,14 @@ bool Endpoint::Set(char* ip, int port)
 	return true;
 }
 
-bool Endpoint::Set(char* ip_port)
+#define MAX_IP 16
+
+bool Endpoint::Set(const char* ip_port)
 {
-	char*	p;
-	int		port;
-	bool	ret;
+	const char*	p;
+	int			port;
+	bool		ret;
+	char		ip[MAX_IP];
 	
 	p = ip_port;
 	
@@ -37,7 +40,8 @@ bool Endpoint::Set(char* ip_port)
 		return false;
 	}
 	
-	*p = '\0';
+	memcpy(ip, ip_port, p - ip_port);
+	ip[p - ip_port] = '\0';
 	p++;
 	
 	port = -1;
@@ -48,10 +52,7 @@ bool Endpoint::Set(char* ip_port)
 		return false;
 	}
 
-	ret = Set(ip_port, port);
-	
-	p--;
-	*p = ':';
+	ret = Set(ip, port);
 	
 	return ret;
 }

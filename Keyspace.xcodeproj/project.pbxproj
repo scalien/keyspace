@@ -86,8 +86,11 @@
 		9A2724720F6551C600EE25E2 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
 		9A2724730F6551C600EE25E2 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC50F648B86004BBDB4 /* HttpServer.cpp */; };
-		9A27251D0F65AA5300EE25E2 /* HubSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A27251C0F65AA5300EE25E2 /* HubSim.cpp */; };
-		9A2725210F65ABA400EE25E2 /* IPConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A2725200F65ABA400EE25E2 /* IPConnection.cpp */; };
+		9A2725AF0F66E45800EE25E2 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
+		9A2725B00F66E45800EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
+		9A2725B10F66E45800EE25E2 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
+		9A2725B20F66E45800EE25E2 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
+		9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -221,11 +224,9 @@
 		9A27242A0F65480E00EE25E2 /* Test.agazso */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Test.agazso; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A2724300F654C5400EE25E2 /* Test.agazso.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test.agazso.cpp; sourceTree = "<group>"; };
 		9A2725180F65AA4000EE25E2 /* HubSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HubSim; sourceTree = BUILT_PRODUCTS_DIR; };
-		9A27251C0F65AA5300EE25E2 /* HubSim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HubSim.cpp; sourceTree = "<group>"; };
-		9A27251F0F65ABA400EE25E2 /* IPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPConnection.h; sourceTree = "<group>"; };
-		9A2725200F65ABA400EE25E2 /* IPConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IPConnection.cpp; sourceTree = "<group>"; };
 		9A27252A0F65CA9300EE25E2 /* HashTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashTable.h; sourceTree = "<group>"; };
 		9A27252B0F65CA9F00EE25E2 /* BlockAlloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockAlloc.h; sourceTree = "<group>"; };
+		9A2727000F692B4800EE25E2 /* UDPTestClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPTestClient.c; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
@@ -366,6 +367,7 @@
 				544611F40F533FAB00EFBBDE /* test.h */,
 				544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */,
 				544611F60F533FAB00EFBBDE /* UDPEchoClient.c */,
+				9A2727000F692B4800EE25E2 /* UDPTestClient.c */,
 				9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */,
 				9A2724300F654C5400EE25E2 /* Test.agazso.cpp */,
 			);
@@ -408,7 +410,6 @@
 		548146FE0F31B6B200F3D2B6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				9A2725140F65AA0F00EE25E2 /* HubSim */,
 				5446122A0F53488D00EFBBDE /* Keyspace */,
 				5406777B0F3C48FD00E80088 /* TestDB */,
 				548146FF0F31B6B200F3D2B6 /* EchoServer */,
@@ -577,16 +578,6 @@
 				9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */,
 			);
 			name = AsyncDatabase;
-			sourceTree = "<group>";
-		};
-		9A2725140F65AA0F00EE25E2 /* HubSim */ = {
-			isa = PBXGroup;
-			children = (
-				9A27251C0F65AA5300EE25E2 /* HubSim.cpp */,
-				9A27251F0F65ABA400EE25E2 /* IPConnection.h */,
-				9A2725200F65ABA400EE25E2 /* IPConnection.cpp */,
-			);
-			path = HubSim;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
@@ -811,8 +802,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A27251D0F65AA5300EE25E2 /* HubSim.cpp in Sources */,
-				9A2725210F65ABA400EE25E2 /* IPConnection.cpp in Sources */,
+				9A2725AF0F66E45800EE25E2 /* Scheduler.cpp in Sources */,
+				9A2725B00F66E45800EE25E2 /* IOProcessor_Darwin.cpp in Sources */,
+				9A2725B10F66E45800EE25E2 /* Socket.cpp in Sources */,
+				9A2725B20F66E45800EE25E2 /* Log.cpp in Sources */,
+				9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
