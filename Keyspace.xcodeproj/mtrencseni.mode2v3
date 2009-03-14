@@ -197,48 +197,7 @@
 	<key>Notifications</key>
 	<array/>
 	<key>OpenEditors</key>
-	<array>
-		<dict>
-			<key>Content</key>
-			<dict>
-				<key>PBXProjectModuleGUID</key>
-				<string>5421E3510F6C1340004BBDB4</string>
-				<key>PBXProjectModuleLabel</key>
-				<string>HubSim.cpp</string>
-				<key>PBXSplitModuleInNavigatorKey</key>
-				<dict>
-					<key>Split0</key>
-					<dict>
-						<key>PBXProjectModuleGUID</key>
-						<string>5421E3540F6C134D004BBDB4</string>
-						<key>PBXProjectModuleLabel</key>
-						<string>HubSim.cpp</string>
-						<key>_historyCapacity</key>
-						<integer>0</integer>
-						<key>bookmark</key>
-						<string>5421E3550F6C134D004BBDB4</string>
-						<key>history</key>
-						<array>
-							<string>5421E3500F6C1340004BBDB4</string>
-						</array>
-					</dict>
-					<key>SplitCount</key>
-					<string>1</string>
-				</dict>
-				<key>StatusBarVisibility</key>
-				<true/>
-			</dict>
-			<key>Geometry</key>
-			<dict>
-				<key>Frame</key>
-				<string>{{0, 20}, {881, 1081}}</string>
-				<key>PBXModuleWindowStatusBarHidden2</key>
-				<false/>
-				<key>RubberWindowFrame</key>
-				<string>268 56 881 1122 0 0 1920 1178 </string>
-			</dict>
-		</dict>
-	</array>
+	<array/>
 	<key>PerspectiveWidths</key>
 	<array>
 		<integer>-1</integer>
@@ -302,12 +261,15 @@
 										<string>548146F90F31B6B200F3D2B6</string>
 										<string>548146FE0F31B6B200F3D2B6</string>
 										<string>548147140F31B6B200F3D2B6</string>
+										<string>5421E3440F6C130E004BBDB4</string>
+										<string>548147270F31B6B200F3D2B6</string>
 										<string>5481472D0F31B6B200F3D2B6</string>
 										<string>5481473A0F31B6B200F3D2B6</string>
 									</array>
 									<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 									<array>
 										<array>
+											<integer>11</integer>
 											<integer>10</integer>
 											<integer>9</integer>
 											<integer>3</integer>
@@ -474,8 +436,8 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>5421E3520F6C134D004BBDB4</string>
-				<string>5421E3530F6C134D004BBDB4</string>
+				<string>5421E3950F6C1848004BBDB4</string>
+				<string>5421E3960F6C1848004BBDB4</string>
 				<string>1C9437FD063B20B00039CFAC</string>
 				<string>1C9437FE063B20B00039CFAC</string>
 				<string>1C9437FF063B20B00039CFAC</string>
@@ -487,7 +449,7 @@
 	<key>PerspectivesBarVisible</key>
 	<false/>
 	<key>PinnedNavigatorIdentifier</key>
-	<string>5421E3510F6C1340004BBDB4</string>
+	<string>5421E3630F6C13F1004BBDB4</string>
 	<key>ShelfIsVisible</key>
 	<false/>
 	<key>SourceDescription</key>
@@ -510,9 +472,7 @@
 	<integer>0</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1C530D52069F1CE1000CFCEE</string>
 		<string>1C530D54069F1CE1000CFCEE</string>
-		<string>5421E3510F6C1340004BBDB4</string>
 		<string>/Users/mtrencseni/Code/Keyspace/Keyspace.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -674,7 +634,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string></string>
+								<string>Log.h</string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -691,10 +651,12 @@
 							<string>166pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXBuildLogShowsTranscriptDefaultKey</key>
-								<string>{{0, 278}, {771, 42}}</string>
+								<string>{{0, 320}, {771, 0}}</string>
 								<key>PBXProjectModuleGUID</key>
 								<string>XCMainBuildResultsModuleGUID</string>
 								<key>PBXProjectModuleLabel</key>
@@ -743,7 +705,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C530D52069F1CE1000CFCEE</string>
 			<key>WindowToolIsVisible</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
@@ -852,13 +814,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C530D54069F1CE1000CFCEE</string>
-				<string>5421E3570F6C134D004BBDB4</string>
+				<string>5421E3970F6C1848004BBDB4</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>5421E3580F6C134D004BBDB4</string>
-				<string>5421E3590F6C134D004BBDB4</string>
-				<string>5421E35A0F6C134D004BBDB4</string>
-				<string>5421E35B0F6C134D004BBDB4</string>
-				<string>5421E35C0F6C134D004BBDB4</string>
+				<string>5421E3980F6C1848004BBDB4</string>
+				<string>5421E3990F6C1848004BBDB4</string>
+				<string>5421E39A0F6C1848004BBDB4</string>
+				<string>5421E39B0F6C1848004BBDB4</string>
+				<string>5421E39C0F6C1848004BBDB4</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
