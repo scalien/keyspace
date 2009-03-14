@@ -65,8 +65,8 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 258506852;
-			PBXWorkspaceStateSaveDate = 258506852;
+			PBXPerProjectTemplateStateSaveDate = 258741047;
+			PBXWorkspaceStateSaveDate = 258741047;
 		};
 		perUserProjectItems = {
 			5421CD570F571D7A004BBDB4 = 5421CD570F571D7A004BBDB4 /* PBXTextBookmark */;
@@ -2535,6 +2535,8 @@
 			5421E2F60F687F2A004BBDB4 = 5421E2F60F687F2A004BBDB4 /* PBXTextBookmark */;
 			5421E2F70F687F2A004BBDB4 = 5421E2F70F687F2A004BBDB4 /* PBXTextBookmark */;
 			5421E2F80F687F2A004BBDB4 = 5421E2F80F687F2A004BBDB4 /* PBXTextBookmark */;
+			5421E3500F6C1340004BBDB4 /* PBXBookmark */ = 5421E3500F6C1340004BBDB4 /* PBXBookmark */;
+			5421E3550F6C134D004BBDB4 /* PBXTextBookmark */ = 5421E3550F6C134D004BBDB4 /* PBXTextBookmark */;
 			544612330F55CED700EFBBDE = 544612330F55CED700EFBBDE /* PBXTextBookmark */;
 			544612340F55CED700EFBBDE = 544612340F55CED700EFBBDE /* PBXTextBookmark */;
 			544612350F55CED700EFBBDE = 544612350F55CED700EFBBDE /* PBXTextBookmark */;
@@ -6781,7 +6783,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 371";
 		rLen = 0;
-		rLoc = 7227;
+		rLoc = 7427;
 		rType = 0;
 		vrLen = 1163;
 		vrLoc = 6195;
@@ -6811,7 +6813,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 371";
 		rLen = 0;
-		rLoc = 7227;
+		rLoc = 7427;
 		rType = 0;
 		vrLen = 1163;
 		vrLoc = 6195;
@@ -7061,7 +7063,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 7";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -8491,7 +8493,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 7";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -10360,7 +10362,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 371";
 		rLen = 0;
-		rLoc = 7227;
+		rLoc = 7427;
 		rType = 0;
 		vrLen = 1274;
 		vrLoc = 0;
@@ -11110,7 +11112,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 371";
 		rLen = 0;
-		rLoc = 7227;
+		rLoc = 7427;
 		rType = 0;
 		vrLen = 1274;
 		vrLoc = 0;
@@ -15164,7 +15166,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 161";
 		rLen = 0;
-		rLoc = 3362;
+		rLoc = 3361;
 		rType = 0;
 		vrLen = 1555;
 		vrLoc = 2367;
@@ -15304,7 +15306,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 334";
 		rLen = 0;
-		rLoc = 5549;
+		rLoc = 6137;
 		rType = 0;
 		vrLen = 777;
 		vrLoc = 0;
@@ -16671,7 +16673,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 188";
 		rLen = 0;
-		rLoc = 3915;
+		rLoc = 4490;
 		rType = 0;
 		vrLen = 1358;
 		vrLoc = 3072;
@@ -16691,7 +16693,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 180";
 		rLen = 8;
-		rLoc = 3587;
+		rLoc = 4162;
 		rType = 0;
 		vrLen = 1453;
 		vrLoc = 3074;
@@ -16731,7 +16733,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 199";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1476;
 		vrLoc = 3074;
@@ -16751,7 +16753,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 210";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1503;
 		vrLoc = 3074;
@@ -16771,7 +16773,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 210";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1361;
 		vrLoc = 3219;
@@ -16791,7 +16793,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 234";
 		rLen = 0;
-		rLoc = 5208;
+		rLoc = 5796;
 		rType = 0;
 		vrLen = 1059;
 		vrLoc = 3941;
@@ -16811,7 +16813,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 161";
 		rLen = 0;
-		rLoc = 3362;
+		rLoc = 3361;
 		rType = 0;
 		vrLen = 1555;
 		vrLoc = 2367;
@@ -18321,7 +18323,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 394";
 		rLen = 8;
-		rLoc = 7701;
+		rLoc = 7901;
 		rType = 0;
 		vrLen = 1399;
 		vrLoc = 6769;
@@ -18471,7 +18473,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 393";
 		rLen = 39;
-		rLoc = 7653;
+		rLoc = 7853;
 		rType = 0;
 		vrLen = 1229;
 		vrLoc = 0;
@@ -18501,7 +18503,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 394";
 		rLen = 8;
-		rLoc = 7701;
+		rLoc = 7901;
 		rType = 0;
 		vrLen = 1399;
 		vrLoc = 6769;
@@ -18981,7 +18983,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 181";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1569;
 		vrLoc = 2717;
@@ -19021,7 +19023,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 176";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1544;
 		vrLoc = 2717;
@@ -19081,7 +19083,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 176";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1544;
 		vrLoc = 2717;
@@ -19101,7 +19103,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 177";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1510;
 		vrLoc = 2717;
@@ -19121,7 +19123,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 181";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1569;
 		vrLoc = 2717;
@@ -19141,7 +19143,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 181";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1510;
 		vrLoc = 2776;
@@ -19229,7 +19231,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 181";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1510;
 		vrLoc = 2776;
@@ -19239,7 +19241,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 181";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1510;
 		vrLoc = 2776;
@@ -19830,7 +19832,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 175";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1552;
 		vrLoc = 2776;
@@ -19850,7 +19852,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 175";
 		rLen = 0;
-		rLoc = 3895;
+		rLoc = 4470;
 		rType = 0;
 		vrLen = 1552;
 		vrLoc = 2776;
@@ -19870,7 +19872,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 288";
 		rLen = 0;
-		rLoc = 7325;
+		rLoc = 7913;
 		rType = 0;
 		vrLen = 1508;
 		vrLoc = 4795;
@@ -20000,7 +20002,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 284";
 		rLen = 0;
-		rLoc = 7155;
+		rLoc = 7743;
 		rType = 0;
 		vrLen = 1583;
 		vrLoc = 4795;
@@ -20020,7 +20022,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 291";
 		rLen = 0;
-		rLoc = 7239;
+		rLoc = 7827;
 		rType = 0;
 		vrLen = 1671;
 		vrLoc = 5077;
@@ -20040,7 +20042,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 289";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7801;
 		rType = 0;
 		vrLen = 1683;
 		vrLoc = 5077;
@@ -20060,7 +20062,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 289";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7801;
 		rType = 0;
 		vrLen = 1659;
 		vrLoc = 5077;
@@ -20100,7 +20102,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 283";
 		rLen = 0;
-		rLoc = 7155;
+		rLoc = 7743;
 		rType = 0;
 		vrLen = 1286;
 		vrLoc = 1743;
@@ -20140,7 +20142,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 283";
 		rLen = 0;
-		rLoc = 7155;
+		rLoc = 7743;
 		rType = 0;
 		vrLen = 1286;
 		vrLoc = 1743;
@@ -21535,7 +21537,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 305";
 		rLen = 0;
-		rLoc = 7544;
+		rLoc = 8132;
 		rType = 0;
 		vrLen = 1160;
 		vrLoc = 5619;
@@ -21735,7 +21737,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 310";
 		rLen = 0;
-		rLoc = 7660;
+		rLoc = 8248;
 		rType = 0;
 		vrLen = 1156;
 		vrLoc = 5623;
@@ -21755,7 +21757,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 311";
 		rLen = 0;
-		rLoc = 7659;
+		rLoc = 8247;
 		rType = 0;
 		vrLen = 1156;
 		vrLoc = 5623;
@@ -21775,7 +21777,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 305";
 		rLen = 0;
-		rLoc = 7544;
+		rLoc = 8132;
 		rType = 0;
 		vrLen = 1160;
 		vrLoc = 5619;
@@ -21885,7 +21887,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 305";
 		rLen = 0;
-		rLoc = 7544;
+		rLoc = 8132;
 		rType = 0;
 		vrLen = 1156;
 		vrLoc = 5623;
@@ -21925,7 +21927,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 303";
 		rLen = 0;
-		rLoc = 7482;
+		rLoc = 8070;
 		rType = 0;
 		vrLen = 1084;
 		vrLoc = 1215;
@@ -21935,7 +21937,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 305";
 		rLen = 0;
-		rLoc = 7544;
+		rLoc = 8132;
 		rType = 0;
 		vrLen = 1156;
 		vrLoc = 5623;
@@ -21965,7 +21967,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 303";
 		rLen = 0;
-		rLoc = 7482;
+		rLoc = 8070;
 		rType = 0;
 		vrLen = 1084;
 		vrLoc = 1215;
@@ -21985,7 +21987,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 241";
 		rLen = 0;
-		rLoc = 5841;
+		rLoc = 6429;
 		rType = 0;
 		vrLen = 1730;
 		vrLoc = 4188;
@@ -22025,7 +22027,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 241";
 		rLen = 0;
-		rLoc = 5841;
+		rLoc = 6429;
 		rType = 0;
 		vrLen = 1730;
 		vrLoc = 4188;
@@ -22125,7 +22127,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 296";
 		rLen = 0;
-		rLoc = 7271;
+		rLoc = 7859;
 		rType = 0;
 		vrLen = 947;
 		vrLoc = 5832;
@@ -22185,7 +22187,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 296";
 		rLen = 0;
-		rLoc = 7271;
+		rLoc = 7859;
 		rType = 0;
 		vrLen = 947;
 		vrLoc = 5832;
@@ -22255,7 +22257,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 290";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7801;
 		rType = 0;
 		vrLen = 1078;
 		vrLoc = 5701;
@@ -22275,7 +22277,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 296";
 		rLen = 0;
-		rLoc = 7271;
+		rLoc = 7859;
 		rType = 0;
 		vrLen = 958;
 		vrLoc = 5821;
@@ -22295,7 +22297,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 290";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7801;
 		rType = 0;
 		vrLen = 1078;
 		vrLoc = 5701;
@@ -22315,7 +22317,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 285";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7801;
 		rType = 0;
 		vrLen = 1282;
 		vrLoc = 5497;
@@ -22333,7 +22335,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 285";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7801;
 		rType = 0;
 		vrLen = 1495;
 		vrLoc = 5043;
@@ -22353,7 +22355,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 285";
 		rLen = 0;
-		rLoc = 7213;
+		rLoc = 7801;
 		rType = 0;
 		vrLen = 1495;
 		vrLoc = 5043;
@@ -22503,7 +22505,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 249";
 		rLen = 0;
-		rLoc = 5901;
+		rLoc = 6489;
 		rType = 0;
 		vrLen = 1868;
 		vrLoc = 4840;
@@ -22523,7 +22525,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 249";
 		rLen = 0;
-		rLoc = 5901;
+		rLoc = 6489;
 		rType = 0;
 		vrLen = 1799;
 		vrLoc = 4302;
@@ -22533,7 +22535,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 249";
 		rLen = 0;
-		rLoc = 5901;
+		rLoc = 6489;
 		rType = 0;
 		vrLen = 1868;
 		vrLoc = 4840;
@@ -22553,7 +22555,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 249";
 		rLen = 0;
-		rLoc = 5901;
+		rLoc = 6489;
 		rType = 0;
 		vrLen = 1799;
 		vrLoc = 4302;
@@ -22573,7 +22575,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 228";
 		rLen = 0;
-		rLoc = 5549;
+		rLoc = 6137;
 		rType = 0;
 		vrLen = 1650;
 		vrLoc = 4050;
@@ -22587,7 +22589,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 287";
 		rLen = 0;
-		rLoc = 7152;
+		rLoc = 7740;
 		rType = 0;
 		vrLen = 1117;
 		vrLoc = 5662;
@@ -22617,7 +22619,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 286";
 		rLen = 0;
-		rLoc = 7068;
+		rLoc = 7656;
 		rType = 0;
 		vrLen = 1117;
 		vrLoc = 5662;
@@ -22637,7 +22639,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 287";
 		rLen = 0;
-		rLoc = 7152;
+		rLoc = 7740;
 		rType = 0;
 		vrLen = 1117;
 		vrLoc = 5662;
@@ -22847,7 +22849,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 245";
 		rLen = 0;
-		rLoc = 6023;
+		rLoc = 6611;
 		rType = 0;
 		vrLen = 1746;
 		vrLoc = 4302;
@@ -22967,7 +22969,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 255";
 		rLen = 13;
-		rLoc = 6392;
+		rLoc = 6980;
 		rType = 0;
 		vrLen = 1402;
 		vrLoc = 3058;
@@ -22977,7 +22979,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 247";
 		rLen = 0;
-		rLoc = 6129;
+		rLoc = 6717;
 		rType = 0;
 		vrLen = 1780;
 		vrLoc = 4302;
@@ -23047,7 +23049,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 213";
 		rLen = 0;
-		rLoc = 5165;
+		rLoc = 5753;
 		rType = 0;
 		vrLen = 1655;
 		vrLoc = 4033;
@@ -23077,7 +23079,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 213";
 		rLen = 0;
-		rLoc = 5165;
+		rLoc = 5753;
 		rType = 0;
 		vrLen = 1389;
 		vrLoc = 2460;
@@ -23117,7 +23119,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 204";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1530;
 		vrLoc = 3467;
@@ -23157,7 +23159,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 255";
 		rLen = 13;
-		rLoc = 6392;
+		rLoc = 6980;
 		rType = 0;
 		vrLen = 1402;
 		vrLoc = 3058;
@@ -23197,7 +23199,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 172";
 		rLen = 0;
-		rLoc = 3945;
+		rLoc = 4520;
 		rType = 0;
 		vrLen = 1348;
 		vrLoc = 2857;
@@ -23364,7 +23366,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 182";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1435;
 		vrLoc = 3170;
@@ -23464,7 +23466,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 172";
 		rLen = 0;
-		rLoc = 3955;
+		rLoc = 4530;
 		rType = 0;
 		vrLen = 1348;
 		vrLoc = 2857;
@@ -23524,7 +23526,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 272";
 		rLen = 0;
-		rLoc = 6978;
+		rLoc = 7566;
 		rType = 0;
 		vrLen = 1487;
 		vrLoc = 5292;
@@ -23624,7 +23626,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 272";
 		rLen = 0;
-		rLoc = 6978;
+		rLoc = 7566;
 		rType = 0;
 		vrLen = 1501;
 		vrLoc = 5278;
@@ -23644,7 +23646,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 272";
 		rLen = 0;
-		rLoc = 6978;
+		rLoc = 7566;
 		rType = 0;
 		vrLen = 1697;
 		vrLoc = 4805;
@@ -23664,7 +23666,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 182";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1477;
 		vrLoc = 3170;
@@ -23684,7 +23686,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 182";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1435;
 		vrLoc = 3170;
@@ -23704,7 +23706,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 182";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1435;
 		vrLoc = 3170;
@@ -23882,7 +23884,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 450";
 		rLen = 35;
-		rLoc = 8884;
+		rLoc = 9084;
 		rType = 0;
 		vrLen = 1314;
 		vrLoc = 8203;
@@ -24012,7 +24014,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 450";
 		rLen = 0;
-		rLoc = 8917;
+		rLoc = 9117;
 		rType = 0;
 		vrLen = 1234;
 		vrLoc = 8166;
@@ -24032,7 +24034,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 450";
 		rLen = 35;
-		rLoc = 8884;
+		rLoc = 9084;
 		rType = 0;
 		vrLen = 1314;
 		vrLoc = 8203;
@@ -24116,7 +24118,7 @@
 		comments = "warning: unused parameter 'ev'";
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		rLen = 1;
-		rLoc = 449;
+		rLoc = 460;
 		rType = 1;
 	};
 	5421E05D0F65D23F004BBDB4 /* PBXTextBookmark */ = {
@@ -24144,7 +24146,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 450";
 		rLen = 0;
-		rLoc = 8917;
+		rLoc = 9117;
 		rType = 0;
 		vrLen = 112;
 		vrLoc = 8829;
@@ -24468,7 +24470,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 176";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1285;
 		vrLoc = 2737;
@@ -24518,7 +24520,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 175";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1348;
 		vrLoc = 2840;
@@ -24538,7 +24540,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 186";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1455;
 		vrLoc = 3208;
@@ -24588,7 +24590,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 450";
 		rLen = 0;
-		rLoc = 8917;
+		rLoc = 9117;
 		rType = 0;
 		vrLen = 112;
 		vrLoc = 8829;
@@ -24606,7 +24608,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 450";
 		rLen = 0;
-		rLoc = 8917;
+		rLoc = 9117;
 		rType = 0;
 		vrLen = 112;
 		vrLoc = 8829;
@@ -24796,7 +24798,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 184";
 		rLen = 0;
-		rLoc = 5057;
+		rLoc = 5645;
 		rType = 0;
 		vrLen = 1226;
 		vrLoc = 3065;
@@ -24820,7 +24822,7 @@
 		comments = "error: no 'bool ReplicatedLog::ReadMsg(ByteString&)' member function declared in class 'ReplicatedLog'";
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		rLen = 0;
-		rLoc = 319;
+		rLoc = 337;
 		rType = 1;
 	};
 	5421E1580F681901004BBDB4 /* PBXTextBookmark */ = {
@@ -25008,7 +25010,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 326";
 		rLen = 0;
-		rLoc = 7661;
+		rLoc = 8249;
 		rType = 0;
 		vrLen = 1351;
 		vrLoc = 5975;
@@ -25558,7 +25560,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 315";
 		rLen = 0;
-		rLoc = 7662;
+		rLoc = 8250;
 		rType = 0;
 		vrLen = 1662;
 		vrLoc = 4128;
@@ -25695,7 +25697,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -25725,7 +25727,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 184";
 		rLen = 0;
-		rLoc = 4923;
+		rLoc = 5511;
 		rType = 0;
 		vrLen = 1480;
 		vrLoc = 3028;
@@ -25765,7 +25767,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 184";
 		rLen = 0;
-		rLoc = 4923;
+		rLoc = 5511;
 		rType = 0;
 		vrLen = 1421;
 		vrLoc = 3087;
@@ -25795,7 +25797,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 178";
 		rLen = 0;
-		rLoc = 4785;
+		rLoc = 5373;
 		rType = 0;
 		vrLen = 1577;
 		vrLoc = 2691;
@@ -25815,7 +25817,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 170";
 		rLen = 0;
-		rLoc = 3729;
+		rLoc = 4304;
 		rType = 0;
 		vrLen = 1431;
 		vrLoc = 3009;
@@ -25835,7 +25837,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 187";
 		rLen = 0;
-		rLoc = 4923;
+		rLoc = 5511;
 		rType = 0;
 		vrLen = 1421;
 		vrLoc = 3009;
@@ -25855,7 +25857,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 187";
 		rLen = 0;
-		rLoc = 4923;
+		rLoc = 5511;
 		rType = 0;
 		vrLen = 1421;
 		vrLoc = 3009;
@@ -25875,7 +25877,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 188";
 		rLen = 0;
-		rLoc = 5040;
+		rLoc = 5628;
 		rType = 0;
 		vrLen = 1424;
 		vrLoc = 3009;
@@ -25945,7 +25947,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 190";
 		rLen = 0;
-		rLoc = 4923;
+		rLoc = 5511;
 		rType = 0;
 		vrLen = 1455;
 		vrLoc = 3009;
@@ -25965,7 +25967,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 191";
 		rLen = 0;
-		rLoc = 4923;
+		rLoc = 5511;
 		rType = 0;
 		vrLen = 1652;
 		vrLoc = 3009;
@@ -26025,7 +26027,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 206";
 		rLen = 0;
-		rLoc = 4948;
+		rLoc = 5536;
 		rType = 0;
 		vrLen = 1764;
 		vrLoc = 4320;
@@ -26035,7 +26037,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -26245,7 +26247,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -26255,7 +26257,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -26265,7 +26267,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -26295,7 +26297,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -26572,7 +26574,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 174";
 		rLen = 0;
-		rLoc = 3730;
+		rLoc = 4305;
 		rType = 0;
 		vrLen = 1867;
 		vrLoc = 3266;
@@ -26692,7 +26694,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 174";
 		rLen = 0;
-		rLoc = 3730;
+		rLoc = 4305;
 		rType = 0;
 		vrLen = 1867;
 		vrLoc = 3266;
@@ -26712,7 +26714,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 174";
 		rLen = 0;
-		rLoc = 3730;
+		rLoc = 4305;
 		rType = 0;
 		vrLen = 1870;
 		vrLoc = 3266;
@@ -26740,7 +26742,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 191";
 		rLen = 0;
-		rLoc = 4381;
+		rLoc = 4969;
 		rType = 0;
 		vrLen = 1695;
 		vrLoc = 3895;
@@ -26780,7 +26782,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 174";
 		rLen = 0;
-		rLoc = 3766;
+		rLoc = 4341;
 		rType = 0;
 		vrLen = 1294;
 		vrLoc = 217;
@@ -26800,7 +26802,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 174";
 		rLen = 0;
-		rLoc = 3766;
+		rLoc = 4341;
 		rType = 0;
 		vrLen = 1911;
 		vrLoc = 3246;
@@ -26870,7 +26872,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 197";
 		rLen = 3;
-		rLoc = 4734;
+		rLoc = 5322;
 		rType = 0;
 		vrLen = 1911;
 		vrLoc = 3246;
@@ -26890,7 +26892,7 @@
 		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
 		name = "ReplicatedLog.cpp: 191";
 		rLen = 0;
-		rLoc = 4381;
+		rLoc = 4969;
 		rType = 0;
 		vrLen = 1695;
 		vrLoc = 3895;
@@ -27018,7 +27020,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27078,7 +27080,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 241;
+		rLoc = 677;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27295,6 +27297,20 @@
 		name = HubSim;
 		sourceDirectories = (
 		);
+	};
+	5421E3500F6C1340004BBDB4 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 9A6204DB0F6C09B0009576A1 /* HubSim.cpp */;
+	};
+	5421E3550F6C134D004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6204DB0F6C09B0009576A1 /* HubSim.cpp */;
+		name = "HubSim.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1020;
+		vrLoc = 0;
 	};
 	54460CD30F5198E800EFBBDE /* AsyncDBTest */ = {
 		activeExec = 0;
@@ -27628,15 +27644,15 @@
 	};
 	548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {822, 4828}}";
-			sepNavSelRange = "{5188, 0}";
-			sepNavVisRange = "{5143, 1737}";
+			sepNavIntBoundsRect = "{{0, 0}, {710, 4760}}";
+			sepNavSelRange = "{487, 0}";
+			sepNavVisRange = "{330, 188}";
 		};
 	};
 	548147250F31B6B200F3D2B6 /* PaxosMsg.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {822, 1054}}";
-			sepNavSelRange = "{1452, 0}";
+			sepNavSelRange = "{864, 0}";
 			sepNavVisRange = "{0, 1609}";
 		};
 	};
@@ -27663,9 +27679,9 @@
 	};
 	5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {822, 5576}}";
-			sepNavSelRange = "{4381, 0}";
-			sepNavVisRange = "{3895, 1657}";
+			sepNavIntBoundsRect = "{{0, 0}, {822, 5763}}";
+			sepNavSelRange = "{4142, 0}";
+			sepNavVisRange = "{4102, 1825}";
 		};
 	};
 	5481472B0F31B6B200F3D2B6 /* ReplicatedLog.h */ = {
@@ -27786,9 +27802,9 @@
 	};
 	5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {710, 8568}}";
-			sepNavSelRange = "{8917, 0}";
-			sepNavVisRange = "{8829, 112}";
+			sepNavIntBoundsRect = "{{0, 0}, {822, 8024}}";
+			sepNavSelRange = "{6667, 5}";
+			sepNavVisRange = "{5466, 1292}";
 		};
 	};
 	548147410F31B6B200F3D2B6 /* Socket.cpp */ = {
@@ -27844,8 +27860,8 @@
 	548147490F31B6B200F3D2B6 /* todo.txt */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {822, 1050}}";
-			sepNavSelRange = "{227, 0}";
-			sepNavVisRange = "{0, 241}";
+			sepNavSelRange = "{663, 0}";
+			sepNavVisRange = "{0, 677}";
 		};
 	};
 	54814BFE0F35084500F3D2B6 /* Transaction.h */ = {
@@ -27942,6 +27958,13 @@
 		executables = (
 			5421E2FF0F688063004BBDB4 /* HubSim */,
 		);
+	};
+	9A6204DB0F6C09B0009576A1 /* HubSim.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {822, 3060}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1020}";
+		};
 	};
 	9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {
 		uiCtxt = {
