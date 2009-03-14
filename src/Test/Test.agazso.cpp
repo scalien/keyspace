@@ -4,10 +4,10 @@
 #include "Application/Keyspace/Protocol/MemcacheServer.h"
 #include "Application/Keyspace/Protocol/HttpServer.h"
 
-#include "Framework/Transport/TransportTCPWriter.h"
+#include "Framework/Transport/TransportUDPWriter.h"
 #include "System/Time.h"
 
-TransportTCPWriter writer;
+TransportUDPWriter writer;
 
 void Write()
 {
@@ -43,7 +43,6 @@ main(int argc, char* argv[])
 	maro.Set("192.168.1.240", 8080);
 	
 	writer.Init(ioproc, eventloop, maro);
-	writer.Connect();
 	
 	eventloop->Add(&writeTimeout);
 	eventloop->Run();	

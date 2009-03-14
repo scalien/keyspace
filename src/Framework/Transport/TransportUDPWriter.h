@@ -10,8 +10,8 @@ public:
 	TransportUDPWriter();
 	
 	// TransportWriter interface
-	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_) = 0;
-	virtual	void	Write(ByteString &bs) = 0;	
+	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_);
+	virtual	void	Write(ByteString &bs);
 
 private:
 	IOProcessor*	ioproc;
