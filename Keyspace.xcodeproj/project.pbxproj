@@ -96,6 +96,7 @@
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
+		9A62072F0F6C3FE2009576A1 /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -243,6 +244,8 @@
 		9A6205110F6C1A11009576A1 /* TransportTCPWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportTCPWriter.h; sourceTree = "<group>"; };
 		9A6205120F6C1C3A009576A1 /* Transport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transport.h; sourceTree = "<group>"; };
 		9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportTCPWriter.cpp; sourceTree = "<group>"; };
+		9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportUDPWriter.h; sourceTree = "<group>"; };
+		9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportUDPWriter.cpp; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
@@ -382,6 +385,8 @@
 				9A62050B0F6C1789009576A1 /* TCPServer.h */,
 				9A62050A0F6C1789009576A1 /* TCPServer.cpp */,
 				9A6205090F6C1789009576A1 /* TCPConn.h */,
+				9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */,
+				9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
@@ -841,6 +846,7 @@
 				9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */,
 				9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */,
 				9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */,
+				9A62072F0F6C3FE2009576A1 /* TransportUDPWriter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

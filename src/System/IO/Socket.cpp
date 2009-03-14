@@ -121,7 +121,13 @@ bool Socket::Connect(Endpoint &endpoint)
 	
 	ret = connect(fd, (struct sockaddr *) &endpoint.sa, sizeof(endpoint.sa));
 	
-	return ret < 0 ? false : true;
+	if (ret < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+
+	return true;
 }
 
 bool Socket::GetEndpoint(Endpoint &endpoint)

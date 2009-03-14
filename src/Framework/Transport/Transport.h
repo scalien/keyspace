@@ -2,5 +2,6 @@
 #define TRANSPORT_H
 
 #define MAX_TCP_MESSAGE_SIZE (10 + (1024 * 1024))
+#define MAX_UDP_MESSAGE_SIZE 64000
 
 #endif
