@@ -1,8 +1,8 @@
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
-#include "Framework/Transport/TransportTCPReader.h"
+#include "Framework/Transport/TransportUDPReader.h"
 
-TransportTCPReader reader;
+TransportUDPReader reader;
 
 void OnRead()
 {

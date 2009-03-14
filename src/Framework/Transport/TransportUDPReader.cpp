@@ -32,7 +32,7 @@ void TransportUDPReader::GetMessage(ByteString& bs_)
 
 void TransportUDPReader::OnRead()
 {
-	Log_Trace();
+	Call(userCallback);
 	
 	ioproc->Add(&udpread);
 }

@@ -379,6 +379,10 @@
 			isa = PBXGroup;
 			children = (
 				9A6205120F6C1C3A009576A1 /* Transport.h */,
+				5421E61B0F6C3F98004BBDB4 /* TransportUDPReader.h */,
+				5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */,
+				9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */,
+				9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */,
 				5421E3EC0F6C1DD5004BBDB4 /* TransportReader.h */,
 				5421E35E0F6C13CC004BBDB4 /* TransportTCPReader.h */,
 				5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */,
@@ -388,10 +392,6 @@
 				9A62050B0F6C1789009576A1 /* TCPServer.h */,
 				9A62050A0F6C1789009576A1 /* TCPServer.cpp */,
 				9A6205090F6C1789009576A1 /* TCPConn.h */,
-				5421E61B0F6C3F98004BBDB4 /* TransportUDPReader.h */,
-				5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */,
-				9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */,
-				9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
