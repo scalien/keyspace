@@ -335,7 +335,7 @@ void ProcessTCPRead(struct kevent* ev)
 			{
 				if (errno == EWOULDBLOCK || errno == EAGAIN)
 					ioproc.Add(tcpread);
-				else
+				else if (!(ev->flags & EV_EOF))
 					Log_Errno();
 			} else
 			{
@@ -358,9 +358,20 @@ void ProcessTCPWrite(struct kevent* ev)
 	TCPWrite*	tcpwrite;
 	
 	tcpwrite = (TCPWrite*) ev->udata;
+	
+	if (tcpwrite->data.length == 0)
+	{
+		if (ev->flags & EV_EOF)
+			Call(tcpwrite->onClose);
+		else
+			Call(tcpwrite->onComplete);
+
+		return;
+	}
 
 	writelen = tcpwrite->data.length - tcpwrite->transferred;
 	writelen = min(ev->data, writelen);
+	
 	if (writelen > 0)
 	{
 		//Log_Message(rprintf("Calling write() to write %d bytes", writelen));
@@ -369,7 +380,7 @@ void ProcessTCPWrite(struct kevent* ev)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				ioproc.Add(tcpwrite);
-			else
+			else if (!(ev->flags & EV_EOF))
 				Log_Errno();
 		} else
 		{

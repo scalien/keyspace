@@ -1,34 +1,52 @@
-#ifndef TRANSPORTREADER_H
-#define	TRANSPORTREADER_H
+#ifndef TRANSPORTTCPREADER_H
+#define	TRANSPORTTCPREADER_H
 
+#include "Transport.h"
+#include "TransportReader.h"
 #include "TCPServer.h"
 #include "TCPConn.h"
 
-class TransportReader
-{
-public:
-	virtual void	Init(IOProcessor* ioproc_, int port_) = 0;
-
-	virtual void	SetOnRead(Callable* onRead) = 0;
-	
-	virtual void	GetMessage(ByteString& bs) = 0;
-};
-
+class TransportTCPReader; // forward
 
 class TransportTCPConn : public TCPConn<MAX_TCP_MESSAGE_SIZE>
 {
+public:
+	TransportTCPConn(TransportTCPReader* reader_, Callable* onRead_)
+	{
+		reader = reader_;
+		onRead = onRead_;
+	}
+	
+	void				OnRead();
+	
+	void				OnClose();
+
+private:
+	TransportTCPReader* reader;
+	Callable*			onRead;
 };
+
 
 class TransportTCPReader : public TransportReader, public TCPServer
 {
-public:
-	void			Init(IOProcessor* ioproc_, int port_);
+friend class TransportTCPConn;
 
-	void			SetOnRead(Callable* onRead);
+public:
+	void				Init(IOProcessor* ioproc_, int port);
+
+	void				SetOnRead(Callable* onRead);
 	
-	void			GetMessage(ByteString& bs);
+	void				GetMessage(ByteString& bs_);
 	
-	void			OnConnect();
+	void				OnConnect();
+
+private:
+	void				SetMessage(ByteString bs_);
+	
+	IOProcessor*		ioproc;
+	Callable*			onRead;
+	
+	ByteString			bs;
 };
 
 #endif

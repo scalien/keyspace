@@ -24,7 +24,8 @@
 		5421DCD40F648B86004BBDB4 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */; };
 		5421DCD50F648B86004BBDB4 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */; };
 		5421E1060F68121B004BBDB4 /* ReplicatedLogMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */; };
-		5421E3600F6C13CC004BBDB4 /* TransportReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E35F0F6C13CC004BBDB4 /* TransportReader.cpp */; };
+		5421E3600F6C13CC004BBDB4 /* TransportTCPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */; };
+		5421E3F30F6C1E50004BBDB4 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		54460CF10F519A8000EFBBDE /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
@@ -146,8 +147,9 @@
 		5421DCCC0F648B86004BBDB4 /* MemcacheServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheServer.h; sourceTree = "<group>"; };
 		5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedLogMsg.h; sourceTree = "<group>"; };
 		5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedLogMsg.cpp; sourceTree = "<group>"; };
-		5421E35E0F6C13CC004BBDB4 /* TransportReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportReader.h; sourceTree = "<group>"; };
-		5421E35F0F6C13CC004BBDB4 /* TransportReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportReader.cpp; sourceTree = "<group>"; };
+		5421E35E0F6C13CC004BBDB4 /* TransportTCPReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportTCPReader.h; sourceTree = "<group>"; };
+		5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportTCPReader.cpp; sourceTree = "<group>"; };
+		5421E3EC0F6C1DD5004BBDB4 /* TransportReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportReader.h; sourceTree = "<group>"; };
 		54460CD40F5198E800EFBBDE /* AsyncDBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncDBTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncDBTest.cpp; sourceTree = "<group>"; };
 		544611F00F533FAB00EFBBDE /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOTest.cpp; sourceTree = "<group>"; };
@@ -367,14 +369,15 @@
 		5421E3440F6C130E004BBDB4 /* Transport */ = {
 			isa = PBXGroup;
 			children = (
-				5421E35E0F6C13CC004BBDB4 /* TransportReader.h */,
-				5421E35F0F6C13CC004BBDB4 /* TransportReader.cpp */,
-				9A6205090F6C1789009576A1 /* TCPConn.h */,
-				9A62050A0F6C1789009576A1 /* TCPServer.cpp */,
-				9A62050B0F6C1789009576A1 /* TCPServer.h */,
+				9A6205120F6C1C3A009576A1 /* Transport.h */,
+				5421E3EC0F6C1DD5004BBDB4 /* TransportReader.h */,
+				5421E35E0F6C13CC004BBDB4 /* TransportTCPReader.h */,
+				5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */,
 				9A6205070F6C13EB009576A1 /* TransportWriter.h */,
 				9A6205110F6C1A11009576A1 /* TransportTCPWriter.h */,
-				9A6205120F6C1C3A009576A1 /* Transport.h */,
+				9A62050B0F6C1789009576A1 /* TCPServer.h */,
+				9A62050A0F6C1789009576A1 /* TCPServer.cpp */,
+				9A6205090F6C1789009576A1 /* TCPConn.h */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
@@ -444,12 +447,12 @@
 		548146FF0F31B6B200F3D2B6 /* EchoServer */ = {
 			isa = PBXGroup;
 			children = (
-				548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */,
-				548147010F31B6B200F3D2B6 /* TCPEchoConn.h */,
-				548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */,
-				548147030F31B6B200F3D2B6 /* TCPEchoServer.h */,
-				548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */,
 				548147050F31B6B200F3D2B6 /* UDPEchoServer.h */,
+				548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */,
+				548147030F31B6B200F3D2B6 /* TCPEchoServer.h */,
+				548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */,
+				548147010F31B6B200F3D2B6 /* TCPEchoConn.h */,
+				548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */,
 			);
 			path = EchoServer;
 			sourceTree = "<group>";
@@ -792,7 +795,8 @@
 				5421DCD40F648B86004BBDB4 /* MemcacheConn.cpp in Sources */,
 				5421DCD50F648B86004BBDB4 /* MemcacheServer.cpp in Sources */,
 				5421E1060F68121B004BBDB4 /* ReplicatedLogMsg.cpp in Sources */,
-				5421E3600F6C13CC004BBDB4 /* TransportReader.cpp in Sources */,
+				5421E3600F6C13CC004BBDB4 /* TransportTCPReader.cpp in Sources */,
+				5421E3F30F6C1E50004BBDB4 /* TCPServer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,18 @@
+#ifndef TRANSPORTREADER_H
+#define TRANSPORTREADER_H
+
+#include "System/IO/IOProcessor.h"
+#include "System/Buffer.h"
+#include "System/Events/Callable.h"
+
+class TransportReader
+{
+public:
+	virtual void	Init(IOProcessor* ioproc_, int port_) = 0;
+
+	virtual void	SetOnRead(Callable* onRead) = 0;
+	
+	virtual void	GetMessage(ByteString& bs) = 0;
+};
+
+#endif
