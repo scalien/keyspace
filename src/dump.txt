@@ -14,20 +14,22 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
+	Log_SetTimestamping(true);
+	
 	ioproc = IOProcessor::New();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();
 
 	ReplicatedLog rl;
-	rl.ReadConfig(argv[1]);
-	rl.Init(ioproc, eventloop, true /* multiPaxos */);
+	rl.Init(ioproc, eventloop, argv[1]);
 	
 	TestDB testdb;
 	testdb.Init(ioproc, eventloop, &rl);
 	
-	eventloop->Run();	
+	eventloop->Run();
 }
+
 
 
 
