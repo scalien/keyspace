@@ -15,7 +15,7 @@ public:
 	TCPConn();
 	virtual ~TCPConn();
 	
-	void			Init(IOProcessor* ioproc_);
+	void			Init(IOProcessor* ioproc_, bool startRead = true);
 	Socket&			GetSocket() { return socket; }
 	
 protected:
@@ -63,7 +63,7 @@ TCPConn<bufferSize>::~TCPConn()
 
 
 template<int bufferSize>
-void TCPConn<bufferSize>::Init(IOProcessor* ioproc_)
+void TCPConn<bufferSize>::Init(IOProcessor* ioproc_, bool startRead)
 {
 	ioproc = ioproc_;
 	
@@ -72,7 +72,8 @@ void TCPConn<bufferSize>::Init(IOProcessor* ioproc_)
 	tcpread.onComplete = &onRead;
 	tcpread.onClose = &onClose;
 	tcpread.requested = IO_READ_ANY;
-	ioproc->Add(&tcpread);
+	if (startRead)
+		ioproc->Add(&tcpread);
 	
 	tcpwrite.fd = socket.fd;
 	tcpwrite.onComplete = &onWrite;
@@ -126,8 +127,8 @@ void TCPConn<bufferSize>::Write(const char *data, int count, bool activate)
 		writeQueue.Append(buf);
 	}
 	
-	memcpy(buf->buffer, data, count);
-	buf->length = count;
+	memcpy(buf->buffer + buf->length, data, count);
+	buf->length += count;
 	
 	if (!tcpwrite.active && activate)
 		WritePending();

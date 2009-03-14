@@ -95,6 +95,7 @@
 		9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DE0F6C09B0009576A1 /* Main.cpp */; };
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
+		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 /* End PBXBuildFile section */
 
@@ -839,6 +840,7 @@
 				9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */,
 				9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */,
 				9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */,
+				9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

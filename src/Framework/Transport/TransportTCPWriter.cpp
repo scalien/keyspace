@@ -13,7 +13,7 @@ connectTimeout(CONNECT_TIMEOUT, &onConnectTimeout)
 
 void TransportTCPWriter::Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_)
 {
-	TCPConn<MAX_TCP_MESSAGE_SIZE>::Init(ioproc_);
+	TCPConn<MAX_TCP_MESSAGE_SIZE>::Init(ioproc_, false);
 	scheduler = scheduler_;
 	endpoint = endpoint_;
 }
@@ -46,6 +46,7 @@ void TransportTCPWriter::Connect()
 	
 	tcpwrite.fd = socket.fd;
 	tcpwrite.onComplete = &onConnect;
+	tcpwrite.data.length = 0;
 	
 	ioproc->Add(&tcpwrite);
 	scheduler->Reset(&connectTimeout);
@@ -53,8 +54,12 @@ void TransportTCPWriter::Connect()
 
 void TransportTCPWriter::OnConnect()
 {
+	Log_Trace();
+	
 	state = CONNECTED;
 	tcpwrite.onComplete = &onWrite;
+	
+	scheduler->Remove(&connectTimeout);
 }
 
 void TransportTCPWriter::OnConnectTimeout()
