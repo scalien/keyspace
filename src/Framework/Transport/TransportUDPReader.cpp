@@ -32,7 +32,8 @@ void TransportUDPReader::GetMessage(ByteString& bs_)
 
 void TransportUDPReader::OnRead()
 {
-	Log_Message("received from: %s", udpread.endpoint.ToString());
+	Log_Message("received %.*s from: %s", udpread.data.length, udpread.data.buffer,
+		udpread.endpoint.ToString());
 
 	Call(userCallback);
 	

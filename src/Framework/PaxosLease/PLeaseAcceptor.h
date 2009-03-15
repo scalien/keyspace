@@ -2,9 +2,8 @@
 #define PLEASEACCEPTOR_H
 
 #include "System/Common.h"
-#include "System/IO/IOProcessor.h"
-#include "System/IO/Socket.h"
 #include "System/Events/Scheduler.h"
+#include "Framework/Transport/TransportWriter.h"
 #include "Framework/Paxos/PaxosConfig.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
@@ -14,32 +13,22 @@ class PLeaseAcceptor
 public:
 							PLeaseAcceptor();
 	
-	bool					Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
-	
-	void					OnRead();
-	void					OnWrite();
+	bool					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
+
+	void					ProcessMsg(PLeaseMsg &msg_);
 	
 	void					OnLeaseTimeout();
 
 private:
-	void					SendReply();
+	void					SendReply(unsigned nodeID);
 
-	void					ProcessMsg();
 	virtual void			OnPrepareRequest();
 	virtual void			OnProposeRequest();
 
-	IOProcessor*			ioproc;
+	TransportWriter**		writers;
 	Scheduler*				scheduler;
-	Socket					socket;
 
-	UDPRead					udpread;
-	UDPWrite				udpwrite;
-	
-	ByteArray<64*KB>		rdata;
 	ByteArray<64*KB>		wdata;
-	
-	MFunc<PLeaseAcceptor>	onRead;
-	MFunc<PLeaseAcceptor>	onWrite;
 	
 	MFunc<PLeaseAcceptor>	onLeaseTimeout;
 	Timer					leaseTimeout;

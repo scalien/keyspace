@@ -16,6 +16,8 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 	ioproc = ioproc_;
 	scheduler = scheduler_;
 	
+	replicatedDB = NULL;
+	
 	if (!config.Init(filename))
 		return false;
 

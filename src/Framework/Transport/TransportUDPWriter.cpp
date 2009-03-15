@@ -11,10 +11,10 @@ TransportUDPWriter::~TransportUDPWriter()
 	socket.Close();
 }
 
-void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*, Endpoint &ep)
+void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*, Endpoint &endpoint_)
 {
 	ioproc = ioproc_;
-	endpoint = ep;
+	endpoint = endpoint_;
 	
 	socket.Create(UDP);
 	socket.SetNonblocking();
@@ -23,6 +23,8 @@ void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*, Endpoint &ep)
 void TransportUDPWriter::Write(ByteString &bs)
 {
 	int ret;
+	
+	Log_Message("sending %.*s to %s", bs.length, bs.buffer, endpoint.ToString());
 
 	// We use direct sendto here because otherwise
 	//  we should buffer the packets here.

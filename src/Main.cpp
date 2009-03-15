@@ -1,31 +1,31 @@
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
-#include "Framework/Transport/TransportUDPReader.h"
-
-TransportUDPReader reader;
-
-void OnRead()
-{
-	ByteString bs;
-	reader.GetMessage(bs);
-	Log_Message("Received message: %.*s", bs.length, bs.buffer);
-}
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
+#include "Application/TestDB/TestDB.h"
 
 int main(int argc, char* argv[])
 {
 	IOProcessor*	ioproc;
-	EventLoop*		eventloop;
+	EventLoop*	eventloop;
 	
-	Log_SetTimestamping(true);
+	if (argc != 2)
+	{
+		printf("usage: %s <config-file>\n", argv[0]);
+		return 1;
+	}
+	
+	//Log_SetTimestamping(true);
 	
 	ioproc = IOProcessor::New();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();
 
-	reader.Init(ioproc, 8080);
-	CFunc onRead(&OnRead);
-	reader.SetOnRead(&onRead);
+	ReplicatedLog rl;
+	rl.Init(ioproc, eventloop, argv[1]);
+	
+	//TestDB testdb;
+	//testdb.Init(ioproc, eventloop, &rl);
 	
 	eventloop->Run();
 }

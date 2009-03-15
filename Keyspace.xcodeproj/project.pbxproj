@@ -27,6 +27,7 @@
 		5421E3600F6C13CC004BBDB4 /* TransportTCPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */; };
 		5421E3F30F6C1E50004BBDB4 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		5421E61D0F6C3F98004BBDB4 /* TransportUDPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */; };
+		5421E7E20F6D2E84004BBDB4 /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
 		54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		54460CF10F519A8000EFBBDE /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
@@ -812,6 +813,7 @@
 				5421E3600F6C13CC004BBDB4 /* TransportTCPReader.cpp in Sources */,
 				5421E3F30F6C1E50004BBDB4 /* TCPServer.cpp in Sources */,
 				5421E61D0F6C3F98004BBDB4 /* TransportUDPReader.cpp in Sources */,
+				5421E7E20F6D2E84004BBDB4 /* TransportUDPWriter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

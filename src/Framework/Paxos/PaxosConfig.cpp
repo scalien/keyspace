@@ -45,10 +45,10 @@ bool PaxosConfig::Init(char *filename)
 	while (fgets(buffer, sizeof(buffer), f) != NULL)
 	{
 		endpoint.Set(buffer);
-		if (endpoint == me)
+		//if (endpoint == me)
 			endpoints.Append(endpoint);
-		else
-			endpoints.Add(endpoint);
+		//else
+		//	endpoints.Add(endpoint);
 	}
 	
 	numNodes = endpoints.Size();

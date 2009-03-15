@@ -4,8 +4,6 @@
 #define MAX_LEASE_TIME			3000	// msec
 #define	MAX_CLOCK_SKEW			100		// msec
 
-#define PLEASE_PROPOSER_PORT_OFFSET	3
-#define PLEASE_ACCEPTOR_PORT_OFFSET	4
-#define PLEASE_LEARNER_PORT_OFFSET	5
+#define PLEASE_PORT_OFFSET		5
 
 #endif

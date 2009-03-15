@@ -3,33 +3,33 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void PLeaseMsg::Init(char type_)
+void PLeaseMsg::Init(char type_, unsigned nodeID_)
 {
 	type = type_;
+	nodeID = nodeID_;
 }
 
-bool PLeaseMsg::PrepareRequest(ulong64 proposalID_)
+bool PLeaseMsg::PrepareRequest(unsigned nodeID_, ulong64 proposalID_)
 {
-	Init(PREPARE_REQUEST);
+	Init(PREPARE_REQUEST, nodeID_);
 	proposalID = proposalID_;
 
 	return true;
 }
 
-bool PLeaseMsg::PrepareResponse(ulong64 proposalID_, char response_)
+bool PLeaseMsg::PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_)
 {
-	Init(PREPARE_RESPONSE);
+	Init(PREPARE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
 	response = response_;
 
 	return true;
 }
 
-bool PLeaseMsg::PrepareResponse(ulong64 proposalID_, char response_,
-	ulong64 acceptedProposalID_, unsigned leaseOwner_,
-								 ulong64 expireTime_)
+bool PLeaseMsg::PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_,
+	ulong64 acceptedProposalID_, unsigned leaseOwner_, ulong64 expireTime_)
 {
-	Init(PREPARE_RESPONSE);
+	Init(PREPARE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
 	response = response_;
 	acceptedProposalID = acceptedProposalID_;
@@ -39,10 +39,10 @@ bool PLeaseMsg::PrepareResponse(ulong64 proposalID_, char response_,
 	return true;
 }
 
-bool PLeaseMsg::ProposeRequest(ulong64 proposalID_, unsigned int leaseOwner_,
-													ulong64 expireTime_)
+bool PLeaseMsg::ProposeRequest(unsigned nodeID_, ulong64 proposalID_, unsigned int leaseOwner_,
+									ulong64 expireTime_)
 {
-	Init(PROPOSE_REQUEST);
+	Init(PROPOSE_REQUEST, nodeID_);
 	proposalID = proposalID_;
 	leaseOwner = leaseOwner_;
 	expireTime = expireTime_;
@@ -50,18 +50,18 @@ bool PLeaseMsg::ProposeRequest(ulong64 proposalID_, unsigned int leaseOwner_,
 	return true;
 }
 
-bool PLeaseMsg::ProposeResponse(ulong64 proposalID_, char response_)
+bool PLeaseMsg::ProposeResponse(unsigned nodeID_, ulong64 proposalID_, char response_)
 {
-	Init(PROPOSE_RESPONSE);
+	Init(PROPOSE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
 	response = response_;
 
 	return true;
 }
 
-bool PLeaseMsg::LearnChosen(unsigned leaseOwner_, ulong64 expireTime_)
+bool PLeaseMsg::LearnChosen(unsigned nodeID_, unsigned leaseOwner_, ulong64 expireTime_)
 {
-	Init(LEARN_CHOSEN);
+	Init(LEARN_CHOSEN, nodeID_);
 	leaseOwner = leaseOwner_;
 	expireTime = expireTime_;
 
@@ -85,6 +85,8 @@ bool PLeaseMsg::Read(ByteString& data)
 	pos = data.buffer;
 	CheckOverflow();
 	ReadChar(type);	CheckOverflow();
+	ReadSeparator(); CheckOverflow();
+	ReadNumber(nodeID); CheckOverflow();
 	
 	if (type != PREPARE_REQUEST	&&
 		type != PREPARE_RESPONSE &&
@@ -102,7 +104,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		ReadNumber(proposalID);
 		
 		ValidateLength();
-		PrepareRequest(proposalID);
+		PrepareRequest(nodeID, proposalID);
 		return true;
 	}
 	else if (type == PREPARE_RESPONSE)
@@ -126,7 +128,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		if (response == PREPARE_REJECTED || response == PREPARE_CURRENTLY_OPEN)
 		{
 			ValidateLength();
-			PrepareResponse(proposalID, response);
+			PrepareResponse(nodeID, proposalID, response);
 			return true;
 		}
 
@@ -139,7 +141,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		ReadNumber(expireTime);
 		
 		ValidateLength();
-		PrepareResponse(proposalID, response, acceptedProposalID, leaseOwner, expireTime);
+		PrepareResponse(nodeID, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
 		return true;
 	}
 	else if (type == PROPOSE_REQUEST)
@@ -154,7 +156,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		ReadNumber(expireTime);
 		
 		ValidateLength();
-		ProposeRequest(proposalID, leaseOwner, expireTime);
+		ProposeRequest(nodeID, proposalID, leaseOwner, expireTime);
 		return true;
 	}
 	else if (type == PROPOSE_RESPONSE)
@@ -172,7 +174,7 @@ bool PLeaseMsg::Read(ByteString& data)
 				return false;
 		
 		ValidateLength();
-		ProposeResponse(proposalID, response);
+		ProposeResponse(nodeID, proposalID, response);
 		return true;
 	}
 	else if (type == LEARN_CHOSEN)
@@ -182,7 +184,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		ReadNumber(expireTime);
 		
 		ValidateLength();
-		LearnChosen(leaseOwner, expireTime);
+		LearnChosen(nodeID, leaseOwner, expireTime);
 		return true;
 	}
 	
@@ -195,28 +197,29 @@ bool PLeaseMsg::Write(ByteString& data)
 	
 	if		(type == PREPARE_REQUEST)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%llu", type, proposalID);
+		required = snprintf(data.buffer, data.size, "%c#%d#%llu", type, nodeID, proposalID);
 	}
 	else if (type == PREPARE_RESPONSE)
 	{
 		if (response == PREPARE_REJECTED || response == PREPARE_CURRENTLY_OPEN)
-			required = snprintf(data.buffer, data.size, "%c#%llu#%c", type, proposalID, response);
+			required = snprintf(data.buffer, data.size, "%c#%d#%llu#%c", type, nodeID,
+				proposalID, response);
 		else
-			required = snprintf(data.buffer, data.size, "%c#%llu#%c#%llu#%d#%llu",
-				type, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
+			required = snprintf(data.buffer, data.size, "%c#%d#%llu#%c#%llu#%d#%llu",
+				type, nodeID, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_REQUEST)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%llu#%d#%llu", type, proposalID,
+		required = snprintf(data.buffer, data.size, "%c#%d#%llu#%d#%llu", type, nodeID, proposalID,
 			leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_RESPONSE)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%llu#%c", type, proposalID, response);
+		required = snprintf(data.buffer, data.size, "%c#%d#%llu#%c", type, nodeID, proposalID, response);
 	}
 	else if (type == LEARN_CHOSEN)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%llu", type, leaseOwner, expireTime);
+		required = snprintf(data.buffer, data.size, "%c#%d#%d#%llu", type, nodeID, leaseOwner, expireTime);
 	}
 	else
 		ASSERT_FAIL();

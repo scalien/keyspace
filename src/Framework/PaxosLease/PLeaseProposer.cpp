@@ -7,8 +7,6 @@
 #include "PLeaseConsts.h"
 
 PLeaseProposer::PLeaseProposer() :
-	onRead(this, &PLeaseProposer::OnRead),
-	onWrite(this, &PLeaseProposer::OnWrite),
 	onAcquireLeaseTimeout(this, &PLeaseProposer::OnAcquireLeaseTimeout),
 	acquireLeaseTimeout(MAX_LEASE_TIME, &onAcquireLeaseTimeout),
 	onExtendLeaseTimeout(this, &PLeaseProposer::OnExtendLeaseTimeout),
@@ -16,14 +14,12 @@ PLeaseProposer::PLeaseProposer() :
 {
 }
 
-bool PLeaseProposer::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
+bool PLeaseProposer::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
 {
-	// I/O framework
-	ioproc = ioproc_;
+	writers = writers_;
 	scheduler = scheduler_;
 	config = config_;
 	
-	// Paxos variables
 	state.Init();
 
 	// TODO: read restart counter
@@ -32,19 +28,7 @@ bool PLeaseProposer::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConf
 		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
 	}
 	
-	if (!socket.Create(UDP)) return false;
-	if (!socket.Bind(config->port + PLEASE_PROPOSER_PORT_OFFSET)) return false;
-	if (!socket.SetNonblocking()) return false;
-	
-	udpread.fd = socket.fd;
-	udpread.data = rdata;
-	udpread.onComplete = &onRead;
-	
-	udpwrite.fd = socket.fd;
-	udpwrite.data = wdata;
-	udpwrite.onComplete = &onWrite;
-	
-	return ioproc->Add(&udpread);
+	return true;
 }
 
 void PLeaseProposer::AcquireLease()
@@ -55,80 +39,26 @@ void PLeaseProposer::AcquireLease()
 		StartPreparing();
 }
 
-void PLeaseProposer::OnRead()
-{
-	Log_Trace();
-		
-	Log_Message("Participant %d received message %.*s from %s",
-		config->nodeID, udpread.data.length, udpread.data.buffer, udpread.endpoint.ToString());
-	
-	if (!msg.Read(udpread.data))
-	{
-		Log_Message("PLeaseMsg::Read() failed: invalid message format");
-		ioproc->Add(&udpread); // read again
-	}
-	else
-		ProcessMsg();
-}
-
-void PLeaseProposer::OnWrite()
-{
-	Log_Trace();
-
-	numSent++;
-
-	sending_to = config->endpoints.Next(sending_to);
-	SendMessage();
-}
-
 void PLeaseProposer::BroadcastMessage()
 {
 	Log_Trace();
+	
+	unsigned nodeID;
 
-	// remove outstanding read (we're called from a timeout)
-	if (udpread.active)
-		ioproc->Remove(&udpread);
-
-	numSent		= 0;
 	numReceived = 0;
 	numAccepted = 0;
 	numRejected = 0;
-
-	if (!msg.Write(udpwrite.data))
-	{
-		ioproc->Add(&udpread);
-		return;
-	}
 	
-	sending_to = config->endpoints.Head();
-	SendMessage();
+	msg.Write(wdata);
+	
+	for (nodeID = 0; nodeID < config->numNodes; nodeID++)
+		writers[nodeID]->Write(wdata);
 }
 
-void PLeaseProposer::SendMessage()
+void PLeaseProposer::ProcessMsg(PLeaseMsg &msg_)
 {
-	if (sending_to != NULL)
-	{
-		udpwrite.endpoint = *sending_to;
-		
-		if (msg.type == PREPARE_REQUEST || msg.type == PROPOSE_REQUEST)
-			udpwrite.endpoint.SetPort(udpwrite.endpoint.GetPort() + PLEASE_ACCEPTOR_PORT_OFFSET);
-		else if (msg.type == LEARN_CHOSEN)
-			udpwrite.endpoint.SetPort(udpwrite.endpoint.GetPort() + PLEASE_LEARNER_PORT_OFFSET);
-		else
-			ASSERT_FAIL();
-		
-		Log_Message("Participant %d sending message %.*s to %s",
-			config->nodeID, udpwrite.data.length, udpwrite.data.buffer,
-			udpwrite.endpoint.ToString());
-		
-		ioproc->Add(&udpwrite);
-	}
-	else
-		ioproc->Add(&udpread);
-}
+	msg = msg_;
 
-void PLeaseProposer::ProcessMsg()
-{
 	if (msg.type == PREPARE_RESPONSE)
 		OnPrepareResponse();
 	else if (msg.type == PROPOSE_RESPONSE)
@@ -142,13 +72,10 @@ void PLeaseProposer::OnPrepareResponse()
 	Log_Trace();
 
 	if (state.expireTime < Now())
-		ioproc->Add(&udpread); // wait for timer
+		return; // wait for timer
 
 	if (!state.preparing || msg.proposalID != state.proposalID)
-	{
-		ioproc->Add(&udpread);
 		return;
-	}
 		
 	numReceived++;
 	
@@ -163,33 +90,18 @@ void PLeaseProposer::OnPrepareResponse()
 			state.leaseOwner = msg.leaseOwner;
 		}
 	}
-	
-	bool read = TryFinishPreparing();
-		
-	if (read)
-		ioproc->Add(&udpread);
-}
 
-// returns whether to put out an IORead
-bool PLeaseProposer::TryFinishPreparing()
-{
-	Log_Trace();
-	
 	if (numRejected >= ceil(config->numNodes / 2))
 	{
 		StartPreparing();
-		return false;
+		return;
 	}
 	
 	// see if we have enough positive replies to advance	
 	int numPositive = numReceived - numRejected;
 	if (numPositive >= config->MinMajority())
-	{
 		StartProposing();
-		return false;
-	}
 	
-	return true;
 }
 
 void PLeaseProposer::OnProposeResponse()
@@ -197,36 +109,22 @@ void PLeaseProposer::OnProposeResponse()
 	Log_Trace();
 
 	if (state.expireTime < Now())
-		ioproc->Add(&udpread); // wait for timer
+		return; // wait for timer
 	
 	if (!state.proposing || msg.proposalID != state.proposalID)
-	{
-		ioproc->Add(&udpread);
 		return;
-	}
 	
 	numReceived++;
 	
 	if (msg.response == PROPOSE_ACCEPTED)
 		numAccepted++;
 
-	bool read = TryFinishProposing();
-		
-	if (read)
-		ioproc->Add(&udpread);
-}
-
-// returns whether to put out an IORead
-bool PLeaseProposer::TryFinishProposing()
-{
-	Log_Trace();
-	
 	// see if we have enough positive replies to advance
 	if (numAccepted >= config->MinMajority())
 	{
 		// a majority have accepted our proposal, we have consensus
 		state.proposing = false;
-		msg.LearnChosen(state.leaseOwner, state.expireTime);
+		msg.LearnChosen(config->nodeID, state.leaseOwner, state.expireTime);
 		
 		scheduler->Remove(&acquireLeaseTimeout);
 		
@@ -234,16 +132,12 @@ bool PLeaseProposer::TryFinishProposing()
 		scheduler->Reset(&extendLeaseTimeout);
 		
 		BroadcastMessage();
-		return false;
+		return;
 	}
 	
-	if (numReceived == numSent)
-	{
+	if (numReceived == config->numNodes)
 		StartPreparing();
-		return false;
-	}
-	
-	return true;
+
 }
 
 void PLeaseProposer::StartPreparing()
@@ -263,7 +157,7 @@ void PLeaseProposer::StartPreparing()
 
 	state.proposalID = config->NextHighest(state.proposalID);
 		
-	msg.PrepareRequest(state.proposalID);
+	msg.PrepareRequest(config->nodeID, state.proposalID);
 	
 	BroadcastMessage();
 }
@@ -284,7 +178,8 @@ void PLeaseProposer::StartProposing()
 	state.proposing = true;
 
 	// acceptors get (t_e + S)
-	msg.ProposeRequest(state.proposalID, state.leaseOwner, state.expireTime + MAX_CLOCK_SKEW);
+	msg.ProposeRequest(config->nodeID, state.proposalID,
+		state.leaseOwner, state.expireTime + MAX_CLOCK_SKEW);
 
 	BroadcastMessage();
 }

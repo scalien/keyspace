@@ -26,6 +26,7 @@ class PLeaseMsg
 {
 public:
 	char			type;
+	unsigned		nodeID;
 	ulong64			proposalID;
 	char			response;
 	
@@ -33,17 +34,18 @@ public:
 	unsigned int	leaseOwner;
 	ulong64			expireTime;
 	
-	void			Init(char type_);
+	void			Init(char type_, unsigned nodeID_);
 		
-	bool			PrepareRequest(ulong64 proposalID_);
-	bool			PrepareResponse(ulong64 proposalID_, char response_);
-	bool			PrepareResponse(ulong64 proposalID_, char response_,
+	bool			PrepareRequest(unsigned nodeID_, ulong64 proposalID_);
+	bool			PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_);
+	bool			PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_,
 						ulong64 acceptedProposalID_, unsigned leaseOwner_, ulong64 expireTime_);
 	
-	bool			ProposeRequest(ulong64 proposalID_, unsigned leaseOwner_, ulong64 expireTime_);
-	bool			ProposeResponse(ulong64 proposalID_, char response_);
+	bool			ProposeRequest(unsigned nodeID_, ulong64 proposalID_,
+						unsigned leaseOwner_, ulong64 expireTime_);
+	bool			ProposeResponse(unsigned nodeID_, ulong64 proposalID_, char response_);
 	
-	bool			LearnChosen(unsigned leaseOwner_, ulong64 expireTime_);
+	bool			LearnChosen(unsigned nodeID, unsigned leaseOwner_, ulong64 expireTime_);
 	
 	bool			Read(ByteString& data);
 	bool			Write(ByteString& data);
