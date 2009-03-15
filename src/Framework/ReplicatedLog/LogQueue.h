@@ -3,26 +3,16 @@
 
 #include "Framework/ReplicatedLog/LogCache.h"
 
-class QueueItem
-{
-public:
-	char					protocol;
-	ByteString				value;
-};
-
-
 class LogQueue
 {
 public:
-	bool					Push(char protocol, ByteString value);
-	QueueItem*				Next();
-	QueueItem*				Pop();
+	bool					Push(ByteString value);
+	ByteString*				Next();
+	ByteString*				Pop();
 	int						Size();
 	
-	bool					RemoveAll(char protocol);
-
 private:
-	List<QueueItem*>		queue;
+	List<ByteString*>		queue;
 };
 
 #endif

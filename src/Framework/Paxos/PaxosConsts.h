@@ -1,9 +1,12 @@
 #ifndef PAXOSCONSTS_H
 #define PAXOSCONSTS_H
 
-#define PAXOS_PROPOSER_PORT_OFFSET	0
-#define PAXOS_ACCEPTOR_PORT_OFFSET	1
-#define PAXOS_LEARNER_PORT_OFFSET	2
+#include "System/Common.h"
+
+#define	VALUE_SIZE					(512*KB)
+#define PAXOS_BUFSIZE				(512*KB + 1*KB)
+
+#define PAXOS_PORT_OFFSET			0
 
 #define PAXOS_TIMEOUT				1000 // TODO: I increased this for testing
 

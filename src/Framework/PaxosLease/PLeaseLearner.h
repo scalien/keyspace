@@ -11,9 +11,9 @@
 class PLeaseLearner
 {
 public:
-							PLeaseLearner();
+	PLeaseLearner();
 	
-	bool					Init(Scheduler* scheduler_, PaxosConfig* config_);
+	void					Init(Scheduler* scheduler_, PaxosConfig* config_);
 
 	void					ProcessMsg(PLeaseMsg &msg);
 	
@@ -28,7 +28,7 @@ public:
 	void					SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_);
 
 private:
-	virtual void			OnLearnChosen();
+	void					OnLearnChosen();
 
 	Scheduler*				scheduler;
 	

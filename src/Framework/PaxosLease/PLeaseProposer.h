@@ -5,15 +5,16 @@
 #include "System/Events/Scheduler.h"
 #include "Framework/Transport/TransportWriter.h"
 #include "Framework/Paxos/PaxosConfig.h"
+#include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
 
 class PLeaseProposer
 {
 public:
-							PLeaseProposer();
+	PLeaseProposer();
 
-	bool					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
+	void					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
 
 	void					ProcessMsg(PLeaseMsg &msg_);
 			
@@ -25,8 +26,8 @@ public:
 private:
 	void					BroadcastMessage();
 
-	virtual void			OnPrepareResponse();
-	virtual void			OnProposeResponse();
+	void					OnPrepareResponse();
+	void					OnProposeResponse();
 
 	void					StartPreparing();
 	void					StartProposing();
@@ -34,7 +35,7 @@ private:
 	TransportWriter**		writers;
 	Scheduler*				scheduler;
 	
-	ByteArray<64*KB>		wdata;
+	ByteArray<PLEASE_BUFSIZE>wdata;
 	
 	PaxosConfig*			config;
 

@@ -7,26 +7,20 @@
 #include "PaxosConsts.h"
 
 PaxosAcceptor::PaxosAcceptor() :
-	onRead(this, &PaxosAcceptor::OnRead),
-	onWrite(this, &PaxosAcceptor::OnWrite),
 	onDBComplete(this, &PaxosAcceptor::OnDBComplete)
 {
 	mdbop.SetCallback(&onDBComplete);
 }
 
-bool PaxosAcceptor::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
+void PaxosAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
 {
-	// I/O framework
-	ioproc = ioproc_;
+	writers = writers_;
 	scheduler = scheduler_;
 	config = config_;
 	
 	table = database.GetTable("state");
 	if (table == NULL)
-	{
-		Log_Trace();
-		return false;
-	}
+		ASSERT_FAIL();
 	transaction.Set(table);
 
 	// Paxos variables
@@ -37,20 +31,6 @@ bool PaxosAcceptor::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfi
 	{
 		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
 	}
-	
-	if (!socket.Create(UDP)) return false;
-	if (!socket.Bind(config->port + PAXOS_ACCEPTOR_PORT_OFFSET)) return false;
-	if (!socket.SetNonblocking()) return false;
-	
-	udpread.fd = socket.fd;
-	udpread.data = rdata;
-	udpread.onComplete = &onRead;
-	
-	udpwrite.fd = socket.fd;
-	udpwrite.data = wdata;
-	udpwrite.onComplete = &onWrite;
-	
-	return ioproc->Add(&udpread);
 }
 
 void PaxosAcceptor::SetPaxosID(ulong64 paxosID_)
@@ -145,114 +125,53 @@ bool PaxosAcceptor::WriteState(Transaction* transaction)
 }
 
 
-void PaxosAcceptor::SendReply()
+void PaxosAcceptor::SendReply(unsigned nodeID)
 {
-	Log_Trace();
-		
-	if (!msg.Write(udpwrite.data))
-	{
-		ioproc->Add(&udpread);
-		return;
-	}
-	
-	if (udpwrite.data.length > 0)
-	{
-		Log_Message("Participant %d sending message %.*s to %s",
-			config->nodeID, udpwrite.data.length, udpwrite.data.buffer,
-			udpwrite.endpoint.ToString());
-		
-		ioproc->Add(&udpwrite);
-	}
-	else
-		ioproc->Add(&udpread);
+	msg.Write(wdata);
+
+	writers[nodeID]->Write(wdata);
 }
 
-void PaxosAcceptor::OnRead()
-{
-	Log_Trace();
-		
-	Log_Message("Participant %d received message %.*s from %s",
-		config->nodeID, udpread.data.length, udpread.data.buffer, udpread.endpoint.ToString());
-	
-	if (!msg.Read(udpread.data))
-	{
-		Log_Message("PaxosMsg::Read() failed: invalid message format");
-		ioproc->Add(&udpread); // read again
-	} else
-		ProcessMsg();
-	
-	assert(Xor(udpread.active, udpwrite.active, mdbop.active));
-}
-
-void PaxosAcceptor::OnWrite()
-{
-	Log_Trace();
-
-	ioproc->Add(&udpread);
-	
-	assert(Xor(udpread.active, udpwrite.active, mdbop.active));
-}
-
-void PaxosAcceptor::ProcessMsg()
-{
-	if (msg.type == PREPARE_REQUEST)
-		OnPrepareRequest();
-	else if (msg.type == PROPOSE_REQUEST)
-		OnProposeRequest();
-	else
-		ASSERT_FAIL();
-}
-
-void PaxosAcceptor::OnPrepareRequest()
+void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 {
 	Log_Trace();
 	
-	if (msg.proposalID >= state.promisedProposalID)
-	{
-		state.promisedProposalID = msg.proposalID;
-
-		if (!state.accepted)
-			msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
-		else
-			msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
-				state.acceptedProposalID, state.acceptedValue);
-		
-		WriteState(&transaction);
-	}
-	else
-	{
-		msg.PrepareResponse(msg.paxosID, msg.proposalID, PREPARE_REJECTED);
-		
-		udpwrite.endpoint = udpread.endpoint;
-		if (!msg.Write(udpwrite.data))
-		{
-			Log_Trace();
-			ioproc->Add(&udpread);
-			return;
-		}
-		
-		SendReply();
-		return;
-	}
-}
-
-void PaxosAcceptor::OnProposeRequest()
-{
-	Log_Trace();
+	msg = msg_;
+	
+	senderID = msg.nodeID;
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.ProposeResponse(msg.paxosID, msg.proposalID, PROPOSE_REJECTED);
+		msg.PrepareResponse(msg.paxosID, config->nodeID, msg.proposalID, PREPARE_REJECTED);
 		
-		udpwrite.endpoint = udpread.endpoint;
-		if (!msg.Write(udpwrite.data))
-		{
-			Log_Trace();
-			ioproc->Add(&udpread);
-			return;
-		}
+		SendReply(senderID);
+		return;
+	}
+
+	state.promisedProposalID = msg.proposalID;
+
+	if (!state.accepted)
+		msg.PrepareResponse(msg.paxosID, config->nodeID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
+	else
+		msg.PrepareResponse(msg.paxosID, config->nodeID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
+			state.acceptedProposalID, state.acceptedValue);
+	
+	WriteState(&transaction);
+}
+
+void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
+{
+	Log_Trace();
+	
+	msg = msg_;
+	
+	senderID = msg.nodeID;
+	
+	if (msg.proposalID < state.promisedProposalID)
+	{
+		msg.ProposeResponse(msg.paxosID, config->nodeID, msg.proposalID, PROPOSE_REJECTED);
 		
-		SendReply();
+		SendReply(senderID);
 		return;
 	}
 
@@ -260,9 +179,9 @@ void PaxosAcceptor::OnProposeRequest()
 	state.acceptedProposalID = msg.proposalID;
 	if (!state.acceptedValue.Set(msg.value))
 		ASSERT_FAIL();
-	msg.ProposeResponse(msg.paxosID, msg.proposalID, PROPOSE_ACCEPTED);
+	msg.ProposeResponse(msg.paxosID, config->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
 	
-	WriteState(&transaction);	
+	WriteState(&transaction);
 }
 
 void PaxosAcceptor::OnDBComplete()
@@ -270,21 +189,5 @@ void PaxosAcceptor::OnDBComplete()
 	Log_Trace();
 
 	if (writtenPaxosID == paxosID)
-	{
-		// TODO: check that the transaction commited
-
-		udpwrite.endpoint = udpread.endpoint;
-		if (!msg.Write(udpwrite.data))
-		{
-			Log_Trace();
-			ioproc->Add(&udpread);
-			return;
-		}
-		
-		SendReply();
-	}
-	else
-		ioproc->Add(&udpread);
-
-	assert(Xor(udpread.active, udpwrite.active, mdbop.active));
+		SendReply(senderID); // TODO: check that the transaction commited
 }

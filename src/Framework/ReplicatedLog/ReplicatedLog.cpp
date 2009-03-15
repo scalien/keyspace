@@ -1,9 +1,12 @@
 #include "ReplicatedLog.h"
 #include <string.h>
 #include "Framework/Paxos/PaxosConsts.h"
+#include "Framework/Transport/TransportTCPReader.h"
+#include "Framework/Transport/TransportTCPWriter.h"
 
 ReplicatedLog::ReplicatedLog()
-:	onCatchupTimeout(this, &ReplicatedLog::OnCatchupTimeout),
+:	onRead(this, &ReplicatedLog::OnRead),
+	onCatchupTimeout(this, &ReplicatedLog::OnCatchupTimeout),
 	catchupTimeout(CATCHUP_TIMEOUT, &onCatchupTimeout),
 	onLearnLease(this, &ReplicatedLog::OnLearnLease),
 	onLeaseTimeout(this, &ReplicatedLog::OnLeaseTimeout)
@@ -13,7 +16,6 @@ ReplicatedLog::ReplicatedLog()
 bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* filename)
 {
 	// I/O framework
-	ioproc = ioproc_;
 	scheduler = scheduler_;
 	
 	replicatedDB = NULL;
@@ -21,18 +23,45 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 	if (!config.Init(filename))
 		return false;
 
-	PaxosProposer::Init(ioproc_, scheduler_, &config);
-	PaxosAcceptor::Init(ioproc_, scheduler_, &config);
-	PaxosLearner::Init(ioproc_, scheduler_, &config);
-	
 	masterLease.Init(ioproc_, scheduler_, &config);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
 	masterLease.AcquireLease();
+
+	InitTransport(ioproc_, scheduler_, &config);
+
+	proposer.Init(writers, scheduler_, &config);
+	acceptor.Init(writers, scheduler_, &config);
+	learner.Init(writers, scheduler_, &config);
 	
 	appending = false;
 	
 	return true;
+}
+
+void ReplicatedLog::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
+{
+	int			i;
+	Endpoint	endpoint;
+	Endpoint*	it;
+
+	reader = new TransportTCPReader;
+	reader->Init(ioproc_, config_->port + PAXOS_PORT_OFFSET);
+	reader->SetOnRead(&onRead);
+	
+	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * config_->numNodes);
+	it = config_->endpoints.Head();
+	for (i = 0; i < config_->numNodes; i++)
+	{
+		endpoint = *it;
+		endpoint.SetPort(endpoint.GetPort() + PAXOS_PORT_OFFSET);
+		writers[i] = new TransportTCPWriter;
+		
+		Log_Message("Connecting to %s", endpoint.ToString());
+		writers[i]->Init(ioproc_, scheduler_, endpoint);
+	
+		it = config_->endpoints.Next(it);
+	}
 }
 
 /*bool ReplicatedLog::Stop()
@@ -65,20 +94,19 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 
 bool ReplicatedLog::Append(ByteString value_)
 {
-	if (!logQueue.Push(value_.buffer[0], value_))
+	if (!logQueue.Push(value_))
 		return false;
 	
 	if (!appending)
 	{
-		if (!ReplicatedLog::msg.Init(config.nodeID, config.restartCounter, 
-			masterLease.LeaseEpoch(), value_))
-				return false;
+		if (!rmsg.Init(config.nodeID, config.restartCounter,  masterLease.LeaseEpoch(), value_))
+			return false;
 		
-		if (!ReplicatedLog::msg.Write(value))
+		if (!rmsg.Write(value))
 			return false;
 		
 		appending = true;
-		return PaxosProposer::Propose(value);
+		return proposer.Propose(value);
 	}
 	
 	return true;
@@ -104,54 +132,70 @@ int ReplicatedLog::NodeID()
 	return config.nodeID;
 }
 
+void ReplicatedLog::OnRead()
+{
+	ByteString bs;
+	reader->GetMessage(bs);
+	pmsg.Read(bs);
+	
+	ProcessMsg();
+}
+
+void ReplicatedLog::ProcessMsg()
+{
+	if (pmsg.paxosID > highestPaxosID)
+		highestPaxosID = pmsg.paxosID;
+
+	if (pmsg.type == PREPARE_REQUEST)
+		OnPrepareRequest();
+	else if (pmsg.type == PREPARE_RESPONSE)
+		OnPrepareResponse();
+	else if (pmsg.type == PROPOSE_REQUEST)
+		OnProposeRequest();
+	else if (pmsg.type == PROPOSE_RESPONSE)
+		OnProposeResponse();
+	else if (pmsg.type == LEARN_CHOSEN)
+		OnLearnChosen();
+	else if (pmsg.type == REQUEST_CHOSEN)
+		OnRequestChosen();
+	else
+		ASSERT_FAIL();
+}
+
 void ReplicatedLog::OnPrepareRequest()
 {
 	Log_Trace();
 		
-	if (PaxosAcceptor::msg.paxosID == PaxosAcceptor::paxosID)
-		return PaxosAcceptor::OnPrepareRequest();
+	if (pmsg.paxosID == acceptor.paxosID)
+		return acceptor.OnPrepareRequest(pmsg);
 
-	if (PaxosAcceptor::msg.paxosID > highestPaxosID)
-		highestPaxosID = PaxosAcceptor::msg.paxosID;
-	
 	OnRequest();
-	
-	PaxosAcceptor::ioproc->Add(&(PaxosAcceptor::udpread));
 }
 
 void ReplicatedLog::OnPrepareResponse()
 {
 	Log_Trace();
 	
-	if (PaxosProposer::msg.paxosID == PaxosProposer::paxosID)
-		PaxosProposer::OnPrepareResponse();
-	else
-		PaxosProposer::ioproc->Add(&(PaxosProposer::udpread));
+	if (pmsg.paxosID == proposer.paxosID)
+		proposer.OnPrepareResponse(pmsg);
 }
 
 void ReplicatedLog::OnProposeRequest()
 {
 	Log_Trace();
 	
-	if (PaxosAcceptor::msg.paxosID == PaxosAcceptor::paxosID)
-		return PaxosAcceptor::OnProposeRequest();
+	if (pmsg.paxosID == acceptor.paxosID)
+		return acceptor.OnProposeRequest(pmsg);
 	
-	if (PaxosAcceptor::msg.paxosID > highestPaxosID)
-		highestPaxosID = PaxosAcceptor::msg.paxosID;
-
 	OnRequest();
-	
-	PaxosAcceptor::ioproc->Add(&(PaxosAcceptor::udpread));
 }
 
 void ReplicatedLog::OnProposeResponse()
 {
-		Log_Trace();
-	
-	if (PaxosProposer::msg.paxosID == PaxosProposer::paxosID)
-		PaxosProposer::OnProposeResponse();
-	else
-		PaxosProposer::ioproc->Add(&(PaxosProposer::udpread));
+	Log_Trace();
+
+	if (pmsg.paxosID == proposer.paxosID)
+		proposer.OnProposeResponse(pmsg);
 }
 
 void ReplicatedLog::OnLearnChosen()
@@ -159,119 +203,99 @@ void ReplicatedLog::OnLearnChosen()
 	Log_Trace();
 
 	ulong64 paxosID;
-	
-	if (PaxosLearner::msg.paxosID > highestPaxosID)
-		highestPaxosID = PaxosLearner::msg.paxosID;
 
-	if (PaxosLearner::msg.paxosID == PaxosLearner::paxosID)
+	if (pmsg.paxosID == learner.paxosID)
 	{
 		if (catchupTimeout.IsActive())
 			scheduler->Remove(&catchupTimeout);
 		
-		if (PaxosLearner::msg.subtype == LEARN_PROPOSAL &&
-			PaxosAcceptor::state.accepted &&
-			PaxosAcceptor::state.acceptedProposalID == PaxosLearner::msg.proposalID)
-		{
-			PaxosLearner::msg.LearnChosen(PaxosLearner::msg.paxosID,
-				LEARN_VALUE, PaxosAcceptor::state.acceptedValue);
-		}
+		if (pmsg.subtype == LEARN_PROPOSAL && acceptor.state.accepted &&
+			acceptor.state.acceptedProposalID == pmsg.proposalID)
+				pmsg.LearnChosen(pmsg.paxosID, config.nodeID, LEARN_VALUE, acceptor.state.acceptedValue);
 		
-		if (PaxosLearner::msg.subtype == LEARN_VALUE)
-			PaxosLearner::OnLearnChosen();
+		if (pmsg.subtype == LEARN_VALUE)
+			learner.OnLearnChosen(pmsg);
 		else
 		{
-			Endpoint endpoint = PaxosLearner::udpread.endpoint;
-			endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
-												+ PAXOS_LEARNER_PORT_OFFSET);
-			PaxosLearner::RequestChosen(endpoint);
+			learner.RequestChosen(pmsg.nodeID);
 			return;
 		}
 		
 		// save it in the logCache (includes the epoch info)
-		logCache.Push(PaxosLearner::paxosID, PaxosLearner::state.value);
+		logCache.Push(learner.paxosID, learner.state.value);
 		
-		msg.Read(PaxosLearner::state.value);	// msg.value holds the 'user value'
-		paxosID = PaxosLearner::paxosID;		// this is the value we pass to the ReplicatedDB
+		rmsg.Read(learner.state.value);	// rmsg.value holds the 'user value'
+		paxosID = learner.paxosID;		// this is the value we pass to the ReplicatedDB
 		
 		NewPaxosRound(); // increments paxosID, clears proposer, acceptor, learner
 		
 		if (highestPaxosID > paxosID)
 		{
-			PaxosLearner::RequestChosen(PaxosLearner::udpread.endpoint); //TODO: why?
+			learner.RequestChosen(pmsg.nodeID);
 			return;
 		}
 
-		if (msg.nodeID == config.nodeID && msg.restartCounter == config.restartCounter)
+		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter)
 			logQueue.Pop(); // we just appended this
 
-		if (msg.nodeID == config.nodeID && msg.restartCounter == config.restartCounter &&
-			msg.leaseEpoch == masterLease.LeaseEpoch() && masterLease.IsLeaseOwner())
+		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter &&
+			rmsg.leaseEpoch == masterLease.LeaseEpoch() && masterLease.IsLeaseOwner())
 		{
-			PaxosProposer::state.leader = true;
+			proposer.state.leader = true;
 			Log_Message("Multi paxos enabled!");
 		}
 		else
 		{
-			PaxosProposer::state.leader = false;
+			proposer.state.leader = false;
 		}
 
 		
 		if (logQueue.Size() > 0)
 		{
-			if (!ReplicatedLog::msg.Init(config.nodeID, config.restartCounter, 
-				masterLease.LeaseEpoch(), logQueue.Next()->value))
+			if (!rmsg.Init(config.nodeID, config.restartCounter, 
+				masterLease.LeaseEpoch(), *(logQueue.Next())))
 					ASSERT_FAIL();
 		
-			if (!ReplicatedLog::msg.Write(value))
+			if (!rmsg.Write(value))
 				ASSERT_FAIL();
 			
 			appending = true;
-			PaxosProposer::Propose(value);
+			proposer.Propose(value);
 		}
 		else
 			appending = false;
 		
-		if (msg.nodeID == config.nodeID && msg.restartCounter == config.restartCounter &&
-			replicatedDB != NULL && msg.value.length > 0)
+		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter &&
+			replicatedDB != NULL && rmsg.value.length > 0)
 		{
 			//Transaction tx(table);
-			replicatedDB->OnAppend(NULL, paxosID, msg.value); // user will call Append() here
+			replicatedDB->OnAppend(NULL, paxosID, rmsg.value); // user will call Append() here
 			//tx.Commit();
 		}		
 	}
-	else if (PaxosLearner::msg.paxosID > PaxosLearner::paxosID)
+	else if (pmsg.paxosID > learner.paxosID)
 	{
 		//	I am lagging and need to catch-up
-		
-		if (PaxosLearner::msg.paxosID > highestPaxosID)
-			highestPaxosID = PaxosLearner::msg.paxosID;
 		
 		if (!catchupTimeout.IsActive())
 			scheduler->Add(&catchupTimeout);
 		
-			Endpoint endpoint = PaxosLearner::udpread.endpoint;
-			endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
-												+ PAXOS_LEARNER_PORT_OFFSET);
-			PaxosLearner::RequestChosen(endpoint);
+		learner.RequestChosen(pmsg.nodeID);
 	}
 }
 
 void ReplicatedLog::OnRequestChosen()
 {
-	if (PaxosLearner::msg.paxosID == PaxosLearner::paxosID)
-		return PaxosLearner::OnRequestChosen();
+	if (pmsg.paxosID == learner.paxosID)
+		return learner.OnRequestChosen(pmsg);
 	
-	if (PaxosLearner::msg.paxosID > highestPaxosID)
-		highestPaxosID = PaxosLearner::msg.paxosID;
-
 	// same as OnRequest but with the learner's message
-	if (PaxosLearner::msg.paxosID < PaxosLearner::paxosID)
+	if (pmsg.paxosID < learner.paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		LogItem* li = logCache.Get(PaxosLearner::msg.paxosID);
+		LogItem* li = logCache.Get(pmsg.paxosID);
 		if (li != NULL)
-			PaxosLearner::SendChosen(PaxosLearner::udpread.endpoint,
-				PaxosLearner::msg.paxosID, li->value);
+			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, li->value);
 	}
 }
 
@@ -279,17 +303,12 @@ void ReplicatedLog::OnRequest()
 {
 	Log_Trace();
 
-	if (PaxosAcceptor::msg.paxosID < PaxosAcceptor::paxosID)
+	if (pmsg.paxosID < acceptor.paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		LogItem* li = logCache.Get(PaxosAcceptor::msg.paxosID);
+		LogItem* li = logCache.Get(pmsg.paxosID);
 		if (li != NULL)
-		{
-			Endpoint endpoint = PaxosAcceptor::udpread.endpoint;
-			endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
-												+ PAXOS_LEARNER_PORT_OFFSET);
-			PaxosLearner::SendChosen(endpoint, PaxosAcceptor::msg.paxosID, li->value);
-		}
+			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, li->value);
 	}
 	else // paxosID < msg.paxosID
 	{
@@ -298,25 +317,22 @@ void ReplicatedLog::OnRequest()
 		if (!catchupTimeout.IsActive())
 			scheduler->Add(&catchupTimeout);
 		
-		Endpoint endpoint = PaxosAcceptor::udpread.endpoint;
-		endpoint.SetPort(endpoint.GetPort() - PAXOS_PROPOSER_PORT_OFFSET
-											+ PAXOS_LEARNER_PORT_OFFSET);
-		PaxosLearner::RequestChosen(endpoint);
+		learner.RequestChosen(pmsg.nodeID);
 	}
 }
 
 void ReplicatedLog::NewPaxosRound()
 {
-	PaxosProposer::scheduler->Remove(&(PaxosProposer::prepareTimeout));
-	PaxosProposer::scheduler->Remove(&(PaxosProposer::proposeTimeout));
-	PaxosProposer::paxosID++;
-	PaxosProposer::state.Init();
+	proposer.scheduler->Remove(&(proposer.prepareTimeout));
+	proposer.scheduler->Remove(&(proposer.proposeTimeout));
+	proposer.paxosID++;
+	proposer.state.Init();
 
-	PaxosAcceptor::paxosID++;
-	PaxosAcceptor::state.Init();
+	acceptor.paxosID++;
+	acceptor.state.Init();
 
-	PaxosLearner::paxosID++;
-	PaxosLearner::state.Init();
+	learner.paxosID++;
+	learner.state.Init();
 }
 
 void ReplicatedLog::OnCatchupTimeout()

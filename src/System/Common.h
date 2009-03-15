@@ -6,6 +6,7 @@
 #include "Types.h"
 
 #define KB 1000
+#define MB 1000000
 
 #define MEMCMP(b1, l1, b2, l2) ((l1) == (l2) && memcmp((b1), (b2), l1) == 0)
 

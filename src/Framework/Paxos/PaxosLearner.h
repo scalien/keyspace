@@ -2,9 +2,8 @@
 #define PAXOSLEARNER_H
 
 #include "System/Common.h"
-#include "System/IO/IOProcessor.h"
-#include "System/IO/Socket.h"
 #include "System/Events/Scheduler.h"
+#include "Framework/Transport/TransportWriter.h"
 #include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "Framework/Database/Transaction.h"
 #include "PaxosMsg.h"
@@ -13,16 +12,15 @@
 
 class PaxosLearner
 {
+friend class ReplicatedLog;
+
 protected:
-							PaxosLearner();
+	PaxosLearner();
 	
-	bool					Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
+	void					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
 	
-	void					OnRead();
-	void					OnWrite();
-	
-	bool					RequestChosen(Endpoint endpoint);
-	bool					SendChosen(Endpoint endpoint, ulong64 paxosID, ByteString& value);
+	bool					RequestChosen(unsigned nodeID);
+	bool					SendChosen(unsigned nodeID, ulong64 paxosID, ByteString& value);
 	
 	bool					Learned();
 	ByteString				Value();
@@ -30,22 +28,13 @@ protected:
 	void					SetPaxosID(ulong64 paxosID_);
 
 protected:
-	void					ProcessMsg();
-	virtual void			OnLearnChosen();
-	virtual void			OnRequestChosen();
+	void					OnLearnChosen(PaxosMsg& msg_);
+	void					OnRequestChosen(PaxosMsg& msg_);
 
-	IOProcessor*			ioproc;
+	TransportWriter**		writers;
 	Scheduler*				scheduler;
-	Socket					socket;
 
-	UDPRead					udpread;
-	UDPWrite				udpwrite;
-	
-	ByteArray<64*KB>		rdata;
-	ByteArray<64*KB>		wdata;
-	
-	MFunc<PaxosLearner>		onRead;
-	MFunc<PaxosLearner>		onWrite;
+	ByteArray<PAXOS_BUFSIZE>wdata;
 	
 	ulong64					paxosID;
 	

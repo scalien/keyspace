@@ -1,7 +1,6 @@
 #include "TransportTCPWriter.h"
 
-#define CONNECT_TIMEOUT		3
-#define RECONNECT_TIMEOUT	3
+#define CONNECT_TIMEOUT		2000
 
 TransportTCPWriter::TransportTCPWriter() :
 onConnect(this, &TransportTCPWriter::OnConnect),
@@ -42,6 +41,8 @@ void TransportTCPWriter::Write(ByteString &bs)
 
 void TransportTCPWriter::Connect()
 {
+	Log_Trace();
+	
 	bool ret;
 	
 	state = CONNECTING;
@@ -70,16 +71,21 @@ void TransportTCPWriter::OnConnect()
 
 void TransportTCPWriter::OnConnectTimeout()
 {
-	OnClose();
+	Log_Trace();
+	
+	Close();
+	Connect();
 }
 
 void TransportTCPWriter::OnRead()
 {
-	Log_Message("should not read here");
+	ASSERT_FAIL();
 }
 
 void TransportTCPWriter::OnClose()
 {
-	Close();
-	Connect();
+	Log_Trace();
+	
+	if (!connectTimeout.IsActive())
+		scheduler->Add(&connectTimeout);
 }

@@ -3,6 +3,8 @@
 
 #include "System/Containers/List.h"
 #include "System/Events/Callable.h"
+#include "Framework/Transport/TransportReader.h"
+#include "Framework/Transport/TransportWriter.h"
 #include "Framework/Paxos/PaxosProposer.h"
 #include "Framework/Paxos/PaxosAcceptor.h"
 #include "Framework/Paxos/PaxosLearner.h"
@@ -14,12 +16,14 @@
 
 #define CATCHUP_TIMEOUT	5000
 
-class ReplicatedLog : private PaxosProposer, private PaxosAcceptor, private PaxosLearner
+class ReplicatedLog
 {
 public:
 	ReplicatedLog();
 
 	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* filename);
+
+	void				OnRead();
 	
 	bool				Append(ByteString value);
 	
@@ -35,12 +39,15 @@ public:
 	bool				Continue();
 
 private:
-	virtual void		OnPrepareRequest();
-	virtual void		OnPrepareResponse();
-	virtual void		OnProposeRequest();
-	virtual void		OnProposeResponse();
-	virtual void		OnLearnChosen();
-	virtual void		OnRequestChosen();
+	void				InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
+	
+	void				ProcessMsg();
+	void				OnPrepareRequest();
+	void				OnPrepareResponse();
+	void				OnProposeRequest();
+	void				OnProposeResponse();
+	void				OnLearnChosen();
+	void				OnRequestChosen();
 
 	void				OnRequest();
 	
@@ -51,14 +58,22 @@ private:
 	
 	void				NewPaxosRound();
 
-	IOProcessor*		ioproc;
 	Scheduler*			scheduler;
+	TransportReader*	reader;
+	TransportWriter**	writers;
+
+	MFunc<ReplicatedLog>onRead;
+	
+	PaxosProposer		proposer;
+	PaxosAcceptor		acceptor;
+	PaxosLearner		learner;
 	
 	PaxosLease			masterLease;
 
 	bool				appending;
-	ReplicatedLogMsg	msg;
-	ByteArray<65*KB>	value;
+	PaxosMsg			pmsg;
+	ReplicatedLogMsg	rmsg;
+	ByteArray<PAXOS_BUFSIZE>value;
 	
 	ulong64				highestPaxosID;
 	

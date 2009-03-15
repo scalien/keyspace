@@ -11,7 +11,7 @@ PLeaseAcceptor::PLeaseAcceptor() :
 {
 }
 
-bool PLeaseAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
+void PLeaseAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
 {
 	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
 
@@ -20,8 +20,6 @@ bool PLeaseAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_, Pax
 	config = config_;
 	
 	state.Init();
-	
-	return true;
 }
 
 void PLeaseAcceptor::SendReply(unsigned nodeID)
@@ -83,30 +81,29 @@ void PLeaseAcceptor::OnProposeRequest()
 		OnLeaseTimeout();
 	}
 
-	if (msg.expireTime > Now())
-	{
-		if (msg.proposalID < state.promisedProposalID)
-			msg.ProposeResponse(config->nodeID, msg.proposalID, PROPOSE_REJECTED);
-		else
-		{
-			state.accepted = true;
-			state.acceptedProposalID = msg.proposalID;
-			state.acceptedLeaseOwner = msg.leaseOwner;
-			state.acceptedExpireTime = msg.expireTime;
-			
-			leaseTimeout.Set(state.acceptedExpireTime);
-			scheduler->Reset(&leaseTimeout);
-			
-			msg.ProposeResponse(config->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
-		}
-		
-		SendReply(senderID);
-	}
-	else
+	if (msg.expireTime < Now())
 	{
 		Log_Message("Expired propose request received (msg.expireTime = %llu | Now = %llu)",
 			msg.expireTime, Now());
+		return;
 	}
+
+	if (msg.proposalID < state.promisedProposalID)
+		msg.ProposeResponse(config->nodeID, msg.proposalID, PROPOSE_REJECTED);
+	else
+	{
+		state.accepted = true;
+		state.acceptedProposalID = msg.proposalID;
+		state.acceptedLeaseOwner = msg.leaseOwner;
+		state.acceptedExpireTime = msg.expireTime;
+		
+		leaseTimeout.Set(state.acceptedExpireTime);
+		scheduler->Reset(&leaseTimeout);
+		
+		msg.ProposeResponse(config->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
+	}
+	
+	SendReply(senderID);
 }
 
 void PLeaseAcceptor::OnLeaseTimeout()

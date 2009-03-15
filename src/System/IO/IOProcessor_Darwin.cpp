@@ -358,6 +358,12 @@ void ProcessTCPWrite(struct kevent* ev)
 	
 	tcpwrite = (TCPWrite*) ev->udata;
 	
+	if (ev->flags & EV_EOF)
+	{
+		Call(tcpwrite->onClose);
+		return;
+	}
+	
 	if (tcpwrite->data.length == 0)
 	{
 		if (ev->flags & EV_EOF)
@@ -390,9 +396,6 @@ void ProcessTCPWrite(struct kevent* ev)
 				ioproc.Add(tcpwrite);
 		}
 	}
-	
-	if (ev->flags & EV_EOF)
-		Call(tcpwrite->onClose);
 }
 
 void ProcessUDPRead(struct kevent* ev)

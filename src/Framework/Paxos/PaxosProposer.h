@@ -2,23 +2,21 @@
 #define PAXOSPROPOSER_H
 
 #include "System/Common.h"
-#include "System/IO/IOProcessor.h"
-#include "System/IO/Socket.h"
 #include "System/Events/Scheduler.h"
+#include "Framework/Transport/TransportWriter.h"
 #include "PaxosMsg.h"
 #include "PaxosState.h"
 #include "PaxosConfig.h"
 
 class PaxosProposer
 {
-public:
-							PaxosProposer();
+friend class ReplicatedLog;
 
-	bool					Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
+public:
+	PaxosProposer();
+
+	void					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
 		
-	void					OnRead();
-	void					OnWrite();
-	
 	void					OnPrepareTimeout();
 	void					OnProposeTimeout();
 	
@@ -29,11 +27,9 @@ public:
 
 protected:
 	void					BroadcastMessage();
-	void					SendMessage();
 
-	void					ProcessMsg();
-	virtual void			OnPrepareResponse();
-	virtual void			OnProposeResponse();
+	void					OnPrepareResponse(PaxosMsg& msg_);
+	void					OnProposeResponse(PaxosMsg& msg_);
 
 	void					StopPreparing();
 	void					StopProposing();
@@ -41,38 +37,24 @@ protected:
 	void					StartPreparing();
 	void					StartProposing();
 
-	bool					TryFinishPreparing();
-	bool					TryFinishProposing();
-
-	IOProcessor*			ioproc;
+	TransportWriter**		writers;
 	Scheduler*				scheduler;
-	Socket					socket;
-
-	UDPRead					udpread;
-	UDPWrite				udpwrite;
 	
-	ByteArray<64*KB>		rdata;
-	ByteArray<64*KB>		wdata;
+	ByteArray<PAXOS_BUFSIZE>wdata;
 	
 	PaxosConfig*			config;
 	PaxosProposerState		state;
-	
-	Endpoint*				sending_to;
 	
 	PaxosMsg				msg;
 
 	ulong64					paxosID;
 	
-	MFunc<PaxosProposer>	onRead;
-	MFunc<PaxosProposer>	onWrite;
-
 	MFunc<PaxosProposer>	onPrepareTimeout;
 	MFunc<PaxosProposer>	onProposeTimeout;
 	CdownTimer				prepareTimeout;
 	CdownTimer				proposeTimeout;
 	
 // keeping track of messages during prepare and propose phases
-	int						numSent;
 	int						numReceived;
 	int						numAccepted;
 	int						numRejected;

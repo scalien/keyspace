@@ -14,7 +14,7 @@ PLeaseProposer::PLeaseProposer() :
 {
 }
 
-bool PLeaseProposer::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
+void PLeaseProposer::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
 {
 	writers = writers_;
 	scheduler = scheduler_;
@@ -27,8 +27,6 @@ bool PLeaseProposer::Init(TransportWriter** writers_, Scheduler* scheduler_, Pax
 	{
 		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
 	}
-	
-	return true;
 }
 
 void PLeaseProposer::AcquireLease()
@@ -43,15 +41,13 @@ void PLeaseProposer::BroadcastMessage()
 {
 	Log_Trace();
 	
-	unsigned nodeID;
-
 	numReceived = 0;
 	numAccepted = 0;
 	numRejected = 0;
 	
 	msg.Write(wdata);
 	
-	for (nodeID = 0; nodeID < config->numNodes; nodeID++)
+	for (unsigned nodeID = 0; nodeID < config->numNodes; nodeID++)
 		writers[nodeID]->Write(wdata);
 }
 
@@ -82,13 +78,11 @@ void PLeaseProposer::OnPrepareResponse()
 	if (msg.response == PREPARE_REJECTED)
 		numRejected++;
 	else if (msg.response == PREPARE_PREVIOUSLY_ACCEPTED && 
-			 msg.acceptedProposalID >= state.highestReceivedProposalID)
+			 msg.acceptedProposalID >= state.highestReceivedProposalID &&
+			 msg.expireTime > Now())
 	{
-		if (msg.expireTime > Now())
-		{
-			state.highestReceivedProposalID = msg.acceptedProposalID;
-			state.leaseOwner = msg.leaseOwner;
-		}
+		state.highestReceivedProposalID = msg.acceptedProposalID;
+		state.leaseOwner = msg.leaseOwner;
 	}
 
 	if (numRejected >= ceil(config->numNodes / 2))
@@ -98,10 +92,8 @@ void PLeaseProposer::OnPrepareResponse()
 	}
 	
 	// see if we have enough positive replies to advance	
-	int numPositive = numReceived - numRejected;
-	if (numPositive >= config->MinMajority())
-		StartProposing();
-	
+	if ((numReceived - numRejected) >= config->MinMajority())
+		StartProposing();	
 }
 
 void PLeaseProposer::OnProposeResponse()
@@ -137,7 +129,6 @@ void PLeaseProposer::OnProposeResponse()
 	
 	if (numReceived == config->numNodes)
 		StartPreparing();
-
 }
 
 void PLeaseProposer::StartPreparing()
@@ -169,11 +160,7 @@ void PLeaseProposer::StartProposing()
 	state.preparing = false;
 
 	if (state.leaseOwner != config->nodeID)
-	{
-		// no point in getting someone else a lease
-		// wait for OnAcquireLeaseTimeout
-		return;
-	}
+		return; // no point in getting someone else a lease, wait for OnAcquireLeaseTimeout
 
 	state.proposing = true;
 

@@ -3,33 +3,34 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void PaxosMsg::Init(ulong64 paxosID_, char type_)
+void PaxosMsg::Init(ulong64 paxosID_, char type_, unsigned nodeID_)
 {
 	paxosID = paxosID_;
+	nodeID = nodeID_;
 	type = type_;
 }
 
-bool PaxosMsg::PrepareRequest(ulong64 paxosID_, ulong64 proposalID_)
+bool PaxosMsg::PrepareRequest(ulong64 paxosID_, unsigned nodeID_, ulong64 proposalID_)
 {
-	Init(paxosID_, PREPARE_REQUEST);
+	Init(paxosID_, PREPARE_REQUEST, nodeID_);
 	proposalID = proposalID_;
 
 	return true;
 }
 
-bool PaxosMsg::PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char subtype_)
+bool PaxosMsg::PrepareResponse(ulong64 paxosID_, unsigned nodeID_, ulong64 proposalID_, char subtype_)
 {
-	Init(paxosID_, PREPARE_RESPONSE);
+	Init(paxosID_, PREPARE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
 	subtype = subtype_;
 
 	return true;
 }
 
-bool PaxosMsg::PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char subtype_,
+bool PaxosMsg::PrepareResponse(ulong64 paxosID_, unsigned nodeID_, ulong64 proposalID_, char subtype_,
 	ulong64 acceptedProposalID_, ByteString value_)
 {
-	Init(paxosID_, PREPARE_RESPONSE);
+	Init(paxosID_, PREPARE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
 	subtype = subtype_;
 	acceptedProposalID = acceptedProposalID_;
@@ -39,9 +40,9 @@ bool PaxosMsg::PrepareResponse(ulong64 paxosID_, ulong64 proposalID_, char subty
 	return true;
 }
 
-bool PaxosMsg::ProposeRequest(ulong64 paxosID_, ulong64 proposalID_, ByteString value_)
+bool PaxosMsg::ProposeRequest(ulong64 paxosID_, unsigned nodeID_, ulong64 proposalID_, ByteString value_)
 {
-	Init(paxosID_, PROPOSE_REQUEST);
+	Init(paxosID_, PROPOSE_REQUEST, nodeID_);
 	proposalID = proposalID_;
 	if (!value.Set(value_))
 		return false;
@@ -49,18 +50,18 @@ bool PaxosMsg::ProposeRequest(ulong64 paxosID_, ulong64 proposalID_, ByteString 
 	return true;
 }
 
-bool PaxosMsg::ProposeResponse(ulong64 paxosID_, ulong64 proposalID_, char subtype_)
+bool PaxosMsg::ProposeResponse(ulong64 paxosID_, unsigned nodeID_, ulong64 proposalID_, char subtype_)
 {
-	Init(paxosID_, PROPOSE_RESPONSE);
+	Init(paxosID_, PROPOSE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
 	subtype = subtype_;
 
 	return true;
 }
 
-bool PaxosMsg::LearnChosen(ulong64 paxosID_, char subtype_, ByteString value_)
+bool PaxosMsg::LearnChosen(ulong64 paxosID_, unsigned nodeID_, char subtype_, ByteString value_)
 {
-	Init(paxosID_, LEARN_CHOSEN);
+	Init(paxosID_, LEARN_CHOSEN, nodeID_);
 	subtype = subtype_;
 	if (!value.Set(value_))
 		return false;
@@ -68,18 +69,18 @@ bool PaxosMsg::LearnChosen(ulong64 paxosID_, char subtype_, ByteString value_)
 	return true;
 }
 
-bool PaxosMsg::LearnChosen(ulong64 paxosID_, char subtype_, ulong64 proposalID_)
+bool PaxosMsg::LearnChosen(ulong64 paxosID_, unsigned nodeID_, char subtype_, ulong64 proposalID_)
 {
-	Init(paxosID_, LEARN_CHOSEN);
+	Init(paxosID_, LEARN_CHOSEN, nodeID_);
 	subtype = subtype_;
 	proposalID = proposalID_;
 	
 	return true;
 }
 
-bool PaxosMsg::RequestChosen(ulong64 paxosID_)
+bool PaxosMsg::RequestChosen(ulong64 paxosID_, unsigned nodeID_)
 {
-	Init(paxosID_, REQUEST_CHOSEN);
+	Init(paxosID_, REQUEST_CHOSEN, nodeID_);
 	
 	return true;
 }
@@ -107,12 +108,14 @@ bool PaxosMsg::Read(ByteString& data)
 	CheckOverflow();
 	ReadNumber(paxosID); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadChar(type);
+	ReadChar(type); CheckOverflow();
+	ReadSeparator(); CheckOverflow();
+	ReadNumber(nodeID);
 		
 	if (type == REQUEST_CHOSEN)
 	{
 		ValidateLength();
-		RequestChosen(paxosID);
+		RequestChosen(paxosID, nodeID);
 		return true;
 	}
 	
@@ -127,7 +130,7 @@ bool PaxosMsg::Read(ByteString& data)
 		ReadNumber(proposalID);
 		
 		ValidateLength();
-		PrepareRequest(paxosID, proposalID);
+		PrepareRequest(paxosID, nodeID, proposalID);
 		return true;
 	}
 	else if (type == PREPARE_RESPONSE)
@@ -151,7 +154,7 @@ bool PaxosMsg::Read(ByteString& data)
 		if (response == PREPARE_REJECTED || response == PREPARE_CURRENTLY_OPEN)
 		{
 			ValidateLength();
-			PrepareResponse(paxosID, proposalID, response);
+			PrepareResponse(paxosID, nodeID, proposalID, response);
 			return true;
 		}
 
@@ -165,7 +168,7 @@ bool PaxosMsg::Read(ByteString& data)
 		if (pos - data.buffer != data.length - length)
 			return false;
 
-		PrepareResponse(paxosID, proposalID, response, acceptedProposalID,
+		PrepareResponse(paxosID, nodeID, proposalID, response, acceptedProposalID,
 			ByteString(data.size - (pos - data.buffer), length, pos));
 		return true;
 	}
@@ -183,7 +186,7 @@ bool PaxosMsg::Read(ByteString& data)
 		if (pos - data.buffer != data.length - length)
 			return false;
 		
-		ProposeRequest(paxosID, proposalID, ByteString(data.size - (pos - data.buffer),
+		ProposeRequest(paxosID, nodeID, proposalID, ByteString(data.size - (pos - data.buffer),
 			length, pos));
 		return true;
 	}
@@ -202,7 +205,7 @@ bool PaxosMsg::Read(ByteString& data)
 				return false;
 		
 		ValidateLength();
-		ProposeResponse(paxosID, proposalID, response);
+		ProposeResponse(paxosID, nodeID, proposalID, response);
 		return true;
 	}
 	else if (type == LEARN_CHOSEN)
@@ -221,7 +224,7 @@ bool PaxosMsg::Read(ByteString& data)
 			if (pos - data.buffer != data.length - length)
 				return false;
 			
-			LearnChosen(paxosID, LEARN_VALUE,
+			LearnChosen(paxosID, nodeID, LEARN_VALUE,
 				ByteString(data.size - (pos - data.buffer), length, pos));
 		}
 		else
@@ -229,7 +232,7 @@ bool PaxosMsg::Read(ByteString& data)
 			ReadNumber(proposalID);
 			
 			ValidateLength();
-			LearnChosen(paxosID, LEARN_PROPOSAL, proposalID);
+			LearnChosen(paxosID, nodeID, LEARN_PROPOSAL, proposalID);
 			return true;
 
 		}
@@ -244,34 +247,34 @@ bool PaxosMsg::Write(ByteString& data)
 	int required;
 	
 	if (type == PREPARE_REQUEST)
-		required = snprintf(data.buffer, data.size, "%llu#%c#%llu", paxosID, type, proposalID);
+		required = snprintf(data.buffer, data.size, "%llu#%c#%d#%llu", paxosID, type, nodeID, proposalID);
 	else if (type == PREPARE_RESPONSE)
 	{
 		if (subtype == PREPARE_REJECTED || subtype == PREPARE_CURRENTLY_OPEN)
-			required = snprintf(data.buffer, data.size, "%llu#%c#%llu#%c", paxosID, type,
+			required = snprintf(data.buffer, data.size, "%llu#%c#%d#%llu#%c", paxosID, type, nodeID,
 				proposalID, subtype);
 		else
-			required = snprintf(data.buffer, data.size, "%llu#%c#%llu#%c#%llu#%d#%.*s", paxosID,
-				type, proposalID, subtype, acceptedProposalID, 
+			required = snprintf(data.buffer, data.size, "%llu#%c#%d#%llu#%c#%llu#%d#%.*s", paxosID,
+				type, nodeID, proposalID, subtype, acceptedProposalID, 
 				value.length, value.length, value.buffer);
 	}
 	else if (type == PROPOSE_REQUEST)
-		required = snprintf(data.buffer, data.size, "%llu#%c#%llu#%d#%.*s", paxosID, type,
+		required = snprintf(data.buffer, data.size, "%llu#%c#%d#%llu#%d#%.*s", paxosID, type, nodeID,
 			proposalID, value.length, value.length, value.buffer);
 	else if (type == PROPOSE_RESPONSE)
-		required = snprintf(data.buffer, data.size, "%llu#%c#%llu#%c", paxosID, type,
+		required = snprintf(data.buffer, data.size, "%llu#%c#%d#%llu#%c", paxosID, type, nodeID,
 			proposalID, subtype);
 	else if (type == LEARN_CHOSEN)
 		{
 		if (subtype == LEARN_VALUE)
-			required = snprintf(data.buffer, data.size, "%llu#%c#%c#%d#%.*s", paxosID, type,
+			required = snprintf(data.buffer, data.size, "%llu#%c#%d#%c#%d#%.*s", paxosID, type, nodeID,
 				subtype, value.length, value.length, value.buffer);
 		else
-			required = snprintf(data.buffer, data.size, "%llu#%c#%c#%llu", paxosID, type,
+			required = snprintf(data.buffer, data.size, "%llu#%c#%d#%c#%llu", paxosID, type, nodeID,
 				subtype, proposalID);
 		}
 	else if (type == REQUEST_CHOSEN)
-		required = snprintf(data.buffer, data.size, "%llu#%c", paxosID, type);
+		required = snprintf(data.buffer, data.size, "%llu#%c#%d", paxosID, type, nodeID);
 	else
 		return false;
 	

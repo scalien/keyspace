@@ -10,7 +10,6 @@ class LogItem
 {
 public:
 	ulong64					paxosID;
-	//ByteArray<65*KB>		value;
 	ByteString				value;
 };
 

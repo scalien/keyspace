@@ -1,73 +1,47 @@
 #include "LogQueue.h"
 
-bool LogQueue::Push(char protocol, ByteString value)
+bool LogQueue::Push(ByteString value)
 {
-	QueueItem* qi = new QueueItem();
-	
-	qi->protocol = protocol;
-	qi->value = value;
-	
-	queue.Add(qi);
+	ByteString* bs = new ByteString();
+
+	*bs = value;
+
+	queue.Add(bs);
 	
 	return true;
 }
 
 
-QueueItem* LogQueue::Next()
+ByteString* LogQueue::Next()
 {
-	QueueItem** it;
+	ByteString** it;
 	
 	it = queue.Tail();
 	
 	if (it == NULL)
-	{
 		return NULL;
-	}
 		
 	return *it;
 }
 
-QueueItem* LogQueue::Pop()
+ByteString* LogQueue::Pop()
 {
-	QueueItem** it;
-	QueueItem* qi;
+	ByteString** it;
+	ByteString* bs;
 	
 	it = queue.Tail();
 	
 	if (it == NULL)
-	{
 		return NULL;
-	}
 	
-	qi = *it;
+	bs = *it;
 	
-	queue.Remove(it);
+	queue.Remove(bs);
 	
-	return qi;
+	return bs;
 }
 
 int LogQueue::Size()
 {
 	return queue.Size();
-}
-
-bool LogQueue::RemoveAll(char protocol)
-{
-	QueueItem** it;
-	QueueItem* qi;
-	
-	for (it = queue.Head(); it != NULL; /* advanced in body */)
-	{
-		qi = *it;
-		
-		if (qi->protocol == protocol)
-		{
-			it = queue.Remove(it);
-			delete qi;
-		}
-		else
-			it = queue.Next(it);
-	}
-	
-	return true;
 }

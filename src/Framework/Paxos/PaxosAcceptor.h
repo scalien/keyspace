@@ -2,9 +2,8 @@
 #define PAXOSACCEPTOR_H
 
 #include "System/Common.h"
-#include "System/IO/IOProcessor.h"
-#include "System/IO/Socket.h"
 #include "System/Events/Scheduler.h"
+#include "Framework/Transport/TransportWriter.h"
 #include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "Framework/Database/Transaction.h"
 #include "PaxosMsg.h"
@@ -15,45 +14,36 @@
 
 class PaxosAcceptor
 {
-public:
-							PaxosAcceptor();
-	
-	bool					Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
-	
-	void					OnRead();
-	void					OnWrite();
+friend class ReplicatedLog;
 
+public:
+	PaxosAcceptor();
+	
+	void					Init(TransportWriter** writer_, Scheduler* scheduler_, PaxosConfig* config_);
+	
 	void					SetPaxosID(ulong64 paxosID_);
 
 protected:
 	bool					ReadState();
 	bool					WriteState(Transaction* transaction);
 	
-	void					SendReply();
+	void					SendReply(unsigned nodeID);
 
-	void					ProcessMsg();	
-	virtual void			OnPrepareRequest();
-	virtual void			OnProposeRequest();
+	void					OnPrepareRequest(PaxosMsg& msg_);
+	void					OnProposeRequest(PaxosMsg& msg_);
 
 	void					OnDBComplete();
 
-	IOProcessor*			ioproc;
+	TransportWriter**		writers;
 	Scheduler*				scheduler;
-	Socket					socket;
 
-	UDPRead					udpread;
-	UDPWrite				udpwrite;
-	
-	ByteArray<64*KB>		rdata;
-	ByteArray<64*KB>		wdata;
+	ByteArray<PAXOS_BUFSIZE>wdata;
 			
-	MFunc<PaxosAcceptor>	onRead;
-	MFunc<PaxosAcceptor>	onWrite;
-	
 // single paxos specific:
 	ulong64					paxosID;
 	PaxosMsg				msg;
 	
+	unsigned				senderID;
 	PaxosConfig*			config;
 	PaxosAcceptorState		state;
 
@@ -61,7 +51,7 @@ protected:
 	Table*					table;
 	Transaction				transaction;
 	MultiDatabaseOp			mdbop;
-	ByteArray<VALUE_SIZE>	bytearrays[4];
+	ByteArray<128>			bytearrays[4];
 	ulong64					writtenPaxosID;
 
 	MFunc<PaxosAcceptor>	onDBComplete;

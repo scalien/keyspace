@@ -13,6 +13,7 @@ LogCache::LogCache()
 	{
 		buffers[i] = (char*)malloc(65*KB);
 		logItems[i].value = ByteString(65*KB, 0, buffers[i]);
+		// TODO: 65K fixed here, can't change it to 1MB
 	}
 }
 

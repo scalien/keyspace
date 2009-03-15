@@ -4,6 +4,7 @@
 #include "Framework/Transport/TransportReader.h"
 #include "Framework/Transport/TransportWriter.h"
 #include "Framework/Paxos/PaxosConfig.h"
+#include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseProposer.h"
 #include "PLeaseAcceptor.h"
@@ -28,6 +29,8 @@ public:
 	void				SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback);
 	
 private:
+	void				InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
+	
 	TransportReader*	reader;
 	TransportWriter**	writers;
 	

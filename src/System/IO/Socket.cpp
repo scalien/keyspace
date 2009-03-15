@@ -123,8 +123,11 @@ bool Socket::Connect(Endpoint &endpoint)
 	
 	if (ret < 0)
 	{
-		Log_Errno();
-		return false;
+		if (errno != EINPROGRESS)
+		{
+			Log_Errno();
+			return false;
+		}
 	}
 
 	return true;
@@ -149,9 +152,15 @@ bool Socket::GetEndpoint(Endpoint &endpoint)
 
 void Socket::Close()
 {
+	int ret;
+	
 	if (fd != -1)
 	{
-		close(fd);
+		ret = close(fd);
+
+		if (ret < 0)
+			Log_Errno();
+
 		fd = -1;
 	}
 }

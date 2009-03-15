@@ -7,8 +7,6 @@
 #include "PaxosConsts.h"
 
 PaxosProposer::PaxosProposer() :
-	onRead(this, &PaxosProposer::OnRead),
-	onWrite(this, &PaxosProposer::OnWrite),
 	onPrepareTimeout(this, &PaxosProposer::OnPrepareTimeout),
 	onProposeTimeout(this, &PaxosProposer::OnProposeTimeout),
 	prepareTimeout(PAXOS_TIMEOUT, &onPrepareTimeout),
@@ -16,30 +14,15 @@ PaxosProposer::PaxosProposer() :
 {
 }
 
-bool PaxosProposer::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
+void PaxosProposer::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
 {
-	// I/O framework
-	ioproc = ioproc_;
+	writers = writers_;
 	scheduler = scheduler_;
 	config = config_;
 	
 	// Paxos variables
 	paxosID = 0;
 	state.Init();
-	
-	if (!socket.Create(UDP)) return false;
-	if (!socket.Bind(config->port + PAXOS_PROPOSER_PORT_OFFSET)) return false;
-	if (!socket.SetNonblocking()) return false;
-	
-	udpread.fd = socket.fd;
-	udpread.data = rdata;
-	udpread.onComplete = &onRead;
-	
-	udpwrite.fd = socket.fd;
-	udpwrite.data = wdata;
-	udpwrite.onComplete = &onWrite;
-	
-	return ioproc->Add(&udpread);
 }
 
 void PaxosProposer::SetPaxosID(ulong64 paxosID_)
@@ -61,9 +44,7 @@ bool PaxosProposer::Propose(ByteString& value)
 		StartProposing();
 	}
 	else
-	{
 		StartPreparing();
-	}
 	
 	return true;
 }
@@ -73,98 +54,28 @@ bool PaxosProposer::IsActive()
 	return (state.preparing || state.proposing);
 }
 
-void PaxosProposer::OnRead()
-{
-	Log_Trace();
-		
-	Log_Message("Participant %d received message %.*s from %s",
-		config->nodeID, udpread.data.length, udpread.data.buffer, udpread.endpoint.ToString());
-	
-	if (!msg.Read(udpread.data))
-	{
-		Log_Message("PaxosMsg::Read() failed: invalid message format");
-		ioproc->Add(&udpread); // read again
-	}
-	else
-		ProcessMsg();
-}
-
-void PaxosProposer::OnWrite()
-{
-	Log_Trace();
-
-	numSent++;
-
-	sending_to = config->endpoints.Next(sending_to);
-
-	SendMessage();
-}
-
 void PaxosProposer::BroadcastMessage()
 {
 	Log_Trace();
-
-	// remove outstanding read (we're called from a timeout)
-	if (udpread.active)
-		ioproc->Remove(&udpread);
-
-	numSent		= 0;
+	
 	numReceived = 0;
 	numAccepted = 0;
 	numRejected = 0;
-
-	if (!msg.Write(udpwrite.data))
-	{
-		ioproc->Add(&udpread);
-		return;
-	}
 	
-	sending_to = config->endpoints.Head();
-	SendMessage();
+	msg.Write(wdata);
+	
+	for (unsigned nodeID = 0; nodeID < config->numNodes; nodeID++)
+		writers[nodeID]->Write(wdata);
 }
 
-void PaxosProposer::SendMessage()
-{
-	if (sending_to != NULL)
-	{
-		udpwrite.endpoint = *sending_to;
-		
-		if (msg.type == PREPARE_REQUEST || msg.type == PROPOSE_REQUEST)
-			udpwrite.endpoint.SetPort(udpwrite.endpoint.GetPort() + PAXOS_ACCEPTOR_PORT_OFFSET);
-		else if (msg.type == LEARN_CHOSEN)
-			udpwrite.endpoint.SetPort(udpwrite.endpoint.GetPort() + PAXOS_LEARNER_PORT_OFFSET);
-		else
-			ASSERT_FAIL();
-		
-		Log_Message("Participant %d sending message %.*s to %s",
-			config->nodeID, udpwrite.data.length, udpwrite.data.buffer,
-			udpwrite.endpoint.ToString());
-		
-		ioproc->Add(&udpwrite);
-	}
-	else
-		ioproc->Add(&udpread);
-}
-
-void PaxosProposer::ProcessMsg()
-{
-	if (msg.type == PREPARE_RESPONSE)
-		OnPrepareResponse();
-	else if (msg.type == PROPOSE_RESPONSE)
-		OnProposeResponse();
-	else
-		ASSERT_FAIL();
-}
-
-void PaxosProposer::OnPrepareResponse()
+void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 {
 	Log_Trace();
 
+	msg = msg_;
+
 	if (!state.preparing || msg.proposalID != state.proposalID)
-	{
-		ioproc->Add(&udpread);
 		return;
-	}
 		
 	numReceived++;
 	
@@ -184,83 +95,39 @@ void PaxosProposer::OnPrepareResponse()
 			ASSERT_FAIL();
 	}
 	
-	bool read = TryFinishPreparing();
-		
-	if (read)
-		ioproc->Add(&udpread);
-}
-
-// returns whether to put out an IORead
-bool PaxosProposer::TryFinishPreparing()
-{
-	Log_Trace();
-			
 	if (numRejected >= ceil(config->numNodes / 2))
-	{
 		StartPreparing();
-		return false;
-	}
-	
-	// see if we have enough positive replies to advance	
-	int numPositive = numReceived - numRejected;
-	if (numPositive >= config->MinMajority())
-	{
+	else if ((numReceived - numRejected) >= config->MinMajority())
 		StartProposing();
-		return false;
-	}
-	
-	if (numReceived == numSent)
-	{
+	else if (numReceived == config->numNodes)
 		StartPreparing();
-		return false;
-	}
-	
-	return true;
 }
 
-void PaxosProposer::OnProposeResponse()
+
+void PaxosProposer::OnProposeResponse(PaxosMsg& msg_)
 {
 	Log_Trace();
+	
+	msg = msg_;
 	
 	if (!state.proposing || msg.proposalID != state.proposalID)
-	{
-		ioproc->Add(&udpread);
 		return;
-	}
 	
 	numReceived++;
 	
 	if (msg.subtype == PROPOSE_ACCEPTED)
 		numAccepted++;
 
-	bool read = TryFinishProposing();
-		
-	if (read)
-		ioproc->Add(&udpread);
-}
-
-// returns whether to put out an IORead
-bool PaxosProposer::TryFinishProposing()
-{
-	Log_Trace();
-	
 	// see if we have enough positive replies to advance
 	if (numAccepted >= config->MinMajority())
 	{
 		// a majority have accepted our proposal, we have consensus
 		StopProposing();
-		msg.LearnChosen(paxosID, LEARN_PROPOSAL, state.proposalID);
+		msg.LearnChosen(paxosID, config->nodeID, LEARN_PROPOSAL, state.proposalID);
 		BroadcastMessage();
-		return false;
 	}
-	
-	if (numReceived == numSent)
-	{
+	else if (numReceived == config->numNodes)
 		StartPreparing();
-		return false;
-	}
-	
-	return true;
 }
 
 void PaxosProposer::StopPreparing()
@@ -292,7 +159,7 @@ void PaxosProposer::StartPreparing()
 	
 	state.highestReceivedProposalID = 0; // TODO: should be -1 ?
 	
-	msg.PrepareRequest(paxosID, state.proposalID);
+	msg.PrepareRequest(paxosID, config->nodeID, state.proposalID);
 	
 	BroadcastMessage();
 	
@@ -307,7 +174,7 @@ void PaxosProposer::StartProposing()
 
 	state.proposing = true;
 
-	msg.ProposeRequest(paxosID, state.proposalID, state.value);
+	msg.ProposeRequest(paxosID, config->nodeID, state.proposalID, state.value);
 
 	BroadcastMessage();
 	

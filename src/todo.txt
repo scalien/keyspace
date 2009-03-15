@@ -1,16 +1,10 @@
 -	coordinate ReplicatedDB and Paxos commits
 
--	commit and non-commit rounds:
-	1. First I thought I can add a special commit flag to the messages, so
-	some messages can be tagged to be commited, which would trigger the
-	commit of previous in-memory rounds as soon as the acceptor receives
-	a message flagged; however, what if the proposer looses out and some
-	other proposers non-commit proposal wins out --- this would result in
-	some nodes having commited, possibly a majority not commiting,
-	violating the fundamental Paxos invariant.
-	2. How about special commit values? This doesn't work either.
-	
-	the only way out seems to be to use TCP!
+-	max. value size and LogCache!
+
+-	pause acceptor while it is commiting
+
+
 
 
 

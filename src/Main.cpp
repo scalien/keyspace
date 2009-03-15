@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
 	ReplicatedLog rl;
 	rl.Init(ioproc, eventloop, argv[1]);
 	
-	//TestDB testdb;
-	//testdb.Init(ioproc, eventloop, &rl);
+	TestDB testdb;
+	testdb.Init(ioproc, eventloop, &rl);
 	
 	eventloop->Run();
 }
