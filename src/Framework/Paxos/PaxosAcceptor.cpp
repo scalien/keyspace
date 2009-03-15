@@ -136,6 +136,9 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 {
 	Log_Trace();
 	
+	if (mdbop.active)
+		return;
+	
 	msg = msg_;
 	
 	senderID = msg.nodeID;
@@ -162,6 +165,9 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 {
 	Log_Trace();
+	
+	if (mdbop.active)
+		return;
 	
 	msg = msg_;
 	
