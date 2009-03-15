@@ -5,9 +5,9 @@
 #include "System/IO/IOProcessor.h"
 #include "System/IO/Socket.h"
 #include "System/Events/Scheduler.h"
+#include "Framework/Paxos/PaxosConfig.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
-#include "PaxosConfig.h"
 
 class PLeaseAcceptor
 {

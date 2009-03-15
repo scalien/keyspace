@@ -45,7 +45,9 @@ public:
 	
 	CFunc(Callback callback_) { callback = callback_; }
 	
-	void Execute() { (*callback)(); }
+	CFunc() { callback = 0; }
+	
+	void Execute() { if (callback) (*callback)(); }
 };
 
 inline void Call(Callable* callable) { if (callable) callable->Execute(); }

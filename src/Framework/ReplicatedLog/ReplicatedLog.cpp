@@ -1,6 +1,6 @@
 #include "ReplicatedLog.h"
 #include <string.h>
-#include "PaxosConsts.h"
+#include "Framework/Paxos/PaxosConsts.h"
 
 ReplicatedLog::ReplicatedLog()
 :	onCatchupTimeout(this, &ReplicatedLog::OnCatchupTimeout),

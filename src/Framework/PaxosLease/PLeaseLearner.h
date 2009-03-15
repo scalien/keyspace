@@ -7,9 +7,9 @@
 #include "System/Events/Scheduler.h"
 #include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "Framework/Database/Transaction.h"
+#include "Framework/Paxos/PaxosConfig.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
-#include "PaxosConfig.h"
 
 class PLeaseLearner
 {

@@ -34,7 +34,15 @@ public:
 class IOOperation
 {
 public:
-	IOOperation()		{ fd = -1; onComplete = NULL; onClose = NULL; active = false; }
+	IOOperation()
+	{
+		fd = -1;
+		active = false;
+		offset = 0;
+		next = NULL;
+		onComplete = NULL; 
+		onClose = NULL; 
+	}
 
 	ByteString		data;
 	
@@ -43,6 +51,7 @@ public:
 	int				offset;
 	
 	bool			active;
+	IOOperation*	next;
 
 	Callable*		onComplete;
 	Callable*		onClose;

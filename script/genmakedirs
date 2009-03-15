@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo '$(BUILD_DIR):'
+echo '	-mkdir -p $(BUILD_DIR) \'
+find ./src -mindepth 2 -name '.svn' | sed -e "s/^\.\/src\/\(.*\).svn\$/\t\t\$(BUILD_DIR)\/\1 \\\/"

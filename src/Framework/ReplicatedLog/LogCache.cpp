@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "LogCache.h"
 
 #define INDEX(n) (((n) + size) % size)

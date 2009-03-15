@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "ALL_OBJECTS = \\"
+find ./src -name "*.cpp" | sed -e "s/^\.\/src\/\(.*\).cpp\$/\t\$(BUILD_DIR)\/\1.o \\\/"

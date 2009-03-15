@@ -78,6 +78,8 @@ targets: $(BUILD_DIR) $(BASE_DIR)/scalien
 #
 ##############################################################################
 
+include Makefile.objects
+
 SCALIEN_LIBS =
 	
 SYSTEM_OBJECTS = \
@@ -89,18 +91,10 @@ SYSTEM_OBJECTS = \
 	$(BUILD_DIR)/System/Common.o \
 
 FRAMEWORK_OBJECTS = \
-	$(BUILD_DIR)/Framework/MasterLease/MasterLease.o \
-	$(BUILD_DIR)/Framework/MasterLease/MasterLeaseMsg.o \
-	$(BUILD_DIR)/Framework/Paxos/PaxosConfig.o \
-	$(BUILD_DIR)/Framework/Paxos/Paxos.o \
-	$(BUILD_DIR)/Framework/Paxos/PaxosMsg.o \
-	$(BUILD_DIR)/Framework/ReplicatedLog/LogCache.o \
-	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLog.o \
-	$(BUILD_DIR)/Framework/Database/Database.o \
-	$(BUILD_DIR)/Framework/Database/Table.o \
-	$(BUILD_DIR)/Framework/Database/Transaction.o \
+	$(BUILD_DIR)/Framework/Transport/TransportUDPReader.o \
 
 OBJECTS = \
+	$(ALL_OBJECTS) \
 	$(SYSTEM_OBJECTS) \
 	$(FRAMEWORK_OBJECTS) \
 	$(BUILD_DIR)/Main.o
@@ -108,17 +102,18 @@ OBJECTS = \
 LIBS = \
 	$(SCALIEN_LIBS)
 
-$(BUILD_DIR):
-	-mkdir -p $(BUILD_DIR) \
-		$(BUILD_DIR)/System \
-		$(BUILD_DIR)/System/Events \
-		$(BUILD_DIR)/System/IO \
-		$(BUILD_DIR)/Framework \
-		$(BUILD_DIR)/Framework/MasterLease \
-		$(BUILD_DIR)/Framework/Paxos \
-		$(BUILD_DIR)/Framework/ReplicatedLog \
-		$(BUILD_DIR)/Framework/Database \
-
+#$(BUILD_DIR):
+#	-mkdir -p $(BUILD_DIR) \
+#		$(BUILD_DIR)/System \
+#		$(BUILD_DIR)/System/Events \
+#		$(BUILD_DIR)/System/IO \
+#		$(BUILD_DIR)/Framework \
+#		$(BUILD_DIR)/Framework/MasterLease \
+#		$(BUILD_DIR)/Framework/Paxos \
+#		$(BUILD_DIR)/Framework/ReplicatedLog \
+#		$(BUILD_DIR)/Framework/Database \
+#		$(BUILD_DIR)/Framework/Transport \
+include Makefile.dirs
 
 $(SCALIEN_LIBS):
 	cd $(SCALIEN_DIR); $(MAKE) targets BUILD=$(BUILD)

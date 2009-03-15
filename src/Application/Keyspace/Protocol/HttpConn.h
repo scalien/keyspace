@@ -1,7 +1,7 @@
 #ifndef HTTP_CONN_H
 #define HTTP_CONN_H
 
-#include "TCPConn.h"
+#include "Framework/Transport/TCPConn.h"
 #include "HttpRequest.h"
 #include "../Database/KeyspaceDB.h"
 

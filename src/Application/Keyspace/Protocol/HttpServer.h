@@ -1,7 +1,7 @@
 #ifndef HTTP_SERVER_H
 #define HTTP_SERVER_H
 
-#include "TCPServer.h"
+#include "Framework/Transport/TCPServer.h"
 #include "HttpConn.h"
 
 class KeyspaceDB;

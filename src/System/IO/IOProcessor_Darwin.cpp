@@ -175,6 +175,8 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		Log_Message("kq < 0");
 		return false;
 	}
+
+	// TODO Remove(FileOp*)
 	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 		filter = EVFILT_READ;
