@@ -1,5 +1,6 @@
 #include "PaxosLease.h"
 #include "PLeaseConsts.h"
+#include "System/Common.h"
 #include "Framework/Transport/TransportUDPReader.h"
 #include "Framework/Transport/TransportUDPWriter.h"
 
@@ -14,7 +15,7 @@ void PaxosLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* 
 	Endpoint	endpoint;
 	Endpoint*	it;
 	
-	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * config_->numNodes);
+	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * config_->numNodes);
 	it = config_->endpoints.Head();
 	for (i = 0; i < config_->numNodes; i++)
 	{

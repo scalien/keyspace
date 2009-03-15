@@ -68,6 +68,8 @@ debug:
 
 release:
 	$(MAKE) targets BUILD="release"
+
+include Makefile.dirs
 	
 targets: $(BUILD_DIR) $(BASE_DIR)/scalien
 
@@ -95,8 +97,6 @@ FRAMEWORK_OBJECTS = \
 
 OBJECTS = \
 	$(ALL_OBJECTS) \
-	$(SYSTEM_OBJECTS) \
-	$(FRAMEWORK_OBJECTS) \
 	$(BUILD_DIR)/Main.o
 
 LIBS = \
@@ -113,7 +113,6 @@ LIBS = \
 #		$(BUILD_DIR)/Framework/ReplicatedLog \
 #		$(BUILD_DIR)/Framework/Database \
 #		$(BUILD_DIR)/Framework/Transport \
-include Makefile.dirs
 
 $(SCALIEN_LIBS):
 	cd $(SCALIEN_DIR); $(MAKE) targets BUILD=$(BUILD)
