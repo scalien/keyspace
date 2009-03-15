@@ -2,7 +2,6 @@
 
 -	max. value size and LogCache!
 
--	pause acceptor while it is commiting
 
 
 
