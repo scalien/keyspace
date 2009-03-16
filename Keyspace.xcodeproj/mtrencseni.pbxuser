@@ -3598,6 +3598,16 @@
 			5421ECC90F6DB065004BBDB4 /* PBXTextBookmark */ = 5421ECC90F6DB065004BBDB4 /* PBXTextBookmark */;
 			5421ECCA0F6DB065004BBDB4 /* PBXTextBookmark */ = 5421ECCA0F6DB065004BBDB4 /* PBXTextBookmark */;
 			5421ECCB0F6DB065004BBDB4 /* PBXTextBookmark */ = 5421ECCB0F6DB065004BBDB4 /* PBXTextBookmark */;
+			5421ECD00F6DB1A3004BBDB4 /* PBXTextBookmark */ = 5421ECD00F6DB1A3004BBDB4 /* PBXTextBookmark */;
+			5421ECD10F6DB1A3004BBDB4 /* PBXTextBookmark */ = 5421ECD10F6DB1A3004BBDB4 /* PBXTextBookmark */;
+			5421ECD20F6DB1A3004BBDB4 /* PBXTextBookmark */ = 5421ECD20F6DB1A3004BBDB4 /* PBXTextBookmark */;
+			5421ECD30F6DB1A3004BBDB4 /* PBXTextBookmark */ = 5421ECD30F6DB1A3004BBDB4 /* PBXTextBookmark */;
+			5421ECD40F6DB1A3004BBDB4 /* PBXTextBookmark */ = 5421ECD40F6DB1A3004BBDB4 /* PBXTextBookmark */;
+			5421ECD50F6DB1A3004BBDB4 /* PBXTextBookmark */ = 5421ECD50F6DB1A3004BBDB4 /* PBXTextBookmark */;
+			5421ECD60F6DB1A3004BBDB4 /* PBXTextBookmark */ = 5421ECD60F6DB1A3004BBDB4 /* PBXTextBookmark */;
+			5421ECD80F6DB2A7004BBDB4 /* PBXTextBookmark */ = 5421ECD80F6DB2A7004BBDB4 /* PBXTextBookmark */;
+			5421ECD90F6DB2A7004BBDB4 /* PBXTextBookmark */ = 5421ECD90F6DB2A7004BBDB4 /* PBXTextBookmark */;
+			5421ECDA0F6DB2A7004BBDB4 /* PBXTextBookmark */ = 5421ECDA0F6DB2A7004BBDB4 /* PBXTextBookmark */;
 			544612330F55CED700EFBBDE = 544612330F55CED700EFBBDE /* PBXTextBookmark */;
 			544612340F55CED700EFBBDE = 544612340F55CED700EFBBDE /* PBXTextBookmark */;
 			544612350F55CED700EFBBDE = 544612350F55CED700EFBBDE /* PBXTextBookmark */;
@@ -8019,9 +8029,9 @@
 	};
 	5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {869, 3298}}";
-			sepNavSelRange = "{3628, 0}";
-			sepNavVisRange = "{1403, 1403}";
+			sepNavIntBoundsRect = "{{0, 0}, {869, 3400}}";
+			sepNavSelRange = "{3575, 0}";
+			sepNavVisRange = "{0, 1400}";
 		};
 	};
 	5421D1E20F5C8846004BBDB4 /* PBXTextBookmark */ = {
@@ -8124,7 +8134,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 7";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -9494,7 +9504,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 223";
 		rLen = 0;
-		rLoc = 2996;
+		rLoc = 3027;
 		rType = 0;
 		vrLen = 1103;
 		vrLoc = 4410;
@@ -9514,7 +9524,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 223";
 		rLen = 0;
-		rLoc = 2996;
+		rLoc = 3027;
 		rType = 0;
 		vrLen = 1103;
 		vrLoc = 4410;
@@ -9554,7 +9564,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 7";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -10144,7 +10154,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 284";
 		rLen = 0;
-		rLoc = 4163;
+		rLoc = 4225;
 		rType = 0;
 		vrLen = 695;
 		vrLoc = 5331;
@@ -10384,7 +10394,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 284";
 		rLen = 0;
-		rLoc = 4163;
+		rLoc = 4225;
 		rType = 0;
 		vrLen = 695;
 		vrLoc = 5331;
@@ -11443,7 +11453,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 275";
 		rLen = 0;
-		rLoc = 3987;
+		rLoc = 4049;
 		rType = 0;
 		vrLen = 1416;
 		vrLoc = 153;
@@ -11623,7 +11633,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 275";
 		rLen = 0;
-		rLoc = 3987;
+		rLoc = 4049;
 		rType = 0;
 		vrLen = 778;
 		vrLoc = 5248;
@@ -12323,7 +12333,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 275";
 		rLen = 0;
-		rLoc = 3987;
+		rLoc = 4049;
 		rType = 0;
 		vrLen = 1416;
 		vrLoc = 153;
@@ -15472,7 +15482,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 205";
 		rLen = 0;
-		rLoc = 2996;
+		rLoc = 3027;
 		rType = 0;
 		vrLen = 1424;
 		vrLoc = 153;
@@ -15542,7 +15552,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 205";
 		rLen = 0;
-		rLoc = 2996;
+		rLoc = 3027;
 		rType = 0;
 		vrLen = 1286;
 		vrLoc = 4261;
@@ -15562,7 +15572,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 205";
 		rLen = 0;
-		rLoc = 2996;
+		rLoc = 3027;
 		rType = 0;
 		vrLen = 1209;
 		vrLoc = 4594;
@@ -20956,7 +20966,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 287";
 		rLen = 0;
-		rLoc = 4230;
+		rLoc = 4292;
 		rType = 0;
 		vrLen = 1229;
 		vrLoc = 4797;
@@ -21146,7 +21156,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 287";
 		rLen = 0;
-		rLoc = 4230;
+		rLoc = 4292;
 		rType = 0;
 		vrLen = 1229;
 		vrLoc = 4797;
@@ -24460,7 +24470,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 259";
 		rLen = 19;
-		rLoc = 3908;
+		rLoc = 3970;
 		rType = 0;
 		vrLen = 1228;
 		vrLoc = 4798;
@@ -24790,7 +24800,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 259";
 		rLen = 19;
-		rLoc = 3908;
+		rLoc = 3970;
 		rType = 0;
 		vrLen = 1228;
 		vrLoc = 4798;
@@ -24810,7 +24820,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 259";
 		rLen = 19;
-		rLoc = 3908;
+		rLoc = 3970;
 		rType = 0;
 		vrLen = 1280;
 		vrLoc = 4358;
@@ -24824,7 +24834,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 259";
 		rLen = 19;
-		rLoc = 3908;
+		rLoc = 3970;
 		rType = 0;
 		vrLen = 1252;
 		vrLoc = 4358;
@@ -24834,7 +24844,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 259";
 		rLen = 19;
-		rLoc = 3908;
+		rLoc = 3970;
 		rType = 0;
 		vrLen = 1252;
 		vrLoc = 4358;
@@ -24977,7 +24987,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 232";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1144;
 		vrLoc = 3261;
@@ -25126,7 +25136,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 232";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1144;
 		vrLoc = 3261;
@@ -26749,7 +26759,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27089,7 +27099,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27299,7 +27309,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27309,7 +27319,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27319,7 +27329,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27339,7 +27349,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 232";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1300;
 		vrLoc = 3406;
@@ -27349,7 +27359,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 3";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -27369,7 +27379,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 232";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1300;
 		vrLoc = 3406;
@@ -27526,7 +27536,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 232";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1313;
 		vrLoc = 3404;
@@ -27576,7 +27586,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 232";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1313;
 		vrLoc = 3404;
@@ -27804,7 +27814,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 237";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1189;
 		vrLoc = 4001;
@@ -27974,7 +27984,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 237";
 		rLen = 0;
-		rLoc = 3542;
+		rLoc = 3573;
 		rType = 0;
 		vrLen = 1189;
 		vrLoc = 4001;
@@ -28072,7 +28082,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -28132,7 +28142,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 1";
 		rLen = 0;
-		rLoc = 152;
+		rLoc = 113;
 		rType = 0;
 		vrLen = 0;
 		vrLoc = 0;
@@ -30385,7 +30395,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 17";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 99;
 		rType = 0;
 		vrLen = 706;
 		vrLoc = 0;
@@ -30605,7 +30615,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 17";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 99;
 		rType = 0;
 		vrLen = 706;
 		vrLoc = 0;
@@ -30665,7 +30675,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 17";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 99;
 		rType = 0;
 		vrLen = 706;
 		vrLoc = 0;
@@ -34927,7 +34937,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 5";
 		rLen = 0;
-		rLoc = 103;
+		rLoc = 77;
 		rType = 0;
 		vrLen = 181;
 		vrLoc = 0;
@@ -34987,7 +34997,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 166";
 		rLen = 0;
-		rLoc = 3628;
+		rLoc = 3690;
 		rType = 0;
 		vrLen = 1355;
 		vrLoc = 2353;
@@ -35687,7 +35697,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 152";
 		rLen = 0;
-		rLoc = 3021;
+		rLoc = 3052;
 		rType = 0;
 		vrLen = 1181;
 		vrLoc = 2824;
@@ -35707,7 +35717,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 195";
 		rLen = 0;
-		rLoc = 4074;
+		rLoc = 4136;
 		rType = 0;
 		vrLen = 1225;
 		vrLoc = 3416;
@@ -35727,7 +35737,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 164";
 		rLen = 0;
-		rLoc = 3541;
+		rLoc = 3572;
 		rType = 0;
 		vrLen = 1308;
 		vrLoc = 3084;
@@ -35747,7 +35757,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 183";
 		rLen = 0;
-		rLoc = 3799;
+		rLoc = 3861;
 		rType = 0;
 		vrLen = 1309;
 		vrLoc = 1781;
@@ -36717,7 +36727,7 @@
 		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
 		name = "todo.txt: 5";
 		rLen = 0;
-		rLoc = 103;
+		rLoc = 77;
 		rType = 0;
 		vrLen = 181;
 		vrLoc = 0;
@@ -37437,7 +37447,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 166";
 		rLen = 0;
-		rLoc = 3628;
+		rLoc = 3690;
 		rType = 0;
 		vrLen = 1355;
 		vrLoc = 2353;
@@ -37862,7 +37872,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 166";
 		rLen = 0;
-		rLoc = 3628;
+		rLoc = 3690;
 		rType = 0;
 		vrLen = 1403;
 		vrLoc = 1403;
@@ -37912,7 +37922,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 166";
 		rLen = 0;
-		rLoc = 3628;
+		rLoc = 3690;
 		rType = 0;
 		vrLen = 1337;
 		vrLoc = 1572;
@@ -37932,7 +37942,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 166";
 		rLen = 0;
-		rLoc = 3628;
+		rLoc = 3690;
 		rType = 0;
 		vrLen = 1403;
 		vrLoc = 1403;
@@ -37952,7 +37962,7 @@
 		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
 		name = "PaxosAcceptor.cpp: 166";
 		rLen = 0;
-		rLoc = 3628;
+		rLoc = 3690;
 		rType = 0;
 		vrLen = 1403;
 		vrLoc = 1403;
@@ -39004,6 +39014,106 @@
 		vrLen = 1393;
 		vrLoc = 337;
 	};
+	5421ECD00F6DB1A3004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D5AA0F61DE2A004BBDB4 /* PaxosLease.cpp */;
+		name = "PaxosLease.cpp: 27";
+		rLen = 0;
+		rLoc = 665;
+		rType = 0;
+		vrLen = 1393;
+		vrLoc = 337;
+	};
+	5421ECD10F6DB1A3004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */;
+		name = "TransportTCPWriter.cpp: 89";
+		rLen = 0;
+		rLoc = 1602;
+		rType = 0;
+		vrLen = 1001;
+		vrLoc = 640;
+	};
+	5421ECD20F6DB1A3004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
+		name = "todo.txt: 5";
+		rLen = 0;
+		rLoc = 77;
+		rType = 0;
+		vrLen = 181;
+		vrLoc = 0;
+	};
+	5421ECD30F6DB1A3004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D5AA0F61DE2A004BBDB4 /* PaxosLease.cpp */;
+		name = "PaxosLease.cpp: 27";
+		rLen = 0;
+		rLoc = 665;
+		rType = 0;
+		vrLen = 1393;
+		vrLoc = 337;
+	};
+	5421ECD40F6DB1A3004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */;
+		name = "TransportTCPWriter.cpp: 89";
+		rLen = 0;
+		rLoc = 1602;
+		rType = 0;
+		vrLen = 1001;
+		vrLoc = 640;
+	};
+	5421ECD50F6DB1A3004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
+		name = "todo.txt: 5";
+		rLen = 0;
+		rLoc = 77;
+		rType = 0;
+		vrLen = 181;
+		vrLoc = 0;
+	};
+	5421ECD60F6DB1A3004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
+		name = "PaxosAcceptor.cpp: 169";
+		rLen = 0;
+		rLoc = 3648;
+		rType = 0;
+		vrLen = 1303;
+		vrLoc = 2807;
+	};
+	5421ECD80F6DB2A7004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
+		name = "PaxosAcceptor.cpp: 164";
+		rLen = 0;
+		rLoc = 3575;
+		rType = 0;
+		vrLen = 1400;
+		vrLoc = 0;
+	};
+	5421ECD90F6DB2A7004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */;
+		name = "PaxosAcceptor.cpp: 164";
+		rLen = 0;
+		rLoc = 3575;
+		rType = 0;
+		vrLen = 1400;
+		vrLoc = 0;
+	};
+	5421ECDA0F6DB2A7004BBDB4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147490F31B6B200F3D2B6 /* todo.txt */;
+		name = "todo.txt: 8";
+		rLen = 0;
+		rLoc = 81;
+		rType = 0;
+		vrLen = 142;
+		vrLoc = 0;
+	};
 	54460CD30F5198E800EFBBDE /* AsyncDBTest */ = {
 		activeExec = 0;
 		executables = (
@@ -39559,8 +39669,8 @@
 	548147490F31B6B200F3D2B6 /* todo.txt */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {869, 1050}}";
-			sepNavSelRange = "{103, 0}";
-			sepNavVisRange = "{0, 181}";
+			sepNavSelRange = "{81, 0}";
+			sepNavVisRange = "{0, 142}";
 		};
 	};
 	54814BFE0F35084500F3D2B6 /* Transaction.h */ = {
@@ -39718,7 +39828,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {869, 1564}}";
 			sepNavSelRange = "{1602, 0}";
-			sepNavVisRange = "{665, 976}";
+			sepNavVisRange = "{640, 1001}";
 		};
 	};
 	9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */ = {
