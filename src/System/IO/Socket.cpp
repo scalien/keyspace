@@ -150,6 +150,23 @@ bool Socket::GetEndpoint(Endpoint &endpoint)
 	return true;
 }
 
+bool Socket::SendTo(void *data, int count, const Endpoint &endpoint)
+{
+	int ret;
+	
+	ret = sendto(fd, data, count, 0,
+				 (const sockaddr *) &endpoint.sa,
+				 sizeof(sockaddr));
+	
+	if (ret < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+	
+	return true;
+}
+
 void Socket::Close()
 {
 	int ret;

@@ -26,6 +26,8 @@ public:
 	bool Connect(Endpoint &endpoint);
 
 	bool GetEndpoint(Endpoint &endpoint);
+
+	bool SendTo(void* data, int count, const Endpoint &endpoint);
 	
 	void Close();	
 };
