@@ -88,7 +88,7 @@ void TransportTCPReader::OnConnect()
 		Log_Message("%s connected", endpoint.ToString());
 		
 		conn->GetSocket().SetNonblocking();
-		conn->Init(ioproc);
+		conn->Init(ioproc, true);
 	}
 	else
 	{

@@ -1,5 +1,15 @@
 #!/bin/sh
 
+
+create_gdb_conf()
+{
+cat > $1.gdb << EOF
+set confirm off
+handle SIG33 nostop
+run $1.conf
+EOF
+}
+
 if [ "$1" = "" ]; then
 	echo -e "usage: $0 config-number [command]\n"
 	exit 1
@@ -19,4 +29,13 @@ else
 	fi
 fi
 
-$BIN $1.conf
+if [ "$3" = "-g" ]; then
+	if [ ! -e $1.gdb ]; then
+		create_gdb_conf $1
+	fi
+	CMD="gdb -x $1.gdb $BIN"
+else
+	CMD="$BIN $1.conf"
+fi
+
+$CMD

@@ -36,7 +36,7 @@ protected:
 	virtual void	OnWrite();
 	virtual void	OnClose() = 0;
 	
-	void			Write(const char* data, int count, bool activate = true);
+	void			Write(const char* data, int count, bool flush = true);
 	void			WritePending();
 	void			Close();
 };
