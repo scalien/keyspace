@@ -1,0 +1,23 @@
+$(BUILD_DIR):
+	-mkdir -p $(BUILD_DIR) \
+		$(BUILD_DIR)/Application/EchoServer/ \
+		$(BUILD_DIR)/Application/HubSim/ \
+		$(BUILD_DIR)/Application/ \
+		$(BUILD_DIR)/Application/TestDB/ \
+		$(BUILD_DIR)/Application/Keyspace/Protocol/ \
+		$(BUILD_DIR)/Application/Keyspace/ \
+		$(BUILD_DIR)/Application/Keyspace/Database/ \
+		$(BUILD_DIR)/Framework/ReplicatedLog/ \
+		$(BUILD_DIR)/Framework/Transport/ \
+		$(BUILD_DIR)/Framework/MasterLease/ \
+		$(BUILD_DIR)/Framework/ \
+		$(BUILD_DIR)/Framework/Paxos/ \
+		$(BUILD_DIR)/Framework/AsyncDatabase/ \
+		$(BUILD_DIR)/Framework/Database/ \
+		$(BUILD_DIR)/Framework/PaxosLease/ \
+		$(BUILD_DIR)/Framework/ReplicatedDB/ \
+		$(BUILD_DIR)/System/ \
+		$(BUILD_DIR)/System/Events/ \
+		$(BUILD_DIR)/System/Containers/ \
+		$(BUILD_DIR)/System/IO/ \
+		$(BUILD_DIR)/Test/ \
