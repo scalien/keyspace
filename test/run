@@ -1,2 +1,22 @@
-cd $1
-../../build/Debug/Keyspace $1.conf
+#!/bin/sh
+
+if [ "$1" = "" ]; then
+	echo -e "usage: $0 config-number [command]\n"
+	exit 1
+fi
+
+WD=`pwd`
+SCRIPT_DIR=`dirname $0`
+cd $SCRIPT_DIR/$1
+
+if [ "$2" = "" ]; then
+	BIN=../../build/Debug/Keyspace
+else
+	if [ -x $2 ]; then
+		BIN=$2
+	else
+		BIN=$WD/$2
+	fi
+fi
+
+$BIN $1.conf

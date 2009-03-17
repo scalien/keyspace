@@ -11,10 +11,9 @@ class TransportTCPReader; // forward
 class TransportTCPConn : public TCPConn<MAX_TCP_MESSAGE_SIZE>
 {
 public:
-	TransportTCPConn(TransportTCPReader* reader_, Callable* onRead_)
+	TransportTCPConn(TransportTCPReader* reader_)
 	{
 		reader = reader_;
-		onRead = onRead_;
 	}
 	
 	void				OnRead();
@@ -23,7 +22,6 @@ public:
 
 private:
 	TransportTCPReader* reader;
-	Callable*			onRead;
 };
 
 

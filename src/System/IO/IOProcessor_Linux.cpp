@@ -107,7 +107,7 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 	fcntl(pipeop.pipe[0], F_SETFL, O_NONBLOCK);
 	fcntl(pipeop.pipe[1], F_SETFL, O_NONBLOCK);
 
-	if (!AddEvent(pipeop.pipe[0], EPOLLIN | EPOLLOUT, &pipeop))
+	if (!AddEvent(pipeop.pipe[0], EPOLLIN | EPOLLOUT | EPOLLONESHOT, &pipeop))
 		return false;
 	
 	pipeop.callback = callback;
@@ -153,9 +153,9 @@ bool IOProcessor::Add(IOOperation* ioop)
 	else
 	{
 		if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-			filter = EPOLLET | EPOLLIN;
+			filter = EPOLLET | EPOLLIN | EPOLLONESHOT;
 		else
-			filter = EPOLLET | EPOLLOUT;
+			filter = EPOLLET | EPOLLOUT | EPOLLONESHOT;
 		
 		return AddEvent(ioop->fd, filter, ioop);
 	}

@@ -32,7 +32,7 @@ void TransportTCPConn::OnRead()
 		reader->SetMessage(
 			ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)
 			);
-		Call(onRead);
+		Call(reader->onRead);
 		
 		// move the rest back to the beginning of the buffer
 		memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
@@ -78,7 +78,7 @@ void TransportTCPReader::GetMessage(ByteString& bs_)
 
 void TransportTCPReader::OnConnect()
 {
-	TransportTCPConn* conn = new TransportTCPConn(this, onRead);
+	TransportTCPConn* conn = new TransportTCPConn(this);
 	
 	if (listener.Accept(&(conn->GetSocket())))
 	{

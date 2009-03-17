@@ -9,6 +9,12 @@ class Endpoint
 {
 public:
 	struct sockaddr_in	sa;
+
+	Endpoint() 
+	{
+		sa.sin_family = 0; sa.sin_port = 0; 
+		sa.sin_addr.s_addr = 0; sa.sin_zero[0] = 0;
+	}
 	
 	bool	Set(struct sockaddr_in &sa_);
 	
