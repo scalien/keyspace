@@ -5,6 +5,10 @@
 void TransportTCPConn::OnRead()
 {
 	int msglength, nread, msgbegin, msgend;
+	Endpoint endpoint;
+	
+	GetSocket().GetEndpoint(endpoint);
+	Log_Message("endpoint = %s", endpoint.ToString());
 	
 	tcpread.requested = IO_READ_ANY;
 	

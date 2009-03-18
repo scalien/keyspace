@@ -4,6 +4,7 @@
 class Callable
 {
 public:
+	virtual ~Callable() {}
     virtual void Execute() = 0;
 };
 

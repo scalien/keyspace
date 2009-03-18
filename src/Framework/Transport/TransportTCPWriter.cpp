@@ -41,7 +41,7 @@ void TransportTCPWriter::Write(ByteString &bs)
 
 void TransportTCPWriter::Connect()
 {
-	Log_Trace();
+	Log_Message("endpoint = %s", endpoint.ToString());
 	
 	bool ret;
 	
@@ -61,7 +61,7 @@ void TransportTCPWriter::Connect()
 
 void TransportTCPWriter::OnConnect()
 {
-	Log_Trace();
+	Log_Message("endpoint = %s", endpoint.ToString());
 	
 	state = CONNECTED;
 	tcpwrite.onComplete = &onWrite;
@@ -71,7 +71,7 @@ void TransportTCPWriter::OnConnect()
 
 void TransportTCPWriter::OnConnectTimeout()
 {
-	Log_Trace();
+	Log_Message("endpoint = %s", endpoint.ToString());
 	
 	Close();
 	Connect();
@@ -84,7 +84,7 @@ void TransportTCPWriter::OnRead()
 
 void TransportTCPWriter::OnClose()
 {
-	Log_Trace();
+	Log_Message("endpoint = %s", endpoint.ToString());
 	
 	if (!connectTimeout.IsActive())
 		scheduler->Add(&connectTimeout);

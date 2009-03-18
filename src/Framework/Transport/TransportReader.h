@@ -8,6 +8,8 @@
 class TransportReader
 {
 public:
+	virtual			~TransportReader() {}
+
 	virtual void	Init(IOProcessor* ioproc_, int port_) = 0;
 
 	virtual void	SetOnRead(Callable* onRead) = 0;

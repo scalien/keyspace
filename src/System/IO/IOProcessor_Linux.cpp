@@ -22,6 +22,7 @@ class PipeOp : public IOOperation
 public:
 	PipeOp()
 	{
+		type = PIPEOP;
 		pipe[0] = pipe[1] = -1;
 	}
 	
@@ -32,8 +33,16 @@ public:
 	
 	void Close()
 	{
-		if (pipe[0] >= 0) close(pipe[0]);
-		if (pipe[1] >= 0) close(pipe[1]);
+		if (pipe[0] >= 0)
+		{
+			close(pipe[0]);
+			pipe[0] = -1;
+		}
+		if (pipe[1] >= 0)
+		{
+			close(pipe[1]);
+			pipe[1] = -1;
+		}
 	}
 	
 	int			 	pipe[2];
@@ -92,8 +101,6 @@ static void IOProc_sigev_thread_handler(union sigval value)
 
 bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 {
-	pipeop.type = PIPEOP;
-	
 	if (pipe(pipeop.pipe) < 0)
 	{
 		Log_Errno();
@@ -152,10 +159,19 @@ bool IOProcessor::Add(IOOperation* ioop)
 	}
 	else
 	{
+		filter = 0;
 		if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-			filter = EPOLLET | EPOLLIN | EPOLLONESHOT;
-		else
-			filter = EPOLLET | EPOLLOUT | EPOLLONESHOT;
+		{
+			filter |= EPOLLIN;
+		}
+		else if (ioop->type == TCP_WRITE || ioop->type == UDP_WRITE)
+		{
+			filter |= EPOLLOUT;
+		}
+		if (ioop->type == TCP_READ | ioop->type == TCP_WRITE)
+		{
+			filter |= EPOLLET | EPOLLONESHOT;
+		}
 		
 		return AddEvent(ioop->fd, filter, ioop);
 	}
@@ -217,7 +233,10 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	
 	// add our interest in the event
 	nev = epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev);
-	if (nev < 0)
+
+    // If you add the same fd to an epoll_set twice, you
+    // probably get EEXIST, but this is a harmless condition.
+	if (nev < 0 && errno != EEXIST)
 	{
 		Log_Errno();
 		return false;
@@ -518,28 +537,33 @@ void ProcessUDPRead(struct epoll_event* ev)
 	udpread = (UDPRead*) ev->data.ptr;
 	
 	//Log_Message(rprintf("Calling recvfrom() to read max %d bytes", udpread->size));
+
 	salen = sizeof(udpread->endpoint.sa);
-	nread = recvfrom(udpread->fd, udpread->data.buffer, udpread->data.size, 0,
+
+	do {
+		nread = recvfrom(udpread->fd, udpread->data.buffer, udpread->data.size, 0,
 				(sockaddr*)&udpread->endpoint.sa, (socklen_t*)&salen);
-	if (nread < 0)
-	{
-		if (errno == EWOULDBLOCK || errno == EAGAIN)
-			ioproc.Add(udpread); // try again
-		else
+	
+		if (nread < 0)
 		{
-			Log_Errno();
+			if (errno == EWOULDBLOCK || errno == EAGAIN)
+				ioproc.Add(udpread); // try again
+			else
+			{
+				Log_Errno();
+				Call(udpread->onClose);
+			}
+		} 
+		else if (nread == 0)
+		{
 			Call(udpread->onClose);
 		}
-	} 
-	else if (nread == 0)
-	{
-		Call(udpread->onClose);
-	}
-	else
-	{
-		udpread->data.length = nread;
-		Call(udpread->onComplete);
-	}
+		else
+		{
+			udpread->data.length = nread;
+			Call(udpread->onComplete);
+		}
+	} while (nread > 0);
 }
 
 void ProcessUDPWrite(struct epoll_event* ev)

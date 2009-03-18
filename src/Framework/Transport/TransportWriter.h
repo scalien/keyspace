@@ -9,6 +9,8 @@ class ByteString;
 class TransportWriter
 {
 public:
+	virtual			~TransportWriter() {}
+
 	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_) = 0;
 
 	virtual	void	Write(ByteString &bs) = 0;
