@@ -136,7 +136,7 @@ bool Socket::Connect(Endpoint &endpoint)
 bool Socket::GetEndpoint(Endpoint &endpoint)
 {
 	int ret;
-	socklen_t len = sizeof(sockaddr);
+	socklen_t len = sizeof(endpoint.sa);
 	
 	ret = getpeername(fd, (sockaddr*) &endpoint.sa, &len);
 	

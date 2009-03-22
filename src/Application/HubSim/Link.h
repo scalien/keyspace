@@ -18,9 +18,16 @@ class Link
 {
 public:	
 	virtual ~Link() {}
+	
 	virtual void WriteUDP(Port* port, Endpoint &dst, const char* data, int count)
 	{
 		port->Write(dst, data, count);
+	}
+
+	virtual void WriteTCP(Port* port, const char* data, int count)
+	{
+		Endpoint endpoint; // dummy
+		port->Write(endpoint, data, count);
 	}
 };
 
@@ -47,6 +54,11 @@ public:
 		rnd = random() / (double) RAND_MAX;
 		if (rnd >= prob)
 			port->Write(dst, data, count);
+	}
+	
+	virtual void WriteTCP(Port* port, const char* data, int count)
+	{
+		
 	}
 };
 

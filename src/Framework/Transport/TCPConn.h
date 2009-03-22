@@ -89,6 +89,8 @@ void TCPConn<bufferSize>::Init(IOProcessor* ioproc_, bool startRead)
 template<int bufferSize>
 void TCPConn<bufferSize>::OnWrite()
 {
+	Log_Trace();
+	
 	Buffer** it;
 	Buffer* buf;
 	Buffer* last;

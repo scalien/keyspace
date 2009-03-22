@@ -63,6 +63,7 @@ void TransportTCPReader::Init(IOProcessor* ioproc_, int port)
 {
 	ioproc = ioproc_;
 	TCPServer::Init(ioproc_, port);
+	Log_Message("fd = %d", listener.fd);
 }
 
 void TransportTCPReader::SetOnRead(Callable* onRead_)
@@ -89,7 +90,7 @@ void TransportTCPReader::OnConnect()
 		Endpoint endpoint;
 		conn->GetSocket().GetEndpoint(endpoint);
 		
-		Log_Message("%s connected", endpoint.ToString());
+		Log_Message("%s connected, fd = %d", endpoint.ToString(), conn->GetSocket().fd);
 		
 		conn->GetSocket().SetNonblocking();
 		conn->Init(ioproc, true);
