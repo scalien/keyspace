@@ -1,6 +1,7 @@
 #include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "KeyspaceDB.h"
 #include <assert.h>
+#include <stdlib.h>
 #include "System/Log.h"
 
 KeyspaceDB::KeyspaceDB()
