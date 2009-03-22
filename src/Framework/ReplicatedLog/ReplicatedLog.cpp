@@ -3,6 +3,7 @@
 #include "Framework/Paxos/PaxosConsts.h"
 #include "Framework/Transport/TransportTCPReader.h"
 #include "Framework/Transport/TransportTCPWriter.h"
+#include <stdlib.h>
 
 ReplicatedLog::ReplicatedLog()
 :	onRead(this, &ReplicatedLog::OnRead),
@@ -120,6 +121,16 @@ void ReplicatedLog::SetReplicatedDB(ReplicatedDB* replicatedDB_)
 LogItem* ReplicatedLog::LastLogItem()
 {
 	return logCache.Last();
+}
+
+LogItem* ReplicatedLog::GetLogItem(ulong64 paxosID)
+{
+	return logCache.Get(paxosID);
+}
+
+ulong64 ReplicatedLog::GetPaxosID()
+{
+	return proposer.paxosID;
 }
 
 bool ReplicatedLog::IsMaster()

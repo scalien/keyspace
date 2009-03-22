@@ -30,9 +30,10 @@ public:
 	void				SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	
 	LogItem*			LastLogItem();
-	
-	bool				IsMaster();
-	
+	LogItem*			GetLogItem(ulong64 paxosID);
+
+	ulong64				GetPaxosID();
+	bool				IsMaster();	
 	int					NodeID();
 	
 	bool				Stop();
