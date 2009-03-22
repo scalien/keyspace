@@ -170,7 +170,8 @@ bool IOProcessor::Add(IOOperation* ioop)
 		}
 		if (ioop->type == TCP_READ | ioop->type == TCP_WRITE)
 		{
-			filter |= EPOLLET | EPOLLONESHOT;
+			//filter |= EPOLLET | EPOLLONESHOT;
+			filter |= EPOLLONESHOT;
 		}
 		
 		return AddEvent(ioop->fd, filter, ioop);
@@ -236,10 +237,18 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 
     // If you add the same fd to an epoll_set twice, you
     // probably get EEXIST, but this is a harmless condition.
-	if (nev < 0 && errno != EEXIST)
+	if (nev < 0)
 	{
-		Log_Errno();
-		return false;
+		if (errno == EEXIST)
+		{
+			nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &ev);
+		}
+
+		if (nev < 0)
+		{
+			Log_Errno();
+			return false;
+		}
 	}
 	
 	if (ioop)

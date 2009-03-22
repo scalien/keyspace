@@ -33,21 +33,21 @@ main(int argc, char* argv[])
 	
 	ioproc->Init();
 
-//	KeyspaceDB kdb;
-//	kdb.Init();
+	KeyspaceDB kdb;
+	kdb.Init();
 //	
 //	MemcacheServer mcServer;
 //	mcServer.Init(&kdb);
 //	
-//	HttpServer httpServer;
-//	httpServer.Init(&kdb);
+	HttpServer httpServer;
+	httpServer.Init(&kdb);
 
-	Endpoint maro;
-	maro.Set("192.168.1.240", 8080);
+//	Endpoint maro;
+//	maro.Set("192.168.1.240", 8080);
 	
-	writer.Init(ioproc, eventloop, maro);
+//	writer.Init(ioproc, eventloop, maro);
 	
-	eventloop->Add(&writeTimeout);
+//	eventloop->Add(&writeTimeout);
 	eventloop->Run();	
 
 	return 0;

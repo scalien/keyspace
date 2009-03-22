@@ -97,7 +97,7 @@ FRAMEWORK_OBJECTS = \
 
 OBJECTS = \
 	$(ALL_OBJECTS) \
-	$(BUILD_DIR)/Main.o
+	$(BUILD_DIR)/Test/Test.agazso.o
 
 LIBS = \
 	$(SCALIEN_LIBS)
