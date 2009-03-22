@@ -4,6 +4,7 @@
 #include "assert.h"
 #include <string.h>
 #include "Types.h"
+#include <math.h>
 
 #define KB 1000
 #define MB 1000000
@@ -35,5 +36,7 @@ void* Alloc(int num, int size = 1);
 inline bool Xor(bool a, bool b, bool c) { return (((int)a + (int)b + (int)c) == 1); }
 
 inline bool Xor(bool a, bool b) { return Xor(a, b, false); }
+
+inline unsigned NumLen(int n) { return floor(log10(n) + 1); }
 
 #endif

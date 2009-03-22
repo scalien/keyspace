@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string>
+#include <stdlib.h>
 
 long strntol(char* buffer, int size, int* nread)
 {
