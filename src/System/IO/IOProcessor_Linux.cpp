@@ -501,8 +501,10 @@ void ProcessTCPWrite(struct epoll_event* ev)
 
 	writelen = tcpwrite->data.length - tcpwrite->transferred;
 	if (writelen <= 0)
-		return;
-		
+	{
+		ASSERT_FAIL();
+	}
+	
 	//Log_Message(rprintf("Calling write() to write %d bytes", writelen));
 	nwrite = write(tcpwrite->fd, tcpwrite->data.buffer, writelen);
 	if (nwrite < 0)
