@@ -168,6 +168,7 @@ bool IOProcessor::Add(IOOperation* ioop)
 		{
 			filter |= EPOLLOUT;
 		}
+		
 		if (ioop->type == TCP_READ | ioop->type == TCP_WRITE)
 		{
 			//filter |= EPOLLET | EPOLLONESHOT;

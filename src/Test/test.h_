@@ -1,5 +1,5 @@
 /*
- * test.h -- basic unit test framework
+ * Test.h -- basic unit test framework
  */
 #ifndef __TEST_H
 #define __TEST_H
@@ -20,7 +20,7 @@ extern "C" {
 #define TEST(testfn) test(testfn, #testfn)
 #define TESTARG(testfn) (testfn),(#testfn)
 #define TEST_MAIN(...) \
-	int main(int argc, char *argv[]) { \
+	int main(int, char **) { \
 		testfn_t test_functions[] = {__VA_ARGS__}; \
 		char test_names[] = #__VA_ARGS__; \
 		int size = sizeof(test_functions) / sizeof(void *); \

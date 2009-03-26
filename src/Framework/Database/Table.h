@@ -8,7 +8,8 @@
 class TableVisitor
 {
 public:
-	virtual void Accept(const ByteString &key, const ByteString &value) = 0;
+	virtual bool Accept(const ByteString &key, const ByteString &value) = 0;
+	virtual const ByteString* GetKeyHint() { return 0; }
 };
 
 class Table
@@ -30,6 +31,8 @@ public:
 	bool		Drop();
 	
 	bool		Visit(TableVisitor &tv);
+	
+	bool		Truncate(Transaction* transaction = NULL);
 private:
 	Database*	database;
 	Db*			db;

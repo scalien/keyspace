@@ -1,6 +1,7 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
+#include <stdarg.h>
 #include "Common.h"
 
 class ByteString
@@ -17,7 +18,7 @@ public:
 	
 	void Init() { size = 0; length = 0; buffer = 0; }
 	
-	bool Set(char* str)
+	bool Set(const char* str)
 	{
 		if (buffer == NULL)
 			ASSERT_FAIL();
@@ -26,7 +27,7 @@ public:
 		return Set(str, len);
 	}
 	
-	bool Set(char* str, int len)
+	bool Set(const char* str, int len)
 	{
 		if (buffer == NULL)
 			ASSERT_FAIL();
@@ -59,6 +60,23 @@ public:
 	}
 	
 	void Clear() { length = 0; }
+	
+	bool Printf(const char* fmt, ...)
+	{
+		va_list ap;
+		
+		va_start(ap, fmt);
+		length = vsnprintf(buffer, size, fmt, ap);
+		va_end(ap);
+		
+		if (length > size)
+		{
+			length = size;
+			return false;
+		}
+		
+		return true;
+	}
 };
 
 template<int n>
@@ -69,7 +87,7 @@ public:
 	
 	ByteArray() { size = n; length = 0; buffer = data; }
 	
-	ByteArray(char* str)
+	ByteArray(const char* str)
 	{
 		size = n;
 		length = strlen(str);
@@ -77,9 +95,9 @@ public:
 		buffer = data;
 	}
 	
-	bool Set(char* str) { return ByteString::Set(str); }
-	
-	bool Set(char* str, int len) { return ByteString::Set(str, len); }
+	bool Set(const char* str) { return ByteString::Set(str); }
+
+	bool Set(const char* str, int len) { return ByteString::Set(str, len); }
 							
 	bool Set(ByteString bs)
 	{
@@ -91,6 +109,55 @@ public:
 		length = bs.length;
 		
 		return true;
+	}
+};
+
+template<int n>
+class DynArray : public ByteString
+{
+public:
+	char data[n];
+	enum { GRAN = 32 };
+	DynArray()
+	{
+		size = n;
+		length = 0;
+		buffer = data;
+	}
+	
+	~DynArray()
+	{
+		if (buffer != data)
+			delete[] buffer;
+	}
+	
+	bool Append(const char *str, int len)
+	{
+		if (length + len > size)
+			Reallocate(length + len, true);
+
+		memcpy(data + length, str, len);
+		length += len;
+		
+		return true;
+	}
+	
+	void Reallocate(int newsize, bool keepold)
+	{
+		char *newbuffer;
+		
+		size = size + GRAN - 1;
+		size -= size % GRAN;
+		
+		newbuffer = new char[size];
+		
+		if (keepold)
+			memcpy(newbuffer, buffer, length);
+
+		if (buffer != data)
+			delete[] buffer;
+		
+		buffer = newbuffer;
 	}
 };
 

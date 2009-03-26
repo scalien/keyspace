@@ -123,22 +123,48 @@ bool Table::Visit(TableVisitor &tv)
 {
 	Dbc* cursor = NULL;
 	bool ret = true;
+	u_int32_t flags = DB_NEXT;
 
 	if (db->cursor(NULL, &cursor, 0) != 0)
 		return false;
 	
 	Dbt key, value;
+	if (tv.GetKeyHint())
+	{
+		key.set_data(tv.GetKeyHint()->buffer);
+		key.set_size(tv.GetKeyHint()->length);
+		flags = DB_SET_RANGE;		
+	}
 	
-	while (cursor->get(&key, &value, DB_NEXT) == 0)
+	while (cursor->get(&key, &value, flags) == 0)
 	{
 		ByteString bsKey(key.get_size(), key.get_size(), (char*) key.get_data());
 		ByteString bsValue(value.get_size(), value.get_size(), (char*) value.get_data());
 
-		tv.Accept(bsKey, bsValue);
+		ret = tv.Accept(bsKey, bsValue);
+		if (!ret)
+			break;
+
+		flags = DB_NEXT;
 	}
 	
 	if (cursor)
 		cursor->close();
 	
 	return ret;
+}
+
+
+bool Table::Truncate(Transaction* transaction)
+{
+	u_int32_t count;
+	u_int32_t flags = 0;
+	int ret;
+	DbTxn* txn;
+	
+	txn = transaction ? transaction->txn : NULL;
+	// TODO error handling
+	ret = db->truncate(txn, &count, flags);
+	
+	return true;
 }
