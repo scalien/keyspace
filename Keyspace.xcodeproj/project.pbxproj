@@ -40,7 +40,7 @@
 		54460CFC0F519AC200EFBBDE /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
 		54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */; };
-		544611FB0F533FAB00EFBBDE /* test.c_ in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* test.c_ */; };
+		544611FB0F533FAB00EFBBDE /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */; };
 		547A75F80F758C3D003084C9 /* CatchupMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F30F758C3D003084C9 /* CatchupMsg.cpp */; };
 		547A75F90F758C3D003084C9 /* CatchupClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F40F758C3D003084C9 /* CatchupClient.cpp */; };
@@ -72,7 +72,7 @@
 		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
 		9A27231C0F5F9BBE00EE25E2 /* TableVisitorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */; };
-		9A2723220F5F9D7900EE25E2 /* test.c_ in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* test.c_ */; };
+		9A2723220F5F9D7900EE25E2 /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		9A2723230F5F9D8900EE25E2 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
 		9A2723240F5F9D9F00EE25E2 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		9A2723270F5F9DB600EE25E2 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
@@ -170,8 +170,8 @@
 		544611F00F533FAB00EFBBDE /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOTest.cpp; sourceTree = "<group>"; };
 		544611F10F533FAB00EFBBDE /* OpenDirect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenDirect.cpp; sourceTree = "<group>"; };
 		544611F20F533FAB00EFBBDE /* PaxosTester.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PaxosTester.c; sourceTree = "<group>"; };
-		544611F30F533FAB00EFBBDE /* test.c_ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.c_; sourceTree = "<group>"; };
-		544611F40F533FAB00EFBBDE /* test.h_ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.h_; sourceTree = "<group>"; };
+		544611F30F533FAB00EFBBDE /* Test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Test.c; sourceTree = "<group>"; };
+		544611F40F533FAB00EFBBDE /* Test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test.h; sourceTree = "<group>"; };
 		544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPoolTest.cpp; sourceTree = "<group>"; };
 		544611F60F533FAB00EFBBDE /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPEchoClient.c; sourceTree = "<group>"; };
 		5446122C0F53488D00EFBBDE /* KeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceDB.h; sourceTree = "<group>"; };
@@ -423,8 +423,8 @@
 				544611F00F533FAB00EFBBDE /* IOTest.cpp */,
 				544611F10F533FAB00EFBBDE /* OpenDirect.cpp */,
 				544611F20F533FAB00EFBBDE /* PaxosTester.c */,
-				544611F30F533FAB00EFBBDE /* test.c_ */,
-				544611F40F533FAB00EFBBDE /* test.h_ */,
+				544611F30F533FAB00EFBBDE /* Test.c */,
+				544611F40F533FAB00EFBBDE /* Test.h */,
 				544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */,
 				544611F60F533FAB00EFBBDE /* UDPEchoClient.c */,
 				9A2727000F692B4800EE25E2 /* UDPTestClient.c */,
@@ -793,7 +793,7 @@
 				54460CFC0F519AC200EFBBDE /* Log.cpp in Sources */,
 				54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */,
 				544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */,
-				544611FB0F533FAB00EFBBDE /* test.c_ in Sources */,
+				544611FB0F533FAB00EFBBDE /* Test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -859,7 +859,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A27231C0F5F9BBE00EE25E2 /* TableVisitorTest.cpp in Sources */,
-				9A2723220F5F9D7900EE25E2 /* test.c_ in Sources */,
+				9A2723220F5F9D7900EE25E2 /* Test.c in Sources */,
 				9A2723230F5F9D8900EE25E2 /* Database.cpp in Sources */,
 				9A2723240F5F9D9F00EE25E2 /* Table.cpp in Sources */,
 				9A05218B0F78633D0066338D /* Common.cpp in Sources */,
