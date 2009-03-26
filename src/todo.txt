@@ -2,7 +2,7 @@
 
 -	max. value size and LogCache!
 
-
+-	get rid of IOProc* and Scheduler* passing
 
 
 

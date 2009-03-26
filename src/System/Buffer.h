@@ -46,6 +46,18 @@ public:
 		return MEMCMP(buffer, length, other.buffer, other.length);
 	}
 	
+	bool Advance(unsigned n)
+	{
+		if (length < n)
+			return false;
+		
+		buffer += n;
+		length -= n;
+		size   -= n;
+		
+		return true;
+	}
+	
 	void Clear() { length = 0; }
 };
 
@@ -66,6 +78,7 @@ public:
 	}
 	
 	bool Set(char* str) { return ByteString::Set(str); }
+	
 	bool Set(char* str, int len) { return ByteString::Set(str, len); }
 							
 	bool Set(ByteString bs)

@@ -2,6 +2,7 @@
 #define TABLE_H
 
 #include "Database.h"
+#include "Cursor.h"
 #include "System/Buffer.h"
 
 class TableVisitor
@@ -17,14 +18,18 @@ public:
 	Table(Database* database, const char *name);
 	~Table();
 	
-	bool Get(Transaction* transaction, const ByteString &key, ByteString &value);
-	bool Get(Transaction* transaction, const char* key, ByteString &value);
+	bool		Iterate(Cursor& cursor);
 	
-	bool Put(Transaction* transaction, const ByteString &key, const ByteString &value);
-	bool Put(Transaction* transaction, const char* key, const ByteString &value);
-	bool Put(Transaction* transaction, const char* key, const char* value);
+	bool		Get(Transaction* transaction, const ByteString &key, ByteString &value);
+	bool		Get(Transaction* transaction, const char* key, ByteString &value);
 	
-	bool Visit(TableVisitor &tv);
+	bool		Set(Transaction* transaction, const ByteString &key, const ByteString &value);
+	bool		Set(Transaction* transaction, const char* key, const ByteString &value);
+	bool		Set(Transaction* transaction, const char* key, const char* value);
+	
+	bool		Drop();
+	
+	bool		Visit(TableVisitor &tv);
 private:
 	Database*	database;
 	Db*			db;

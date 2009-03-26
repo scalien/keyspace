@@ -28,7 +28,7 @@ main(int argc, char* argv[])
 {
 	IOProcessor*	ioproc;
 	
-	ioproc = IOProcessor::New();
+	ioproc = IOProcessor::Get();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();

@@ -29,9 +29,19 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 {
 	Log_Trace();
 	
-	if (op->type == KeyspaceOp::GET && status)
+	if (op->type == KeyspaceOp::GET)
 	{
-		Response(200, op->value.buffer, op->value.length);
+		if (status)
+			Response(200, op->value.buffer, op->value.length);
+		else
+			Response(404, "Not found", strlen("Not found"));
+	}
+	else if (op->type == KeyspaceOp::SET || op->type == KeyspaceOp::TEST_AND_SET)
+	{
+		if (status)
+			Response(200, "OK", strlen("OK"));
+		else
+			Response(200, "Failed", strlen("Failed"));
 	}
 }
 
@@ -78,15 +88,17 @@ int HttpConn::ProcessGetRequest()
 {
 	KeyspaceOp op;
 	const char* key;
-	int keylen;
 	const char* value;
+	const char* test;
+	int keylen;
 	int valuelen;
+	int testlen;
 	// http://localhost:8080/get/key
 	// http://localhost:8080/set/key/value
 	
-	if (strncmp(request.line.uri, "/get/", 5) == 0)
+	if (strncmp(request.line.uri, "/get/", strlen("/get/")) == 0)
 	{
-		key = request.line.uri + 5;
+		key = request.line.uri + strlen("/get/");
 		keylen = strlen(key);
 		
 		op.client = this;
@@ -98,13 +110,15 @@ int HttpConn::ProcessGetRequest()
 		op.value.Init();
 		op.test.Init();
 		
-		kdb->Add(op);
+		if (!kdb->Add(op))
+			Response(500, "Unable to process your request at this time",
+				strlen("Unable to process your request at this time"));
 		
 		return 0;
 	}
-	else if (strncmp(request.line.uri, "/set/", 5) == 0)
+	else if (strncmp(request.line.uri, "/set/", strlen("/set/")) == 0)
 	{
-		key = request.line.uri + 5;
+		key = request.line.uri + strlen("/set/");
 		value = strchr(key, '/');
 		if (!value)
 			return -1;
@@ -129,6 +143,44 @@ int HttpConn::ProcessGetRequest()
 		
 		return 0;
 	}
+	else if (strncmp(request.line.uri, "/testandset/", strlen("testandset")) == 0)
+	{
+		key = request.line.uri + strlen("/testandset/");
+		test = strchr(key, '/');
+		if (!test)
+			return -1;
+		
+		keylen = test - key;
+		test++;
+		
+		value = strchr(test, '/');
+		if (!value)
+			return -1;
+		
+		testlen = value - test;
+		value++;
+		
+		valuelen = strlen(value);
+		
+		op.client = this;
+		op.type = KeyspaceOp::TEST_AND_SET;
+		op.key.buffer = (char*) key;
+		op.key.length = keylen;
+		op.key.size = keylen;
+		
+		op.test.buffer = (char*) test;
+		op.test.length = testlen;
+		op.test.size = testlen;
+		
+		op.value.buffer = (char*) value;
+		op.value.length = valuelen;
+		op.value.size = valuelen;
+		
+		kdb->Add(op);
+		
+		return 0;
+	}
+
 	else if (strcmp(request.line.uri, "/latency") == 0)
 	{
 		Response(200, "OK", 2);
@@ -163,6 +215,7 @@ void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 					"%s %d %s" CS_CRLF
 					"Accept-Range: bytes" CS_CRLF
 					"Content-Length: %d" CS_CRLF
+					"Cache-Control: no-cache" CS_CRLF
 					"%s"
 					"%s"
 					CS_CRLF

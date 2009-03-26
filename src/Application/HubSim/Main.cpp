@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	
 	Log_SetTimestamping(true);
 	
-	ioproc = IOProcessor::New();
+	ioproc = IOProcessor::Get();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();

@@ -18,7 +18,7 @@ void PaxosAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_, Paxo
 	scheduler = scheduler_;
 	config = config_;
 	
-	table = database.GetTable("state");
+	table = database.GetTable("keyspace");
 	if (table == NULL)
 		ASSERT_FAIL();
 	transaction.Set(table);
@@ -49,11 +49,11 @@ bool PaxosAcceptor::ReadState()
 		return false;
 
 	ret = true;
-	ret = ret && table->Get(NULL, "paxosID",			bytearrays[0]);
-	ret = ret && table->Get(NULL, "accepted",			bytearrays[1]);
-	ret = ret && table->Get(NULL, "promisedProposalID",	bytearrays[2]);
-	ret = ret && table->Get(NULL, "acceptedProposalID",	bytearrays[3]);
-	ret = ret && table->Get(NULL, "acceptedValue",		state.acceptedValue);
+	ret = ret && table->Get(NULL, "@@paxosID",				bytearrays[0]);
+	ret = ret && table->Get(NULL, "@@accepted",				bytearrays[1]);
+	ret = ret && table->Get(NULL, "@@promisedProposalID",	bytearrays[2]);
+	ret = ret && table->Get(NULL, "@@acceptedProposalID",	bytearrays[3]);
+	ret = ret && table->Get(NULL, "@@acceptedValue",		state.acceptedValue);
 
 	if (!ret)
 		return false;
@@ -108,11 +108,11 @@ bool PaxosAcceptor::WriteState(Transaction* transaction)
 	mdbop.Init();
 	
 	ret = true;
-	ret = ret && mdbop.Set(table, "paxosID",			bytearrays[0]);
-	ret = ret && mdbop.Set(table, "accepted",			bytearrays[1]);
-	ret = ret && mdbop.Set(table, "promisedProposalID",	bytearrays[2]);
-	ret = ret && mdbop.Set(table, "acceptedProposalID",	bytearrays[3]);
-	ret = ret && mdbop.Set(table, "acceptedValue",		state.acceptedValue);
+	ret = ret && mdbop.Set(table, "@@paxosID",				bytearrays[0]);
+	ret = ret && mdbop.Set(table, "@@accepted",				bytearrays[1]);
+	ret = ret && mdbop.Set(table, "@@promisedProposalID",	bytearrays[2]);
+	ret = ret && mdbop.Set(table, "@@acceptedProposalID",	bytearrays[3]);
+	ret = ret && mdbop.Set(table, "@@acceptedValue",		state.acceptedValue);
 
 	if (!ret)
 		return false;

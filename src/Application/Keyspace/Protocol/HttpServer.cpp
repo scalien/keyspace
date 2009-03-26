@@ -5,13 +5,13 @@
 
 void HttpServer::Init(KeyspaceDB* kdb_)
 {
-	TCPServer::Init(IOProcessor::New(), HTTP_PORT);
 	kdb = kdb_;
+	TCPServer::Init(IOProcessor::Get(), HTTP_PORT + kdb->GetNodeID());
 }
 
 void HttpServer::OnConnect()
 {
-	IOProcessor* ioproc = IOProcessor::New();
+	IOProcessor* ioproc = IOProcessor::Get();
 	HttpConn* conn = new HttpConn;
 	if (listener.Accept(&(conn->GetSocket())))
 	{

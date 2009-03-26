@@ -4,7 +4,7 @@ void MemcacheServer::Init(KeyspaceDB* kdb_)
 {
 	Log_Trace();
 
-	TCPServer::Init(IOProcessor::New(), MEMCACHE_PORT);
+	TCPServer::Init(IOProcessor::Get(), MEMCACHE_PORT);
 
 	kdb = kdb_;
 }
@@ -21,7 +21,7 @@ void MemcacheServer::OnConnect()
 	Log_Trace();
 
 	// FIXME
-	IOProcessor* ioproc = IOProcessor::New();
+	IOProcessor* ioproc = IOProcessor::Get();
 	
 	MemcacheConn *conn = new MemcacheConn;
 	if (listener.Accept(&(conn->socket)))

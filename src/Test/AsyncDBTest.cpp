@@ -29,7 +29,7 @@ CFunc callable(&cb);
 
 int test()
 {
-	IOProcessor* ioproc = IOProcessor::New();
+	IOProcessor* ioproc = IOProcessor::Get();
 	EventLoop* eventloop = new EventLoop(ioproc);
 	ioproc->Init();
 	

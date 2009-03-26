@@ -137,7 +137,7 @@ void MultiDatabaseOp::Operation()
 	int			i;
 	DatabaseOp* op;
 	
-	if (tx)
+	if (tx && !tx->IsActive())
 		tx->Begin();
 		
 	for (i = 0; i < numop; i++)
@@ -146,7 +146,7 @@ void MultiDatabaseOp::Operation()
 		if (op->type == DatabaseOp::GET)
 			op->ret = op->table->Get(tx, op->key, op->value);
 		else if (op->type == DatabaseOp::SET)
-			op->ret = op->table->Put(tx, op->key, op->value);
+			op->ret = op->table->Set(tx, op->key, op->value);
 	}
 	
 	if (tx)

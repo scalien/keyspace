@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 		filename = argv[1];
 	}
 	
-	ioproc = IOProcessor::New();
+	ioproc = IOProcessor::Get();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();

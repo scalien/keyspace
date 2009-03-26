@@ -6,67 +6,52 @@
 #include "System/Events/Callable.h"
 #include "Framework/Database/Database.h"
 #include "Framework/Database/Transaction.h"
+#include "Framework/ReplicatedDB/ReplicatedDB.h"
 #include "Framework/AsyncDatabase/MultiDatabaseOp.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
+#include "KeyspaceConsts.h"
+#include "KeyspaceMsg.h"
+#include "KeyspaceClient.h"
 
-#define MAX_VALUE_SIZE 64000
-
-class KeyspaceOp;
-
-class KeyspaceClient
+class KeyspaceOp_Alloc : public KeyspaceOp
 {
 public:
-	virtual	void	OnComplete(KeyspaceOp* op, bool status) = 0;
-};
-
-class KeyspaceOp
-{
-public:
-	enum Type
-	{
-		GET,
-		SET,
-		TEST_AND_SET
-	};
+	char*	pkey;
+	char*	pvalue;
+	char*	ptest;
 	
-	Type					type;
-	ByteString				key;
-	ByteString				value;
-	ByteString				test;
-	
-	KeyspaceClient*			client;
+	void	Alloc(KeyspaceOp& op);
+	void	Free();
 };
 
-class OpBuffers
-{
-public:
-	char*					key;
-	char*					value;
-	char*					test;
-};
-
-class KeyspaceDB
+class KeyspaceDB : ReplicatedDB
 {
 public:
 	KeyspaceDB();
 	
-	bool					Init();
-	
+	bool					Init(ReplicatedLog* replicatedLog_);
 	bool					Add(KeyspaceOp& op);	// the interface used by KeyspaceClient
+	unsigned				GetNodeID();
 	
-	bool					StartDBOperation();
-	
-	void					OnDBComplete();
-	MFunc<KeyspaceDB>		onDBComplete;
-	
-	DatabaseOp				MakeDatabaseOp(KeyspaceOp* keyspaceOp);
+// ReplicatedDB interface:
+	virtual void			OnAppend(Transaction* transaction, ulong64 paxosID,
+								ByteString value, bool ownAppend);
+	virtual void			OnMasterLease(unsigned nodeID);
+	virtual void			OnMasterLeaseExpired();
+	virtual void			OnDoCatchup();
 	
 private:
-	List<KeyspaceOp>		queuedOps;
-	List<OpBuffers>			queuedOpBuffers;
+	void					Execute(Transaction* transaction, bool ownAppend);
+	void					Append();
+	void					AllocKeyspaceOp(KeyspaceOp& op, KeyspaceOp_Alloc& op_alloc);
 	
+	ReplicatedLog*			replicatedLog;
+	List<KeyspaceOp>		queuedOps;
 	Table*					table;
-	Transaction				transaction;
-	MultiDatabaseOp			mdbop;
+	KeyspaceMsg				msg;
+	List<KeyspaceOp_Alloc>	ops;
+	ByteArray<VALUE_SIZE>	data;
+	bool					catchingUp;
 };
 
 #endif

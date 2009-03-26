@@ -3,168 +3,203 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "System/Log.h"
+#include "System/Common.h"
 
-KeyspaceDB::KeyspaceDB()
-: onDBComplete(this, &KeyspaceDB::OnDBComplete)
+void KeyspaceOp_Alloc::Alloc(KeyspaceOp& op)
 {
+	type = op.type;
+	client = op.client;
+	key = op.key;
+	value = op.value;
+	test = op.test;
+	
+	pkey = (char*) ::Alloc(key.length);
+	key.size = key.length;
+	memcpy(pkey, key.buffer, key.length);
+	key.buffer = pkey;
+	
+	if (type == SET || type == TEST_AND_SET)
+	{
+		pvalue = (char*) ::Alloc(value.length);
+		value.size = value.length;
+		memcpy(pvalue, value.buffer, value.length);
+		value.buffer = pvalue;
+	}
+	
+	if (type == TEST_AND_SET)
+	{
+		ptest = (char*) ::Alloc(test.length);
+		test.size = test.length;
+		memcpy(ptest, test.buffer, test.length);
+		test.buffer = ptest;
+	}		
 }
 
-bool KeyspaceDB::Init()
+void KeyspaceOp_Alloc::Free()
+{
+	if (pkey != NULL) free(pkey);
+	if (pvalue != NULL) free(pvalue);
+	if (ptest != NULL) free(ptest);
+}
+
+KeyspaceDB::KeyspaceDB()
+{
+	catchingUp = false;
+}
+
+bool KeyspaceDB::Init(ReplicatedLog* replicatedLog_)
 {
 	Log_Trace();
-
-	mdbop.SetCallback(&onDBComplete);
 	
-	table = database.GetTable("test");
+	replicatedLog = replicatedLog_;
+	replicatedLog->SetReplicatedDB(this);
 	
-	transaction.Set(table);
+	table = database.GetTable("keyspace");
 	
 	return true;
+}
+
+unsigned KeyspaceDB::GetNodeID()
+{
+	return replicatedLog->GetNodeID();
 }
 
 bool KeyspaceDB::Add(KeyspaceOp& op_)
 {
 	Log_Trace();
-	
-	KeyspaceOp op = op_;
 
-	assert(queuedOps.Size() == queuedOpBuffers.Size());
-
-	assert(op.type != KeyspaceOp::TEST_AND_SET);
+	bool ret;
+	Transaction* transaction;
+	KeyspaceOp_Alloc op;
 	
-	assert(table != NULL);
-
-
-	OpBuffers opBuffers;
+	if (!replicatedLog->IsMaster() || catchingUp)
+		return false;
 	
-	// allocate and copy buffers for the values
-	
-	opBuffers.key =	(char*) Alloc(op.key.length);
-	op.key.size = op.key.length;
-	memcpy(opBuffers.key, op.key.buffer, op.key.length);
-	op.key.buffer = opBuffers.key;
-	
-	if (op.type == KeyspaceOp::GET)
+	if (op_.type == KeyspaceOp::GET)
 	{
-		opBuffers.value = (char*) Alloc(MAX_VALUE_SIZE);
-		op.value.size = MAX_VALUE_SIZE;
+		if ((transaction = replicatedLog->GetTransaction()) != NULL)
+			if (!transaction->IsActive())
+				transaction = NULL;
+		ret = table->Get(transaction, op_.key, data);
+		if (ret)
+			op_.value = data;
+
+		op_.client->OnComplete(&op_, ret);
+		return true;
+	}
+	
+	// copy client buffers
+	op.Alloc(op_);
+	ops.Append(op);
+	
+	if (!replicatedLog->IsAppending() && replicatedLog->IsMaster())
+		Append();
+	
+	return true;
+}
+
+void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
+{
+	bool						ret;
+	KeyspaceOp_Alloc*			it;
+	
+	ret = true;
+	if (msg.type == KEYSPACE_GET && ownAppend)
+	{
+		//ret &= table->Get(transaction, msg.key, data);
+		ASSERT_FAIL(); // GETs are not put in the ReplicatedLog
+	}
+	else if (msg.type == KEYSPACE_SET)
+	{
+		ret &= table->Set(transaction, msg.key, msg.value);
+	}
+	else if (msg.type == KEYSPACE_TESTANDSET)
+	{
+		ret &= table->Get(transaction, msg.key, data);
+		if (data == msg.test)
+			ret &= table->Set(transaction, msg.key, msg.value);
+		else
+			ret = false;
 	}
 	else
+		ASSERT_FAIL();
+		
+	if (ownAppend)
 	{
-		opBuffers.value = (char*) Alloc(op.value.length);
-		op.value.size = op.value.length;
+		it = ops.Head();
+		if (it->type == KeyspaceOp::GET)
+		{
+				it->value = data;
+				free(it->pvalue);
+				it->pvalue = NULL;
+		}
+		it->client->OnComplete(it, ret);
+		it->Free();
+		ops.Remove(it);
 	}
-	memcpy(opBuffers.value, op.value.buffer, op.value.length);
-	op.value.buffer = opBuffers.value;
-	
-	opBuffers.test = (char*) Alloc(op.test.length);
-	op.test.size = op.test.length;
-	memcpy(opBuffers.test, op.test.buffer, op.test.length);
-	op.test.buffer = opBuffers.test;
-
-	// enqueue
-	
-	queuedOps.Append(op);
-	queuedOpBuffers.Append(opBuffers);
-	
-	// if we're currently not waiting on a db op
-	// to complete, we may as well start one
-	
-	if (!mdbop.active)
-		StartDBOperation();
-	
-	return true;
 }
 
-DatabaseOp KeyspaceDB::MakeDatabaseOp(KeyspaceOp* keyspaceOp)
+void KeyspaceDB::OnAppend(Transaction* transaction, ulong64 paxosID, ByteString value, bool ownAppend)
 {
-	DatabaseOp dbop;
+	unsigned numOps, nread;
 
-	if (keyspaceOp->type == KeyspaceOp::GET)
-		dbop.type = DatabaseOp::GET;
-	if (keyspaceOp->type == KeyspaceOp::SET)
-		dbop.type = DatabaseOp::SET;
+	numOps = 0;
+	while (true)
+	{
+		if (msg.Read(value, nread))
+		{
+			Execute(transaction, ownAppend);
+			value.Advance(nread);
+			numOps++;
+			if (value.length == 0)
+				break;
+		}
+		else
+			break;
+	}
+
+	Log_Message("paxosID = %llu, numOps = %u", paxosID, numOps);
 	
-	dbop.table = table;
-	dbop.key = keyspaceOp->key;
-	dbop.value = keyspaceOp->value;
-	
-	return dbop;
+	if (replicatedLog->IsMaster() && ops.Size() > 0)
+		Append();
 }
 
-bool KeyspaceDB::StartDBOperation()
+void KeyspaceDB::Append()
 {
-	Log_Trace();
+	ByteString bs;
+	KeyspaceOp_Alloc* it;
 
-	assert(queuedOps.Size() == queuedOpBuffers.Size());
+	data.length = 0;
+	bs = data;
 
-	KeyspaceOp* it;
-	DatabaseOp dbop;
-	bool ret;
-	
-	mdbop.Init();
-	
-	for (it = queuedOps.Head(); it != NULL; it = queuedOps.Next(it))
+	for (it = ops.Head(); it != NULL; it = ops.Next(it))
 	{
-		dbop = MakeDatabaseOp(it);
-
-		ret = mdbop.Add(dbop);
-
-		if (!ret)
-			break;		// MultiDatabaseOp is full
+		msg.BuildFrom(it);
+		if (msg.Write(bs))
+		{
+			data.length += bs.length;
+			bs.Advance(bs.length);
+			
+			if (bs.length <= 0)
+				break;
+		}
+		else
+			break;
 	}
 	
-	if (mdbop.GetNumOp() > 0)
-	{
-		mdbop.SetTransaction(&transaction);
-		dbWriter.Add(&mdbop); // I'm using the dbWriter even though it may contain reads
-	}
-	
-	return true;
+	replicatedLog->Append(data);
 }
 
-void KeyspaceDB::OnDBComplete()
+void KeyspaceDB::OnMasterLease(unsigned)
 {
-	Log_Trace();
-	
-	int			i, numOp;
-	KeyspaceOp*	opit;
-	OpBuffers*	bfit;
-	
-	numOp = mdbop.GetNumOp();
-
-	assert(numOp <= queuedOps.Size());
-	assert(numOp <= queuedOpBuffers.Size());
-	
-	opit = queuedOps.Head();
-	bfit = queuedOpBuffers.Head();
-	
-	for (i = 0; i < numOp; i++)
-	{
-		bool ret = mdbop.GetReturnValue(i);
-
-		if (ret)
-			opit->value = *mdbop.GetValue(i);
-
-		// call client's callback
-		
-		opit->client->OnComplete(opit, ret);
-		
-		// free buffers allocated in Add()
-
-		free(bfit->key);
-		free(bfit->value);
-		free(bfit->test);
-		
-		// remove from queue
-		
-		opit = queuedOps.Remove(opit);
-		bfit = queuedOpBuffers.Remove(bfit);
-	}
-	
-	// start a new operation
-	
-	if (queuedOps.Size() > 0)
-		StartDBOperation();
+	if (!replicatedLog->IsAppending() && replicatedLog->IsMaster() && ops.Size() > 0)
+		Append();
 }
 
+void KeyspaceDB::OnMasterLeaseExpired()
+{
+}
+
+void KeyspaceDB::OnDoCatchup()
+{
+}

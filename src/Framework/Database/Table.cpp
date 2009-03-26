@@ -25,6 +25,14 @@ Table::~Table()
 	delete db;
 }
 
+bool Table::Iterate(Cursor& cursor)
+{
+	if (db->cursor(NULL, &cursor.cursor, 0) == 0)
+		return true;
+	else
+		return false;
+}
+
 bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &value)
 {
 	Dbt dbtKey(key.buffer, key.length);
@@ -59,7 +67,7 @@ bool Table::Get(Transaction* transaction, const char* key, ByteString &value)
 	return Table::Get(transaction, bsKey, value);
 }
 
-bool Table::Put(Transaction* transaction, const ByteString &key, const ByteString &value)
+bool Table::Set(Transaction* transaction, const ByteString &key, const ByteString &value)
 {
 	Dbt dbtKey(key.buffer, key.length);
 	Dbt dbtValue(value.buffer, value.length);
@@ -76,7 +84,7 @@ bool Table::Put(Transaction* transaction, const ByteString &key, const ByteStrin
 	return true;
 }
 
-bool Table::Put(Transaction* transaction, const char* key, const ByteString &value)
+bool Table::Set(Transaction* transaction, const char* key, const ByteString &value)
 {
 	int len;
 	
@@ -84,10 +92,10 @@ bool Table::Put(Transaction* transaction, const char* key, const ByteString &val
 	
 	ByteString bsKey(len, len, (char*) key);
 	
-	return Table::Put(transaction, bsKey, value);
+	return Table::Set(transaction, bsKey, value);
 }
 
-bool Table::Put(Transaction* transaction, const char* key, const char* value)
+bool Table::Set(Transaction* transaction, const char* key, const char* value)
 {
 	int len;
 	
@@ -97,7 +105,18 @@ bool Table::Put(Transaction* transaction, const char* key, const char* value)
 	len = strlen(value);
 	ByteString bsValue(len, len, (char*) value);
 	
-	return Table::Put(transaction, bsKey, bsValue);
+	return Table::Set(transaction, bsKey, bsValue);
+}
+
+bool Table::Drop()
+{
+	u_int32_t count;
+		
+	if (db->truncate(NULL, &count, 0) == 0)
+		return true;
+	else
+		return false;
+	
 }
 
 bool Table::Visit(TableVisitor &tv)
@@ -105,7 +124,8 @@ bool Table::Visit(TableVisitor &tv)
 	Dbc* cursor = NULL;
 	bool ret = true;
 
-	db->cursor(NULL, &cursor, 0);
+	if (db->cursor(NULL, &cursor, 0) != 0)
+		return false;
 	
 	Dbt key, value;
 	

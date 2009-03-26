@@ -11,18 +11,14 @@ class TestDB : public ReplicatedDB
 public:
 	void Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* replicatedLog_);
 
-	void OnAppend(Transaction* transaction, ulong64 paxosID, ByteString entry);
+	void OnAppend(Transaction*, ulong64, ByteString, bool);
 	
-	void OnMasterLease(int nodeID);
+	void OnMasterLease(unsigned nodeID);
 	
 	void OnMasterLeaseExpired()		{ /* empty */ };
 	
 	void OnDoCatchup()				{ /* empty */ };
 	
-	void OnStop()					{ /* empty */ };
-	
-	void OnContinue()				{ /* empty */ };
-
 private:
 	ReplicatedLog*	replicatedLog;
 	int				seq;

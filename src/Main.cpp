@@ -2,6 +2,8 @@
 #include "System/IO/IOProcessor.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Application/TestDB/TestDB.h"
+#include "Application/Keyspace/Database/KeyspaceDB.h"
+#include "Application/Keyspace/Protocol/HttpServer.h"
 
 int main(int argc, char* argv[])
 {
@@ -16,7 +18,7 @@ int main(int argc, char* argv[])
 	
 	//Log_SetTimestamping(true);
 	
-	ioproc = IOProcessor::New();
+	ioproc = IOProcessor::Get();
 	eventloop = new EventLoop(ioproc);
 	
 	ioproc->Init();
@@ -24,8 +26,14 @@ int main(int argc, char* argv[])
 	ReplicatedLog rl;
 	rl.Init(ioproc, eventloop, argv[1]);
 	
-	TestDB testdb;
-	testdb.Init(ioproc, eventloop, &rl);
+	KeyspaceDB kdb;
+	kdb.Init(&rl);
 	
+//	TestDB testdb;
+//	testdb.Init(ioproc, eventloop, &rl);
+
+	HttpServer proto;
+	proto.Init(&kdb);
+
 	eventloop->Run();
 }

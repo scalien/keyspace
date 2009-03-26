@@ -1,12 +1,19 @@
 #include "Transaction.h"
 
+Transaction::Transaction()
+{
+	active = false;
+}
+
 Transaction::Transaction(Database* database_)
 {
+	active = false;
 	database = database_;
 }
 
 Transaction::Transaction(Table* table)
 {
+	active = false;
 	database = table->database;
 }
 
@@ -20,16 +27,24 @@ void Transaction::Set(Table* table)
 	database = table->database;
 }
 
+bool Transaction::IsActive()
+{
+	return active;
+}
+
 bool Transaction::Begin()
 {
 	if (database->env.txn_begin(NULL, &txn, DB_TXN_SYNC) != 0)
 			return false;
 	
+	active = true;
 	return true;
 }
 
 bool Transaction::Commit()
 {
+	active = false;
+	
 	if (txn->commit(0) != 0)
 		return false;
 	
@@ -38,6 +53,8 @@ bool Transaction::Commit()
 
 bool Transaction::Abort()
 {
+	active = false;
+	
 	if (txn->abort() != 0)
 		return false;
 	

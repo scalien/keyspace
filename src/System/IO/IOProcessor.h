@@ -9,7 +9,7 @@ class Callable;
 class IOProcessor
 {
 public:
-	static IOProcessor* New();
+	static IOProcessor* Get();
 
 	bool Init();
 	void Shutdown();

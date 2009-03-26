@@ -138,7 +138,7 @@ bool ReplicatedLog::IsMaster()
 	return masterLease.IsLeaseOwner();
 }
 
-int ReplicatedLog::NodeID()
+int ReplicatedLog::GetNodeID()
 {
 	return config.nodeID;
 }
@@ -214,6 +214,7 @@ void ReplicatedLog::OnLearnChosen()
 	Log_Trace();
 
 	ulong64 paxosID;
+	bool	ownAppend;
 
 	if (pmsg.paxosID == learner.paxosID)
 	{
@@ -278,11 +279,15 @@ void ReplicatedLog::OnLearnChosen()
 		
 		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter &&
 			replicatedDB != NULL && rmsg.value.length > 0)
-		{
-			//Transaction tx(table);
-			replicatedDB->OnAppend(NULL, paxosID, rmsg.value); // user will call Append() here
-			//tx.Commit();
-		}		
+				ownAppend = true;
+		else
+			ownAppend = false;
+		
+		// commit chaining
+		if (!acceptor.transaction.IsActive())
+			acceptor.transaction.Begin();
+		replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend);
+		// client calls Append() here		
 	}
 	else if (pmsg.paxosID > learner.paxosID)
 	{
@@ -364,4 +369,14 @@ void ReplicatedLog::OnLeaseTimeout()
 {
 	if (replicatedDB)
 		replicatedDB->OnMasterLeaseExpired();
+}
+
+bool ReplicatedLog::IsAppending()
+{
+	return appending;
+}
+
+Transaction* ReplicatedLog::GetTransaction()
+{
+	return &acceptor.transaction;
 }

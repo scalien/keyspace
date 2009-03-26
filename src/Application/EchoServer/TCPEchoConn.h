@@ -23,7 +23,7 @@ public:
 	void				OnRead();
 	void				OnWrite();
 	void				OnCloseRead();
-	void					OnCloseWrite();	
+	void				OnCloseWrite();	
 	
 	MFunc<TCPEchoConn>	onWelcome;
 	MFunc<TCPEchoConn>	onRead;

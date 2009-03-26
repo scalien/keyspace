@@ -15,22 +15,22 @@ env(DB_CXX_NO_EXCEPTIONS)
 	
 	env.open(db_home, flags, mode);
 	
-	state = new Table(this, "state");
+	keyspace = new Table(this, "keyspace");
 	test = new Table(this, "test");
 }
 
 Database::~Database()
 {
-	delete versionDB;
-	delete state;
+	delete keyspace;
+	delete test;
 	
 	env.close(0);
 }
 
 Table* Database::GetTable(const char* name)
 {
-	if (strcmp(name, "state") == 0)
-		return state;
+	if (strcmp(name, "keyspace") == 0)
+		return keyspace;
 		
 	if (strcmp(name, "test") == 0)
 		return test;

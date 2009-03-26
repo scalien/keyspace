@@ -18,8 +18,7 @@ public:
 	
 private:
 	DbEnv env;
-	Table* state;
-	Table* versionDB;
+	Table* keyspace;
 	Table* test;
 };
 

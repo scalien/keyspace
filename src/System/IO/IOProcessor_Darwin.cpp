@@ -34,7 +34,7 @@ static void ProcessUDPWrite(struct kevent* ev);
 static void ProcessFileOp(struct kevent* ev);
 
 
-IOProcessor* IOProcessor::New()
+IOProcessor* IOProcessor::Get()
 {	
 	return &ioproc;
 }

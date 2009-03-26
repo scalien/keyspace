@@ -8,13 +8,13 @@ class Transaction
 {
 	friend class Table;
 public:
-	Transaction() {}
+	Transaction();
 	Transaction(Database* database);
 	Transaction(Table* table);
 	
 	void Set(Database* database);	
 	void Set(Table* table);
-	
+	bool IsActive();
 	bool Begin();
 	bool Commit();
 	bool Abort();
@@ -22,6 +22,7 @@ public:
 private:
 	Database*	database;
 	DbTxn*		txn;
+	bool		active;
 };
 
 #endif

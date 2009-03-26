@@ -67,7 +67,7 @@ void PaxosConfig::InitRestartCounter()
 	ByteArray<32>	baRestartCounter;
 	Table*			table;
 	
-	table = database.GetTable("state");
+	table = database.GetTable("keyspace");
 	if (table == NULL)
 	{
 		restartCounter = 0;
@@ -77,7 +77,7 @@ void PaxosConfig::InitRestartCounter()
 	Transaction tx(table);
 	tx.Begin();
 	
-	ret = table->Get(&tx, "restartCounter", baRestartCounter);
+	ret = table->Get(&tx, "@@restartCounter", baRestartCounter);
 
 	if (ret)
 	{
@@ -93,7 +93,7 @@ void PaxosConfig::InitRestartCounter()
 	baRestartCounter.length =
 		snprintf(baRestartCounter.buffer, baRestartCounter.size, "%llu", restartCounter);
 	
-	table->Put(&tx, "restartCounter", baRestartCounter);
+	table->Set(&tx, "@@restartCounter", baRestartCounter);
 	tx.Commit();
 	
 	Log_Message("Running with restartCounter = %llu", restartCounter);

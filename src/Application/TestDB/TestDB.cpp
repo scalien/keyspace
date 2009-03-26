@@ -11,14 +11,14 @@ void TestDB::Init(IOProcessor*, Scheduler*, ReplicatedLog* replicatedLog_)
 	replicatedLog->SetReplicatedDB(this);
 }
 
-void TestDB::OnAppend(Transaction*, ulong64, ByteString)
+void TestDB::OnAppend(Transaction*, ulong64, ByteString, bool)
 {
 	Log_Trace();
 	
 	if (replicatedLog->IsMaster())
 	{
 		ba.length = snprintf(ba.data, ba.size,
-			"%c:%d:%d", PROTOCOL_TESTDB, replicatedLog->NodeID(), seq++);
+			"%c:%d:%d", PROTOCOL_TESTDB, replicatedLog->GetNodeID(), seq++);
 		
 		Log_Message("Proposing value %.*s", ba.length, ba.buffer);
 		
@@ -26,13 +26,13 @@ void TestDB::OnAppend(Transaction*, ulong64, ByteString)
 	}
 }
 
-void TestDB::OnMasterLease(int nodeID)
+void TestDB::OnMasterLease(unsigned nodeID)
 {
 	Log_Trace();
 	
-	if (!master && nodeID == replicatedLog->NodeID())
+	if (!master && nodeID == replicatedLog->GetNodeID())
 	{
 		master = true;
-		OnAppend(NULL, 0, ByteString());
+		OnAppend(NULL, 0, ByteString(), false);
 	}
 }

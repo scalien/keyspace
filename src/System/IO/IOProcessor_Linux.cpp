@@ -67,7 +67,7 @@ static void			ProcessTCPWrite(struct epoll_event* ev);
 static void			ProcessUDPRead(struct epoll_event* ev);
 static void			ProcessUDPWrite(struct epoll_event* ev);
 
-IOProcessor* IOProcessor::New()
+IOProcessor* IOProcessor::Get()
 {
 	return &ioproc;
 }
