@@ -24,7 +24,7 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 	if (!config.Init(filename))
 		return false;
 
-	masterLease.Init(ioproc_, scheduler_, &config);
+	masterLease.Init(ioproc_, scheduler_, this, &config);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
 	masterLease.AcquireLease();
@@ -36,6 +36,7 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 	learner.Init(writers, scheduler_, &config);
 	
 	appending = false;
+	safeDB = false;
 	
 	return true;
 }
@@ -100,7 +101,7 @@ bool ReplicatedLog::Append(ByteString value_)
 	
 	if (!appending)
 	{
-		if (!rmsg.Init(config.nodeID, config.restartCounter,  masterLease.LeaseEpoch(), value_))
+		if (!rmsg.Init(config.nodeID, config.restartCounter,  masterLease.GetLeaseEpoch(), value_))
 			return false;
 		
 		if (!rmsg.Write(value))
@@ -251,7 +252,7 @@ void ReplicatedLog::OnLearnChosen()
 			logQueue.Pop(); // we just appended this
 
 		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter &&
-			rmsg.leaseEpoch == masterLease.LeaseEpoch() && masterLease.IsLeaseOwner())
+			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && masterLease.IsLeaseOwner())
 		{
 			proposer.state.leader = true;
 			Log_Message("Multi paxos enabled!");
@@ -265,7 +266,7 @@ void ReplicatedLog::OnLearnChosen()
 		if (logQueue.Size() > 0)
 		{
 			if (!rmsg.Init(config.nodeID, config.restartCounter, 
-				masterLease.LeaseEpoch(), *(logQueue.Next())))
+				masterLease.GetLeaseEpoch(), *(logQueue.Next())))
 					ASSERT_FAIL();
 		
 			if (!rmsg.Write(value))
@@ -277,17 +278,26 @@ void ReplicatedLog::OnLearnChosen()
 		else
 			appending = false;
 		
-		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter &&
-			replicatedDB != NULL && rmsg.value.length > 0)
-				ownAppend = true;
+		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter)
+			ownAppend = true;
 		else
 			ownAppend = false;
 		
 		// commit chaining
-		if (!acceptor.transaction.IsActive())
-			acceptor.transaction.Begin();
-		replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend);
-		// client calls Append() here		
+		if (ownAppend && rmsg.value == BS_MSG_NOP)
+		{
+			safeDB = true;
+			if (replicatedDB != NULL & IsMaster())
+				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
+
+		}
+		else if (replicatedDB != NULL && rmsg.value.length > 0)
+			{
+				if (!acceptor.transaction.IsActive())
+					acceptor.transaction.Begin();
+				replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend);
+				// client calls Append() here
+			}
 	}
 	else if (pmsg.paxosID > learner.paxosID)
 	{
@@ -361,12 +371,14 @@ void ReplicatedLog::OnCatchupTimeout()
 
 void ReplicatedLog::OnLearnLease()
 {
-	if (replicatedDB)
-		replicatedDB->OnMasterLease(masterLease.LeaseOwner());
+	if (masterLease.IsLeaseOwner() && !safeDB)
+		Append(BS_MSG_NOP);
 }
 
 void ReplicatedLog::OnLeaseTimeout()
 {
+	safeDB = false;
+	
 	if (replicatedDB)
 		replicatedDB->OnMasterLeaseExpired();
 }
@@ -379,4 +391,9 @@ bool ReplicatedLog::IsAppending()
 Transaction* ReplicatedLog::GetTransaction()
 {
 	return &acceptor.transaction;
+}
+
+bool ReplicatedLog::IsSafeDB()
+{
+	return safeDB;
 }

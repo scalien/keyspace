@@ -7,6 +7,9 @@
 #include "System/Types.h"
 #include "Framework/Paxos/PaxosConsts.h"
 
+#define MSG_NOP		"NOP"
+#define BS_MSG_NOP	ByteString(strlen(MSG_NOP), strlen(MSG_NOP), "NOP")
+
 class ReplicatedLogMsg
 {
 public:

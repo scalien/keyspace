@@ -72,7 +72,7 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 	Transaction* transaction;
 	KeyspaceOp_Alloc op;
 	
-	if (!replicatedLog->IsMaster() || catchingUp)
+	if (!replicatedLog->IsMaster() || !replicatedLog->IsSafeDB() || catchingUp)
 		return false;
 	
 	if (op_.type == KeyspaceOp::GET)

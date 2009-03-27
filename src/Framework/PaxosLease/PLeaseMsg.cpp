@@ -9,11 +9,12 @@ void PLeaseMsg::Init(char type_, unsigned nodeID_)
 	nodeID = nodeID_;
 }
 
-bool PLeaseMsg::PrepareRequest(unsigned nodeID_, ulong64 proposalID_)
+bool PLeaseMsg::PrepareRequest(unsigned nodeID_, ulong64 proposalID_, ulong64 paxosID_)
 {
 	Init(PREPARE_REQUEST, nodeID_);
 	proposalID = proposalID_;
-
+	paxosID = paxosID_;
+	
 	return true;
 }
 
@@ -99,12 +100,13 @@ bool PLeaseMsg::Read(ByteString& data)
 	
 	if (type == PREPARE_REQUEST)
 	{
-		ulong64 proposalID;
 		
-		ReadNumber(proposalID);
+		ReadNumber(proposalID); CheckOverflow();
+		ReadSeparator(); CheckOverflow();
+		ReadNumber(paxosID);
 		
 		ValidateLength();
-		PrepareRequest(nodeID, proposalID);
+		PrepareRequest(nodeID, proposalID, paxosID);
 		return true;
 	}
 	else if (type == PREPARE_RESPONSE)
@@ -112,9 +114,6 @@ bool PLeaseMsg::Read(ByteString& data)
 		// <<<type specific>>> := <n>#<response>#<n_accepted>#<length>#<value>
 		// the <n_accepted>#<length>#<value> is only present if
 		// response == PREPARE_PREVIOUSLY_ACCEPTED
-		ulong64		proposalID, acceptedProposalID, expireTime;
-		char		response;
-		unsigned	leaseOwner;
 		
 		ReadNumber(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
@@ -145,10 +144,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		return true;
 	}
 	else if (type == PROPOSE_REQUEST)
-	{
-		ulong64			proposalID, expireTime;
-		unsigned int	leaseOwner;
-		
+	{		
 		ReadNumber(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadNumber(leaseOwner); CheckOverflow();
@@ -162,9 +158,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	else if (type == PROPOSE_RESPONSE)
 	{
 		// <<<type specific>>> := <n>#<response>
-		ulong64	proposalID;
-		char	response;
-		
+
 		ReadNumber(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadChar(response);
@@ -197,7 +191,7 @@ bool PLeaseMsg::Write(ByteString& data)
 	
 	if		(type == PREPARE_REQUEST)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%llu", type, nodeID, proposalID);
+		required = snprintf(data.buffer, data.size, "%c#%d#%llu#%llu", type, nodeID, proposalID, paxosID);
 	}
 	else if (type == PREPARE_RESPONSE)
 	{

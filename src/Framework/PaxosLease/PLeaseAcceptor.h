@@ -9,15 +9,16 @@
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
 
+class ReplicatedLog;
+
 class PLeaseAcceptor
 {
 public:
 	PLeaseAcceptor();
 	
-	void					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
-
+	void					Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_,
+								 Scheduler* scheduler_, PaxosConfig* config_);
 	void					ProcessMsg(PLeaseMsg &msg_);
-	
 	void					OnLeaseTimeout();
 
 private:
@@ -26,16 +27,13 @@ private:
 	void					OnPrepareRequest();
 	void					OnProposeRequest();
 
+	ReplicatedLog*			replicatedLog;
 	TransportWriter**		writers;
 	Scheduler*				scheduler;
-
 	ByteArray<PLEASE_BUFSIZE>wdata;
-	
 	MFunc<PLeaseAcceptor>	onLeaseTimeout;
 	Timer					leaseTimeout;
-	
 	PLeaseMsg				msg;
-	
 	PaxosConfig*			config;
 	PLeaseAcceptorState		state;
 };

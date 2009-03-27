@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "System/Log.h"
 #include "Framework/Database/Transaction.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "PLeaseConsts.h"
 
 PLeaseProposer::PLeaseProposer() :
@@ -14,8 +15,10 @@ PLeaseProposer::PLeaseProposer() :
 {
 }
 
-void PLeaseProposer::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
+void PLeaseProposer::Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_,
+						  Scheduler* scheduler_, PaxosConfig* config_)
 {
+	replicatedLog = replicatedLog_;
 	writers = writers_;
 	scheduler = scheduler_;
 	config = config_;
@@ -148,7 +151,7 @@ void PLeaseProposer::StartPreparing()
 
 	state.proposalID = config->NextHighest(state.proposalID);
 		
-	msg.PrepareRequest(config->nodeID, state.proposalID);
+	msg.PrepareRequest(config->nodeID, state.proposalID, replicatedLog->GetPaxosID());
 	
 	BroadcastMessage();
 }

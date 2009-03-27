@@ -3,6 +3,7 @@
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "PLeaseConsts.h"
 
 PLeaseAcceptor::PLeaseAcceptor() :
@@ -11,10 +12,12 @@ PLeaseAcceptor::PLeaseAcceptor() :
 {
 }
 
-void PLeaseAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
+void PLeaseAcceptor::Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_,
+						  Scheduler* scheduler_, PaxosConfig* config_)
 {
 	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
-
+	
+	replicatedLog = replicatedLog_;
 	writers = writers_;
 	scheduler = scheduler_;
 	config = config_;
@@ -44,6 +47,9 @@ void PLeaseAcceptor::ProcessMsg(PLeaseMsg& msg_)
 void PLeaseAcceptor::OnPrepareRequest()
 {
 	Log_Trace();
+	
+	if (msg.paxosID < replicatedLog->GetPaxosID())
+		return; // only up-to-date nodes can become masters
 	
 	unsigned senderID = msg.nodeID;
 	

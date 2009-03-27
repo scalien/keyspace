@@ -10,21 +10,21 @@
 #include "PLeaseAcceptor.h"
 #include "PLeaseLearner.h"
 
+class ReplicatedLog;
+
 class PaxosLease
 {
 public:
 	PaxosLease();
 
-	void				Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
-	
+	void				Init(IOProcessor* ioproc_, Scheduler* scheduler_,
+							 ReplicatedLog* replicatedLog_, PaxosConfig* config_);
 	void				OnRead();
-	
 	void				AcquireLease();
 	bool				IsLeaseOwner();
-	bool				LeaseKnown();
-	unsigned			LeaseOwner();
-	ulong64				LeaseEpoch();
-	
+	bool				IsLeaseKnown();
+	unsigned			GetLeaseOwner();
+	ulong64				GetLeaseEpoch();
 	void				SetOnLearnLease(Callable* onLearnLeaseCallback);
 	void				SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback);
 	
@@ -33,11 +33,8 @@ private:
 	
 	TransportReader*	reader;
 	TransportWriter**	writers;
-	
 	MFunc<PaxosLease>	onRead;
-	
 	PLeaseMsg			msg;
-
  	PLeaseProposer		proposer;
 	PLeaseAcceptor		acceptor;
 	PLeaseLearner		learner;

@@ -33,10 +33,11 @@ public:
 	ulong64			acceptedProposalID;
 	unsigned int	leaseOwner;
 	ulong64			expireTime;
+	ulong64			paxosID; // so only up-to-date nodes can become masters
 	
 	void			Init(char type_, unsigned nodeID_);
 		
-	bool			PrepareRequest(unsigned nodeID_, ulong64 proposalID_);
+	bool			PrepareRequest(unsigned nodeID_, ulong64 proposalID_, ulong64 paxosID_);
 	bool			PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_);
 	bool			PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_,
 						ulong64 acceptedProposalID_, unsigned leaseOwner_, ulong64 expireTime_);

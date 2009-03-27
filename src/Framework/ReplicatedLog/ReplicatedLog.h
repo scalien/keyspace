@@ -34,6 +34,7 @@ public:
 	bool				Stop();
 	bool				Continue();
 	bool				IsAppending();
+	bool				IsSafeDB();
 
 private:
 	void				InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
@@ -61,7 +62,7 @@ private:
 	bool				appending;
 	PaxosMsg			pmsg;
 	ReplicatedLogMsg	rmsg;
-	ByteArray<PAXOS_BUFSIZE>value;
+	ByteArray<PAXOS_BUFSIZE> value;
 	ulong64				highestPaxosID;
 	LogCache			logCache;
 	LogQueue			logQueue;
@@ -71,5 +72,6 @@ private:
 	MFunc<ReplicatedLog>onLeaseTimeout;
 	ReplicatedDB*		replicatedDB;
 	PaxosConfig			config;
+	bool				safeDB;
 };
 #endif

@@ -9,12 +9,13 @@ PaxosLease::PaxosLease()
 {
 }
 
-void PaxosLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
+void PaxosLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_,
+					  ReplicatedLog* replicatedLog_, PaxosConfig* config_)
 {
 	InitTransport(ioproc_, scheduler_, config_);
 	
-	proposer.Init(writers, scheduler_, config_);
-	acceptor.Init(writers, scheduler_, config_);
+	proposer.Init(replicatedLog_, writers, scheduler_, config_);
+	acceptor.Init(replicatedLog_, writers, scheduler_, config_);
 	learner.Init(scheduler_, config_);
 }
 
@@ -67,17 +68,17 @@ bool PaxosLease::IsLeaseOwner()
 	return learner.IsLeaseOwner();
 }
 
-bool PaxosLease::LeaseKnown()
+bool PaxosLease::IsLeaseKnown()
 {
 	return learner.LeaseKnown();
 }
 
-unsigned PaxosLease::LeaseOwner()
+unsigned PaxosLease::GetLeaseOwner()
 {
 	return learner.LeaseOwner();
 }
 
-ulong64 PaxosLease::LeaseEpoch()
+ulong64 PaxosLease::GetLeaseEpoch()
 {
 	return learner.LeaseEpoch();
 }
