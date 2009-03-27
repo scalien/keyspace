@@ -8,19 +8,13 @@ LogCache::LogCache()
 	count = 0;
 	next = 0;
 	size = SIZE(logItems);
-	
-	for (int i = 0; i < SIZE(buffers); i++)
-	{
-		buffers[i] = (char*)malloc(65*KB);
-		logItems[i].value = ByteString(65*KB, 0, buffers[i]);
-		// TODO: 65K fixed here, can't change it to 1MB
-	}
+	allocated = 0;
 }
 
 LogCache::~LogCache()
 {
-	for (int i = 0; i < SIZE(buffers); i++)
-		free(buffers[i]);
+	for (int i = 0; i < size; i++)
+		logItems[i].value.Free();
 }
 
 LogItem* LogCache::Last()
@@ -33,23 +27,48 @@ LogItem* LogCache::Last()
 
 bool LogCache::Push(ulong64 paxosID, ByteString value)
 {
-	logItems[next].paxosID = paxosID;
-	logItems[next].value = value;
+	int tail, head, i;
+	
+	tail = INDEX(next - count);
+	head = INDEX(next - 1);
 
+	if (allocated - logItems[next].value.size + value.length > MAX_MEM_USE)
+	{
+		// start freeing up at the tail
+		for (i = tail; i <= head; i = INDEX(i+1))
+		{
+			allocated -= logItems[i].value.size;
+			logItems[i].value.Free();
+			count--;
+			if (allocated + value.length <= MAX_MEM_USE)
+				break;
+		}
+	}
+	
+	logItems[next].paxosID = paxosID;
+	allocated -= logItems[next].value.size;
+	logItems[next].value.Free();
+	if (!logItems[next].value.Allocate(value.length))
+		ASSERT_FAIL();
+	allocated += logItems[next].value.size;
+	logItems[next].value.Set(value);
 	next = INDEX(next + 1);
 	
-	if (count < size) count++;
+	if (count < size)
+		count++;
 	
 	return true;
 }
 
 LogItem* LogCache::Get(ulong64 paxosID)
 {
+	int tail, head, offset;
+	
 	if (count == 0)
 		return NULL;
 	
-	int tail = INDEX(next - count);
-	int head = INDEX(next - 1);
+	tail = INDEX(next - count);
+	head = INDEX(next - 1);
 	
 	if (paxosID < logItems[tail].paxosID)
 		return NULL;
@@ -57,7 +76,7 @@ LogItem* LogCache::Get(ulong64 paxosID)
 	if (logItems[head].paxosID < paxosID)
 		return NULL;
 	
-	int offset = paxosID - logItems[tail].paxosID;
+	offset = paxosID - logItems[tail].paxosID;
 
 	return &logItems[INDEX(tail + offset)];
 }

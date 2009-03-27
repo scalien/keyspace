@@ -4,13 +4,14 @@
 #include "System/Containers/List.h"
 #include "Framework/Paxos/PaxosMsg.h"
 
-#define CACHE_SIZE		10000
+#define CACHE_SIZE		10*1000
+#define MAX_MEM_USE		256*MB
 
 class LogItem
 {
 public:
 	ulong64					paxosID;
-	ByteString				value;
+	ByteBuffer				value;
 };
 
 class LogCache
@@ -26,10 +27,10 @@ public:
 
 private:
 	LogItem				logItems[CACHE_SIZE];
-	char*				buffers[CACHE_SIZE];
 	int					count;
 	int					next;
 	int					size;
+	unsigned long		allocated;
 };
 
 #endif

@@ -35,7 +35,7 @@ void TransportTCPWriter::Write(ByteString &bs)
 		TCPConn<MAX_TCP_MESSAGE_SIZE>::Write(lbuf, llen, false);		
 		TCPConn<MAX_TCP_MESSAGE_SIZE>::Write(bs.buffer, bs.length);
 	}
-	else if (state == DISCONNECTED)
+	else if (state == DISCONNECTED && !connectTimeout.IsActive())
 		Connect();
 }
 
