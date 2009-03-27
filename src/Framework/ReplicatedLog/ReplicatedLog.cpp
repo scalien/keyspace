@@ -119,14 +119,9 @@ void ReplicatedLog::SetReplicatedDB(ReplicatedDB* replicatedDB_)
 	replicatedDB = replicatedDB_;
 }
 
-LogItem* ReplicatedLog::LastLogItem()
+bool ReplicatedLog::GetLogItem(ulong64 paxosID, ByteString& value)
 {
-	return logCache.Last();
-}
-
-LogItem* ReplicatedLog::GetLogItem(ulong64 paxosID)
-{
-	return logCache.Get(paxosID);
+	return logCache.Get(paxosID, value);
 }
 
 ulong64 ReplicatedLog::GetPaxosID()
@@ -312,6 +307,8 @@ void ReplicatedLog::OnLearnChosen()
 
 void ReplicatedLog::OnRequestChosen()
 {
+	ByteString value;
+	
 	if (pmsg.paxosID == learner.paxosID)
 		return learner.OnRequestChosen(pmsg);
 	
@@ -319,22 +316,22 @@ void ReplicatedLog::OnRequestChosen()
 	if (pmsg.paxosID < learner.paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		LogItem* li = logCache.Get(pmsg.paxosID);
-		if (li != NULL)
-			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, li->value);
+		if (logCache.Get(pmsg.paxosID, value))
+			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value);
 	}
 }
 
 void ReplicatedLog::OnRequest()
 {
 	Log_Trace();
+	
+	ByteString value;
 
 	if (pmsg.paxosID < acceptor.paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		LogItem* li = logCache.Get(pmsg.paxosID);
-		if (li != NULL)
-			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, li->value);
+		if (logCache.Get(pmsg.paxosID, value))
+			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value);
 	}
 	else // paxosID < msg.paxosID
 	{

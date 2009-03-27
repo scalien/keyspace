@@ -26,8 +26,7 @@ public:
 	bool				Append(ByteString value);
 	void				SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	Transaction*		GetTransaction();
-	LogItem*			LastLogItem();
-	LogItem*			GetLogItem(ulong64 paxosID);
+	bool				GetLogItem(ulong64 paxosID, ByteString& value);
 	ulong64				GetPaxosID();
 	bool				IsMaster();	
 	int					GetNodeID();

@@ -20,10 +20,10 @@ public:
 						LogCache();
 						~LogCache();
 
-	LogItem*			Last();
+	//LogItem*			Last();
 
 	bool				Push(ulong64 paxosID, ByteString value);
-	LogItem*			Get(ulong64 paxosID);
+	bool				Get(ulong64 paxosID, ByteString& value);
 
 private:
 	LogItem				logItems[CACHE_SIZE];

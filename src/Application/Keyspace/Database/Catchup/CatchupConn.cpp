@@ -36,7 +36,6 @@ void CatchupConn::WriteNext()
 {
 	int			msglen;
 	ByteString	key, value;
-	LogItem*	item;
 	
 	if (msg.type == KEY_VALUE)
 	{
@@ -47,22 +46,19 @@ void CatchupConn::WriteNext()
 		}
 		else
 		{
-			endPaxosID = server->replicatedLog->GetPaxosID();
-			
-			item = server->replicatedLog->GetLogItem(startPaxosID);
-			if (item == NULL)
-				msg.Rollback();
+			endPaxosID = server->replicatedLog->GetPaxosID();			
+			if (server->replicatedLog->GetLogItem(startPaxosID, value))
+				msg.DBCommand(startPaxosID, value);
 			else
-				msg.DBCommand(item->paxosID, item->value);			
+				msg.Rollback();
 		}
 	}
 	else if (msg.type == DB_COMMAND && msg.paxosID < endPaxosID)
 	{
-		item = server->replicatedLog->GetLogItem(msg.paxosID + 1);
-		if (item == NULL)
-			msg.Rollback();
+		if (server->replicatedLog->GetLogItem(msg.paxosID + 1, value))
+			msg.DBCommand(msg.paxosID + 1, value);			
 		else
-			msg.DBCommand(item->paxosID, item->value);
+			msg.Rollback();
 	}
 	else // (msg.type == DB_COMMAND && msg.paxosID == endPaxosID)
 	{

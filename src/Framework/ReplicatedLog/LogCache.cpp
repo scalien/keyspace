@@ -17,13 +17,13 @@ LogCache::~LogCache()
 		logItems[i].value.Free();
 }
 
-LogItem* LogCache::Last()
+/*LogItem* LogCache::Last()
 {
 	if (count != 0)
 		return &logItems[INDEX(next - 1)];
 	else
 		return NULL;
-}
+}*/
 
 bool LogCache::Push(ulong64 paxosID, ByteString value)
 {
@@ -60,23 +60,24 @@ bool LogCache::Push(ulong64 paxosID, ByteString value)
 	return true;
 }
 
-LogItem* LogCache::Get(ulong64 paxosID)
+bool LogCache::Get(ulong64 paxosID, ByteString& value)
 {
 	int tail, head, offset;
 	
 	if (count == 0)
-		return NULL;
+		return false;
 	
 	tail = INDEX(next - count);
 	head = INDEX(next - 1);
 	
 	if (paxosID < logItems[tail].paxosID)
-		return NULL;
+		return false;
 	
 	if (logItems[head].paxosID < paxosID)
-		return NULL;
+		return false;
 	
 	offset = paxosID - logItems[tail].paxosID;
 
-	return &logItems[INDEX(tail + offset)];
+	value = logItems[INDEX(tail + offset)].value;
+	return true;
 }
