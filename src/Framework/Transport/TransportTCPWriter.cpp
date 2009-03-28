@@ -7,7 +7,7 @@
 void TransportTCPWriter::Init(Endpoint &endpoint_)
 {
 	endpoint = endpoint_;
-	TCPConn<MAX_TCP_MESSAGE_SIZE>::Connect(endpoint, CONNECT_TIMEOUT);
+	TCPConn<>::Connect(endpoint, CONNECT_TIMEOUT);
 }
 
 void TransportTCPWriter::Write(ByteString &bs)
@@ -21,8 +21,8 @@ void TransportTCPWriter::Write(ByteString &bs)
 	{
 		llen = snprintf(lbuf, sizeof(lbuf), "%d:", bs.length);
 	
-		TCPConn<MAX_TCP_MESSAGE_SIZE>::Write(lbuf, llen, false);		
-		TCPConn<MAX_TCP_MESSAGE_SIZE>::Write(bs.buffer, bs.length);
+		TCPConn<>::Write(lbuf, llen, false);		
+		TCPConn<>::Write(bs.buffer, bs.length);
 	}
 	else if (state == DISCONNECTED && !connectTimeout.IsActive())
 		Connect();
@@ -32,11 +32,13 @@ void TransportTCPWriter::Connect()
 {
 	Log_Trace();
 	
-	TCPConn<MAX_TCP_MESSAGE_SIZE>::Connect(endpoint, CONNECT_TIMEOUT);
+	TCPConn<>::Connect(endpoint, CONNECT_TIMEOUT);
 }
 
 void TransportTCPWriter::OnConnect()
 {
+	TCPConn<>::OnConnect();
+	
 	Log_Message("endpoint = %s", endpoint.ToString());
 	tcpwrite.onComplete = &onWrite;
 	
@@ -45,6 +47,8 @@ void TransportTCPWriter::OnConnect()
 
 void TransportTCPWriter::OnConnectTimeout()
 {
+	TCPConn<>::OnConnectTimeout();
+	
 	Log_Message("endpoint = %s", endpoint.ToString());
 	
 	Close();
@@ -65,5 +69,8 @@ void TransportTCPWriter::OnClose()
 	Log_Message("endpoint = %s", endpoint.ToString());
 	
 	if (!connectTimeout.IsActive())
+	{
+		Log_Message("reset");
 		EventLoop::Get()->Reset(&connectTimeout);
+	}
 }

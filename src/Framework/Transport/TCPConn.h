@@ -21,12 +21,12 @@ public:
 	virtual ~TCPConn();
 	
 	void			Init(bool startRead = true);
-	void			Connect(Endpoint &endpoint_, int timeout);
+	void			Connect(Endpoint &endpoint_, unsigned timeout);
 
 	Socket&			GetSocket() { return socket; }
 	
 protected:
-	typedef DynArray<bufferSize> Buffer;
+	typedef ByteArray<bufferSize> Buffer;
 
 	enum State 
 	{
@@ -136,6 +136,8 @@ void TCPConn<bufferSize>::OnConnect()
 {
 	Log_Trace();
 	
+	state = CONNECTED;
+	
 	EventLoop::Get()->Remove(&connectTimeout);
 }
 
@@ -198,7 +200,7 @@ void TCPConn<bufferSize>::WritePending()
 		tcpwrite.data = *buf;
 		tcpwrite.transferred = 0;
 		
-		IOProcessor::Get()->Add(&tcpwrite);		
+		IOProcessor::Get()->Add(&tcpwrite);
 	}	
 }
 
@@ -218,7 +220,7 @@ void TCPConn<bufferSize>::Close()
 }
 
 template<int bufferSize>
-void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, int timeout)
+void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 {
 	Log_Message("endpoint_ = %s", endpoint_.ToString());
 

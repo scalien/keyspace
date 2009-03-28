@@ -26,7 +26,7 @@ private:
 	virtual void	OnRead();
 	virtual void	OnClose();
 
-	Endpoint					endpoint;
+	Endpoint		endpoint;
 };
 
 
