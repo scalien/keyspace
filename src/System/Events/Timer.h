@@ -71,11 +71,16 @@ public:
 		delay = delay_;
 	}
 		
+	void SetDelay(unsigned delay_)
+	{
+		delay = delay_;
+	}
+
 	virtual void OnAdd()
 	{
 		when = Now() + delay;
 	}
-
+	
 private:
 	unsigned delay;
 };

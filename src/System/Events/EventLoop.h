@@ -12,9 +12,15 @@ class EventLoop : public Scheduler
 public:
 	IOProcessor*					ioproc;
 	
-	EventLoop()						{ ioproc = NULL; }
-	EventLoop(IOProcessor* ioproc_)	{ ioproc = ioproc_; }
+	static EventLoop* Get();
 	
+	EventLoop()						{ ioproc = NULL; }
+
+	void Init()
+	{
+		ioproc = IOProcessor::Get();
+	}
+			
 	long RunOnce()
 	{
 		Timer** it;
