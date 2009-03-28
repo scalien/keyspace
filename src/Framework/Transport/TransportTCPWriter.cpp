@@ -3,13 +3,6 @@
 
 #define CONNECT_TIMEOUT		2000
 
-TransportTCPWriter::TransportTCPWriter()
-{
-}
-
-TransportTCPWriter::~TransportTCPWriter()
-{
-}
 
 void TransportTCPWriter::Init(Endpoint &endpoint_)
 {

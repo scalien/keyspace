@@ -138,7 +138,9 @@ int HttpConn::ProcessGetRequest()
 		
 		op.test.Init();
 		
-		kdb->Add(op);
+		if (!kdb->Add(op))
+			Response(500, "Unable to process your request at this time",
+				strlen("Unable to process your request at this time"));
 		
 		return 0;
 	}
@@ -175,7 +177,9 @@ int HttpConn::ProcessGetRequest()
 		op.value.length = valuelen;
 		op.value.size = valuelen;
 		
-		kdb->Add(op);
+		if (!kdb->Add(op))
+			Response(500, "Unable to process your request at this time",
+				strlen("Unable to process your request at this time"));
 		
 		return 0;
 	}

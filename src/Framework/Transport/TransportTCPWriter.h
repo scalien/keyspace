@@ -12,8 +12,6 @@ class TransportTCPWriter :
 	public TCPConn<MAX_TCP_MESSAGE_SIZE>
 {
 public:
-	TransportTCPWriter();
-	~TransportTCPWriter();
 	
 	// TransportWriter interface
 	virtual void	Init(Endpoint &endpoint_);

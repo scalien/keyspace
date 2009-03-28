@@ -13,7 +13,6 @@ void Write();
 TransportUDPWriter	writer;
 CFunc				writeCallback(&Write);
 CdownTimer			writeTimeout(1000, &writeCallback);
-EventLoop*			eventloop;
 
 void Write()
 {
@@ -21,40 +20,26 @@ void Write()
 	hello.Set("hello");
 
 	writer.Write(hello);
-	eventloop->Reset(&writeTimeout);
+	EventLoop::Get()->Reset(&writeTimeout);
 }
 
 int
-main(int, char**)
+main(int, char* argv[])
 {
-	IOProcessor*	ioproc;
+	IOProcessor::Get()->Init();
 	
-	ioproc = IOProcessor::Get();
-	ioproc->Init();
+	if (!PaxosConfig::Get()->Init(argv[1]))
+		ASSERT_FAIL();
 
-	eventloop = EventLoop::Get();
-	eventloop->Init();
+	ReplicatedLog::Get()->Init();
 	
-
-	ReplicatedLog rlog;
-	rlog.Init(ioproc, eventloop);
-
 	KeyspaceDB kdb;
-	kdb.Init(ioproc, &rlog);
-//	
-//	MemcacheServer mcServer;
-//	mcServer.Init(&kdb);
-//	
-	HttpServer httpServer;
-	httpServer.Init(&kdb);
+	kdb.Init();
+	
+	HttpServer proto;
+	proto.Init(&kdb);
 
-//	Endpoint maro;
-//	maro.Set("192.168.1.240", 8080);
-	
-//	writer.Init(ioproc, eventloop, maro);
-	
-//	eventloop->Add(&writeTimeout);
-	eventloop->Run();	
+	EventLoop::Get()->Run();
 
 	return 0;
 }

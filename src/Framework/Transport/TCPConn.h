@@ -68,7 +68,8 @@ onRead(this, &TCPConn::OnRead),
 onWrite(this, &TCPConn::OnWrite),
 onClose(this, &TCPConn::OnClose),
 onConnect(this, &TCPConn::OnConnect),
-onConnectTimeout(this, &TCPConn::OnConnectTimeout)
+onConnectTimeout(this, &TCPConn::OnConnectTimeout),
+connectTimeout(&onConnectTimeout)
 {
 	state = DISCONNECTED;
 }
@@ -226,7 +227,7 @@ void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, int timeout)
 	
 	bool ret;
 	
-	Init( false);
+	Init(false);
 	state = CONNECTING;
 
 	socket.Create(TCP);
