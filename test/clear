@@ -1,4 +1,4 @@
 rm $1/__*
 rm $1/log*
-rm $1/state
+rm $1/keyspace
 rm $1/test
