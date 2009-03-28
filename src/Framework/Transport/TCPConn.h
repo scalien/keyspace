@@ -7,8 +7,9 @@
 #include "System/Events/Callable.h"
 #include "System/Containers/List.h"
 #include "System/Buffer.h"
+#include "Transport.h"
 
-template<int bufferSize = 4096>
+template<int bufferSize = MAX_TCP_MESSAGE_SIZE>
 class TCPConn
 {
 public:

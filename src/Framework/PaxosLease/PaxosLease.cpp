@@ -33,8 +33,7 @@ void PaxosLease::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
 		endpoint = PaxosConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
-		writers[i]->Init(ioproc_, scheduler_);
-		writers[i]->Start(endpoint);
+		writers[i]->Init(ioproc_, scheduler_, endpoint);
 	}	
 }
 

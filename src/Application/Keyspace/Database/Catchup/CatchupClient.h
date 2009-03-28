@@ -1,13 +1,13 @@
 #ifndef CATCHUPCLIENT_H
 #define CATCHUPCLIENT_H
 
-#include "Framework/Transport/TransportTCPWriter.h"
+#include "Framework/Transport/TCPConn.h"
 #include "Framework/Database/Table.h"
 #include "Framework/Database/Transaction.h"
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "CatchupMsg.h"
 
-class CatchupClient : TransportTCPWriter
+class CatchupClient : public TCPConn<>
 {
 public:
 	void						Init(Table* table_);

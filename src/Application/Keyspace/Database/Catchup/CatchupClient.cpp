@@ -17,7 +17,6 @@ void CatchupClient::Start(unsigned nodeID)
 
 	endpoint = PaxosConfig::Get()->endpoints[nodeID];
 	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);
-	TransportTCPWriter::Start(endpoint);
 }
 
 void CatchupClient::OnRead()

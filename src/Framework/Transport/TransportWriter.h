@@ -11,8 +11,7 @@ class TransportWriter
 public:
 	virtual			~TransportWriter() {}
 
-	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_) = 0;
-	virtual void	Start(Endpoint &endpoint) = 0;
+	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint) = 0;
 	virtual	void	Write(ByteString &bs) = 0;
 };
 

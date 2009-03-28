@@ -11,8 +11,7 @@ public:
 	~TransportUDPWriter();
 	
 	// TransportWriter interface
-	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_);
-	virtual void	Start(Endpoint &endpoint_);
+	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint);
 	virtual	void	Write(ByteString &bs);
 
 private:

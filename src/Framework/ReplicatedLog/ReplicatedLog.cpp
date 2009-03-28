@@ -56,8 +56,7 @@ void ReplicatedLog::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
 		writers[i] = new TransportTCPWriter;
 		
 		Log_Message("Connecting to %s", endpoint.ToString());
-		writers[i]->Init(ioproc_, scheduler_);
-		writers[i]->Start(endpoint);
+		writers[i]->Init(ioproc_, scheduler_, endpoint);
 	}
 }
 
