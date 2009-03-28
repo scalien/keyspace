@@ -11,17 +11,16 @@ public:
 		Clear();
 	}
 
-	bool IsEmpty()
-	{
-		if (first == last && first == NULL)
-			return true;
-		return false;
-	}
+	int Size() { return size; }
 	
 	void Clear()
 	{
-		first = NULL;
-		last = NULL;
+		T* elem;
+
+		do
+		{
+			elem = Get();
+		} while (elem);
 	}
 	
 	void Add(T* elem)
@@ -61,6 +60,7 @@ public:
 private:
 	T*	first;
 	T*	last;
+	int	size;
 };
 
 

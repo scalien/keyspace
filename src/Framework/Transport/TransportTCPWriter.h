@@ -29,19 +29,19 @@ private:
 	virtual void	OnRead();
 	virtual void	OnClose();
 
-	enum State 
-	{
-		DISCONNECTED,
-		CONNECTED,
-		CONNECTING
-	};
-	
-	State						state;
+//	enum State 
+//	{
+//		DISCONNECTED,
+//		CONNECTED,
+//		CONNECTING
+//	};
+//	
+//	State						state;
 	Endpoint					endpoint;
 	Scheduler*					scheduler;	
-	MFunc<TransportTCPWriter>	onConnect;
-	MFunc<TransportTCPWriter>	onConnectTimeout;
-	CdownTimer					connectTimeout;
+//	MFunc<TransportTCPWriter>	onConnect;
+//	MFunc<TransportTCPWriter>	onConnectTimeout;
+//	CdownTimer					connectTimeout;
 };
 
 

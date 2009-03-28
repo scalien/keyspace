@@ -1,5 +1,6 @@
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Protocol/MemcacheServer.h"
 #include "Application/Keyspace/Protocol/HttpServer.h"
@@ -24,17 +25,22 @@ void Write()
 }
 
 int
-main(int argc, char* argv[])
+main(int, char**)
 {
 	IOProcessor*	ioproc;
 	
 	ioproc = IOProcessor::Get();
-	eventloop = new EventLoop(ioproc);
-	
 	ioproc->Init();
 
+	eventloop = EventLoop::Get();
+	eventloop->Init();
+	
+
+	ReplicatedLog rlog;
+	rlog.Init(ioproc, eventloop);
+
 	KeyspaceDB kdb;
-	kdb.Init();
+	kdb.Init(ioproc, &rlog);
 //	
 //	MemcacheServer mcServer;
 //	mcServer.Init(&kdb);

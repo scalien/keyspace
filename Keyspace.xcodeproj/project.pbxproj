@@ -106,10 +106,34 @@
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
-		9A62072F0F6C3FE2009576A1 /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		9ADC984D0F7C00C50025A7AB /* QueueTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC98430F7C004E0025A7AB /* QueueTest.cpp */; };
 		9ADC98670F7C01C10025A7AB /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
+		9ADC9A3A0F7E77F60025A7AB /* KeyspaceMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */; };
+		9ADC9A3B0F7E780D0025A7AB /* CatchupClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F40F758C3D003084C9 /* CatchupClient.cpp */; };
+		9ADC9A3D0F7E781C0025A7AB /* ReplicatedLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */; };
+		9ADC9A3F0F7E789B0025A7AB /* CatchupMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F30F758C3D003084C9 /* CatchupMsg.cpp */; };
+		9ADC9A400F7E789B0025A7AB /* CatchupServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F50F758C3D003084C9 /* CatchupServer.cpp */; };
+		9ADC9A410F7E789B0025A7AB /* PaxosLease.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D5AA0F61DE2A004BBDB4 /* PaxosLease.cpp */; };
+		9ADC9A420F7E789B0025A7AB /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */; };
+		9ADC9A430F7E789B0025A7AB /* PaxosMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */; };
+		9ADC9A440F7E789B0025A7AB /* PaxosProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */; };
+		9ADC9A450F7E789B0025A7AB /* PaxosAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */; };
+		9ADC9A460F7E789B0025A7AB /* PaxosLearner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D81C0F6424CE004BBDB4 /* PaxosLearner.cpp */; };
+		9ADC9A470F7E789B0025A7AB /* ReplicatedLogMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */; };
+		9ADC9A480F7E789B0025A7AB /* LogCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147280F31B6B200F3D2B6 /* LogCache.cpp */; };
+		9ADC9A490F7E789B0025A7AB /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
+		9ADC9A510F7E78D80025A7AB /* CatchupConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A76300F765B9C003084C9 /* CatchupConn.cpp */; };
+		9ADC9A520F7E78D80025A7AB /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
+		9ADC9A530F7E78D80025A7AB /* TransportTCPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */; };
+		9ADC9A540F7E78D80025A7AB /* PLeaseMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D3870F5EAD7F004BBDB4 /* PLeaseMsg.cpp */; };
+		9ADC9A550F7E78D80025A7AB /* PLeaseProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D38B0F5EADB2004BBDB4 /* PLeaseProposer.cpp */; };
+		9ADC9A560F7E78D80025A7AB /* PLeaseAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D38E0F5EADBE004BBDB4 /* PLeaseAcceptor.cpp */; };
+		9ADC9A570F7E78D80025A7AB /* PLeaseLearner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D56A0F61DB32004BBDB4 /* PLeaseLearner.cpp */; };
+		9ADC9A590F7E78ED0025A7AB /* TransportUDPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */; };
+		9ADC9A5A0F7E78ED0025A7AB /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A765F0F7680D6003084C9 /* Cursor.cpp */; };
+		9ADC9AD30F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
+		9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -276,6 +300,7 @@
 		9ADC98430F7C004E0025A7AB /* QueueTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QueueTest.cpp; sourceTree = "<group>"; };
 		9ADC98480F7C00960025A7AB /* QueueTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = QueueTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkedList.h; sourceTree = "<group>"; };
+		9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventLoop.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -627,6 +652,7 @@
 			children = (
 				548147350F31B6B200F3D2B6 /* Callable.h */,
 				548147360F31B6B200F3D2B6 /* EventLoop.h */,
+				9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */,
 				548147380F31B6B200F3D2B6 /* Scheduler.h */,
 				548147370F31B6B200F3D2B6 /* Scheduler.cpp */,
 				548147390F31B6B200F3D2B6 /* Timer.h */,
@@ -883,6 +909,7 @@
 				547A76310F765B9C003084C9 /* CatchupConn.cpp in Sources */,
 				547A76600F7680D6003084C9 /* Cursor.cpp in Sources */,
 				545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */,
+				9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -924,7 +951,30 @@
 				9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */,
 				9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */,
 				9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */,
-				9A62072F0F6C3FE2009576A1 /* TransportUDPWriter.cpp in Sources */,
+				9ADC9A3A0F7E77F60025A7AB /* KeyspaceMsg.cpp in Sources */,
+				9ADC9A3B0F7E780D0025A7AB /* CatchupClient.cpp in Sources */,
+				9ADC9A3D0F7E781C0025A7AB /* ReplicatedLog.cpp in Sources */,
+				9ADC9A3F0F7E789B0025A7AB /* CatchupMsg.cpp in Sources */,
+				9ADC9A400F7E789B0025A7AB /* CatchupServer.cpp in Sources */,
+				9ADC9A410F7E789B0025A7AB /* PaxosLease.cpp in Sources */,
+				9ADC9A420F7E789B0025A7AB /* PaxosConfig.cpp in Sources */,
+				9ADC9A430F7E789B0025A7AB /* PaxosMsg.cpp in Sources */,
+				9ADC9A440F7E789B0025A7AB /* PaxosProposer.cpp in Sources */,
+				9ADC9A450F7E789B0025A7AB /* PaxosAcceptor.cpp in Sources */,
+				9ADC9A460F7E789B0025A7AB /* PaxosLearner.cpp in Sources */,
+				9ADC9A470F7E789B0025A7AB /* ReplicatedLogMsg.cpp in Sources */,
+				9ADC9A480F7E789B0025A7AB /* LogCache.cpp in Sources */,
+				9ADC9A490F7E789B0025A7AB /* LogQueue.cpp in Sources */,
+				9ADC9A510F7E78D80025A7AB /* CatchupConn.cpp in Sources */,
+				9ADC9A520F7E78D80025A7AB /* TransportUDPWriter.cpp in Sources */,
+				9ADC9A530F7E78D80025A7AB /* TransportTCPReader.cpp in Sources */,
+				9ADC9A540F7E78D80025A7AB /* PLeaseMsg.cpp in Sources */,
+				9ADC9A550F7E78D80025A7AB /* PLeaseProposer.cpp in Sources */,
+				9ADC9A560F7E78D80025A7AB /* PLeaseAcceptor.cpp in Sources */,
+				9ADC9A570F7E78D80025A7AB /* PLeaseLearner.cpp in Sources */,
+				9ADC9A590F7E78ED0025A7AB /* TransportUDPReader.cpp in Sources */,
+				9ADC9A5A0F7E78ED0025A7AB /* Cursor.cpp in Sources */,
+				9ADC9AD30F7E89330025A7AB /* EventLoop.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

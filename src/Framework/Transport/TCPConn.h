@@ -5,9 +5,13 @@
 #include "System/IO/IOProcessor.h"
 #include "System/IO/Socket.h"
 #include "System/Events/Callable.h"
+#include "System/Events/Timer.h"
+#include "System/Events/EventLoop.h"
 #include "System/Containers/List.h"
 #include "System/Buffer.h"
 #include "Transport.h"
+
+#define TCP_CONNECT_TIMEOUT 3000
 
 template<int bufferSize = MAX_TCP_MESSAGE_SIZE>
 class TCPConn
@@ -17,26 +21,43 @@ public:
 	virtual ~TCPConn();
 	
 	void			Init(IOProcessor* ioproc_, bool startRead = true);
+	void			Connect(IOProcessor* ioproc_, Endpoint &endpoint_, int timeout);
+
 	Socket&			GetSocket() { return socket; }
 	
 protected:
-	typedef ByteArray<bufferSize> Buffer;
-	
+	typedef DynArray<bufferSize> Buffer;
+
+	enum State 
+	{
+		DISCONNECTED,
+		CONNECTED,
+		CONNECTING
+	};
+		
+	State			state;
 	Socket			socket;
 	TCPRead			tcpread;
 	TCPWrite		tcpwrite;
 	IOProcessor*	ioproc;
+	Scheduler*		scheduler;
 	Buffer			readBuffer;
 	List<Buffer*>	writeQueue;
+	CdownTimer		connectTimeout;
 	
 	MFunc<TCPConn>	onRead;
 	MFunc<TCPConn>	onWrite;
 	MFunc<TCPConn>	onClose;
+	MFunc<TCPConn>	onConnect;
+	MFunc<TCPConn>	onConnectTimeout;
 	
 	virtual void	OnRead() = 0;
 	virtual void	OnWrite();
 	virtual void	OnClose() = 0;
+	virtual void	OnConnect();
+	virtual void	OnConnectTimeout();
 	
+	void			AsyncRead(bool start = true);
 	void			Write(const char* data, int count, bool flush = true);
 	void			WritePending();
 	void			Close();
@@ -47,9 +68,13 @@ template<int bufferSize>
 TCPConn<bufferSize>::TCPConn() :
 onRead(this, &TCPConn::OnRead),
 onWrite(this, &TCPConn::OnWrite),
-onClose(this, &TCPConn::OnClose)
+onClose(this, &TCPConn::OnClose),
+onConnect(this, &TCPConn::OnConnect),
+onConnectTimeout(this, &TCPConn::OnConnectTimeout)
 {
+	state = DISCONNECTED;
 	ioproc = NULL;
+	scheduler = NULL;
 }
 
 
@@ -58,7 +83,6 @@ TCPConn<bufferSize>::~TCPConn()
 {
 	Buffer** it;
 
-	// FIXME this looks suspicious
 	for (it = writeQueue.Head(); it != NULL; it = writeQueue.Next(it))
 		delete *it;	
 	
@@ -70,14 +94,9 @@ template<int bufferSize>
 void TCPConn<bufferSize>::Init(IOProcessor* ioproc_, bool startRead)
 {
 	ioproc = ioproc_;
+	state = CONNECTED;
 	
-	tcpread.fd = socket.fd;
-	tcpread.data = readBuffer;
-	tcpread.onComplete = &onRead;
-	tcpread.onClose = &onClose;
-	tcpread.requested = IO_READ_ANY;
-	if (startRead)
-		ioproc->Add(&tcpread);
+	AsyncRead(startRead);
 	
 	tcpwrite.fd = socket.fd;
 	tcpwrite.onComplete = &onWrite;
@@ -117,7 +136,34 @@ void TCPConn<bufferSize>::OnWrite()
 }
 
 template<int bufferSize>
-void TCPConn<bufferSize>::Write(const char *data, int count, bool activate)
+void TCPConn<bufferSize>::OnConnect()
+{
+	Log_Trace();
+	
+	EventLoop::Get()->Remove(&connectTimeout);
+}
+
+template<int bufferSize>
+void TCPConn<bufferSize>::OnConnectTimeout()
+{
+	Log_Trace();
+}
+
+template<int bufferSize>
+void TCPConn<bufferSize>::AsyncRead(bool start)
+{
+	tcpread.fd = socket.fd;
+	tcpread.data = readBuffer;
+	tcpread.onComplete = &onRead;
+	tcpread.onClose = &onClose;
+	tcpread.requested = IO_READ_ANY;
+	if (start)
+		ioproc->Add(&tcpread);
+}
+
+
+template<int bufferSize>
+void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 {
 	Log_Trace();
 	
@@ -136,7 +182,7 @@ void TCPConn<bufferSize>::Write(const char *data, int count, bool activate)
 	memcpy(buf->buffer + buf->length, data, count);
 	buf->length += count;
 	
-	if (!tcpwrite.active && activate)
+	if (!tcpwrite.active && flush)
 		WritePending();
 }
 
@@ -168,6 +214,37 @@ void TCPConn<bufferSize>::Close()
 		ioproc->Remove(&tcpwrite);
 	
 	socket.Close();
+	state = DISCONNECTED;
+}
+
+template<int bufferSize>
+void TCPConn<bufferSize>::Connect(IOProcessor* ioproc_, Endpoint &endpoint_, int timeout)
+{
+	Log_Message("endpoint_ = %s", endpoint_.ToString());
+
+	if (state != DISCONNECTED)
+		return;
+	
+	bool ret;
+	
+	Init(ioproc_, false);
+	state = CONNECTING;
+
+	socket.Create(TCP);
+	socket.SetNonblocking();
+	ret = socket.Connect(endpoint_);
+	
+	tcpwrite.fd = socket.fd;
+	tcpwrite.onComplete = &onConnect;
+	tcpwrite.data.length = 0;
+	
+	ioproc->Add(&tcpwrite);
+
+	if (timeout)
+	{
+		connectTimeout.SetDelay(timeout);
+		EventLoop::Get()->Reset(&connectTimeout);
+	}
 }
 
 #endif
