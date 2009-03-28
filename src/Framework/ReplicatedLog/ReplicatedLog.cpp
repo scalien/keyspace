@@ -256,6 +256,8 @@ void ReplicatedLog::OnLearnChosen()
 			return;
 		}
 
+		Log_Message("%d %d %llu %llu", rmsg.nodeID, GetNodeID(), rmsg.restartCounter,
+			PaxosConfig::Get()->restartCounter);
 		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
 			logQueue.Pop(); // we just appended this
 
@@ -297,7 +299,6 @@ void ReplicatedLog::OnLearnChosen()
 			safeDB = true;
 			if (replicatedDB != NULL & IsMaster())
 				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
-
 		}
 		else if (replicatedDB != NULL && rmsg.value.length > 0)
 			{
@@ -382,7 +383,10 @@ void ReplicatedLog::OnCatchupTimeout()
 void ReplicatedLog::OnLearnLease()
 {
 	if (masterLease.IsLeaseOwner() && !safeDB && !(appending && rmsg.value == BS_MSG_NOP))
+	{
+		Log_Message("appending NOP");
 		Append(BS_MSG_NOP);
+	}
 }
 
 void ReplicatedLog::OnLeaseTimeout()

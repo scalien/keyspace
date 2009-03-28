@@ -49,11 +49,27 @@ void CatchupConn::WriteNext()
 	static ByteArray<32> prefix; // for the "length:" header
 	static ByteArray<MAX_TCP_MESSAGE_SIZE> msgData;
 	ByteString	key, value;
+	bool kv;
 	
-	if (cursor.Next(key, value))
-		msg.KeyValue(key, value);
-	else
-		msg.Commit(startPaxosID);
+	kv = false;
+	while(true)
+	{
+		kv = cursor.Next(key, value);
+		
+		if (!kv)
+		{
+			msg.Commit(startPaxosID);
+			break;
+		}
+		
+		if (key.length > 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
+			continue;
+		else
+		{
+			msg.KeyValue(key, value);
+			break;
+		}
+	}
 	
 	msg.Write(msgData);
 	
