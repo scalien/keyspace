@@ -113,19 +113,6 @@ class List
 			if (head == NULL)
 				head = node;
 		}
-		/*
-		 virtual void AddUnique(T t)
-		 {
-		 T* it;
-		 for (it = Head(); it != NULL; it = Next(it))
-		 {
-		 if (*it == t) // unique-check
-		 return;
-		 }
-		 
-		 Add(t);
-		 }
-		 */
 		
 		T* Remove(T* t)
 		{

@@ -32,7 +32,7 @@ extern "C" {
 			ret += test_time(test_functions[i], (const char *) &test_names[names[i]]); \
 		} \
 		return test_eval(__FILE__, ret); \
-	}
+	} \
 
 #define TEST_SUCCESS 0
 #define TEST_FAILURE 1

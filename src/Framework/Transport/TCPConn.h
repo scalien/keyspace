@@ -56,7 +56,8 @@ template<int bufferSize>
 TCPConn<bufferSize>::~TCPConn()
 {
 	Buffer** it;
-	
+
+	// FIXME this looks suspicious
 	for (it = writeQueue.Head(); it != NULL; it = writeQueue.Next(it))
 		delete *it;	
 	

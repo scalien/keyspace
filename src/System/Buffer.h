@@ -157,8 +157,11 @@ template<int n>
 class DynArray : public ByteString
 {
 public:
-	char data[n];
+	char		data[n];
+	DynArray*	next;
+	
 	enum { GRAN = 32 };
+	
 	DynArray()
 	{
 		size = n;

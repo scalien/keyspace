@@ -108,6 +108,8 @@
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		9A62072F0F6C3FE2009576A1 /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
+		9ADC984D0F7C00C50025A7AB /* QueueTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC98430F7C004E0025A7AB /* QueueTest.cpp */; };
+		9ADC98670F7C01C10025A7AB /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -271,6 +273,9 @@
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		9ADC98040F7BFBA50025A7AB /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
+		9ADC98430F7C004E0025A7AB /* QueueTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QueueTest.cpp; sourceTree = "<group>"; };
+		9ADC98480F7C00960025A7AB /* QueueTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = QueueTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkedList.h; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -314,6 +319,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9ADC98460F7C00960025A7AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -344,6 +356,7 @@
 				9A2723170F5F9B9F00EE25E2 /* TableVisitorTest */,
 				9A27242A0F65480E00EE25E2 /* Test.agazso */,
 				9A2725180F65AA4000EE25E2 /* HubSim */,
+				9ADC98480F7C00960025A7AB /* QueueTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -430,6 +443,7 @@
 				9A2727000F692B4800EE25E2 /* UDPTestClient.c */,
 				9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */,
 				9A2724300F654C5400EE25E2 /* Test.agazso.cpp */,
+				9ADC98430F7C004E0025A7AB /* QueueTest.cpp */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -603,6 +617,7 @@
 				548147320F31B6B200F3D2B6 /* List.h */,
 				548147330F31B6B200F3D2B6 /* SortedList.h */,
 				9ADC98040F7BFBA50025A7AB /* Queue.h */,
+				9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */,
 			);
 			path = Containers;
 			sourceTree = "<group>";
@@ -757,6 +772,22 @@
 			productReference = 9A2725180F65AA4000EE25E2 /* HubSim */;
 			productType = "com.apple.product-type.tool";
 		};
+		9ADC98470F7C00960025A7AB /* QueueTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9ADC984C0F7C00B50025A7AB /* Build configuration list for PBXNativeTarget "QueueTest" */;
+			buildPhases = (
+				9ADC98450F7C00960025A7AB /* Sources */,
+				9ADC98460F7C00960025A7AB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QueueTest;
+			productName = QueueTest;
+			productReference = 9ADC98480F7C00960025A7AB /* QueueTest */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -774,6 +805,7 @@
 				9A2723160F5F9B9F00EE25E2 /* TableVisitorTest */,
 				9A2724290F65480E00EE25E2 /* Test.agazso */,
 				9A2725170F65AA4000EE25E2 /* HubSim */,
+				9ADC98470F7C00960025A7AB /* QueueTest */,
 			);
 		};
 /* End PBXProject section */
@@ -907,6 +939,15 @@
 				9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */,
 				9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */,
 				9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9ADC98450F7C00960025A7AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ADC984D0F7C00C50025A7AB /* QueueTest.cpp in Sources */,
+				9ADC98670F7C01C10025A7AB /* Test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1149,6 +1190,36 @@
 			};
 			name = Release;
 		};
+		9ADC984A0F7C00970025A7AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = QueueTest;
+			};
+			name = Debug;
+		};
+		9ADC984B0F7C00970025A7AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = QueueTest;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1202,6 +1273,15 @@
 			buildConfigurations = (
 				9A27251A0F65AA4100EE25E2 /* Debug */,
 				9A27251B0F65AA4100EE25E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9ADC984C0F7C00B50025A7AB /* Build configuration list for PBXNativeTarget "QueueTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9ADC984A0F7C00970025A7AB /* Debug */,
+				9ADC984B0F7C00970025A7AB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
