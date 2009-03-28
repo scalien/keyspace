@@ -13,7 +13,8 @@ public:
 
 	void				OnRead();
 	void				OnWrite();
-	void				OnClose();
+	
+	virtual void		OnClose();
 	
 	void				WriteNext();
 	

@@ -4,6 +4,8 @@
 #include "Framework/Paxos/PaxosConsts.h"
 #include "Framework/Transport/TransportTCPReader.h"
 #include "Framework/Transport/TransportTCPWriter.h"
+#include "Framework/Transport/TransportUDPReader.h"
+#include "Framework/Transport/TransportUDPWriter.h"
 #include <stdlib.h>
 
 ReplicatedLog replicatedLog;
@@ -49,17 +51,24 @@ void ReplicatedLog::InitTransport()
 	int			i;
 	Endpoint	endpoint;
 
+#if USE_TCP == 1
 	reader = new TransportTCPReader;
+#else
+	reader = new TransportUDPReader;
+#endif
 	reader->Init(PaxosConfig::Get()->port + PAXOS_PORT_OFFSET);
 	reader->SetOnRead(&onRead);
-	
+
 	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
 	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
 	{
 		endpoint = PaxosConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort() + PAXOS_PORT_OFFSET);
+#if USE_TCP == 1
 		writers[i] = new TransportTCPWriter;
-		
+#else
+		writers[i] = new TransportUDPWriter;
+#endif
 		Log_Message("Connecting to %s", endpoint.ToString());
 		writers[i]->Init(endpoint);
 	}
@@ -111,6 +120,21 @@ bool ReplicatedLog::GetLogItem(ulong64 paxosID, ByteString& value)
 ulong64 ReplicatedLog::GetPaxosID()
 {
 	return proposer.paxosID;
+}
+
+void ReplicatedLog::SetPaxosID(Transaction* transaction, ulong64 paxosID)
+{
+	EventLoop::Get()->Remove(&(proposer.prepareTimeout));
+	EventLoop::Get()->Remove(&(proposer.proposeTimeout));
+	proposer.paxosID = paxosID;
+	proposer.state.Init();
+
+	acceptor.paxosID = paxosID;
+	acceptor.state.Init();
+	acceptor.Persist(transaction);
+
+	learner.paxosID = paxosID;
+	learner.state.Init();
 }
 
 bool ReplicatedLog::IsMaster()

@@ -12,6 +12,8 @@ void CatchupClient::Init(KeyspaceDB* keyspaceDB_, Table* table_)
 
 void CatchupClient::Start(unsigned nodeID)
 {
+	Log_Trace();
+
 	Endpoint endpoint;
 	
 	transaction.Begin();
@@ -19,10 +21,13 @@ void CatchupClient::Start(unsigned nodeID)
 
 	endpoint = PaxosConfig::Get()->endpoints[nodeID];
 	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);
+	Connect(endpoint, CATCHUP_CONNECT_TIMEOUT);
 }
 
 void CatchupClient::OnRead()
 {
+	Log_Trace();
+
 	int msglength, nread, msgbegin, msgend;
 	Endpoint endpoint;
 	
@@ -67,6 +72,8 @@ void CatchupClient::OnRead()
 
 void CatchupClient::OnClose()
 {
+	Log_Trace();
+
 	if (transaction.IsActive())
 		transaction.Rollback();
 	
@@ -75,8 +82,26 @@ void CatchupClient::OnClose()
 	Close();
 }
 
+void CatchupClient::OnConnect()
+{
+	Log_Trace();
+
+	TCPConn<>::OnConnect();
+	
+	AsyncRead();
+}
+
+void CatchupClient::OnConnectTimeout()
+{
+	Log_Trace();
+
+	OnClose();
+}
+
 void CatchupClient::ProcessMsg()
 {
+	Log_Trace();
+
 	if (msg.type == KEY_VALUE)
 		OnKeyValue();
 	else if (msg.type == CATCHUP_COMMIT)
@@ -87,13 +112,16 @@ void CatchupClient::ProcessMsg()
 
 void CatchupClient::OnKeyValue()
 {
+	Log_Trace();
+
 	table->Set(&transaction, msg.key, msg.value);
 }
 
 void CatchupClient::OnCommit()
 {
-	// TODO: set paxos stuff
-	//ReplicatedLog::Get()->SetPaxos(msg.paxosID);
+	Log_Trace();
+
+	ReplicatedLog::Get()->SetPaxosID(&transaction, msg.paxosID);
 	
 	transaction.Commit();
 	

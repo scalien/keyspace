@@ -18,12 +18,11 @@ public:
 	PaxosAcceptor();
 	
 	void					Init(TransportWriter** writer_);
+	bool					Persist(Transaction* transaction);
 	
-	void					SetPaxosID(ulong64 paxosID_);
-
 protected:
+	bool					WriteState();
 	bool					ReadState();
-	bool					WriteState(Transaction* transaction);
 	void					SendReply(unsigned nodeID);
 	void					OnPrepareRequest(PaxosMsg& msg_);
 	void					OnProposeRequest(PaxosMsg& msg_);

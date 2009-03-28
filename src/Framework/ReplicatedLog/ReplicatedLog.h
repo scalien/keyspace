@@ -15,6 +15,8 @@
 #include "LogQueue.h"
 
 #define CATCHUP_TIMEOUT	5000
+#define USE_TCP			0
+
 
 class ReplicatedLog
 {
@@ -29,7 +31,7 @@ public:
 	Transaction*				GetTransaction();
 	bool						GetLogItem(ulong64 paxosID, ByteString& value);
 	ulong64						GetPaxosID();
-	void						SetPaxosID();
+	void						SetPaxosID(Transaction* transaction, ulong64 paxosID);
 	bool						IsMaster();	
 	int							GetNodeID();
 	void						Stop();

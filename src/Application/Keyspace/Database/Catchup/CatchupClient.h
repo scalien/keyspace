@@ -7,6 +7,8 @@
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "CatchupMsg.h"
 
+#define CATCHUP_CONNECT_TIMEOUT	2000
+
 class KeyspaceDB;
 
 class CatchupClient : public TCPConn<>
@@ -17,6 +19,8 @@ public:
 	void						Start(unsigned nodeID);
 	void						OnRead();
 	void						OnClose();
+	virtual void				OnConnect();
+	virtual void				OnConnectTimeout();
 
 private:
 	void						ProcessMsg();

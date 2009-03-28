@@ -205,10 +205,13 @@ void KeyspaceDB::OnMasterLease(unsigned)
 
 void KeyspaceDB::OnMasterLeaseExpired()
 {
+	Log_Trace();
 }
 
 void KeyspaceDB::OnDoCatchup(unsigned nodeID)
 {
+	Log_Trace();
+
 	catchingUp = true;
 	ReplicatedLog::Get()->Stop();
 	ReplicatedLog::Get()->GetTransaction()->Commit();
@@ -217,8 +220,16 @@ void KeyspaceDB::OnDoCatchup(unsigned nodeID)
 
 void KeyspaceDB::OnCatchupComplete()
 {
+	Log_Trace();
+	
+	catchingUp = false;
+	ReplicatedLog::Get()->Continue();
 }
 
 void KeyspaceDB::OnCatchupFailed()
 {
+	Log_Trace();
+
+	catchingUp = false;
+	ReplicatedLog::Get()->Continue();	
 }

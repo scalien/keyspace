@@ -34,6 +34,8 @@ void CatchupConn::OnWrite()
 
 void CatchupConn::OnClose()
 {
+	Log_Trace();
+
 	if (transaction.IsActive())
 		transaction.Rollback();
 	Close();
@@ -42,6 +44,8 @@ void CatchupConn::OnClose()
 
 void CatchupConn::WriteNext()
 {
+	Log_Trace();
+
 	static ByteArray<32> prefix; // for the "length:" header
 	static ByteArray<MAX_TCP_MESSAGE_SIZE> msgData;
 	ByteString	key, value;

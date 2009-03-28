@@ -27,15 +27,37 @@ void PaxosAcceptor::Init(TransportWriter** writers_)
 	paxosID = 0;
 	state.Init();
 
-	//if (!ReadState())
+	if (!ReadState())
 	{
 		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
 	}
 }
 
-void PaxosAcceptor::SetPaxosID(ulong64 paxosID_)
+bool PaxosAcceptor::Persist(Transaction* transaction)
 {
-	paxosID = paxosID_;
+	Log_Trace();
+
+	bool ret;
+	
+	if (table == NULL)
+		return false;
+		
+	bytearrays[0].Set(rprintf("%llu",			paxosID));
+	bytearrays[1].Set(rprintf("%d",				state.accepted));
+	bytearrays[2].Set(rprintf("%llu",			state.promisedProposalID));
+	bytearrays[3].Set(rprintf("%llu",			state.acceptedProposalID));
+	
+	ret = true;
+	ret = ret && table->Set(transaction, "@@paxosID",				bytearrays[0]);
+	ret = ret && table->Set(transaction, "@@accepted",				bytearrays[1]);
+	ret = ret && table->Set(transaction, "@@promisedProposalID",	bytearrays[2]);
+	ret = ret && table->Set(transaction, "@@acceptedProposalID",	bytearrays[3]);
+	ret = ret && table->Set(transaction, "@@acceptedValue",			state.acceptedValue);
+	
+	if (!ret)
+		return false;
+	
+	return true;
 }
 
 bool PaxosAcceptor::ReadState()
@@ -89,7 +111,7 @@ bool PaxosAcceptor::ReadState()
 	return true;
 }
 
-bool PaxosAcceptor::WriteState(Transaction* transaction)
+bool PaxosAcceptor::WriteState()
 {
 	Log_Trace();
 
@@ -117,13 +139,12 @@ bool PaxosAcceptor::WriteState(Transaction* transaction)
 	if (!ret)
 		return false;
 	
-	mdbop.SetTransaction(transaction);
+	mdbop.SetTransaction(&transaction);
 	
 	dbWriter.Add(&mdbop);
 
 	return true;
 }
-
 
 void PaxosAcceptor::SendReply(unsigned nodeID)
 {
@@ -160,7 +181,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID,
 			msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED, state.acceptedProposalID, state.acceptedValue);
 	
-	WriteState(&transaction);
+	WriteState();
 }
 
 void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
@@ -188,7 +209,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 		ASSERT_FAIL();
 	msg.ProposeResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
 	
-	WriteState(&transaction);
+	WriteState();
 }
 
 void PaxosAcceptor::OnDBComplete()
