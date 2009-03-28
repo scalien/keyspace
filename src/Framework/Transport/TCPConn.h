@@ -20,8 +20,8 @@ public:
 	TCPConn();
 	virtual ~TCPConn();
 	
-	void			Init(IOProcessor* ioproc_, bool startRead = true);
-	void			Connect(IOProcessor* ioproc_, Endpoint &endpoint_, int timeout);
+	void			Init(bool startRead = true);
+	void			Connect(Endpoint &endpoint_, int timeout);
 
 	Socket&			GetSocket() { return socket; }
 	
@@ -39,8 +39,6 @@ protected:
 	Socket			socket;
 	TCPRead			tcpread;
 	TCPWrite		tcpwrite;
-	IOProcessor*	ioproc;
-	Scheduler*		scheduler;
 	Buffer			readBuffer;
 	List<Buffer*>	writeQueue;
 	CdownTimer		connectTimeout;
@@ -73,8 +71,6 @@ onConnect(this, &TCPConn::OnConnect),
 onConnectTimeout(this, &TCPConn::OnConnectTimeout)
 {
 	state = DISCONNECTED;
-	ioproc = NULL;
-	scheduler = NULL;
 }
 
 
@@ -91,9 +87,8 @@ TCPConn<bufferSize>::~TCPConn()
 
 
 template<int bufferSize>
-void TCPConn<bufferSize>::Init(IOProcessor* ioproc_, bool startRead)
+void TCPConn<bufferSize>::Init(bool startRead)
 {
-	ioproc = ioproc_;
 	state = CONNECTED;
 	
 	AsyncRead(startRead);
@@ -158,7 +153,7 @@ void TCPConn<bufferSize>::AsyncRead(bool start)
 	tcpread.onClose = &onClose;
 	tcpread.requested = IO_READ_ANY;
 	if (start)
-		ioproc->Add(&tcpread);
+		IOProcessor::Get()->Add(&tcpread);
 }
 
 
@@ -200,7 +195,7 @@ void TCPConn<bufferSize>::WritePending()
 		tcpwrite.data = *buf;
 		tcpwrite.transferred = 0;
 		
-		ioproc->Add(&tcpwrite);		
+		IOProcessor::Get()->Add(&tcpwrite);		
 	}	
 }
 
@@ -208,17 +203,17 @@ template<int bufferSize>
 void TCPConn<bufferSize>::Close()
 {
 	if (tcpread.active)
-		ioproc->Remove(&tcpread);
+		IOProcessor::Get()->Remove(&tcpread);
 	
 	if (tcpwrite.active)
-		ioproc->Remove(&tcpwrite);
+		IOProcessor::Get()->Remove(&tcpwrite);
 	
 	socket.Close();
 	state = DISCONNECTED;
 }
 
 template<int bufferSize>
-void TCPConn<bufferSize>::Connect(IOProcessor* ioproc_, Endpoint &endpoint_, int timeout)
+void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, int timeout)
 {
 	Log_Message("endpoint_ = %s", endpoint_.ToString());
 
@@ -227,7 +222,7 @@ void TCPConn<bufferSize>::Connect(IOProcessor* ioproc_, Endpoint &endpoint_, int
 	
 	bool ret;
 	
-	Init(ioproc_, false);
+	Init( false);
 	state = CONNECTING;
 
 	socket.Create(TCP);
@@ -238,7 +233,7 @@ void TCPConn<bufferSize>::Connect(IOProcessor* ioproc_, Endpoint &endpoint_, int
 	tcpwrite.onComplete = &onConnect;
 	tcpwrite.data.length = 0;
 	
-	ioproc->Add(&tcpwrite);
+	IOProcessor::Get()->Add(&tcpwrite);
 
 	if (timeout)
 	{

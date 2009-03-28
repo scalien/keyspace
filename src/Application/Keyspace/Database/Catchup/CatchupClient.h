@@ -7,10 +7,12 @@
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "CatchupMsg.h"
 
+class KeyspaceDB;
+
 class CatchupClient : public TCPConn<>
 {
 public:
-	void						Init(Table* table_);
+	void						Init(KeyspaceDB* keyspaceDB_, Table* table_);
 
 	void						Start(unsigned nodeID);
 	void						OnRead();
@@ -25,6 +27,7 @@ private:
 	CatchupMsg					msg;
 	ulong64						paxosID;
 	Transaction					transaction;
+	KeyspaceDB*					keyspaceDB;
 };
 
 #endif

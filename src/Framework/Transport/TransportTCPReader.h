@@ -29,7 +29,7 @@ class TransportTCPReader : public TransportReader, public TCPServer
 friend class TransportTCPConn;
 
 public:
-	void				Init(IOProcessor* ioproc_, int port);
+	void				Init(int port);
 
 	void				SetOnRead(Callable* onRead);
 	void				GetMessage(ByteString& bs_);
@@ -40,7 +40,6 @@ public:
 private:
 	void				SetMessage(ByteString bs_);
 	
-	IOProcessor*		ioproc;
 	Callable*			onRead;
 	ByteString			bs;
 	bool				stopped;

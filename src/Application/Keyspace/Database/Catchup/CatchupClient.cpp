@@ -1,8 +1,10 @@
 #include "CatchupClient.h"
 #include "Framework/Paxos/PaxosConfig.h"
+#include "Application/Keyspace/Database/KeyspaceDB.h"
 
-void CatchupClient::Init(Table* table_)
+void CatchupClient::Init(KeyspaceDB* keyspaceDB_, Table* table_)
 {
+	keyspaceDB = keyspaceDB_;
 	table = table_;
 	
 	transaction.Set(table);
@@ -59,7 +61,7 @@ void CatchupClient::OnRead()
 	}
 	while (true);
 	
-	ioproc->Add(&tcpread);
+	IOProcessor::Get()->Add(&tcpread);
 
 }
 
@@ -67,6 +69,8 @@ void CatchupClient::OnClose()
 {
 	if (transaction.IsActive())
 		transaction.Rollback();
+	
+	keyspaceDB->OnCatchupFailed();
 	
 	Close();
 }
@@ -88,5 +92,12 @@ void CatchupClient::OnKeyValue()
 
 void CatchupClient::OnCommit()
 {
+	// TODO: set paxos stuff
+	//ReplicatedLog::Get()->SetPaxos(msg.paxosID);
+	
 	transaction.Commit();
+	
+	keyspaceDB->OnCatchupComplete();
+	
+	Close();
 }

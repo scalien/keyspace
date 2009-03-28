@@ -17,7 +17,7 @@ public:
 	~TransportTCPWriter();
 	
 	// TransportWriter interface
-	virtual void	Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_);
+	virtual void	Init(Endpoint &endpoint_);
 	virtual void	Write(ByteString &bs);
 
 private:

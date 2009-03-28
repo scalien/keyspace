@@ -6,12 +6,10 @@ onConnect(this, &TCPServer::OnConnect)
 {
 }
 
-bool TCPServer::Init(IOProcessor* ioproc_, int port)
+bool TCPServer::Init(int port)
 {
 	Log_Trace();
 
-	ioproc = ioproc_;
-	
 	listener.Create(TCP);
 	listener.Listen(port);
 	listener.SetNonblocking();
@@ -20,5 +18,5 @@ bool TCPServer::Init(IOProcessor* ioproc_, int port)
 	tcpread.listening = true;
 	tcpread.onComplete = &onConnect;
 	
-	return ioproc->Add(&tcpread);	
+	return IOProcessor::Get()->Add(&tcpread);	
 }

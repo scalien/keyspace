@@ -7,9 +7,6 @@
 
 int main(int argc, char* argv[])
 {
-	IOProcessor*	ioproc;
-	EventLoop*	eventloop;
-	
 	if (argc != 2)
 	{
 		printf("usage: %s <config-file>\n", argv[0]);
@@ -18,19 +15,15 @@ int main(int argc, char* argv[])
 	
 	//Log_SetTimestamping(true);
 	
-	ioproc = IOProcessor::Get();
-	eventloop = new EventLoop(ioproc);
+	IOProcessor::Get()->Init();
 	
 	if (!PaxosConfig::Get()->Init(argv[1]))
 		ASSERT_FAIL();
-	
-	ioproc->Init();
 
-	ReplicatedLog rl;
-	rl.Init(ioproc, eventloop);
+	ReplicatedLog::Get()->Init();
 	
 	KeyspaceDB kdb;
-	kdb.Init(ioproc, &rl);
+	kdb.Init();
 	
 //	TestDB testdb;
 //	testdb.Init(ioproc, eventloop, &rl);
@@ -38,5 +31,5 @@ int main(int argc, char* argv[])
 	HttpServer proto;
 	proto.Init(&kdb);
 
-	eventloop->Run();
+	EventLoop::Get()->Run();
 }

@@ -2,9 +2,8 @@
 #define PLEASEPROPOSER_H
 
 #include "System/Common.h"
-#include "System/Events/Scheduler.h"
+#include "System/Events/Timer.h"
 #include "Framework/Transport/TransportWriter.h"
-#include "Framework/Paxos/PaxosConfig.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
@@ -16,8 +15,7 @@ class PLeaseProposer
 public:
 	PLeaseProposer();
 
-	void					Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_,
-								 Scheduler* scheduler_);
+	void					Init(TransportWriter** writers_);
 	
 	void					ProcessMsg(PLeaseMsg &msg_);
 	void					OnAcquireLeaseTimeout();
@@ -31,11 +29,8 @@ private:
 	void					StartPreparing();
 	void					StartProposing();
 
-	ReplicatedLog*			replicatedLog;
 	TransportWriter**		writers;
-	Scheduler*				scheduler;
 	ByteArray<PLEASE_BUFSIZE>wdata;
-	PaxosConfig*			config;
 	PLeaseProposerState		state;
 	PLeaseMsg				msg;
 	MFunc<PLeaseProposer>	onAcquireLeaseTimeout;

@@ -7,14 +7,13 @@
 
 HttpConn::HttpConn()
 {
-	ioproc = NULL;
 	server = NULL;
 }
 
 
-void HttpConn::Init(IOProcessor* ioproc_, KeyspaceDB* kdb_, HttpServer* server_)
+void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 {
-	TCPConn<>::Init(ioproc_);
+	TCPConn<>::Init();
 
 	kdb = kdb_;
 	server = server_;
@@ -52,7 +51,7 @@ void HttpConn::OnRead()
 	
 	Parse(tcpread.data.buffer, tcpread.data.length);
 	
-	ioproc->Add(&tcpread);
+	IOProcessor::Get()->Add(&tcpread);
 }
 
 

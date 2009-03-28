@@ -1,9 +1,17 @@
 #include "ReplicatedLog.h"
 #include <string.h>
+#include "System/Events/EventLoop.h"
 #include "Framework/Paxos/PaxosConsts.h"
 #include "Framework/Transport/TransportTCPReader.h"
 #include "Framework/Transport/TransportTCPWriter.h"
 #include <stdlib.h>
+
+ReplicatedLog replicatedLog;
+
+ReplicatedLog* ReplicatedLog::Get()
+{
+	return &replicatedLog;
+}
 
 ReplicatedLog::ReplicatedLog()
 :	onRead(this, &ReplicatedLog::OnRead),
@@ -14,24 +22,21 @@ ReplicatedLog::ReplicatedLog()
 {
 }
 
-bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
+bool ReplicatedLog::Init()
 {
-	// I/O framework
-	scheduler = scheduler_;
-	
 	replicatedDB = NULL;
 	
-	masterLease.Init(ioproc_, scheduler_, this);
+	masterLease.Init();
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
 //	if (config.nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
 		masterLease.AcquireLease();
 
-	InitTransport(ioproc_, scheduler_);
+	InitTransport();
 
-	proposer.Init(writers, scheduler_);
-	acceptor.Init(writers, scheduler_);
-	learner.Init(writers, scheduler_);
+	proposer.Init(writers);
+	acceptor.Init(writers);
+	learner.Init(writers);
 	
 	appending = false;
 	safeDB = false;
@@ -39,13 +44,13 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	return true;
 }
 
-void ReplicatedLog::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
+void ReplicatedLog::InitTransport()
 {
 	int			i;
 	Endpoint	endpoint;
 
 	reader = new TransportTCPReader;
-	reader->Init(ioproc_, PaxosConfig::Get()->port + PAXOS_PORT_OFFSET);
+	reader->Init(PaxosConfig::Get()->port + PAXOS_PORT_OFFSET);
 	reader->SetOnRead(&onRead);
 	
 	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
@@ -56,7 +61,7 @@ void ReplicatedLog::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
 		writers[i] = new TransportTCPWriter;
 		
 		Log_Message("Connecting to %s", endpoint.ToString());
-		writers[i]->Init(ioproc_, scheduler_, endpoint);
+		writers[i]->Init(endpoint);
 	}
 }
 
@@ -194,7 +199,7 @@ void ReplicatedLog::OnLearnChosen()
 	if (pmsg.paxosID == learner.paxosID)
 	{
 		if (catchupTimeout.IsActive())
-			scheduler->Remove(&catchupTimeout);
+			EventLoop::Get()->Remove(&catchupTimeout);
 		
 		if (pmsg.subtype == LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
@@ -278,7 +283,7 @@ void ReplicatedLog::OnLearnChosen()
 		//	I am lagging and need to catch-up
 		
 		if (!catchupTimeout.IsActive())
-			scheduler->Add(&catchupTimeout);
+			EventLoop::Get()->Add(&catchupTimeout);
 		
 		learner.RequestChosen(pmsg.nodeID);
 	}
@@ -317,7 +322,7 @@ void ReplicatedLog::OnRequest()
 		//	I am lagging and need to catch-up
 		
 		if (!catchupTimeout.IsActive())
-			scheduler->Add(&catchupTimeout);
+			EventLoop::Get()->Add(&catchupTimeout);
 		
 		learner.RequestChosen(pmsg.nodeID);
 	}
@@ -325,8 +330,8 @@ void ReplicatedLog::OnRequest()
 
 void ReplicatedLog::NewPaxosRound()
 {
-	proposer.scheduler->Remove(&(proposer.prepareTimeout));
-	proposer.scheduler->Remove(&(proposer.proposeTimeout));
+	EventLoop::Get()->Remove(&(proposer.prepareTimeout));
+	EventLoop::Get()->Remove(&(proposer.proposeTimeout));
 	proposer.paxosID++;
 	proposer.state.Init();
 

@@ -12,7 +12,7 @@ class HttpConn : public TCPConn<>, public KeyspaceClient
 public:
 	HttpConn();
 	
-	void			Init(IOProcessor* ioproc_, KeyspaceDB* kdb_, HttpServer* server_);
+	void			Init(KeyspaceDB* kdb_, HttpServer* server_);
 	void			OnComplete(KeyspaceOp* op, bool status);
 private:
 	

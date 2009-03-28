@@ -47,23 +47,22 @@ KeyspaceDB::KeyspaceDB()
 	catchingUp = false;
 }
 
-bool KeyspaceDB::Init(IOProcessor* ioproc_, ReplicatedLog* replicatedLog_)
+bool KeyspaceDB::Init()
 {
 	Log_Trace();
 	
-	replicatedLog = replicatedLog_;
-	replicatedLog->SetReplicatedDB(this);
+	ReplicatedLog::Get()->SetReplicatedDB(this);
 	
 	table = database.GetTable("keyspace");
 	
-	catchupServer.Init(ioproc_, PaxosConfig::Get()->port + CATCHUP_PORT_OFFSET, table, replicatedLog);
+	catchupServer.Init(PaxosConfig::Get()->port + CATCHUP_PORT_OFFSET);
 	
 	return true;
 }
 
 unsigned KeyspaceDB::GetNodeID()
 {
-	return replicatedLog->GetNodeID();
+	return ReplicatedLog::Get()->GetNodeID();
 }
 
 bool KeyspaceDB::Add(KeyspaceOp& op_)
@@ -74,12 +73,17 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 	Transaction* transaction;
 	KeyspaceOp_Alloc op;
 	
-	if (!replicatedLog->IsMaster() || !replicatedLog->IsSafeDB() || catchingUp)
+	if (catchingUp)
 		return false;
+	
+	if ((!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()) &&
+		!(op_.type == KeyspaceOp::GET && op_.key.length > 2 &&
+		  op_.key.buffer[0] == '@' && op_.key.buffer[1] == '@'))
+			return false;
 	
 	if (op_.type == KeyspaceOp::GET)
 	{
-		if ((transaction = replicatedLog->GetTransaction()) != NULL)
+		if ((transaction = ReplicatedLog::Get()->GetTransaction()) != NULL)
 			if (!transaction->IsActive())
 				transaction = NULL;
 		ret = table->Get(transaction, op_.key, data);
@@ -94,7 +98,7 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 	op.Alloc(op_);
 	ops.Append(op);
 	
-	if (!replicatedLog->IsAppending() && replicatedLog->IsMaster())
+	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster())
 		Append();
 	
 	return true;
@@ -163,7 +167,7 @@ void KeyspaceDB::OnAppend(Transaction* transaction, ulong64 paxosID, ByteString 
 
 	Log_Message("paxosID = %llu, numOps = %u", paxosID, numOps);
 	
-	if (replicatedLog->IsMaster() && ops.Size() > 0)
+	if (ReplicatedLog::Get()->IsMaster() && ops.Size() > 0)
 		Append();
 }
 
@@ -190,12 +194,12 @@ void KeyspaceDB::Append()
 			break;
 	}
 	
-	replicatedLog->Append(data);
+	ReplicatedLog::Get()->Append(data);
 }
 
 void KeyspaceDB::OnMasterLease(unsigned)
 {
-	if (!replicatedLog->IsAppending() && replicatedLog->IsMaster() && ops.Size() > 0)
+	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Size() > 0)
 		Append();
 }
 
@@ -206,7 +210,15 @@ void KeyspaceDB::OnMasterLeaseExpired()
 void KeyspaceDB::OnDoCatchup(unsigned nodeID)
 {
 	catchingUp = true;
-	replicatedLog->Stop();
-	replicatedLog->GetTransaction()->Commit();
+	ReplicatedLog::Get()->Stop();
+	ReplicatedLog::Get()->GetTransaction()->Commit();
 	catchupClient.Start(nodeID);
+}
+
+void KeyspaceDB::OnCatchupComplete()
+{
+}
+
+void KeyspaceDB::OnCatchupFailed()
+{
 }

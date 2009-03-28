@@ -11,12 +11,11 @@ class TCPServer
 public:
 	TCPServer();
 	
-	bool				Init(IOProcessor* ioproc_, int port);
+	bool				Init(int port);
 	
 protected:
 	TCPRead				tcpread;
 	Socket				listener;
-	IOProcessor*		ioproc;
 	MFunc<TCPServer>	onConnect;
 	
 	virtual void		OnConnect() = 0;

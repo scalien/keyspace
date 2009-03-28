@@ -10,7 +10,7 @@ class CatchupServer : public TCPServer
 friend class CatchupConn;
 
 public:
-	bool				Init(IOProcessor* ioproc_, int port, Table* table_, ReplicatedLog* replicatedLog_);
+	bool				Init(int port);
 	
 	void				OnConnect();
 

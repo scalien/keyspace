@@ -4,7 +4,7 @@
 
 CatchupConn::CatchupConn(CatchupServer* server_)
 {
-	TCPConn<BUF_SIZE>::Init(IOProcessor::Get(), false /*startRead*/);
+	TCPConn<BUF_SIZE>::Init(false /*startRead*/);
 	
 	server = server_;
 	transaction.Set(server->table);
@@ -57,5 +57,5 @@ void CatchupConn::WriteNext()
 	snprintf(writeBuffer.buffer, writeBuffer.size, "%d:%.*s",
 		msgData.length, msgData.length, msgData.buffer);
 	
-	ioproc->Add(&tcpwrite);
+	IOProcessor::Get()->Add(&tcpwrite);
 }

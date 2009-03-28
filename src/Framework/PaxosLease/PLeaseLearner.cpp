@@ -3,7 +3,9 @@
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "System/Events/EventLoop.h"
 #include "Framework/Paxos/PaxosConsts.h"
+#include "Framework/Paxos/PaxosConfig.h"
 #include "PLeaseConsts.h"
 
 PLeaseLearner::PLeaseLearner() :
@@ -12,10 +14,8 @@ PLeaseLearner::PLeaseLearner() :
 {
 }
 
-void PLeaseLearner::Init(Scheduler* scheduler_)
+void PLeaseLearner::Init()
 {
-	scheduler = scheduler_;
-		
 	state.Init();
 }
 
@@ -43,7 +43,7 @@ void PLeaseLearner::OnLearnChosen()
 			state.leaseOwner, state.expireTime - Now());
 
 		leaseTimeout.Set(state.expireTime);
-		scheduler->Reset(&leaseTimeout);
+		EventLoop::Get()->Reset(&leaseTimeout);
 		
 		Call(onLearnLeaseCallback);
 	}
@@ -58,7 +58,7 @@ void PLeaseLearner::OnLeaseTimeout()
 
 bool PLeaseLearner::IsLeaseOwner()
 {
-	if (state.learned && state.leaseOwner == config->nodeID && Now() < state.expireTime)
+	if (state.learned && state.leaseOwner == PaxosConfig::Get()->nodeID && Now() < state.expireTime)
 		return true;
 	else
 		return false;		

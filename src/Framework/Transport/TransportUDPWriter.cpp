@@ -3,7 +3,6 @@
 
 TransportUDPWriter::TransportUDPWriter()
 {
-	ioproc = NULL;
 }
 
 TransportUDPWriter::~TransportUDPWriter()
@@ -11,10 +10,8 @@ TransportUDPWriter::~TransportUDPWriter()
 	socket.Close();
 }
 
-void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*, Endpoint &endpoint_)
+void TransportUDPWriter::Init(Endpoint &endpoint_)
 {
-	ioproc = ioproc_;
-	
 	socket.Create(UDP);
 	socket.SetNonblocking();
 	endpoint = endpoint_;

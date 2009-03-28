@@ -1,12 +1,11 @@
 #include "CatchupServer.h"
 #include "CatchupConn.h"
 
-bool CatchupServer::Init(IOProcessor* ioproc_, int port, Table* table_, ReplicatedLog* replicatedLog_)
+bool CatchupServer::Init(int port)
 {
-	table = table_;
-	replicatedLog = replicatedLog_;
+	table = database.GetTable("keyspace");
 	
-	return TCPServer::Init(ioproc_, port);
+	return TCPServer::Init(port);
 }
 
 void CatchupServer::OnConnect()
@@ -21,7 +20,7 @@ void CatchupServer::OnConnect()
 		Log_Message("%s connected", endpoint.ToString());
 		
 		conn->GetSocket().SetNonblocking();
-		conn->Init(ioproc, true);
+		conn->Init(true);
 	}
 	else
 	{
@@ -29,5 +28,5 @@ void CatchupServer::OnConnect()
 		delete conn;
 	}
 	
-	ioproc->Add(&tcpread);
+	IOProcessor::Get()->Add(&tcpread);
 }

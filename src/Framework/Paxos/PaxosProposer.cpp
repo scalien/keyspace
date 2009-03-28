@@ -3,7 +3,9 @@
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "System/Events/EventLoop.h"
 #include "Framework/Database/Transaction.h"
+#include "PaxosConfig.h"
 #include "PaxosConsts.h"
 
 PaxosProposer::PaxosProposer() :
@@ -14,10 +16,9 @@ PaxosProposer::PaxosProposer() :
 {
 }
 
-void PaxosProposer::Init(TransportWriter** writers_, Scheduler* scheduler_)
+void PaxosProposer::Init(TransportWriter** writers_)
 {
 	writers = writers_;
-	scheduler = scheduler_;
 	
 	// Paxos variables
 	paxosID = 0;
@@ -63,7 +64,7 @@ void PaxosProposer::BroadcastMessage()
 	
 	msg.Write(wdata);
 	
-	for (unsigned nodeID = 0; nodeID < config->numNodes; nodeID++)
+	for (unsigned nodeID = 0; nodeID < PaxosConfig::Get()->numNodes; nodeID++)
 		writers[nodeID]->Write(wdata);
 }
 
@@ -94,11 +95,11 @@ void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 			ASSERT_FAIL();
 	}
 	
-	if (numRejected >= ceil(config->numNodes / 2))
+	if (numRejected >= ceil(PaxosConfig::Get()->numNodes / 2))
 		StartPreparing();
-	else if ((numReceived - numRejected) >= config->MinMajority())
+	else if ((numReceived - numRejected) >= PaxosConfig::Get()->MinMajority())
 		StartProposing();
-	else if (numReceived == config->numNodes)
+	else if (numReceived == PaxosConfig::Get()->numNodes)
 		StartPreparing();
 }
 
@@ -118,14 +119,14 @@ void PaxosProposer::OnProposeResponse(PaxosMsg& msg_)
 		numAccepted++;
 
 	// see if we have enough positive replies to advance
-	if (numAccepted >= config->MinMajority())
+	if (numAccepted >= PaxosConfig::Get()->MinMajority())
 	{
 		// a majority have accepted our proposal, we have consensus
 		StopProposing();
-		msg.LearnChosen(paxosID, config->nodeID, LEARN_PROPOSAL, state.proposalID);
+		msg.LearnChosen(paxosID, PaxosConfig::Get()->nodeID, LEARN_PROPOSAL, state.proposalID);
 		BroadcastMessage();
 	}
-	else if (numReceived == config->numNodes)
+	else if (numReceived == PaxosConfig::Get()->numNodes)
 		StartPreparing();
 }
 
@@ -134,7 +135,7 @@ void PaxosProposer::StopPreparing()
 	Log_Trace();
 
 	state.preparing = false;
-	scheduler->Remove(&prepareTimeout);
+	EventLoop::Get()->Remove(&prepareTimeout);
 }
 
 void PaxosProposer::StopProposing()
@@ -142,7 +143,7 @@ void PaxosProposer::StopProposing()
 	Log_Trace();
 	
 	state.proposing = false;
-	scheduler->Remove(&proposeTimeout);
+	EventLoop::Get()->Remove(&proposeTimeout);
 }
 
 void PaxosProposer::StartPreparing()
@@ -154,15 +155,15 @@ void PaxosProposer::StartPreparing()
 	
 	state.numProposals++;
 	
-	state.proposalID = config->NextHighest(state.proposalID);
+	state.proposalID = PaxosConfig::Get()->NextHighest(state.proposalID);
 	
 	state.highestReceivedProposalID = 0; // TODO: should be -1 ?
 	
-	msg.PrepareRequest(paxosID, config->nodeID, state.proposalID);
+	msg.PrepareRequest(paxosID, PaxosConfig::Get()->nodeID, state.proposalID);
 	
 	BroadcastMessage();
 	
-	scheduler->Reset(&prepareTimeout);
+	EventLoop::Get()->Reset(&prepareTimeout);
 }
 
 void PaxosProposer::StartProposing()
@@ -173,11 +174,11 @@ void PaxosProposer::StartProposing()
 
 	state.proposing = true;
 
-	msg.ProposeRequest(paxosID, config->nodeID, state.proposalID, state.value);
+	msg.ProposeRequest(paxosID, PaxosConfig::Get()->nodeID, state.proposalID, state.value);
 
 	BroadcastMessage();
 	
-	scheduler->Reset(&proposeTimeout);
+	EventLoop::Get()->Reset(&proposeTimeout);
 }
 
 void PaxosProposer::OnPrepareTimeout()

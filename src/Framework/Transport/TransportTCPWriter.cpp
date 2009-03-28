@@ -14,16 +14,15 @@ TransportTCPWriter::~TransportTCPWriter()
 {
 }
 
-void TransportTCPWriter::Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_)
+void TransportTCPWriter::Init(Endpoint &endpoint_)
 {
 //--	TCPConn<MAX_TCP_MESSAGE_SIZE>::Init(ioproc_, false);
 //--	scheduler = scheduler_;
 //--	endpoint = endpoint_;
 //--	Connect();
-	
-	TCPConn<MAX_TCP_MESSAGE_SIZE>::Connect(ioproc_, endpoint, CONNECT_TIMEOUT);
-	scheduler = scheduler_;
+
 	endpoint = endpoint_;
+	TCPConn<MAX_TCP_MESSAGE_SIZE>::Connect(endpoint, CONNECT_TIMEOUT);
 }
 
 void TransportTCPWriter::Write(ByteString &bs)
@@ -63,7 +62,7 @@ void TransportTCPWriter::Write(ByteString &bs)
 //}
 void TransportTCPWriter::Connect()
 {
-	TCPConn<MAX_TCP_MESSAGE_SIZE>::Connect(ioproc, endpoint, CONNECT_TIMEOUT);
+	TCPConn<MAX_TCP_MESSAGE_SIZE>::Connect(endpoint, CONNECT_TIMEOUT);
 }
 
 //void TransportTCPWriter::OnConnect()

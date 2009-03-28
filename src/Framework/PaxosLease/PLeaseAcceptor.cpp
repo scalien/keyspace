@@ -3,7 +3,9 @@
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "System/Events/EventLoop.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
+#include "Framework/Paxos/PaxosConfig.h"
 #include "PLeaseConsts.h"
 
 PLeaseAcceptor::PLeaseAcceptor() :
@@ -12,13 +14,11 @@ PLeaseAcceptor::PLeaseAcceptor() :
 {
 }
 
-void PLeaseAcceptor::Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_, Scheduler* scheduler_)
+void PLeaseAcceptor::Init(TransportWriter** writers_)
 {
 	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
 	
-	replicatedLog = replicatedLog_;
 	writers = writers_;
-	scheduler = scheduler_;
 	
 	state.Init();
 }
@@ -46,27 +46,27 @@ void PLeaseAcceptor::OnPrepareRequest()
 {
 	Log_Trace();
 	
-	if (msg.paxosID < replicatedLog->GetPaxosID())
+	if (msg.paxosID < ReplicatedLog::Get()->GetPaxosID())
 		return; // only up-to-date nodes can become masters
 	
 	unsigned senderID = msg.nodeID;
 	
 	if (state.accepted && state.acceptedExpireTime < Now())
 	{
-		scheduler->Remove(&leaseTimeout);
+		EventLoop::Get()->Remove(&leaseTimeout);
 		OnLeaseTimeout();
 	}
 	
 	if (msg.proposalID < state.promisedProposalID)
-		msg.PrepareResponse(config->nodeID, msg.proposalID, PREPARE_REJECTED);
+		msg.PrepareResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_REJECTED);
 	else
 	{
 		state.promisedProposalID = msg.proposalID;
 
 		if (!state.accepted)
-			msg.PrepareResponse(config->nodeID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
+			msg.PrepareResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
 		else
-			msg.PrepareResponse(config->nodeID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
+			msg.PrepareResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
 				state.acceptedProposalID, state.acceptedLeaseOwner, state.acceptedExpireTime);
 	}
 	
@@ -81,7 +81,7 @@ void PLeaseAcceptor::OnProposeRequest()
 	
 	if (state.accepted && state.acceptedExpireTime < Now())
 	{
-		scheduler->Remove(&leaseTimeout);
+		EventLoop::Get()->Remove(&leaseTimeout);
 		OnLeaseTimeout();
 	}
 
@@ -93,7 +93,7 @@ void PLeaseAcceptor::OnProposeRequest()
 	}
 
 	if (msg.proposalID < state.promisedProposalID)
-		msg.ProposeResponse(config->nodeID, msg.proposalID, PROPOSE_REJECTED);
+		msg.ProposeResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
 	else
 	{
 		state.accepted = true;
@@ -102,9 +102,9 @@ void PLeaseAcceptor::OnProposeRequest()
 		state.acceptedExpireTime = msg.expireTime;
 		
 		leaseTimeout.Set(state.acceptedExpireTime);
-		scheduler->Reset(&leaseTimeout);
+		EventLoop::Get()->Reset(&leaseTimeout);
 		
-		msg.ProposeResponse(config->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
+		msg.ProposeResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
 	}
 	
 	SendReply(senderID);

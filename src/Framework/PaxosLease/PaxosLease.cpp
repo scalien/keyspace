@@ -9,22 +9,22 @@ PaxosLease::PaxosLease()
 {
 }
 
-void PaxosLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* replicatedLog_)
+void PaxosLease::Init()
 {
-	InitTransport(ioproc_, scheduler_);
+	InitTransport();
 	
-	proposer.Init(replicatedLog_, writers, scheduler_);
-	acceptor.Init(replicatedLog_, writers, scheduler_);
-	learner.Init(scheduler_);
+	proposer.Init(writers);
+	acceptor.Init(writers);
+	learner.Init();
 }
 
-void PaxosLease::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
+void PaxosLease::InitTransport()
 {
 	int			i;
 	Endpoint	endpoint;
 	
 	reader = new TransportUDPReader;
-	reader->Init(ioproc_, PaxosConfig::Get()->port + PLEASE_PORT_OFFSET);
+	reader->Init(PaxosConfig::Get()->port + PLEASE_PORT_OFFSET);
 	reader->SetOnRead(&onRead);
 	
 	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
@@ -33,7 +33,7 @@ void PaxosLease::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
 		endpoint = PaxosConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
-		writers[i]->Init(ioproc_, scheduler_, endpoint);
+		writers[i]->Init(endpoint);
 	}	
 }
 

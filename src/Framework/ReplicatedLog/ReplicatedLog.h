@@ -21,13 +21,15 @@ class ReplicatedLog
 public:
 	ReplicatedLog();
 
-	bool						Init(IOProcessor* ioproc_, Scheduler* scheduler_);
+	static ReplicatedLog*		Get();
+	bool						Init();
 	void						OnRead();
 	bool						Append(ByteString value);
 	void						SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	Transaction*				GetTransaction();
 	bool						GetLogItem(ulong64 paxosID, ByteString& value);
 	ulong64						GetPaxosID();
+	void						SetPaxosID();
 	bool						IsMaster();	
 	int							GetNodeID();
 	void						Stop();
@@ -36,7 +38,7 @@ public:
 	bool						IsSafeDB();
 
 private:
-	void						InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_);
+	void						InitTransport();
 	void						ProcessMsg();
 	void						OnPrepareRequest();
 	void						OnPrepareResponse();
@@ -50,7 +52,6 @@ private:
 	void						OnLeaseTimeout();
 	void						NewPaxosRound();
 
-	Scheduler*					scheduler;
 	TransportReader*			reader;
 	TransportWriter**			writers;
 	MFunc<ReplicatedLog>		onRead;

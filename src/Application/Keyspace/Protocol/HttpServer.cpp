@@ -6,7 +6,7 @@
 void HttpServer::Init(KeyspaceDB* kdb_)
 {
 	kdb = kdb_;
-	TCPServer::Init(IOProcessor::Get(), HTTP_PORT + kdb->GetNodeID());
+	TCPServer::Init(HTTP_PORT + kdb->GetNodeID());
 }
 
 void HttpServer::OnConnect()
@@ -16,7 +16,7 @@ void HttpServer::OnConnect()
 	if (listener.Accept(&(conn->GetSocket())))
 	{
 		conn->GetSocket().SetNonblocking();
-		conn->Init(ioproc, kdb, this);
+		conn->Init(kdb, this);
 	}
 	else
 	{

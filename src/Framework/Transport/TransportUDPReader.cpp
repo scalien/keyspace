@@ -1,13 +1,14 @@
 #include "TransportUDPReader.h"
+#include "System/IO/IOProcessor.h"
+#include "System/Events/EventLoop.h"
 
 TransportUDPReader::TransportUDPReader() :
 onRead(this, &TransportUDPReader::OnRead)
 {
 }
 
-void TransportUDPReader::Init(IOProcessor* ioproc_, int port)
+void TransportUDPReader::Init(int port)
 {
-	ioproc = ioproc_;
 	
 	stopped = false;
 	
@@ -19,7 +20,7 @@ void TransportUDPReader::Init(IOProcessor* ioproc_, int port)
 	udpread.data = data;
 	udpread.onComplete = &onRead;
 	
-	ioproc->Add(&udpread);
+	IOProcessor::Get()->Add(&udpread);
 }
 
 void TransportUDPReader::SetOnRead(Callable* onRead_)
@@ -50,5 +51,5 @@ void TransportUDPReader::OnRead()
 	if (!stopped)
 		Call(userCallback);
 	
-	ioproc->Add(&udpread);
+	IOProcessor::Get()->Add(&udpread);
 }

@@ -4,7 +4,7 @@ void MemcacheServer::Init(KeyspaceDB* kdb_)
 {
 	Log_Trace();
 
-	TCPServer::Init(IOProcessor::Get(), MEMCACHE_PORT);
+	TCPServer::Init(MEMCACHE_PORT);
 
 	kdb = kdb_;
 }

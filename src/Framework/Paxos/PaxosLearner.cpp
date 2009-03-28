@@ -3,18 +3,17 @@
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "System/Events/EventLoop.h"
+#include "PaxosConfig.h"
 #include "PaxosConsts.h"
 
 PaxosLearner::PaxosLearner()
 {
 }
 
-void PaxosLearner::Init(TransportWriter** writers_, Scheduler* scheduler_)
+void PaxosLearner::Init(TransportWriter** writers_)
 {
-	// I/O framework
-	writers = writers_;
-	scheduler = scheduler_;
-	
+	writers = writers_;	
 	state.Init();
 }
 
@@ -22,7 +21,7 @@ bool PaxosLearner::RequestChosen(unsigned nodeID)
 {
 	Log_Trace();
 	
-	msg.RequestChosen(paxosID, config->nodeID);
+	msg.RequestChosen(paxosID, PaxosConfig::Get()->nodeID);
 	
 	msg.Write(wdata);
 
@@ -35,7 +34,7 @@ bool PaxosLearner::SendChosen(unsigned nodeID, ulong64 paxosID, ByteString& valu
 {
 	Log_Trace();
 	
-	msg.LearnChosen(paxosID, config->nodeID, LEARN_VALUE, value);
+	msg.LearnChosen(paxosID, PaxosConfig::Get()->nodeID, LEARN_VALUE, value);
 	
 	msg.Write(wdata);
 

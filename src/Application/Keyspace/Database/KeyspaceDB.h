@@ -33,13 +33,15 @@ class KeyspaceDB : ReplicatedDB
 public:
 	KeyspaceDB();
 	
-	bool					Init(IOProcessor* ioproc_, ReplicatedLog* replicatedLog_);
+	bool					Init();
 	bool					Add(KeyspaceOp& op);	// the interface used by KeyspaceClient
 	unsigned				GetNodeID();
+	void					OnCatchupComplete();	// called by CatchupClient
+	void					OnCatchupFailed();		// called by CatchupClient
 	
 // ReplicatedDB interface:
 	virtual void			OnAppend(Transaction* transaction, ulong64 paxosID,
-								ByteString value, bool ownAppend);
+									 ByteString value, bool ownAppend);
 	virtual void			OnMasterLease(unsigned nodeID);
 	virtual void			OnMasterLeaseExpired();
 	virtual void			OnDoCatchup(unsigned nodeID);
@@ -48,13 +50,12 @@ private:
 	void					Execute(Transaction* transaction, bool ownAppend);
 	void					Append();
 	
-	ReplicatedLog*			replicatedLog;
+	bool					catchingUp;
 	List<KeyspaceOp>		queuedOps;
 	Table*					table;
 	KeyspaceMsg				msg;
 	List<KeyspaceOp_Alloc>	ops;
 	ByteArray<VALUE_SIZE>	data;
-	bool					catchingUp;
 	CatchupServer			catchupServer;
 	CatchupClient			catchupClient;
 };

@@ -3,7 +3,9 @@
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
+#include "System/Events/EventLoop.h"
 #include "Framework/Database/Transaction.h"
+#include "PaxosConfig.h"
 #include "PaxosConsts.h"
 
 PaxosAcceptor::PaxosAcceptor() :
@@ -12,10 +14,9 @@ PaxosAcceptor::PaxosAcceptor() :
 	mdbop.SetCallback(&onDBComplete);
 }
 
-void PaxosAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_)
+void PaxosAcceptor::Init(TransportWriter** writers_)
 {
 	writers = writers_;
-	scheduler = scheduler_;
 	
 	table = database.GetTable("keyspace");
 	if (table == NULL)
@@ -144,7 +145,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.PrepareResponse(msg.paxosID, config->nodeID, msg.proposalID, PREPARE_REJECTED);
+		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_REJECTED);
 		
 		SendReply(senderID);
 		return;
@@ -153,10 +154,11 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	state.promisedProposalID = msg.proposalID;
 
 	if (!state.accepted)
-		msg.PrepareResponse(msg.paxosID, config->nodeID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
+		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID,
+			msg.proposalID, PREPARE_CURRENTLY_OPEN);
 	else
-		msg.PrepareResponse(msg.paxosID, config->nodeID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
-			state.acceptedProposalID, state.acceptedValue);
+		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID,
+			msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED, state.acceptedProposalID, state.acceptedValue);
 	
 	WriteState(&transaction);
 }
@@ -174,7 +176,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.ProposeResponse(msg.paxosID, config->nodeID, msg.proposalID, PROPOSE_REJECTED);
+		msg.ProposeResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
 		
 		SendReply(senderID);
 		return;
@@ -184,7 +186,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	state.acceptedProposalID = msg.proposalID;
 	if (!state.acceptedValue.Set(msg.value))
 		ASSERT_FAIL();
-	msg.ProposeResponse(msg.paxosID, config->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
+	msg.ProposeResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
 	
 	WriteState(&transaction);
 }

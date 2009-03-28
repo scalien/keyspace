@@ -50,7 +50,7 @@ void TransportTCPConn::OnRead()
 	}
 	while (true);
 	
-	ioproc->Add(&tcpread);
+	IOProcessor::Get()->Add(&tcpread);
 }
 	
 void TransportTCPConn::OnClose()
@@ -61,10 +61,9 @@ void TransportTCPConn::OnClose()
 
 
 
-void TransportTCPReader::Init(IOProcessor* ioproc_, int port)
+void TransportTCPReader::Init(int port)
 {
-	ioproc = ioproc_;
-	TCPServer::Init(ioproc_, port);
+	TCPServer::Init(port);
 	Log_Message("fd = %d", listener.fd);
 	stopped = false;
 }
@@ -106,7 +105,7 @@ void TransportTCPReader::OnConnect()
 		Log_Message("%s connected, fd = %d", endpoint.ToString(), conn->GetSocket().fd);
 		
 		conn->GetSocket().SetNonblocking();
-		conn->Init(ioproc, true);
+		conn->Init(true);
 	}
 	else
 	{
@@ -114,5 +113,5 @@ void TransportTCPReader::OnConnect()
 		delete conn;
 	}
 	
-	ioproc->Add(&tcpread);
+	IOProcessor::Get()->Add(&tcpread);
 }

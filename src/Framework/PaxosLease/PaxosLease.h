@@ -17,7 +17,7 @@ class PaxosLease
 public:
 	PaxosLease();
 
-	void				Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* replicatedLog_);
+	void				Init();
 	void				OnRead();
 	void				AcquireLease();
 	bool				IsLeaseOwner();
@@ -30,7 +30,7 @@ public:
 	void				Continue();
 	
 private:
-	void				InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_);
+	void				InitTransport();
 	
 	TransportReader*	reader;
 	TransportWriter**	writers;
