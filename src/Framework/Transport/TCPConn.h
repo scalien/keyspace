@@ -99,8 +99,11 @@ void TCPConn<bufferSize>::Init(bool startRead)
 	tcpwrite.onClose = &onClose;
 	
 	// preallocate a buffer for writeQueue
-	Buffer* buf = new Buffer;
-	writeQueue.Append(buf);
+	if (writeQueue.Size() == 0)
+	{
+		Buffer* buf = new Buffer;
+		writeQueue.Append(buf);
+	}
 }
 
 template<int bufferSize>
