@@ -130,7 +130,8 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		if (it->type == KeyspaceOp::GET)
 		{
 				it->value = data;
-				free(it->pvalue);
+				if (it->pvalue != NULL)
+					free(it->pvalue);
 				it->pvalue = NULL;
 		}
 		it->client->OnComplete(it, ret);

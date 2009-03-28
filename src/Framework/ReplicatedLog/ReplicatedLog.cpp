@@ -27,7 +27,8 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 	masterLease.Init(ioproc_, scheduler_, this, &config);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	masterLease.AcquireLease();
+//	if (config.nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
+		masterLease.AcquireLease();
 
 	InitTransport(ioproc_, scheduler_, &config);
 
@@ -368,7 +369,7 @@ void ReplicatedLog::OnCatchupTimeout()
 
 void ReplicatedLog::OnLearnLease()
 {
-	if (masterLease.IsLeaseOwner() && !safeDB)
+	if (masterLease.IsLeaseOwner() && !safeDB && !(appending && rmsg.value == BS_MSG_NOP))
 		Append(BS_MSG_NOP);
 }
 

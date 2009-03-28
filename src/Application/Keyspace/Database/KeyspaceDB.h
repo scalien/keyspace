@@ -16,6 +16,8 @@
 class KeyspaceOp_Alloc : public KeyspaceOp
 {
 public:
+	KeyspaceOp_Alloc() { pkey = NULL; pvalue = NULL; ptest = NULL; }
+	
 	char*	pkey;
 	char*	pvalue;
 	char*	ptest;
@@ -43,7 +45,6 @@ public:
 private:
 	void					Execute(Transaction* transaction, bool ownAppend);
 	void					Append();
-	void					AllocKeyspaceOp(KeyspaceOp& op, KeyspaceOp_Alloc& op_alloc);
 	
 	ReplicatedLog*			replicatedLog;
 	List<KeyspaceOp>		queuedOps;

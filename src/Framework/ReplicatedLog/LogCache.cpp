@@ -14,53 +14,46 @@ LogCache::LogCache()
 LogCache::~LogCache()
 {
 	for (int i = 0; i < size; i++)
-		logItems[i].value.Free();
+		logItems[i].Free();
 }
 
-/*LogItem* LogCache::Last()
-{
-	if (count != 0)
-		return &logItems[INDEX(next - 1)];
-	else
-		return NULL;
-}*/
-
-bool LogCache::Push(ulong64 paxosID, ByteString value)
+bool LogCache::Push(ulong64 paxosID_, ByteString value)
 {
 	int tail, head, i;
 	
 	tail = INDEX(next - count);
 	head = INDEX(next - 1);
 
-	if (allocated - logItems[next].value.size + value.length > MAX_MEM_USE)
+	if (allocated - logItems[next].size + value.length > MAX_MEM_USE)
 	{
 		// start freeing up at the tail
 		for (i = tail; i <= head; i = INDEX(i+1))
 		{
-			allocated -= logItems[i].value.size;
-			logItems[i].value.Free();
+			allocated -= logItems[i].size;
+			logItems[i].Free();
 			count--;
 			if (allocated + value.length <= MAX_MEM_USE)
 				break;
 		}
 	}
 	
-	logItems[next].paxosID = paxosID;
-	allocated -= logItems[next].value.size;
-	logItems[next].value.Free();
-	if (!logItems[next].value.Allocate(value.length))
+	allocated -= logItems[next].size;
+	logItems[next].Free();
+	if (!logItems[next].Allocate(value.length))
 		ASSERT_FAIL();
-	allocated += logItems[next].value.size;
-	logItems[next].value.Set(value);
+	allocated += logItems[next].size;
+	logItems[next].Set(value);
 	next = INDEX(next + 1);
 	
 	if (count < size)
 		count++;
 	
+	paxosID = paxosID_;
+	
 	return true;
 }
 
-bool LogCache::Get(ulong64 paxosID, ByteString& value)
+bool LogCache::Get(ulong64 paxosID_, ByteString& value)
 {
 	int tail, head, offset;
 	
@@ -70,14 +63,14 @@ bool LogCache::Get(ulong64 paxosID, ByteString& value)
 	tail = INDEX(next - count);
 	head = INDEX(next - 1);
 	
-	if (paxosID < logItems[tail].paxosID)
+	if (paxosID_ <= paxosID - count)
 		return false;
 	
-	if (logItems[head].paxosID < paxosID)
+	if (paxosID < paxosID_)
 		return false;
 	
-	offset = paxosID - logItems[tail].paxosID;
+	offset = paxosID_ - (paxosID - count + 1);
 
-	value = logItems[INDEX(tail + offset)].value;
+	value = logItems[INDEX(tail + offset)];
 	return true;
 }

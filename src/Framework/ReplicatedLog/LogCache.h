@@ -7,30 +7,22 @@
 #define CACHE_SIZE		10*1000
 #define MAX_MEM_USE		256*MB
 
-class LogItem
-{
-public:
-	ulong64					paxosID;
-	ByteBuffer				value;
-};
-
 class LogCache
 {
 public:
 						LogCache();
 						~LogCache();
 
-	//LogItem*			Last();
-
 	bool				Push(ulong64 paxosID, ByteString value);
 	bool				Get(ulong64 paxosID, ByteString& value);
 
 private:
-	LogItem				logItems[CACHE_SIZE];
+	ByteBuffer			logItems[CACHE_SIZE];
 	int					count;
 	int					next;
 	int					size;
 	unsigned long		allocated;
+	ulong64				paxosID;
 };
 
 #endif
