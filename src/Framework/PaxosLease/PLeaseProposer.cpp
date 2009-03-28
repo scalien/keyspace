@@ -22,12 +22,6 @@ void PLeaseProposer::Init(TransportWriter** writers_)
 	writers = writers_;
 	
 	state.Init();
-
-	// TODO: read restart counter
-	//if (!ReadState())
-	{
-		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
-	}
 }
 
 void PLeaseProposer::AcquireLease()

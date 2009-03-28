@@ -147,6 +147,8 @@ void TCPConn<bufferSize>::OnConnectTimeout()
 template<int bufferSize>
 void TCPConn<bufferSize>::AsyncRead(bool start)
 {
+	Log_Trace();
+	
 	tcpread.fd = socket.fd;
 	tcpread.data = readBuffer;
 	tcpread.onComplete = &onRead;
@@ -202,6 +204,8 @@ void TCPConn<bufferSize>::WritePending()
 template<int bufferSize>
 void TCPConn<bufferSize>::Close()
 {
+	Log_Trace();
+	
 	if (tcpread.active)
 		IOProcessor::Get()->Remove(&tcpread);
 	
@@ -235,8 +239,10 @@ void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, int timeout)
 	
 	IOProcessor::Get()->Add(&tcpwrite);
 
-	if (timeout)
+	if (timeout > 0)
 	{
+		Log_Message("starting timeout with %d", timeout);
+		
 		connectTimeout.SetDelay(timeout);
 		EventLoop::Get()->Reset(&connectTimeout);
 	}

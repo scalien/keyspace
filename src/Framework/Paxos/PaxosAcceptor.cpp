@@ -28,9 +28,7 @@ void PaxosAcceptor::Init(TransportWriter** writers_)
 	state.Init();
 
 	if (!ReadState())
-	{
 		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
-	}
 }
 
 bool PaxosAcceptor::Persist(Transaction* transaction)

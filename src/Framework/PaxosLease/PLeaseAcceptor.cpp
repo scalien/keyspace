@@ -46,6 +46,8 @@ void PLeaseAcceptor::OnPrepareRequest()
 {
 	Log_Trace();
 	
+	Log_Message("msg.paxosID: %llu, my.paxosID: %llu", msg.paxosID, ReplicatedLog::Get()->GetPaxosID());
+	
 	if (msg.paxosID < ReplicatedLog::Get()->GetPaxosID())
 		return; // only up-to-date nodes can become masters
 	

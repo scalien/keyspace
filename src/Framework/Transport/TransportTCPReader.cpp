@@ -4,6 +4,8 @@
 
 void TransportTCPConn::OnRead()
 {
+	Log_Trace();
+	
 	int msglength, nread, msgbegin, msgend;
 	Endpoint endpoint;
 	
@@ -31,7 +33,6 @@ void TransportTCPConn::OnRead()
 			tcpread.requested = msgend - tcpread.data.length;
 			break;
 		}
-
 		
 		reader->SetMessage(
 			ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)
@@ -55,6 +56,8 @@ void TransportTCPConn::OnRead()
 	
 void TransportTCPConn::OnClose()
 {
+	Log_Trace();
+	
 	socket.Close();
 	delete this;
 }
@@ -85,16 +88,22 @@ void TransportTCPReader::GetMessage(ByteString& bs_)
 
 void TransportTCPReader::Stop()
 {
+	Log_Trace();
+	
 	stopped = true;
 }
 
 void TransportTCPReader::Continue()
 {
+	Log_Trace();
+	
 	stopped = false;
 }
 
 void TransportTCPReader::OnConnect()
 {
+	Log_Trace();
+	
 	TransportTCPConn* conn = new TransportTCPConn(this);
 	
 	if (listener.Accept(&(conn->GetSocket())))

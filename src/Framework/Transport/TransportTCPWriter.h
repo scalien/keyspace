@@ -1,7 +1,6 @@
 #ifndef TRANSPORT_TCP_WRITER_H
 #define TRANSPORT_TCP_WRITER_H
 
-#include "System/Events/Scheduler.h"
 #include "System/Events/Timer.h"
 #include "System/IO/IOProcessor.h"
 #include "Transport.h"
@@ -29,19 +28,7 @@ private:
 	virtual void	OnRead();
 	virtual void	OnClose();
 
-//	enum State 
-//	{
-//		DISCONNECTED,
-//		CONNECTED,
-//		CONNECTING
-//	};
-//	
-//	State						state;
 	Endpoint					endpoint;
-	Scheduler*					scheduler;	
-//	MFunc<TransportTCPWriter>	onConnect;
-//	MFunc<TransportTCPWriter>	onConnectTimeout;
-//	CdownTimer					connectTimeout;
 };
 
 

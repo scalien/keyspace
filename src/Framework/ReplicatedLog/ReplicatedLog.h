@@ -15,7 +15,7 @@
 #include "LogQueue.h"
 
 #define CATCHUP_TIMEOUT	5000
-#define USE_TCP			0
+#define USE_TCP			1
 
 
 class ReplicatedLog

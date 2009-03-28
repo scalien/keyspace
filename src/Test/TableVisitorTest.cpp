@@ -17,7 +17,7 @@ int TableVisitorTest()
 	Table* table;
 	ListTableVisitor ltv;
 	
-	table = database.GetTable("test");
+	table = database.GetTable("keyspace");
 	table->Visit(ltv);
 	
 	return TEST_SUCCESS;
@@ -329,4 +329,4 @@ int StructuredDatabaseTest()
 	return TEST_SUCCESS;
 }
 
-TEST_MAIN(/*TableVisitorTest, TableSelectorTest*/ StructuredDatabaseTest);
+TEST_MAIN(TableVisitorTest/*, TableSelectorTest*/ /*StructuredDatabaseTest*/);

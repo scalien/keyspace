@@ -28,17 +28,20 @@ bool ReplicatedLog::Init()
 {
 	replicatedDB = NULL;
 	
-	masterLease.Init();
-	masterLease.SetOnLearnLease(&onLearnLease);
-	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-//	if (config.nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
-		masterLease.AcquireLease();
-
 	InitTransport();
 
 	proposer.Init(writers);
 	acceptor.Init(writers);
 	learner.Init(writers);
+	
+	proposer.paxosID = acceptor.paxosID;
+	learner.paxosID = acceptor.paxosID;
+	
+	masterLease.Init();
+	masterLease.SetOnLearnLease(&onLearnLease);
+	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
+	if (PaxosConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
+		masterLease.AcquireLease();
 	
 	appending = false;
 	safeDB = false;
@@ -88,6 +91,8 @@ void ReplicatedLog::Continue()
 
 bool ReplicatedLog::Append(ByteString value_)
 {
+	Log_Trace();
+	
 	if (!logQueue.Push(value_))
 		return false;
 	
