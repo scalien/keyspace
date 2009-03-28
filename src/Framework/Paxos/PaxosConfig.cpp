@@ -5,6 +5,13 @@
 #include "Framework/Database/Transaction.h"
 #include "PaxosConsts.h"
 
+PaxosConfig config;
+
+PaxosConfig* PaxosConfig::Get()
+{
+	return &config;
+}
+
 bool PaxosConfig::Init(char *filename)
 {
 	FILE*		f;
@@ -42,17 +49,14 @@ bool PaxosConfig::Init(char *filename)
 	ReadLine();
 	
 	// now read other nodes, including myself
+	numNodes = 0;
 	while (fgets(buffer, sizeof(buffer), f) != NULL)
 	{
 		endpoint.Set(buffer);
-		//if (endpoint == me)
-			endpoints.Append(endpoint);
-		//else
-		//	endpoints.Add(endpoint);
+		endpoints[numNodes] = endpoint;
+		numNodes++;
 	}
-	
-	numNodes = endpoints.Size();
-	
+		
 	InitRestartCounter();
 	
 	return true;

@@ -12,11 +12,10 @@ PaxosAcceptor::PaxosAcceptor() :
 	mdbop.SetCallback(&onDBComplete);
 }
 
-void PaxosAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
+void PaxosAcceptor::Init(TransportWriter** writers_, Scheduler* scheduler_)
 {
 	writers = writers_;
 	scheduler = scheduler_;
-	config = config_;
 	
 	table = database.GetTable("keyspace");
 	if (table == NULL)

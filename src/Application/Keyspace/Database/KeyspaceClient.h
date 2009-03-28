@@ -5,7 +5,6 @@
 
 class KeyspaceOp;
 
-
 class KeyspaceClient
 {
 public:

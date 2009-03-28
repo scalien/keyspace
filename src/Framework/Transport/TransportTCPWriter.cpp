@@ -14,12 +14,15 @@ TransportTCPWriter::~TransportTCPWriter()
 {
 }
 
-void TransportTCPWriter::Init(IOProcessor* ioproc_, Scheduler* scheduler_, Endpoint &endpoint_)
+void TransportTCPWriter::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 {
 	TCPConn<MAX_TCP_MESSAGE_SIZE>::Init(ioproc_, false);
 	scheduler = scheduler_;
+}
+
+void TransportTCPWriter::Start(Endpoint &endpoint_)
+{
 	endpoint = endpoint_;
-	
 	Connect();
 }
 

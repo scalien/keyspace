@@ -25,9 +25,14 @@ Table::~Table()
 	delete db;
 }
 
-bool Table::Iterate(Cursor& cursor)
+bool Table::Iterate(Transaction* transaction, Cursor& cursor)
 {
-	if (db->cursor(NULL, &cursor.cursor, 0) == 0)
+	DbTxn* txn = NULL;
+	
+	if (transaction)
+		txn = transaction->txn;
+	
+	if (db->cursor(txn, &cursor.cursor, 0) == 0)
 		return true;
 	else
 		return false;

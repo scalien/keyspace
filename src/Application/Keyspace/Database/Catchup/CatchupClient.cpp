@@ -1,11 +1,23 @@
 #include "CatchupClient.h"
+#include "Framework/Paxos/PaxosConfig.h"
 
 void CatchupClient::Init(Table* table_)
 {
 	table = table_;
 	
+	transaction.Set(table);
+}
+
+void CatchupClient::Start(unsigned nodeID)
+{
+	Endpoint endpoint;
+	
+	transaction.Begin();
 	table->Drop();
-	//TODO: reset paxosID to 0, which is the default, empty db
+
+	endpoint = PaxosConfig::Get()->endpoints[nodeID];
+	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);
+	TransportTCPWriter::Start(endpoint);
 }
 
 void CatchupClient::OnRead()
@@ -54,6 +66,9 @@ void CatchupClient::OnRead()
 
 void CatchupClient::OnClose()
 {
+	if (transaction.IsActive())
+		transaction.Rollback();
+	
 	Close();
 }
 
@@ -61,37 +76,18 @@ void CatchupClient::ProcessMsg()
 {
 	if (msg.type == KEY_VALUE)
 		OnKeyValue();
-	else if (msg.type == DB_COMMAND)
-		OnDBCommand();
 	else if (msg.type == CATCHUP_COMMIT)
 		OnCommit();
-	else if (msg.type == CATCHUP_ROLLBACK)
-		OnRollback();
 	else
 		ASSERT_FAIL();
 }
 
 void CatchupClient::OnKeyValue()
 {
-	table->Set(NULL, msg.key, msg.value);
-}
-
-void CatchupClient::OnDBCommand()
-{
-	paxosID = msg.paxosID;
-	Execute(msg.paxosID, msg.dbCommand);
+	table->Set(&transaction, msg.key, msg.value);
 }
 
 void CatchupClient::OnCommit()
 {
-}
-
-void CatchupClient::OnRollback()
-{
-	table->Drop();
-}
-
-void CatchupClient::Execute(ulong64 paxosID, ByteString& dbCommand)
-{
-	//TODO:
+	transaction.Commit();
 }

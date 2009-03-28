@@ -19,7 +19,7 @@ public:
 	Table(Database* database, const char *name);
 	~Table();
 	
-	bool		Iterate(Cursor& cursor);
+	bool		Iterate(Transaction* transaction, Cursor& cursor);
 	
 	bool		Get(Transaction* transaction, const ByteString &key, ByteString &value);
 	bool		Get(Transaction* transaction, const char* key, ByteString &value);

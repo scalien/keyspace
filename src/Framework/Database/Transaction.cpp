@@ -51,7 +51,7 @@ bool Transaction::Commit()
 	return true;
 }
 
-bool Transaction::Abort()
+bool Transaction::Rollback()
 {
 	active = false;
 	

@@ -1,12 +1,15 @@
 #include "CatchupConn.h"
 #include <math.h>
+#include "Transport.h"
 
 CatchupConn::CatchupConn(CatchupServer* server_)
 {
 	TCPConn<BUF_SIZE>::Init(IOProcessor::Get(), false /*startRead*/);
 	
-	server = server_;	
-	server->table->Iterate(cursor);
+	server = server_;
+	transaction.Set(server->table);
+	transaction.Begin();
+	server->table->Iterate(&transaction, cursor);
 	tcpwrite.data = writeBuffer;
 	startPaxosID = server->replicatedLog->GetPaxosID();
 	
@@ -19,55 +22,40 @@ void CatchupConn::OnRead()
 
 void CatchupConn::OnWrite()
 {
-	if (msg.type == CATCHUP_COMMIT || msg.type == CATCHUP_ROLLBACK)
+	if (msg.type == CATCHUP_COMMIT)
 	{
+		transaction.Rollback(); // we just read from the DB, so we could Commit(), too
 		Close();
 		delete this;
 	}
+	else
+		WriteNext();
 }
 
 void CatchupConn::OnClose()
 {
+	if (transaction.IsActive())
+		transaction.Rollback();
 	Close();
 	delete this;
 }
 
 void CatchupConn::WriteNext()
 {
-	int			msglen;
+	static ByteArray<32> prefix; // for the "length:" header
+	static ByteArray<MAX_TCP_MESSAGE_SIZE> msgData;
 	ByteString	key, value;
 	
-	if (msg.type == KEY_VALUE)
-	{
-		if (cursor.Next(key, value))
-		{
-			msg.KeyValue(key, value);
-			msglen = NumLen(key.length) + NumLen(value.length) + 3 + key.length + value.length;
-		}
-		else
-		{
-			endPaxosID = server->replicatedLog->GetPaxosID();			
-			if (server->replicatedLog->GetLogItem(startPaxosID, value))
-				msg.DBCommand(startPaxosID, value);
-			else
-				msg.Rollback();
-		}
-	}
-	else if (msg.type == DB_COMMAND && msg.paxosID < endPaxosID)
-	{
-		if (server->replicatedLog->GetLogItem(msg.paxosID + 1, value))
-			msg.DBCommand(msg.paxosID + 1, value);			
-		else
-			msg.Rollback();
-	}
-	else // (msg.type == DB_COMMAND && msg.paxosID == endPaxosID)
-	{
-		msg.Commit();
-	}
+	if (cursor.Next(key, value))
+		msg.KeyValue(key, value);
+	else
+		msg.Commit(startPaxosID);
 	
-	writeBuffer.length = snprintf(writeBuffer.buffer, writeBuffer.size, "%d:", msglen);
+	msg.Write(msgData);
 	
-	msg.Write(writeBuffer);
+	// prepend with the "length:" header
+	snprintf(writeBuffer.buffer, writeBuffer.size, "%d:%.*s",
+		msgData.length, msgData.length, msgData.buffer);
 	
 	ioproc->Add(&tcpwrite);
 }

@@ -21,9 +21,9 @@ private:
 	Buffer				writeBuffer;
 	CatchupServer*		server;
 	Cursor				cursor;
+	Transaction			transaction;
 	CatchupMsg			msg;
 	ulong64				startPaxosID;
-	ulong64				endPaxosID;
 };
 
 #endif

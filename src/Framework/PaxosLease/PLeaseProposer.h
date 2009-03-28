@@ -17,7 +17,7 @@ public:
 	PLeaseProposer();
 
 	void					Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_,
-								 Scheduler* scheduler_, PaxosConfig* config_);
+								 Scheduler* scheduler_);
 	
 	void					ProcessMsg(PLeaseMsg &msg_);
 	void					OnAcquireLeaseTimeout();

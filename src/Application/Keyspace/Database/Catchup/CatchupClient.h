@@ -1,31 +1,30 @@
 #ifndef CATCHUPCLIENT_H
 #define CATCHUPCLIENT_H
 
-#include "Framework/Transport/TCPConn.h"
+#include "Framework/Transport/TransportTCPWriter.h"
 #include "Framework/Database/Table.h"
+#include "Framework/Database/Transaction.h"
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "CatchupMsg.h"
 
-class CatchupClient : TCPConn<BUF_SIZE>
+class CatchupClient : TransportTCPWriter
 {
 public:
-	void				Init(Table* table_);
+	void						Init(Table* table_);
 
-	void				OnRead();
-	void				OnClose();
+	void						Start(unsigned nodeID);
+	void						OnRead();
+	void						OnClose();
 
 private:
-	void				ProcessMsg();
-	void				Execute(ulong64 paxosID, ByteString& dbCommand);
-	
-	void				OnKeyValue();
-	void				OnDBCommand();
-	void				OnCommit();
-	void				OnRollback();
+	void						ProcessMsg();
+	void						OnKeyValue();
+	void						OnCommit();
 
-	Table*				table;
-	CatchupMsg			msg;
-	ulong64				paxosID;
+	Table*						table;
+	CatchupMsg					msg;
+	ulong64						paxosID;
+	Transaction					transaction;
 };
 
 #endif

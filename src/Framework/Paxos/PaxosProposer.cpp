@@ -14,11 +14,10 @@ PaxosProposer::PaxosProposer() :
 {
 }
 
-void PaxosProposer::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
+void PaxosProposer::Init(TransportWriter** writers_, Scheduler* scheduler_)
 {
 	writers = writers_;
 	scheduler = scheduler_;
-	config = config_;
 	
 	// Paxos variables
 	paxosID = 0;

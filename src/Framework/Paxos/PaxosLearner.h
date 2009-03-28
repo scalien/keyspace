@@ -17,7 +17,7 @@ friend class ReplicatedLog;
 protected:
 	PaxosLearner();
 	
-	void					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
+	void					Init(TransportWriter** writers_, Scheduler* scheduler_);
 	
 	bool					RequestChosen(unsigned nodeID);
 	bool					SendChosen(unsigned nodeID, ulong64 paxosID, ByteString& value);

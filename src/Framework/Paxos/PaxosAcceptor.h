@@ -19,7 +19,7 @@ friend class ReplicatedLog;
 public:
 	PaxosAcceptor();
 	
-	void					Init(TransportWriter** writer_, Scheduler* scheduler_, PaxosConfig* config_);
+	void					Init(TransportWriter** writer_, Scheduler* scheduler_);
 	
 	void					SetPaxosID(ulong64 paxosID_);
 

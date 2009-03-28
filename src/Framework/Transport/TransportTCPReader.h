@@ -17,7 +17,6 @@ public:
 	}
 	
 	void				OnRead();
-	
 	void				OnClose();
 
 private:
@@ -33,9 +32,9 @@ public:
 	void				Init(IOProcessor* ioproc_, int port);
 
 	void				SetOnRead(Callable* onRead);
-	
 	void				GetMessage(ByteString& bs_);
-	
+	void				Stop();
+	void				Continue();
 	void				OnConnect();
 
 private:
@@ -43,8 +42,8 @@ private:
 	
 	IOProcessor*		ioproc;
 	Callable*			onRead;
-	
 	ByteString			bs;
+	bool				stopped;
 };
 
 #endif

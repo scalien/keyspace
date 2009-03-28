@@ -13,7 +13,7 @@ class PLeaseLearner
 public:
 	PLeaseLearner();
 	
-	void					Init(Scheduler* scheduler_, PaxosConfig* config_);
+	void					Init(Scheduler* scheduler_);
 
 	void					ProcessMsg(PLeaseMsg &msg);
 	

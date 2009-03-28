@@ -15,7 +15,7 @@ friend class ReplicatedLog;
 public:
 	PaxosProposer();
 
-	void					Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_);
+	void					Init(TransportWriter** writers_, Scheduler* scheduler_);
 		
 	void					OnPrepareTimeout();
 	void					OnProposeTimeout();

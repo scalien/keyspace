@@ -11,13 +11,17 @@ TransportUDPWriter::~TransportUDPWriter()
 	socket.Close();
 }
 
-void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*, Endpoint &endpoint_)
+void TransportUDPWriter::Init(IOProcessor* ioproc_, Scheduler*)
 {
 	ioproc = ioproc_;
-	endpoint = endpoint_;
 	
 	socket.Create(UDP);
 	socket.SetNonblocking();
+}
+
+void TransportUDPWriter::Start(Endpoint &endpoint_)
+{
+	endpoint = endpoint_;
 }
 
 void TransportUDPWriter::Write(ByteString &bs)

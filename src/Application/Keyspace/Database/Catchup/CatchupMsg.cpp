@@ -6,16 +6,6 @@ void CatchupMsg::Init(char type_)
 	type = type_;
 }
 
-void CatchupMsg::Commit()
-{
-	Init(CATCHUP_COMMIT);
-}
-
-void CatchupMsg::Rollback()
-{
-	Init(CATCHUP_ROLLBACK);
-}
-
 void CatchupMsg::KeyValue(ByteString& key_, ByteString& value_)
 {
 	Init(KEY_VALUE);
@@ -23,11 +13,11 @@ void CatchupMsg::KeyValue(ByteString& key_, ByteString& value_)
 	value.Set(value_);
 }
 
-void CatchupMsg::DBCommand(ulong64 paxosID_, ByteString& dbCommand_)
+void CatchupMsg::Commit(ulong64 paxosID_)
 {
-	Init(DB_COMMAND);
+	Init(CATCHUP_COMMIT);
 	paxosID = paxosID_;
-	dbCommand.Set(dbCommand_);
+	
 }
 
 bool CatchupMsg::Read(ByteString data)
@@ -49,15 +39,10 @@ bool CatchupMsg::Read(ByteString data)
 	CheckOverflow();
 	ReadChar(type);
 	
-	if (type == CATCHUP_COMMIT || CATCHUP_ROLLBACK)
-	{
-		ValidateLength();
-		Init(type);
-		return true;
-	}
-	else if (type == KEY_VALUE)
+	if (type == KEY_VALUE)
 	{
 		CheckOverflow();
+		ReadSeparator(); CheckOverflow();
 		ReadNumber(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		
@@ -76,20 +61,14 @@ bool CatchupMsg::Read(ByteString data)
 		KeyValue(key, value);
 		return true;
 	}
-	else if (type == DB_COMMAND)
+	else if (type == CATCHUP_COMMIT)
 	{
 		CheckOverflow();
-		ReadNumber(paxosID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(dbCommand.length); CheckOverflow();
-		ReadSeparator();
+		ReadNumber(paxosID);
 		
-		dbCommand.buffer = pos;
-		dbCommand.size = dbCommand.length;
-		
-		pos += dbCommand.length;
 		ValidateLength();
-		DBCommand(paxosID, dbCommand);
+		Commit(paxosID);
 		return true;
 	}
 	else
@@ -98,24 +77,17 @@ bool CatchupMsg::Read(ByteString data)
 	
 bool CatchupMsg::Write(ByteString& data)
 {
-	int		required, size;
-	char*	p;
+	int		required;
 	
-	p = data.buffer + data.length;
-	size = data.size - data.length;
-	
-	if (type == CATCHUP_COMMIT || CATCHUP_ROLLBACK)
-		required = snprintf(p, size, "%c", type);
-	else if (type == KEY_VALUE)
-		required = snprintf(p, size, "%c:%d:%.*s:%d:%.*s", type,
+	if (type == KEY_VALUE)
+		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%d:%.*s", type,
 			key.length, key.length, key.buffer, value.length, value.length, value.buffer);
-	else if (type == DB_COMMAND)
-		required = snprintf(p, size, "%c:%llu:%d:%.*s", type,
-			paxosID, dbCommand.length, dbCommand.length, dbCommand.buffer);
+	else if (type == CATCHUP_COMMIT)
+		required = snprintf(data.buffer, data.size, "%c:%llu", type, paxosID);
 	else
 		return false;
 	
-	if (required > size)
+	if (required > data.size)
 		return false;
 		
 	data.length += required;

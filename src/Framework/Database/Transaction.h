@@ -17,7 +17,7 @@ public:
 	bool IsActive();
 	bool Begin();
 	bool Commit();
-	bool Abort();
+	bool Rollback();
 	
 private:
 	Database*	database;

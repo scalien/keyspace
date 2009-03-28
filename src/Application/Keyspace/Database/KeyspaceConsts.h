@@ -2,3 +2,5 @@
 #define VAL_SIZE	256*KB
 
 #define BUF_SIZE	260*KB
+
+#define CATCHUP_PORT_OFFSET		2

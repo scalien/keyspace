@@ -15,13 +15,11 @@ PLeaseProposer::PLeaseProposer() :
 {
 }
 
-void PLeaseProposer::Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_,
-						  Scheduler* scheduler_, PaxosConfig* config_)
+void PLeaseProposer::Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_, Scheduler* scheduler_)
 {
 	replicatedLog = replicatedLog_;
 	writers = writers_;
 	scheduler = scheduler_;
-	config = config_;
 	
 	state.Init();
 

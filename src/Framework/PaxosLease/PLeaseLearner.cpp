@@ -12,10 +12,9 @@ PLeaseLearner::PLeaseLearner() :
 {
 }
 
-void PLeaseLearner::Init(Scheduler* scheduler_, PaxosConfig* config_)
+void PLeaseLearner::Init(Scheduler* scheduler_)
 {
 	scheduler = scheduler_;
-	config = config_;
 		
 	state.Init();
 }

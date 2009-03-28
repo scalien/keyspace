@@ -17,8 +17,7 @@ class PaxosLease
 public:
 	PaxosLease();
 
-	void				Init(IOProcessor* ioproc_, Scheduler* scheduler_,
-							 ReplicatedLog* replicatedLog_, PaxosConfig* config_);
+	void				Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* replicatedLog_);
 	void				OnRead();
 	void				AcquireLease();
 	bool				IsLeaseOwner();
@@ -27,9 +26,11 @@ public:
 	ulong64				GetLeaseEpoch();
 	void				SetOnLearnLease(Callable* onLearnLeaseCallback);
 	void				SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback);
+	void				Stop();
+	void				Continue();
 	
 private:
-	void				InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_);
+	void				InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_);
 	
 	TransportReader*	reader;
 	TransportWriter**	writers;

@@ -14,27 +14,24 @@ ReplicatedLog::ReplicatedLog()
 {
 }
 
-bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* filename)
+bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 {
 	// I/O framework
 	scheduler = scheduler_;
 	
 	replicatedDB = NULL;
 	
-	if (!config.Init(filename))
-		return false;
-
-	masterLease.Init(ioproc_, scheduler_, this, &config);
+	masterLease.Init(ioproc_, scheduler_, this);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
 //	if (config.nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
 		masterLease.AcquireLease();
 
-	InitTransport(ioproc_, scheduler_, &config);
+	InitTransport(ioproc_, scheduler_);
 
-	proposer.Init(writers, scheduler_, &config);
-	acceptor.Init(writers, scheduler_, &config);
-	learner.Init(writers, scheduler_, &config);
+	proposer.Init(writers, scheduler_);
+	acceptor.Init(writers, scheduler_);
+	learner.Init(writers, scheduler_);
 	
 	appending = false;
 	safeDB = false;
@@ -42,58 +39,39 @@ bool ReplicatedLog::Init(IOProcessor* ioproc_, Scheduler* scheduler_, char* file
 	return true;
 }
 
-void ReplicatedLog::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
+void ReplicatedLog::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
 {
 	int			i;
 	Endpoint	endpoint;
-	Endpoint*	it;
 
 	reader = new TransportTCPReader;
-	reader->Init(ioproc_, config_->port + PAXOS_PORT_OFFSET);
+	reader->Init(ioproc_, PaxosConfig::Get()->port + PAXOS_PORT_OFFSET);
 	reader->SetOnRead(&onRead);
 	
-	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * config_->numNodes);
-	it = config_->endpoints.Head();
-	for (i = 0; i < config_->numNodes; i++)
+	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
+	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
 	{
-		endpoint = *it;
+		endpoint = PaxosConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort() + PAXOS_PORT_OFFSET);
 		writers[i] = new TransportTCPWriter;
 		
 		Log_Message("Connecting to %s", endpoint.ToString());
-		writers[i]->Init(ioproc_, scheduler_, endpoint);
-	
-		it = config_->endpoints.Next(it);
+		writers[i]->Init(ioproc_, scheduler_);
+		writers[i]->Start(endpoint);
 	}
 }
 
-/*bool ReplicatedLog::Stop()
+void ReplicatedLog::Stop()
 {
-	sendtoall = false;
-	
-	if (udpread.active)
-		ioproc->Remove(&udpread);
+	reader->Stop();
+	masterLease.Stop();
+}
 
-	if (udpwrite.active)
-		ioproc->Remove(&udpwrite);
-	
-	for (int i = 0; i < SIZE(replicatedDBs); i++)
-		if (replicatedDBs[i] != NULL)
-			replicatedDBs[i]->OnStop();
-	
-	return true;
-}*/
-
-/*bool ReplicatedLog::Continue()
+void ReplicatedLog::Continue()
 {
-	ioproc->Add(&udpwrite);
-	
-	for (int i = 0; i < SIZE(replicatedDBs); i++)
-		if (replicatedDBs[i] != NULL)
-			replicatedDBs[i]->OnContinue();
-
-	return true;
-}*/
+	reader->Continue();
+	masterLease.Continue();
+}
 
 bool ReplicatedLog::Append(ByteString value_)
 {
@@ -102,7 +80,8 @@ bool ReplicatedLog::Append(ByteString value_)
 	
 	if (!appending)
 	{
-		if (!rmsg.Init(config.nodeID, config.restartCounter,  masterLease.GetLeaseEpoch(), value_))
+		if (!rmsg.Init(PaxosConfig::Get()->nodeID, PaxosConfig::Get()->restartCounter,
+					   masterLease.GetLeaseEpoch(), value_))
 			return false;
 		
 		if (!rmsg.Write(value))
@@ -137,7 +116,7 @@ bool ReplicatedLog::IsMaster()
 
 int ReplicatedLog::GetNodeID()
 {
-	return config.nodeID;
+	return PaxosConfig::Get()->nodeID;
 }
 
 void ReplicatedLog::OnRead()
@@ -153,7 +132,7 @@ void ReplicatedLog::ProcessMsg()
 {
 	if (pmsg.paxosID > highestPaxosID)
 		highestPaxosID = pmsg.paxosID;
-
+	
 	if (pmsg.type == PREPARE_REQUEST)
 		OnPrepareRequest();
 	else if (pmsg.type == PREPARE_RESPONSE)
@@ -220,7 +199,7 @@ void ReplicatedLog::OnLearnChosen()
 		
 		if (pmsg.subtype == LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
-				pmsg.LearnChosen(pmsg.paxosID, config.nodeID, LEARN_VALUE, acceptor.state.acceptedValue);
+				pmsg.LearnChosen(pmsg.paxosID, GetNodeID(), LEARN_VALUE, acceptor.state.acceptedValue);
 		
 		if (pmsg.subtype == LEARN_VALUE)
 			learner.OnLearnChosen(pmsg);
@@ -244,10 +223,10 @@ void ReplicatedLog::OnLearnChosen()
 			return;
 		}
 
-		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter)
+		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
 			logQueue.Pop(); // we just appended this
 
-		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter &&
+		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter &&
 			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && masterLease.IsLeaseOwner())
 		{
 			proposer.state.leader = true;
@@ -261,7 +240,7 @@ void ReplicatedLog::OnLearnChosen()
 		
 		if (logQueue.Size() > 0)
 		{
-			if (!rmsg.Init(config.nodeID, config.restartCounter, 
+			if (!rmsg.Init(GetNodeID(), PaxosConfig::Get()->restartCounter, 
 				masterLease.GetLeaseEpoch(), *(logQueue.Next())))
 					ASSERT_FAIL();
 		
@@ -274,7 +253,7 @@ void ReplicatedLog::OnLearnChosen()
 		else
 			appending = false;
 		
-		if (rmsg.nodeID == config.nodeID && rmsg.restartCounter == config.restartCounter)
+		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
 			ownAppend = true;
 		else
 			ownAppend = false;
@@ -363,8 +342,8 @@ void ReplicatedLog::OnCatchupTimeout()
 {
 	Log_Trace();
 
-	if (replicatedDB != NULL)
-		replicatedDB->OnDoCatchup();
+	if (replicatedDB != NULL && masterLease.IsLeaseKnown())
+		replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 }
 
 void ReplicatedLog::OnLearnLease()

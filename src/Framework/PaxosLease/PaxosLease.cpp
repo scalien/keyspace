@@ -9,36 +9,32 @@ PaxosLease::PaxosLease()
 {
 }
 
-void PaxosLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_,
-					  ReplicatedLog* replicatedLog_, PaxosConfig* config_)
+void PaxosLease::Init(IOProcessor* ioproc_, Scheduler* scheduler_, ReplicatedLog* replicatedLog_)
 {
-	InitTransport(ioproc_, scheduler_, config_);
+	InitTransport(ioproc_, scheduler_);
 	
-	proposer.Init(replicatedLog_, writers, scheduler_, config_);
-	acceptor.Init(replicatedLog_, writers, scheduler_, config_);
-	learner.Init(scheduler_, config_);
+	proposer.Init(replicatedLog_, writers, scheduler_);
+	acceptor.Init(replicatedLog_, writers, scheduler_);
+	learner.Init(scheduler_);
 }
 
-void PaxosLease::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_, PaxosConfig* config_)
+void PaxosLease::InitTransport(IOProcessor* ioproc_, Scheduler* scheduler_)
 {
 	int			i;
 	Endpoint	endpoint;
-	Endpoint*	it;
 	
 	reader = new TransportUDPReader;
-	reader->Init(ioproc_, config_->port + PLEASE_PORT_OFFSET);
+	reader->Init(ioproc_, PaxosConfig::Get()->port + PLEASE_PORT_OFFSET);
 	reader->SetOnRead(&onRead);
 	
-	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * config_->numNodes);
-	it = config_->endpoints.Head();
-	for (i = 0; i < config_->numNodes; i++)
+	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
+	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
 	{
-		endpoint = *it;
+		endpoint = PaxosConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
-		writers[i]->Init(ioproc_, scheduler_, endpoint);
-	
-		it = config_->endpoints.Next(it);
+		writers[i]->Init(ioproc_, scheduler_);
+		writers[i]->Start(endpoint);
 	}	
 }
 
@@ -91,4 +87,14 @@ void PaxosLease::SetOnLearnLease(Callable* onLearnLeaseCallback)
 void PaxosLease::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback)
 {
 	learner.SetOnLeaseTimeout(onLeaseTimeoutCallback);
+}
+
+void PaxosLease::Stop()
+{
+	reader->Stop();
+}
+
+void PaxosLease::Continue()
+{
+	reader->Continue();
 }

@@ -9,12 +9,11 @@ PaxosLearner::PaxosLearner()
 {
 }
 
-void PaxosLearner::Init(TransportWriter** writers_, Scheduler* scheduler_, PaxosConfig* config_)
+void PaxosLearner::Init(TransportWriter** writers_, Scheduler* scheduler_)
 {
 	// I/O framework
 	writers = writers_;
 	scheduler = scheduler_;
-	config = config_;
 	
 	state.Init();
 }

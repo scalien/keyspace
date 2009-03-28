@@ -12,15 +12,13 @@ PLeaseAcceptor::PLeaseAcceptor() :
 {
 }
 
-void PLeaseAcceptor::Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_,
-						  Scheduler* scheduler_, PaxosConfig* config_)
+void PLeaseAcceptor::Init(ReplicatedLog* replicatedLog_, TransportWriter** writers_, Scheduler* scheduler_)
 {
 	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
 	
 	replicatedLog = replicatedLog_;
 	writers = writers_;
 	scheduler = scheduler_;
-	config = config_;
 	
 	state.Init();
 }

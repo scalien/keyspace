@@ -13,8 +13,9 @@ public:
 	virtual void	Init(IOProcessor* ioproc_, int port_) = 0;
 
 	virtual void	SetOnRead(Callable* onRead) = 0;
-	
 	virtual void	GetMessage(ByteString& bs) = 0;
+	virtual void	Stop() = 0;
+	virtual void	Continue() = 0;
 };
 
 #endif

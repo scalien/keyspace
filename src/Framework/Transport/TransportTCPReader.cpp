@@ -32,11 +32,13 @@ void TransportTCPConn::OnRead()
 			break;
 		}
 
-			
+		
 		reader->SetMessage(
 			ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)
 			);
-		Call(reader->onRead);
+		
+		if (!reader->stopped)
+			Call(reader->onRead);
 		
 		// move the rest back to the beginning of the buffer
 		memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
@@ -64,6 +66,7 @@ void TransportTCPReader::Init(IOProcessor* ioproc_, int port)
 	ioproc = ioproc_;
 	TCPServer::Init(ioproc_, port);
 	Log_Message("fd = %d", listener.fd);
+	stopped = false;
 }
 
 void TransportTCPReader::SetOnRead(Callable* onRead_)
@@ -79,6 +82,16 @@ void TransportTCPReader::SetMessage(ByteString bs_)
 void TransportTCPReader::GetMessage(ByteString& bs_)
 {
 	bs_ = bs;
+}
+
+void TransportTCPReader::Stop()
+{
+	stopped = true;
+}
+
+void TransportTCPReader::Continue()
+{
+	stopped = false;
 }
 
 void TransportTCPReader::OnConnect()

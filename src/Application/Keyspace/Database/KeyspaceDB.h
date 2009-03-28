@@ -9,6 +9,8 @@
 #include "Framework/ReplicatedDB/ReplicatedDB.h"
 #include "Framework/AsyncDatabase/MultiDatabaseOp.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
+#include "Catchup/CatchupServer.h"
+#include "Catchup/CatchupClient.h"
 #include "KeyspaceConsts.h"
 #include "KeyspaceMsg.h"
 #include "KeyspaceClient.h"
@@ -31,7 +33,7 @@ class KeyspaceDB : ReplicatedDB
 public:
 	KeyspaceDB();
 	
-	bool					Init(ReplicatedLog* replicatedLog_);
+	bool					Init(IOProcessor* ioproc_, ReplicatedLog* replicatedLog_);
 	bool					Add(KeyspaceOp& op);	// the interface used by KeyspaceClient
 	unsigned				GetNodeID();
 	
@@ -40,7 +42,7 @@ public:
 								ByteString value, bool ownAppend);
 	virtual void			OnMasterLease(unsigned nodeID);
 	virtual void			OnMasterLeaseExpired();
-	virtual void			OnDoCatchup();
+	virtual void			OnDoCatchup(unsigned nodeID);
 	
 private:
 	void					Execute(Transaction* transaction, bool ownAppend);
@@ -53,6 +55,8 @@ private:
 	List<KeyspaceOp_Alloc>	ops;
 	ByteArray<VALUE_SIZE>	data;
 	bool					catchingUp;
+	CatchupServer			catchupServer;
+	CatchupClient			catchupClient;
 };
 
 #endif

@@ -47,7 +47,7 @@ KeyspaceDB::KeyspaceDB()
 	catchingUp = false;
 }
 
-bool KeyspaceDB::Init(ReplicatedLog* replicatedLog_)
+bool KeyspaceDB::Init(IOProcessor* ioproc_, ReplicatedLog* replicatedLog_)
 {
 	Log_Trace();
 	
@@ -55,6 +55,8 @@ bool KeyspaceDB::Init(ReplicatedLog* replicatedLog_)
 	replicatedLog->SetReplicatedDB(this);
 	
 	table = database.GetTable("keyspace");
+	
+	catchupServer.Init(ioproc_, PaxosConfig::Get()->port + CATCHUP_PORT_OFFSET, table, replicatedLog);
 	
 	return true;
 }
@@ -201,6 +203,10 @@ void KeyspaceDB::OnMasterLeaseExpired()
 {
 }
 
-void KeyspaceDB::OnDoCatchup()
+void KeyspaceDB::OnDoCatchup(unsigned nodeID)
 {
+	catchingUp = true;
+	replicatedLog->Stop();
+	replicatedLog->GetTransaction()->Commit();
+	catchupClient.Start(nodeID);
 }

@@ -21,13 +21,16 @@ int main(int argc, char* argv[])
 	ioproc = IOProcessor::Get();
 	eventloop = new EventLoop(ioproc);
 	
+	if (!PaxosConfig::Get()->Init(argv[1]))
+		ASSERT_FAIL();
+	
 	ioproc->Init();
 
 	ReplicatedLog rl;
-	rl.Init(ioproc, eventloop, argv[1]);
+	rl.Init(ioproc, eventloop);
 	
 	KeyspaceDB kdb;
-	kdb.Init(&rl);
+	kdb.Init(ioproc, &rl);
 	
 //	TestDB testdb;
 //	testdb.Init(ioproc, eventloop, &rl);
