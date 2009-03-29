@@ -252,7 +252,7 @@ void TCPConn<bufferSize>::Close()
 		if (writeQueue.Size() == 1)
 		{
 			it = writeQueue.Head();
-			(	*it)->Clear();
+				(*it)->Clear();
 		}
 	}
 }

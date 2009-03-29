@@ -15,7 +15,7 @@ public:
 	
 	LLNode()
 	{
-		next = prev = 0;
+		next = prev = this;
 		owner = 0;
 	}
 	
@@ -24,12 +24,18 @@ public:
 		Remove();
 	}
 	
+	bool IsLinked()
+	{
+		return owner ? true : false;
+	}
+	
 	void Remove()
 	{
 		next->prev = prev;
 		prev->next = next;
 		next = this;
 		prev = this;
+		owner = 0;
 	}
 };
 
@@ -49,8 +55,15 @@ public:
 	
 	T* Next(T* t)
 	{
-		LLNode<T>* node;
-		node = &(t->*pnode);
+		LLNode<T>* node = &(t->*pnode)->next;
+		if (node)
+			return node->owner;
+		return 0;
+	}
+	
+	T* Prev(T* t)
+	{
+		LLNode<T>* node = &(t->*pnode)->prev;
 		if (node)
 			return node->owner;
 		return 0;
@@ -58,18 +71,61 @@ public:
 
 	void Add(T &t)
 	{
-		(t.*pnode).next = head;
-		(t.*pnode).prev = 0;
+		LLNode<T>* node = &(t->*pnode);
+
+		node->next = head;
+		node->prev = 0;
 		
-		if (head != 0)
-			head->prev = &(t.*pnode);
-		head = &(t.*pnode);
+		if (head)
+			head->prev = node;
+		head = node;
 		size++;
 		
-		if (tail == 0)
-			tail = &(t.*pnode);
+		if (!tail)
+			tail = node;
 		
-		(t.*pnode).owner = &t;
+		node->owner = &t;
+	}
+	
+	void Append(T &t)
+	{
+		LLNode<T>* node = &(t->*pnode);
+
+		node->next = 0;
+		node->prev = tail;
+		
+		if (tail)
+			tail->next = node;
+		tail = node;
+		size++;
+		
+		if (!head)
+			head = node;
+		
+		node->owner = &t;
+	}
+	
+	T* Remove(T* t)
+	{
+		LLNode<T>* node = &(t->*pnode);
+		T* ret;
+
+		if (head == node)
+			head = node;
+		else
+			node->prev->next = node;
+		
+		if (tail == node)
+			tail = Prev(t);
+		else
+			node->next->prev = node;
+		
+		size--;
+		node->owner = 0;
+		ret = 0;
+		if (Next(t))
+			ret = t;
+		return ret;
 	}
 };
 
