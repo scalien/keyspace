@@ -11,11 +11,17 @@ void CatchupConn::Init()
 {
 	TCPConn<BUF_SIZE>::Init(false);
 	
+	if (ReplicatedLog::Get()->GetTransaction()->IsActive())
+		ReplicatedLog::Get()->GetTransaction()->Commit();
+		
+	// commit the current transaction so we see the latest state
+	// or we could use get @@paxosID instead of ReplicatedLog::Get()->GetPaxosID()
+	
 	transaction.Set(server->table);
 	transaction.Begin();
 	server->table->Iterate(&transaction, cursor);
 	tcpwrite.data = writeBuffer;
-	startPaxosID = ReplicatedLog::Get()->GetPaxosID();
+	paxosID = ReplicatedLog::Get()->GetPaxosID();
 	
 	WriteNext();
 }
@@ -66,7 +72,7 @@ void CatchupConn::WriteNext()
 		
 		if (!kv)
 		{
-			msg.Commit(startPaxosID);
+			msg.Commit(paxosID);
 			break;
 		}
 		

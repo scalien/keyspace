@@ -24,7 +24,7 @@ private:
 	Cursor				cursor;
 	Transaction			transaction;
 	CatchupMsg			msg;
-	ulong64				startPaxosID;
+	ulong64				paxosID;
 	ByteArray<KEY_SIZE>	key;
 	ByteArray<VAL_SIZE>	value;
 };
