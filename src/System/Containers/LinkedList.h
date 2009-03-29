@@ -15,8 +15,8 @@ public:
 	
 	LLNode()
 	{
-		next = prev = NULL;
-		owner = NULL;
+		next = prev = 0;
+		owner = 0;
 	}
 	
 	~LLNode()
@@ -43,7 +43,7 @@ public:
 
 	LList()
 	{
-		head = tail = NULL;
+		head = tail = 0;
 		size = 0;
 	}
 	
@@ -53,20 +53,20 @@ public:
 		node = &(t->*pnode);
 		if (node)
 			return node->owner;
-		return NULL;
+		return 0;
 	}
 
 	void Add(T &t)
 	{
 		(t.*pnode).next = head;
-		(t.*pnode).prev = NULL;
+		(t.*pnode).prev = 0;
 		
-		if (head != NULL)
+		if (head != 0)
 			head->prev = &(t.*pnode);
 		head = &(t.*pnode);
 		size++;
 		
-		if (tail == NULL)
+		if (tail == 0)
 			tail = &(t.*pnode);
 		
 		(t.*pnode).owner = &t;
@@ -82,7 +82,7 @@ public:
 
 	LinkedListNode()
 	{
-		next = prev = NULL;
+		next = prev = 0;
 	}	
 };
 
@@ -96,7 +96,7 @@ public:
 	
 	LinkedList()
 	{
-		head = tail = NULL;
+		head = tail = 0;
 		size = 0;
 	}
 	
@@ -125,28 +125,28 @@ public:
 	void Add(T &t)
 	{
 		(t.*pnode).next = head;
-		(t.*pnode).prev = NULL;
+		(t.*pnode).prev = 0;
 		
-		if (head != NULL)
+		if (head != 0)
 			(head->*pnode).prev = &t;
 		head = &t;
 		size++;
 		
-		if (tail == NULL)
+		if (tail == 0)
 			tail = &t;
 	}
 	
 	void Append(T &t)
 	{
-		(t.*pnode).next = NULL;
+		(t.*pnode).next = 0;
 		(t.*pnode).prev = tail;
 		
-		if (tail != NULL)
+		if (tail != 0)
 			(tail->*pnode).next = &t;
 		tail = &t;
 		size++;
 		
-		if (head == NULL)
+		if (head == 0)
 			head = &t;
 	}
 	
@@ -165,7 +165,7 @@ public:
 			(Next(t)->*pnode).prev = t;
 		
 		size--;
-		ret = NULL;
+		ret = 0;
 		if (Next(t))
 			ret = Next(t);
 			
@@ -183,7 +183,7 @@ public:
 
 	LinkedList2()
 	{
-		head = tail = NULL;
+		head = tail = 0;
 		size = 0;
 	}
 
@@ -212,28 +212,28 @@ public:
 	void Add(T &t)
 	{
 		t.*pnext = head;
-		t.*pprev = NULL;
+		t.*pprev = 0;
 		
-		if (head != NULL)
+		if (head != 0)
 			head->*pprev = &t;
 		head = &t;
 		size++;
 		
-		if (tail == NULL)
+		if (tail == 0)
 			tail = &t;
 	}
 	
 	void Append(T &t)
 	{
-		t.*pnext = NULL;
+		t.*pnext = 0;
 		t.*pprev = tail;
 		
-		if (tail != NULL)
+		if (tail != 0)
 			tail->*pnext = &t;
 		tail = &t;
 		size++;
 		
-		if (head == NULL)
+		if (head == 0)
 			head = &t;
 	}
 	
@@ -252,7 +252,7 @@ public:
 			t->*pnext->*pprev = t->*pprev;
 		
 		size--;
-		ret = NULL;
+		ret = 0;
 		if (t->*pnext)
 			ret = Next(t);
 			

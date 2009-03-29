@@ -1,6 +1,14 @@
 #ifndef TCPCONN_H
 #define TCPCONN_H
 
+//===================================================================
+//
+// TCPConn.h:
+//
+//	Async tcp connection with automatic write queue management.
+//
+//===================================================================
+
 #include "System/IO/IOOperation.h"
 #include "System/IO/IOProcessor.h"
 #include "System/IO/Socket.h"
@@ -8,6 +16,7 @@
 #include "System/Events/Timer.h"
 #include "System/Events/EventLoop.h"
 #include "System/Containers/List.h"
+#include "System/Containers/Queue.h"
 #include "System/Buffer.h"
 #include "Transport.h"
 
@@ -26,7 +35,8 @@ public:
 	Socket&			GetSocket() { return socket; }
 	
 protected:
-	typedef ByteArray<bufferSize> Buffer;
+	typedef DynArray<bufferSize> Buffer;
+	typedef Queue<Buffer, &Buffer::next> BufferQueue;
 
 	enum State 
 	{
@@ -41,6 +51,7 @@ protected:
 	TCPWrite		tcpwrite;
 	Buffer			readBuffer;
 	List<Buffer*>	writeQueue;
+//	BufferQueue		writeQueue;
 	CdownTimer		connectTimeout;
 	
 	MFunc<TCPConn>	onRead;
@@ -82,6 +93,11 @@ TCPConn<bufferSize>::~TCPConn()
 
 	for (it = writeQueue.Head(); it != NULL; it = writeQueue.Next(it))
 		delete *it;	
+
+//	Buffer* buf;
+//
+//	while ((buf = writeQueue.Get()) != NULL)
+//		delete buf;
 	
 	Close();
 }
@@ -97,13 +113,6 @@ void TCPConn<bufferSize>::Init(bool startRead)
 	tcpwrite.fd = socket.fd;
 	tcpwrite.onComplete = &onWrite;
 	tcpwrite.onClose = &onClose;
-	
-	// preallocate a buffer for writeQueue
-	if (writeQueue.Size() == 0)
-	{
-		Buffer* buf = new Buffer;
-		writeQueue.Append(buf);
-	}
 }
 
 template<int bufferSize>
@@ -173,6 +182,13 @@ void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 	Buffer* buf;
 	Buffer* head;
 	
+	// preallocate a buffer for writeQueue
+	if (writeQueue.Size() == 0)
+	{
+		buf = new Buffer;
+		writeQueue.Append(buf);
+	}
+	
 	head = *writeQueue.Head();
 	buf = *writeQueue.Tail();
 	if ((tcpwrite.active && head == buf) || buf->size - buf->length < count)
@@ -211,6 +227,8 @@ template<int bufferSize>
 void TCPConn<bufferSize>::Close()
 {
 	Log_Trace();
+
+	EventLoop::Get()->Remove(&connectTimeout);
 	
 	if (tcpread.active)
 		IOProcessor::Get()->Remove(&tcpread);
@@ -220,6 +238,23 @@ void TCPConn<bufferSize>::Close()
 	
 	socket.Close();
 	state = DISCONNECTED;
+	
+	// discard unnecessary buffers if there are any
+	while (writeQueue.Size() > 1)
+	{
+		Buffer** it;
+		
+		it = writeQueue.Head();
+		writeQueue.Remove(it);
+		
+		// keep the last one, so that when the connection is reused it isn't
+		// need to be allocated
+		if (writeQueue.Size() == 1)
+		{
+			it = writeQueue.Head();
+			(	*it)->Clear();
+		}
+	}
 }
 
 template<int bufferSize>
@@ -227,11 +262,11 @@ void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 {
 	Log_Message("endpoint_ = %s", endpoint_.ToString());
 
+	bool ret;
+
 	if (state != DISCONNECTED)
 		return;
-	
-	bool ret;
-	
+		
 	Init(false);
 	state = CONNECTING;
 
@@ -241,6 +276,7 @@ void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 	
 	tcpwrite.fd = socket.fd;
 	tcpwrite.onComplete = &onConnect;
+	// zero indicates for IOProcessor that we are waiting for connect event
 	tcpwrite.data.length = 0;
 	
 	IOProcessor::Get()->Add(&tcpwrite);

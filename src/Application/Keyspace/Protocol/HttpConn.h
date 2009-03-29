@@ -1,6 +1,7 @@
 #ifndef HTTP_CONN_H
 #define HTTP_CONN_H
 
+#include "System/Containers/LinkedList.h"
 #include "Framework/Transport/TCPConn.h"
 #include "HttpRequest.h"
 #include "../Database/KeyspaceDB.h"
@@ -15,6 +16,8 @@ public:
 	void			Init(KeyspaceDB* kdb_, HttpServer* server_);
 	void			OnComplete(KeyspaceOp* op, bool status);
 private:
+	friend class HttpServer;
+	typedef LinkedListNode<HttpConn> Node;
 	
 	HttpServer*		server;
 	KeyspaceDB*		kdb;
@@ -23,6 +26,7 @@ private:
 	int				offs;
 	char*			buffer;
 	HttpRequest		request;
+	Node			node;
 
 	// TCPConn interface
 	virtual void	OnRead();

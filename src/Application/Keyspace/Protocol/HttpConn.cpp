@@ -1,4 +1,5 @@
 #include "HttpConn.h"
+#include "HttpServer.h"
 
 #define MAX_MESSAGE_SIZE	4096
 #define CS_CR				"\015"
@@ -59,6 +60,7 @@ void HttpConn::OnClose()
 {
 	Log_Trace();
 	Close();
+	server->DeleteConn(this);
 }
 
 

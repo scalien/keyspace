@@ -1,7 +1,7 @@
 #ifndef CATCHUPMSG_H
 #define CATCHUPMSG_H
 
-#include "KeyspaceConsts.h"
+#include "../KeyspaceConsts.h"
 #include "System/Buffer.h"
 
 #define KEY_VALUE			'k'

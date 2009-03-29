@@ -23,44 +23,46 @@ public:
 		} while (elem);
 	}
 	
-	void Add(T* elem)
+	void Append(T* elem)
 	{
 		elem->*pnext = NULL;
-		if (last)
-			last->*pnext = elem;
+		if (tail)
+			tail->*pnext = elem;
 		else
-			first = elem;
-		last = elem;
+			head = elem;
+		tail = elem;
+		size++;
 	}
 	
 	T* Get()
 	{
 		T* elem;
-		elem = first;
+		elem = head;
 		if (elem)
 		{
-			first = elem->*pnext;
-			if (last == elem)
-				last = NULL;
+			head = elem->*pnext;
+			if (tail == elem)
+				tail = NULL;
 			elem->*pnext = NULL;
+			size--;
 		}
 		return elem;
 	}
 	
-	T* First()
+	T* Head()
 	{
-		return first;
+		return head;
 	}
 	
-	T* Last()
+	T* Tail()
 	{
-		return last;
+		return tail;
 	}
 
 private:
-	T*	first;
-	T*	last;
-	int	size;
+	T*		head;
+	T*		tail;
+	int		size;
 };
 
 
