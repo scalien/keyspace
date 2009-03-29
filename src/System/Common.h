@@ -37,6 +37,6 @@ inline bool Xor(bool a, bool b, bool c) { return (((int)a + (int)b + (int)c) == 
 
 inline bool Xor(bool a, bool b) { return Xor(a, b, false); }
 
-inline unsigned NumLen(int n) { return floor(log10(n) + 1); }
+inline unsigned NumLen(int n) { return (unsigned) floor(log10(n) + 1); }
 
 #endif

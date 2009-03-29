@@ -8,6 +8,7 @@
 #include "Framework/Transport/TransportUDPWriter.h"
 #include "System/Time.h"
 
+
 void Write();
 
 TransportUDPWriter	writer;
@@ -35,7 +36,7 @@ main(int, char* argv[])
 	
 	KeyspaceDB kdb;
 	kdb.Init();
-	
+
 	HttpServer proto;
 	proto.Init(&kdb);
 

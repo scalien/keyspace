@@ -49,6 +49,19 @@ public:
 	CFunc::Callback	callback;
 };
 
+class EpollOp
+{
+public:
+	EpollOp()
+	{
+		read = NULL;
+		write = NULL;
+	}
+	
+	IOOperation*	read;
+	IOOperation*	write;
+};
+
 // this is the singleton object
 static IOProcessor	ioproc;
 
@@ -56,16 +69,18 @@ static int			epollfd;
 static PipeOp		filePipeOp;
 static PipeOp		asyncPipeOp;
 static IOOperation*	canceledOps;
+static EpollOp		epollOps[1024];
 
 static bool			AddEvent(int fd, uint32_t filter, IOOperation* ioop);
 static bool			AddAio(FileOp* ioop);
 
 static void			ProcessFileOp();
 static void			ProcessAsyncOp();
-static void			ProcessTCPRead(struct epoll_event* ev);
-static void			ProcessTCPWrite(struct epoll_event* ev);
-static void			ProcessUDPRead(struct epoll_event* ev);
-static void			ProcessUDPWrite(struct epoll_event* ev);
+static void			ProcessIOOperation(IOOperation* ioop);
+static void			ProcessTCPRead(TCPRead* tcpread);
+static void			ProcessTCPWrite(TCPWrite* tcpwrite);
+static void			ProcessUDPRead(UDPRead* udpread);
+static void			ProcessUDPWrite(UDPWrite* udpwrite);
 
 IOProcessor* IOProcessor::Get()
 {
@@ -223,6 +238,8 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 {
 	int					nev;
 	struct epoll_event	ev;
+	EpollOp				*epollOp;
+	bool				hasEvent;
 	
 	if (epollfd < 0)
 	{
@@ -230,11 +247,27 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 		return false;
 	}
 
+	epollOp = &epollOps[fd];
+	hasEvent = epollOp->read || epollOp->write;
+
+	if (event & EPOLLIN == EPOLLIN)
+		epollOp->read = ioop;
+	if (event & EPOLLOUT == EPOLLOUT)
+		epollOp->write = ioop;
+
+	if (hasEvent)
+	{
+		if (epollOp->read)
+			event |= EPOLLIN;
+		if (epollOp->write)
+			event |= EPOLLOUT;
+	}
+
 	ev.events = event;
-	ev.data.ptr = ioop;
+	ev.data.ptr = epollOp;
 	
 	// add our interest in the event
-	nev = epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev);
+	nev = epoll_ctl(epollfd, hasEvent ? EPOLL_CTL_MOD : EPOLL_CTL_ADD, fd, &ev);
 
     // If you add the same fd to an epoll_set twice, you
     // probably get EEXIST, but this is a harmless condition.
@@ -242,6 +275,7 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	{
 		if (errno == EEXIST)
 		{
+			Log_Message("AddEvent: fd = %d exists", fd);
 			nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &ev);
 		}
 
@@ -280,6 +314,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 {
 	int				nev;
 	struct epoll_event	ev;
+	EpollOp*		epollOp;
 	
 	if (epollfd < 0)
 	{
@@ -289,19 +324,34 @@ bool IOProcessor::Remove(IOOperation* ioop)
 
 	if (ioop->type == FILE_READ || ioop->type == FILE_WRITE)
 	{
-		// TODO Remove(FileOp*)
 		return Remove((FileOp*) ioop);
 	}
-	
+
+	epollOp = &epollOps[ioop->fd];	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-		ev.events = EPOLLIN;
+	{
+		epollOp->read = NULL;
+		if (epollOp->write)
+			ev.events = EPOLLOUT;
+		else
+			ev.events = EPOLLIN;
+	}
 	else
-		ev.events = EPOLLOUT;
+	{
+		epollOp->write = NULL;
+		if (epollOp->read)
+			ev.events = EPOLLIN;
+		else
+			ev.events = EPOLLOUT;
+	}
 
 	ev.data.fd = ioop->fd;
-	
-	// delete event
-	nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev);
+
+	if (epollOp->read || epollOp->write)
+		nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, ioop->fd, &ev);
+	else
+		nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev);
+
 	if (nev < 0)
 	{
 		Log_Errno();
@@ -320,6 +370,8 @@ bool IOProcessor::Poll(int sleep)
 	int							i, nevents, wait;
 	static struct epoll_event	events[MAX_EVENTS];
 	IOOperation*				ioop;
+	EpollOp*					epollOp;
+	int							newev;
 	
 	called = Now();
 	
@@ -338,30 +390,51 @@ bool IOProcessor::Poll(int sleep)
 		
 		for (i = 0; i < nevents; i++)
 		{
-			ioop = (IOOperation *) events[i].data.ptr;
+			//ioop = (IOOperation *) events[i].data.ptr;
+			epollOp = (EpollOp*) events[i].data.ptr;
+
+			newev = epollOp->read ? EPOLLIN : 0;
+			newev |= epollOp->write ? EPOLLOUT : 0;
 			
-			ioop->active = false;
-			
-			if (ioop && ioop->type == PIPEOP)
+			if (events[i].events & EPOLLIN)
 			{
-				PipeOp* pipeop = (PipeOp*) ioop;
-				pipeop->callback();
-				
-				if (!AddEvent(pipeop->pipe[0], EPOLLIN, pipeop))
-					return false;
-				
-				continue;
+				ioop = epollOp->read;
+				assert(ioop != NULL);
+	
+				if (ioop && ioop->type == PIPEOP)
+				{
+					PipeOp* pipeop = (PipeOp*) ioop;
+					pipeop->callback();
+					
+					if (!AddEvent(pipeop->pipe[0], EPOLLIN, pipeop))
+						return false;
+					
+					continue;
+				}
+
+				ProcessIOOperation(ioop);
+				newev &= ~EPOLLIN;
 			}
 			
-			if (ioop && ioop->type == TCP_READ && (events[i].events & EPOLLIN))
-				ProcessTCPRead(&events[i]);
-			else if (ioop && ioop->type == TCP_WRITE && (events[i].events & EPOLLOUT))
-				ProcessTCPWrite(&events[i]);
-			else if (ioop && ioop->type == UDP_READ && (events[i].events & EPOLLIN))
-				ProcessUDPRead(&events[i]);
-			else if (ioop && ioop->type == UDP_WRITE && (events[i].events & EPOLLOUT))
-				ProcessUDPWrite(&events[i]);
+			if (events[i].events & EPOLLOUT)
+			{
+				ioop = epollOp->write;
+				assert(ioop != NULL);
+				ProcessIOOperation(ioop);
+				newev &= ~EPOLLOUT;
+			}
+
+			if (newev)
+			{
+				if (epollOp->read && epollOp->read->type == TCP_READ ||
+					epollOp->write && epollOp->write->type == TCP_WRITE)
+					newev |= EPOLLONESHOT;
+
+				events[i].events = newev;
+				epoll_ctl(epollfd, EPOLL_CTL_MOD, events[i].data.fd, &events[i]);
+			}
 		}
+			
 	} while (nevents > 0 && wait > 0);
 	
 	return true;
@@ -381,6 +454,20 @@ bool IOProcessor::Complete(Callable* callable)
 	}
 	
 	return true;
+}
+
+void ProcessIOOperation(IOOperation* ioop)
+{
+	ioop->active = false;
+	
+	if (ioop && ioop->type == TCP_READ)
+		ProcessTCPRead((TCPRead*) ioop);
+	else if (ioop && ioop->type == TCP_WRITE)
+		ProcessTCPWrite((TCPWrite*) ioop);
+	else if (ioop && ioop->type == UDP_READ)
+		ProcessUDPRead((UDPRead*) ioop);
+	else if (ioop && ioop->type == UDP_WRITE)
+		ProcessUDPWrite((UDPWrite*) ioop);
 }
 
 void ProcessFileOp()
@@ -439,12 +526,9 @@ void ProcessAsyncOp()
 	}
 }
 
-void ProcessTCPRead(struct epoll_event* ev)
+void ProcessTCPRead(TCPRead* tcpread)
 {
 	int			readlen, nread;
-	TCPRead*	tcpread;
-	
-	tcpread = (TCPRead*) ev->data.ptr;
 
 	if (tcpread->listening)
 	{
@@ -487,12 +571,9 @@ void ProcessTCPRead(struct epoll_event* ev)
 	}
 }
 
-void ProcessTCPWrite(struct epoll_event* ev)
+void ProcessTCPWrite(TCPWrite* tcpwrite)
 {
 	int			writelen, nwrite;
-	TCPWrite*	tcpwrite;
-	
-	tcpwrite = (TCPWrite*) ev->data.ptr;
 
 	// this indicates check for connect() readyness
 	if (tcpwrite->data.length == 0)
@@ -541,12 +622,9 @@ void ProcessTCPWrite(struct epoll_event* ev)
 	}
 }
 
-void ProcessUDPRead(struct epoll_event* ev)
+void ProcessUDPRead(UDPRead* udpread)
 {
 	int			salen, nread;
-	UDPRead*	udpread;
-
-	udpread = (UDPRead*) ev->data.ptr;
 	
 	//Log_Message(rprintf("Calling recvfrom() to read max %d bytes", udpread->size));
 
@@ -578,12 +656,9 @@ void ProcessUDPRead(struct epoll_event* ev)
 	} while (nread > 0);
 }
 
-void ProcessUDPWrite(struct epoll_event* ev)
+void ProcessUDPWrite(UDPWrite* udpwrite)
 {
 	int			nwrite;
-	UDPWrite*	udpwrite;
-
-	udpwrite = (UDPWrite*) ev->data.ptr;
 
 	//Log_Message(rprintf("Calling sendto() to write %d bytes", udpwrite->data));
 	nwrite = sendto(udpwrite->fd, udpwrite->data.buffer + udpwrite->offset, udpwrite->data.length - udpwrite->offset, 0,

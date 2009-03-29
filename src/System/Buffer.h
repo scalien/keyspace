@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include "Common.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 class ByteString
 {
@@ -16,6 +17,8 @@ public:
 	
 	ByteString(int size_, int length_, char* buffer_)
 		: size(size_), length(length_), buffer(buffer_) {}
+	
+	virtual ~ByteString() {}
 	
 	virtual void Init() { size = 0; length = 0; buffer = 0; }
 	
@@ -62,7 +65,7 @@ public:
 	
 	bool Advance(unsigned n)
 	{
-		if (length < n)
+		if (length < (int) n)
 			return false;
 		
 		buffer += n;

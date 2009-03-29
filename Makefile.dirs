@@ -4,9 +4,10 @@ $(BUILD_DIR):
 		$(BUILD_DIR)/Application/HubSim/ \
 		$(BUILD_DIR)/Application/ \
 		$(BUILD_DIR)/Application/TestDB/ \
-		$(BUILD_DIR)/Application/Keyspace/Protocol/ \
 		$(BUILD_DIR)/Application/Keyspace/ \
 		$(BUILD_DIR)/Application/Keyspace/Database/ \
+		$(BUILD_DIR)/Application/Keyspace/Database/Catchup \
+		$(BUILD_DIR)/Application/Keyspace/Protocol/ \
 		$(BUILD_DIR)/Framework/ReplicatedLog/ \
 		$(BUILD_DIR)/Framework/Transport/ \
 		$(BUILD_DIR)/Framework/MasterLease/ \
