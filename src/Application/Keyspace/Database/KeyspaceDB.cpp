@@ -56,6 +56,7 @@ bool KeyspaceDB::Init()
 	table = database.GetTable("keyspace");
 	
 	catchupServer.Init(PaxosConfig::Get()->port + CATCHUP_PORT_OFFSET);
+	catchupClient.Init(this, table);
 	
 	return true;
 }
@@ -214,7 +215,8 @@ void KeyspaceDB::OnDoCatchup(unsigned nodeID)
 
 	catchingUp = true;
 	ReplicatedLog::Get()->Stop();
-	ReplicatedLog::Get()->GetTransaction()->Commit();
+	if (ReplicatedLog::Get()->GetTransaction()->IsActive())
+		ReplicatedLog::Get()->GetTransaction()->Commit();
 	catchupClient.Start(nodeID);
 }
 

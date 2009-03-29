@@ -4,14 +4,18 @@
 
 CatchupConn::CatchupConn(CatchupServer* server_)
 {
-	TCPConn<BUF_SIZE>::Init(false /*startRead*/);
-	
 	server = server_;
+}
+
+void CatchupConn::Init()
+{
+	TCPConn<BUF_SIZE>::Init(false);
+	
 	transaction.Set(server->table);
 	transaction.Begin();
 	server->table->Iterate(&transaction, cursor);
 	tcpwrite.data = writeBuffer;
-	startPaxosID = server->replicatedLog->GetPaxosID();
+	startPaxosID = ReplicatedLog::Get()->GetPaxosID();
 	
 	WriteNext();
 }
@@ -22,9 +26,13 @@ void CatchupConn::OnRead()
 
 void CatchupConn::OnWrite()
 {
+	Log_Trace();
+	
 	if (msg.type == CATCHUP_COMMIT)
 	{
-		transaction.Rollback(); // we just read from the DB, so we could Commit(), too
+		cursor.Close();
+		if (transaction.IsActive())
+			transaction.Rollback();
 		Close();
 		delete this;
 	}
@@ -36,6 +44,7 @@ void CatchupConn::OnClose()
 {
 	Log_Trace();
 
+	cursor.Close();
 	if (transaction.IsActive())
 		transaction.Rollback();
 	Close();
@@ -48,7 +57,6 @@ void CatchupConn::WriteNext()
 
 	static ByteArray<32> prefix; // for the "length:" header
 	static ByteArray<MAX_TCP_MESSAGE_SIZE> msgData;
-	ByteString	key, value;
 	bool kv;
 	
 	kv = false;
@@ -74,8 +82,9 @@ void CatchupConn::WriteNext()
 	msg.Write(msgData);
 	
 	// prepend with the "length:" header
-	snprintf(writeBuffer.buffer, writeBuffer.size, "%d:%.*s",
+	tcpwrite.data.length = snprintf(tcpwrite.data.buffer, tcpwrite.data.size, "%d:%.*s",
 		msgData.length, msgData.length, msgData.buffer);
-	
+	tcpwrite.transferred = 0;
+
 	IOProcessor::Get()->Add(&tcpwrite);
 }

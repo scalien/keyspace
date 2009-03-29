@@ -15,3 +15,8 @@ bool Cursor::Next(ByteString &key, ByteString &value)
 	else
 		return false;
 }
+
+bool Cursor::Close()
+{
+	return (cursor->close() == 0);
+}

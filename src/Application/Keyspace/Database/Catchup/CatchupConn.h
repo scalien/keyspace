@@ -11,20 +11,22 @@ class CatchupConn : public TCPConn<BUF_SIZE>
 public:
 	CatchupConn(CatchupServer* server_);
 
-	void				OnRead();
-	void				OnWrite();
+	void				Init();
 	
+	void				OnRead();
+	void				OnWrite();	
 	virtual void		OnClose();
 	
-	void				WriteNext();
-	
 private:
+	void				WriteNext();
 	Buffer				writeBuffer;
 	CatchupServer*		server;
 	Cursor				cursor;
 	Transaction			transaction;
 	CatchupMsg			msg;
 	ulong64				startPaxosID;
+	ByteArray<KEY_SIZE>	key;
+	ByteArray<VAL_SIZE>	value;
 };
 
 #endif

@@ -3,6 +3,8 @@
 
 bool CatchupServer::Init(int port)
 {
+	Log_Trace();
+	
 	table = database.GetTable("keyspace");
 	
 	return TCPServer::Init(port);
@@ -10,6 +12,8 @@ bool CatchupServer::Init(int port)
 
 void CatchupServer::OnConnect()
 {
+	Log_Trace();
+	
 	CatchupConn* conn = new CatchupConn(this);
 	
 	if (listener.Accept(&(conn->GetSocket())))
@@ -20,7 +24,7 @@ void CatchupServer::OnConnect()
 		Log_Message("%s connected", endpoint.ToString());
 		
 		conn->GetSocket().SetNonblocking();
-		conn->Init(true);
+		conn->Init();
 	}
 	else
 	{

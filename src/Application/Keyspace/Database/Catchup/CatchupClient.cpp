@@ -14,10 +14,14 @@ void CatchupClient::Start(unsigned nodeID)
 {
 	Log_Trace();
 
+	bool ret;
 	Endpoint endpoint;
 	
-	transaction.Begin();
-	table->Drop();
+	ret = true;
+	ret &= transaction.Begin();
+	ret &= table->Drop(&transaction);
+	if (!ret)
+		ASSERT_FAIL();
 
 	endpoint = PaxosConfig::Get()->endpoints[nodeID];
 	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);

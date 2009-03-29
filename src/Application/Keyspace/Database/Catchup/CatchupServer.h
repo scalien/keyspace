@@ -16,7 +16,6 @@ public:
 
 private:
 	Table*				table;
-	ReplicatedLog*		replicatedLog;
 };
 
 #endif

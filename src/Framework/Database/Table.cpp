@@ -113,17 +113,6 @@ bool Table::Set(Transaction* transaction, const char* key, const char* value)
 	return Table::Set(transaction, bsKey, bsValue);
 }
 
-bool Table::Drop()
-{
-	u_int32_t count;
-		
-	if (db->truncate(NULL, &count, 0) == 0)
-		return true;
-	else
-		return false;
-	
-}
-
 bool Table::Visit(TableVisitor &tv)
 {
 	Dbc* cursor = NULL;
@@ -160,7 +149,7 @@ bool Table::Visit(TableVisitor &tv)
 }
 
 
-bool Table::Truncate(Transaction* transaction)
+bool Table::Drop(Transaction* transaction)
 {
 	u_int32_t count;
 	u_int32_t flags = 0;

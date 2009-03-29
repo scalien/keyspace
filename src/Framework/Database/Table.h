@@ -28,11 +28,9 @@ public:
 	bool		Set(Transaction* transaction, const char* key, const ByteString &value);
 	bool		Set(Transaction* transaction, const char* key, const char* value);
 	
-	bool		Drop();
-	
 	bool		Visit(TableVisitor &tv);
 	
-	bool		Truncate(Transaction* transaction = NULL);
+	bool		Drop(Transaction* transaction = NULL);
 private:
 	Database*	database;
 	Db*			db;

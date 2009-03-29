@@ -26,6 +26,8 @@ ReplicatedLog::ReplicatedLog()
 
 bool ReplicatedLog::Init()
 {
+	Log_Trace();
+	
 	replicatedDB = NULL;
 	
 	InitTransport();

@@ -32,7 +32,7 @@ bool CatchupMsg::Read(ByteString data)
 #define ReadNumber(num)		(num) = strntoulong64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != '#') return false; pos++;
+#define ReadSeparator()		if (*pos != ':') return false; pos++;
 #define ValidateLength()	if ((pos - data.buffer) != data.length) return false;
 
 	pos = data.buffer;
@@ -50,6 +50,7 @@ bool CatchupMsg::Read(ByteString data)
 		key.size = key.length;
 		
 		pos += key.length;
+		ReadSeparator(); CheckOverflow();
 		ReadNumber(value.length); CheckOverflow();
 		ReadSeparator();
 
@@ -90,6 +91,6 @@ bool CatchupMsg::Write(ByteString& data)
 	if (required > data.size)
 		return false;
 		
-	data.length += required;
+	data.length = required;
 	return true;
 }

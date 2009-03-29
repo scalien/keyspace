@@ -12,6 +12,7 @@ friend class Table;
 
 public:
 	bool		Next(ByteString &key, ByteString &value);
+	bool		Close();
 
 private:
 	Dbc*		cursor;
