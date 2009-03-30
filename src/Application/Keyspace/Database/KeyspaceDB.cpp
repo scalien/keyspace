@@ -40,7 +40,8 @@ bool KeyspaceDB::Add(KeyspaceOp& op)
 		return false;
 	
 	// don't allow writes for @@ keys
-	if ((op.type == KeyspaceOp::SET || op.type == KeyspaceOp::TEST_AND_SET || op.type == KeyspaceOp::DELETE)
+	if ((op.type == KeyspaceOp::SET || op.type == KeyspaceOp::TEST_AND_SET ||
+		 op.type == KeyspaceOp::DELETE || op.type == KeyspaceOp::INCREMENT)
 		 && op.key.length > 2 && op.key.buffer[0] == '@' && op.key.buffer[1] == '@')
 			return false;
 	
@@ -78,6 +79,8 @@ bool KeyspaceDB::Add(KeyspaceOp& op)
 void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 {
 	bool		ret;
+	ulong64		num;
+	int			nread;
 	KeyspaceOp* it;
 	
 	ret = true;
@@ -93,6 +96,23 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		else
 			ret = false;
 	}
+	else if (msg.type == KEYSPACE_INCREMENT)
+	{
+		ret &= table->Get(transaction, msg.key, data); // read number
+		
+		if (ret)
+		{
+			num = strntoulong64(data.buffer, data.length, &nread); // parse number
+			if (nread == data.length)
+			{
+				num++; // increase number
+				data.length = snprintf(data.buffer, data.size, "%llu", num); // print number
+				ret &= table->Set(transaction, msg.key, data); // write number
+			}
+			else
+				ret = false;
+		}
+	}
 	else if (msg.type == KEYSPACE_DELETE)
 		ret &= table->Delete(transaction, msg.key);
 	else
@@ -103,6 +123,13 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		it = ops.Head();
 		if (it->type == KeyspaceOp::DIRTY_GET || it->type == KeyspaceOp::GET)
 			ASSERT_FAIL();
+		if (it->type == KeyspaceOp::INCREMENT && ret)
+		{
+			// return new value to client
+			it->value.Allocate(data.length);
+			it->value.Set(data);
+
+		}
 		it->client->OnComplete(it, ret);
 		ops.Remove(it);
 	}

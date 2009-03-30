@@ -21,6 +21,7 @@ public:
 		GET,
 		SET,
 		TEST_AND_SET,
+		INCREMENT,
 		DELETE
 	};
 	

@@ -30,6 +30,13 @@ void KeyspaceMsg::TestAndSet(ByteString key_, ByteString test_, ByteString value
 	value.Set(value_);
 }
 
+void KeyspaceMsg::Increment(ByteString key_)
+{
+	Init(KEYSPACE_INCREMENT);
+	
+	key.Set(key_);
+}
+
 void KeyspaceMsg::Delete(ByteString key_)
 {
 	Init(KEYSPACE_DELETE);
@@ -121,6 +128,20 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 		n = pos - data.buffer;
 		return true;
 	}
+	else if (type == KEYSPACE_INCREMENT)
+	{
+		ReadNumber(key.length); CheckOverflow();
+		ReadSeparator(); CheckOverflow();
+		key.buffer = pos;
+		pos += key.length;
+		
+		if (pos > data.buffer + data.length)
+			return false;
+		
+		Increment(ByteString(key.length, key.length, key.buffer));
+		n = pos - data.buffer;
+		return true;
+	}
 	else if (type == KEYSPACE_DELETE)
 	{
 		ReadNumber(key.length); CheckOverflow();
@@ -155,6 +176,9 @@ bool KeyspaceMsg::Write(ByteString& data)
 			key.length, key.length, key.buffer,
 			test.length, test.length, test.buffer,
 			value.length, value.length, value.buffer);
+	else if (type == KEYSPACE_INCREMENT)
+		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
+			key.length, key.length, key.buffer);
 	else if (type == KEYSPACE_DELETE)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
 			key.length, key.length, key.buffer);
@@ -179,6 +203,8 @@ bool KeyspaceMsg::BuildFrom(KeyspaceOp* op)
 		Init(KEYSPACE_SET);
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 		Init(KEYSPACE_TESTANDSET);
+	else if (op->type == KeyspaceOp::INCREMENT)
+		Init(KEYSPACE_INCREMENT);
 	else if (op->type == KeyspaceOp::DELETE)
 		Init(KEYSPACE_DELETE);
 	else

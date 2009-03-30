@@ -34,14 +34,17 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 {
 	Log_Trace();
 	
-	if (op->type == KeyspaceOp::GET || op->type == KeyspaceOp::DIRTY_GET)
+	if (op->type == KeyspaceOp::GET ||
+		op->type == KeyspaceOp::DIRTY_GET ||
+		op->type == KeyspaceOp::INCREMENT)
 	{
 		if (status)
 			Response(200, op->value.buffer, op->value.length);
 		else
 			RESPONSE_NOTFOUND;
 	}
-	else if (op->type == KeyspaceOp::SET || op->type == KeyspaceOp::TEST_AND_SET)
+	else if (op->type == KeyspaceOp::SET ||
+			 op->type == KeyspaceOp::TEST_AND_SET)
 	{
 		if (status)
 			Response(200, "OK", strlen("OK"));
@@ -226,6 +229,25 @@ int HttpConn::ProcessGetRequest()
 			return 0;
 		}
 		op.value.Set((char*) value, valuelen);
+		
+		if (!kdb->Add(op))
+			RESPONSE_FAIL;
+		
+		return 0;
+	}
+	else if (strncmp(request.line.uri, "/increment/", strlen("/increment/")) == 0)
+	{
+		key = request.line.uri + strlen("/increment/");
+		keylen = strlen(key);
+		
+		op.type = KeyspaceOp::INCREMENT;
+		
+		if (!op.key.Allocate(keylen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.key.Set((char*) key, keylen);
 		
 		if (!kdb->Add(op))
 			RESPONSE_FAIL;
