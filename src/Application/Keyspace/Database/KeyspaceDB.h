@@ -15,19 +15,6 @@
 #include "KeyspaceMsg.h"
 #include "KeyspaceClient.h"
 
-class KeyspaceOp_Alloc : public KeyspaceOp
-{
-public:
-	KeyspaceOp_Alloc() { pkey = NULL; pvalue = NULL; ptest = NULL; }
-	
-	char*	pkey;
-	char*	pvalue;
-	char*	ptest;
-	
-	void	Alloc(KeyspaceOp& op);
-	void	Free();
-};
-
 class KeyspaceDB : ReplicatedDB
 {
 public:
@@ -51,10 +38,9 @@ private:
 	void					Append();
 	
 	bool					catchingUp;
-	List<KeyspaceOp>		queuedOps;
+	List<KeyspaceOp>		ops;
 	Table*					table;
 	KeyspaceMsg				msg;
-	List<KeyspaceOp_Alloc>	ops;
 	ByteArray<VALUE_SIZE>	data;
 	CatchupServer			catchupServer;
 	CatchupClient			catchupClient;

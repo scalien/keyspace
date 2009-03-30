@@ -5,43 +5,6 @@
 #include "System/Log.h"
 #include "System/Common.h"
 
-void KeyspaceOp_Alloc::Alloc(KeyspaceOp& op)
-{
-	type = op.type;
-	client = op.client;
-	key = op.key;
-	value = op.value;
-	test = op.test;
-	
-	pkey = (char*) ::Alloc(key.length);
-	key.size = key.length;
-	memcpy(pkey, key.buffer, key.length);
-	key.buffer = pkey;
-	
-	if (type == SET || type == TEST_AND_SET)
-	{
-		pvalue = (char*) ::Alloc(value.length);
-		value.size = value.length;
-		memcpy(pvalue, value.buffer, value.length);
-		value.buffer = pvalue;
-	}
-	
-	if (type == TEST_AND_SET)
-	{
-		ptest = (char*) ::Alloc(test.length);
-		test.size = test.length;
-		memcpy(ptest, test.buffer, test.length);
-		test.buffer = ptest;
-	}		
-}
-
-void KeyspaceOp_Alloc::Free()
-{
-	if (pkey != NULL) free(pkey);
-	if (pvalue != NULL) free(pvalue);
-	if (ptest != NULL) free(ptest);
-}
-
 KeyspaceDB::KeyspaceDB()
 {
 	catchingUp = false;
@@ -66,38 +29,37 @@ unsigned KeyspaceDB::GetNodeID()
 	return ReplicatedLog::Get()->GetNodeID();
 }
 
-bool KeyspaceDB::Add(KeyspaceOp& op_)
+bool KeyspaceDB::Add(KeyspaceOp& op)
 {
 	Log_Trace();
 
 	bool ret;
 	Transaction* transaction;
-	KeyspaceOp_Alloc op;
 	
 	if (catchingUp)
 		return false;
 	
 	// don't allow writes for @@ keys
-	if ((op_.type == KeyspaceOp::SET || op_.type == KeyspaceOp::TEST_AND_SET) &&
-		 op_.key.length > 2 && op_.key.buffer[0] == '@' && op_.key.buffer[1] == '@')
+	if ((op.type == KeyspaceOp::SET || op.type == KeyspaceOp::TEST_AND_SET) &&
+		 op.key.length > 2 && op.key.buffer[0] == '@' && op.key.buffer[1] == '@')
 			return false;
 	
 	// reads are handled locally, they don't have to be added to the ReplicatedLog
-	if (op_.type == KeyspaceOp::DIRTY_GET || op_.type == KeyspaceOp::GET)
+	if (op.type == KeyspaceOp::DIRTY_GET || op.type == KeyspaceOp::GET)
 	{
 		// only handle GETs if I'm the master and it's safe to do so (I have NOPed)
-		if (op_.type == KeyspaceOp::GET &&
+		if (op.type == KeyspaceOp::GET &&
 		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
 			return false;
 		
 		if ((transaction = ReplicatedLog::Get()->GetTransaction()) != NULL)
 			if (!transaction->IsActive())
 				transaction = NULL;
-		ret = table->Get(transaction, op_.key, data);
-		if (ret)
-			op_.value = data;
+		
+		op.value.Allocate(VAL_SIZE);
+		ret = table->Get(transaction, op.key, op.value);
 
-		op_.client->OnComplete(&op_, ret);
+		op.client->OnComplete(&op, ret);
 		return true;
 	}
 	
@@ -105,8 +67,6 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 	if (!ReplicatedLog::Get()->IsMaster())
 		return false;
 	
-	// copy client buffers
-	op.Alloc(op_);
 	ops.Append(op);
 	
 	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster())
@@ -117,19 +77,14 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 
 void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 {
-	bool						ret;
-	KeyspaceOp_Alloc*			it;
+	bool		ret;
+	KeyspaceOp* it;
 	
 	ret = true;
-	if (msg.type == KEYSPACE_GET && ownAppend)
-	{
-		//ret &= table->Get(transaction, msg.key, data);
+	if (msg.type == KEYSPACE_GET)
 		ASSERT_FAIL(); // GETs are not put in the ReplicatedLog
-	}
 	else if (msg.type == KEYSPACE_SET)
-	{
 		ret &= table->Set(transaction, msg.key, msg.value);
-	}
 	else if (msg.type == KEYSPACE_TESTANDSET)
 	{
 		ret &= table->Get(transaction, msg.key, data);
@@ -144,15 +99,9 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	if (ownAppend)
 	{
 		it = ops.Head();
-		if (it->type == KeyspaceOp::GET)
-		{
-				it->value = data;
-				if (it->pvalue != NULL)
-					free(it->pvalue);
-				it->pvalue = NULL;
-		}
+		if (it->type != KeyspaceOp::SET && it->type != KeyspaceOp::TEST_AND_SET)
+			ASSERT_FAIL();
 		it->client->OnComplete(it, ret);
-		it->Free();
 		ops.Remove(it);
 	}
 }
@@ -184,8 +133,8 @@ void KeyspaceDB::OnAppend(Transaction* transaction, ulong64 paxosID, ByteString 
 
 void KeyspaceDB::Append()
 {
-	ByteString bs;
-	KeyspaceOp_Alloc* it;
+	ByteString	bs;
+	KeyspaceOp* it;
 
 	data.length = 0;
 	bs = data;

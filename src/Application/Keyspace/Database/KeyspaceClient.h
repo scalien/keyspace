@@ -17,17 +17,25 @@ class KeyspaceOp
 public:
 	enum Type
 	{
+		DIRTY_GET,
 		GET,
 		SET,
 		TEST_AND_SET
 	};
 	
 	Type					type;
-	ByteString				key;
-	ByteString				value;
-	ByteString				test;
+	ByteBuffer				key;
+	ByteBuffer				value;
+	ByteBuffer				test;
 	
 	KeyspaceClient*			client;
+	
+	void Free()
+	{
+		key.Free();
+		value.Free();
+		test.Free();
+	}
 };
 
 #endif

@@ -5,6 +5,11 @@
 #define CS_CR				"\015"
 #define CS_LF				"\012"
 #define CS_CRLF				CS_CR CS_LF
+#define MSG_FAIL			"Unable to process your request at this time"
+#define MSG_NOT_FOUND		"Not found"
+#define RESPONSE_FAIL		Response(500, MSG_FAIL, strlen(MSG_FAIL))
+#define RESPONSE_NOTFOUND	Response(404, MSG_NOT_FOUND, strlen(MSG_NOT_FOUND))
+
 
 HttpConn::HttpConn()
 {
@@ -34,7 +39,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 		if (status)
 			Response(200, op->value.buffer, op->value.length);
 		else
-			Response(404, "Not found", strlen("Not found"));
+			RESPONSE_NOTFOUND;
 	}
 	else if (op->type == KeyspaceOp::SET || op->type == KeyspaceOp::TEST_AND_SET)
 	{
@@ -43,6 +48,8 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 		else
 			Response(200, "Failed", strlen("Failed"));
 	}
+	
+	op->Free();
 }
 
 
@@ -97,23 +104,24 @@ int HttpConn::ProcessGetRequest()
 	// http://localhost:8080/get/key
 	// http://localhost:8080/set/key/value
 	
+	op.client = this;
+	
 	if (strncmp(request.line.uri, "/get/", strlen("/get/")) == 0)
 	{
 		key = request.line.uri + strlen("/get/");
 		keylen = strlen(key);
 		
-		op.client = this;
 		op.type = KeyspaceOp::GET;
-		op.key.buffer = (char*) key;
-		op.key.length = keylen;
-		op.key.size = keylen;
 		
-		op.value.Init();
-		op.test.Init();
+		if (!op.key.Allocate(keylen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.key.Set((char*) key, keylen);
 		
 		if (!kdb->Add(op))
-			Response(500, "Unable to process your request at this time",
-				strlen("Unable to process your request at this time"));
+			RESPONSE_FAIL;
 		
 		return 0;
 	}
@@ -122,18 +130,17 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/dirtyget/");
 		keylen = strlen(key);
 		
-		op.client = this;
 		op.type = KeyspaceOp::DIRTY_GET;
-		op.key.buffer = (char*) key;
-		op.key.length = keylen;
-		op.key.size = keylen;
 		
-		op.value.Init();
-		op.test.Init();
+		if (!op.key.Allocate(keylen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.key.Set((char*) key, keylen);
 		
 		if (!kdb->Add(op))
-			Response(500, "Unable to process your request at this time",
-				strlen("Unable to process your request at this time"));
+			RESPONSE_FAIL;
 		
 		return 0;
 	}
@@ -148,21 +155,24 @@ int HttpConn::ProcessGetRequest()
 		value++;
 		valuelen = strlen(value);
 		
-		op.client = this;
 		op.type = KeyspaceOp::SET;
-		op.key.buffer = (char*) key;
-		op.key.length = keylen;
-		op.key.size = keylen;
 		
-		op.value.buffer = (char*) value;
-		op.value.length = valuelen;
-		op.value.size = valuelen;
+		if (!op.key.Allocate(keylen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.key.Set((char*) key, keylen);
 		
-		op.test.Init();
+		if (!op.value.Allocate(valuelen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.value.Set((char*) value, valuelen);
 		
 		if (!kdb->Add(op))
-			Response(500, "Unable to process your request at this time",
-				strlen("Unable to process your request at this time"));
+			RESPONSE_FAIL;
 		
 		return 0;
 	}
@@ -185,23 +195,31 @@ int HttpConn::ProcessGetRequest()
 		
 		valuelen = strlen(value);
 		
-		op.client = this;
 		op.type = KeyspaceOp::TEST_AND_SET;
-		op.key.buffer = (char*) key;
-		op.key.length = keylen;
-		op.key.size = keylen;
 		
-		op.test.buffer = (char*) test;
-		op.test.length = testlen;
-		op.test.size = testlen;
+		if (!op.key.Allocate(keylen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.key.Set((char*) key, keylen);
 		
-		op.value.buffer = (char*) value;
-		op.value.length = valuelen;
-		op.value.size = valuelen;
+		if (!op.test.Allocate(testlen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.test.Set((char*) test, testlen);
+		
+		if (!op.value.Allocate(valuelen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.value.Set((char*) value, valuelen);
 		
 		if (!kdb->Add(op))
-			Response(500, "Unable to process your request at this time",
-				strlen("Unable to process your request at this time"));
+			RESPONSE_FAIL;
 		
 		return 0;
 	}
@@ -213,8 +231,7 @@ int HttpConn::ProcessGetRequest()
 	}
 	else
 	{
-		// 404
-		Response(404, "Not found", 9);
+		RESPONSE_NOTFOUND;
 	}
 	
 	return -1;
