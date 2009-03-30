@@ -28,6 +28,8 @@ public:
 	bool		Set(Transaction* transaction, const char* key, const ByteString &value);
 	bool		Set(Transaction* transaction, const char* key, const char* value);
 	
+	bool		Delete(Transaction* transaction, const ByteString &key);
+	
 	bool		Visit(TableVisitor &tv);
 	
 	bool		Drop(Transaction* transaction = NULL);

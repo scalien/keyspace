@@ -20,7 +20,8 @@ public:
 		DIRTY_GET,
 		GET,
 		SET,
-		TEST_AND_SET
+		TEST_AND_SET,
+		DELETE
 	};
 	
 	Type					type;

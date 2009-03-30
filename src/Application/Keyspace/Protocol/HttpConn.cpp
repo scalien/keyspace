@@ -48,6 +48,15 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 		else
 			Response(200, "Failed", strlen("Failed"));
 	}
+	else if (op->type == KeyspaceOp::DELETE)
+	{
+		if (status)
+			Response(200, "OK", strlen("OK"));
+		else
+			RESPONSE_NOTFOUND;
+	}
+	else
+		ASSERT_FAIL();
 	
 	op->Free();
 }
@@ -217,6 +226,25 @@ int HttpConn::ProcessGetRequest()
 			return 0;
 		}
 		op.value.Set((char*) value, valuelen);
+		
+		if (!kdb->Add(op))
+			RESPONSE_FAIL;
+		
+		return 0;
+	}
+	else if (strncmp(request.line.uri, "/delete/", strlen("/delete/")) == 0)
+	{
+		key = request.line.uri + strlen("/delete/");
+		keylen = strlen(key);
+		
+		op.type = KeyspaceOp::DELETE;
+		
+		if (!op.key.Allocate(keylen))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.key.Set((char*) key, keylen);
 		
 		if (!kdb->Add(op))
 			RESPONSE_FAIL;

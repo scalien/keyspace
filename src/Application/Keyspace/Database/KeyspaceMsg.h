@@ -8,6 +8,7 @@
 #define KEYSPACE_GET		'g'
 #define KEYSPACE_SET		's'
 #define KEYSPACE_TESTANDSET	't'
+#define KEYSPACE_DELETE		'd'
 
 class KeyspaceMsg
 {
@@ -23,6 +24,7 @@ public:
 	void					Get(ByteString key_);
 	void					Set(ByteString key_, ByteString value_);
 	void					TestAndSet(ByteString key_, ByteString test_, ByteString value_);
+	void					Delete(ByteString key_);
 
 	bool					Read(ByteString& data, unsigned &nread);
 	bool					Write(ByteString& data);

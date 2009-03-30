@@ -40,8 +40,8 @@ bool KeyspaceDB::Add(KeyspaceOp& op)
 		return false;
 	
 	// don't allow writes for @@ keys
-	if ((op.type == KeyspaceOp::SET || op.type == KeyspaceOp::TEST_AND_SET) &&
-		 op.key.length > 2 && op.key.buffer[0] == '@' && op.key.buffer[1] == '@')
+	if ((op.type == KeyspaceOp::SET || op.type == KeyspaceOp::TEST_AND_SET || op.type == KeyspaceOp::DELETE)
+		 && op.key.length > 2 && op.key.buffer[0] == '@' && op.key.buffer[1] == '@')
 			return false;
 	
 	// reads are handled locally, they don't have to be added to the ReplicatedLog
@@ -63,7 +63,7 @@ bool KeyspaceDB::Add(KeyspaceOp& op)
 		return true;
 	}
 	
-	// only handle WRITEs if I'm the master
+	// only handle writes if I'm the master
 	if (!ReplicatedLog::Get()->IsMaster())
 		return false;
 	
@@ -93,13 +93,15 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		else
 			ret = false;
 	}
+	else if (msg.type == KEYSPACE_DELETE)
+		ret &= table->Delete(transaction, msg.key);
 	else
 		ASSERT_FAIL();
 		
 	if (ownAppend)
 	{
 		it = ops.Head();
-		if (it->type != KeyspaceOp::SET && it->type != KeyspaceOp::TEST_AND_SET)
+		if (it->type == KeyspaceOp::DIRTY_GET || it->type == KeyspaceOp::GET)
 			ASSERT_FAIL();
 		it->client->OnComplete(it, ret);
 		ops.Remove(it);

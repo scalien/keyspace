@@ -113,6 +113,22 @@ bool Table::Set(Transaction* transaction, const char* key, const char* value)
 	return Table::Set(transaction, bsKey, bsValue);
 }
 
+bool Table::Delete(Transaction* transaction, const ByteString &key)
+{
+	Dbt dbtKey(key.buffer, key.length);
+	DbTxn* txn = NULL;
+	int ret;
+
+	if (transaction)
+		txn = transaction->txn;
+	
+	ret = db->del(txn, &dbtKey, 0);
+	if (ret < 0)
+		return false;
+	
+	return true;
+}
+
 bool Table::Visit(TableVisitor &tv)
 {
 	Dbc* cursor = NULL;
