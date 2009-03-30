@@ -29,7 +29,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 {
 	Log_Trace();
 	
-	if (op->type == KeyspaceOp::GET)
+	if (op->type == KeyspaceOp::GET || op->type == KeyspaceOp::DIRTY_GET)
 	{
 		if (status)
 			Response(200, op->value.buffer, op->value.length);
@@ -104,6 +104,26 @@ int HttpConn::ProcessGetRequest()
 		
 		op.client = this;
 		op.type = KeyspaceOp::GET;
+		op.key.buffer = (char*) key;
+		op.key.length = keylen;
+		op.key.size = keylen;
+		
+		op.value.Init();
+		op.test.Init();
+		
+		if (!kdb->Add(op))
+			Response(500, "Unable to process your request at this time",
+				strlen("Unable to process your request at this time"));
+		
+		return 0;
+	}
+	else if (strncmp(request.line.uri, "/dirtyget/", strlen("/dirtyget/")) == 0)
+	{
+		key = request.line.uri + strlen("/dirtyget/");
+		keylen = strlen(key);
+		
+		op.client = this;
+		op.type = KeyspaceOp::DIRTY_GET;
 		op.key.buffer = (char*) key;
 		op.key.length = keylen;
 		op.key.size = keylen;

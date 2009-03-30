@@ -77,13 +77,19 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 	if (catchingUp)
 		return false;
 	
-	if ((!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()) &&
-		!(op_.type == KeyspaceOp::GET && op_.key.length > 2 &&
-		  op_.key.buffer[0] == '@' && op_.key.buffer[1] == '@'))
+	// don't allow writes for @@ keys
+	if ((op_.type == KeyspaceOp::SET || op_.type == KeyspaceOp::TEST_AND_SET) &&
+		 op_.key.length > 2 && op_.key.buffer[0] == '@' && op_.key.buffer[1] == '@')
 			return false;
 	
-	if (op_.type == KeyspaceOp::GET)
+	// reads are handled locally, they don't have to be added to the ReplicatedLog
+	if (op_.type == KeyspaceOp::DIRTY_GET || op_.type == KeyspaceOp::GET)
 	{
+		// only handle GETs if I'm the master and it's safe to do so (I have NOPed)
+		if (op_.type == KeyspaceOp::GET &&
+		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
+			return false;
+		
 		if ((transaction = ReplicatedLog::Get()->GetTransaction()) != NULL)
 			if (!transaction->IsActive())
 				transaction = NULL;
@@ -94,6 +100,10 @@ bool KeyspaceDB::Add(KeyspaceOp& op_)
 		op_.client->OnComplete(&op_, ret);
 		return true;
 	}
+	
+	// only handle WRITEs if I'm the master
+	if (!ReplicatedLog::Get()->IsMaster())
+		return false;
 	
 	// copy client buffers
 	op.Alloc(op_);
