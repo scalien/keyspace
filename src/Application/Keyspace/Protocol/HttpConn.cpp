@@ -79,6 +79,7 @@ void HttpConn::OnClose()
 {
 	Log_Trace();
 	Close();
+	request.Free();
 	server->DeleteConn(this);
 }
 

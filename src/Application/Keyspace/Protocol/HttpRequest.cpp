@@ -9,6 +9,12 @@ void HttpRequest::Init()
 	state = REQUEST_LINE;
 	pos = 0;
 	contentLength = -1;
+	header.Init();
+}
+
+void HttpRequest::Free()
+{
+	header.Free();
 }
 
 int HttpRequest::Parse(char* buf, int len)

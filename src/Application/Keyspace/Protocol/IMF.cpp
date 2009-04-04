@@ -108,16 +108,27 @@ int IMFHeader::StatusLine::Parse(char* buf, int len, int offs)
 
 IMFHeader::IMFHeader()
 {
-	numKeyval = 0;
-	capKeyval = KEYVAL_BUFFER_SIZE;
-	keyvalues = keyvalBuffer;
-	data = NULL;
+	Init();
 }
 
 IMFHeader::~IMFHeader()
 {
+	Free();
+}
+
+void IMFHeader::Init()
+{
+	numKeyval = 0;
+	capKeyval = KEYVAL_BUFFER_SIZE;
+	keyvalues = keyvalBuffer;
+	data = NULL;	
+}
+
+void IMFHeader::Free()
+{
 	if (keyvalues != keyvalBuffer)
 		delete[] keyvalues;
+	keyvalues = keyvalBuffer;
 }
 
 int IMFHeader::Parse(char* buf, int len, int offs)

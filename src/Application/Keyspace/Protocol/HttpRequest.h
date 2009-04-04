@@ -21,6 +21,7 @@ public:
 	int				contentLength;
 	
 	void Init();
+	void Free();
 	int Parse(char *buf, int len);
 };
 

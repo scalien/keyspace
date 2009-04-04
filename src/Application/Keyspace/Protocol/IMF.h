@@ -50,6 +50,8 @@ public:
 	IMFHeader();
 	~IMFHeader();
 	
+	void			Init();
+	void			Free();
 	int				Parse(char* buf, int len, int offs);
 	const char*		GetField(const char* key);
 	
