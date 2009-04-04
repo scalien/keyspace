@@ -270,7 +270,7 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	{
 		if (errno == EEXIST)
 		{
-			Log_Message("AddEvent: fd = %d exists", fd);
+			//Log_Message("AddEvent: fd = %d exists", fd);
 			nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &ev);
 		}
 
@@ -383,6 +383,7 @@ bool IOProcessor::Poll(int sleep)
 			//ioop = (IOOperation *) events[i].data.ptr;
 			epollOp = (EpollOp*) events[i].data.ptr;
 
+			newev = 0;
 			if ((events[i].events & EPOLLIN) && epollOp->write)
 				newev |= EPOLLOUT;
 			if ((events[i].events & EPOLLOUT) && epollOp->read)
