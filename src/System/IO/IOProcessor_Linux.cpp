@@ -13,7 +13,7 @@
 #include "System/Time.h"
 
 #define EPOLL_EVENT_SIZE	1024
-#define	MAX_EVENTS			256
+#define	MAX_EVENTS			1
 #define PIPEOP				'p'
 
 
@@ -174,21 +174,11 @@ bool IOProcessor::Add(IOOperation* ioop)
 	}
 	else
 	{
-		filter = 0;
+		filter = EPOLLONESHOT;
 		if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-		{
 			filter |= EPOLLIN;
-		}
 		else if (ioop->type == TCP_WRITE || ioop->type == UDP_WRITE)
-		{
 			filter |= EPOLLOUT;
-		}
-		
-		if (ioop->type == TCP_READ | ioop->type == TCP_WRITE)
-		{
-			//filter |= EPOLLET | EPOLLONESHOT;
-			filter |= EPOLLONESHOT;
-		}
 		
 		return AddEvent(ioop->fd, filter, ioop);
 	}
@@ -255,13 +245,10 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	if (event & EPOLLOUT == EPOLLOUT)
 		epollOp->write = ioop;
 
-	if (hasEvent)
-	{
-		if (epollOp->read)
-			event |= EPOLLIN;
-		if (epollOp->write)
-			event |= EPOLLOUT;
-	}
+	if (epollOp->read)
+		event |= EPOLLIN;
+	if (epollOp->write)
+		event |= EPOLLOUT;
 
 	ev.events = event;
 	ev.data.ptr = epollOp;
@@ -312,9 +299,9 @@ bool /*IOProcessor::*/Remove(FileOp* fileop)
 
 bool IOProcessor::Remove(IOOperation* ioop)
 {
-	int				nev;
+	int					nev;
 	struct epoll_event	ev;
-	EpollOp*		epollOp;
+	EpollOp*			epollOp;
 	
 	if (epollfd < 0)
 	{
@@ -323,9 +310,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	}
 
 	if (ioop->type == FILE_READ || ioop->type == FILE_WRITE)
-	{
 		return Remove((FileOp*) ioop);
-	}
 
 	epollOp = &epollOps[ioop->fd];	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
@@ -333,24 +318,21 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		epollOp->read = NULL;
 		if (epollOp->write)
 			ev.events = EPOLLOUT;
-		else
-			ev.events = EPOLLIN;
 	}
 	else
 	{
 		epollOp->write = NULL;
 		if (epollOp->read)
 			ev.events = EPOLLIN;
-		else
-			ev.events = EPOLLOUT;
 	}
 
+	ev.events |= EPOLLONESHOT;
 	ev.data.fd = ioop->fd;
 
 	if (epollOp->read || epollOp->write)
 		nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, ioop->fd, &ev);
 	else
-		nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev);
+		nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev /* this paramter is ignored */);
 
 	if (nev < 0)
 	{
@@ -367,7 +349,7 @@ bool IOProcessor::Poll(int sleep)
 {
 	
 	long long					called;
-	int							i, nevents, wait;
+	int							i, nevents, nev, wait;
 	static struct epoll_event	events[MAX_EVENTS];
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
@@ -393,15 +375,34 @@ bool IOProcessor::Poll(int sleep)
 			//ioop = (IOOperation *) events[i].data.ptr;
 			epollOp = (EpollOp*) events[i].data.ptr;
 
-			newev = epollOp->read ? EPOLLIN : 0;
-			newev |= epollOp->write ? EPOLLOUT : 0;
+			if (events[i].events & EPOLLIN && epollOp->write)
+				newev |= EPOLLOUT;
+			if (events[i].events & EPOLLOUT && epollOp->read)
+				newev |= EPOLLIN;
+
+			if (newev)
+			{
+				if ((epollOp->read &&
+					(epollOp->read->type == TCP_READ || epollOp->read->type == UDP_READ)) ||
+					(epollOp->write &&
+					(epollOp->write->type == TCP_WRITE || epollOp->write->type == UDP_WRITE)))
+						newev |= EPOLLONESHOT;
+
+				events[i].events = newev;
+				nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, events[i].data.fd, &events[i]);
+				if (nev < 0)
+				{
+					Log_Errno();
+					return false;
+				}
+			}
 			
 			if (events[i].events & EPOLLIN)
 			{
 				ioop = epollOp->read;
 				assert(ioop != NULL);
 	
-				if (ioop && ioop->type == PIPEOP)
+				if (ioop->type == PIPEOP)
 				{
 					PipeOp* pipeop = (PipeOp*) ioop;
 					pipeop->callback();
@@ -413,7 +414,7 @@ bool IOProcessor::Poll(int sleep)
 				}
 
 				ProcessIOOperation(ioop);
-				newev &= ~EPOLLIN;
+				
 			}
 			
 			if (events[i].events & EPOLLOUT)
@@ -421,17 +422,7 @@ bool IOProcessor::Poll(int sleep)
 				ioop = epollOp->write;
 				assert(ioop != NULL);
 				ProcessIOOperation(ioop);
-				newev &= ~EPOLLOUT;
-			}
-
-			if (newev)
-			{
-				if (epollOp->read && epollOp->read->type == TCP_READ ||
-					epollOp->write && epollOp->write->type == TCP_WRITE)
-					newev |= EPOLLONESHOT;
-
-				events[i].events = newev;
-				epoll_ctl(epollfd, EPOLL_CTL_MOD, events[i].data.fd, &events[i]);
+				
 			}
 		}
 			
