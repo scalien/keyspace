@@ -362,6 +362,7 @@ bool IOProcessor::Poll(int sleep)
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
 	int							newev, currentev;
+	int							newfd;
 	
 	called = Now();
 	
@@ -387,10 +388,16 @@ bool IOProcessor::Poll(int sleep)
 
 			newev = 0;
 			if ((events[i].events & EPOLLIN) && epollOp->write)
+			{
 				newev |= EPOLLOUT;
+				newfd = epollOp->write->fd;
+			}
 			if ((events[i].events & EPOLLOUT) && epollOp->read)
+			{
 				newev |= EPOLLIN;
-
+				newfd = epollOp->read->fd;
+			}
+			
 			if (newev)
 			{
 				if ((epollOp->read &&
@@ -400,7 +407,7 @@ bool IOProcessor::Poll(int sleep)
 						newev |= EPOLLONESHOT;
 
 				events[i].events = newev;
-				nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, events[i].data.fd, &events[i]);
+				nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, &events[i]);
 				if (nev < 0)
 				{
 					Log_Errno();
