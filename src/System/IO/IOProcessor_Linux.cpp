@@ -141,7 +141,7 @@ bool IOProcessor::Init()
 {
 	int i;
 	
-	for (i = 0; i < SIZE(epollOps); i++
+	for (i = 0; i < SIZE(epollOps); i++)
 	{
 		epollOps[i].read = NULL;
 		epollOps[i].write = NULL;
@@ -248,9 +248,9 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	epollOp = &epollOps[fd];
 	hasEvent = epollOp->read || epollOp->write;
 
-	if (event & EPOLLIN == EPOLLIN)
+	if ((event & EPOLLIN) == EPOLLIN)
 		epollOp->read = ioop;
-	if (event & EPOLLOUT == EPOLLOUT)
+	if ((event & EPOLLOUT) == EPOLLOUT)
 		epollOp->write = ioop;
 
 	if (epollOp->read)
@@ -383,9 +383,9 @@ bool IOProcessor::Poll(int sleep)
 			//ioop = (IOOperation *) events[i].data.ptr;
 			epollOp = (EpollOp*) events[i].data.ptr;
 
-			if (events[i].events & EPOLLIN && epollOp->write)
+			if ((events[i].events & EPOLLIN) && epollOp->write)
 				newev |= EPOLLOUT;
-			if (events[i].events & EPOLLOUT && epollOp->read)
+			if ((events[i].events & EPOLLOUT) && epollOp->read)
 				newev |= EPOLLIN;
 
 			if (newev)
