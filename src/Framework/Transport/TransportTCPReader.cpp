@@ -68,6 +68,7 @@ void TransportTCPReader::Init(int port)
 {
 	TCPServer::Init(port);
 	Log_Message("fd = %d", listener.fd);
+	onRead = NULL;
 	stopped = false;
 }
 
