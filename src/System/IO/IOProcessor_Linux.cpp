@@ -361,8 +361,7 @@ bool IOProcessor::Poll(int sleep)
 	static struct epoll_event	events[MAX_EVENTS];
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
-	int							newev;
-	int							currentev;
+	int							newev, currentev;
 	
 	called = Now();
 	
