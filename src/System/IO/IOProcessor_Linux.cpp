@@ -419,15 +419,15 @@ bool IOProcessor::Poll(int sleep)
 			{
 				ioop = epollOp->read;
 				assert(ioop != NULL);
-				epollOp->read = NULL;
-				
+								
 				if (ioop->type == PIPEOP)
 				{
 					PipeOp* pipeop = (PipeOp*) ioop;
 					pipeop->callback();
 					continue;
 				}
-
+				
+				epollOp->read = NULL;
 				ProcessIOOperation(ioop);
 				
 			}
