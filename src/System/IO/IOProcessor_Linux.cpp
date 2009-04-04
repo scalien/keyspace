@@ -362,6 +362,7 @@ bool IOProcessor::Poll(int sleep)
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
 	int							newev;
+	int							currentev;
 	
 	called = Now();
 	
@@ -380,6 +381,8 @@ bool IOProcessor::Poll(int sleep)
 		
 		for (i = 0; i < nevents; i++)
 		{
+			currentev = events[i].events;
+			
 			//ioop = (IOOperation *) events[i].data.ptr;
 			epollOp = (EpollOp*) events[i].data.ptr;
 
@@ -406,7 +409,7 @@ bool IOProcessor::Poll(int sleep)
 				}
 			}
 			
-			if (events[i].events & EPOLLIN)
+			if (currentev & EPOLLIN)
 			{
 				ioop = epollOp->read;
 				assert(ioop != NULL);
@@ -427,7 +430,7 @@ bool IOProcessor::Poll(int sleep)
 				
 			}
 			
-			if (events[i].events & EPOLLOUT)
+			if (currentev & EPOLLOUT)
 			{
 				ioop = epollOp->write;
 				assert(ioop != NULL);
