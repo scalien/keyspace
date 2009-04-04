@@ -129,7 +129,7 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 	fcntl(pipeop.pipe[0], F_SETFL, O_NONBLOCK);
 	fcntl(pipeop.pipe[1], F_SETFL, O_NONBLOCK);
 
-	if (!AddEvent(pipeop.pipe[0], EPOLLIN | EPOLLOUT | EPOLLONESHOT, &pipeop))
+	if (!AddEvent(pipeop.pipe[0], EPOLLIN, &pipeop))
 		return false;
 	
 	pipeop.callback = callback;
@@ -425,10 +425,6 @@ bool IOProcessor::Poll(int sleep)
 				{
 					PipeOp* pipeop = (PipeOp*) ioop;
 					pipeop->callback();
-					
-					if (!AddEvent(pipeop->pipe[0], EPOLLIN, pipeop))
-						return false;
-					
 					continue;
 				}
 
