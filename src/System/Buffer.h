@@ -1,10 +1,10 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include <stdarg.h>
 #include "Common.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 class ByteString
 {
