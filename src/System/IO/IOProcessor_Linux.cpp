@@ -401,7 +401,8 @@ bool IOProcessor::Poll(int sleep)
 			{
 				ioop = epollOp->read;
 				assert(ioop != NULL);
-	
+				epollOp->read = NULL;
+				
 				if (ioop->type == PIPEOP)
 				{
 					PipeOp* pipeop = (PipeOp*) ioop;
@@ -421,6 +422,7 @@ bool IOProcessor::Poll(int sleep)
 			{
 				ioop = epollOp->write;
 				assert(ioop != NULL);
+				epollOp->write = NULL;
 				ProcessIOOperation(ioop);
 				
 			}
