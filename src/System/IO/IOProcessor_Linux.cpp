@@ -335,7 +335,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	}
 
 	ev.events |= EPOLLONESHOT;
-	ev.data.fd = ioop->fd;
+	ev.data.ptr = ioop;
 
 	if (epollOp->read || epollOp->write)
 		nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, ioop->fd, &ev);
