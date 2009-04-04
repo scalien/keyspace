@@ -70,13 +70,16 @@ void CatchupClient::OnRead()
 	}
 	while (true);
 	
-	IOProcessor::Get()->Add(&tcpread);
-
+	if (state == CONNECTED)
+		IOProcessor::Get()->Add(&tcpread);
 }
 
 void CatchupClient::OnClose()
 {
 	Log_Trace();
+
+	if (state == DISCONNECTED)
+		return;
 
 	if (transaction.IsActive())
 		transaction.Rollback();
