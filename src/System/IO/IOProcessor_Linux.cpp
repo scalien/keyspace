@@ -139,8 +139,16 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 
 bool IOProcessor::Init()
 {
-	canceledOps = NULL;
+	int i;
 	
+	for (i = 0; i < SIZE(epollOps); i++
+	{
+		epollOps[i].read = NULL;
+		epollOps[i].write = NULL;
+	}
+		
+	canceledOps = NULL;
+
 	epollfd = epoll_create(EPOLL_EVENT_SIZE);
 	if (epollfd < 0)
 	{
