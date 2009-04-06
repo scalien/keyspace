@@ -33,9 +33,7 @@ private:
 	};
 
 	MemcacheServer*	server;
-	KeyspaceDB*		kdb;
 	const char*		newline;
-	int				numpending;
 
 	int				Tokenize(const char* data, int size, Token* tokens, int maxtokens);
 	const char*		Process(const char* data, int size);
