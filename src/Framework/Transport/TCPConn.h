@@ -210,13 +210,13 @@ void TCPConn<bufferSize>::Close()
 	Log_Trace();
 
 	EventLoop::Remove(&connectTimeout);
-	
+
 	if (tcpread.active)
 		IOProcessor::Remove(&tcpread);
-	
+
 	if (tcpwrite.active)
 		IOProcessor::Remove(&tcpwrite);
-	
+
 	socket.Close();
 	state = DISCONNECTED;
 	

@@ -29,7 +29,7 @@ class List
 		
 		List() { head = NULL; tail = NULL; size = 0; }
 		
-		~List()
+		virtual ~List()
 		{
 			ListNode<T> *t, *n;
 			
