@@ -307,6 +307,7 @@ int HttpConn::ProcessGetRequest()
 	else
 	{
 		RESPONSE_NOTFOUND;
+		return 0;
 	}
 	
 	return -1;

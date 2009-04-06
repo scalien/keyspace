@@ -65,7 +65,7 @@ private:
 	PaxosMsg					pmsg;
 	ReplicatedLogMsg			rmsg;
 	ByteArray<PAXOS_BUFSIZE>	value;
-	ulong64						highestPaxosID;
+	uint64_t					highestPaxosID;
 	LogCache					logCache;
 	LogQueue					logQueue;
 	MFunc<ReplicatedLog>		onCatchupTimeout;

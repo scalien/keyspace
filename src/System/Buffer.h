@@ -18,9 +18,20 @@ public:
 	ByteString(int size_, int length_, char* buffer_)
 		: size(size_), length(length_), buffer(buffer_) {}
 	
-	virtual ~ByteString() {}
+	// FIXME this should be virtual, but then KeyspaceOp will
+	// call the destructor when returning to the client...
+//	virtual ~ByteString() {}
 	
 	virtual void Init() { size = 0; length = 0; buffer = 0; }
+
+	ByteString& operator=(const ByteString &bs)
+	{
+		size = bs.size;
+		length = bs.length;
+		buffer = bs.buffer;
+		
+		return *this;
+	}
 	
 	virtual bool Set(const char* str)
 	{

@@ -11,7 +11,7 @@ struct ListNode
 	ListNode<T>*	next;
 	ListNode<T>*	prev;
 	
-	void Init(T data_, ListNode<T>* next_, ListNode<T>* prev_)
+	void Init(T &data_, ListNode<T>* next_, ListNode<T>* prev_)
 	{
 		data = data_;
 		next = next_;
@@ -82,7 +82,7 @@ class List
 				return &node->prev->data;
 		}
 		
-		virtual void Add(T t)
+		virtual void Add(T &t)
 		{
 			ListNode<T>* node;
 			
@@ -98,7 +98,7 @@ class List
 				tail = node;
 		}
 		
-		void Append(T t)
+		void Append(T &t)
 		{
 			ListNode<T>* node;
 			
@@ -140,7 +140,7 @@ class List
 			return ret;
 		}
 		
-		bool Remove(T t)
+		bool Remove(T &t)
 		{
 			T* it;
 			
