@@ -20,8 +20,6 @@ public:
 private:	
 	HttpServer*		server;
 	HttpRequest		request;
-	int				numpending;
-	bool			closed;
 
 	// TCPConn interface
 	virtual void	OnRead();

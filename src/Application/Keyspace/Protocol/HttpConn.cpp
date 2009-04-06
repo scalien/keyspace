@@ -189,7 +189,7 @@ int HttpConn::ProcessGetRequest()
 		}
 		op.value.Set((char*) value, valuelen);
 		
-		if (!kdb->Add(op))
+		if (!Add(op))
 			RESPONSE_FAIL;
 		
 		return 0;
