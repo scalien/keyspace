@@ -549,7 +549,7 @@ void ProcessTCPRead(TCPRead* tcpread)
 	if (nread < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
-			ioproc.Add(tcpread);
+			IOProcessor::Add(tcpread);
 		else
 		{
 			Log_Errno();
@@ -567,7 +567,7 @@ void ProcessTCPRead(TCPRead* tcpread)
 			tcpread->data.length == tcpread->requested)
 			Call(tcpread->onComplete);
 		else
-			ioproc.Add(tcpread);
+			IOProcessor::Add(tcpread);
 	}
 }
 
@@ -601,7 +601,7 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 	if (nwrite < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
-			ioproc.Add(tcpwrite);
+			IOProcessor::Add(tcpwrite);
 		else
 		{
 			Log_Errno();
@@ -618,7 +618,7 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 		if (tcpwrite->transferred == tcpwrite->data.length)
 			Call(tcpwrite->onComplete);
 		else
-			ioproc.Add(tcpwrite);
+			IOProcessor::Add(tcpwrite);
 	}
 }
 
@@ -637,7 +637,7 @@ void ProcessUDPRead(UDPRead* udpread)
 		if (nread < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
-				ioproc.Add(udpread); // try again
+				IOProcessor::Add(udpread); // try again
 			else
 			{
 				Log_Errno();
@@ -667,7 +667,7 @@ void ProcessUDPWrite(UDPWrite* udpwrite)
 	if (nwrite < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
-			ioproc.Add(udpwrite); // try again
+			IOProcessor::Add(udpwrite); // try again
 		else
 		{
 			Log_Errno();
@@ -687,7 +687,7 @@ void ProcessUDPWrite(UDPWrite* udpwrite)
 		{
 			udpwrite->offset += nwrite;
 			Log_Message("sendto() datagram fragmentation");
-			ioproc.Add(udpwrite); // try again
+			IOProcessor::Add(udpwrite); // try again
 		}
 	}
 }
