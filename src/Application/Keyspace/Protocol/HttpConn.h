@@ -5,6 +5,7 @@
 #include "Framework/Transport/TCPConn.h"
 #include "HttpRequest.h"
 #include "../Database/KeyspaceDB.h"
+#include "../Database/KeyspaceClient.h"
 
 class HttpServer;
 
@@ -15,18 +16,13 @@ public:
 	
 	void			Init(KeyspaceDB* kdb_, HttpServer* server_);
 	void			OnComplete(KeyspaceOp* op, bool status);
-private:
-	friend class HttpServer;
-	typedef LinkedListNode<HttpConn> Node;
-	
+
+private:	
 	HttpServer*		server;
 	KeyspaceDB*		kdb;
-	int				contentLength;
-	int				contentStart;
-	int				offs;
-	char*			buffer;
 	HttpRequest		request;
-	Node			node;
+	int				numpending;
+	bool			closed;
 
 	// TCPConn interface
 	virtual void	OnRead();

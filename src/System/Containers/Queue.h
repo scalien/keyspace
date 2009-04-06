@@ -8,6 +8,7 @@ public:
 
 	Queue()
 	{
+		size = 0;
 		Clear();
 	}
 

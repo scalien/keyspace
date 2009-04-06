@@ -1,4 +1,5 @@
 #include "KeyspaceMsg.h"
+#include "KeyspaceClient.h"
 #include <stdio.h>
 
 void KeyspaceMsg::Init(char type_)

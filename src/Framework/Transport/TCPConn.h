@@ -26,6 +26,8 @@ template<int bufferSize = MAX_TCP_MESSAGE_SIZE>
 class TCPConn
 {
 public:
+	TCPConn			*next;
+
 	TCPConn();
 	virtual ~TCPConn();
 	
@@ -44,14 +46,13 @@ protected:
 		CONNECTED,
 		CONNECTING
 	};
-		
+	
 	State			state;
 	Socket			socket;
 	TCPRead			tcpread;
 	TCPWrite		tcpwrite;
 	Buffer			readBuffer;
-	List<Buffer*>	writeQueue;
-//	BufferQueue		writeQueue;
+	BufferQueue		writeQueue;
 	CdownTimer		connectTimeout;
 	
 	MFunc<TCPConn>	onRead;
@@ -89,15 +90,10 @@ connectTimeout(&onConnectTimeout)
 template<int bufferSize>
 TCPConn<bufferSize>::~TCPConn()
 {
-	Buffer** it;
+	Buffer* buf;
 
-	for (it = writeQueue.Head(); it != NULL; it = writeQueue.Next(it))
-		delete *it;	
-
-//	Buffer* buf;
-//
-//	while ((buf = writeQueue.Get()) != NULL)
-//		delete buf;
+	while ((buf = writeQueue.Get()) != NULL)
+		delete buf;
 	
 	Close();
 }
@@ -119,28 +115,17 @@ template<int bufferSize>
 void TCPConn<bufferSize>::OnWrite()
 {
 	Log_Trace();
-	
-	Buffer** it;
+
 	Buffer* buf;
-	Buffer* last;
 	
-	it = writeQueue.Head();
-	buf = *it;
+	buf = writeQueue.Get();
 	buf->Clear();
 	tcpwrite.data.Clear();
 	
-	if (writeQueue.Size() > 1)
-	{
-		writeQueue.Remove(it);
-		it = writeQueue.Tail();
-		last = *it;
-		if (last->length)
-			writeQueue.Append(buf);
-		else
-			delete buf;
-		
+	if (writeQueue.Size() == 0)
+		writeQueue.Append(buf);
+	else	
 		WritePending();
-	}	
 }
 
 template<int bufferSize>
@@ -151,6 +136,7 @@ void TCPConn<bufferSize>::OnConnect()
 	state = CONNECTED;
 	
 	EventLoop::Get()->Remove(&connectTimeout);
+	WritePending();
 }
 
 template<int bufferSize>
@@ -180,28 +166,20 @@ void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 	Log_Trace();
 	
 	Buffer* buf;
-	Buffer* head;
-	
-	// preallocate a buffer for writeQueue
-	if (writeQueue.Size() == 0)
+
+	buf = writeQueue.Tail();
+
+	if (!buf ||
+		(tcpwrite.active && writeQueue.Size() == 1) || 
+		(buf->length > 0 && buf->Remaining() < count))
 	{
 		buf = new Buffer;
 		writeQueue.Append(buf);
 	}
+
+	buf->Append(data, count);
 	
-	head = *writeQueue.Head();
-	buf = *writeQueue.Tail();
-	if ((tcpwrite.active && head == buf) || buf->size - buf->length < count)
-	{
-		// TODO max queue size
-		buf = new Buffer;
-		writeQueue.Append(buf);
-	}
-	
-	memcpy(buf->buffer + buf->length, data, count);
-	buf->length += count;
-	
-	if (!tcpwrite.active && flush)
+	if (flush)
 		WritePending();
 }
 
@@ -212,9 +190,12 @@ void TCPConn<bufferSize>::WritePending()
 	
 	Buffer* buf;
 	
-	buf = *writeQueue.Head();
+	if (tcpwrite.active)
+		return;
 	
-	if (buf->length)
+	buf = writeQueue.Head();
+	
+	if (buf && buf->length > 0)
 	{
 		tcpwrite.data = *buf;
 		tcpwrite.transferred = 0;
@@ -239,22 +220,17 @@ void TCPConn<bufferSize>::Close()
 	socket.Close();
 	state = DISCONNECTED;
 	
-	// discard unnecessary buffers if there are any
+	// Discard unnecessary buffers if there are any.
+	// Keep the last one, so that when the connection is reused it isn't
+	// need to be allocated.
 	while (writeQueue.Size() > 1)
 	{
-		Buffer** it;
-		
-		it = writeQueue.Head();
-		writeQueue.Remove(it);
-		
-		// keep the last one, so that when the connection is reused it isn't
-		// need to be allocated
-		if (writeQueue.Size() == 1)
-		{
-			it = writeQueue.Head();
-				(*it)->Clear();
-		}
+		Buffer* buf = writeQueue.Get();
+		delete buf;
 	}
+	
+	// TODO ? if the last buffer size exceeds some limit, 
+	// reallocate it to a normal value
 }
 
 template<int bufferSize>

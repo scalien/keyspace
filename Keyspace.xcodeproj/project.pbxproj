@@ -134,6 +134,21 @@
 		9ADC9A5A0F7E78ED0025A7AB /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A765F0F7680D6003084C9 /* Cursor.cpp */; };
 		9ADC9AD30F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
+		9ADCA0800F8385580025A7AB /* Channel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA07F0F8385580025A7AB /* Channel.cpp */; };
+		9AF5010A0F83953500F7F49E /* kdbfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501090F83953500F7F49E /* kdbfs.cpp */; };
+		9AF5011A0F83A9F600F7F49E /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */; };
+		9AF5011B0F83A9F600F7F49E /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC70F648B86004BBDB4 /* IMF.cpp */; };
+		9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
+		9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
+		9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
+		9AF5011F0F83A9F600F7F49E /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
+		9AF501200F83A9F600F7F49E /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
+		9AF501220F83AA0100F7F49E /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */; };
+		9AF5012D0F85198E00F7F49E /* kdbfs_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA0250F82D5980025A7AB /* kdbfs_main.c */; };
+		9AF501FD0F8826A900F7F49E /* BDBDump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501F10F88226400F7F49E /* BDBDump.cpp */; };
+		9AF502000F8826CC00F7F49E /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
+		9AF502010F8826CC00F7F49E /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
+		9AF502030F8826DB00F7F49E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -301,6 +316,16 @@
 		9ADC98480F7C00960025A7AB /* QueueTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = QueueTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkedList.h; sourceTree = "<group>"; };
 		9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventLoop.cpp; sourceTree = "<group>"; };
+		9ADCA0250F82D5980025A7AB /* kdbfs_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kdbfs_main.c; sourceTree = "<group>"; };
+		9ADCA0290F82D6EE0025A7AB /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
+		9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpClient.cpp; sourceTree = "<group>"; };
+		9ADCA04B0F82D7C90025A7AB /* Kdbfs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Kdbfs; sourceTree = BUILT_PRODUCTS_DIR; };
+		9ADCA07E0F8385580025A7AB /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
+		9ADCA07F0F8385580025A7AB /* Channel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Channel.cpp; sourceTree = "<group>"; };
+		9AF501080F83953500F7F49E /* kdbfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kdbfs.h; sourceTree = "<group>"; };
+		9AF501090F83953500F7F49E /* kdbfs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kdbfs.cpp; sourceTree = "<group>"; };
+		9AF501F10F88226400F7F49E /* BDBDump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBDump.cpp; sourceTree = "<group>"; };
+		9AF501F50F88229800F7F49E /* bdbdump */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bdbdump; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -351,6 +376,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9ADCA0490F82D7C90025A7AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AF501F30F88229800F7F49E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AF502030F8826DB00F7F49E /* libdb_cxx.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -382,6 +422,8 @@
 				9A27242A0F65480E00EE25E2 /* Test.agazso */,
 				9A2725180F65AA4000EE25E2 /* HubSim */,
 				9ADC98480F7C00960025A7AB /* QueueTest */,
+				9ADCA04B0F82D7C90025A7AB /* Kdbfs */,
+				9AF501F50F88229800F7F49E /* bdbdump */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -529,6 +571,8 @@
 		548146FE0F31B6B200F3D2B6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				9AF501EF0F88223C00F7F49E /* Tools */,
+				9ADCA0240F82D4860025A7AB /* Fuse */,
 				9A6204DA0F6C098F009576A1 /* HubSim */,
 				5446122A0F53488D00EFBBDE /* Keyspace */,
 				5406777B0F3C48FD00E80088 /* TestDB */,
@@ -705,6 +749,36 @@
 			name = HubSim;
 			sourceTree = "<group>";
 		};
+		9ADCA0240F82D4860025A7AB /* Fuse */ = {
+			isa = PBXGroup;
+			children = (
+				9ADCA0290F82D6EE0025A7AB /* HttpClient.h */,
+				9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */,
+				9ADCA07E0F8385580025A7AB /* Channel.h */,
+				9ADCA07F0F8385580025A7AB /* Channel.cpp */,
+				9AF501080F83953500F7F49E /* kdbfs.h */,
+				9AF501090F83953500F7F49E /* kdbfs.cpp */,
+				9ADCA0250F82D5980025A7AB /* kdbfs_main.c */,
+			);
+			path = Fuse;
+			sourceTree = "<group>";
+		};
+		9AF501EF0F88223C00F7F49E /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				9AF501F00F88223C00F7F49E /* BDBDump */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		9AF501F00F88223C00F7F49E /* BDBDump */ = {
+			isa = PBXGroup;
+			children = (
+				9AF501F10F88226400F7F49E /* BDBDump.cpp */,
+			);
+			path = BDBDump;
+			sourceTree = "<group>";
+		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -814,6 +888,38 @@
 			productReference = 9ADC98480F7C00960025A7AB /* QueueTest */;
 			productType = "com.apple.product-type.tool";
 		};
+		9ADCA04A0F82D7C90025A7AB /* Kdbfs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9ADCA0520F82D83B0025A7AB /* Build configuration list for PBXNativeTarget "Kdbfs" */;
+			buildPhases = (
+				9ADCA0480F82D7C90025A7AB /* Sources */,
+				9ADCA0490F82D7C90025A7AB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Kdbfs;
+			productName = Kdbfs;
+			productReference = 9ADCA04B0F82D7C90025A7AB /* Kdbfs */;
+			productType = "com.apple.product-type.tool";
+		};
+		9AF501F40F88229800F7F49E /* bdbdump */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "bdbdump" */;
+			buildPhases = (
+				9AF501F20F88229800F7F49E /* Sources */,
+				9AF501F30F88229800F7F49E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bdbdump;
+			productName = bdbdump;
+			productReference = 9AF501F50F88229800F7F49E /* bdbdump */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -832,6 +938,8 @@
 				9A2724290F65480E00EE25E2 /* Test.agazso */,
 				9A2725170F65AA4000EE25E2 /* HubSim */,
 				9ADC98470F7C00960025A7AB /* QueueTest */,
+				9ADCA04A0F82D7C90025A7AB /* Kdbfs */,
+				9AF501F40F88229800F7F49E /* bdbdump */,
 			);
 		};
 /* End PBXProject section */
@@ -998,6 +1106,34 @@
 			files = (
 				9ADC984D0F7C00C50025A7AB /* QueueTest.cpp in Sources */,
 				9ADC98670F7C01C10025A7AB /* Test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9ADCA0480F82D7C90025A7AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ADCA0800F8385580025A7AB /* Channel.cpp in Sources */,
+				9AF5010A0F83953500F7F49E /* kdbfs.cpp in Sources */,
+				9AF5011A0F83A9F600F7F49E /* HttpClient.cpp in Sources */,
+				9AF5011B0F83A9F600F7F49E /* IMF.cpp in Sources */,
+				9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */,
+				9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */,
+				9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */,
+				9AF5011F0F83A9F600F7F49E /* Socket.cpp in Sources */,
+				9AF501200F83A9F600F7F49E /* Log.cpp in Sources */,
+				9AF501220F83AA0100F7F49E /* HttpRequest.cpp in Sources */,
+				9AF5012D0F85198E00F7F49E /* kdbfs_main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AF501F20F88229800F7F49E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AF501FD0F8826A900F7F49E /* BDBDump.cpp in Sources */,
+				9AF502000F8826CC00F7F49E /* Table.cpp in Sources */,
+				9AF502010F8826CC00F7F49E /* Database.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1270,6 +1406,90 @@
 			};
 			name = Release;
 		};
+		9ADCA04D0F82D7CA0025A7AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/fuse,
+					/opt/local/include/db46,
+					src,
+				);
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_CFLAGS = (
+					"-D_FILE_OFFSET_BITS=64",
+					"-D__FreeBSD__=10",
+					"-DFUSE_USE_VERSION=26",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DPLATFORM_DARWIN",
+					"-D_FILE_OFFSET_BITS=64",
+					"-D__FreeBSD__=10",
+					"-DFUSE_USE_VERSION=26",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Kdbfs;
+			};
+			name = Debug;
+		};
+		9ADCA04E0F82D7CA0025A7AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = Kdbfs;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		9AF501F70F88229900F7F49E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = bdbdump;
+			};
+			name = Debug;
+		};
+		9AF501F80F88229900F7F49E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/db46,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = bdbdump;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1332,6 +1552,24 @@
 			buildConfigurations = (
 				9ADC984A0F7C00970025A7AB /* Debug */,
 				9ADC984B0F7C00970025A7AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9ADCA0520F82D83B0025A7AB /* Build configuration list for PBXNativeTarget "Kdbfs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9ADCA04D0F82D7CA0025A7AB /* Debug */,
+				9ADCA04E0F82D7CA0025A7AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "bdbdump" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AF501F70F88229900F7F49E /* Debug */,
+				9AF501F80F88229900F7F49E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

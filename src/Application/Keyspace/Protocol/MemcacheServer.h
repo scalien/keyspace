@@ -12,15 +12,13 @@
 
 class KeyspaceDB;
 
-class MemcacheServer : public TCPServer 
+class MemcacheServer : public TCPServerT<MemcacheServer, MemcacheConn>
 {
 public:
 	void					Init(KeyspaceDB* kdb);
-	void					OnDisconnect(MemcacheConn* conn);
+	void					InitConn(MemcacheConn* conn);
 private:	
-	List<MemcacheConn *>	conns;
 	KeyspaceDB*				kdb;
-	virtual void			OnConnect();
 };
 
 #endif

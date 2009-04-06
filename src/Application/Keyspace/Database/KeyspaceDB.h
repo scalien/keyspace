@@ -13,7 +13,6 @@
 #include "Catchup/CatchupClient.h"
 #include "KeyspaceConsts.h"
 #include "KeyspaceMsg.h"
-#include "KeyspaceClient.h"
 
 class KeyspaceDB : ReplicatedDB
 {

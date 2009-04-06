@@ -93,6 +93,11 @@ public:
 		
 		return true;
 	}
+	
+	int Remaining() const
+	{
+		return size - length;
+	}
 };
 
 class ByteBuffer : public ByteString
@@ -103,6 +108,11 @@ public:
 		buffer = NULL;
 		size = 0;
 		length = 0;
+	}
+	
+	~ByteBuffer()
+	{
+		Free();
 	}
 	
 	bool Allocate(int size_)
@@ -193,10 +203,10 @@ public:
 	{
 		char *newbuffer;
 		
-		size = size + GRAN - 1;
-		size -= size % GRAN;
+		newsize = newsize + GRAN - 1;
+		newsize -= newsize % GRAN;
 		
-		newbuffer = new char[size];
+		newbuffer = new char[newsize];
 		
 		if (keepold)
 			memcpy(newbuffer, buffer, length);

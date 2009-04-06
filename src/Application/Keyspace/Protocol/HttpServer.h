@@ -7,23 +7,14 @@
 
 class KeyspaceDB;
 
-class HttpServer : public TCPServer
+class HttpServer : public TCPServerT<HttpServer, HttpConn>
 {
 public:
 	void			Init(KeyspaceDB* kdb);
-	
-	void			DeleteConn(HttpConn* conn);
-	
+	void			InitConn(HttpConn* conn);
+
 private:
-	typedef LinkedList<HttpConn, &HttpConn::node> HttpConnList;
-
 	KeyspaceDB*		kdb;
-	HttpConnList	conns;
-	
-	HttpConn*		GetConn();
-
-	// TCPServer interface
-	virtual void	OnConnect();
 };
 
 #endif

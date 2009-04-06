@@ -3,13 +3,14 @@
 
 #include "System/Buffer.h"
 #include "KeyspaceConsts.h"
-#include "KeyspaceClient.h"
 
 #define KEYSPACE_GET		'g'
 #define KEYSPACE_SET		's'
 #define KEYSPACE_TESTANDSET	't'
 #define KEYSPACE_DELETE		'd'
 #define KEYSPACE_INCREMENT	'i'
+
+class KeyspaceOp;
 
 class KeyspaceMsg
 {

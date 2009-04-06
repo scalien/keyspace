@@ -1,9 +1,44 @@
 #include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "KeyspaceDB.h"
+#include "KeyspaceClient.h"
 #include <assert.h>
 #include <stdlib.h>
 #include "System/Log.h"
 #include "System/Common.h"
+
+class ListVisitor : public TableVisitor
+{
+public:
+	ListVisitor(const ByteString &keyHint_) :
+	keyHint(keyHint_)
+	{}
+	
+	virtual bool Accept(const ByteString &key, const ByteString &)
+	{
+		// don't list system keys
+		if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
+			return true;
+
+		out.Append(key.buffer, key.length);
+		out.Append("\n", 1);
+		return true;
+	}
+	
+	virtual const ByteString* GetKeyHint()
+	{
+		return &keyHint;
+	}
+	
+	ByteString &GetOutput()
+	{
+		return out;
+	}
+	
+private:
+	const ByteString	&keyHint;
+	DynArray<1024>		out;
+};
+
 
 KeyspaceDB::KeyspaceDB()
 {
@@ -60,6 +95,22 @@ bool KeyspaceDB::Add(KeyspaceOp& op)
 		op.value.Allocate(VAL_SIZE);
 		ret = table->Get(transaction, op.key, op.value);
 
+		op.client->OnComplete(&op, ret);
+		return true;
+	}
+	
+	if (op.type == KeyspaceOp::LIST)
+	{
+		ListVisitor lv(op.key);
+		ret = table->Visit(lv);
+		
+		ByteString &out = lv.GetOutput();
+		if (out.length > 0)
+		{
+			op.value.Allocate(out.length);
+			op.value.Set(out.buffer, out.length);
+		}
+		
 		op.client->OnComplete(&op, ret);
 		return true;
 	}

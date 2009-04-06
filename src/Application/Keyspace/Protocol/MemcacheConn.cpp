@@ -22,100 +22,17 @@
 #define TOKEN_CAS_NOREPLY	6
 
 
-MemcacheConn::MemcacheConn() :
-onRead(this, &MemcacheConn::OnRead),
-onWrite(this, &MemcacheConn::OnWrite),
-onClose(this, &MemcacheConn::OnClose)
-{
-	WriteBuffer* buffer;
-	
-	server = NULL;
-	ioproc = NULL;
-	kdb = NULL;
-	newline = NULL;
-
-	// preallocate a buffer for writeQueue
-	buffer = new WriteBuffer;
-	writeQueue.Append(buffer);
-}
-
-MemcacheConn::~MemcacheConn()
-{
-	WriteBuffer** it;
-	
-	for (it = writeQueue.Head(); it != NULL; it = writeQueue.Next(it))
-		delete *it;
-}
-
-void MemcacheConn::Init(IOProcessor* ioproc_, KeyspaceDB* kdb_, MemcacheServer* server_)
+void MemcacheConn::Init(MemcacheServer* server_, KeyspaceDB* kdb_)
 {
 	Log_Trace();
-
+	
+	TCPConn<>::Init();
+	KeyspaceClient::Init(kdb_);
+	
 	server = server_;
-	ioproc = ioproc_;
-	kdb = kdb_;
-	
-	tcpread.fd = socket.fd;
-	tcpread.data = readBuffer;
-	tcpread.onComplete = &onRead;
-	tcpread.onClose = &onClose;
-	tcpread.requested = IO_READ_ANY;
-	ioproc->Add(&tcpread);
-	
-	tcpwrite.fd = socket.fd;
-	tcpwrite.onComplete = &onWrite;
-	tcpwrite.onClose = &onClose;
-	
+
+	newline = NULL;
 	numpending = 0;
-	closed = false;
-	
-}
-
-void MemcacheConn::Write(const char *data, int count)
-{
-	Log_Trace();
-
-	WriteBuffer* buf;
-	WriteBuffer* head;
-	
-	head = *writeQueue.Head();
-	buf = *writeQueue.Tail();
-	if ((tcpwrite.active && head == buf) || buf->size - buf->length < count)
-	{
-		// TODO max queue size
-		buf = new WriteBuffer;
-		writeQueue.Append(buf);
-	}
-	
-	memcpy(buf->buffer, data, count);
-	buf->length = count;
-	
-	if (!tcpwrite.active)
-		WritePending();
-}
-
-void MemcacheConn::TryClose()
-{
-	Log_Trace();
-
-	if (!closed)
-	{
-		if (tcpread.active)
-			ioproc->Remove(&tcpread);
-		
-		if (tcpwrite.active)
-			ioproc->Remove(&tcpwrite);
-		
-		socket.Close();
-	}
-
-	closed = true;
-	if (numpending == 0)
-	{
-		server->OnDisconnect(this);
-		Log_Message("before delete this");
-		delete this;		
-	}
 }
 
 void MemcacheConn::OnRead()
@@ -135,7 +52,7 @@ void MemcacheConn::OnRead()
 		p = Process(p, remaining);
 		if (!p)
 		{
-			TryClose();
+			Close();
 			return;
 		}
 		
@@ -144,14 +61,14 @@ void MemcacheConn::OnRead()
 			if (tcpread.data.length == tcpread.data.size)
 			{
 				Log_Message("message is bigger than buffer size, closing connection");
-				TryClose();
+				Close();
 				return;
 			}
 			newlen = tcpread.data.length - (p - tcpread.data.buffer);
 			memmove(tcpread.data.buffer, p, newlen);
 			tcpread.data.length = newlen;
 
-			ioproc->Add(&tcpread);
+			IOProcessor::Get()->Add(&tcpread);
 			return;
 		}
 		
@@ -160,38 +77,13 @@ void MemcacheConn::OnRead()
 	}
 }
 
-void MemcacheConn::OnWrite()
-{
-	Log_Trace();
-
-	WriteBuffer** it;
-	WriteBuffer* buf;
-	WriteBuffer* last;
-	
-	it = writeQueue.Head();
-	buf = *it;
-	buf->Clear();
-	tcpwrite.data.Clear();
-	
-	if (writeQueue.Size() > 1)
-	{
-		writeQueue.Remove(it);
-		it = writeQueue.Tail();
-		last = *it;
-		if (last->length)
-			writeQueue.Append(buf);
-		else
-			delete buf;
-		
-		WritePending();
-	}
-}
-
 void MemcacheConn::OnClose()
 {
 	Log_Trace();
 
-	TryClose();
+	Close();
+	if (numpending == 0)
+		server->DeleteConn(this);
 }
 
 void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
@@ -200,19 +92,23 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 
 	const char STORED[] = "STORED" CS_CRLF;
 	const char NOT_STORED[] = "NOT_STORED" CS_CRLF;
-	char buf[MAX_MESSAGE_SIZE];	// TODO can be bigger than that
+	DynArray<MAX_MESSAGE_SIZE> buf;
 	const char *p;
 	int size;
 	
 	if (op->type == KeyspaceOp::GET && status)
 	{
-		size = snprintf(buf, sizeof(buf), "VALUE %.*s %d %d" CS_CRLF "%.*s" CS_CRLF "END" CS_CRLF, 
+		do {
+			size = snprintf(buf.buffer, buf.size, "VALUE %.*s %d %d" CS_CRLF "%.*s" CS_CRLF "END" CS_CRLF, 
 				 op->key.length, op->key.buffer,
 				 0,
 				 op->value.length,
 				 op->value.length, op->value.buffer);
-		
-		p = buf;
+			if (size <= buf.size)
+				break;
+			buf.Reallocate(size, true);
+		} while (1);
+		p = buf.buffer;
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
@@ -228,10 +124,11 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 		}
 	}
 
-	if (!closed)
+	if (state == CONNECTED)
 		Write(p, size);
-
-	numpending--;
+	
+	if (state == DISCONNECTED && numpending == 0)
+		server->DeleteConn(this);
 }
 
 int MemcacheConn::Tokenize(const char *data, int size, Token *tokens, int maxtokens)
@@ -385,29 +282,4 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	Add(op);
 	
 	return data_start + num + CRLF_LENGTH;
-}
-
-void MemcacheConn::Add(KeyspaceOp& op)
-{
-	Log_Trace();
-
-	kdb->Add(op);
-	numpending++;
-}
-
-void MemcacheConn::WritePending()
-{
-	Log_Trace();
-
-	WriteBuffer* buf;
-	
-	buf = *writeQueue.Head();
-
-	if (buf->length)
-	{
-		tcpwrite.data = *buf;
-		tcpwrite.transferred = 0;
-
-		ioproc->Add(&tcpwrite);		
-	}
 }

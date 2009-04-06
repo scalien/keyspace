@@ -138,6 +138,7 @@ int IMFHeader::Parse(char* buf, int len, int offs)
 	char* value;
 	int nkv = numKeyval;
 	KeyValue* keyvalue;
+	int keylen;
 
 	data = buf;
 	
@@ -152,6 +153,8 @@ int IMFHeader::Parse(char* buf, int len, int offs)
 		
 		if (p)
 		{
+			keylen = (int) (p - key);
+			
 			*p++ = '\0';
 			p = SkipWhitespace(p);
 			
@@ -159,20 +162,26 @@ int IMFHeader::Parse(char* buf, int len, int offs)
 			p = SeekCrlf(p);
 			if (p)
 			{
-				*p = '\0';
-				p += 2;
-				//strtolower(key);
-				
 				keyvalue = GetKeyValues(nkv);
 				
 				keyvalue[nkv].keyStart = (int) (key - buf);
+				keyvalue[nkv].keyLength = keylen;
 				keyvalue[nkv].valueStart = (int) (value - buf);
+				keyvalue[nkv].valueLength = (int) (p - value);
 				nkv++;
+
+				*p = '\0';
+				p += 2;
+			}
+			else
+			{
+				p = key;
+				break;
 			}
 		}
 		else
 		{
-			p =  key;
+			p = key;
 			break;
 		}
 	}
@@ -195,7 +204,7 @@ const char* IMFHeader::GetField(const char* key)
 	while (i < numKeyval)
 	{
 		keyval = &keyvalues[i];
-		if (strcasecmp(key, data + keyval->keyStart) == 0)
+		if (strncasecmp(key, data + keyval->keyStart, keyval->keyLength) == 0)
 			return data + keyval->valueStart;
 
 		i++;

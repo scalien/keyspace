@@ -7,8 +7,8 @@
 #define CS_CRLF				CS_CR CS_LF
 #define MSG_FAIL			"Unable to process your request at this time"
 #define MSG_NOT_FOUND		"Not found"
-#define RESPONSE_FAIL		Response(500, MSG_FAIL, strlen(MSG_FAIL))
-#define RESPONSE_NOTFOUND	Response(404, MSG_NOT_FOUND, strlen(MSG_NOT_FOUND))
+#define RESPONSE_FAIL		Response(500, MSG_FAIL, sizeof(MSG_FAIL) - 1)
+#define RESPONSE_NOTFOUND	Response(404, MSG_NOT_FOUND, sizeof(MSG_NOT_FOUND) - 1)
 
 
 HttpConn::HttpConn()
@@ -20,13 +20,11 @@ HttpConn::HttpConn()
 void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 {
 	TCPConn<>::Init();
-
-	kdb = kdb_;
+	KeyspaceClient::Init(kdb_);
+	
 	server = server_;
 	
 	request.Init();
-	buffer = readBuffer.buffer;
-	offs = 0;
 }
 
 
@@ -34,9 +32,12 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 {
 	Log_Trace();
 	
+	numpending--;
+	
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
-		op->type == KeyspaceOp::INCREMENT)
+		op->type == KeyspaceOp::INCREMENT ||
+		op->type == KeyspaceOp::LIST)
 	{
 		if (status)
 			Response(200, op->value.buffer, op->value.length);
@@ -62,6 +63,9 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 		ASSERT_FAIL();
 	
 	op->Free();
+
+	if (state == DISCONNECTED && numpending == 0)
+		server->DeleteConn(this);
 }
 
 
@@ -80,7 +84,8 @@ void HttpConn::OnClose()
 	Log_Trace();
 	Close();
 	request.Free();
-	server->DeleteConn(this);
+	if (numpending == 0)
+		server->DeleteConn(this);
 }
 
 
@@ -133,7 +138,7 @@ int HttpConn::ProcessGetRequest()
 		}
 		op.key.Set((char*) key, keylen);
 		
-		if (!kdb->Add(op))
+		if (!Add(op))
 			RESPONSE_FAIL;
 		
 		return 0;
@@ -152,7 +157,7 @@ int HttpConn::ProcessGetRequest()
 		}
 		op.key.Set((char*) key, keylen);
 		
-		if (!kdb->Add(op))
+		if (!Add(op))
 			RESPONSE_FAIL;
 		
 		return 0;
@@ -231,7 +236,7 @@ int HttpConn::ProcessGetRequest()
 		}
 		op.value.Set((char*) value, valuelen);
 		
-		if (!kdb->Add(op))
+		if (!Add(op))
 			RESPONSE_FAIL;
 		
 		return 0;
@@ -250,7 +255,7 @@ int HttpConn::ProcessGetRequest()
 		}
 		op.key.Set((char*) key, keylen);
 		
-		if (!kdb->Add(op))
+		if (!Add(op))
 			RESPONSE_FAIL;
 		
 		return 0;
@@ -269,12 +274,31 @@ int HttpConn::ProcessGetRequest()
 		}
 		op.key.Set((char*) key, keylen);
 		
-		if (!kdb->Add(op))
+		if (!Add(op))
 			RESPONSE_FAIL;
 		
 		return 0;
 	}
-
+	else if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0)
+	{
+		key = request.line.uri + strlen("/list/");
+		keylen = strlen(key);
+		
+		op.type = KeyspaceOp::LIST;
+		
+		// HACK +1 is to handle empty string (solution is to use DynBuffer)
+		if (!op.key.Allocate(keylen + 1))
+		{
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op.key.Set((char*) key, keylen);
+		
+		if (!Add(op))
+			RESPONSE_FAIL;
+			
+		return 0;
+	}
 	else if (strcmp(request.line.uri, "/latency") == 0)
 	{
 		Response(200, "OK", 2);
@@ -300,11 +324,11 @@ const char* HttpConn::Status(int code)
 
 void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 {	
-	char buf[MAX_MESSAGE_SIZE];	// TODO can be bigger than that
-	const char *p;
+	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	int size;
-	
-	size = snprintf(buf, sizeof(buf), 
+
+	do {
+		size = snprintf(httpHeader.buffer, httpHeader.size,
 					"%s %d %s" CS_CRLF
 					"Accept-Range: bytes" CS_CRLF
 					"Content-Length: %d" CS_CRLF
@@ -312,16 +336,18 @@ void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 					"%s"
 					"%s"
 					CS_CRLF
-					"%s"
 					, 
 					request.line.version, code, Status(code),
 					len,
 					close ? "Connection: close" CS_CRLF : "",
-					header ? header : "",
-					data);
-		
-	p = buf;
-	
-	Write(p, size);
-	
+					header ? header : "");
+
+		if (size <= httpHeader.size)
+			break;
+
+		httpHeader.Reallocate(size, true);
+	} while (1);
+			
+	Write(httpHeader.buffer, size - 1, false);
+	Write(data, len);
 }

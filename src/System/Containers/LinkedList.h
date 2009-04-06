@@ -55,7 +55,7 @@ public:
 	
 	T* Next(T* t)
 	{
-		LLNode<T>* node = &(t->*pnode)->next;
+		LLNode<T>* node = t->*pnode.next;
 		if (node)
 			return node->owner;
 		return 0;
@@ -63,7 +63,7 @@ public:
 	
 	T* Prev(T* t)
 	{
-		LLNode<T>* node = &(t->*pnode)->prev;
+		LLNode<T>* node = t->*pnode.prev;
 		if (node)
 			return node->owner;
 		return 0;
