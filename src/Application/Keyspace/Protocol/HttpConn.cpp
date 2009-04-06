@@ -345,7 +345,7 @@ void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 		if (size <= httpHeader.size)
 			break;
 
-		httpHeader.Reallocate(size, true);
+		httpHeader.Reallocate(size, false);
 	} while (1);
 			
 	Write(httpHeader.buffer, size - 1, false);

@@ -208,7 +208,7 @@ public:
 		
 		newbuffer = new char[newsize];
 		
-		if (keepold)
+		if (keepold && length > 0)
 			memcpy(newbuffer, buffer, length);
 
 		if (buffer != data)
