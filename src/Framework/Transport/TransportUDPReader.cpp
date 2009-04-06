@@ -20,7 +20,7 @@ void TransportUDPReader::Init(int port)
 	udpread.data = data;
 	udpread.onComplete = &onRead;
 	
-	IOProcessor::Get()->Add(&udpread);
+	IOProcessor::Add(&udpread);
 }
 
 void TransportUDPReader::SetOnRead(Callable* onRead_)
@@ -51,5 +51,5 @@ void TransportUDPReader::OnRead()
 	if (!stopped)
 		Call(userCallback);
 	
-	IOProcessor::Get()->Add(&udpread);
+	IOProcessor::Add(&udpread);
 }

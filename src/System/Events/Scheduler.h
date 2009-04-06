@@ -8,15 +8,15 @@ class Scheduler
 {
 public:
 	
-	SortedList<Timer*>	timers;
+	static SortedList<Timer*>	timers;
 		
-	void Add(Timer* timer);
+	static void Add(Timer* timer);
 	
-	void Remove(Timer* timer);
+	static void Remove(Timer* timer);
 	
-	void Reset(Timer* timer);
+	static void Reset(Timer* timer);
 	
-	void Shutdown()					{ /* todo: deallocate timers? */ }
+	static void Shutdown()					{ /* todo: deallocate timers? */ }
 };
 
 #endif

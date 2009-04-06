@@ -71,6 +71,6 @@ void TransportTCPWriter::OnClose()
 	if (!connectTimeout.IsActive())
 	{
 		Log_Message("reset");
-		EventLoop::Get()->Reset(&connectTimeout);
+		EventLoop::Reset(&connectTimeout);
 	}
 }

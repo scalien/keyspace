@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	
 	//Log_SetTimestamping(true);
 	
-	IOProcessor::Get()->Init();
+	IOProcessor::Init();
 	
 	if (!PaxosConfig::Get()->Init(argv[1]))
 		ASSERT_FAIL();
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 	HttpServer proto;
 	proto.Init(&kdb);
 
-	EventLoop::Get()->Run();
+	EventLoop::Run();
 /*	
 
 	IOProcessor::Get()->Init();

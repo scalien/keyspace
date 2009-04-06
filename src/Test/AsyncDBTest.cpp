@@ -20,7 +20,7 @@ void cb()
 	TEST_LOG("callback");
 	
 	long elapsed = Now() - start;
-	printf("%d transactions took %d msec *** %f tps\n",
+	printf("%d transactions took %ld msec *** %f tps\n",
 		NUM, elapsed, (double)1000*NUM/elapsed);
 	
 }
@@ -29,9 +29,7 @@ CFunc callable(&cb);
 
 int test()
 {
-	IOProcessor* ioproc = IOProcessor::Get();
-	EventLoop* eventloop = new EventLoop(ioproc);
-	ioproc->Init();
+	IOProcessor::Init();
 	
 	
 	Table* table = db.GetTable("test");
@@ -44,7 +42,7 @@ int test()
 	
 	for (int j = 0; j < NUMPUT; j++)
 	{
-		bool ret = dbop.Put(table, key, value);
+		bool ret = dbop.Set(table, key, value);
 		if (!ret)
 			TEST_LOG("false");
 	}
@@ -55,7 +53,7 @@ int test()
 	
 	writer.Add(&dbop);
 	
-	eventloop->Run();
+	EventLoop::Run();
 	
 	return TEST_SUCCESS;
 }

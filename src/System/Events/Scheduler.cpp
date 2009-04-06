@@ -1,5 +1,7 @@
 #include "Scheduler.h"
 
+SortedList<Timer*>	Scheduler::timers;
+
 void Scheduler::Add(Timer* timer)
 {
 	timer->OnAdd();

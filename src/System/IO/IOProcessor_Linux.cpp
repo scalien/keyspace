@@ -62,9 +62,6 @@ public:
 	IOOperation*	write;
 };
 
-// this is the singleton object
-static IOProcessor	ioproc;
-
 static int			epollfd;
 static PipeOp		filePipeOp;
 static PipeOp		asyncPipeOp;
@@ -82,10 +79,6 @@ static void			ProcessTCPWrite(TCPWrite* tcpwrite);
 static void			ProcessUDPRead(UDPRead* udpread);
 static void			ProcessUDPWrite(UDPWrite* udpwrite);
 
-IOProcessor* IOProcessor::Get()
-{
-	return &ioproc;
-}
 
 static void IOProc_sigev_thread_handler(union sigval value)
 {

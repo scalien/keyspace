@@ -232,7 +232,7 @@ public:
 		return p;
 	}
 	
-	bool GetResult(const char* key, ByteString &value)
+	bool GetResult(const char* key, ByteString &)
 	{
 		ByteString data;
 		

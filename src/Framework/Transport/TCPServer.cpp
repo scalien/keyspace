@@ -18,5 +18,5 @@ bool TCPServer::Init(int port)
 	tcpread.listening = true;
 	tcpread.onComplete = &onConnect;
 	
-	return IOProcessor::Get()->Add(&tcpread);	
+	return IOProcessor::Add(&tcpread);	
 }

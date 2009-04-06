@@ -46,7 +46,7 @@ public:
 		tcpread.listening = true;
 		tcpread.onComplete = &onConnect;
 		
-		return IOProcessor::Get()->Add(&tcpread);	
+		return IOProcessor::Add(&tcpread);	
 	}
 
 	void DeleteConn(Conn* conn)
@@ -71,7 +71,6 @@ protected:
 	void OnConnect()
 	{
 		T* pT = static_cast<T*>(this);
-		IOProcessor* ioproc = IOProcessor::Get();
 		Conn* conn = pT->GetConn();
 		if (listener.Accept(&(conn->GetSocket())))
 		{
@@ -84,7 +83,7 @@ protected:
 			pT->DeleteConn(conn);
 		}
 		
-		ioproc->Add(&tcpread);		
+		IOProcessor::Add(&tcpread);		
 	}
 	
 	Conn* GetConn()

@@ -131,8 +131,8 @@ ulong64 ReplicatedLog::GetPaxosID()
 
 void ReplicatedLog::SetPaxosID(Transaction* transaction, ulong64 paxosID)
 {
-	EventLoop::Get()->Remove(&(proposer.prepareTimeout));
-	EventLoop::Get()->Remove(&(proposer.proposeTimeout));
+	EventLoop::Remove(&(proposer.prepareTimeout));
+	EventLoop::Remove(&(proposer.proposeTimeout));
 	proposer.paxosID = paxosID;
 	proposer.state.Init();
 
@@ -230,7 +230,7 @@ void ReplicatedLog::OnLearnChosen()
 	if (pmsg.paxosID == learner.paxosID)
 	{
 		if (catchupTimeout.IsActive())
-			EventLoop::Get()->Remove(&catchupTimeout);
+			EventLoop::Remove(&catchupTimeout);
 		
 		if (pmsg.subtype == LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
@@ -315,7 +315,7 @@ void ReplicatedLog::OnLearnChosen()
 		//	I am lagging and need to catch-up
 		
 		if (!catchupTimeout.IsActive())
-			EventLoop::Get()->Add(&catchupTimeout);
+			EventLoop::Add(&catchupTimeout);
 		
 		learner.RequestChosen(pmsg.nodeID);
 	}
@@ -354,7 +354,7 @@ void ReplicatedLog::OnRequest()
 		//	I am lagging and need to catch-up
 		
 		if (!catchupTimeout.IsActive())
-			EventLoop::Get()->Add(&catchupTimeout);
+			EventLoop::Add(&catchupTimeout);
 		
 		learner.RequestChosen(pmsg.nodeID);
 	}
@@ -362,8 +362,8 @@ void ReplicatedLog::OnRequest()
 
 void ReplicatedLog::NewPaxosRound()
 {
-	EventLoop::Get()->Remove(&(proposer.prepareTimeout));
-	EventLoop::Get()->Remove(&(proposer.proposeTimeout));
+	EventLoop::Remove(&(proposer.prepareTimeout));
+	EventLoop::Remove(&(proposer.proposeTimeout));
 	proposer.paxosID++;
 	proposer.state.Init();
 

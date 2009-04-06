@@ -32,5 +32,5 @@ void CatchupServer::OnConnect()
 		delete conn;
 	}
 	
-	IOProcessor::Get()->Add(&tcpread);
+	IOProcessor::Add(&tcpread);
 }

@@ -92,5 +92,5 @@ void CatchupConn::WriteNext()
 		msgData.length, msgData.length, msgData.buffer);
 	tcpwrite.transferred = 0;
 
-	IOProcessor::Get()->Add(&tcpwrite);
+	IOProcessor::Add(&tcpwrite);
 }

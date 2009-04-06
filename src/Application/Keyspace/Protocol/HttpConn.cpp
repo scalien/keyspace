@@ -75,7 +75,7 @@ void HttpConn::OnRead()
 	
 	Parse(tcpread.data.buffer, tcpread.data.length);
 	
-	IOProcessor::Get()->Add(&tcpread);
+	IOProcessor::Add(&tcpread);
 }
 
 

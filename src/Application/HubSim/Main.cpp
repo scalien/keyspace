@@ -11,14 +11,12 @@ int main(int argc, char* argv[])
 	
 	Log_SetTimestamping(true);
 	
-	ioproc = IOProcessor::Get();
-	eventloop = new EventLoop(ioproc);
 	
-	ioproc->Init();
+	IOProcessor::Init();
 	
 	hubSim.CreateNode("127.0.0.1:4001", 5000);
 	hubSim.CreateNode("127.0.0.1:4000", 5001);
 	
-	eventloop->Run();
+	EventLoop::Run();
 	return 0;
 }	

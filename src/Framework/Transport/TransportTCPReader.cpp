@@ -51,7 +51,7 @@ void TransportTCPConn::OnRead()
 	}
 	while (true);
 	
-	IOProcessor::Get()->Add(&tcpread);
+	IOProcessor::Add(&tcpread);
 }
 	
 void TransportTCPConn::OnClose()
@@ -123,5 +123,5 @@ void TransportTCPReader::OnConnect()
 		delete conn;
 	}
 	
-	IOProcessor::Get()->Add(&tcpread);
+	IOProcessor::Add(&tcpread);
 }

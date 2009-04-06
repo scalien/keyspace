@@ -71,7 +71,7 @@ public:
 
 	void Add(T &t)
 	{
-		LLNode<T>* node = &(t->*pnode);
+		LLNode<T>* node = &(t.*pnode);
 
 		node->next = head;
 		node->prev = 0;

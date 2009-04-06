@@ -33,7 +33,7 @@ public:
 	
 	bool		Visit(TableVisitor &tv);
 	
-	bool		Drop(Transaction* transaction = NULL);
+	bool		Truncate(Transaction* transaction = NULL);
 private:
 	Database*	database;
 	Db*			db;

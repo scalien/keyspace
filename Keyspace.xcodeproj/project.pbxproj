@@ -149,6 +149,8 @@
 		9AF502000F8826CC00F7F49E /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		9AF502010F8826CC00F7F49E /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
 		9AF502030F8826DB00F7F49E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
+		9AF504260F8A2E7500F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
+		9AF504A70F8A2FA300F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -960,6 +962,7 @@
 				54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */,
 				544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */,
 				544611FB0F533FAB00EFBBDE /* Test.c in Sources */,
+				9AF504260F8A2E7500F7F49E /* EventLoop.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1097,6 +1100,7 @@
 				9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */,
 				9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */,
 				9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */,
+				9AF504A70F8A2FA300F7F49E /* EventLoop.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

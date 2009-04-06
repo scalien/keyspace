@@ -135,7 +135,7 @@ void PaxosProposer::StopPreparing()
 	Log_Trace();
 
 	state.preparing = false;
-	EventLoop::Get()->Remove(&prepareTimeout);
+	EventLoop::Remove(&prepareTimeout);
 }
 
 void PaxosProposer::StopProposing()
@@ -143,7 +143,7 @@ void PaxosProposer::StopProposing()
 	Log_Trace();
 	
 	state.proposing = false;
-	EventLoop::Get()->Remove(&proposeTimeout);
+	EventLoop::Remove(&proposeTimeout);
 }
 
 void PaxosProposer::StartPreparing()
@@ -163,7 +163,7 @@ void PaxosProposer::StartPreparing()
 	
 	BroadcastMessage();
 	
-	EventLoop::Get()->Reset(&prepareTimeout);
+	EventLoop::Reset(&prepareTimeout);
 }
 
 void PaxosProposer::StartProposing()
@@ -178,7 +178,7 @@ void PaxosProposer::StartProposing()
 
 	BroadcastMessage();
 	
-	EventLoop::Get()->Reset(&proposeTimeout);
+	EventLoop::Reset(&proposeTimeout);
 }
 
 void PaxosProposer::OnPrepareTimeout()

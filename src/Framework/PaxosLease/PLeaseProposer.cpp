@@ -26,7 +26,7 @@ void PLeaseProposer::Init(TransportWriter** writers_)
 
 void PLeaseProposer::AcquireLease()
 {
-	EventLoop::Get()->Remove(&extendLeaseTimeout);
+	EventLoop::Remove(&extendLeaseTimeout);
 	
 	if (!(state.preparing || state.proposing))
 		StartPreparing();
@@ -113,10 +113,10 @@ void PLeaseProposer::OnProposeResponse()
 		state.proposing = false;
 		msg.LearnChosen(PaxosConfig::Get()->nodeID, state.leaseOwner, state.expireTime);
 		
-		EventLoop::Get()->Remove(&acquireLeaseTimeout);
+		EventLoop::Remove(&acquireLeaseTimeout);
 		
 		extendLeaseTimeout.Set(Now() + (state.expireTime - Now()) / 2);
-		EventLoop::Get()->Reset(&extendLeaseTimeout);
+		EventLoop::Reset(&extendLeaseTimeout);
 		
 		BroadcastMessage();
 		return;
@@ -130,7 +130,7 @@ void PLeaseProposer::StartPreparing()
 {
 	Log_Trace();
 
-	EventLoop::Get()->Reset(&acquireLeaseTimeout);
+	EventLoop::Reset(&acquireLeaseTimeout);
 
 	state.proposing = false;
 

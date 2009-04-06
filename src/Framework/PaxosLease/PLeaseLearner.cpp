@@ -43,7 +43,7 @@ void PLeaseLearner::OnLearnChosen()
 			state.leaseOwner, state.expireTime - Now());
 
 		leaseTimeout.Set(state.expireTime);
-		EventLoop::Get()->Reset(&leaseTimeout);
+		EventLoop::Reset(&leaseTimeout);
 		
 		Call(onLearnLeaseCallback);
 	}

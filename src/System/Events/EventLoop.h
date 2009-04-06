@@ -10,11 +10,11 @@
 class EventLoop : public Scheduler
 {
 public:
-	static EventLoop*	Get();
+//	static EventLoop*	Get();
 	
-	long				RunOnce();	
-	void				Run();
-	void				Shutdown();
+	static long			RunOnce();	
+	static void			Run();
+	static void			Shutdown();
 };
 
 

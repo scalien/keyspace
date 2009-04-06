@@ -2,11 +2,6 @@
 
 EventLoop eventLoop;
 
-EventLoop* EventLoop::Get()
-{
-	return &eventLoop;
-}
-
 long EventLoop::RunOnce()
 {
 	Timer** it;
@@ -41,7 +36,7 @@ void EventLoop::Run()
 		if (sleep < 0)
 			sleep = SLEEP_MSEC;
 		
-		IOProcessor::Get()->Poll(sleep);
+		IOProcessor::Poll(sleep);
 	}
 }
 

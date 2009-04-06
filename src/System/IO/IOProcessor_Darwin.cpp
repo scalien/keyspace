@@ -16,9 +16,6 @@
 
 // see http://wiki.netbsd.se/index.php/kqueue_tutorial
 
-// this is the singleton object
-static IOProcessor		ioproc;
-
 static int				kq;			// the kqueue
 static List<FileOp*>	fileops;	// the list of aio ops
 static int				asyncOpPipe[2];
@@ -32,12 +29,6 @@ static void ProcessTCPWrite(struct kevent* ev);
 static void ProcessUDPRead(struct kevent* ev);
 static void ProcessUDPWrite(struct kevent* ev);
 static void ProcessFileOp(struct kevent* ev);
-
-
-IOProcessor* IOProcessor::Get()
-{	
-	return &ioproc;
-}
 
 bool IOProcessor::Init()
 {
@@ -202,7 +193,7 @@ bool IOProcessor::Poll(int sleep)
 {
 #define	MAX_KEVENTS 1
 	
-	ulong64				called;
+	ulong64					called;
 	int						i, nevents, wait;
 	static struct kevent	events[MAX_KEVENTS];
 	struct timespec			timeout;
@@ -333,7 +324,7 @@ void ProcessTCPRead(struct kevent* ev)
 			if (nread < 0)
 			{
 				if (errno == EWOULDBLOCK || errno == EAGAIN)
-					ioproc.Add(tcpread);
+					IOProcessor::Add(tcpread);
 				else if (!(ev->flags & EV_EOF))
 					Log_Errno();
 			} else
@@ -342,7 +333,7 @@ void ProcessTCPRead(struct kevent* ev)
 				if (tcpread->requested == IO_READ_ANY || tcpread->data.length == tcpread->requested)
 					Call(tcpread->onComplete);
 				else
-					ioproc.Add(tcpread);
+					IOProcessor::Add(tcpread);
 			}
 		}
 		
@@ -384,7 +375,7 @@ void ProcessTCPWrite(struct kevent* ev)
 		if (nwrite < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
-				ioproc.Add(tcpwrite);
+				IOProcessor::Add(tcpwrite);
 			else if (!(ev->flags & EV_EOF))
 				Log_Errno();
 		} else
@@ -393,7 +384,7 @@ void ProcessTCPWrite(struct kevent* ev)
 			if (tcpwrite->transferred == tcpwrite->data.length)
 				Call(tcpwrite->onComplete);
 			else
-				ioproc.Add(tcpwrite);
+				IOProcessor::Add(tcpwrite);
 		}
 	}
 }
@@ -412,7 +403,7 @@ void ProcessUDPRead(struct kevent* ev)
 	if (nread < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
-			ioproc.Add(udpread); // try again
+			IOProcessor::Add(udpread); // try again
 		else
 			Log_Errno();
 	} else
@@ -440,7 +431,7 @@ void ProcessUDPWrite(struct kevent* ev)
 		if (nwrite < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
-				ioproc.Add(udpwrite); // try again
+				IOProcessor::Add(udpwrite); // try again
 			else
 				Log_Errno();
 		} else
@@ -451,7 +442,7 @@ void ProcessUDPWrite(struct kevent* ev)
 			} else
 			{
 				Log_Message("sendto() datagram fragmentation");
-				ioproc.Add(udpwrite); // try again
+				IOProcessor::Add(udpwrite); // try again
 			}
 		}
 	}

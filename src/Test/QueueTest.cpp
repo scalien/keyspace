@@ -13,7 +13,7 @@ int BasicQueueTest()
 	{
 		buffer = new Buffer();
 		buffer->Printf("%i", i);
-		q.Add(buffer);
+		q.Append(buffer);
 	}
 	
 	for (int  i = 0; i < 3; i++)

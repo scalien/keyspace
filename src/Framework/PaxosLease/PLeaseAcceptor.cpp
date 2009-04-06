@@ -55,7 +55,7 @@ void PLeaseAcceptor::OnPrepareRequest()
 	
 	if (state.accepted && state.acceptedExpireTime < Now())
 	{
-		EventLoop::Get()->Remove(&leaseTimeout);
+		EventLoop::Remove(&leaseTimeout);
 		OnLeaseTimeout();
 	}
 	
@@ -83,7 +83,7 @@ void PLeaseAcceptor::OnProposeRequest()
 	
 	if (state.accepted && state.acceptedExpireTime < Now())
 	{
-		EventLoop::Get()->Remove(&leaseTimeout);
+		EventLoop::Remove(&leaseTimeout);
 		OnLeaseTimeout();
 	}
 
@@ -104,7 +104,7 @@ void PLeaseAcceptor::OnProposeRequest()
 		state.acceptedExpireTime = msg.expireTime;
 		
 		leaseTimeout.Set(state.acceptedExpireTime);
-		EventLoop::Get()->Reset(&leaseTimeout);
+		EventLoop::Reset(&leaseTimeout);
 		
 		msg.ProposeResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
 	}

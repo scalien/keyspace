@@ -21,13 +21,13 @@ void Write()
 	hello.Set("hello");
 
 	writer.Write(hello);
-	EventLoop::Get()->Reset(&writeTimeout);
+	EventLoop::Reset(&writeTimeout);
 }
 
 int
 main(int, char* argv[])
 {
-	IOProcessor::Get()->Init();
+	IOProcessor::Init();
 	
 	if (!PaxosConfig::Get()->Init(argv[1]))
 		ASSERT_FAIL();
@@ -40,7 +40,7 @@ main(int, char* argv[])
 	HttpServer proto;
 	proto.Init(&kdb);
 
-	EventLoop::Get()->Run();
+	EventLoop::Run();
 
 	return 0;
 }

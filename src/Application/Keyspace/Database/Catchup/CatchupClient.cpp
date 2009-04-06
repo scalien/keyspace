@@ -19,7 +19,7 @@ void CatchupClient::Start(unsigned nodeID)
 	
 	ret = true;
 	ret &= transaction.Begin();
-	ret &= table->Drop(&transaction);
+	ret &= table->Truncate(&transaction);
 	if (!ret)
 		ASSERT_FAIL();
 
@@ -71,7 +71,7 @@ void CatchupClient::OnRead()
 	while (true);
 	
 	if (state == CONNECTED)
-		IOProcessor::Get()->Add(&tcpread);
+		IOProcessor::Add(&tcpread);
 }
 
 void CatchupClient::OnClose()

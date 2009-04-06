@@ -165,7 +165,7 @@ bool Table::Visit(TableVisitor &tv)
 }
 
 
-bool Table::Drop(Transaction* transaction)
+bool Table::Truncate(Transaction* transaction)
 {
 	u_int32_t count;
 	u_int32_t flags = 0;

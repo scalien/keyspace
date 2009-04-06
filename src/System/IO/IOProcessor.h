@@ -9,15 +9,13 @@ class Callable;
 class IOProcessor
 {
 public:
-	static IOProcessor* Get();
+	static bool Init();
+	static void Shutdown();
 
-	bool Init();
-	void Shutdown();
-	
-	bool Add(IOOperation* ioop);
-	bool Remove(IOOperation* ioop);
-		
-	bool Poll(int sleep);
+	static bool Add(IOOperation* ioop);
+	static bool Remove(IOOperation* ioop);
+
+	static bool Poll(int sleep);
 
 	static bool Complete(Callable* callable);
 };

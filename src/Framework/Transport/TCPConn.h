@@ -135,7 +135,7 @@ void TCPConn<bufferSize>::OnConnect()
 	
 	state = CONNECTED;
 	
-	EventLoop::Get()->Remove(&connectTimeout);
+	EventLoop::Remove(&connectTimeout);
 	WritePending();
 }
 
@@ -156,7 +156,7 @@ void TCPConn<bufferSize>::AsyncRead(bool start)
 	tcpread.onClose = &onClose;
 	tcpread.requested = IO_READ_ANY;
 	if (start)
-		IOProcessor::Get()->Add(&tcpread);
+		IOProcessor::Add(&tcpread);
 }
 
 
@@ -200,7 +200,7 @@ void TCPConn<bufferSize>::WritePending()
 		tcpwrite.data = *buf;
 		tcpwrite.transferred = 0;
 		
-		IOProcessor::Get()->Add(&tcpwrite);
+		IOProcessor::Add(&tcpwrite);
 	}	
 }
 
@@ -209,13 +209,13 @@ void TCPConn<bufferSize>::Close()
 {
 	Log_Trace();
 
-	EventLoop::Get()->Remove(&connectTimeout);
+	EventLoop::Remove(&connectTimeout);
 	
 	if (tcpread.active)
-		IOProcessor::Get()->Remove(&tcpread);
+		IOProcessor::Remove(&tcpread);
 	
 	if (tcpwrite.active)
-		IOProcessor::Get()->Remove(&tcpwrite);
+		IOProcessor::Remove(&tcpwrite);
 	
 	socket.Close();
 	state = DISCONNECTED;
@@ -255,14 +255,14 @@ void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 	// zero indicates for IOProcessor that we are waiting for connect event
 	tcpwrite.data.length = 0;
 	
-	IOProcessor::Get()->Add(&tcpwrite);
+	IOProcessor::Add(&tcpwrite);
 
 	if (timeout > 0)
 	{
 		Log_Message("starting timeout with %d", timeout);
 		
 		connectTimeout.SetDelay(timeout);
-		EventLoop::Get()->Reset(&connectTimeout);
+		EventLoop::Reset(&connectTimeout);
 	}
 }
 

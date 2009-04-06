@@ -68,7 +68,7 @@ void MemcacheConn::OnRead()
 			memmove(tcpread.data.buffer, p, newlen);
 			tcpread.data.length = newlen;
 
-			IOProcessor::Get()->Add(&tcpread);
+			IOProcessor::Add(&tcpread);
 			return;
 		}
 		
