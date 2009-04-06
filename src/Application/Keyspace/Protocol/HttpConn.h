@@ -19,7 +19,6 @@ public:
 
 private:	
 	HttpServer*		server;
-	KeyspaceDB*		kdb;
 	HttpRequest		request;
 	int				numpending;
 	bool			closed;
