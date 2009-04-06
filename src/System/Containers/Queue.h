@@ -9,6 +9,8 @@ public:
 	Queue()
 	{
 		size = 0;
+		head = 0;
+		tail = 0;
 		Clear();
 	}
 
