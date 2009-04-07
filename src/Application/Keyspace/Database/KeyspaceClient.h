@@ -19,7 +19,7 @@ public:
 	}
 
 
-	bool Add(KeyspaceOp &op)
+	bool Add(KeyspaceOp *op)
 	{
 		bool ret;
 		
@@ -55,6 +55,11 @@ public:
 	ByteBuffer				test;
 	
 	KeyspaceClient*			client;
+	
+	~KeyspaceOp()
+	{
+		Free();
+	}
 	
 	void Free()
 	{

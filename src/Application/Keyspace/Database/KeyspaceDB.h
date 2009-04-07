@@ -20,7 +20,7 @@ public:
 	KeyspaceDB();
 	
 	bool					Init();
-	bool					Add(KeyspaceOp& op);	// the interface used by KeyspaceClient
+	bool					Add(KeyspaceOp* op);	// the interface used by KeyspaceClient
 	unsigned				GetNodeID();
 	void					OnCatchupComplete();	// called by CatchupClient
 	void					OnCatchupFailed();		// called by CatchupClient
@@ -37,7 +37,7 @@ private:
 	void					Append();
 	
 	bool					catchingUp;
-	List<KeyspaceOp>		ops;
+	List<KeyspaceOp*>		ops;
 	Table*					table;
 	KeyspaceMsg				msg;
 	ByteArray<VALUE_SIZE>	data;

@@ -2,6 +2,7 @@
 #define SORTEDLIST_H
 
 #include "List.h"
+#include "Common.h"
 
 template<class T>
 class SortedList : public List<T>
@@ -9,18 +10,14 @@ class SortedList : public List<T>
 public:
     void Add(T t)
     {
-		Add(t, false);
+		if (!Add(t, true))
+			ASSERT_FAIL(); // application-specific, that's how we use SortedList<>
     }
-	
-    /*
-    void AddUnique(T t)
-	{
-		Add(t, true);
-	}
-	*/
-	
+		
 private:
-    void Add(T t, bool unique)
+	// true  => t was added
+	// false => t was already in the list
+    bool Add(T t, bool unique)
 	{
         ListNode<T>*  node;
         ListNode<T>** curr = &this->head;
@@ -40,15 +37,17 @@ private:
 					this->tail = node;
 				*curr = node;
 				this->size++;		
-				return;
+				return true;
 	        } else {
 	            if (unique) {
 					if ((*curr)->data == t) // unique-check
-	                	return;
+	                	return false;
 				}
 	            curr = &(*curr)->next;
 	        }
 		}
+		
+		ASSERT_FAIL();
     }
 };
 

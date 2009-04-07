@@ -126,6 +126,8 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 
 	if (state == CONNECTED)
 		Write(p, size);
+
+	delete op;
 	
 	if (state == DISCONNECTED && numpending == 0)
 		server->DeleteConn(this);
@@ -222,25 +224,27 @@ const char* MemcacheConn::ProcessGetCommand(const char* data, int size, Token* t
 	Log_Trace();
 
 	const char *data_start;
-	KeyspaceOp op;
+	KeyspaceOp *op;
 	int i;
 	
 	data_start = DATA_START(tokens, numtoken);
 	if (data_start > data + size)
 		return data;
 
-	op.client = this;
-	op.type = KeyspaceOp::GET;
+	op = new KeyspaceOp;
+	op->client = this;
+	op->type = KeyspaceOp::GET;
 	for (i = 1; i < numtoken; i++)
 	{
-		op.key.buffer = (char *) tokens[i].value;
-		op.key.size = tokens[i].len;
-		op.key.length = tokens[i].len;
-		
-		op.value.Init();
-		op.test.Init();
-		
-		Add(op);
+		op->key.buffer = (char *) tokens[i].value;
+		op->key.size = tokens[i].len;
+		op->key.length = tokens[i].len;
+				
+		if (!Add(op))
+		{
+			delete op;
+			ASSERT_FAIL(); // todo
+		}
 	}
 		
 	return data_start;
@@ -252,7 +256,7 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	Log_Trace();
 
 	const char* data_start;
-	KeyspaceOp op;
+	KeyspaceOp *op;
 	long num;
 	int numlen;
 	
@@ -260,8 +264,8 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	if (data_start > data + size)
 		return data;
 	
-	op.client = this;
-	op.type = KeyspaceOp::SET;
+	op->client = this;
+	op->type = KeyspaceOp::SET;
 	
 	numlen = 0;
 	num = strntol((char *) tokens[TOKEN_BYTES].value, tokens[TOKEN_BYTES].len, &numlen);
@@ -271,15 +275,19 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	if (size - (data_start - data) < num + CRLF_LENGTH)
 		return data;
 	
-	op.key.buffer = (char *) tokens[TOKEN_KEY].value;
-	op.key.size = tokens[TOKEN_KEY].len;
-	op.key.length = tokens[TOKEN_KEY].len;
+	op->key.buffer = (char *) tokens[TOKEN_KEY].value;
+	op->key.size = tokens[TOKEN_KEY].len;
+	op->key.length = tokens[TOKEN_KEY].len;
 	
-	op.value.buffer = (char *) data_start;
-	op.value.size = num;
-	op.value.length = num;
+	op->value.buffer = (char *) data_start;
+	op->value.size = num;
+	op->value.length = num;
 	
-	Add(op);
+	if (!Add(op))
+	{
+		delete op;
+		ASSERT_FAIL(); // todo
+	}
 	
 	return data_start + num + CRLF_LENGTH;
 }

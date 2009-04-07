@@ -62,7 +62,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 	else
 		ASSERT_FAIL();
 	
-	op->Free();
+	delete op;
 
 	if (state == DISCONNECTED && numpending == 0)
 		server->DeleteConn(this);
@@ -112,7 +112,7 @@ int HttpConn::Parse(char* buf, int len)
 
 int HttpConn::ProcessGetRequest()
 {
-	KeyspaceOp op;
+	KeyspaceOp* op;
 	const char* key;
 	const char* value;
 	const char* test;
@@ -122,24 +122,29 @@ int HttpConn::ProcessGetRequest()
 	// http://localhost:8080/get/key
 	// http://localhost:8080/set/key/value
 	
-	op.client = this;
+	op = new KeyspaceOp;
+	op->client = this;
 	
 	if (strncmp(request.line.uri, "/get/", strlen("/get/")) == 0)
 	{
 		key = request.line.uri + strlen("/get/");
 		keylen = strlen(key);
 		
-		op.type = KeyspaceOp::GET;
+		op->type = KeyspaceOp::GET;
 		
-		if (!op.key.Allocate(keylen))
+		if (!op->key.Allocate(keylen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.key.Set((char*) key, keylen);
+		op->key.Set((char*) key, keylen);
 		
 		if (!Add(op))
+		{
+			delete op;
 			RESPONSE_FAIL;
+		}
 		
 		return 0;
 	}
@@ -148,17 +153,21 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/dirtyget/");
 		keylen = strlen(key);
 		
-		op.type = KeyspaceOp::DIRTY_GET;
+		op->type = KeyspaceOp::DIRTY_GET;
 		
-		if (!op.key.Allocate(keylen))
+		if (!op->key.Allocate(keylen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.key.Set((char*) key, keylen);
+		op->key.Set((char*) key, keylen);
 		
 		if (!Add(op))
+		{
+			delete op;
 			RESPONSE_FAIL;
+		}
 		
 		return 0;
 	}
@@ -167,30 +176,38 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/set/");
 		value = strchr(key, '/');
 		if (!value)
+		{
+			delete op;
 			return -1;
+		}
 		
 		keylen = value - key;
 		value++;
 		valuelen = strlen(value);
 		
-		op.type = KeyspaceOp::SET;
+		op->type = KeyspaceOp::SET;
 		
-		if (!op.key.Allocate(keylen))
+		if (!op->key.Allocate(keylen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.key.Set((char*) key, keylen);
+		op->key.Set((char*) key, keylen);
 		
-		if (!op.value.Allocate(valuelen))
+		if (!op->value.Allocate(valuelen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.value.Set((char*) value, valuelen);
+		op->value.Set((char*) value, valuelen);
 		
 		if (!Add(op))
+		{
+			delete op;
 			RESPONSE_FAIL;
+		}
 		
 		return 0;
 	}
@@ -199,45 +216,57 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/testandset/");
 		test = strchr(key, '/');
 		if (!test)
+		{
+			delete op;
 			return -1;
+		}
 		
 		keylen = test - key;
 		test++;
 		
 		value = strchr(test, '/');
 		if (!value)
+		{
+			delete op;
 			return -1;
+		}
 		
 		testlen = value - test;
 		value++;
 		
 		valuelen = strlen(value);
 		
-		op.type = KeyspaceOp::TEST_AND_SET;
+		op->type = KeyspaceOp::TEST_AND_SET;
 		
-		if (!op.key.Allocate(keylen))
+		if (!op->key.Allocate(keylen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.key.Set((char*) key, keylen);
+		op->key.Set((char*) key, keylen);
 		
-		if (!op.test.Allocate(testlen))
+		if (!op->test.Allocate(testlen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.test.Set((char*) test, testlen);
+		op->test.Set((char*) test, testlen);
 		
-		if (!op.value.Allocate(valuelen))
+		if (!op->value.Allocate(valuelen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.value.Set((char*) value, valuelen);
+		op->value.Set((char*) value, valuelen);
 		
 		if (!Add(op))
+		{
+			delete op;
 			RESPONSE_FAIL;
+		}
 		
 		return 0;
 	}
@@ -246,17 +275,21 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/increment/");
 		keylen = strlen(key);
 		
-		op.type = KeyspaceOp::INCREMENT;
+		op->type = KeyspaceOp::INCREMENT;
 		
-		if (!op.key.Allocate(keylen))
+		if (!op->key.Allocate(keylen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.key.Set((char*) key, keylen);
+		op->key.Set((char*) key, keylen);
 		
 		if (!Add(op))
+		{
+			delete op;
 			RESPONSE_FAIL;
+		}
 		
 		return 0;
 	}
@@ -265,17 +298,21 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/delete/");
 		keylen = strlen(key);
 		
-		op.type = KeyspaceOp::DELETE;
+		op->type = KeyspaceOp::DELETE;
 		
-		if (!op.key.Allocate(keylen))
+		if (!op->key.Allocate(keylen))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.key.Set((char*) key, keylen);
+		op->key.Set((char*) key, keylen);
 		
 		if (!Add(op))
+		{
+			delete op;
 			RESPONSE_FAIL;
+		}
 		
 		return 0;
 	}
@@ -284,28 +321,34 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/list/");
 		keylen = strlen(key);
 		
-		op.type = KeyspaceOp::LIST;
+		op->type = KeyspaceOp::LIST;
 		
 		// HACK +1 is to handle empty string (solution is to use DynBuffer)
-		if (!op.key.Allocate(keylen + 1))
+		if (!op->key.Allocate(keylen + 1))
 		{
+			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op.key.Set((char*) key, keylen);
+		op->key.Set((char*) key, keylen);
 		
 		if (!Add(op))
+		{
+			delete op;
 			RESPONSE_FAIL;
+		}
 			
 		return 0;
 	}
 	else if (strcmp(request.line.uri, "/latency") == 0)
 	{
+		delete op;
 		Response(200, "OK", 2);
 		return 0;
 	}
 	else
 	{
+		delete op;
 		RESPONSE_NOTFOUND;
 		return 0;
 	}

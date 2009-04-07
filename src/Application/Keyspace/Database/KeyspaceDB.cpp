@@ -64,7 +64,7 @@ unsigned KeyspaceDB::GetNodeID()
 	return ReplicatedLog::Get()->GetNodeID();
 }
 
-bool KeyspaceDB::Add(KeyspaceOp& op)
+bool KeyspaceDB::Add(KeyspaceOp* op)
 {
 	Log_Trace();
 
@@ -75,16 +75,16 @@ bool KeyspaceDB::Add(KeyspaceOp& op)
 		return false;
 	
 	// don't allow writes for @@ keys
-	if ((op.type == KeyspaceOp::SET || op.type == KeyspaceOp::TEST_AND_SET ||
-		 op.type == KeyspaceOp::DELETE || op.type == KeyspaceOp::INCREMENT)
-		 && op.key.length > 2 && op.key.buffer[0] == '@' && op.key.buffer[1] == '@')
+	if ((op->type == KeyspaceOp::SET || op->type == KeyspaceOp::TEST_AND_SET ||
+		 op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::INCREMENT)
+		 && op->key.length > 2 && op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
 			return false;
 	
 	// reads are handled locally, they don't have to be added to the ReplicatedLog
-	if (op.type == KeyspaceOp::DIRTY_GET || op.type == KeyspaceOp::GET)
+	if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
 	{
 		// only handle GETs if I'm the master and it's safe to do so (I have NOPed)
-		if (op.type == KeyspaceOp::GET &&
+		if (op->type == KeyspaceOp::GET &&
 		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
 			return false;
 		
@@ -92,26 +92,26 @@ bool KeyspaceDB::Add(KeyspaceOp& op)
 			if (!transaction->IsActive())
 				transaction = NULL;
 		
-		op.value.Allocate(VAL_SIZE);
-		ret = table->Get(transaction, op.key, op.value);
+		op->value.Allocate(VAL_SIZE);
+		ret = table->Get(transaction, op->key, op->value);
 
-		op.client->OnComplete(&op, ret);
+		op->client->OnComplete(op, ret);
 		return true;
 	}
 	
-	if (op.type == KeyspaceOp::LIST)
+	if (op->type == KeyspaceOp::LIST)
 	{
-		ListVisitor lv(op.key);
+		ListVisitor lv(op->key);
 		ret = table->Visit(lv);
 		
 		ByteString &out = lv.GetOutput();
 		if (out.length > 0)
 		{
-			op.value.Allocate(out.length);
-			op.value.Set(out.buffer, out.length);
+			op->value.Allocate(out.length);
+			op->value.Set(out.buffer, out.length);
 		}
 		
-		op.client->OnComplete(&op, ret);
+		op->client->OnComplete(op, ret);
 		return true;
 	}
 	
@@ -132,7 +132,8 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	bool		ret;
 	ulong64		num;
 	int			nread;
-	KeyspaceOp* it;
+	KeyspaceOp*	op;
+	KeyspaceOp**it;
 	
 	ret = true;
 	if (msg.type == KEYSPACE_GET)
@@ -172,17 +173,18 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	if (ownAppend)
 	{
 		it = ops.Head();
-		if (it->type == KeyspaceOp::DIRTY_GET || it->type == KeyspaceOp::GET)
+		op = *it;
+		if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
 			ASSERT_FAIL();
-		if (it->type == KeyspaceOp::INCREMENT && ret)
+		if (op->type == KeyspaceOp::INCREMENT && ret)
 		{
 			// return new value to client
-			it->value.Allocate(data.length);
-			it->value.Set(data);
+			op->value.Allocate(data.length);
+			op->value.Set(data);
 
 		}
-		it->client->OnComplete(it, ret);
-		ops.Remove(it);
+		op->client->OnComplete(op, ret);
+		ops.Remove(op);
 	}
 }
 
@@ -214,14 +216,16 @@ void KeyspaceDB::OnAppend(Transaction* transaction, ulong64 paxosID, ByteString 
 void KeyspaceDB::Append()
 {
 	ByteString	bs;
-	KeyspaceOp* it;
+	KeyspaceOp*	op;
+	KeyspaceOp**it;
 
 	data.length = 0;
 	bs = data;
 
 	for (it = ops.Head(); it != NULL; it = ops.Next(it))
 	{
-		msg.BuildFrom(it);
+		op = *it;
+		msg.BuildFrom(op);
 		if (msg.Write(bs))
 		{
 			data.length += bs.length;
