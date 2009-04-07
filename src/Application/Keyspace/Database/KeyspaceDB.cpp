@@ -52,7 +52,7 @@ public:
 	
 	AsyncVisitorCallback()
 	{
-		keys = new ByteBuffer[VISITOR_LIMIT];
+		keys = new ByteString[VISITOR_LIMIT];
 		buffer = new Buffer;
 		numkey = 0;
 		op = NULL;
