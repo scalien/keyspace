@@ -1,6 +1,7 @@
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
+#include "Framework/Database/Database.h"
 #include "Application/TestDB/TestDB.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Protocol/HttpServer.h"
@@ -36,6 +37,7 @@ int main(int argc, char* argv[])
 	//Log_SetTimestamping(true);
 	
 	IOProcessor::Init();
+	database.Init(".");
 	
 	if (!PaxosConfig::Get()->Init(argv[1]))
 		ASSERT_FAIL();

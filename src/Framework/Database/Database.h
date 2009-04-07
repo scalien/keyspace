@@ -14,6 +14,8 @@ public:
 	Database();
 	~Database();
 	
+	bool Init(const char *dbdir);
+	
 	Table* GetTable(const char* name);
 	
 private:

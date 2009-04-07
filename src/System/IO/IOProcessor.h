@@ -2,7 +2,6 @@
 #define IOPROCESSOR_H
 
 #include "IOOperation.h"
-#include "System/Common.h"
 
 class Callable;
 

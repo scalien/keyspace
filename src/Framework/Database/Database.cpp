@@ -9,14 +9,24 @@ Database database;
 Database::Database() :
 env(DB_CXX_NO_EXCEPTIONS)
 {
+}
+
+bool Database::Init(const char* dbdir)
+{
 	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL/* | DB_THREAD*/;
 	int mode = 0;
-	const char* db_home = ".";
+	int ret;
 	
-	env.open(db_home, flags, mode);
+	ret = env.open(dbdir, flags, mode);
+	if (ret != 0)
+	{
+		return false;
+	}
 	
 	keyspace = new Table(this, "keyspace");
 	test = new Table(this, "test");
+	
+	return true;
 }
 
 Database::~Database()

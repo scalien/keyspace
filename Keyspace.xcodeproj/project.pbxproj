@@ -145,12 +145,15 @@
 		9AF501200F83A9F600F7F49E /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
 		9AF501220F83AA0100F7F49E /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */; };
 		9AF5012D0F85198E00F7F49E /* kdbfs_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA0250F82D5980025A7AB /* kdbfs_main.c */; };
-		9AF501FD0F8826A900F7F49E /* BDBDump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501F10F88226400F7F49E /* BDBDump.cpp */; };
+		9AF501FD0F8826A900F7F49E /* BDBTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501F10F88226400F7F49E /* BDBTool.cpp */; };
 		9AF502000F8826CC00F7F49E /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		9AF502010F8826CC00F7F49E /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
 		9AF502030F8826DB00F7F49E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		9AF504260F8A2E7500F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9AF504A70F8A2FA300F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
+		9AF507D90F8A725300F7F49E /* KeyspaceMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */; };
+		9AF507DB0F8A726200F7F49E /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
+		9AF508690F8AB05300F7F49E /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF508680F8AB05300F7F49E /* Config.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -295,8 +298,6 @@
 		9A27242A0F65480E00EE25E2 /* Test.agazso */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Test.agazso; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A2724300F654C5400EE25E2 /* Test.agazso.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test.agazso.cpp; sourceTree = "<group>"; };
 		9A2725180F65AA4000EE25E2 /* HubSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HubSim; sourceTree = BUILT_PRODUCTS_DIR; };
-		9A27252A0F65CA9300EE25E2 /* HashTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashTable.h; sourceTree = "<group>"; };
-		9A27252B0F65CA9F00EE25E2 /* BlockAlloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockAlloc.h; sourceTree = "<group>"; };
 		9A2727000F692B4800EE25E2 /* UDPTestClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPTestClient.c; sourceTree = "<group>"; };
 		9A6204DB0F6C09B0009576A1 /* HubSim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HubSim.cpp; path = HubSim/HubSim.cpp; sourceTree = "<group>"; };
 		9A6204DC0F6C09B0009576A1 /* HubSim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HubSim.h; path = HubSim/HubSim.h; sourceTree = "<group>"; };
@@ -326,8 +327,10 @@
 		9ADCA07F0F8385580025A7AB /* Channel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Channel.cpp; sourceTree = "<group>"; };
 		9AF501080F83953500F7F49E /* kdbfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kdbfs.h; sourceTree = "<group>"; };
 		9AF501090F83953500F7F49E /* kdbfs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kdbfs.cpp; sourceTree = "<group>"; };
-		9AF501F10F88226400F7F49E /* BDBDump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBDump.cpp; sourceTree = "<group>"; };
-		9AF501F50F88229800F7F49E /* bdbdump */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bdbdump; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AF501F10F88226400F7F49E /* BDBTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBTool.cpp; sourceTree = "<group>"; };
+		9AF501F50F88229800F7F49E /* bdblist */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bdblist; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AF508670F8AB05300F7F49E /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		9AF508680F8AB05300F7F49E /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -425,7 +428,7 @@
 				9A2725180F65AA4000EE25E2 /* HubSim */,
 				9ADC98480F7C00960025A7AB /* QueueTest */,
 				9ADCA04B0F82D7C90025A7AB /* Kdbfs */,
-				9AF501F50F88229800F7F49E /* bdbdump */,
+				9AF501F50F88229800F7F49E /* bdblist */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -665,7 +668,6 @@
 				548147310F31B6B200F3D2B6 /* Containers */,
 				548147340F31B6B200F3D2B6 /* Events */,
 				5481473A0F31B6B200F3D2B6 /* IO */,
-				9A27252B0F65CA9F00EE25E2 /* BlockAlloc.h */,
 				5481472E0F31B6B200F3D2B6 /* Buffer.h */,
 				548147300F31B6B200F3D2B6 /* Common.h */,
 				5481472F0F31B6B200F3D2B6 /* Common.cpp */,
@@ -677,6 +679,8 @@
 				548147480F31B6B200F3D2B6 /* Types.h */,
 				9A89F5860F3F444C0041D4A1 /* ThreadPool.h */,
 				9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */,
+				9AF508670F8AB05300F7F49E /* Config.h */,
+				9AF508680F8AB05300F7F49E /* Config.cpp */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -684,7 +688,6 @@
 		548147310F31B6B200F3D2B6 /* Containers */ = {
 			isa = PBXGroup;
 			children = (
-				9A27252A0F65CA9300EE25E2 /* HashTable.h */,
 				548147320F31B6B200F3D2B6 /* List.h */,
 				548147330F31B6B200F3D2B6 /* SortedList.h */,
 				9ADC98040F7BFBA50025A7AB /* Queue.h */,
@@ -768,16 +771,17 @@
 		9AF501EF0F88223C00F7F49E /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				9AF501F00F88223C00F7F49E /* BDBDump */,
+				9AF501F00F88223C00F7F49E /* BDBTool */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
 		};
-		9AF501F00F88223C00F7F49E /* BDBDump */ = {
+		9AF501F00F88223C00F7F49E /* BDBTool */ = {
 			isa = PBXGroup;
 			children = (
-				9AF501F10F88226400F7F49E /* BDBDump.cpp */,
+				9AF501F10F88226400F7F49E /* BDBTool.cpp */,
 			);
+			name = BDBTool;
 			path = BDBDump;
 			sourceTree = "<group>";
 		};
@@ -906,9 +910,9 @@
 			productReference = 9ADCA04B0F82D7C90025A7AB /* Kdbfs */;
 			productType = "com.apple.product-type.tool";
 		};
-		9AF501F40F88229800F7F49E /* bdbdump */ = {
+		9AF501F40F88229800F7F49E /* BDBTool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "bdbdump" */;
+			buildConfigurationList = 9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "BDBTool" */;
 			buildPhases = (
 				9AF501F20F88229800F7F49E /* Sources */,
 				9AF501F30F88229800F7F49E /* Frameworks */,
@@ -917,9 +921,9 @@
 			);
 			dependencies = (
 			);
-			name = bdbdump;
+			name = BDBTool;
 			productName = bdbdump;
-			productReference = 9AF501F50F88229800F7F49E /* bdbdump */;
+			productReference = 9AF501F50F88229800F7F49E /* bdblist */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -941,7 +945,7 @@
 				9A2725170F65AA4000EE25E2 /* HubSim */,
 				9ADC98470F7C00960025A7AB /* QueueTest */,
 				9ADCA04A0F82D7C90025A7AB /* Kdbfs */,
-				9AF501F40F88229800F7F49E /* bdbdump */,
+				9AF501F40F88229800F7F49E /* BDBTool */,
 			);
 		};
 /* End PBXProject section */
@@ -1021,6 +1025,7 @@
 				547A76600F7680D6003084C9 /* Cursor.cpp in Sources */,
 				545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */,
 				9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */,
+				9AF508690F8AB05300F7F49E /* Config.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1135,9 +1140,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9AF501FD0F8826A900F7F49E /* BDBDump.cpp in Sources */,
+				9AF501FD0F8826A900F7F49E /* BDBTool.cpp in Sources */,
 				9AF502000F8826CC00F7F49E /* Table.cpp in Sources */,
 				9AF502010F8826CC00F7F49E /* Database.cpp in Sources */,
+				9AF507D90F8A725300F7F49E /* KeyspaceMsg.cpp in Sources */,
+				9AF507DB0F8A726200F7F49E /* Common.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1471,7 +1478,7 @@
 					/opt/local/lib/db46,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = bdbdump;
+				PRODUCT_NAME = bdblist;
 			};
 			name = Debug;
 		};
@@ -1569,7 +1576,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "bdbdump" */ = {
+		9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "BDBTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9AF501F70F88229900F7F49E /* Debug */,

@@ -20,7 +20,7 @@ public:
 	
 	// FIXME this should be virtual, but then KeyspaceOp will
 	// call the destructor when returning to the client...
-//	virtual ~ByteString() {}
+	virtual ~ByteString() {}
 	
 	virtual void Init() { size = 0; length = 0; buffer = 0; }
 
