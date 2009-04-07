@@ -130,10 +130,13 @@ public:
 		if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
 			return true;
 
-		if (!avc->AppendKey(key))
+		if (strncmp(keyHint.buffer, key.buffer, min(keyHint.length, key.length)) == 0)
 		{
-			IOProcessor::Complete(avc);
-			Init();
+			if (!avc->AppendKey(key))
+			{
+				IOProcessor::Complete(avc);
+				Init();
+			}
 		}
 
 		return true;
