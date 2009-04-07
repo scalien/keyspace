@@ -64,10 +64,11 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	{
 		if (!headerSent)
 		{
-			ResponseHeader(200);
+			ResponseHeader(200, false, "Content-type: text/plain" CS_CRLF CS_CRLF);
 			headerSent = true;
 		}
-		Write(op->key.buffer, op->key.length);
+		Write(op->key.buffer, op->key.length, false);
+		Write("\n", 1);
 	}
 	else
 		ASSERT_FAIL();
@@ -87,10 +88,12 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 void HttpConn::OnRead()
 {
 	Log_Trace();
+	int len;
 	
-	Parse(tcpread.data.buffer, tcpread.data.length);
-	
-	IOProcessor::Add(&tcpread);
+	len = Parse(tcpread.data.buffer, tcpread.data.length);
+
+	if (len < 0)
+		IOProcessor::Add(&tcpread);
 }
 
 
