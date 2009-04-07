@@ -10,7 +10,7 @@ class KeyspaceClient
 {
 public:
 	virtual			~KeyspaceClient() {}
-	virtual	void	OnComplete(KeyspaceOp* op, bool status) = 0;
+	virtual	void	OnComplete(KeyspaceOp* op, bool status, bool final = true) = 0;
 	
 	void Init(KeyspaceDB* kdb_)
 	{
@@ -53,6 +53,7 @@ public:
 	ByteBuffer				key;
 	ByteBuffer				value;
 	ByteBuffer				test;
+	ByteBuffer				prefix;
 	
 	KeyspaceClient*			client;
 	
@@ -66,6 +67,7 @@ public:
 		key.Free();
 		value.Free();
 		test.Free();
+		prefix.Free();
 	}
 };
 

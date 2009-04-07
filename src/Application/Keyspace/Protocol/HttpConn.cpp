@@ -25,19 +25,20 @@ void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 	server = server_;
 	
 	request.Init();
+	
+	// HACK
+	headerSent = false;
+	closeAfterSend = false;
 }
 
 
-void HttpConn::OnComplete(KeyspaceOp* op, bool status)
+void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 {
 	Log_Trace();
-	
-	numpending--;
-	
+		
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
-		op->type == KeyspaceOp::INCREMENT ||
-		op->type == KeyspaceOp::LIST)
+		op->type == KeyspaceOp::INCREMENT)
 	{
 		if (status)
 			Response(200, op->value.buffer, op->value.length);
@@ -59,10 +60,24 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status)
 		else
 			RESPONSE_NOTFOUND;
 	}
+	else if (op->type == KeyspaceOp::LIST)
+	{
+		if (!headerSent)
+		{
+			ResponseHeader(200);
+			headerSent = true;
+		}
+		Write(op->key.buffer, op->key.length);
+	}
 	else
 		ASSERT_FAIL();
-	
-	delete op;
+
+	if (final)
+	{
+		numpending--;
+		delete op;
+		closeAfterSend = true;
+	}
 
 	if (state == DISCONNECTED && numpending == 0)
 		server->DeleteConn(this);
@@ -86,6 +101,15 @@ void HttpConn::OnClose()
 	request.Free();
 	if (numpending == 0)
 		server->DeleteConn(this);
+}
+
+
+void HttpConn::OnWrite()
+{
+	Log_Trace();
+	TCPConn<>::OnWrite();
+	if (closeAfterSend && !tcpwrite.active)
+		Close();
 }
 
 
@@ -116,9 +140,11 @@ int HttpConn::ProcessGetRequest()
 	const char* key;
 	const char* value;
 	const char* test;
+	const char* prefix;
 	int keylen;
 	int valuelen;
 	int testlen;
+	int prefixlen;
 	// http://localhost:8080/get/key
 	// http://localhost:8080/set/key/value
 	
@@ -318,19 +344,19 @@ int HttpConn::ProcessGetRequest()
 	}
 	else if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0)
 	{
-		key = request.line.uri + strlen("/list/");
-		keylen = strlen(key);
+		prefix = request.line.uri + strlen("/list/");
+		prefixlen = strlen(prefix);
 		
 		op->type = KeyspaceOp::LIST;
 		
 		// HACK +1 is to handle empty string (solution is to use DynBuffer)
-		if (!op->key.Allocate(keylen + 1))
+		if (!op->prefix.Allocate(prefixlen + 1))
 		{
 			delete op;
 			RESPONSE_FAIL;
 			return 0;
 		}
-		op->key.Set((char*) key, keylen);
+		op->prefix.Set((char*) prefix, prefixlen);
 		
 		if (!Add(op))
 		{
@@ -394,4 +420,30 @@ void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 			
 	Write(httpHeader.buffer, size - 1, false);
 	Write(data, len);
+}
+
+void HttpConn::ResponseHeader(int code, bool close, char* header)
+{
+	DynArray<MAX_MESSAGE_SIZE> httpHeader;
+	int size;
+
+	do {
+		size = snprintf(httpHeader.buffer, httpHeader.size,
+					"%s %d %s" CS_CRLF
+					"Cache-Control: no-cache" CS_CRLF
+					"%s"
+					"%s"
+					CS_CRLF
+					, 
+					request.line.version, code, Status(code),
+					close ? "Connection: close" CS_CRLF : "",
+					header ? header : "");
+
+		if (size <= httpHeader.size)
+			break;
+
+		httpHeader.Reallocate(size, false);
+	} while (1);
+			
+	Write(httpHeader.buffer, size - 1, false);
 }

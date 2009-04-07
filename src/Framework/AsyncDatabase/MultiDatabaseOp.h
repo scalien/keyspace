@@ -5,6 +5,7 @@
 #include "System/Events/Callable.h"
 
 class Table;
+class TableVisitor;
 class Transaction;
 class ByteString;
 class ThreadPool;
@@ -14,13 +15,15 @@ class DatabaseOp
 public:
 	enum Type {
 		GET,
-		SET
+		SET,
+		VISIT,
 	};
 	
 	Type				type;
 	Table*				table;
 	ByteString			key;
 	ByteString			value;
+	TableVisitor*		visitor;
 	bool				ret;
 };
 
@@ -35,6 +38,7 @@ public:
 	bool					Set(Table* table, const ByteString& key, ByteString& value);
 	bool					Set(Table* table, char* key, ByteString &value);
 	bool					Set(Table* table, char* key, char* value);
+	bool					Visit(Table* table, TableVisitor &tv);
 	bool					Add(DatabaseOp& op);
 
 	void					SetTransaction(Transaction* tx = 0);

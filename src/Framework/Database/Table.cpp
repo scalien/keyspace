@@ -161,6 +161,8 @@ bool Table::Visit(TableVisitor &tv)
 	if (cursor)
 		cursor->close();
 	
+	tv.OnComplete();
+	
 	return ret;
 }
 

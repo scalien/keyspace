@@ -11,6 +11,7 @@ public:
 	virtual	~TableVisitor() {}
 	virtual bool Accept(const ByteString &key, const ByteString &value) = 0;
 	virtual const ByteString* GetKeyHint() { return 0; }
+	virtual void OnComplete() {}
 };
 
 class Table

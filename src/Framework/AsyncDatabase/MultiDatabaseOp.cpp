@@ -82,6 +82,23 @@ bool MultiDatabaseOp::Set(Table* table, char* key, char* value)
 	return MultiDatabaseOp::Set(table, bsKey, bsValue);
 }
 
+bool MultiDatabaseOp::Visit(Table* table, TableVisitor& tv)
+{
+	DatabaseOp* op;
+
+	if (numop >= SIZE(ops))
+		return false;
+	
+	op = &ops[numop];
+	op->type = DatabaseOp::VISIT;
+	op->table = table;
+	op->visitor = &tv;
+	
+	numop++;
+	
+	return true;
+}
+
 bool MultiDatabaseOp::Add(DatabaseOp& op)
 {
 	if (numop >= SIZE(ops))
@@ -147,6 +164,8 @@ void MultiDatabaseOp::Operation()
 			op->ret = op->table->Get(tx, op->key, op->value);
 		else if (op->type == DatabaseOp::SET)
 			op->ret = op->table->Set(tx, op->key, op->value);
+		else if (op->type == DatabaseOp::VISIT)
+			op->ret = op->table->Visit(*op->visitor);
 	}
 	
 	if (tx)

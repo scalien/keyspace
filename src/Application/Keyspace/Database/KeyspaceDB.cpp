@@ -39,6 +39,138 @@ private:
 	DynArray<1024>		out;
 };
 
+#define VISITOR_LIMIT	1024
+class AsyncVisitorCallback : public Callable
+{
+public:
+	typedef ByteArray<VISITOR_LIMIT> Buffer; // TODO better initial value
+	ByteString*		keys;
+	int				numkey;
+	Buffer*			buffer;
+	KeyspaceOp*		op;
+	bool			complete;
+	
+	AsyncVisitorCallback()
+	{
+		keys = new ByteBuffer[VISITOR_LIMIT];
+		buffer = new Buffer;
+		numkey = 0;
+		op = NULL;
+		complete = false;
+	}
+	
+	~AsyncVisitorCallback()
+	{
+		delete[] keys;
+		delete buffer;	
+	}
+	
+	bool AppendKey(const ByteString &key)
+	{
+		if (key.length + buffer->length <= buffer->size && numkey < VISITOR_LIMIT - 1)
+		{
+			keys[numkey].length = key.length;
+			keys[numkey].size = key.size;
+			keys[numkey].buffer = buffer->buffer + buffer->length;
+			memcpy(buffer->buffer + buffer->length, key.buffer, key.length);
+			buffer->length += key.length;
+			
+			numkey++;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	void Execute()
+	{
+		for (int i = 0; i < numkey; i++)
+		{
+			if (op->key.size < keys[i].length)
+			{
+				op->key.Free();
+				op->key.Allocate(keys[i].length);
+			}
+			op->key.Set(keys[i].buffer, keys[i].length);
+			if (i == numkey - 1)
+				op->client->OnComplete(op, true, complete);
+			else
+				op->client->OnComplete(op, true, false);
+		}
+
+		if (numkey == 0 && complete)
+		{
+			op->key.length = 0;
+			op->client->OnComplete(op, true, complete);
+		}
+				
+		delete this;
+	}
+};
+
+class AsyncListVisitor : public TableVisitor
+{
+public:
+	AsyncListVisitor(const ByteString &keyHint_, KeyspaceOp* op_) :
+	keyHint(keyHint_)
+	{
+		op = op_;
+		Init();
+	}
+	
+	void Init()
+	{
+		avc = new AsyncVisitorCallback;
+		avc->op = op;
+	}
+	
+	virtual bool Accept(const ByteString &key, const ByteString &)
+	{
+		// don't list system keys
+		if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
+			return true;
+
+		if (!avc->AppendKey(key))
+		{
+			IOProcessor::Complete(avc);
+			Init();
+		}
+
+		return true;
+	}
+	
+	virtual const ByteString* GetKeyHint()
+	{
+		return &keyHint;
+	}
+	
+	virtual void OnComplete()
+	{
+		avc->complete = true;
+		IOProcessor::Complete(avc);
+		delete this;
+	}
+	
+private:
+	const ByteString		&keyHint;
+	KeyspaceOp*				op;
+	AsyncVisitorCallback*	avc;
+};
+
+class AsyncMultiDatabaseOp : public Callable, public MultiDatabaseOp
+{
+public:
+	AsyncMultiDatabaseOp()
+	{
+		SetCallback(this);
+	}
+	
+	void Execute()
+	{
+		Log_Trace();
+		delete this;
+	}
+};
 
 KeyspaceDB::KeyspaceDB()
 {
@@ -101,17 +233,20 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 	
 	if (op->type == KeyspaceOp::LIST)
 	{
-		ListVisitor lv(op->key);
-		ret = table->Visit(lv);
-		
-		ByteString &out = lv.GetOutput();
-		if (out.length > 0)
-		{
-			op->value.Allocate(out.length);
-			op->value.Set(out.buffer, out.length);
-		}
-		
-		op->client->OnComplete(op, ret);
+		AsyncListVisitor *alv = new AsyncListVisitor(op->prefix, op);
+		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
+		mdbop->Visit(table, *alv);
+		dbReader.Add(mdbop);
+//		ret = table->Visit(lv);
+//		
+//		ByteString &out = lv.GetOutput();
+//		if (out.length > 0)
+//		{
+//			op->value.Allocate(out.length);
+//			op->value.Set(out.buffer, out.length);
+//		}
+//		
+//		op->client->OnComplete(op, ret);
 		return true;
 	}
 	
