@@ -2,7 +2,7 @@
 #define SORTEDLIST_H
 
 #include "List.h"
-#include "Common.h"
+#include "System/Common.h"
 
 template<class T>
 class SortedList : public List<T>
