@@ -1,0 +1,170 @@
+%%!TEX TS-program = latex
+
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+\geometry{a4paper} % or letter
+\geometry{margin=1in}
+
+\title{ KEYSPACE: A Replicated, Highly-Available, Consistent Key-Value Store }
+\author{ Marton Trencseni, \texttt{mtrencseni@scalien.com} \and Attila Gazso, \texttt{agazso@scalien.com} }
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\abstract{ This paper describes the design and architecture of Keyspace, a distributed key-value store offering  strong consistency, fault-tolerance and high availability. The source code is released as free, open-source software under the GNU General Public License (GPL). Keyspace is a product of Scalien Software, available for download at \texttt{http://scalien.com/keyspace}. }
+
+\section{ Introduction }
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+This paper describes the design and architecture of Keyspace, a distributed key-value store, offering replication, fault-tolerance, high availability and consistency. Below we define what these terms mean in the context of Keyspace:
+
+\begin{enumerate}
+\item Key-value store: a database offering only basic operations such as \texttt{SET(key, value)} and \texttt{GET(key)}. For a complete list see section 'Operations'.
+\item Distributed: several computers, called nodes, store data, state, exchange messages and perform computation to serve client requests.
+\item Consistent: all clients see the database going through the same sequence of states (key-value pairs).
+\item Replicated: all nodes store the same data, in this case key-value pairs and database state.
+\item Fault-tolerant: the system can tolerate certain failure conditions and continue serving client requests.
+\item Highly-available: the system continously serves client request. In the case of Keyspace, replication and fault-tolerance guarantee high availability.
+\end{enumerate}
+
+The intended use of Keyspace is as a building block for other distributed systems, ie. the lowest layer in a distributed stack, for example as a controller which distributes data and workload across other machines. Keyspace is released as free, open-source software under the GNU General Public License (GPL), available for Linux, Darwin (MacOS X) and FreeBSD.
+
+\section{ Consistency }
+%%%%%%%%%%%%%%%%%%%%%%%
+
+Keyspace makes strong consistency guarantees by using the Paxos distributed consensus algorithm. The advantage of strong consistency is that Keyspace acts as a "regular" key-value store, meaning clients need not bother with distributed aspects. Consistency, in the context of Keyspace is the guarantee that once a write operation completes:
+
+\begin{enumerate}
+\item The data has been written to disk on a \textit{majority} of nodes.
+\item All succeeding read operations will reflect the data written.
+\end{enumerate}
+
+The trade-off for strong consistency is that Keyspace will only complete write operations if a majority of nodes are alive and able to communicate. This can be amortized by increasing the number of nodes forming the Keyspace system. The table below shows the probability of liveness for different system sizes assuming the probability of a node being alive is 95\%.
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{ | c | c | c | }
+\hline
+total nodes & required for majority & probability of liveness \\
+\hline \hline
+1 & 1 & 95.00\% \\ \hline
+2 & 2 & 90.25\% \\ \hline
+\textbf{3} & \textbf{2} & \textbf{99.27\%} \\ \hline
+4 & 3 & 98.59\% \\ \hline
+5 & 3 & 99.88\% \\ \hline
+.. & .. & .. \\ \hline
+\end{tabular}
+\caption{ Probability of liveness for different system sizes. }
+\end{center}
+\end{table}
+
+Clients can choose to trade consistency for availability and issue special dirty-read requests, which are always returned by a single node. Dirty-reads do not guarantee consistency, ie. they may not reflect all previous write operations the Keyspace system has performed. (Sometimes regular reads are referred to as safe-reads to differentiate.) There is no dirty-write operation --- for Keyspace to perform a write operation, a majority of nodes have to be alive.
+
+Paxos, in the context of Keyspace is used to replicate database write commands. All nodes receive these commands in the same order and execute them on their local database. This guarantees that all nodes' local databases go through the same sequence of states, hence the name replicated database.
+
+\section{ Fault-tolerance }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Keyspace guarantees consistency under all failure conditions occuring in real world computing networks such as data centers or the Internet. These failure conditions are:
+
+\begin{enumerate}
+\item Nodes stop and restart: the computers running the Keyspace program may stop and restart, loosing in-memory state but not loosing data written to disk.
+\item Network splits: switches and other networking equipment may fail, causing the nodes to split into disjoint networks.
+\item Message loss, duplication and reordering: operating system network stacks and routers may loose or reorder messages. Network protocols such as TCP guarantee reliable delivery in sent order, while UDP does not. Keyspace can run over both TCP and UDP-like protocols.
+\item In-transit message delays: on busy networks and WAN environments such as the Internet, messages may take several seconds to arrive at the recipient.
+\end{enumerate}
+
+Keyspace keeps its strong consistency guarantees, as described before, under all enumerated fault conditions. This means that if enough of the Keyspace system is functioning (a majority of nodes are up and connected without too much packet loss) then the users see the distributed key-value store which behaves like a "regular" key-value store. Once too much of the system fails, Keyspace will only serve dirty-reads.
+
+\section{ Liveness }
+%%%%%%%%%%%%%%%%%%%%
+
+Keyspace is distributed system that requires a majority of nodes to be alive and connected to safely serve client requests. Table 1. showed how many nodes are required for majority for different system sizes, with the configuration recommended for most users highlighted: users wishing to tolerate single-machine failure should use $n=3$. Users looking for even more fault-tolerance should use $n=5$ guaranteeing liveness for two machine failures.
+
+Notice that the probabilities for even sized systems are lower than for odd sized systems, eg. the probability of liveness in the example is 99.27\% for $n=3$ and 98.59\% for $n=4$, meaning that adding a machine (the fourth) to the system \textit{decreases} the probability of liveness. The explanation is intuitive: in both setups only one machine can fail, but in the $n=4$ case three machines have to keep going, whereas in the $n=3$ case only two. The conclusion is that users are advised to use odd sized Keyspace systems: $n=3, 5, 7...$
+
+\section{ Operations }
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+\item \texttt{GET(key)}: returns the value of \texttt{key}, if it exists in the database.
+\item \texttt{SET(key, value)}: sets the value of \texttt{key}, overwriting the previous value if it already existed in the database.
+\item \texttt{TESTANDSET(key, test, value)}: changes the value of \texttt{key} to \texttt{value} if its current value is \texttt{test}.
+\item \texttt{DELETE(key)}: deletes \texttt{key} and its value from the database.
+\item \texttt{INCREMENT(key)}: treats the value of \texttt{key} as an unsigned number and atomically increments it by one. Useful for building indexes and counters.
+\item \texttt{DIRTY-GET}: returns the value of \texttt{key}, if it exists in the database, without making any consistency guarantees about reflecting previous write operations.
+\item \texttt{LIST(prefix)}: returns all keys starting with \texttt{prefix}.
+\end{itemize}
+
+\section{ Master leases }
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Keyspace is a master-slave system. Any node can obtain a master lease, which is valid for a few seconds, and can extend the lease before it expires, thus holding on to its mastership as long as it doesn't fail and network conditions are favorable. If the master fails, another node (previously a slave) will take over mastership within a few seconds. It is guaranteed that this process is safe, ie. only a single node will believe itself to be the master. Keyspace uses our own PaxosLease protocol for leases, a variant of Paxos which does not require disk writes during lease negotiation. PaxosLease is described in a different paper.
+
+In Keyspace, only the master node serves read and write operations (all nodes perform dirty-reads). The advantage is that, since all write operations go through the master, it can be sure that is has seen all write operations, thus it can safely serve read operations without contacting other nodes. This means read operations are cheap, while write operations are not more expensive. The downside is that only a single node services client requests, meaning it could become a performance bottleneck.
+
+\section{ Architecture }
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+Keyspace was designed for strong consistency from the ground-up. The basic distributed primitive is Leslie Lamport's Paxos consensus algorithm. \textbf{Paxos} relies on a message transport layer which it uses to send messages to other nodes. Paxos does not assume reliable message delivery: messages can get lost, reordered or delayed. These fault-conditions are handled by the Paxos algorithm itself.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=0.5]{arch1.eps}
+\caption{Keyspace server program architecture.}
+%\label{default}
+\end{center}
+\end{figure}
+
+In order to support both TCP and UDP-like network protocols, we implemented a \textbf{Message Transport} layer, which sits between Paxos and the actual network protocol-specific code. This allows us to use UDP for small messages and TCP for larger messages containing data.
+
+Paxos, in the context of Keyspace is used to replicate database write commands (such as \texttt{SET, TESTANDSET} etc.). The Paxos algorithms only handles reaching consensus on a single value. A sequence of values are agreed upon by running different Paxos rounds sequentially. This functionality is encapsulated by the \textbf{ReplicatedLog} layer in Keyspace.
+
+Once the ReplicatedLog finds that consensus has been reached on the next write command, it passes the commnd to the \textbf{KeyspaceDB} module. This is the module that actually stores the key-value pairs on local disk.
+
+Coming from the other side, clients can choose to connect using a variety of \textbf{protocols} such as HTTP, Memcache and our own Keyspace protocol. To take advantage of all features and get maximum performance, users are advised to use the Keyspace protocol.
+
+The protocol layer passes the client commands to the KeyspaceDB module, which, if it is a write operation and the node is the master, passes it to the ReplicatedLog, which will inject it into the underlying Paxos sequence. Once the ReplicatedLog signals that it succeeded, KeyspaceDB will actually perform the write operations and return to the client.
+
+If the client submitted a safe-read operation, the node will read the value(s) from its local database and return it. If the node is not the master, it will only serve dirty-read requests, redirecting the client to the master if known.
+
+\section{ Catchup }
+%%%%%%%%%%%%%%%%%%
+
+Keyspace services write requests if a majority of nodes are alive and connected. Nodes who are down or disconnected for some time and then rejoin the network need to \textit{catch up} to the rest. In Keyspace, there are two catchup-mechanisms:
+
+\begin{enumerate}
+\item If a node has been down or disconnected for a short time (ie. only few database commands have been commited to the ReplicatedLog), it can simply fetch the missing database commands from the up-to-date nodes who cache the tail of the log.
+\item If a node has been down for a longer time (ie. the other nodes' cache is insufficient), the node will copy the master node's entire local database and then rejoin the Keyspace cell.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=0.5]{comm1.eps}
+\caption{Keyspace system with three nodes, one lagging behind. Two nodes have seen all four database commands, while one has seen only the first two.}
+%\label{default}
+\end{center}
+\end{figure}
+
+The catchup mechanism is automated and requires no operator intervention. Nodes that are not up-to-date cannot obtain master leases.
+
+\section{ Optimizations }
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Keyspace contains a number of optimizations which reduce the number of network roundtrip times, reduce disk I/O and increase network throughput:
+
+\begin{enumerate}
+\item Multipaxos. The classical Paxos algorithm requires two message roundtrips and two disk syncs (commits) per Paxos round. In systems with masters, such as Keyspace, this can be reduces to one message roundtrip and one disk sync.
+\item Command packing. In order to increase throughput, we pack several client commands into one Paxos round. To maximize the amount of data, we use TCP to send these messages between the nodes.
+\item Commit chaining. Once a Paxos round is over, messages are passed up to the KeyspaceDB by the ReplicatedLog. KeyspaceDB then executes these commands on its local database. To avoid having to sync to disk (commit the transaction) at this point, these transactions are chained with the next Paxos round's and are only commited during the next Paxos round. Additional logic, outside the scope of this paper, ensures that this does not violate the strong consistency guarantees of Keyspace.
+\end{enumerate}
+
+\section{ Performance }
+%%%%%%%%%%%%%%%%%%%%%%%
+
+...
+
+\end{document}
