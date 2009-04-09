@@ -20,7 +20,7 @@ SCRIPT_DIR=`dirname $0`
 cd $SCRIPT_DIR/$1
 
 if [ "$2" = "" ]; then
-	BIN=../../build/Debug/Keyspace
+	BIN=../../bin/scalien
 else
 	if [ -x $2 ]; then
 		BIN=$2
@@ -34,6 +34,8 @@ if [ "$3" = "-g" ]; then
 		create_gdb_conf $1
 	fi
 	CMD="gdb -x $1.gdb $BIN"
+elif [ "$3" = "-v" ]; then
+	CMD="valgrind --leak-check=full --show-reachable=yes -v $BIN $1.conf"
 else
 	CMD="$BIN $1.conf"
 fi

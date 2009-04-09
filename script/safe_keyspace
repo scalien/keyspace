@@ -1,0 +1,10 @@
+#!/bin/sh
+
+safe_keyspace()
+{
+	while (:); do
+		test/run $1 &> /dev/null
+	done
+}
+
+safe_keyspace $1 &
