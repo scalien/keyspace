@@ -119,17 +119,17 @@ void ReplicatedLog::SetReplicatedDB(ReplicatedDB* replicatedDB_)
 	replicatedDB = replicatedDB_;
 }
 
-bool ReplicatedLog::GetLogItem(ulong64 paxosID, ByteString& value)
+bool ReplicatedLog::GetLogItem(uint64_t paxosID, ByteString& value)
 {
 	return logCache.Get(paxosID, value);
 }
 
-ulong64 ReplicatedLog::GetPaxosID()
+uint64_t ReplicatedLog::GetPaxosID()
 {
 	return proposer.paxosID;
 }
 
-void ReplicatedLog::SetPaxosID(Transaction* transaction, ulong64 paxosID)
+void ReplicatedLog::SetPaxosID(Transaction* transaction, uint64_t paxosID)
 {
 	EventLoop::Remove(&(proposer.prepareTimeout));
 	EventLoop::Remove(&(proposer.proposeTimeout));
@@ -224,7 +224,7 @@ void ReplicatedLog::OnLearnChosen()
 {
 	Log_Trace();
 
-	ulong64 paxosID;
+	uint64_t paxosID;
 	bool	ownAppend;
 
 	if (pmsg.paxosID == learner.paxosID)
@@ -258,7 +258,7 @@ void ReplicatedLog::OnLearnChosen()
 			return;
 		}
 
-		Log_Message("%d %d %llu %llu", rmsg.nodeID, GetNodeID(), rmsg.restartCounter,
+		Log_Message("%d %d %" PRIu64 " %" PRIu64 "", rmsg.nodeID, GetNodeID(), rmsg.restartCounter,
 			PaxosConfig::Get()->restartCounter);
 		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
 			logQueue.Pop(); // we just appended this

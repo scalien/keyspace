@@ -13,8 +13,8 @@ public:
 						LogCache();
 						~LogCache();
 
-	bool				Push(ulong64 paxosID, ByteString value);
-	bool				Get(ulong64 paxosID, ByteString& value);
+	bool				Push(uint64_t paxosID, ByteString value);
+	bool				Get(uint64_t paxosID, ByteString& value);
 
 private:
 	ByteBuffer			logItems[CACHE_SIZE];
@@ -22,7 +22,7 @@ private:
 	int					next;
 	int					size;
 	unsigned long		allocated;
-	ulong64				paxosID;
+	uint64_t				paxosID;
 };
 
 #endif

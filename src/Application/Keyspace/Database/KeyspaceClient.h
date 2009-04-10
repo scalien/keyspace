@@ -44,7 +44,7 @@ public:
 		GET,
 		SET,
 		TEST_AND_SET,
-		INCREMENT,
+		ADD,
 		DELETE,
 		LIST
 	};
@@ -54,6 +54,7 @@ public:
 	ByteBuffer				value;
 	ByteBuffer				test;
 	ByteBuffer				prefix;
+	int64_t					addNum;
 	
 	KeyspaceClient*			client;
 	

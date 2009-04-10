@@ -3,7 +3,7 @@
 
 #include "assert.h"
 #include <string.h>
-#include "Types.h"
+#include <stdint.h>
 #include <math.h>
 
 #define KB 1000
@@ -25,9 +25,9 @@ inline int max(int a, int b)
 
 //long strntol(char* buffer, int size, int* nread);
 
-long64 strntolong64(char* buffer, int length, int* nread);
+int64_t strntoint64_t(const char* buffer, int length, int* nread);
 
-ulong64 strntoulong64(char* buffer, int length, int* nread);
+uint64_t strntouint64_t(const char* buffer, int length, int* nread);
 
 char* rprintf(const char* format, ...);
 

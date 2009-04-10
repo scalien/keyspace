@@ -39,7 +39,7 @@ void CatchupClient::OnRead()
 	
 	do
 	{
-		msglength = strntolong64(tcpread.data.buffer, tcpread.data.length, &nread);
+		msglength = strntoint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
 		if (nread == 0 || tcpread.data.length <= nread)
 			break;

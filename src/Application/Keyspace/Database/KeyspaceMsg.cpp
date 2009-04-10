@@ -31,11 +31,12 @@ void KeyspaceMsg::TestAndSet(ByteString key_, ByteString test_, ByteString value
 	value.Set(value_);
 }
 
-void KeyspaceMsg::Increment(ByteString key_)
+void KeyspaceMsg::Add(ByteString key_, int64_t addNum_)
 {
-	Init(KEYSPACE_INCREMENT);
+	Init(KEYSPACE_ADD);
 	
 	key.Set(key_);
+	addNum = addNum_;
 }
 
 void KeyspaceMsg::Delete(ByteString key_)
@@ -52,7 +53,9 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	ByteString  key, value, test;
 		
 #define CheckOverflow()		if ((pos - data.buffer) >= data.length) return false;
-#define ReadNumber(num)		(num) = strntoulong64(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64_t(num)	(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
+								if (nread < 1) return false; pos += nread;
+#define ReadInt64_t(num)	(num) = strntoint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
@@ -65,7 +68,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	
 	if (type == KEYSPACE_GET)
 	{
-		ReadNumber(key.length); CheckOverflow();
+		ReadUint64_t(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
@@ -79,14 +82,14 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	}
 	else if (type == KEYSPACE_SET)
 	{
-		ReadNumber(key.length); CheckOverflow();
+		ReadUint64_t(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(value.length); CheckOverflow();
+		ReadUint64_t(value.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		value.buffer = pos;
 		pos += value.length;
@@ -101,21 +104,21 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	}
 	else if (type == KEYSPACE_TESTANDSET)
 	{
-		ReadNumber(key.length); CheckOverflow();
+		ReadUint64_t(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(test.length); CheckOverflow();
+		ReadUint64_t(test.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		test.buffer = pos;
 		pos += test.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(value.length); CheckOverflow();
+		ReadUint64_t(value.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		value.buffer = pos;
 		pos += value.length;
@@ -129,23 +132,26 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 		n = pos - data.buffer;
 		return true;
 	}
-	else if (type == KEYSPACE_INCREMENT)
+	else if (type == KEYSPACE_ADD)
 	{
-		ReadNumber(key.length); CheckOverflow();
+		ReadUint64_t(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
+		CheckOverflow();
+		ReadSeparator(); CheckOverflow();
+		ReadInt64_t(addNum);
 		
 		if (pos > data.buffer + data.length)
 			return false;
 		
-		Increment(ByteString(key.length, key.length, key.buffer));
+		Add(ByteString(key.length, key.length, key.buffer), addNum);
 		n = pos - data.buffer;
 		return true;
 	}
 	else if (type == KEYSPACE_DELETE)
 	{
-		ReadNumber(key.length); CheckOverflow();
+		ReadUint64_t(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
@@ -177,9 +183,9 @@ bool KeyspaceMsg::Write(ByteString& data)
 			key.length, key.length, key.buffer,
 			test.length, test.length, test.buffer,
 			value.length, value.length, value.buffer);
-	else if (type == KEYSPACE_INCREMENT)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
-			key.length, key.length, key.buffer);
+	else if (type == KEYSPACE_ADD)
+		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%" PRIi64 "", type,
+			key.length, key.length, key.buffer, addNum);
 	else if (type == KEYSPACE_DELETE)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
 			key.length, key.length, key.buffer);
@@ -204,8 +210,8 @@ bool KeyspaceMsg::BuildFrom(KeyspaceOp* op)
 		Init(KEYSPACE_SET);
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 		Init(KEYSPACE_TESTANDSET);
-	else if (op->type == KeyspaceOp::INCREMENT)
-		Init(KEYSPACE_INCREMENT);
+	else if (op->type == KeyspaceOp::ADD)
+		Init(KEYSPACE_ADD);
 	else if (op->type == KeyspaceOp::DELETE)
 		Init(KEYSPACE_DELETE);
 	else
@@ -217,6 +223,7 @@ bool KeyspaceMsg::BuildFrom(KeyspaceOp* op)
 		ret &= value.Set(op->value);
 	if (op->type == KeyspaceOp::TEST_AND_SET)
 		ret &= test.Set(op->test);
-	
+	if (op->type == KeyspaceOp::ADD)
+		addNum = op->addNum;
 	return ret;
 }

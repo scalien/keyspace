@@ -8,7 +8,7 @@
 #define KEYSPACE_SET		's'
 #define KEYSPACE_TESTANDSET	't'
 #define KEYSPACE_DELETE		'd'
-#define KEYSPACE_INCREMENT	'i'
+#define KEYSPACE_ADD		'a'
 
 class KeyspaceOp;
 
@@ -19,6 +19,7 @@ public:
 	ByteArray<KEY_SIZE>		key;
 	ByteArray<VAL_SIZE>		value;
 	ByteArray<VAL_SIZE>		test;
+	int64_t					addNum;
 	
 	
 	void					Init(char type_);
@@ -26,7 +27,7 @@ public:
 	void					Get(ByteString key_);
 	void					Set(ByteString key_, ByteString value_);
 	void					TestAndSet(ByteString key_, ByteString test_, ByteString value_);
-	void					Increment(ByteString key_);
+	void					Add(ByteString key_, int64_t addNum_);
 	void					Delete(ByteString key_);
 
 	bool					Read(ByteString& data, unsigned &nread);

@@ -30,7 +30,7 @@ bool PaxosLearner::RequestChosen(unsigned nodeID)
 	return true;
 }
 
-bool PaxosLearner::SendChosen(unsigned nodeID, ulong64 paxosID, ByteString& value)
+bool PaxosLearner::SendChosen(unsigned nodeID, uint64_t paxosID, ByteString& value)
 {
 	Log_Trace();
 	
@@ -52,7 +52,7 @@ void PaxosLearner::OnLearnChosen(PaxosMsg& msg_)
 	state.learned = true;
 	state.value.Set(msg.value);
 
-	Log_Message("+++ Consensus for paxosID = %llu is %.*s +++", paxosID,
+	Log_Message("+++ Consensus for paxosID = %" PRIu64 " is %.*s +++", paxosID,
 		state.value.length, state.value.buffer);
 }
 

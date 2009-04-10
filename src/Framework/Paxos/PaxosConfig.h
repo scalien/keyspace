@@ -1,7 +1,7 @@
 #ifndef PAXOSCONFIG_H
 #define PAXOSCONFIG_H
 
-#include "System/Types.h"
+#include <stdint.h>
 #include "System/IO/Endpoint.h"
 
 #define MAX_CELL_SIZE 256
@@ -14,11 +14,11 @@ public:
 	bool			Init(char* filename);
 	
 	int				MinMajority();
-	ulong64			NextHighest(ulong64 proposalID);
+	uint64_t			NextHighest(uint64_t proposalID);
 
 	int				nodeID;
 	int				numNodes; // same as endpoints.size
-	ulong64			restartCounter;	
+	uint64_t			restartCounter;	
 	int				port;
 	Endpoint		endpoints[MAX_CELL_SIZE];
 

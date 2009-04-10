@@ -1,6 +1,7 @@
 #include "PaxosConfig.h"
 #include <stdlib.h>
 #include <math.h>
+#include <inttypes.h>
 #include "Framework/Database/Table.h"
 #include "Framework/Database/Transaction.h"
 #include "PaxosConsts.h"
@@ -85,7 +86,7 @@ void PaxosConfig::InitRestartCounter()
 
 	if (ret)
 	{
-		restartCounter = strntoulong64(baRestartCounter.buffer, baRestartCounter.length, &nread);
+		restartCounter = strntouint64_t(baRestartCounter.buffer, baRestartCounter.length, &nread);
 		if (nread != baRestartCounter.length)
 			restartCounter = 0;
 	}
@@ -95,12 +96,12 @@ void PaxosConfig::InitRestartCounter()
 	restartCounter++;
 	
 	baRestartCounter.length =
-		snprintf(baRestartCounter.buffer, baRestartCounter.size, "%llu", restartCounter);
+		snprintf(baRestartCounter.buffer, baRestartCounter.size, "%" PRIu64 "", restartCounter);
 	
 	table->Set(&tx, "@@restartCounter", baRestartCounter);
 	tx.Commit();
 	
-	Log_Message("Running with restartCounter = %llu", restartCounter);
+	Log_Message("Running with restartCounter = %" PRIu64 "", restartCounter);
 }
 
 int PaxosConfig::MinMajority()
@@ -108,11 +109,11 @@ int PaxosConfig::MinMajority()
 	return (floor(numNodes / 2) + 1);
 }
 
-ulong64 PaxosConfig::NextHighest(ulong64 proposalID)
+uint64_t PaxosConfig::NextHighest(uint64_t proposalID)
 {
 	// <proposal count since restart> <restartCounter> <nodeID>
 	
-	ulong64 left, middle, right, nextProposalID;
+	uint64_t left, middle, right, nextProposalID;
 	
 	left = proposalID >> (WIDTH_NODEID + WIDTH_RESTART_COUNTER);
 	

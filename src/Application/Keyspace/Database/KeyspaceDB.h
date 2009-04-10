@@ -26,7 +26,7 @@ public:
 	void					OnCatchupFailed();		// called by CatchupClient
 	
 // ReplicatedDB interface:
-	virtual void			OnAppend(Transaction* transaction, ulong64 paxosID,
+	virtual void			OnAppend(Transaction* transaction, uint64_t paxosID,
 									 ByteString value, bool ownAppend);
 	virtual void			OnMasterLease(unsigned nodeID);
 	virtual void			OnMasterLeaseExpired();

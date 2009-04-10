@@ -17,7 +17,7 @@ LogCache::~LogCache()
 		logItems[i].Free();
 }
 
-bool LogCache::Push(ulong64 paxosID_, ByteString value)
+bool LogCache::Push(uint64_t paxosID_, ByteString value)
 {
 	int tail, head, i;
 	
@@ -53,7 +53,7 @@ bool LogCache::Push(ulong64 paxosID_, ByteString value)
 	return true;
 }
 
-bool LogCache::Get(ulong64 paxosID_, ByteString& value)
+bool LogCache::Get(uint64_t paxosID_, ByteString& value)
 {
 	int tail, head, offset;
 	

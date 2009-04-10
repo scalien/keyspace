@@ -2,6 +2,7 @@
 #include "System/Common.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 void PLeaseMsg::Init(char type_, unsigned nodeID_)
 {
@@ -9,7 +10,7 @@ void PLeaseMsg::Init(char type_, unsigned nodeID_)
 	nodeID = nodeID_;
 }
 
-bool PLeaseMsg::PrepareRequest(unsigned nodeID_, ulong64 proposalID_, ulong64 paxosID_)
+bool PLeaseMsg::PrepareRequest(unsigned nodeID_, uint64_t proposalID_, uint64_t paxosID_)
 {
 	Init(PREPARE_REQUEST, nodeID_);
 	proposalID = proposalID_;
@@ -18,7 +19,7 @@ bool PLeaseMsg::PrepareRequest(unsigned nodeID_, ulong64 proposalID_, ulong64 pa
 	return true;
 }
 
-bool PLeaseMsg::PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_)
+bool PLeaseMsg::PrepareResponse(unsigned nodeID_, uint64_t proposalID_, char response_)
 {
 	Init(PREPARE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
@@ -27,8 +28,8 @@ bool PLeaseMsg::PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char resp
 	return true;
 }
 
-bool PLeaseMsg::PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_,
-	ulong64 acceptedProposalID_, unsigned leaseOwner_, ulong64 expireTime_)
+bool PLeaseMsg::PrepareResponse(unsigned nodeID_, uint64_t proposalID_, char response_,
+	uint64_t acceptedProposalID_, unsigned leaseOwner_, uint64_t expireTime_)
 {
 	Init(PREPARE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
@@ -40,8 +41,8 @@ bool PLeaseMsg::PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char resp
 	return true;
 }
 
-bool PLeaseMsg::ProposeRequest(unsigned nodeID_, ulong64 proposalID_, unsigned int leaseOwner_,
-									ulong64 expireTime_)
+bool PLeaseMsg::ProposeRequest(unsigned nodeID_, uint64_t proposalID_, unsigned int leaseOwner_,
+									uint64_t expireTime_)
 {
 	Init(PROPOSE_REQUEST, nodeID_);
 	proposalID = proposalID_;
@@ -51,7 +52,7 @@ bool PLeaseMsg::ProposeRequest(unsigned nodeID_, ulong64 proposalID_, unsigned i
 	return true;
 }
 
-bool PLeaseMsg::ProposeResponse(unsigned nodeID_, ulong64 proposalID_, char response_)
+bool PLeaseMsg::ProposeResponse(unsigned nodeID_, uint64_t proposalID_, char response_)
 {
 	Init(PROPOSE_RESPONSE, nodeID_);
 	proposalID = proposalID_;
@@ -60,7 +61,7 @@ bool PLeaseMsg::ProposeResponse(unsigned nodeID_, ulong64 proposalID_, char resp
 	return true;
 }
 
-bool PLeaseMsg::LearnChosen(unsigned nodeID_, unsigned leaseOwner_, ulong64 expireTime_)
+bool PLeaseMsg::LearnChosen(unsigned nodeID_, unsigned leaseOwner_, uint64_t expireTime_)
 {
 	Init(LEARN_CHOSEN, nodeID_);
 	leaseOwner = leaseOwner_;
@@ -77,7 +78,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	char		*pos;
 		
 #define CheckOverflow()		if ((pos - data.buffer) >= data.length) return false;
-#define ReadNumber(num)		(num) = strntoulong64(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != '#') return false; pos++;
@@ -87,7 +88,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	CheckOverflow();
 	ReadChar(type);	CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadNumber(nodeID); CheckOverflow();
+	ReadUint64_t(nodeID); CheckOverflow();
 	
 	if (type != PREPARE_REQUEST	&&
 		type != PREPARE_RESPONSE &&
@@ -101,9 +102,9 @@ bool PLeaseMsg::Read(ByteString& data)
 	if (type == PREPARE_REQUEST)
 	{
 		
-		ReadNumber(proposalID); CheckOverflow();
+		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(paxosID);
+		ReadUint64_t(paxosID);
 		
 		ValidateLength();
 		PrepareRequest(nodeID, proposalID, paxosID);
@@ -115,7 +116,7 @@ bool PLeaseMsg::Read(ByteString& data)
 		// the <n_accepted>#<length>#<value> is only present if
 		// response == PREPARE_PREVIOUSLY_ACCEPTED
 		
-		ReadNumber(proposalID); CheckOverflow();
+		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadChar(response);
 	
@@ -133,11 +134,11 @@ bool PLeaseMsg::Read(ByteString& data)
 
 		CheckOverflow();		
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(acceptedProposalID); CheckOverflow();
+		ReadUint64_t(acceptedProposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(leaseOwner); CheckOverflow();
+		ReadUint64_t(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(expireTime);
+		ReadUint64_t(expireTime);
 		
 		ValidateLength();
 		PrepareResponse(nodeID, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
@@ -145,11 +146,11 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == PROPOSE_REQUEST)
 	{		
-		ReadNumber(proposalID); CheckOverflow();
+		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(leaseOwner); CheckOverflow();
+		ReadUint64_t(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(expireTime);
+		ReadUint64_t(expireTime);
 		
 		ValidateLength();
 		ProposeRequest(nodeID, proposalID, leaseOwner, expireTime);
@@ -159,7 +160,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	{
 		// <<<type specific>>> := <n>#<response>
 
-		ReadNumber(proposalID); CheckOverflow();
+		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadChar(response);
 		
@@ -173,9 +174,9 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == LEARN_CHOSEN)
 	{
-		ReadNumber(leaseOwner); CheckOverflow();
+		ReadUint64_t(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadNumber(expireTime);
+		ReadUint64_t(expireTime);
 		
 		ValidateLength();
 		LearnChosen(nodeID, leaseOwner, expireTime);
@@ -191,29 +192,29 @@ bool PLeaseMsg::Write(ByteString& data)
 	
 	if		(type == PREPARE_REQUEST)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%llu#%llu", type, nodeID, proposalID, paxosID);
+		required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%" PRIu64 "", type, nodeID, proposalID, paxosID);
 	}
 	else if (type == PREPARE_RESPONSE)
 	{
 		if (response == PREPARE_REJECTED || response == PREPARE_CURRENTLY_OPEN)
-			required = snprintf(data.buffer, data.size, "%c#%d#%llu#%c", type, nodeID,
+			required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%c", type, nodeID,
 				proposalID, response);
 		else
-			required = snprintf(data.buffer, data.size, "%c#%d#%llu#%c#%llu#%d#%llu",
+			required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%c#%" PRIu64 "#%d#%" PRIu64 "",
 				type, nodeID, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_REQUEST)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%llu#%d#%llu", type, nodeID, proposalID,
+		required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%d#%" PRIu64 "", type, nodeID, proposalID,
 			leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_RESPONSE)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%llu#%c", type, nodeID, proposalID, response);
+		required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%c", type, nodeID, proposalID, response);
 	}
 	else if (type == LEARN_CHOSEN)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%d#%llu", type, nodeID, leaseOwner, expireTime);
+		required = snprintf(data.buffer, data.size, "%c#%d#%d#%" PRIu64 "", type, nodeID, leaseOwner, expireTime);
 	}
 	else
 		ASSERT_FAIL();

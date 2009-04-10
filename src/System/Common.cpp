@@ -4,11 +4,11 @@
 #include <string>
 #include <stdlib.h>
 
-long64 strntolong64(char* buffer, int length, int* nread)
+int64_t strntoint64_t(const char* buffer, int length, int* nread)
 {
 	bool	neg;
 	long	i, digit;
-	long64	n;
+	int64_t	n;
 	char	c;
 	
 #define ADVANCE()	i++; c = buffer[i];
@@ -54,11 +54,11 @@ long64 strntolong64(char* buffer, int length, int* nread)
 #undef ADVANCE
 }
 
-ulong64 strntoulong64(char* buffer, int length, int* nread)
+uint64_t strntouint64_t(const char* buffer, int length, int* nread)
 {
-	long	i, digit;
-	ulong64	n;
-	char	c;
+	long		i, digit;
+	uint64_t	n;
+	char		c;
 
 #define ADVANCE()	i++; c = buffer[i];	
 

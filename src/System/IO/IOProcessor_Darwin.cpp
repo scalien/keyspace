@@ -193,7 +193,7 @@ bool IOProcessor::Poll(int sleep)
 {
 #define	MAX_KEVENTS 1
 	
-	ulong64					called;
+	uint64_t					called;
 	int						i, nevents, wait;
 	static struct kevent	events[MAX_KEVENTS];
 	struct timespec			timeout;

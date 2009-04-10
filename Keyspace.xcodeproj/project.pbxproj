@@ -42,6 +42,7 @@
 		544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */; };
 		544611FB0F533FAB00EFBBDE /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */; };
+		545C76740F8F8180006540BC /* KeyspaceClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */; };
 		547A75F80F758C3D003084C9 /* CatchupMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F30F758C3D003084C9 /* CatchupMsg.cpp */; };
 		547A75F90F758C3D003084C9 /* CatchupClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F40F758C3D003084C9 /* CatchupClient.cpp */; };
 		547A75FA0F758C3D003084C9 /* CatchupServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F50F758C3D003084C9 /* CatchupServer.cpp */; };
@@ -224,6 +225,8 @@
 		545C60330F7979B4006540BC /* KeyspaceClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClient.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
 		545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceMsg.cpp; sourceTree = "<group>"; };
+		545C76720F8F8180006540BC /* KeyspaceClientMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientMsg.h; sourceTree = "<group>"; };
+		545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientMsg.cpp; sourceTree = "<group>"; };
 		547A75AC0F756FA1003084C9 /* KeyspaceConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConsts.h; sourceTree = "<group>"; };
 		547A75F20F758C3D003084C9 /* CatchupMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupMsg.h; sourceTree = "<group>"; };
 		547A75F30F758C3D003084C9 /* CatchupMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupMsg.cpp; sourceTree = "<group>"; };
@@ -280,7 +283,6 @@
 		548147450F31B6B200F3D2B6 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
 		548147460F31B6B200F3D2B6 /* Stopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stopwatch.h; sourceTree = "<group>"; };
 		548147470F31B6B200F3D2B6 /* Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Time.h; sourceTree = "<group>"; };
-		548147480F31B6B200F3D2B6 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		548147490F31B6B200F3D2B6 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
 		54814BFE0F35084500F3D2B6 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
@@ -464,6 +466,7 @@
 		5421DCC00F648B86004BBDB4 /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
+				545C76710F8F816A006540BC /* Keyspace */,
 				5421DCC20F648B86004BBDB4 /* HttpConn.h */,
 				5421DCC10F648B86004BBDB4 /* HttpConn.cpp */,
 				5421DCC40F648B86004BBDB4 /* HttpRequest.h */,
@@ -541,6 +544,15 @@
 				5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		545C76710F8F816A006540BC /* Keyspace */ = {
+			isa = PBXGroup;
+			children = (
+				545C76720F8F8180006540BC /* KeyspaceClientMsg.h */,
+				545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */,
+			);
+			path = Keyspace;
 			sourceTree = "<group>";
 		};
 		547A75E20F7589B8003084C9 /* Catchup */ = {
@@ -676,7 +688,6 @@
 				548147450F31B6B200F3D2B6 /* Platform.h */,
 				548147460F31B6B200F3D2B6 /* Stopwatch.h */,
 				548147470F31B6B200F3D2B6 /* Time.h */,
-				548147480F31B6B200F3D2B6 /* Types.h */,
 				9A89F5860F3F444C0041D4A1 /* ThreadPool.h */,
 				9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */,
 				9AF508670F8AB05300F7F49E /* Config.h */,
@@ -1026,6 +1037,7 @@
 				545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */,
 				9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */,
 				9AF508690F8AB05300F7F49E /* Config.cpp in Sources */,
+				545C76740F8F8180006540BC /* KeyspaceClientMsg.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1187,6 +1199,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -1206,7 +1219,11 @@
 					src,
 				);
 				LIBRARY_SEARCH_PATHS = /opt/local/lib/db46;
-				OTHER_CPLUSPLUSFLAGS = "-DPLATFORM_DARWIN";
+				OTHER_CFLAGS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DPLATFORM_DARWIN",
+					"-D__STDC_FORMAT_MACROS",
+				);
 				PREBINDING = NO;
 				PRELINK_LIBS = db_cxx;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
@@ -1218,6 +1235,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(NATIVE_ARCH)";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -1237,7 +1255,11 @@
 					src,
 				);
 				LIBRARY_SEARCH_PATHS = /opt/local/lib/db46;
-				OTHER_CPLUSPLUSFLAGS = "-DPLATFORM_DARWIN";
+				OTHER_CFLAGS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DPLATFORM_DARWIN",
+					"-D__STDC_FORMAT_MACROS",
+				);
 				PREBINDING = NO;
 				PRELINK_LIBS = db_cxx;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";

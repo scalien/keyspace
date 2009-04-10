@@ -19,10 +19,10 @@ protected:
 	void					Init(TransportWriter** writers_);
 	
 	bool					RequestChosen(unsigned nodeID);
-	bool					SendChosen(unsigned nodeID, ulong64 paxosID, ByteString& value);	
+	bool					SendChosen(unsigned nodeID, uint64_t paxosID, ByteString& value);	
 	bool					Learned();
 	ByteString				Value();
-	void					SetPaxosID(ulong64 paxosID_);
+	void					SetPaxosID(uint64_t paxosID_);
 
 protected:
 	void					OnLearnChosen(PaxosMsg& msg_);
@@ -30,7 +30,7 @@ protected:
 
 	TransportWriter**		writers;
 	ByteArray<PAXOS_BUFSIZE>wdata;
-	ulong64					paxosID;
+	uint64_t					paxosID;
 	PaxosMsg				msg;
 	PaxosLearnerState		state;
 	

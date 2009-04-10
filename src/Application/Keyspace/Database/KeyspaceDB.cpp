@@ -211,7 +211,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 	
 	// don't allow writes for @@ keys
 	if ((op->type == KeyspaceOp::SET || op->type == KeyspaceOp::TEST_AND_SET ||
-		 op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::INCREMENT)
+		 op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::ADD)
 		 && op->key.length > 2 && op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
 			return false;
 	
@@ -240,16 +240,6 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
 		mdbop->Visit(table, *alv);
 		dbReader.Add(mdbop);
-//		ret = table->Visit(lv);
-//		
-//		ByteString &out = lv.GetOutput();
-//		if (out.length > 0)
-//		{
-//			op->value.Allocate(out.length);
-//			op->value.Set(out.buffer, out.length);
-//		}
-//		
-//		op->client->OnComplete(op, ret);
 		return true;
 	}
 	
@@ -268,7 +258,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 {
 	bool		ret;
-	ulong64		num;
+	int64_t	num;
 	int			nread;
 	KeyspaceOp*	op;
 	KeyspaceOp**it;
@@ -286,17 +276,17 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		else
 			ret = false;
 	}
-	else if (msg.type == KEYSPACE_INCREMENT)
+	else if (msg.type == KEYSPACE_ADD)
 	{
 		ret &= table->Get(transaction, msg.key, data); // read number
 		
 		if (ret)
 		{
-			num = strntoulong64(data.buffer, data.length, &nread); // parse number
+			num = strntoint64_t(data.buffer, data.length, &nread); // parse number
 			if (nread == data.length)
 			{
-				num++; // increase number
-				data.length = snprintf(data.buffer, data.size, "%llu", num); // print number
+				num = num + msg.addNum;
+				data.length = snprintf(data.buffer, data.size, "%" PRIi64 "", num); // print number
 				ret &= table->Set(transaction, msg.key, data); // write number
 			}
 			else
@@ -314,7 +304,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		op = *it;
 		if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
 			ASSERT_FAIL();
-		if (op->type == KeyspaceOp::INCREMENT && ret)
+		if (op->type == KeyspaceOp::ADD && ret)
 		{
 			// return new value to client
 			op->value.Allocate(data.length);
@@ -326,7 +316,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	}
 }
 
-void KeyspaceDB::OnAppend(Transaction* transaction, ulong64 paxosID, ByteString value, bool ownAppend)
+void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString value, bool ownAppend)
 {
 	unsigned numOps, nread;
 
@@ -345,7 +335,7 @@ void KeyspaceDB::OnAppend(Transaction* transaction, ulong64 paxosID, ByteString 
 			break;
 	}
 
-	Log_Message("paxosID = %llu, numOps = %u", paxosID, numOps);
+	Log_Message("paxosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
 	
 	if (ReplicatedLog::Get()->IsMaster() && ops.Size() > 0)
 		Append();

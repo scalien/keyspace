@@ -25,7 +25,7 @@ void PaxosProposer::Init(TransportWriter** writers_)
 	state.Init();
 }
 
-void PaxosProposer::SetPaxosID(ulong64 paxosID_)
+void PaxosProposer::SetPaxosID(uint64_t paxosID_)
 {
 	paxosID = paxosID_;
 }

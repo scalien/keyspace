@@ -38,7 +38,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
-		op->type == KeyspaceOp::INCREMENT)
+		op->type == KeyspaceOp::ADD)
 	{
 		if (status)
 			Response(200, op->value.buffer, op->value.length);
@@ -148,6 +148,7 @@ int HttpConn::ProcessGetRequest()
 	int valuelen;
 	int testlen;
 	int prefixlen;
+	int nread;
 	// http://localhost:8080/get/key
 	// http://localhost:8080/set/key/value
 	
@@ -299,12 +300,33 @@ int HttpConn::ProcessGetRequest()
 		
 		return 0;
 	}
-	else if (strncmp(request.line.uri, "/increment/", strlen("/increment/")) == 0)
+	else if (strncmp(request.line.uri, "/add/", strlen("/add/")) == 0)
 	{
-		key = request.line.uri + strlen("/increment/");
-		keylen = strlen(key);
+		key = request.line.uri + strlen("/add/");
+		value = strchr(key, '/');
+		if (!value)
+		{
+			delete op;
+			return -1;
+		}
 		
-		op->type = KeyspaceOp::INCREMENT;
+		keylen = value - key;
+		value++;
+		valuelen = strlen(value);
+		if (valuelen < 1)
+		{
+			delete op;
+			return -1;
+		}
+		
+		op->addNum = strntoint64_t(value, valuelen, &nread);
+		if (nread != valuelen)
+		{
+			delete op;
+			return -1;
+		}
+		
+		op->type = KeyspaceOp::ADD;
 		
 		if (!op->key.Allocate(keylen))
 		{

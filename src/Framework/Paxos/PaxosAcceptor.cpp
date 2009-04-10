@@ -40,10 +40,10 @@ bool PaxosAcceptor::Persist(Transaction* transaction)
 	if (table == NULL)
 		return false;
 		
-	bytearrays[0].Set(rprintf("%llu",			paxosID));
+	bytearrays[0].Set(rprintf("%" PRIu64 "",			paxosID));
 	bytearrays[1].Set(rprintf("%d",				state.accepted));
-	bytearrays[2].Set(rprintf("%llu",			state.promisedProposalID));
-	bytearrays[3].Set(rprintf("%llu",			state.acceptedProposalID));
+	bytearrays[2].Set(rprintf("%" PRIu64 "",			state.promisedProposalID));
+	bytearrays[3].Set(rprintf("%" PRIu64 "",			state.acceptedProposalID));
 	
 	ret = true;
 	ret = ret && table->Set(transaction, "@@paxosID",				bytearrays[0]);
@@ -78,28 +78,28 @@ bool PaxosAcceptor::ReadState()
 	if (!ret)
 		return false;
 
-	paxosID = strntoulong64(bytearrays[0].buffer, bytearrays[0].length, &nread);
+	paxosID = strntouint64_t(bytearrays[0].buffer, bytearrays[0].length, &nread);
 	if (nread != bytearrays[0].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.accepted = strntolong64(bytearrays[1].buffer, bytearrays[1].length, &nread);
+	state.accepted = strntoint64_t(bytearrays[1].buffer, bytearrays[1].length, &nread);
 	if (nread != bytearrays[1].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.promisedProposalID = strntoulong64(bytearrays[2].buffer, bytearrays[2].length, &nread);
+	state.promisedProposalID = strntouint64_t(bytearrays[2].buffer, bytearrays[2].length, &nread);
 	if (nread != bytearrays[2].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.acceptedProposalID = strntoulong64(bytearrays[3].buffer, bytearrays[3].length, &nread);
+	state.acceptedProposalID = strntouint64_t(bytearrays[3].buffer, bytearrays[3].length, &nread);
 	if (nread != bytearrays[3].length)
 	{
 		Log_Trace();
@@ -120,10 +120,10 @@ bool PaxosAcceptor::WriteState()
 	
 	writtenPaxosID = paxosID;
 	
-	bytearrays[0].Set(rprintf("%llu",			paxosID));
+	bytearrays[0].Set(rprintf("%" PRIu64 "",			paxosID));
 	bytearrays[1].Set(rprintf("%d",				state.accepted));
-	bytearrays[2].Set(rprintf("%llu",			state.promisedProposalID));
-	bytearrays[3].Set(rprintf("%llu",			state.acceptedProposalID));
+	bytearrays[2].Set(rprintf("%" PRIu64 "",			state.promisedProposalID));
+	bytearrays[3].Set(rprintf("%" PRIu64 "",			state.acceptedProposalID));
 	
 	mdbop.Init();
 	

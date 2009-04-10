@@ -1,5 +1,6 @@
 #include "PLeaseLearner.h"
 #include <stdio.h>
+#include <inttypes.h>
 #include <math.h>
 #include <assert.h>
 #include "System/Log.h"
@@ -39,7 +40,7 @@ void PLeaseLearner::OnLearnChosen()
 		state.leaseOwner = msg.leaseOwner;
 		state.expireTime = msg.expireTime;
 		
-		Log_Message("+++ Node %d has the lease for %llu msec +++",
+		Log_Message("+++ Node %d has the lease for %" PRIu64 " msec +++",
 			state.leaseOwner, state.expireTime - Now());
 
 		leaseTimeout.Set(state.expireTime);
@@ -77,12 +78,12 @@ unsigned PLeaseLearner::LeaseOwner()
 	return state.leaseOwner;
 }
 
-ulong64 PLeaseLearner::LeaseEpoch()
+uint64_t PLeaseLearner::LeaseEpoch()
 {
 	if (msg.expireTime < Now())
 		state.OnLeaseTimeout();
 
-	/*ulong64 left, middle, right, leaseEpoch;
+	/*uint64_t left, middle, right, leaseEpoch;
 
 	// <leaseEpoch since last restart> <restartCounter> <nodeID>
 	

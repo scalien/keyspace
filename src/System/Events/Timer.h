@@ -23,7 +23,7 @@ public:
 		active = false;
 	}
 		
-	void Set(ulong64 when_)
+	void Set(uint64_t when_)
 	{
 		when = when_;
 	}
@@ -33,7 +33,7 @@ public:
 		return active;
 	}
 	
-	ulong64 When()
+	uint64_t When()
 	{
 		return when;
 	}
@@ -49,7 +49,7 @@ public:
 
 protected:
     bool			active;
-	ulong64			when;
+	uint64_t			when;
     Callable*		callable;
 };
 

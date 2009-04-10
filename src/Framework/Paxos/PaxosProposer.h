@@ -18,7 +18,7 @@ public:
 		
 	void					OnPrepareTimeout();
 	void					OnProposeTimeout();
-	void					SetPaxosID(ulong64 paxosID_);
+	void					SetPaxosID(uint64_t paxosID_);
 	bool					IsActive();	
 	bool					Propose(ByteString& value);
 
@@ -35,7 +35,7 @@ protected:
 	ByteArray<PAXOS_BUFSIZE>wdata;
 	PaxosProposerState		state;
 	PaxosMsg				msg;
-	ulong64					paxosID;
+	uint64_t					paxosID;
 	MFunc<PaxosProposer>	onPrepareTimeout;
 	MFunc<PaxosProposer>	onProposeTimeout;
 	CdownTimer				prepareTimeout;

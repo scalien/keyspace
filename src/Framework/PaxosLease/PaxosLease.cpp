@@ -73,7 +73,7 @@ unsigned PaxosLease::GetLeaseOwner()
 	return learner.LeaseOwner();
 }
 
-ulong64 PaxosLease::GetLeaseEpoch()
+uint64_t PaxosLease::GetLeaseEpoch()
 {
 	return learner.LeaseEpoch();
 }

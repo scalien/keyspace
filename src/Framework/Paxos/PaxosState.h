@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include "System/Buffer.h"
-#include "System/Types.h"
+#include <stdint.h>
 
 class PaxosProposerState
 {
@@ -11,8 +11,8 @@ public:
 	bool					preparing;
 	bool					proposing;
 	
-	ulong64					proposalID;
-	ulong64					highestReceivedProposalID;
+	uint64_t					proposalID;
+	uint64_t					highestReceivedProposalID;
 	ByteArray<VALUE_SIZE>	value;
 	
 	bool					leader;			// multi paxos
@@ -35,9 +35,9 @@ public:
 class PaxosAcceptorState
 {
 public:
-	ulong64					promisedProposalID;
+	uint64_t					promisedProposalID;
 	bool					accepted;	
-	ulong64					acceptedProposalID;
+	uint64_t					acceptedProposalID;
 	ByteArray<VALUE_SIZE>	acceptedValue;
 	
 	void Init()

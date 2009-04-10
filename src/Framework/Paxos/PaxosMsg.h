@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "System/Buffer.h"
-#include "System/Types.h"
+#include <stdint.h>
 
 // paxos message types:
 #define PREPARE_REQUEST				'1'
@@ -31,33 +31,33 @@
 class PaxosMsg
 {
 public:
-	ulong64					paxosID;
+	uint64_t					paxosID;
 	unsigned				nodeID;
 	char					type;
-	ulong64					proposalID;
+	uint64_t					proposalID;
 	char					subtype;
-	ulong64					acceptedProposalID;
+	uint64_t					acceptedProposalID;
 	ByteArray<VALUE_SIZE>	value;
 	
-	void					Init(ulong64 paxosID_, char type_, unsigned nodeID_);
+	void					Init(uint64_t paxosID_, char type_, unsigned nodeID_);
 		
-	bool					PrepareRequest(ulong64 paxosID_, unsigned nodeID_, ulong64 proposalID_);
-	bool					PrepareResponse(ulong64 paxosID_, unsigned nodeID_,
-								ulong64 proposalID_, char subtype_);
-	bool					PrepareResponse(ulong64 paxosID_, unsigned nodeID_, ulong64 proposalID_,
-								char subtype_, ulong64 acceptedProposalID_, ByteString value_);
+	bool					PrepareRequest(uint64_t paxosID_, unsigned nodeID_, uint64_t proposalID_);
+	bool					PrepareResponse(uint64_t paxosID_, unsigned nodeID_,
+								uint64_t proposalID_, char subtype_);
+	bool					PrepareResponse(uint64_t paxosID_, unsigned nodeID_, uint64_t proposalID_,
+								char subtype_, uint64_t acceptedProposalID_, ByteString value_);
 	
-	bool					ProposeRequest(ulong64 paxosID_, unsigned nodeID_, 
-								ulong64 proposalID_, ByteString value_);
-	bool					ProposeResponse(ulong64 paxosID_, unsigned nodeID_,
-								ulong64 proposalID_, char subtype_);
+	bool					ProposeRequest(uint64_t paxosID_, unsigned nodeID_, 
+								uint64_t proposalID_, ByteString value_);
+	bool					ProposeResponse(uint64_t paxosID_, unsigned nodeID_,
+								uint64_t proposalID_, char subtype_);
 	
-	bool					LearnChosen(ulong64 paxosID_, unsigned nodeID_,
+	bool					LearnChosen(uint64_t paxosID_, unsigned nodeID_,
 								char subtype_, ByteString value_);
-	bool					LearnChosen(ulong64 paxosID_, unsigned nodeID_,
-								char subtype_, ulong64 proposalID_);
+	bool					LearnChosen(uint64_t paxosID_, unsigned nodeID_,
+								char subtype_, uint64_t proposalID_);
 
-	bool					RequestChosen(ulong64 paxosID_, unsigned nodeID_);
+	bool					RequestChosen(uint64_t paxosID_, unsigned nodeID_);
 
 	bool					Read(ByteString& data);
 	bool					Write(ByteString& data);

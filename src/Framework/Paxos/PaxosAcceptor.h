@@ -30,7 +30,7 @@ protected:
 
 	TransportWriter**		writers;
 	ByteArray<PAXOS_BUFSIZE>wdata;
-	ulong64					paxosID;
+	uint64_t					paxosID;
 	PaxosMsg				msg;
 	unsigned				senderID;
 	PaxosAcceptorState		state;
@@ -38,7 +38,7 @@ protected:
 	Transaction				transaction;
 	MultiDatabaseOp			mdbop;
 	ByteArray<128>			bytearrays[4];
-	ulong64					writtenPaxosID;
+	uint64_t					writtenPaxosID;
 	MFunc<PaxosAcceptor>	onDBComplete;
 };
 

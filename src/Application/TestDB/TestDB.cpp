@@ -11,7 +11,7 @@ void TestDB::Init(IOProcessor*, Scheduler*, ReplicatedLog* replicatedLog_)
 	replicatedLog->SetReplicatedDB(this);
 }
 
-void TestDB::OnAppend(Transaction*, ulong64, ByteString, bool)
+void TestDB::OnAppend(Transaction*, uint64_t, ByteString, bool)
 {
 	Log_Trace();
 	

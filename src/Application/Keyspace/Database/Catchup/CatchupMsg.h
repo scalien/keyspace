@@ -14,13 +14,13 @@ public:
 	ByteArray<KEY_SIZE>	key;
 	ByteArray<VAL_SIZE>	value;
 	
-	ulong64				paxosID;
+	uint64_t				paxosID;
 	
 	void				Init(char type_);
 		
 	void				KeyValue(ByteString& key_, ByteString& value_);
 	
-	void				Commit(ulong64 paxosID);
+	void				Commit(uint64_t paxosID);
 	
 	bool				Read(ByteString data);
 	

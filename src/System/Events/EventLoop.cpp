@@ -6,7 +6,7 @@ long EventLoop::RunOnce()
 {
 	Timer** it;
 	Timer* timer;
-	ulong64 now;
+	uint64_t now;
 	
 	for (it = timers.Head(); it != NULL; it = timers.Head())
 	{

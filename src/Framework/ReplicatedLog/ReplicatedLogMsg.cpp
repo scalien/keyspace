@@ -1,7 +1,8 @@
 #include "ReplicatedLogMsg.h"
 #include <stdio.h>
+#include <inttypes.h>
 
-bool ReplicatedLogMsg::Init(unsigned nodeID_, ulong64 restartCounter_, ulong64 leaseEpoch_,
+bool ReplicatedLogMsg::Init(unsigned nodeID_, uint64_t restartCounter_, uint64_t leaseEpoch_,
 	ByteString& value_)
 {
 	nodeID = nodeID_;
@@ -19,20 +20,20 @@ bool ReplicatedLogMsg::Read(ByteString& data)
 	char		*pos;
 	
 #define CheckOverflow()		if ((pos - data.buffer) >= data.length) return false;
-#define ReadNumber(num)		(num) = strntoulong64(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadSeparator()		if (*pos != '|') return false; pos++;
 #define ValidateLength()	if ((pos - data.buffer) != data.length) return false;
 
 	pos = data.buffer;
 	CheckOverflow();
-	ReadNumber(nodeID); CheckOverflow();
+	ReadUint64_t(nodeID); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadNumber(restartCounter); CheckOverflow();
+	ReadUint64_t(restartCounter); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadNumber(leaseEpoch); CheckOverflow();
+	ReadUint64_t(leaseEpoch); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadNumber(length); CheckOverflow();
+	ReadUint64_t(length); CheckOverflow();
 	ReadSeparator();
 		
 	if (pos - data.buffer != data.length - length)
@@ -47,7 +48,7 @@ bool ReplicatedLogMsg::Write(ByteString& data)
 {
 	int required;
 	
-	required = snprintf(data.buffer, data.size, "%d|%llu|%llu|%d|%.*s",
+	required = snprintf(data.buffer, data.size, "%d|%" PRIu64 "|%" PRIu64 "|%d|%.*s",
 			nodeID, restartCounter, leaseEpoch,
 			value.length, value.length, value.buffer);
 	

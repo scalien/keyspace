@@ -2,7 +2,7 @@
 #define PLEASESTATE_H
 
 #include "System/Buffer.h"
-#include "System/Types.h"
+#include <stdint.h>
 
 class PLeaseProposerState
 {
@@ -10,11 +10,11 @@ public:
 	bool					preparing;
 	bool					proposing;
 	
-	ulong64					proposalID;
-	ulong64					highestReceivedProposalID;
+	uint64_t					proposalID;
+	uint64_t					highestReceivedProposalID;
 
 	unsigned				leaseOwner;
-	ulong64					expireTime;
+	uint64_t					expireTime;
 			
 	bool Active() { return (preparing || proposing); }
 	
@@ -32,12 +32,12 @@ public:
 class PLeaseAcceptorState
 {
 public:
-	ulong64					promisedProposalID;
+	uint64_t					promisedProposalID;
 
 	bool					accepted;
-	ulong64					acceptedProposalID;
+	uint64_t					acceptedProposalID;
 	unsigned				acceptedLeaseOwner;
-	ulong64					acceptedExpireTime;
+	uint64_t					acceptedExpireTime;
 	
 	void Init()
 	{
@@ -63,8 +63,8 @@ class PLeaseLearnerState
 public:
 	bool		learned;
 	int			leaseOwner;
-	ulong64		expireTime;
-	ulong64		leaseEpoch;
+	uint64_t		expireTime;
+	uint64_t		leaseEpoch;
 	
 	void Init()
 	{

@@ -46,7 +46,7 @@ void PLeaseAcceptor::OnPrepareRequest()
 {
 	Log_Trace();
 	
-	Log_Message("msg.paxosID: %llu, my.paxosID: %llu", msg.paxosID, ReplicatedLog::Get()->GetPaxosID());
+	Log_Message("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "", msg.paxosID, ReplicatedLog::Get()->GetPaxosID());
 	
 	if (msg.paxosID < ReplicatedLog::Get()->GetPaxosID())
 		return; // only up-to-date nodes can become masters
@@ -89,7 +89,7 @@ void PLeaseAcceptor::OnProposeRequest()
 
 	if (msg.expireTime < Now())
 	{
-		Log_Message("Expired propose request received (msg.expireTime = %llu | Now = %llu)",
+		Log_Message("Expired propose request received (msg.expireTime = %" PRIu64 " | Now = %" PRIu64 ")",
 			msg.expireTime, Now());
 		return;
 	}

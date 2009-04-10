@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "System/Buffer.h"
-#include "System/Types.h"
+#include <stdint.h>
 
 // PaxosLease message types:
 #define PREPARE_REQUEST				'1'
@@ -27,26 +27,26 @@ class PLeaseMsg
 public:
 	char			type;
 	unsigned		nodeID;
-	ulong64			proposalID;
+	uint64_t			proposalID;
 	char			response;
 	
-	ulong64			acceptedProposalID;
+	uint64_t			acceptedProposalID;
 	unsigned int	leaseOwner;
-	ulong64			expireTime;
-	ulong64			paxosID; // so only up-to-date nodes can become masters
+	uint64_t			expireTime;
+	uint64_t			paxosID; // so only up-to-date nodes can become masters
 	
 	void			Init(char type_, unsigned nodeID_);
 		
-	bool			PrepareRequest(unsigned nodeID_, ulong64 proposalID_, ulong64 paxosID_);
-	bool			PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_);
-	bool			PrepareResponse(unsigned nodeID_, ulong64 proposalID_, char response_,
-						ulong64 acceptedProposalID_, unsigned leaseOwner_, ulong64 expireTime_);
+	bool			PrepareRequest(unsigned nodeID_, uint64_t proposalID_, uint64_t paxosID_);
+	bool			PrepareResponse(unsigned nodeID_, uint64_t proposalID_, char response_);
+	bool			PrepareResponse(unsigned nodeID_, uint64_t proposalID_, char response_,
+						uint64_t acceptedProposalID_, unsigned leaseOwner_, uint64_t expireTime_);
 	
-	bool			ProposeRequest(unsigned nodeID_, ulong64 proposalID_,
-						unsigned leaseOwner_, ulong64 expireTime_);
-	bool			ProposeResponse(unsigned nodeID_, ulong64 proposalID_, char response_);
+	bool			ProposeRequest(unsigned nodeID_, uint64_t proposalID_,
+						unsigned leaseOwner_, uint64_t expireTime_);
+	bool			ProposeResponse(unsigned nodeID_, uint64_t proposalID_, char response_);
 	
-	bool			LearnChosen(unsigned nodeID, unsigned leaseOwner_, ulong64 expireTime_);
+	bool			LearnChosen(unsigned nodeID, unsigned leaseOwner_, uint64_t expireTime_);
 	
 	bool			Read(ByteString& data);
 	bool			Write(ByteString& data);
