@@ -23,9 +23,11 @@ inline int max(int a, int b)
 	if (a > b) return a; else return b;
 }
 
-long strntol(char* buffer, int size, int* nread);
+//long strntol(char* buffer, int size, int* nread);
 
-ulong64 strntoulong64(char* buffer, int size, int* nread);
+long64 strntolong64(char* buffer, int length, int* nread);
+
+ulong64 strntoulong64(char* buffer, int length, int* nread);
 
 char* rprintf(const char* format, ...);
 

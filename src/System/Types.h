@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-//#define ulong64 unsigned long long
-#define ulong64 uint64_t
+#define ulong64		uint64_t
+#define long64		uint64_t
 
 #endif

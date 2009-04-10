@@ -4,15 +4,16 @@
 #include <string>
 #include <stdlib.h>
 
-long strntol(char* buffer, int size, int* nread)
+long64 strntolong64(char* buffer, int length, int* nread)
 {
-	bool neg;
-	long n, i, digit;
-	char c;
+	bool	neg;
+	long	i, digit;
+	long64	n;
+	char	c;
 	
 #define ADVANCE()	i++; c = buffer[i];
 
-	if (buffer == NULL || size < 1)
+	if (buffer == NULL || length < 1)
 	{
 		*nread = 0;
 		return 0;
@@ -30,7 +31,7 @@ long strntol(char* buffer, int size, int* nread)
 	else
 		neg = false;
 	
-	while(c >= '0' && c <= '9' && i < size)
+	while(c >= '0' && c <= '9' && i < length)
 	{
 		digit = c - '0';
 		n = n * 10 + digit;
@@ -55,9 +56,9 @@ long strntol(char* buffer, int size, int* nread)
 
 ulong64 strntoulong64(char* buffer, int length, int* nread)
 {
-	long i, digit;
-	ulong64 n;
-	char c;
+	long	i, digit;
+	ulong64	n;
+	char	c;
 
 #define ADVANCE()	i++; c = buffer[i];	
 

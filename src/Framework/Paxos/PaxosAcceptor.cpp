@@ -85,7 +85,7 @@ bool PaxosAcceptor::ReadState()
 		return false;
 	}
 	
-	state.accepted = strntol(bytearrays[1].buffer, bytearrays[1].length, &nread);
+	state.accepted = strntolong64(bytearrays[1].buffer, bytearrays[1].length, &nread);
 	if (nread != bytearrays[1].length)
 	{
 		Log_Trace();
