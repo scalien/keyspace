@@ -374,16 +374,19 @@ void KeyspaceClientResp::Ok(ByteString value_)
 void KeyspaceClientResp::NotFound()
 {
 	type = KEYSPACECLIENT_NOTFOUND;
+	value.length = 0;
 }
 
 void KeyspaceClientResp::Failed()
 {
 	type = KEYSPACECLIENT_FAILED;
+	value.length = 0;
 }
 
 void KeyspaceClientResp::ListEnd()
 {
 	type = KEYSPACECLIENT_LISTEND;
+	value.length = 0;
 }
 
 bool KeyspaceClientResp::Write(ByteString& data)
