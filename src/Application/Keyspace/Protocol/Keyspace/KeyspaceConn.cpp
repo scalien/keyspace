@@ -57,6 +57,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		ASSERT_FAIL();
 	
 	resp.Write(data);
+	Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
 	Write(data);
 	
 	if (final)
@@ -122,7 +123,7 @@ void KeyspaceConn::Write(ByteString &bs)
 	
 	prefix.length = snprintf(prefix.buffer, prefix.size, "%d:", bs.length);
 
-	TCPConn<>::Write(prefix.buffer, prefix.length);
+	TCPConn<>::Write(prefix.buffer, prefix.length, false);
 	TCPConn<>::Write(bs.buffer, bs.length);
 }
 
