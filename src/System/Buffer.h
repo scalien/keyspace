@@ -128,6 +128,27 @@ public:
 	
 	bool Allocate(int size_)
 	{
+		if (buffer != NULL)
+			ASSERT_FAIL();
+			
+		buffer = (char*) Alloc(size_);
+		if (buffer == NULL)
+			return false;
+		size = size_;
+		length = 0;
+		return true;
+	}
+
+	bool Reallocate(int size_)
+	{
+		if (size_ <= size)
+		{
+			length = 0;
+			return true;
+		}
+		
+		free(buffer);
+		
 		buffer = (char*) Alloc(size_);
 		if (buffer == NULL)
 			return false;

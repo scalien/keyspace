@@ -25,8 +25,8 @@ private:
 	Transaction			transaction;
 	CatchupMsg			msg;
 	uint64_t				paxosID;
-	ByteArray<KEY_SIZE>	key;
-	ByteArray<VAL_SIZE>	value;
+	ByteArray<KEYSPACE_KEY_SIZE>	key;
+	ByteArray<KEYSPACE_VAL_SIZE>	value;
 };
 
 #endif

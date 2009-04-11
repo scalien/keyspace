@@ -227,7 +227,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 			if (!transaction->IsActive())
 				transaction = NULL;
 		
-		op->value.Allocate(VAL_SIZE);
+		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		ret = table->Get(transaction, op->key, op->value);
 
 		op->client->OnComplete(op, ret);

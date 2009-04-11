@@ -15,25 +15,25 @@ class KeyspaceOp;
 class KeyspaceMsg
 {
 public:
-	char					type;
-	ByteArray<KEY_SIZE>		key;
-	ByteArray<VAL_SIZE>		value;
-	ByteArray<VAL_SIZE>		test;
-	int64_t					addNum;
+	char							type;
+	ByteArray<KEYSPACE_KEY_SIZE>	key;
+	ByteArray<KEYSPACE_VAL_SIZE>	value;
+	ByteArray<KEYSPACE_VAL_SIZE>	test;
+	int64_t							addNum;
 	
 	
-	void					Init(char type_);
+	void							Init(char type_);
 	
-	void					Get(ByteString key_);
-	void					Set(ByteString key_, ByteString value_);
-	void					TestAndSet(ByteString key_, ByteString test_, ByteString value_);
-	void					Add(ByteString key_, int64_t addNum_);
-	void					Delete(ByteString key_);
+	void							Get(ByteString key_);
+	void							Set(ByteString key_, ByteString value_);
+	void							TestAndSet(ByteString key_, ByteString test_, ByteString value_);
+	void							Add(ByteString key_, int64_t addNum_);
+	void							Delete(ByteString key_);
 
-	bool					Read(ByteString& data, unsigned &nread);
-	bool					Write(ByteString& data);
+	bool							Read(ByteString& data, unsigned &nread);
+	bool							Write(ByteString& data);
 
-	bool					BuildFrom(KeyspaceOp* op);
+	bool							BuildFrom(KeyspaceOp* op);
 };
 
 #endif

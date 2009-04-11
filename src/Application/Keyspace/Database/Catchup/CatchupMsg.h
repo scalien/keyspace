@@ -11,20 +11,20 @@ class CatchupMsg
 {
 public:
 	char type;
-	ByteArray<KEY_SIZE>	key;
-	ByteArray<VAL_SIZE>	value;
+	ByteArray<KEYSPACE_KEY_SIZE>	key;
+	ByteArray<KEYSPACE_VAL_SIZE>	value;
 	
-	uint64_t				paxosID;
+	uint64_t						paxosID;
 	
-	void				Init(char type_);
+	void							Init(char type_);
 		
-	void				KeyValue(ByteString& key_, ByteString& value_);
+	void							KeyValue(ByteString& key_, ByteString& value_);
 	
-	void				Commit(uint64_t paxosID);
+	void							Commit(uint64_t paxosID);
 	
-	bool				Read(ByteString data);
+	bool							Read(ByteString data);
 	
-	bool				Write(ByteString& data);
+	bool							Write(ByteString& data);
 };
 
 #endif
