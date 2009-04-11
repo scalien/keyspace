@@ -11,6 +11,7 @@
 			5421D1350F5758A6004BBDB4 /* MemcacheConn.cpp:218 */,
 			5421EC110F6DA581004BBDB4 /* Socket.cpp:162 */,
 			545C751E0F87D3C1006540BC /* CatchupClient.cpp:136 */,
+			5449D7840F9104EB00F95C2F /* KeyspaceConn.cpp:80 */,
 		);
 		codeSenseManager = 548146F80F31B6A900F3D2B6 /* Code sense */;
 		executables = (
@@ -424,6 +425,198 @@
 			5449D61F0F90EA5F00F95C2F /* PBXTextBookmark */ = 5449D61F0F90EA5F00F95C2F /* PBXTextBookmark */;
 			5449D6200F90EA5F00F95C2F /* PBXTextBookmark */ = 5449D6200F90EA5F00F95C2F /* PBXTextBookmark */;
 			5449D6210F90EA5F00F95C2F /* PBXTextBookmark */ = 5449D6210F90EA5F00F95C2F /* PBXTextBookmark */;
+			5449D6220F90ED5800F95C2F /* PBXTextBookmark */ = 5449D6220F90ED5800F95C2F /* PBXTextBookmark */;
+			5449D6290F90EF4100F95C2F /* PBXTextBookmark */ = 5449D6290F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D62A0F90EF4100F95C2F /* PBXTextBookmark */ = 5449D62A0F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D62B0F90EF4100F95C2F /* PBXTextBookmark */ = 5449D62B0F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D62C0F90EF4100F95C2F /* PBXTextBookmark */ = 5449D62C0F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D62D0F90EF4100F95C2F /* PBXTextBookmark */ = 5449D62D0F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D62E0F90EF4100F95C2F /* PBXTextBookmark */ = 5449D62E0F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D62F0F90EF4100F95C2F /* PBXTextBookmark */ = 5449D62F0F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D6300F90EF4100F95C2F /* PBXTextBookmark */ = 5449D6300F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D6310F90EF4100F95C2F /* PBXTextBookmark */ = 5449D6310F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D6320F90EF4100F95C2F /* PBXTextBookmark */ = 5449D6320F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D6330F90EF4100F95C2F /* PBXTextBookmark */ = 5449D6330F90EF4100F95C2F /* PBXTextBookmark */;
+			5449D63A0F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D63A0F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D63B0F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D63B0F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D63C0F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D63C0F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D63D0F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D63D0F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D63E0F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D63E0F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D63F0F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D63F0F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D6400F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D6400F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D6410F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D6410F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D6420F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D6420F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D6430F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D6430F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D6440F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D6440F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D6450F90EFBC00F95C2F /* PBXTextBookmark */ = 5449D6450F90EFBC00F95C2F /* PBXTextBookmark */;
+			5449D6540F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6540F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6550F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6550F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6560F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6560F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6570F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6570F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6580F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6580F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6590F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6590F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D65A0F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D65A0F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D65B0F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D65B0F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D65C0F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D65C0F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D65D0F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D65D0F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D65E0F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D65E0F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D65F0F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D65F0F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6600F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6600F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6610F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6610F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6620F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6620F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6630F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6630F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6640F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6640F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6650F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6650F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6660F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6660F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D6670F90F0FF00F95C2F /* PBXTextBookmark */ = 5449D6670F90F0FF00F95C2F /* PBXTextBookmark */;
+			5449D66C0F90F15900F95C2F /* PBXTextBookmark */ = 5449D66C0F90F15900F95C2F /* PBXTextBookmark */;
+			5449D66D0F90F15900F95C2F /* PBXTextBookmark */ = 5449D66D0F90F15900F95C2F /* PBXTextBookmark */;
+			5449D66E0F90F15900F95C2F /* PBXTextBookmark */ = 5449D66E0F90F15900F95C2F /* PBXTextBookmark */;
+			5449D66F0F90F15900F95C2F /* PBXTextBookmark */ = 5449D66F0F90F15900F95C2F /* PBXTextBookmark */;
+			5449D6700F90F15900F95C2F /* PBXTextBookmark */ = 5449D6700F90F15900F95C2F /* PBXTextBookmark */;
+			5449D69A0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D69A0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D69B0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D69B0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D69C0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D69C0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D69D0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D69D0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D69E0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D69E0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D69F0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D69F0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A00F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A00F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A10F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A10F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A20F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A20F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A30F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A30F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A40F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A40F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A50F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A50F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A60F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A60F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A70F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A70F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A80F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A80F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6A90F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6A90F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6AA0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6AA0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6AB0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6AB0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6AC0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6AC0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6AD0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6AD0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6AE0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6AE0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6AF0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6AF0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B00F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B00F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B10F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B10F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B20F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B20F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B30F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B30F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B40F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B40F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B50F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B50F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B60F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B60F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B70F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B70F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B80F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B80F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6B90F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6B90F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6BA0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6BA0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6BB0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6BB0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6BC0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6BC0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6BD0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6BD0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6BE0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6BE0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6BF0F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6BF0F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6C00F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6C00F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6C10F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6C10F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6C20F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6C20F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6C30F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6C30F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6C40F90F6E300F95C2F /* PBXTextBookmark */ = 5449D6C40F90F6E300F95C2F /* PBXTextBookmark */;
+			5449D6E60F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6E60F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6E70F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6E70F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6E80F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6E80F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6E90F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6E90F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6EA0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6EA0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6EB0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6EB0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6EC0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6EC0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6ED0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6ED0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6EE0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6EE0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6EF0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6EF0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F00F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F00F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F10F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F10F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F20F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F20F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F30F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F30F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F40F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F40F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F50F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F50F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F60F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F60F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F70F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F70F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F80F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F80F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6F90F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6F90F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6FA0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6FA0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6FB0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6FB0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6FC0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6FC0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6FD0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6FD0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6FE0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6FE0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D6FF0F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D6FF0F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D7000F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D7000F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D7010F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D7010F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D7020F90F9EA00F95C2F /* PBXTextBookmark */ = 5449D7020F90F9EA00F95C2F /* PBXTextBookmark */;
+			5449D7030F90FA2B00F95C2F /* PBXTextBookmark */ = 5449D7030F90FA2B00F95C2F /* PBXTextBookmark */;
+			5449D7150F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7150F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7160F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7160F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7170F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7170F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7180F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7180F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7190F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7190F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D71A0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D71A0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D71B0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D71B0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D71C0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D71C0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D71D0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D71D0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D71E0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D71E0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D71F0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D71F0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7200F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7200F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7210F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7210F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7220F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7220F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7230F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7230F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7240F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7240F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7250F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7250F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7260F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7260F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7270F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7270F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7280F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7280F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D7290F90FE3300F95C2F /* PBXTextBookmark */ = 5449D7290F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D72A0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D72A0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D72B0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D72B0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D72C0F90FE3300F95C2F /* PBXTextBookmark */ = 5449D72C0F90FE3300F95C2F /* PBXTextBookmark */;
+			5449D74D0F91015C00F95C2F /* PBXTextBookmark */ = 5449D74D0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D74E0F91015C00F95C2F /* PBXTextBookmark */ = 5449D74E0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D74F0F91015C00F95C2F /* PBXTextBookmark */ = 5449D74F0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7500F91015C00F95C2F /* PBXTextBookmark */ = 5449D7500F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7510F91015C00F95C2F /* PBXTextBookmark */ = 5449D7510F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7520F91015C00F95C2F /* PBXTextBookmark */ = 5449D7520F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7530F91015C00F95C2F /* PBXTextBookmark */ = 5449D7530F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7540F91015C00F95C2F /* PBXTextBookmark */ = 5449D7540F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7550F91015C00F95C2F /* PBXTextBookmark */ = 5449D7550F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7560F91015C00F95C2F /* PBXTextBookmark */ = 5449D7560F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7570F91015C00F95C2F /* PBXTextBookmark */ = 5449D7570F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7580F91015C00F95C2F /* PBXTextBookmark */ = 5449D7580F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7590F91015C00F95C2F /* PBXTextBookmark */ = 5449D7590F91015C00F95C2F /* PBXTextBookmark */;
+			5449D75A0F91015C00F95C2F /* PBXTextBookmark */ = 5449D75A0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D75B0F91015C00F95C2F /* PBXTextBookmark */ = 5449D75B0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D75C0F91015C00F95C2F /* PBXTextBookmark */ = 5449D75C0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D75D0F91015C00F95C2F /* PBXTextBookmark */ = 5449D75D0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D75E0F91015C00F95C2F /* PBXTextBookmark */ = 5449D75E0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D75F0F91015C00F95C2F /* PBXTextBookmark */ = 5449D75F0F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7600F91015C00F95C2F /* PBXTextBookmark */ = 5449D7600F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7610F91015C00F95C2F /* PBXTextBookmark */ = 5449D7610F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7620F91015C00F95C2F /* PBXTextBookmark */ = 5449D7620F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7630F91015C00F95C2F /* PBXTextBookmark */ = 5449D7630F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7640F91015C00F95C2F /* PBXTextBookmark */ = 5449D7640F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7650F91015C00F95C2F /* PBXTextBookmark */ = 5449D7650F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7660F91015C00F95C2F /* PBXTextBookmark */ = 5449D7660F91015C00F95C2F /* PBXTextBookmark */;
+			5449D7670F91015C00F95C2F /* PBXTextBookmark */ = 5449D7670F91015C00F95C2F /* PBXTextBookmark */;
+			5449D76A0F9101A500F95C2F /* PBXTextBookmark */ = 5449D76A0F9101A500F95C2F /* PBXTextBookmark */;
+			5449D76B0F9101A500F95C2F /* PBXTextBookmark */ = 5449D76B0F9101A500F95C2F /* PBXTextBookmark */;
+			5449D76C0F9101A500F95C2F /* PBXTextBookmark */ = 5449D76C0F9101A500F95C2F /* PBXTextBookmark */;
+			5449D76D0F9101A500F95C2F /* PBXTextBookmark */ = 5449D76D0F9101A500F95C2F /* PBXTextBookmark */;
+			5449D76E0F9101A500F95C2F /* PBXTextBookmark */ = 5449D76E0F9101A500F95C2F /* PBXTextBookmark */;
+			5449D7780F91039400F95C2F /* PBXTextBookmark */ = 5449D7780F91039400F95C2F /* PBXTextBookmark */;
+			5449D7790F91039400F95C2F /* PBXTextBookmark */ = 5449D7790F91039400F95C2F /* PBXTextBookmark */;
+			5449D77A0F91039400F95C2F /* PBXTextBookmark */ = 5449D77A0F91039400F95C2F /* PBXTextBookmark */;
+			5449D77B0F91039400F95C2F /* PBXTextBookmark */ = 5449D77B0F91039400F95C2F /* PBXTextBookmark */;
+			5449D77C0F91039400F95C2F /* PBXTextBookmark */ = 5449D77C0F91039400F95C2F /* PBXTextBookmark */;
+			5449D77D0F91039400F95C2F /* PBXTextBookmark */ = 5449D77D0F91039400F95C2F /* PBXTextBookmark */;
+			5449D77E0F91039400F95C2F /* PBXTextBookmark */ = 5449D77E0F91039400F95C2F /* PBXTextBookmark */;
+			5449D7850F9104EE00F95C2F /* PBXTextBookmark */ = 5449D7850F9104EE00F95C2F /* PBXTextBookmark */;
+			5449D7860F9104EE00F95C2F /* PBXTextBookmark */ = 5449D7860F9104EE00F95C2F /* PBXTextBookmark */;
+			5449D7870F9104EE00F95C2F /* PBXTextBookmark */ = 5449D7870F9104EE00F95C2F /* PBXTextBookmark */;
+			5449D7880F9104EE00F95C2F /* PBXTextBookmark */ = 5449D7880F9104EE00F95C2F /* PBXTextBookmark */;
+			5449D7890F9104EE00F95C2F /* PBXTextBookmark */ = 5449D7890F9104EE00F95C2F /* PBXTextBookmark */;
+			5449D78A0F9104EE00F95C2F /* PBXTextBookmark */ = 5449D78A0F9104EE00F95C2F /* PBXTextBookmark */;
+			5449D78B0F9104EE00F95C2F /* PBXTextBookmark */ = 5449D78B0F9104EE00F95C2F /* PBXTextBookmark */;
 			545C76460F8BA984006540BC = 545C76460F8BA984006540BC /* PBXTextBookmark */;
 			545C76480F8BA984006540BC = 545C76480F8BA984006540BC /* PBXTextBookmark */;
 			545C76490F8BA984006540BC = 545C76490F8BA984006540BC /* PBXTextBookmark */;
@@ -565,9 +758,9 @@
 	};
 	5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 6885}}";
-			sepNavSelRange = "{4821, 0}";
-			sepNavVisRange = "{3508, 1733}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 7157}}";
+			sepNavSelRange = "{5498, 0}";
+			sepNavVisRange = "{4345, 1544}";
 		};
 	};
 	5421D1350F5758A6004BBDB4 /* MemcacheConn.cpp:218 */ = {
@@ -584,7 +777,7 @@
 		ignoreCount = 0;
 		lineNumber = 218;
 		location = Keyspace;
-		modificationTime = 261146053.981081;
+		modificationTime = 261162222.165676;
 		state = 1;
 	};
 	5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */ = {
@@ -766,8 +959,8 @@
 	};
 	5421DCC10F648B86004BBDB4 /* HttpConn.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 8330}}";
-			sepNavSelRange = "{660, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 8313}}";
+			sepNavSelRange = "{871, 0}";
 			sepNavVisRange = "{0, 1281}";
 		};
 	};
@@ -944,7 +1137,7 @@
 		ignoreCount = 0;
 		lineNumber = 162;
 		location = Keyspace;
-		modificationTime = 261146053.981092;
+		modificationTime = 261162222.16569;
 		state = 1;
 	};
 	54460CD30F5198E800EFBBDE /* AsyncDBTest */ = {
@@ -1013,7 +1206,7 @@
 	5446122C0F53488D00EFBBDE /* KeyspaceDB.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {883, 1050}}";
-			sepNavSelRange = "{606, 0}";
+			sepNavSelRange = "{651, 0}";
 			sepNavVisRange = "{0, 1355}";
 			sepNavWindowFrame = "{{266, 0}, {881, 1178}}";
 		};
@@ -1091,7 +1284,7 @@
 		comments = "error: 'Num' was not declared in this scope";
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		rLen = 1;
-		rLoc = 246;
+		rLoc = 262;
 		rType = 1;
 	};
 	5449D40C0F90B4BB00F95C2F /* PBXTextBookmark */ = {
@@ -1129,7 +1322,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 43";
 		rLen = 0;
-		rLoc = 542;
+		rLoc = 570;
 		rType = 0;
 		vrLen = 629;
 		vrLoc = 265;
@@ -1149,7 +1342,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 269";
 		rLen = 0;
-		rLoc = 5505;
+		rLoc = 5765;
 		rType = 0;
 		vrLen = 1035;
 		vrLoc = 7028;
@@ -1209,7 +1402,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 23";
 		rLen = 0;
-		rLoc = 559;
+		rLoc = 615;
 		rType = 0;
 		vrLen = 1065;
 		vrLoc = 0;
@@ -1229,7 +1422,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 23";
 		rLen = 0;
-		rLoc = 579;
+		rLoc = 635;
 		rType = 0;
 		vrLen = 1036;
 		vrLoc = 0;
@@ -1239,7 +1432,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 43";
 		rLen = 0;
-		rLoc = 542;
+		rLoc = 570;
 		rType = 0;
 		vrLen = 764;
 		vrLoc = 51;
@@ -1249,7 +1442,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 3";
 		rLen = 0;
-		rLoc = 7432;
+		rLoc = 8942;
 		rType = 0;
 		vrLen = 32;
 		vrLoc = 0;
@@ -1259,7 +1452,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 35";
 		rLen = 0;
-		rLoc = 927;
+		rLoc = 1007;
 		rType = 0;
 		vrLen = 1038;
 		vrLoc = 0;
@@ -1279,7 +1472,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 13";
 		rLen = 0;
-		rLoc = 295;
+		rLoc = 441;
 		rType = 0;
 		vrLen = 1399;
 		vrLoc = 0;
@@ -1369,7 +1562,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 43";
 		rLen = 0;
-		rLoc = 542;
+		rLoc = 570;
 		rType = 0;
 		vrLen = 629;
 		vrLoc = 265;
@@ -1389,7 +1582,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 269";
 		rLen = 0;
-		rLoc = 5505;
+		rLoc = 5765;
 		rType = 0;
 		vrLen = 1035;
 		vrLoc = 7028;
@@ -1419,7 +1612,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 35";
 		rLen = 0;
-		rLoc = 927;
+		rLoc = 1007;
 		rType = 0;
 		vrLen = 1038;
 		vrLoc = 0;
@@ -1429,7 +1622,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 16";
 		rLen = 0;
-		rLoc = 267;
+		rLoc = 413;
 		rType = 0;
 		vrLen = 1246;
 		vrLoc = 0;
@@ -1449,7 +1642,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 9";
 		rLen = 0;
-		rLoc = 153;
+		rLoc = 299;
 		rType = 0;
 		vrLen = 1108;
 		vrLoc = 0;
@@ -1459,7 +1652,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 35";
 		rLen = 0;
-		rLoc = 927;
+		rLoc = 1007;
 		rType = 0;
 		vrLen = 1038;
 		vrLoc = 0;
@@ -1489,7 +1682,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 9";
 		rLen = 0;
-		rLoc = 153;
+		rLoc = 299;
 		rType = 0;
 		vrLen = 1108;
 		vrLoc = 0;
@@ -1499,7 +1692,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 36";
 		rLen = 0;
-		rLoc = 972;
+		rLoc = 1052;
 		rType = 0;
 		vrLen = 1038;
 		vrLoc = 0;
@@ -1509,7 +1702,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 20";
 		rLen = 0;
-		rLoc = 1027;
+		rLoc = 1173;
 		rType = 0;
 		vrLen = 1208;
 		vrLoc = 0;
@@ -1519,7 +1712,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 36";
 		rLen = 0;
-		rLoc = 972;
+		rLoc = 1052;
 		rType = 0;
 		vrLen = 1038;
 		vrLoc = 0;
@@ -1529,7 +1722,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 79";
 		rLen = 0;
-		rLoc = 2029;
+		rLoc = 2175;
 		rType = 0;
 		vrLen = 1606;
 		vrLoc = 1093;
@@ -1539,7 +1732,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 14";
 		rLen = 0;
-		rLoc = 389;
+		rLoc = 426;
 		rType = 0;
 		vrLen = 1034;
 		vrLoc = 0;
@@ -1549,7 +1742,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 3";
 		rLen = 0;
-		rLoc = 71;
+		rLoc = 129;
 		rType = 0;
 		vrLen = 1674;
 		vrLoc = 1496;
@@ -1559,7 +1752,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 31";
 		rLen = 0;
-		rLoc = 735;
+		rLoc = 815;
 		rType = 0;
 		vrLen = 1034;
 		vrLoc = 0;
@@ -1569,7 +1762,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 33";
 		rLen = 0;
-		rLoc = 533;
+		rLoc = 679;
 		rType = 0;
 		vrLen = 1180;
 		vrLoc = 0;
@@ -1579,7 +1772,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 32";
 		rLen = 0;
-		rLoc = 776;
+		rLoc = 856;
 		rType = 0;
 		vrLen = 1074;
 		vrLoc = 0;
@@ -1589,7 +1782,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 34";
 		rLen = 0;
-		rLoc = 598;
+		rLoc = 744;
 		rType = 0;
 		vrLen = 1197;
 		vrLoc = 0;
@@ -1599,7 +1792,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 32";
 		rLen = 0;
-		rLoc = 776;
+		rLoc = 856;
 		rType = 0;
 		vrLen = 1074;
 		vrLoc = 0;
@@ -1609,7 +1802,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 42";
 		rLen = 0;
-		rLoc = 738;
+		rLoc = 884;
 		rType = 0;
 		vrLen = 1106;
 		vrLoc = 0;
@@ -1619,7 +1812,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 24";
 		rLen = 0;
-		rLoc = 579;
+		rLoc = 635;
 		rType = 0;
 		vrLen = 1094;
 		vrLoc = 0;
@@ -1629,7 +1822,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 52";
 		rLen = 0;
-		rLoc = 933;
+		rLoc = 1079;
 		rType = 0;
 		vrLen = 1156;
 		vrLoc = 131;
@@ -1649,7 +1842,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 249";
 		rLen = 0;
-		rLoc = 6336;
+		rLoc = 6776;
 		rType = 0;
 		vrLen = 1589;
 		vrLoc = 1453;
@@ -1659,7 +1852,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 23";
 		rLen = 0;
-		rLoc = 542;
+		rLoc = 598;
 		rType = 0;
 		vrLen = 1048;
 		vrLoc = 0;
@@ -1669,7 +1862,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 105";
 		rLen = 0;
-		rLoc = 2011;
+		rLoc = 2157;
 		rType = 0;
 		vrLen = 1582;
 		vrLoc = 1546;
@@ -1679,7 +1872,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 34";
 		rLen = 0;
-		rLoc = 964;
+		rLoc = 1044;
 		rType = 0;
 		vrLen = 1045;
 		vrLoc = 0;
@@ -1689,7 +1882,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 251";
 		rLen = 0;
-		rLoc = 6464;
+		rLoc = 6904;
 		rType = 0;
 		vrLen = 1821;
 		vrLoc = 4945;
@@ -1699,7 +1892,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 23";
 		rLen = 0;
-		rLoc = 555;
+		rLoc = 611;
 		rType = 0;
 		vrLen = 1045;
 		vrLoc = 0;
@@ -1709,7 +1902,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 262";
 		rLen = 6;
-		rLoc = 7017;
+		rLoc = 7457;
 		rType = 0;
 		vrLen = 1128;
 		vrLoc = 0;
@@ -1719,7 +1912,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 24";
 		rLen = 0;
-		rLoc = 579;
+		rLoc = 635;
 		rType = 0;
 		vrLen = 1065;
 		vrLoc = 0;
@@ -1729,7 +1922,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 154";
 		rLen = 0;
-		rLoc = 3574;
+		rLoc = 3877;
 		rType = 0;
 		vrLen = 1769;
 		vrLoc = 2121;
@@ -1739,7 +1932,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 23";
 		rLen = 0;
-		rLoc = 559;
+		rLoc = 615;
 		rType = 0;
 		vrLen = 1065;
 		vrLoc = 0;
@@ -1749,7 +1942,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 243";
 		rLen = 0;
-		rLoc = 5718;
+		rLoc = 6021;
 		rType = 0;
 		vrLen = 1132;
 		vrLoc = 0;
@@ -1771,15 +1964,15 @@
 	5449D4590F90B66000F95C2F /* KeyspaceConn.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {883, 1050}}";
-			sepNavSelRange = "{776, 0}";
-			sepNavVisRange = "{0, 788}";
+			sepNavSelRange = "{845, 0}";
+			sepNavVisRange = "{0, 914}";
 		};
 	};
 	5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 1768}}";
-			sepNavSelRange = "{1588, 0}";
-			sepNavVisRange = "{557, 1175}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 2958}}";
+			sepNavSelRange = "{580, 0}";
+			sepNavVisRange = "{1356, 1214}";
 		};
 	};
 	5449D48F0F90B7F100F95C2F /* PBXTextBookmark */ = {
@@ -1787,7 +1980,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 35";
 		rLen = 0;
-		rLoc = 601;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 1132;
 		vrLoc = 0;
@@ -1887,7 +2080,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 27";
 		rLen = 0;
-		rLoc = 780;
+		rLoc = 906;
 		rType = 0;
 		vrLen = 619;
 		vrLoc = 0;
@@ -1907,7 +2100,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 19";
 		rLen = 0;
-		rLoc = 1506;
+		rLoc = 2494;
 		rType = 0;
 		vrLen = 322;
 		vrLoc = 0;
@@ -1917,7 +2110,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 35";
 		rLen = 0;
-		rLoc = 601;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 1132;
 		vrLoc = 0;
@@ -2007,7 +2200,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 10";
 		rLen = 0;
-		rLoc = 788;
+		rLoc = 914;
 		rType = 0;
 		vrLen = 149;
 		vrLoc = 0;
@@ -2107,7 +2300,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 4";
 		rLen = 0;
-		rLoc = 779;
+		rLoc = 887;
 		rType = 0;
 		vrLen = 55;
 		vrLoc = 0;
@@ -2127,7 +2320,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 20";
 		rLen = 0;
-		rLoc = 776;
+		rLoc = 884;
 		rType = 0;
 		vrLen = 422;
 		vrLoc = 0;
@@ -2147,7 +2340,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 29";
 		rLen = 0;
-		rLoc = 788;
+		rLoc = 914;
 		rType = 0;
 		vrLen = 619;
 		vrLoc = 0;
@@ -2177,7 +2370,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 29";
 		rLen = 0;
-		rLoc = 788;
+		rLoc = 914;
 		rType = 0;
 		vrLen = 619;
 		vrLoc = 0;
@@ -2237,7 +2430,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 27";
 		rLen = 0;
-		rLoc = 780;
+		rLoc = 906;
 		rType = 0;
 		vrLen = 619;
 		vrLoc = 0;
@@ -2267,7 +2460,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 9";
 		rLen = 0;
-		rLoc = 156;
+		rLoc = 547;
 		rType = 0;
 		vrLen = 219;
 		vrLoc = 0;
@@ -2287,7 +2480,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 27";
 		rLen = 0;
-		rLoc = 780;
+		rLoc = 906;
 		rType = 0;
 		vrLen = 619;
 		vrLoc = 0;
@@ -2317,7 +2510,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 19";
 		rLen = 0;
-		rLoc = 1506;
+		rLoc = 2494;
 		rType = 0;
 		vrLen = 322;
 		vrLoc = 0;
@@ -2327,7 +2520,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 27";
 		rLen = 0;
-		rLoc = 780;
+		rLoc = 906;
 		rType = 0;
 		vrLen = 619;
 		vrLoc = 0;
@@ -2337,7 +2530,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 19";
 		rLen = 0;
-		rLoc = 1506;
+		rLoc = 2494;
 		rType = 0;
 		vrLen = 322;
 		vrLoc = 0;
@@ -2347,7 +2540,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 27";
 		rLen = 0;
-		rLoc = 780;
+		rLoc = 906;
 		rType = 0;
 		vrLen = 619;
 		vrLoc = 0;
@@ -2367,7 +2560,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 26";
 		rLen = 0;
-		rLoc = 1620;
+		rLoc = 3048;
 		rType = 0;
 		vrLen = 398;
 		vrLoc = 0;
@@ -2387,7 +2580,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 262";
 		rLen = 0;
-		rLoc = 5347;
+		rLoc = 5607;
 		rType = 0;
 		vrLen = 82;
 		vrLoc = 5136;
@@ -2487,7 +2680,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 128";
 		rLen = 14;
-		rLoc = 2541;
+		rLoc = 2687;
 		rType = 0;
 		vrLen = 729;
 		vrLoc = 2232;
@@ -2574,7 +2767,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 262";
 		rLen = 0;
-		rLoc = 5347;
+		rLoc = 5607;
 		rType = 0;
 		vrLen = 82;
 		vrLoc = 5136;
@@ -2604,7 +2797,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 35";
 		rLen = 0;
-		rLoc = 601;
+		rLoc = 747;
 		rType = 0;
 		vrLen = 340;
 		vrLoc = 419;
@@ -2624,7 +2817,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 123";
 		rLen = 0;
-		rLoc = 2374;
+		rLoc = 2520;
 		rType = 0;
 		vrLen = 729;
 		vrLoc = 2232;
@@ -2714,7 +2907,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 128";
 		rLen = 14;
-		rLoc = 2541;
+		rLoc = 2687;
 		rType = 0;
 		vrLen = 729;
 		vrLoc = 2232;
@@ -2824,7 +3017,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 57";
 		rLen = 0;
-		rLoc = 747;
+		rLoc = 775;
 		rType = 0;
 		vrLen = 628;
 		vrLoc = 263;
@@ -2854,7 +3047,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 288";
 		rLen = 0;
-		rLoc = 6035;
+		rLoc = 6295;
 		rType = 0;
 		vrLen = 1546;
 		vrLoc = 4503;
@@ -2874,7 +3067,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 27";
 		rLen = 0;
-		rLoc = 1591;
+		rLoc = 3019;
 		rType = 0;
 		vrLen = 414;
 		vrLoc = 0;
@@ -2884,7 +3077,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 26";
 		rLen = 0;
-		rLoc = 1620;
+		rLoc = 3048;
 		rType = 0;
 		vrLen = 398;
 		vrLoc = 0;
@@ -2934,7 +3127,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 16";
 		rLen = 0;
-		rLoc = 285;
+		rLoc = 692;
 		rType = 0;
 		vrLen = 414;
 		vrLoc = 0;
@@ -2984,7 +3177,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 27";
 		rLen = 0;
-		rLoc = 1591;
+		rLoc = 3019;
 		rType = 0;
 		vrLen = 414;
 		vrLoc = 0;
@@ -3004,7 +3197,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 57";
 		rLen = 0;
-		rLoc = 747;
+		rLoc = 775;
 		rType = 0;
 		vrLen = 628;
 		vrLoc = 263;
@@ -3024,7 +3217,7 @@
 		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
 		name = "KeyspaceMsg.cpp: 227";
 		rLen = 0;
-		rLoc = 5631;
+		rLoc = 5575;
 		rType = 0;
 		vrLen = 1734;
 		vrLoc = 3944;
@@ -3054,7 +3247,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 288";
 		rLen = 0;
-		rLoc = 6035;
+		rLoc = 6295;
 		rType = 0;
 		vrLen = 1546;
 		vrLoc = 4503;
@@ -3074,7 +3267,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 27";
 		rLen = 0;
-		rLoc = 1591;
+		rLoc = 3019;
 		rType = 0;
 		vrLen = 414;
 		vrLoc = 0;
@@ -3154,7 +3347,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 40";
 		rLen = 0;
-		rLoc = 1048;
+		rLoc = 1128;
 		rType = 0;
 		vrLen = 1102;
 		vrLoc = 0;
@@ -3164,7 +3357,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 127";
 		rLen = 0;
-		rLoc = 2355;
+		rLoc = 2501;
 		rType = 0;
 		vrLen = 1543;
 		vrLoc = 2016;
@@ -3174,7 +3367,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 25";
 		rLen = 0;
-		rLoc = 677;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 764;
 		vrLoc = 0;
@@ -3184,7 +3377,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 51";
 		rLen = 82;
-		rLoc = 1060;
+		rLoc = 2048;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 217;
@@ -3194,7 +3387,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 19";
 		rLen = 0;
-		rLoc = 290;
+		rLoc = 697;
 		rType = 0;
 		vrLen = 414;
 		vrLoc = 0;
@@ -3224,7 +3417,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 27";
 		rLen = 6;
-		rLoc = 596;
+		rLoc = 1584;
 		rType = 0;
 		vrLen = 1143;
 		vrLoc = 233;
@@ -3244,7 +3437,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 34";
 		rLen = 0;
-		rLoc = 605;
+		rLoc = 1593;
 		rType = 0;
 		vrLen = 1157;
 		vrLoc = 219;
@@ -3274,7 +3467,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 27";
 		rLen = 46;
-		rLoc = 558;
+		rLoc = 1546;
 		rType = 0;
 		vrLen = 1187;
 		vrLoc = 167;
@@ -3294,7 +3487,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 40";
 		rLen = 0;
-		rLoc = 605;
+		rLoc = 1593;
 		rType = 0;
 		vrLen = 1307;
 		vrLoc = 167;
@@ -3304,7 +3497,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 22";
 		rLen = 0;
-		rLoc = 701;
+		rLoc = 811;
 		rType = 0;
 		vrLen = 742;
 		vrLoc = 0;
@@ -3314,7 +3507,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 48";
 		rLen = 0;
-		rLoc = 605;
+		rLoc = 1593;
 		rType = 0;
 		vrLen = 1305;
 		vrLoc = 167;
@@ -3324,7 +3517,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 22";
 		rLen = 0;
-		rLoc = 701;
+		rLoc = 811;
 		rType = 0;
 		vrLen = 742;
 		vrLoc = 0;
@@ -3334,7 +3527,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 48";
 		rLen = 0;
-		rLoc = 605;
+		rLoc = 1593;
 		rType = 0;
 		vrLen = 1305;
 		vrLoc = 167;
@@ -3364,7 +3557,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 35";
 		rLen = 0;
-		rLoc = 605;
+		rLoc = 1593;
 		rType = 0;
 		vrLen = 1307;
 		vrLoc = 167;
@@ -3384,7 +3577,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 22";
 		rLen = 0;
-		rLoc = 701;
+		rLoc = 811;
 		rType = 0;
 		vrLen = 742;
 		vrLoc = 0;
@@ -3394,7 +3587,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 65";
 		rLen = 0;
-		rLoc = 1505;
+		rLoc = 2493;
 		rType = 0;
 		vrLen = 1137;
 		vrLoc = 219;
@@ -3404,7 +3597,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 38";
 		rLen = 0;
-		rLoc = 1021;
+		rLoc = 1101;
 		rType = 0;
 		vrLen = 1120;
 		vrLoc = 0;
@@ -3414,7 +3607,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 309";
 		rLen = 0;
-		rLoc = 7319;
+		rLoc = 7667;
 		rType = 0;
 		vrLen = 1953;
 		vrLoc = 5840;
@@ -3424,7 +3617,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 51";
 		rLen = 4;
-		rLoc = 1070;
+		rLoc = 2058;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 217;
@@ -3434,7 +3627,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 38";
 		rLen = 0;
-		rLoc = 1021;
+		rLoc = 1101;
 		rType = 0;
 		vrLen = 1120;
 		vrLoc = 0;
@@ -3444,7 +3637,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 309";
 		rLen = 0;
-		rLoc = 7319;
+		rLoc = 7667;
 		rType = 0;
 		vrLen = 1953;
 		vrLoc = 5840;
@@ -3454,7 +3647,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 51";
 		rLen = 4;
-		rLoc = 1070;
+		rLoc = 2058;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 217;
@@ -3474,7 +3667,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 309";
 		rLen = 0;
-		rLoc = 7319;
+		rLoc = 7667;
 		rType = 0;
 		vrLen = 1953;
 		vrLoc = 5840;
@@ -3484,7 +3677,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 22";
 		rLen = 0;
-		rLoc = 701;
+		rLoc = 811;
 		rType = 0;
 		vrLen = 742;
 		vrLoc = 0;
@@ -3494,7 +3687,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 51";
 		rLen = 4;
-		rLoc = 1070;
+		rLoc = 2058;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 217;
@@ -3504,7 +3697,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 40";
 		rLen = 0;
-		rLoc = 1053;
+		rLoc = 1133;
 		rType = 0;
 		vrLen = 1103;
 		vrLoc = 0;
@@ -3514,7 +3707,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 173";
 		rLen = 0;
-		rLoc = 3626;
+		rLoc = 3929;
 		rType = 0;
 		vrLen = 1702;
 		vrLoc = 2232;
@@ -3564,7 +3757,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 173";
 		rLen = 0;
-		rLoc = 3626;
+		rLoc = 3929;
 		rType = 0;
 		vrLen = 1701;
 		vrLoc = 2233;
@@ -3584,7 +3777,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 173";
 		rLen = 0;
-		rLoc = 3626;
+		rLoc = 3929;
 		rType = 0;
 		vrLen = 1701;
 		vrLoc = 2233;
@@ -3604,7 +3797,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 173";
 		rLen = 0;
-		rLoc = 3626;
+		rLoc = 3929;
 		rType = 0;
 		vrLen = 1701;
 		vrLoc = 2233;
@@ -3624,7 +3817,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 183";
 		rLen = 0;
-		rLoc = 3945;
+		rLoc = 4248;
 		rType = 0;
 		vrLen = 1682;
 		vrLoc = 2659;
@@ -3644,7 +3837,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 153";
 		rLen = 0;
-		rLoc = 3176;
+		rLoc = 3322;
 		rType = 0;
 		vrLen = 1714;
 		vrLoc = 2233;
@@ -3654,7 +3847,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 51";
 		rLen = 82;
-		rLoc = 1060;
+		rLoc = 2048;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 217;
@@ -3664,7 +3857,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 40";
 		rLen = 0;
-		rLoc = 1048;
+		rLoc = 1128;
 		rType = 0;
 		vrLen = 1102;
 		vrLoc = 0;
@@ -3674,7 +3867,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 127";
 		rLen = 0;
-		rLoc = 2355;
+		rLoc = 2501;
 		rType = 0;
 		vrLen = 1543;
 		vrLoc = 2016;
@@ -3684,7 +3877,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 51";
 		rLen = 82;
-		rLoc = 1060;
+		rLoc = 2048;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 217;
@@ -3694,7 +3887,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 25";
 		rLen = 0;
-		rLoc = 677;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 764;
 		vrLoc = 0;
@@ -3704,7 +3897,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 51";
 		rLen = 82;
-		rLoc = 1060;
+		rLoc = 2048;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 217;
@@ -3714,7 +3907,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 25";
 		rLen = 0;
-		rLoc = 677;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 764;
 		vrLoc = 0;
@@ -3724,7 +3917,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 72";
 		rLen = 0;
-		rLoc = 1592;
+		rLoc = 3020;
 		rType = 0;
 		vrLen = 1157;
 		vrLoc = 235;
@@ -3734,7 +3927,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 72";
 		rLen = 0;
-		rLoc = 1592;
+		rLoc = 3020;
 		rType = 0;
 		vrLen = 1157;
 		vrLoc = 235;
@@ -3744,7 +3937,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 72";
 		rLen = 0;
-		rLoc = 1592;
+		rLoc = 3020;
 		rType = 0;
 		vrLen = 1157;
 		vrLoc = 235;
@@ -3754,7 +3947,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 59";
 		rLen = 0;
-		rLoc = 768;
+		rLoc = 796;
 		rType = 0;
 		vrLen = 628;
 		vrLoc = 297;
@@ -3764,7 +3957,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 61";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 825;
 		rType = 0;
 		vrLen = 800;
 		vrLoc = 0;
@@ -3774,7 +3967,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 241";
 		rLen = 0;
-		rLoc = 4821;
+		rLoc = 4834;
 		rType = 0;
 		vrLen = 1733;
 		vrLoc = 3508;
@@ -3784,7 +3977,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 61";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 825;
 		rType = 0;
 		vrLen = 800;
 		vrLoc = 0;
@@ -3794,7 +3987,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 241";
 		rLen = 0;
-		rLoc = 4821;
+		rLoc = 4834;
 		rType = 0;
 		vrLen = 1733;
 		vrLoc = 3508;
@@ -3874,7 +4067,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 25";
 		rLen = 0;
-		rLoc = 677;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 764;
 		vrLoc = 0;
@@ -3894,7 +4087,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 98";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 3252;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 587;
@@ -3924,7 +4117,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 54";
 		rLen = 0;
-		rLoc = 1180;
+		rLoc = 2168;
 		rType = 0;
 		vrLen = 1165;
 		vrLoc = 236;
@@ -3964,7 +4157,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 56";
 		rLen = 0;
-		rLoc = 1179;
+		rLoc = 2167;
 		rType = 0;
 		vrLen = 1105;
 		vrLoc = 340;
@@ -3984,7 +4177,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 56";
 		rLen = 0;
-		rLoc = 1179;
+		rLoc = 2167;
 		rType = 0;
 		vrLen = 1105;
 		vrLoc = 340;
@@ -4034,7 +4227,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 25";
 		rLen = 0;
-		rLoc = 677;
+		rLoc = 754;
 		rType = 0;
 		vrLen = 764;
 		vrLoc = 0;
@@ -4044,7 +4237,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 55";
 		rLen = 0;
-		rLoc = 1166;
+		rLoc = 2154;
 		rType = 0;
 		vrLen = 1105;
 		vrLoc = 340;
@@ -4064,7 +4257,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 55";
 		rLen = 0;
-		rLoc = 1166;
+		rLoc = 2154;
 		rType = 0;
 		vrLen = 1111;
 		vrLoc = 312;
@@ -4084,7 +4277,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 59";
 		rLen = 0;
-		rLoc = 1333;
+		rLoc = 2321;
 		rType = 0;
 		vrLen = 1133;
 		vrLoc = 356;
@@ -4104,7 +4297,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 24";
 		rLen = 0;
-		rLoc = 405;
+		rLoc = 1418;
 		rType = 0;
 		vrLen = 1104;
 		vrLoc = 26;
@@ -4124,7 +4317,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 98";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 3252;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 587;
@@ -4164,7 +4357,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 30";
 		rLen = 0;
-		rLoc = 776;
+		rLoc = 884;
 		rType = 0;
 		vrLen = 788;
 		vrLoc = 0;
@@ -4184,7 +4377,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 30";
 		rLen = 28;
-		rLoc = 482;
+		rLoc = 1470;
 		rType = 0;
 		vrLen = 1131;
 		vrLoc = 0;
@@ -4214,7 +4407,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 15";
 		rLen = 0;
-		rLoc = 269;
+		rLoc = 676;
 		rType = 0;
 		vrLen = 1131;
 		vrLoc = 0;
@@ -4234,7 +4427,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 15";
 		rLen = 0;
-		rLoc = 269;
+		rLoc = 676;
 		rType = 0;
 		vrLen = 1131;
 		vrLoc = 0;
@@ -4244,7 +4437,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 30";
 		rLen = 0;
-		rLoc = 776;
+		rLoc = 884;
 		rType = 0;
 		vrLen = 778;
 		vrLoc = 0;
@@ -4254,7 +4447,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 15";
 		rLen = 0;
-		rLoc = 269;
+		rLoc = 676;
 		rType = 0;
 		vrLen = 1131;
 		vrLoc = 0;
@@ -4264,7 +4457,7 @@
 		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
 		name = "KeyspaceConn.h: 30";
 		rLen = 0;
-		rLoc = 776;
+		rLoc = 884;
 		rType = 0;
 		vrLen = 788;
 		vrLoc = 0;
@@ -4274,7 +4467,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 30";
 		rLen = 28;
-		rLoc = 482;
+		rLoc = 1470;
 		rType = 0;
 		vrLen = 1131;
 		vrLoc = 0;
@@ -4294,7 +4487,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 36";
 		rLen = 0;
-		rLoc = 556;
+		rLoc = 1544;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 640;
@@ -4304,7 +4497,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 82";
 		rLen = 0;
-		rLoc = 1588;
+		rLoc = 3016;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 640;
@@ -4314,7 +4507,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 127";
 		rLen = 0;
-		rLoc = 2355;
+		rLoc = 2501;
 		rType = 0;
 		vrLen = 1487;
 		vrLoc = 2016;
@@ -4324,7 +4517,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 61";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 825;
 		rType = 0;
 		vrLen = 631;
 		vrLoc = 294;
@@ -4334,7 +4527,7 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 82";
 		rLen = 0;
-		rLoc = 1588;
+		rLoc = 3016;
 		rType = 0;
 		vrLen = 1139;
 		vrLoc = 640;
@@ -4344,7 +4537,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 127";
 		rLen = 0;
-		rLoc = 2355;
+		rLoc = 2501;
 		rType = 0;
 		vrLen = 1487;
 		vrLoc = 2016;
@@ -4354,7 +4547,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 61";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 825;
 		rType = 0;
 		vrLen = 631;
 		vrLoc = 294;
@@ -4364,7 +4557,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 21";
 		rLen = 0;
-		rLoc = 496;
+		rLoc = 552;
 		rType = 0;
 		vrLen = 1102;
 		vrLoc = 0;
@@ -4374,7 +4567,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 21";
 		rLen = 0;
-		rLoc = 496;
+		rLoc = 552;
 		rType = 0;
 		vrLen = 1102;
 		vrLoc = 0;
@@ -4384,7 +4577,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 157";
 		rLen = 0;
-		rLoc = 3248;
+		rLoc = 3551;
 		rType = 0;
 		vrLen = 1888;
 		vrLoc = 5544;
@@ -4394,7 +4587,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 21";
 		rLen = 0;
-		rLoc = 496;
+		rLoc = 552;
 		rType = 0;
 		vrLen = 1102;
 		vrLoc = 0;
@@ -4404,7 +4597,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 157";
 		rLen = 0;
-		rLoc = 3248;
+		rLoc = 3551;
 		rType = 0;
 		vrLen = 1888;
 		vrLoc = 5544;
@@ -4414,30 +4607,1967 @@
 		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
 		name = "KeyspaceConn.cpp: 85";
 		rLen = 0;
-		rLoc = 1588;
+		rLoc = 3016;
 		rType = 0;
 		vrLen = 1175;
 		vrLoc = 557;
 	};
+	5449D6220F90ED5800F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 3016;
+		rType = 0;
+		vrLen = 1178;
+		vrLoc = 649;
+	};
+	5449D6290F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 3016;
+		rType = 0;
+		vrLen = 1178;
+		vrLoc = 649;
+	};
+	5449D62A0F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 315";
+		rLen = 0;
+		rLoc = 8942;
+		rType = 0;
+		vrLen = 2059;
+		vrLoc = 6091;
+	};
+	5449D62B0F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60570F797BA3006540BC /* KeyspaceMsg.h */;
+		name = "KeyspaceMsg.h: 36";
+		rLen = 0;
+		rLoc = 853;
+		rType = 0;
+		vrLen = 862;
+		vrLoc = 0;
+	};
+	5449D62C0F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 207";
+		rLen = 0;
+		rLoc = 5036;
+		rType = 0;
+		vrLen = 1731;
+		vrLoc = 3929;
+	};
+	5449D62D0F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 3016;
+		rType = 0;
+		vrLen = 1178;
+		vrLoc = 649;
+	};
+	5449D62E0F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 148";
+		rLen = 0;
+		rLoc = 3541;
+		rType = 0;
+		vrLen = 1485;
+		vrLoc = 2639;
+	};
+	5449D62F0F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60570F797BA3006540BC /* KeyspaceMsg.h */;
+		name = "KeyspaceMsg.h: 36";
+		rLen = 0;
+		rLoc = 853;
+		rType = 0;
+		vrLen = 862;
+		vrLoc = 0;
+	};
+	5449D6300F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 207";
+		rLen = 0;
+		rLoc = 5036;
+		rType = 0;
+		vrLen = 1731;
+		vrLoc = 3929;
+	};
+	5449D6310F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 315";
+		rLen = 0;
+		rLoc = 8942;
+		rType = 0;
+		vrLen = 2059;
+		vrLoc = 6091;
+	};
+	5449D6320F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60570F797BA3006540BC /* KeyspaceMsg.h */;
+		name = "KeyspaceMsg.h: 36";
+		rLen = 0;
+		rLoc = 853;
+		rType = 0;
+		vrLen = 862;
+		vrLoc = 0;
+	};
+	5449D6330F90EF4100F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 207";
+		rLen = 0;
+		rLoc = 5036;
+		rType = 0;
+		vrLen = 1733;
+		vrLoc = 3927;
+	};
+	5449D63A0F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 32";
+		rLen = 0;
+		rLoc = 660;
+		rType = 0;
+		vrLen = 1281;
+		vrLoc = 0;
+	};
+	5449D63B0F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 257";
+		rLen = 8;
+		rLoc = 5236;
+		rType = 0;
+		vrLen = 1745;
+		vrLoc = 3593;
+	};
+	5449D63C0F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60570F797BA3006540BC /* KeyspaceMsg.h */;
+		name = "KeyspaceMsg.h: 36";
+		rLen = 0;
+		rLoc = 853;
+		rType = 0;
+		vrLen = 862;
+		vrLoc = 0;
+	};
+	5449D63D0F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 207";
+		rLen = 0;
+		rLoc = 5037;
+		rType = 0;
+		vrLen = 1687;
+		vrLoc = 3912;
+	};
+	5449D63E0F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 3016;
+		rType = 0;
+		vrLen = 1178;
+		vrLoc = 649;
+	};
+	5449D63F0F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 204";
+		rLen = 0;
+		rLoc = 5022;
+		rType = 0;
+		vrLen = 1733;
+		vrLoc = 3927;
+	};
+	5449D6400F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 32";
+		rLen = 0;
+		rLoc = 660;
+		rType = 0;
+		vrLen = 1281;
+		vrLoc = 0;
+	};
+	5449D6410F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 257";
+		rLen = 8;
+		rLoc = 5236;
+		rType = 0;
+		vrLen = 1745;
+		vrLoc = 3593;
+	};
+	5449D6420F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60570F797BA3006540BC /* KeyspaceMsg.h */;
+		name = "KeyspaceMsg.h: 36";
+		rLen = 0;
+		rLoc = 853;
+		rType = 0;
+		vrLen = 862;
+		vrLoc = 0;
+	};
+	5449D6430F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 207";
+		rLen = 0;
+		rLoc = 5037;
+		rType = 0;
+		vrLen = 1687;
+		vrLoc = 3912;
+	};
+	5449D6440F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 3016;
+		rType = 0;
+		vrLen = 1178;
+		vrLoc = 649;
+	};
+	5449D6450F90EFBC00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 306";
+		rLen = 0;
+		rLoc = 8942;
+		rType = 0;
+		vrLen = 1876;
+		vrLoc = 5907;
+	};
+	5449D6540F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 37";
+		rLen = 0;
+		rLoc = 950;
+		rType = 0;
+		vrLen = 1163;
+		vrLoc = 0;
+	};
+	5449D6550F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */;
+		name = "KeyspaceServer.h: 6";
+		rLen = 0;
+		rLoc = 160;
+		rType = 0;
+		vrLen = 372;
+		vrLoc = 0;
+	};
+	5449D6560F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */;
+		name = "KeyspaceServer.cpp: 13";
+		rLen = 0;
+		rLoc = 313;
+		rType = 0;
+		vrLen = 353;
+		vrLoc = 0;
+	};
+	5449D6570F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 30";
+		rLen = 0;
+		rLoc = 884;
+		rType = 0;
+		vrLen = 788;
+		vrLoc = 0;
+	};
+	5449D6580F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 2831;
+		rType = 0;
+		vrLen = 1089;
+		vrLoc = 792;
+	};
+	5449D6590F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 74";
+		rLen = 0;
+		rLoc = 1577;
+		rType = 0;
+		vrLen = 1338;
+		vrLoc = 47;
+	};
+	5449D65A0F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 161";
+		rLen = 0;
+		rLoc = 3475;
+		rType = 0;
+		vrLen = 1523;
+		vrLoc = 2200;
+	};
+	5449D65B0F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 306";
+		rLen = 0;
+		rLoc = 8942;
+		rType = 0;
+		vrLen = 1876;
+		vrLoc = 5907;
+	};
+	5449D65C0F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 37";
+		rLen = 0;
+		rLoc = 950;
+		rType = 0;
+		vrLen = 1163;
+		vrLoc = 0;
+	};
+	5449D65D0F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 161";
+		rLen = 0;
+		rLoc = 3475;
+		rType = 0;
+		vrLen = 1553;
+		vrLoc = 2170;
+	};
+	5449D65E0F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 37";
+		rLen = 0;
+		rLoc = 950;
+		rType = 0;
+		vrLen = 1163;
+		vrLoc = 0;
+	};
+	5449D65F0F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 161";
+		rLen = 0;
+		rLoc = 3475;
+		rType = 0;
+		vrLen = 1523;
+		vrLoc = 2200;
+	};
+	5449D6600F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */;
+		name = "KeyspaceServer.h: 6";
+		rLen = 0;
+		rLoc = 160;
+		rType = 0;
+		vrLen = 372;
+		vrLoc = 0;
+	};
+	5449D6610F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */;
+		name = "KeyspaceServer.cpp: 13";
+		rLen = 0;
+		rLoc = 313;
+		rType = 0;
+		vrLen = 353;
+		vrLoc = 0;
+	};
+	5449D6620F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 30";
+		rLen = 0;
+		rLoc = 884;
+		rType = 0;
+		vrLen = 788;
+		vrLoc = 0;
+	};
+	5449D6630F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 2831;
+		rType = 0;
+		vrLen = 1153;
+		vrLoc = 606;
+	};
+	5449D6640F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 161";
+		rLen = 0;
+		rLoc = 3475;
+		rType = 0;
+		vrLen = 1523;
+		vrLoc = 2200;
+	};
+	5449D6650F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 86";
+		rLen = 0;
+		rLoc = 2831;
+		rType = 0;
+		vrLen = 1089;
+		vrLoc = 792;
+	};
+	5449D6660F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 74";
+		rLen = 0;
+		rLoc = 1577;
+		rType = 0;
+		vrLen = 1338;
+		vrLoc = 47;
+	};
+	5449D6670F90F0FF00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 316";
+		rLen = 0;
+		rLoc = 8942;
+		rType = 0;
+		vrLen = 1950;
+		vrLoc = 5769;
+	};
+	5449D66C0F90F15900F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */;
+		name = "KeyspaceServer.h: 6";
+		rLen = 0;
+		rLoc = 160;
+		rType = 0;
+		vrLen = 372;
+		vrLoc = 0;
+	};
+	5449D66D0F90F15900F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 316";
+		rLen = 0;
+		rLoc = 8942;
+		rType = 0;
+		vrLen = 1950;
+		vrLoc = 5769;
+	};
+	5449D66E0F90F15900F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 316";
+		rLen = 0;
+		rLoc = 8942;
+		rType = 0;
+		vrLen = 1950;
+		vrLoc = 5769;
+	};
+	5449D66F0F90F15900F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */;
+		name = "KeyspaceServer.h: 6";
+		rLen = 0;
+		rLoc = 160;
+		rType = 0;
+		vrLen = 372;
+		vrLoc = 0;
+	};
+	5449D6700F90F15900F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 321";
+		rLen = 0;
+		rLoc = 7864;
+		rType = 0;
+		vrLen = 1968;
+		vrLoc = 6131;
+	};
+	5449D69A0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 23";
+		rLen = 0;
+		rLoc = 606;
+		rType = 0;
+		vrLen = 1355;
+		vrLoc = 0;
+	};
+	5449D69B0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
+		name = "KeyspaceClient.h: 61";
+		rLen = 0;
+		rLoc = 825;
+		rType = 0;
+		vrLen = 800;
+		vrLoc = 0;
+	};
+	5449D69C0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472E0F31B6B200F3D2B6 /* Buffer.h */;
+		name = "Buffer.h: 146";
+		rLen = 0;
+		rLoc = 2139;
+		rType = 0;
+		vrLen = 738;
+		vrLoc = 1699;
+	};
+	5449D69D0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60570F797BA3006540BC /* KeyspaceMsg.h */;
+		name = "KeyspaceMsg.h: 36";
+		rLen = 0;
+		rLoc = 838;
+		rType = 0;
+		vrLen = 867;
+		vrLoc = 0;
+	};
+	5449D69E0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 360";
+		rLen = 0;
+		rLoc = 7617;
+		rType = 0;
+		vrLen = 1077;
+		vrLoc = 6683;
+	};
+	5449D69F0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 18";
+		rLen = 0;
+		rLoc = 483;
+		rType = 0;
+		vrLen = 1224;
+		vrLoc = 0;
+	};
+	5449D6A00F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 203";
+		rLen = 0;
+		rLoc = 5004;
+		rType = 0;
+		vrLen = 1663;
+		vrLoc = 3306;
+	};
+	5449D6A10F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 333";
+		rLen = 0;
+		rLoc = 8273;
+		rType = 0;
+		vrLen = 1685;
+		vrLoc = 7270;
+	};
+	5449D6A20F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9ADC98040F7BFBA50025A7AB /* Queue.h */;
+		name = "Queue.h: 21";
+		rLen = 0;
+		rLoc = 209;
+		rType = 0;
+		vrLen = 639;
+		vrLoc = 0;
+	};
+	5449D6A30F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 28";
+		rLen = 0;
+		rLoc = 811;
+		rType = 0;
+		vrLen = 812;
+		vrLoc = 0;
+	};
+	5449D6A40F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 90";
+		rLen = 0;
+		rLoc = 2999;
+		rType = 0;
+		vrLen = 1122;
+		vrLoc = 782;
+	};
+	5449D6A50F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 338";
+		rLen = 0;
+		rLoc = 8428;
+		rType = 0;
+		vrLen = 2113;
+		vrLoc = 6543;
+	};
+	5449D6A60F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 257";
+		rLen = 8;
+		rLoc = 5236;
+		rType = 0;
+		vrLen = 1743;
+		vrLoc = 3595;
+	};
+	5449D6A70F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 23";
+		rLen = 0;
+		rLoc = 606;
+		rType = 0;
+		vrLen = 1355;
+		vrLoc = 0;
+	};
+	5449D6A80F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 257";
+		rLen = 8;
+		rLoc = 5236;
+		rType = 0;
+		vrLen = 1743;
+		vrLoc = 3595;
+	};
+	5449D6A90F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 338";
+		rLen = 0;
+		rLoc = 8428;
+		rType = 0;
+		vrLen = 2113;
+		vrLoc = 6543;
+	};
+	5449D6AA0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
+		name = "KeyspaceClient.h: 61";
+		rLen = 0;
+		rLoc = 825;
+		rType = 0;
+		vrLen = 628;
+		vrLoc = 297;
+	};
+	5449D6AB0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 339";
+		rLen = 0;
+		rLoc = 8494;
+		rType = 0;
+		vrLen = 2056;
+		vrLoc = 6649;
+	};
+	5449D6AC0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
+		name = "KeyspaceClient.h: 61";
+		rLen = 0;
+		rLoc = 825;
+		rType = 0;
+		vrLen = 631;
+		vrLoc = 294;
+	};
+	5449D6AD0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 207";
+		rLen = 0;
+		rLoc = 5037;
+		rType = 0;
+		vrLen = 1689;
+		vrLoc = 3910;
+	};
+	5449D6AE0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
+		name = "KeyspaceClient.h: 61";
+		rLen = 0;
+		rLoc = 825;
+		rType = 0;
+		vrLen = 800;
+		vrLoc = 0;
+	};
+	5449D6AF0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 246";
+		rLen = 0;
+		rLoc = 5006;
+		rType = 0;
+		vrLen = 1754;
+		vrLoc = 3650;
+	};
+	5449D6B00F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 338";
+		rLen = 0;
+		rLoc = 8428;
+		rType = 0;
+		vrLen = 1984;
+		vrLoc = 6724;
+	};
+	5449D6B10F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472E0F31B6B200F3D2B6 /* Buffer.h */;
+		name = "Buffer.h: 146";
+		rLen = 0;
+		rLoc = 2139;
+		rType = 0;
+		vrLen = 738;
+		vrLoc = 1699;
+	};
+	5449D6B20F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 342";
+		rLen = 0;
+		rLoc = 8615;
+		rType = 0;
+		vrLen = 2069;
+		vrLoc = 6649;
+	};
+	5449D6B30F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 37";
+		rLen = 0;
+		rLoc = 950;
+		rType = 0;
+		vrLen = 1163;
+		vrLoc = 0;
+	};
+	5449D6B40F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 317";
+		rLen = 52;
+		rLoc = 7778;
+		rType = 0;
+		vrLen = 1719;
+		vrLoc = 7173;
+	};
+	5449D6B50F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 45";
+		rLen = 0;
+		rLoc = 1185;
+		rType = 0;
+		vrLen = 1205;
+		vrLoc = 0;
+	};
+	5449D6B60F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 317";
+		rLen = 0;
+		rLoc = 7804;
+		rType = 0;
+		vrLen = 2178;
+		vrLoc = 6270;
+	};
+	5449D6B70F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 207";
+		rLen = 0;
+		rLoc = 5037;
+		rType = 0;
+		vrLen = 1689;
+		vrLoc = 3910;
+	};
+	5449D6B80F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60570F797BA3006540BC /* KeyspaceMsg.h */;
+		name = "KeyspaceMsg.h: 36";
+		rLen = 0;
+		rLoc = 838;
+		rType = 0;
+		vrLen = 867;
+		vrLoc = 0;
+	};
+	5449D6B90F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 203";
+		rLen = 0;
+		rLoc = 5004;
+		rType = 0;
+		vrLen = 1692;
+		vrLoc = 3912;
+	};
+	5449D6BA0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 360";
+		rLen = 0;
+		rLoc = 7617;
+		rType = 0;
+		vrLen = 1077;
+		vrLoc = 6683;
+	};
+	5449D6BB0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 18";
+		rLen = 0;
+		rLoc = 483;
+		rType = 0;
+		vrLen = 1224;
+		vrLoc = 0;
+	};
+	5449D6BC0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */;
+		name = "KeyspaceMsg.cpp: 203";
+		rLen = 0;
+		rLoc = 5004;
+		rType = 0;
+		vrLen = 1663;
+		vrLoc = 3306;
+	};
+	5449D6BD0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 333";
+		rLen = 0;
+		rLoc = 8273;
+		rType = 0;
+		vrLen = 1685;
+		vrLoc = 7270;
+	};
+	5449D6BE0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 84";
+		rLen = 0;
+		rLoc = 2826;
+		rType = 0;
+		vrLen = 1099;
+		vrLoc = 782;
+	};
+	5449D6BF0F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 29";
+		rLen = 0;
+		rLoc = 859;
+		rType = 0;
+		vrLen = 788;
+		vrLoc = 0;
+	};
+	5449D6C00F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9ADC98040F7BFBA50025A7AB /* Queue.h */;
+		name = "Queue.h: 21";
+		rLen = 0;
+		rLoc = 209;
+		rType = 0;
+		vrLen = 639;
+		vrLoc = 0;
+	};
+	5449D6C10F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 88";
+		rLen = 0;
+		rLoc = 2999;
+		rType = 0;
+		vrLen = 1099;
+		vrLoc = 782;
+	};
+	5449D6C20F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 28";
+		rLen = 0;
+		rLoc = 811;
+		rType = 0;
+		vrLen = 812;
+		vrLoc = 0;
+	};
+	5449D6C30F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 90";
+		rLen = 0;
+		rLoc = 2999;
+		rType = 0;
+		vrLen = 1122;
+		vrLoc = 782;
+	};
+	5449D6C40F90F6E300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 156";
+		rLen = 19;
+		rLoc = 2705;
+		rType = 0;
+		vrLen = 979;
+		vrLoc = 1915;
+	};
+	5449D6E60F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC20F648B86004BBDB4 /* HttpConn.h */;
+		name = "HttpConn.h: 25";
+		rLen = 0;
+		rLoc = 577;
+		rType = 0;
+		vrLen = 945;
+		vrLoc = 0;
+	};
+	5449D6E70F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
+		name = "KeyspaceClient.h: 26";
+		rLen = 0;
+		rLoc = 425;
+		rType = 0;
+		vrLen = 828;
+		vrLoc = 0;
+	};
+	5449D6E80F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 320";
+		rLen = 0;
+		rLoc = 7833;
+		rType = 0;
+		vrLen = 1793;
+		vrLoc = 7149;
+	};
+	5449D6E90F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 28";
+		rLen = 0;
+		rLoc = 811;
+		rType = 0;
+		vrLen = 788;
+		vrLoc = 0;
+	};
+	5449D6EA0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 24";
+		rLen = 0;
+		rLoc = 651;
+		rType = 0;
+		vrLen = 1355;
+		vrLoc = 0;
+	};
+	5449D6EB0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 271";
+		rLen = 0;
+		rLoc = 5498;
+		rType = 0;
+		vrLen = 1544;
+		vrLoc = 4345;
+	};
+	5449D6EC0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 61";
+		rLen = 0;
+		rLoc = 1272;
+		rType = 0;
+		vrLen = 1200;
+		vrLoc = 452;
+	};
+	5449D6ED0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 31";
+		rLen = 0;
+		rLoc = 1497;
+		rType = 0;
+		vrLen = 1142;
+		vrLoc = 0;
+	};
+	5449D6EE0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 156";
+		rLen = 19;
+		rLoc = 2705;
+		rType = 0;
+		vrLen = 979;
+		vrLoc = 1915;
+	};
+	5449D6EF0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 89";
+		rLen = 0;
+		rLoc = 2891;
+		rType = 0;
+		vrLen = 965;
+		vrLoc = 1055;
+	};
+	5449D6F00F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 339";
+		rLen = 4;
+		rLoc = 5627;
+		rType = 0;
+		vrLen = 1281;
+		vrLoc = 0;
+	};
+	5449D6F10F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC20F648B86004BBDB4 /* HttpConn.h */;
+		name = "HttpConn.h: 25";
+		rLen = 0;
+		rLoc = 577;
+		rType = 0;
+		vrLen = 945;
+		vrLoc = 0;
+	};
+	5449D6F20F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
+		name = "KeyspaceClient.h: 28";
+		rLen = 0;
+		rLoc = 455;
+		rType = 0;
+		vrLen = 800;
+		vrLoc = 0;
+	};
+	5449D6F30F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 202";
+		rLen = 0;
+		rLoc = 3604;
+		rType = 0;
+		vrLen = 1760;
+		vrLoc = 3351;
+	};
+	5449D6F40F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 25";
+		rLen = 0;
+		rLoc = 724;
+		rType = 0;
+		vrLen = 1335;
+		vrLoc = 0;
+	};
+	5449D6F50F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 256";
+		rLen = 0;
+		rLoc = 5160;
+		rType = 0;
+		vrLen = 1916;
+		vrLoc = 3733;
+	};
+	5449D6F60F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 93";
+		rLen = 0;
+		rLoc = 2935;
+		rType = 0;
+		vrLen = 965;
+		vrLoc = 1055;
+	};
+	5449D6F70F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
+		name = "KeyspaceClient.h: 26";
+		rLen = 0;
+		rLoc = 425;
+		rType = 0;
+		vrLen = 828;
+		vrLoc = 0;
+	};
+	5449D6F80F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 320";
+		rLen = 0;
+		rLoc = 7833;
+		rType = 0;
+		vrLen = 1793;
+		vrLoc = 7149;
+	};
+	5449D6F90F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 101";
+		rLen = 0;
+		rLoc = 3016;
+		rType = 0;
+		vrLen = 975;
+		vrLoc = 1045;
+	};
+	5449D6FA0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 28";
+		rLen = 0;
+		rLoc = 811;
+		rType = 0;
+		vrLen = 814;
+		vrLoc = 0;
+	};
+	5449D6FB0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 101";
+		rLen = 0;
+		rLoc = 3014;
+		rType = 0;
+		vrLen = 1030;
+		vrLoc = 916;
+	};
+	5449D6FC0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 28";
+		rLen = 0;
+		rLoc = 811;
+		rType = 0;
+		vrLen = 788;
+		vrLoc = 0;
+	};
+	5449D6FD0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 256";
+		rLen = 0;
+		rLoc = 5160;
+		rType = 0;
+		vrLen = 1756;
+		vrLoc = 3508;
+	};
+	5449D6FE0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* KeyspaceDB.h */;
+		name = "KeyspaceDB.h: 24";
+		rLen = 0;
+		rLoc = 651;
+		rType = 0;
+		vrLen = 1355;
+		vrLoc = 0;
+	};
+	5449D6FF0F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
+		name = "KeyspaceDB.cpp: 271";
+		rLen = 0;
+		rLoc = 5498;
+		rType = 0;
+		vrLen = 1544;
+		vrLoc = 4345;
+	};
+	5449D7000F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 31";
+		rLen = 0;
+		rLoc = 1497;
+		rType = 0;
+		vrLen = 1142;
+		vrLoc = 0;
+	};
+	5449D7010F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 61";
+		rLen = 0;
+		rLoc = 1272;
+		rType = 0;
+		vrLen = 1200;
+		vrLoc = 452;
+	};
+	5449D7020F90F9EA00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 49";
+		rLen = 0;
+		rLoc = 1297;
+		rType = 0;
+		vrLen = 1139;
+		vrLoc = 55;
+	};
+	5449D7030F90FA2B00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 59";
+		rLen = 0;
+		rLoc = 1420;
+		rType = 0;
+		vrLen = 1157;
+		vrLoc = 245;
+	};
+	5449D7150F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F20F758C3D003084C9 /* CatchupMsg.h */;
+		name = "CatchupMsg.h: 14";
+		rLen = 0;
+		rLoc = 222;
+		rType = 0;
+		vrLen = 504;
+		vrLoc = 0;
+	};
+	5449D7160F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F30F758C3D003084C9 /* CatchupMsg.cpp */;
+		name = "CatchupMsg.cpp: 62";
+		rLen = 17;
+		rLoc = 1364;
+		rType = 0;
+		vrLen = 1394;
+		vrLoc = 204;
+	};
+	5449D7170F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F60F758C3D003084C9 /* CatchupServer.h */;
+		name = "CatchupServer.h: 19";
+		rLen = 0;
+		rLoc = 335;
+		rType = 0;
+		vrLen = 346;
+		vrLoc = 0;
+	};
+	5449D7180F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A76300F765B9C003084C9 /* CatchupConn.cpp */;
+		name = "CatchupConn.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 996;
+		vrLoc = 752;
+	};
+	5449D7190F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 44";
+		rLen = 0;
+		rLoc = 1135;
+		rType = 0;
+		vrLen = 1224;
+		vrLoc = 0;
+	};
+	5449D71A0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */;
+		name = "KeyspaceServer.h: 6";
+		rLen = 0;
+		rLoc = 160;
+		rType = 0;
+		vrLen = 372;
+		vrLoc = 0;
+	};
+	5449D71B0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */;
+		name = "KeyspaceServer.cpp: 13";
+		rLen = 0;
+		rLoc = 313;
+		rType = 0;
+		vrLen = 353;
+		vrLoc = 0;
+	};
+	5449D71C0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 31";
+		rLen = 0;
+		rLoc = 800;
+		rType = 0;
+		vrLen = 882;
+		vrLoc = 0;
+	};
+	5449D71D0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1838;
+		vrLoc = 7104;
+	};
+	5449D71E0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 28";
+		rLen = 0;
+		rLoc = 916;
+		rType = 0;
+		vrLen = 1117;
+		vrLoc = 0;
+	};
+	5449D71F0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 57";
+		rLen = 0;
+		rLoc = 1405;
+		rType = 0;
+		vrLen = 1082;
+		vrLoc = 86;
+	};
+	5449D7200F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F20F758C3D003084C9 /* CatchupMsg.h */;
+		name = "CatchupMsg.h: 14";
+		rLen = 0;
+		rLoc = 222;
+		rType = 0;
+		vrLen = 504;
+		vrLoc = 0;
+	};
+	5449D7210F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F30F758C3D003084C9 /* CatchupMsg.cpp */;
+		name = "CatchupMsg.cpp: 62";
+		rLen = 17;
+		rLoc = 1364;
+		rType = 0;
+		vrLen = 1394;
+		vrLoc = 204;
+	};
+	5449D7220F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F60F758C3D003084C9 /* CatchupServer.h */;
+		name = "CatchupServer.h: 19";
+		rLen = 0;
+		rLoc = 335;
+		rType = 0;
+		vrLen = 346;
+		vrLoc = 0;
+	};
+	5449D7230F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A76300F765B9C003084C9 /* CatchupConn.cpp */;
+		name = "CatchupConn.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 996;
+		vrLoc = 752;
+	};
+	5449D7240F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 44";
+		rLen = 0;
+		rLoc = 1135;
+		rType = 0;
+		vrLen = 1224;
+		vrLoc = 0;
+	};
+	5449D7250F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1793;
+		vrLoc = 7149;
+	};
+	5449D7260F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */;
+		name = "KeyspaceServer.h: 6";
+		rLen = 0;
+		rLoc = 160;
+		rType = 0;
+		vrLen = 372;
+		vrLoc = 0;
+	};
+	5449D7270F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */;
+		name = "KeyspaceServer.cpp: 13";
+		rLen = 0;
+		rLoc = 313;
+		rType = 0;
+		vrLen = 353;
+		vrLoc = 0;
+	};
+	5449D7280F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1793;
+		vrLoc = 7149;
+	};
+	5449D7290F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 31";
+		rLen = 0;
+		rLoc = 800;
+		rType = 0;
+		vrLen = 882;
+		vrLoc = 0;
+	};
+	5449D72A0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1838;
+		vrLoc = 7104;
+	};
+	5449D72B0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 28";
+		rLen = 0;
+		rLoc = 916;
+		rType = 0;
+		vrLen = 1117;
+		vrLoc = 0;
+	};
+	5449D72C0F90FE3300F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6205090F6C1789009576A1 /* TCPConn.h */;
+		name = "TCPConn.h: 92";
+		rLen = 0;
+		rLoc = 2009;
+		rType = 0;
+		vrLen = 1261;
+		vrLoc = 690;
+	};
+	5449D74D0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 34";
+		rLen = 0;
+		rLoc = 845;
+		rType = 0;
+		vrLen = 914;
+		vrLoc = 0;
+	};
+	5449D74E0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1140;
+		vrLoc = 0;
+	};
+	5449D74F0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6205090F6C1789009576A1 /* TCPConn.h */;
+		name = "TCPConn.h: 92";
+		rLen = 0;
+		rLoc = 2009;
+		rType = 0;
+		vrLen = 1293;
+		vrLoc = 731;
+	};
+	5449D7500F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F40F758C3D003084C9 /* CatchupClient.cpp */;
+		name = "CatchupClient.cpp: 94";
+		rLen = 0;
+		rLoc = 1841;
+		rType = 0;
+		vrLen = 793;
+		vrLoc = 1483;
+	};
+	5449D7510F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */;
+		name = "KeyspaceServer.cpp: 13";
+		rLen = 0;
+		rLoc = 313;
+		rType = 0;
+		vrLen = 353;
+		vrLoc = 0;
+	};
+	5449D7520F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 43";
+		rLen = 0;
+		rLoc = 871;
+		rType = 0;
+		vrLen = 1281;
+		vrLoc = 0;
+	};
+	5449D7530F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 44";
+		rLen = 0;
+		rLoc = 1103;
+		rType = 0;
+		vrLen = 1354;
+		vrLoc = 55;
+	};
+	5449D7540F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6205090F6C1789009576A1 /* TCPConn.h */;
+		name = "TCPConn.h: 92";
+		rLen = 0;
+		rLoc = 2009;
+		rType = 0;
+		vrLen = 1305;
+		vrLoc = 719;
+	};
+	5449D7550F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 28";
+		rLen = 0;
+		rLoc = 926;
+		rType = 0;
+		vrLen = 1117;
+		vrLoc = 0;
+	};
+	5449D7560F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 28";
+		rLen = 0;
+		rLoc = 705;
+		rType = 0;
+		vrLen = 888;
+		vrLoc = 0;
+	};
+	5449D7570F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6205090F6C1789009576A1 /* TCPConn.h */;
+		name = "TCPConn.h: 92";
+		rLen = 0;
+		rLoc = 2009;
+		rType = 0;
+		vrLen = 1293;
+		vrLoc = 731;
+	};
+	5449D7580F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 34";
+		rLen = 0;
+		rLoc = 845;
+		rType = 0;
+		vrLen = 914;
+		vrLoc = 0;
+	};
+	5449D7590F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 110";
+		rLen = 0;
+		rLoc = 2710;
+		rType = 0;
+		vrLen = 993;
+		vrLoc = 1652;
+	};
+	5449D75A0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 34";
+		rLen = 0;
+		rLoc = 845;
+		rType = 0;
+		vrLen = 914;
+		vrLoc = 0;
+	};
+	5449D75B0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 114";
+		rLen = 0;
+		rLoc = 2683;
+		rType = 0;
+		vrLen = 958;
+		vrLoc = 1652;
+	};
+	5449D75C0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6205090F6C1789009576A1 /* TCPConn.h */;
+		name = "TCPConn.h: 92";
+		rLen = 0;
+		rLoc = 2009;
+		rType = 0;
+		vrLen = 1293;
+		vrLoc = 731;
+	};
+	5449D75D0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 42";
+		rLen = 0;
+		rLoc = 1165;
+		rType = 0;
+		vrLen = 1120;
+		vrLoc = 0;
+	};
+	5449D75E0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 43";
+		rLen = 0;
+		rLoc = 871;
+		rType = 0;
+		vrLen = 1199;
+		vrLoc = 452;
+	};
+	5449D75F0F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 3";
+		rLen = 0;
+		rLoc = 446;
+		rType = 0;
+		vrLen = 1104;
+		vrLoc = 0;
+	};
+	5449D7600F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1140;
+		vrLoc = 0;
+	};
+	5449D7610F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 4";
+		rLen = 0;
+		rLoc = 73;
+		rType = 0;
+		vrLen = 1146;
+		vrLoc = 0;
+	};
+	5449D7620F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9A6205090F6C1789009576A1 /* TCPConn.h */;
+		name = "TCPConn.h: 92";
+		rLen = 0;
+		rLoc = 2009;
+		rType = 0;
+		vrLen = 1293;
+		vrLoc = 731;
+	};
+	5449D7630F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 547A75F40F758C3D003084C9 /* CatchupClient.cpp */;
+		name = "CatchupClient.cpp: 94";
+		rLen = 0;
+		rLoc = 1841;
+		rType = 0;
+		vrLen = 793;
+		vrLoc = 1483;
+	};
+	5449D7640F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */;
+		name = "KeyspaceServer.cpp: 13";
+		rLen = 0;
+		rLoc = 313;
+		rType = 0;
+		vrLen = 353;
+		vrLoc = 0;
+	};
+	5449D7650F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 44";
+		rLen = 0;
+		rLoc = 1103;
+		rType = 0;
+		vrLen = 1354;
+		vrLoc = 55;
+	};
+	5449D7660F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */;
+		name = "HttpConn.cpp: 43";
+		rLen = 0;
+		rLoc = 871;
+		rType = 0;
+		vrLen = 1281;
+		vrLoc = 0;
+	};
+	5449D7670F91015C00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 7";
+		rLen = 0;
+		rLoc = 144;
+		rType = 0;
+		vrLen = 1258;
+		vrLoc = 0;
+	};
+	5449D76A0F9101A500F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 7";
+		rLen = 0;
+		rLoc = 144;
+		rType = 0;
+		vrLen = 1258;
+		vrLoc = 0;
+	};
+	5449D76B0F9101A500F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1140;
+		vrLoc = 0;
+	};
+	5449D76C0F9101A500F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 7";
+		rLen = 0;
+		rLoc = 144;
+		rType = 0;
+		vrLen = 1258;
+		vrLoc = 0;
+	};
+	5449D76D0F9101A500F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
+		name = "KeyspaceClientMsg.cpp: 337";
+		rLen = 0;
+		rLoc = 8459;
+		rType = 0;
+		vrLen = 1140;
+		vrLoc = 0;
+	};
+	5449D76E0F9101A500F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 32";
+		rLen = 0;
+		rLoc = 669;
+		rType = 0;
+		vrLen = 1224;
+		vrLoc = 0;
+	};
+	5449D7780F91039400F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 32";
+		rLen = 0;
+		rLoc = 669;
+		rType = 0;
+		vrLen = 1224;
+		vrLoc = 0;
+	};
+	5449D7790F91039400F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472E0F31B6B200F3D2B6 /* Buffer.h */;
+		name = "Buffer.h: 146";
+		rLen = 0;
+		rLoc = 2139;
+		rType = 0;
+		vrLen = 989;
+		vrLoc = 2100;
+	};
+	5449D77A0F91039400F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 129";
+		rLen = 0;
+		rLoc = 2659;
+		rType = 0;
+		vrLen = 1291;
+		vrLoc = 1521;
+	};
+	5449D77B0F91039400F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
+		name = "KeyspaceClientMsg.h: 32";
+		rLen = 0;
+		rLoc = 669;
+		rType = 0;
+		vrLen = 1224;
+		vrLoc = 0;
+	};
+	5449D77C0F91039400F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 129";
+		rLen = 0;
+		rLoc = 2659;
+		rType = 0;
+		vrLen = 1291;
+		vrLoc = 1521;
+	};
+	5449D77D0F91039400F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472E0F31B6B200F3D2B6 /* Buffer.h */;
+		name = "Buffer.h: 146";
+		rLen = 0;
+		rLoc = 2139;
+		rType = 0;
+		vrLen = 989;
+		vrLoc = 2100;
+	};
+	5449D77E0F91039400F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 4";
+		rLen = 99;
+		rLoc = 55;
+		rType = 0;
+		vrLen = 1334;
+		vrLoc = 0;
+	};
+	5449D7840F9104EB00F95C2F /* KeyspaceConn.cpp:80 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		functionName = "KeyspaceConn::OnRead()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 80;
+		location = Keyspace;
+		modificationTime = 261162222.165706;
+		state = 1;
+	};
+	5449D7850F9104EE00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472C0F31B6B200F3D2B6 /* Main.cpp */;
+		name = "Main.cpp: 8";
+		rLen = 0;
+		rLoc = 376;
+		rType = 0;
+		vrLen = 1264;
+		vrLoc = 0;
+	};
+	5449D7860F9104EE00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 34";
+		rLen = 0;
+		rLoc = 845;
+		rType = 0;
+		vrLen = 914;
+		vrLoc = 0;
+	};
+	5449D7870F9104EE00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 21";
+		rLen = 0;
+		rLoc = 580;
+		rType = 0;
+		vrLen = 1252;
+		vrLoc = 154;
+	};
+	5449D7880F9104EE00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 21";
+		rLen = 0;
+		rLoc = 580;
+		rType = 0;
+		vrLen = 1252;
+		vrLoc = 154;
+	};
+	5449D7890F9104EE00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472C0F31B6B200F3D2B6 /* Main.cpp */;
+		name = "Main.cpp: 8";
+		rLen = 0;
+		rLoc = 376;
+		rType = 0;
+		vrLen = 1264;
+		vrLoc = 0;
+	};
+	5449D78A0F9104EE00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D4590F90B66000F95C2F /* KeyspaceConn.h */;
+		name = "KeyspaceConn.h: 34";
+		rLen = 0;
+		rLoc = 845;
+		rType = 0;
+		vrLen = 914;
+		vrLoc = 0;
+	};
+	5449D78B0F9104EE00F95C2F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */;
+		name = "KeyspaceConn.cpp: 21";
+		rLen = 0;
+		rLoc = 580;
+		rType = 0;
+		vrLen = 1214;
+		vrLoc = 1356;
+	};
 	545C60330F7979B4006540BC /* KeyspaceClient.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 1326}}";
-			sepNavSelRange = "{797, 0}";
-			sepNavVisRange = "{294, 631}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 1258}}";
+			sepNavSelRange = "{425, 0}";
+			sepNavVisRange = "{0, 828}";
 		};
 	};
 	545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {883, 1050}}";
-			sepNavSelRange = "{680, 0}";
-			sepNavVisRange = "{0, 862}";
+			sepNavSelRange = "{838, 0}";
+			sepNavVisRange = "{0, 867}";
 		};
 	};
 	545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 4029}}";
-			sepNavSelRange = "{3541, 0}";
-			sepNavVisRange = "{2593, 1531}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 3876}}";
+			sepNavSelRange = "{5004, 0}";
+			sepNavVisRange = "{3306, 1663}";
 		};
 	};
 	545C6DA00F7E9601006540BC /* QueueTest */ = {
@@ -4477,7 +6607,7 @@
 		ignoreCount = 0;
 		lineNumber = 136;
 		location = Keyspace;
-		modificationTime = 261146053.981097;
+		modificationTime = 261162222.165699;
 		state = 1;
 	};
 	545C75A70F8BA00A006540BC /* Kdbfs */ = {
@@ -4591,7 +6721,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 49";
 		rLen = 0;
-		rLoc = 609;
+		rLoc = 637;
 		rType = 0;
 		vrLen = 743;
 		vrLoc = 0;
@@ -4669,15 +6799,15 @@
 	545C76720F8F8180006540BC /* KeyspaceClientMsg.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {883, 1050}}";
-			sepNavSelRange = "{496, 0}";
-			sepNavVisRange = "{0, 1102}";
+			sepNavSelRange = "{669, 0}";
+			sepNavVisRange = "{0, 1224}";
 		};
 	};
 	545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 5134}}";
-			sepNavSelRange = "{3248, 0}";
-			sepNavVisRange = "{5544, 1888}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 5967}}";
+			sepNavSelRange = "{8459, 0}";
+			sepNavVisRange = "{0, 1140}";
 		};
 	};
 	545C76940F8FEA3F006540BC /* PBXTextBookmark */ = {
@@ -4685,7 +6815,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 3";
 		rLen = 0;
-		rLoc = 7432;
+		rLoc = 8942;
 		rType = 0;
 		vrLen = 32;
 		vrLoc = 0;
@@ -4745,7 +6875,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 3";
 		rLen = 0;
-		rLoc = 7432;
+		rLoc = 8942;
 		rType = 0;
 		vrLen = 32;
 		vrLoc = 0;
@@ -4765,7 +6895,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 28";
 		rLen = 0;
-		rLoc = 579;
+		rLoc = 635;
 		rType = 0;
 		vrLen = 986;
 		vrLoc = 0;
@@ -4775,7 +6905,7 @@
 		fRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */;
 		name = "KeyspaceClientMsg.cpp: 3";
 		rLen = 0;
-		rLoc = 7432;
+		rLoc = 8942;
 		rType = 0;
 		vrLen = 32;
 		vrLoc = 0;
@@ -4785,7 +6915,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 10";
 		rLen = 0;
-		rLoc = 252;
+		rLoc = 289;
 		rType = 0;
 		vrLen = 1025;
 		vrLoc = 0;
@@ -4795,7 +6925,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 58";
 		rLen = 0;
-		rLoc = 770;
+		rLoc = 798;
 		rType = 0;
 		vrLen = 733;
 		vrLoc = 153;
@@ -4965,7 +7095,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 58";
 		rLen = 0;
-		rLoc = 770;
+		rLoc = 798;
 		rType = 0;
 		vrLen = 628;
 		vrLoc = 265;
@@ -5005,7 +7135,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 58";
 		rLen = 0;
-		rLoc = 770;
+		rLoc = 798;
 		rType = 0;
 		vrLen = 630;
 		vrLoc = 263;
@@ -5045,7 +7175,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 295";
 		rLen = 0;
-		rLoc = 5926;
+		rLoc = 6186;
 		rType = 0;
 		vrLen = 1465;
 		vrLoc = 5277;
@@ -5075,7 +7205,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 329";
 		rLen = 0;
-		rLoc = 6090;
+		rLoc = 6350;
 		rType = 0;
 		vrLen = 1210;
 		vrLoc = 6100;
@@ -5185,7 +7315,7 @@
 		fRef = 5481472C0F31B6B200F3D2B6 /* Main.cpp */;
 		name = "Main.cpp: 51";
 		rLen = 0;
-		rLoc = 987;
+		rLoc = 1053;
 		rType = 0;
 		vrLen = 843;
 		vrLoc = 418;
@@ -5205,7 +7335,7 @@
 		fRef = 5481472C0F31B6B200F3D2B6 /* Main.cpp */;
 		name = "Main.cpp: 51";
 		rLen = 0;
-		rLoc = 987;
+		rLoc = 1053;
 		rType = 0;
 		vrLen = 843;
 		vrLoc = 418;
@@ -5295,7 +7425,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 38";
 		rLen = 0;
-		rLoc = 1090;
+		rLoc = 1212;
 		rType = 0;
 		vrLen = 1025;
 		vrLoc = 0;
@@ -5345,7 +7475,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 317";
 		rLen = 0;
-		rLoc = 6513;
+		rLoc = 6773;
 		rType = 0;
 		vrLen = 1524;
 		vrLoc = 5480;
@@ -5375,7 +7505,7 @@
 		fRef = 545C76720F8F8180006540BC /* KeyspaceClientMsg.h */;
 		name = "KeyspaceClientMsg.h: 38";
 		rLen = 0;
-		rLoc = 1090;
+		rLoc = 1212;
 		rType = 0;
 		vrLen = 1025;
 		vrLoc = 0;
@@ -5475,7 +7605,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 26";
 		rLen = 0;
-		rLoc = 378;
+		rLoc = 398;
 		rType = 0;
 		vrLen = 701;
 		vrLoc = 185;
@@ -5495,7 +7625,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 26";
 		rLen = 0;
-		rLoc = 378;
+		rLoc = 398;
 		rType = 0;
 		vrLen = 624;
 		vrLoc = 263;
@@ -5515,7 +7645,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 26";
 		rLen = 0;
-		rLoc = 378;
+		rLoc = 398;
 		rType = 0;
 		vrLen = 702;
 		vrLoc = 185;
@@ -5535,7 +7665,7 @@
 		fRef = 545C60330F7979B4006540BC /* KeyspaceClient.h */;
 		name = "KeyspaceClient.h: 26";
 		rLen = 0;
-		rLoc = 378;
+		rLoc = 398;
 		rType = 0;
 		vrLen = 701;
 		vrLoc = 185;
@@ -5545,7 +7675,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 204";
 		rLen = 0;
-		rLoc = 3595;
+		rLoc = 3608;
 		rType = 0;
 		vrLen = 1669;
 		vrLoc = 3621;
@@ -5575,7 +7705,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 204";
 		rLen = 0;
-		rLoc = 3595;
+		rLoc = 3608;
 		rType = 0;
 		vrLen = 1478;
 		vrLoc = 4196;
@@ -5595,7 +7725,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 371";
 		rLen = 0;
-		rLoc = 7441;
+		rLoc = 7706;
 		rType = 0;
 		vrLen = 1070;
 		vrLoc = 6675;
@@ -5635,7 +7765,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 371";
 		rLen = 0;
-		rLoc = 7441;
+		rLoc = 7706;
 		rType = 0;
 		vrLen = 1510;
 		vrLoc = 5161;
@@ -5675,7 +7805,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 317";
 		rLen = 0;
-		rLoc = 6680;
+		rLoc = 6940;
 		rType = 0;
 		vrLen = 2388;
 		vrLoc = 4931;
@@ -5705,7 +7835,7 @@
 		fRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */;
 		name = "KeyspaceDB.cpp: 317";
 		rLen = 0;
-		rLoc = 6680;
+		rLoc = 6940;
 		rType = 0;
 		vrLen = 2388;
 		vrLoc = 4931;
@@ -5749,9 +7879,9 @@
 	};
 	547A75F20F758C3D003084C9 /* CatchupMsg.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {676, 459}}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 1050}}";
 			sepNavSelRange = "{222, 0}";
-			sepNavVisRange = "{155, 167}";
+			sepNavVisRange = "{0, 504}";
 		};
 	};
 	547A75F30F758C3D003084C9 /* CatchupMsg.cpp */ = {
@@ -5777,7 +7907,7 @@
 	};
 	547A75F60F758C3D003084C9 /* CatchupServer.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {869, 1050}}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 1050}}";
 			sepNavSelRange = "{335, 0}";
 			sepNavVisRange = "{0, 346}";
 		};
@@ -5798,9 +7928,9 @@
 	};
 	547A76300F765B9C003084C9 /* CatchupConn.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 1683}}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 1649}}";
 			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{157, 1100}";
+			sepNavVisRange = "{752, 996}";
 		};
 	};
 	547A765E0F7680D6003084C9 /* Cursor.h */ = {
@@ -6027,17 +8157,17 @@
 	};
 	5481472C0F31B6B200F3D2B6 /* Main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 1224}}";
-			sepNavSelRange = "{987, 0}";
-			sepNavVisRange = "{418, 843}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 1462}}";
+			sepNavSelRange = "{376, 0}";
+			sepNavVisRange = "{0, 1264}";
 			sepNavWindowFrame = "{{283, 0}, {928, 1178}}";
 		};
 	};
 	5481472E0F31B6B200F3D2B6 /* Buffer.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 4369}}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 4267}}";
 			sepNavSelRange = "{2139, 0}";
-			sepNavVisRange = "{1699, 738}";
+			sepNavVisRange = "{2100, 989}";
 		};
 	};
 	5481472F0F31B6B200F3D2B6 /* Common.cpp */ = {
@@ -6330,9 +8460,9 @@
 	};
 	9A6205090F6C1789009576A1 /* TCPConn.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {883, 4624}}";
+			sepNavIntBoundsRect = "{{0, 0}, {883, 4488}}";
 			sepNavSelRange = "{2009, 0}";
-			sepNavVisRange = "{3450, 1109}";
+			sepNavVisRange = "{731, 1293}";
 		};
 	};
 	9A62050A0F6C1789009576A1 /* TCPServer.cpp */ = {
@@ -6396,6 +8526,13 @@
 			sepNavIntBoundsRect = "{{0, 0}, {883, 1972}}";
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRange = "{0, 936}";
+		};
+	};
+	9ADC98040F7BFBA50025A7AB /* Queue.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {883, 1241}}";
+			sepNavSelRange = "{209, 0}";
+			sepNavVisRange = "{0, 639}";
 		};
 	};
 	9ADC98470F7C00960025A7AB /* QueueTest */ = {

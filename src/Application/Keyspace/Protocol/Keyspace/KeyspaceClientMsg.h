@@ -6,14 +6,16 @@
 
 #define KEYSPACECLIENT_GETMASTER	'm'
 #define KEYSPACECLIENT_GET			'g'
-#define KEYSPACECLIENT_DIRTYGET		'd'
+#define KEYSPACECLIENT_DIRTYGET		'G'
 #define KEYSPACECLIENT_LIST			'l'
-#define KEYSPACECLIENT_DIRTYLIST	'x'
+#define KEYSPACECLIENT_DIRTYLIST	'L'
 #define KEYSPACECLIENT_SET			's'
 #define KEYSPACECLIENT_TESTANDSET	't'
 #define KEYSPACECLIENT_DELETE		'd'
 #define KEYSPACECLIENT_ADD			'a'
 #define KEYSPACECLIENT_SUBMIT		'*'
+
+class KeyspaceOp;
 
 class KeyspaceClientMsg
 {
@@ -41,6 +43,8 @@ public:
 
 	bool					Read(ByteString data);
 	bool					Write(ByteString& data);
+	
+	bool					ToKeyspaceOp(KeyspaceOp* op);
 };
 
 #endif

@@ -199,7 +199,7 @@ unsigned KeyspaceDB::GetNodeID()
 	return ReplicatedLog::Get()->GetNodeID();
 }
 
-bool KeyspaceDB::Add(KeyspaceOp* op)
+bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 {
 	Log_Trace();
 
@@ -252,6 +252,18 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 		return false;
 	
 	ops.Append(op);
+	
+	if (submit && !ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster())
+		Append();
+	
+	return true;
+}
+
+bool KeyspaceDB::Submit()
+{
+	// only handle writes if I'm the master
+	if (!ReplicatedLog::Get()->IsMaster())
+		return false;
 	
 	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster())
 		Append();
@@ -357,7 +369,7 @@ void KeyspaceDB::Append()
 	for (it = ops.Head(); it != NULL; it = ops.Next(it))
 	{
 		op = *it;
-		msg.BuildFrom(op);
+		msg.FromKeyspaceOp(op);
 		if (msg.Write(bs))
 		{
 			data.length += bs.length;

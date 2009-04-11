@@ -200,7 +200,7 @@ bool KeyspaceMsg::Write(ByteString& data)
 
 }
 
-bool KeyspaceMsg::BuildFrom(KeyspaceOp* op)
+bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
 {
 	bool ret;
 	

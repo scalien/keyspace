@@ -20,7 +20,8 @@ public:
 	KeyspaceDB();
 	
 	bool					Init();
-	bool					Add(KeyspaceOp* op);	// the interface used by KeyspaceClient
+	bool					Add(KeyspaceOp* op, bool submit = true);
+	bool					Submit();
 	unsigned				GetNodeID();
 	void					OnCatchupComplete();	// called by CatchupClient
 	void					OnCatchupFailed();		// called by CatchupClient

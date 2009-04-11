@@ -33,7 +33,7 @@ public:
 	bool							Read(ByteString& data, unsigned &nread);
 	bool							Write(ByteString& data);
 
-	bool							BuildFrom(KeyspaceOp* op);
+	bool							FromKeyspaceOp(KeyspaceOp* op);
 };
 
 #endif

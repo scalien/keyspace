@@ -1,6 +1,7 @@
 #include "KeyspaceClientMsg.h"
 #include <stdio.h>
 #include <inttypes.h>
+#include "Application/Keyspace/Database/KeyspaceClient.h"
 
 void KeyspaceClientMsg::Init(char type_)
 {
@@ -311,5 +312,47 @@ bool KeyspaceClientMsg::Write(ByteString& data)
 		return false;
 		
 	data.length = required;
+	return true;
+}
+
+bool KeyspaceClientMsg::ToKeyspaceOp(KeyspaceOp* op)
+{
+	if (type == KEYSPACECLIENT_GET)
+		op->type = KeyspaceOp::GET;
+	else if (type == KEYSPACECLIENT_DIRTYGET)
+		op->type = KeyspaceOp::DIRTY_GET;
+	else if (type == KEYSPACECLIENT_LIST)
+		op->type = KeyspaceOp::LIST;
+	else if (type == KEYSPACECLIENT_DIRTYLIST)
+		op->type = KeyspaceOp::DIRTY_LIST;
+	else if (type == KEYSPACECLIENT_SET)
+		op->type = KeyspaceOp::SET;
+	else if (type == KEYSPACECLIENT_TESTANDSET)
+		op->type = KeyspaceOp::TEST_AND_SET;
+	else if (type == KEYSPACECLIENT_DELETE)
+		op->type = KeyspaceOp::DELETE;
+	else if (type == KEYSPACECLIENT_ADD)
+		op->type = KeyspaceOp::ADD;
+	
+	if (!op->key.Reallocate(key.length))
+		return false;
+	op->key.Set(key);
+
+	if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
+		op->count = count;	
+	if (type == KEYSPACECLIENT_SET || op->type == KEYSPACECLIENT_TESTANDSET)
+	{
+		if (op->value.Reallocate(value.length))
+			return false;
+		op->value.Set(value);
+	}
+	if (type == KEYSPACECLIENT_TESTANDSET)
+	{
+		if (op->test.Reallocate(test.length))
+			return false;
+		op->test.Set(test);
+	}
+	if (type == KEYSPACECLIENT_ADD)
+		op->num = num;
 	return true;
 }

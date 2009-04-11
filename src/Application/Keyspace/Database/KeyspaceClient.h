@@ -19,11 +19,11 @@ public:
 	}
 
 
-	bool Add(KeyspaceOp *op)
+	bool Add(KeyspaceOp *op, bool submit = true)
 	{
 		bool ret;
 		
-		ret = kdb->Add(op);
+		ret = kdb->Add(op, submit);
 		if (ret)
 			numpending++;
 		return ret;

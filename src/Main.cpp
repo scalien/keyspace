@@ -5,7 +5,7 @@
 #include "Application/TestDB/TestDB.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Protocol/HttpServer.h"
-
+#include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 #include "Framework/Transport/TransportTCPReader.h"
 #include "Framework/Transport/TransportTCPWriter.h"
 /*
@@ -61,8 +61,11 @@ int main(int argc, char* argv[])
 //	TestDB testdb;
 //	testdb.Init(ioproc, eventloop, &rl);
 
-	HttpServer proto;
-	proto.Init(&kdb);
+	HttpServer protoHttp;
+	protoHttp.Init(&kdb);
+
+	KeyspaceServer protoKeyspace;
+	protoKeyspace.Init(&kdb);
 
 	EventLoop::Run();
 
