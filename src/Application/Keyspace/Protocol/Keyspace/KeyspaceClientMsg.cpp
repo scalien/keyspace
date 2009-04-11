@@ -337,12 +337,19 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 	else if (type == KEYSPACECLIENT_ADD)
 		op->type = KeyspaceOp::ADD;
 	
-	if (!op->key.Reallocate(key.length))
-		return false;
-	op->key.Set(key);
-
 	if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
-		op->count = count;	
+	{
+		if (!op->prefix.Reallocate(key.length))
+			return false;
+		op->prefix.Set(key);
+		op->count = count;
+	}
+	else
+	{
+		if (!op->key.Reallocate(key.length))
+			return false;
+		op->key.Set(key);
+	}
 	if (type == KEYSPACECLIENT_SET || type == KEYSPACECLIENT_TESTANDSET)
 	{
 		if (!op->value.Reallocate(value.length))
@@ -386,6 +393,12 @@ void KeyspaceClientResp::Failed()
 	value.length = 0;
 }
 
+void KeyspaceClientResp::ListItem(ByteString value_)
+{
+	type = KEYSPACECLIENT_LISTITEM;
+	value = value_;
+}
+
 void KeyspaceClientResp::ListEnd()
 {
 	type = KEYSPACECLIENT_LISTEND;
@@ -396,7 +409,10 @@ bool KeyspaceClientResp::Write(ByteString& data)
 {
 	int required;
 	
-	if (value.length > 0)
+	if (type == KEYSPACECLIENT_LISTITEM)
+		required = snprintf(data.buffer, data.size, "%d:%.*s",
+			value.length, value.length, value.buffer);
+	else if (value.length > 0)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s",
 			type, value.length, value.length, value.buffer);
 	else

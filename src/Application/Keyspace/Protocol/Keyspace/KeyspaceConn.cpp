@@ -49,9 +49,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	}
 	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
-		Write(op->key);
-		if (final)
-			resp.ListEnd();
+		resp.ListItem(op->key);
 	}
 	else
 		ASSERT_FAIL();
@@ -59,6 +57,14 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	resp.Write(data);
 	Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
 	Write(data);
+	
+	if (((op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)) && final)
+	{
+		resp.ListEnd();
+		resp.Write(data);
+		Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
+		Write(data);
+	}
 	
 	if (final)
 	{

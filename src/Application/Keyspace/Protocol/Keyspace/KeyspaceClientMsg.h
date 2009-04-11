@@ -51,6 +51,7 @@ public:
 #define KEYSPACECLIENT_OK			'o'
 #define KEYSPACECLIENT_NOTFOUND		'n'
 #define KEYSPACECLIENT_FAILED		'f'
+#define KEYSPACECLIENT_LISTITEM		'i'
 #define KEYSPACECLIENT_LISTEND		'.'
 
 class KeyspaceClientResp
@@ -63,6 +64,7 @@ public:
 	void					Ok(ByteString value_);
 	void					NotFound();
 	void					Failed();
+	void					ListItem(ByteString value_);
 	void					ListEnd();
 	
 	bool					Write(ByteString& data);
