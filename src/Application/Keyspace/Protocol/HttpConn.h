@@ -4,8 +4,8 @@
 #include "System/Containers/LinkedList.h"
 #include "Framework/Transport/TCPConn.h"
 #include "HttpRequest.h"
-#include "../Database/KeyspaceDB.h"
-#include "../Database/KeyspaceClient.h"
+#include "Application/Keyspace/Database/KeyspaceDB.h"
+#include "Application/Keyspace/Database/KeyspaceClient.h"
 
 class HttpServer;
 

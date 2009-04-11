@@ -6,7 +6,7 @@ void TransportTCPConn::OnRead()
 {
 	Log_Trace();
 	
-	int msglength, nread, msgbegin, msgend;
+	unsigned msglength, nread, msgbegin, msgend;
 	Endpoint endpoint;
 	
 	GetSocket().GetEndpoint(endpoint);
@@ -16,7 +16,7 @@ void TransportTCPConn::OnRead()
 	
 	do
 	{
-		msglength = strntoint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
+		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
 		if (nread == 0 || tcpread.data.length <= nread)
 			break;

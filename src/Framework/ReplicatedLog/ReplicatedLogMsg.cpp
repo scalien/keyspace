@@ -16,7 +16,7 @@ bool ReplicatedLogMsg::Init(unsigned nodeID_, uint64_t restartCounter_, uint64_t
 
 bool ReplicatedLogMsg::Read(ByteString& data)
 {
-	int			nread, length;
+	unsigned	nread, length;
 	char		*pos;
 	
 #define CheckOverflow()		if ((pos - data.buffer) >= data.length) return false;

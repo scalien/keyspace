@@ -117,10 +117,16 @@ bool KeyspaceClientMsg::Delete(ByteString key_)
 	key.Set(key_);
 	return true;
 }
-	
-bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
+
+bool KeyspaceClientMsg::Submit()
 {
-	int			nread;
+	Init(KEYSPACECLIENT_SUBMIT);
+	return true;
+}
+	
+bool KeyspaceClientMsg::Read(ByteString data)
+{
+	unsigned	nread;
 	char		*pos;
 	ByteString  key, value, test;
 		
@@ -135,7 +141,19 @@ bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
 
 	pos = data.buffer;
 	CheckOverflow();
-	ReadChar(type); CheckOverflow();
+	ReadChar(type);
+	
+	if (type == KEYSPACECLIENT_SUBMIT)
+	{
+		if (pos > data.buffer + data.length)
+			return false;
+
+		ValidateLength();
+		Submit();
+		return true;
+	}
+	
+	CheckOverflow();
 	ReadSeparator(); CheckOverflow();
 	
 	if (type == KEYSPACECLIENT_GET || type == KEYSPACECLIENT_DIRTYGET)
@@ -145,14 +163,11 @@ bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
 		key.buffer = pos;
 		pos += key.length;
 		
-		if (pos > data.buffer + data.length)
-			return false;
-		
+		ValidateLength();		
 		if (type == KEYSPACECLIENT_GET)
 			Get(ByteString(key.length, key.length, key.buffer));
 		else
 			DirtyGet(ByteString(key.length, key.length, key.buffer));
-		n = pos - data.buffer;
 		return true;
 	}
 	else if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
@@ -165,14 +180,11 @@ bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
 		ReadSeparator(); CheckOverflow();
 		ReadUint64_t(count);
 		
-		if (pos > data.buffer + data.length)
-			return false;
-		
+		ValidateLength();
 		if (type == KEYSPACECLIENT_LIST)
 			List(ByteString(key.length, key.length, key.buffer), count);
 		else
 			DirtyList(ByteString(key.length, key.length, key.buffer), count);
-		n = pos - data.buffer;
 		return true;
 	}
 	else if (type == KEYSPACECLIENT_SET)
@@ -189,12 +201,9 @@ bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
 		value.buffer = pos;
 		pos += value.length;
 		
-		if (pos > data.buffer + data.length)
-			return false;
-		
+		ValidateLength();
 		Set(ByteString(key.length, key.length, key.buffer),
 			ByteString(value.length, value.length, value.buffer));
-		n = pos - data.buffer;
 		return true;
 	}
 	else if (type == KEYSPACECLIENT_TESTANDSET)
@@ -218,13 +227,10 @@ bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
 		value.buffer = pos;
 		pos += value.length;
 		
-		if (pos > data.buffer + data.length)
-			return false;
-		
+		ValidateLength();
 		TestAndSet(ByteString(key.length, key.length, key.buffer),
 				   ByteString(test.length, test.length, test.buffer),
 				   ByteString(value.length, value.length, value.buffer));
-		n = pos - data.buffer;
 		return true;
 	}
 	else if (type == KEYSPACECLIENT_ADD)
@@ -237,11 +243,8 @@ bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
 		ReadSeparator(); CheckOverflow();
 		ReadInt64_t(num);
 		
-		if (pos > data.buffer + data.length)
-			return false;
-		
+		ValidateLength();
 		Add(ByteString(key.length, key.length, key.buffer), num);
-		n = pos - data.buffer;
 		return true;
 	}
 	else if (type == KEYSPACECLIENT_DELETE)
@@ -251,11 +254,8 @@ bool KeyspaceClientMsg::Read(ByteString& data, unsigned &n)
 		key.buffer = pos;
 		pos += key.length;
 		
-		if (pos > data.buffer + data.length)
-			return false;
-		
+		ValidateLength();
 		Delete(ByteString(key.length, key.length, key.buffer));
-		n = pos - data.buffer;
 		return true;
 	}
 	
@@ -287,6 +287,8 @@ bool KeyspaceClientMsg::Write(ByteString& data)
 	else if (type == KEYSPACECLIENT_DELETE)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
 			key.length, key.length, key.buffer);
+	else if (type == KEYSPACECLIENT_SUBMIT)
+			required = snprintf(data.buffer, data.size, "*");
 	else
 		return false;
 	

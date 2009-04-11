@@ -68,7 +68,7 @@ void PaxosConfig::InitRestartCounter()
 	Log_Trace();
 	
 	bool			ret;
-	int				nread;
+	unsigned		nread;
 	ByteArray<32>	baRestartCounter;
 	Table*			table;
 	

@@ -40,13 +40,14 @@ class KeyspaceOp
 public:
 	enum Type
 	{
-		DIRTY_GET,
 		GET,
+		DIRTY_GET,
+		LIST,
+		DIRTY_LIST,
 		SET,
 		TEST_AND_SET,
 		ADD,
-		DELETE,
-		LIST
+		DELETE
 	};
 	
 	Type					type;
@@ -54,7 +55,8 @@ public:
 	ByteBuffer				value;
 	ByteBuffer				test;
 	ByteBuffer				prefix;
-	int64_t					addNum;
+	int64_t					num;
+	uint64_t				count;
 	
 	KeyspaceClient*			client;
 	

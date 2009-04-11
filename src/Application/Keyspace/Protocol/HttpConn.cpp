@@ -60,7 +60,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		else
 			RESPONSE_NOTFOUND;
 	}
-	else if (op->type == KeyspaceOp::LIST)
+	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
 		if (!headerSent)
 		{
@@ -148,7 +148,7 @@ int HttpConn::ProcessGetRequest()
 	int valuelen;
 	int testlen;
 	int prefixlen;
-	int nread;
+	unsigned nread;
 	// http://localhost:8080/get/key
 	// http://localhost:8080/set/key/value
 	
@@ -319,7 +319,7 @@ int HttpConn::ProcessGetRequest()
 			return -1;
 		}
 		
-		op->addNum = strntoint64_t(value, valuelen, &nread);
+		op->num = strntoint64_t(value, valuelen, &nread);
 		if (nread != valuelen)
 		{
 			delete op;
@@ -373,6 +373,30 @@ int HttpConn::ProcessGetRequest()
 		prefixlen = strlen(prefix);
 		
 		op->type = KeyspaceOp::LIST;
+		
+		// HACK +1 is to handle empty string (solution is to use DynBuffer)
+		if (!op->prefix.Allocate(prefixlen + 1))
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op->prefix.Set((char*) prefix, prefixlen);
+		
+		if (!Add(op))
+		{
+			delete op;
+			RESPONSE_FAIL;
+		}
+			
+		return 0;
+	}
+	else if (strncmp(request.line.uri, "/dirtylist/", strlen("/dirtylist/")) == 0)
+	{
+		prefix = request.line.uri + strlen("/dirtylist/");
+		prefixlen = strlen(prefix);
+		
+		op->type = KeyspaceOp::DIRTY_LIST;
 		
 		// HACK +1 is to handle empty string (solution is to use DynBuffer)
 		if (!op->prefix.Allocate(prefixlen + 1))

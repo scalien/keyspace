@@ -24,9 +24,9 @@ void CatchupMsg::Commit(uint64_t paxosID_)
 bool CatchupMsg::Read(ByteString data)
 {
 	char		type;
-	int			nread;
+	unsigned	nread;
 	char		*pos;
-	uint64_t		paxosID;
+	uint64_t	paxosID;
 	ByteString	key, value, dbCommand;
 	
 #define CheckOverflow()		if ((pos - data.buffer) >= data.length) return false;

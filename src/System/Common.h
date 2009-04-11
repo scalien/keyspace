@@ -25,9 +25,9 @@ inline int max(int a, int b)
 
 //long strntol(char* buffer, int size, int* nread);
 
-int64_t strntoint64_t(const char* buffer, int length, int* nread);
+int64_t strntoint64_t(const char* buffer, int length, unsigned* nread);
 
-uint64_t strntouint64_t(const char* buffer, int length, int* nread);
+uint64_t strntouint64_t(const char* buffer, int length, unsigned* nread);
 
 char* rprintf(const char* format, ...);
 

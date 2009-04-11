@@ -29,7 +29,7 @@ private:
 
 	Table*						table;
 	CatchupMsg					msg;
-	uint64_t						paxosID;
+	uint64_t					paxosID;
 	Transaction					transaction;
 	KeyspaceDB*					keyspaceDB;
 };

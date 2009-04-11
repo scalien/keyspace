@@ -12,6 +12,7 @@
 #define KEYSPACECLIENT_TESTANDSET	't'
 #define KEYSPACECLIENT_DELETE		'd'
 #define KEYSPACECLIENT_ADD			'a'
+#define KEYSPACECLIENT_SUBMIT		'*'
 
 class KeyspaceClientMsg
 {
@@ -34,8 +35,9 @@ public:
 	bool					TestAndSet(ByteString key_, ByteString test_, ByteString value_);
 	bool					Add(ByteString key_, int64_t num_);
 	bool					Delete(ByteString key_);
+	bool					Submit();
 
-	bool					Read(ByteString& data, unsigned &nread);
+	bool					Read(ByteString data);
 	bool					Write(ByteString& data);
 };
 

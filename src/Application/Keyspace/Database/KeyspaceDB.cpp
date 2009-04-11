@@ -234,8 +234,12 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 		return true;
 	}
 	
-	if (op->type == KeyspaceOp::LIST)
+	if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
+		if (op->type == KeyspaceOp::LIST &&
+		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
+			return false;
+
 		AsyncListVisitor *alv = new AsyncListVisitor(op->prefix, op);
 		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
 		mdbop->Visit(table, *alv);
@@ -258,8 +262,8 @@ bool KeyspaceDB::Add(KeyspaceOp* op)
 void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 {
 	bool		ret;
-	int64_t	num;
-	int			nread;
+	int64_t		num;
+	unsigned	nread;
 	KeyspaceOp*	op;
 	KeyspaceOp**it;
 	
@@ -285,7 +289,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 			num = strntoint64_t(data.buffer, data.length, &nread); // parse number
 			if (nread == data.length)
 			{
-				num = num + msg.addNum;
+				num = num + msg.num;
 				data.length = snprintf(data.buffer, data.size, "%" PRIi64 "", num); // print number
 				ret &= table->Set(transaction, msg.key, data); // write number
 			}

@@ -19,7 +19,7 @@ public:
 	ByteArray<KEYSPACE_KEY_SIZE>	key;
 	ByteArray<KEYSPACE_VAL_SIZE>	value;
 	ByteArray<KEYSPACE_VAL_SIZE>	test;
-	int64_t							addNum;
+	int64_t							num;
 	
 	
 	void							Init(char type_);
@@ -27,7 +27,7 @@ public:
 	void							Get(ByteString key_);
 	void							Set(ByteString key_, ByteString value_);
 	void							TestAndSet(ByteString key_, ByteString test_, ByteString value_);
-	void							Add(ByteString key_, int64_t addNum_);
+	void							Add(ByteString key_, int64_t num_);
 	void							Delete(ByteString key_);
 
 	bool							Read(ByteString& data, unsigned &nread);

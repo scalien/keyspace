@@ -32,14 +32,13 @@ void CatchupClient::OnRead()
 {
 	Log_Trace();
 
-	int msglength, nread, msgbegin, msgend;
-	Endpoint endpoint;
+	unsigned msglength, nread, msgbegin, msgend;
 	
 	tcpread.requested = IO_READ_ANY;
 	
 	do
 	{
-		msglength = strntoint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
+		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
 		if (nread == 0 || tcpread.data.length <= nread)
 			break;

@@ -89,10 +89,10 @@ bool PaxosMsg::RequestChosen(uint64_t paxosID_, unsigned nodeID_)
 
 bool PaxosMsg::Read(ByteString& data)
 {
-	uint64_t		paxosID;
+	uint64_t	paxosID;
 	char		type;
 	
-	int			nread;
+	unsigned	nread;
 	char		*pos;
 	
 	/*	format for paxos messages, numbers are textual:

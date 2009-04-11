@@ -258,7 +258,7 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	const char* data_start;
 	KeyspaceOp *op;
 	long num;
-	int numlen;
+	unsigned numlen;
 	
 	data_start = DATA_START(tokens, numtoken);
 	if (data_start > data + size)

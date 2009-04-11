@@ -74,7 +74,7 @@ bool PLeaseMsg::Read(ByteString& data)
 {
 	char		type;
 	
-	int			nread;
+	unsigned	nread;
 	char		*pos;
 		
 #define CheckOverflow()		if ((pos - data.buffer) >= data.length) return false;

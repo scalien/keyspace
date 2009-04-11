@@ -4,7 +4,7 @@
 #include <string>
 #include <stdlib.h>
 
-int64_t strntoint64_t(const char* buffer, int length, int* nread)
+int64_t strntoint64_t(const char* buffer, int length, unsigned* nread)
 {
 	bool	neg;
 	long	i, digit;
@@ -54,7 +54,7 @@ int64_t strntoint64_t(const char* buffer, int length, int* nread)
 #undef ADVANCE
 }
 
-uint64_t strntouint64_t(const char* buffer, int length, int* nread)
+uint64_t strntouint64_t(const char* buffer, int length, unsigned* nread)
 {
 	long		i, digit;
 	uint64_t	n;
