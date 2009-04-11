@@ -17,7 +17,7 @@
 
 class KeyspaceOp;
 
-class KeyspaceClientMsg
+class KeyspaceClientReq
 {
 public:
 	char					type;
@@ -45,6 +45,27 @@ public:
 	bool					Write(ByteString& data);
 	
 	bool					ToKeyspaceOp(KeyspaceOp* op);
+};
+
+
+#define KEYSPACECLIENT_OK			'o'
+#define KEYSPACECLIENT_NOTFOUND		'n'
+#define KEYSPACECLIENT_FAILED		'f'
+#define KEYSPACECLIENT_LISTEND		'.'
+
+class KeyspaceClientResp
+{
+public:
+	char					type;
+	ByteString				value;
+	
+	void					OK();
+	void					OK(ByteString value_);
+	void					NotFound();
+	void					Failed();
+	void					ListEnd();
+	
+	bool					Write(ByteString& data);
 };
 
 #endif

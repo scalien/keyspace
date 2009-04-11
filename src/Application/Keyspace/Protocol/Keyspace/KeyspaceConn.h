@@ -31,7 +31,7 @@ private:
 	
 	ByteArray<RESP_SIZE>response;
 	KeyspaceServer*		server;
-	KeyspaceClientMsg	msg;
+	KeyspaceClientReq	msg;
 	bool				closeAfterSend;
 };
 

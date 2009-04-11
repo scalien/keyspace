@@ -3,18 +3,18 @@
 #include <inttypes.h>
 #include "Application/Keyspace/Database/KeyspaceClient.h"
 
-void KeyspaceClientMsg::Init(char type_)
+void KeyspaceClientReq::Init(char type_)
 {
 	type = type_;
 }
 
-bool KeyspaceClientMsg::GetMaster()
+bool KeyspaceClientReq::GetMaster()
 {
 	Init(KEYSPACECLIENT_GETMASTER);
 	return true;
 }
 
-bool KeyspaceClientMsg::Get(ByteString key_)
+bool KeyspaceClientReq::Get(ByteString key_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -26,7 +26,7 @@ bool KeyspaceClientMsg::Get(ByteString key_)
 	return true;
 }
 
-bool KeyspaceClientMsg::DirtyGet(ByteString key_)
+bool KeyspaceClientReq::DirtyGet(ByteString key_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -38,7 +38,7 @@ bool KeyspaceClientMsg::DirtyGet(ByteString key_)
 	return true;
 }
 
-bool KeyspaceClientMsg::List(ByteString prefix_, uint64_t count_)
+bool KeyspaceClientReq::List(ByteString prefix_, uint64_t count_)
 {
 	if (prefix_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -51,7 +51,7 @@ bool KeyspaceClientMsg::List(ByteString prefix_, uint64_t count_)
 	return true;
 }
 
-bool KeyspaceClientMsg::DirtyList(ByteString prefix_, uint64_t count_)
+bool KeyspaceClientReq::DirtyList(ByteString prefix_, uint64_t count_)
 {
 	if (prefix_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -64,7 +64,7 @@ bool KeyspaceClientMsg::DirtyList(ByteString prefix_, uint64_t count_)
 	return true;
 }
 
-bool KeyspaceClientMsg::Set(ByteString key_, ByteString value_)
+bool KeyspaceClientReq::Set(ByteString key_, ByteString value_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -80,7 +80,7 @@ bool KeyspaceClientMsg::Set(ByteString key_, ByteString value_)
 	return true;
 }
 	
-bool KeyspaceClientMsg::TestAndSet(ByteString key_, ByteString test_, ByteString value_)
+bool KeyspaceClientReq::TestAndSet(ByteString key_, ByteString test_, ByteString value_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -100,7 +100,7 @@ bool KeyspaceClientMsg::TestAndSet(ByteString key_, ByteString test_, ByteString
 	return true;
 }
 
-bool KeyspaceClientMsg::Add(ByteString key_, int64_t num_)
+bool KeyspaceClientReq::Add(ByteString key_, int64_t num_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -113,7 +113,7 @@ bool KeyspaceClientMsg::Add(ByteString key_, int64_t num_)
 	return true;
 }
 
-bool KeyspaceClientMsg::Delete(ByteString key_)
+bool KeyspaceClientReq::Delete(ByteString key_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
 		return false;
@@ -125,13 +125,13 @@ bool KeyspaceClientMsg::Delete(ByteString key_)
 	return true;
 }
 
-bool KeyspaceClientMsg::Submit()
+bool KeyspaceClientReq::Submit()
 {
 	Init(KEYSPACECLIENT_SUBMIT);
 	return true;
 }
 	
-bool KeyspaceClientMsg::Read(ByteString data)
+bool KeyspaceClientReq::Read(ByteString data)
 {
 	unsigned	nread;
 	char		*pos;
@@ -278,7 +278,7 @@ bool KeyspaceClientMsg::Read(ByteString data)
 	return false;
 }
 
-bool KeyspaceClientMsg::Write(ByteString& data)
+bool KeyspaceClientReq::Write(ByteString& data)
 {
 	int required;
 	
@@ -315,7 +315,7 @@ bool KeyspaceClientMsg::Write(ByteString& data)
 	return true;
 }
 
-bool KeyspaceClientMsg::ToKeyspaceOp(KeyspaceOp* op)
+bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 {
 	if (type == KEYSPACECLIENT_GET)
 		op->type = KeyspaceOp::GET;
@@ -354,5 +354,50 @@ bool KeyspaceClientMsg::ToKeyspaceOp(KeyspaceOp* op)
 	}
 	if (type == KEYSPACECLIENT_ADD)
 		op->num = num;
+	return true;
+}
+
+
+
+void KeyspaceClientResp::OK()
+{
+	type = KEYSPACECLIENT_OK;
+	value.length = 0;
+}
+
+void KeyspaceClientResp::OK(ByteString value_)
+{
+	type = KEYSPACECLIENT_OK;
+	value = value_;
+}
+
+void KeyspaceClientResp::NotFound()
+{
+	type = KEYSPACECLIENT_NOTFOUND;
+}
+
+void KeyspaceClientResp::Failed()
+{
+	type = KEYSPACECLIENT_FAILED;
+}
+
+void KeyspaceClientResp::ListEnd()
+{
+	type = KEYSPACECLIENT_LISTEND;
+}
+
+bool KeyspaceClientResp::Write(ByteString& data)
+{
+	int required;
+	
+	if (value.length > 0)
+		snprintf(data.buffer, data.size, "%c:%d:%.*s", type, value.length, value.length, value.buffer);
+	else
+		snprintf(data.buffer, data.size, "%c", type);
+	
+	if (required > data.size)
+		return false;
+		
+	data.length = required;
 	return true;
 }
