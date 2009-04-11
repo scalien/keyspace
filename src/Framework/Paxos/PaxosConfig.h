@@ -13,12 +13,12 @@ public:
 	
 	bool			Init(char* filename);
 	
-	int				MinMajority();
-	uint64_t			NextHighest(uint64_t proposalID);
+	unsigned		MinMajority();
+	uint64_t		NextHighest(uint64_t proposalID);
 
-	int				nodeID;
-	int				numNodes; // same as endpoints.size
-	uint64_t			restartCounter;	
+	unsigned		nodeID;
+	unsigned		numNodes; // same as endpoints.size
+	uint64_t		restartCounter;	
 	int				port;
 	Endpoint		endpoints[MAX_CELL_SIZE];
 

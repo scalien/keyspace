@@ -9,6 +9,8 @@ class Entry;
 class ReplicatedDB
 {
 public:
+	virtual ~ReplicatedDB() {}
+	
 	virtual void OnAppend(Transaction* transaction, uint64_t paxosID,
 					ByteString value, bool ownAppend) = 0;
 	

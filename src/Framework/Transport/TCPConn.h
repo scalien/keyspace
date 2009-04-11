@@ -76,12 +76,12 @@ protected:
 
 template<int bufferSize>
 TCPConn<bufferSize>::TCPConn() :
+connectTimeout(&onConnectTimeout),
 onRead(this, &TCPConn::OnRead),
 onWrite(this, &TCPConn::OnWrite),
 onClose(this, &TCPConn::OnClose),
 onConnect(this, &TCPConn::OnConnect),
-onConnectTimeout(this, &TCPConn::OnConnectTimeout),
-connectTimeout(&onConnectTimeout)
+onConnectTimeout(this, &TCPConn::OnConnectTimeout)
 {
 	state = DISCONNECTED;
 }

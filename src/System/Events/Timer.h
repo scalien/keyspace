@@ -15,6 +15,8 @@ public:
 		callable = NULL;
 		active = false;
 	}
+
+	virtual ~Timer() {}
 		
 	Timer(Callable* callable_)
 	{

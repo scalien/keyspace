@@ -104,9 +104,9 @@ void PaxosConfig::InitRestartCounter()
 	Log_Message("Running with restartCounter = %" PRIu64 "", restartCounter);
 }
 
-int PaxosConfig::MinMajority()
+unsigned PaxosConfig::MinMajority()
 {
-	return (floor(numNodes / 2) + 1);
+	return (unsigned)(floor(numNodes / 2) + 1);
 }
 
 uint64_t PaxosConfig::NextHighest(uint64_t proposalID)

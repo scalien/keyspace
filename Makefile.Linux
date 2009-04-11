@@ -33,7 +33,7 @@ INCLUDE = \
 	-I/opt/local/include/db46 \
 
 PLATFORM_UCASE=$(shell echo $(PLATFORM) | tr [a-z] [A-Z])
-BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE)
+BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE) -D__STDC_FORMAT_MACROS
 BASE_CXXFLAGS = $(BASE_CFLAGS)
 BASE_LDFLAGS = -L/opt/local/lib/db46 -lpthread -ldl -ldb_cxx -lrt
 

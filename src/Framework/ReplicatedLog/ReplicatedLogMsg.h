@@ -14,8 +14,8 @@ class ReplicatedLogMsg
 {
 public:
 	unsigned					nodeID;
-	uint64_t						restartCounter;
-	uint64_t						leaseEpoch;
+	uint64_t					restartCounter;
+	uint64_t					leaseEpoch;
 	ByteArray<PAXOS_BUFSIZE>	value;
 	
 	bool						Init(unsigned nodeID_, uint64_t restartCounter_, uint64_t leaseEpoch_,

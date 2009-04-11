@@ -6,9 +6,9 @@
 #include "Framework/Database/Transaction.h"
 
 MultiDatabaseOp::MultiDatabaseOp() :
-operation(this, &MultiDatabaseOp::Operation),
+active(false),
 onComplete(this, &MultiDatabaseOp::OnComplete),
-active(false)
+operation(this, &MultiDatabaseOp::Operation)
 {
 	Init();
 }
@@ -151,7 +151,7 @@ int MultiDatabaseOp::GetNumOp()
 
 void MultiDatabaseOp::Operation()
 {
-	int			i;
+	size_t		i;
 	DatabaseOp* op;
 	
 	if (tx && !tx->IsActive())

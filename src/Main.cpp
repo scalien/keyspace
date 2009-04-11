@@ -5,15 +5,18 @@
 #include "Application/TestDB/TestDB.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Protocol/HttpServer.h"
-/*
+
 #include "Framework/Transport/TransportTCPReader.h"
 #include "Framework/Transport/TransportTCPWriter.h"
-
+/*
 void f();
+void PrintRead();
 
 Endpoint me;
 TransportTCPWriter writer;
+TransportTCPReader reader;
 CFunc cfunc(&f);
+CFunc onReaderRead(&PrintRead);
 CdownTimer timer(1000, &cfunc);
 ByteArray<8> bs;
 
@@ -24,6 +27,14 @@ void f()
 	writer.Write(bs);
 	
 	EventLoop::Get()->Add(&timer);
+}
+
+void PrintRead()
+{
+	ByteString bs;
+	
+	reader.GetMessage(bs);
+	printf("\nPrintRead: %.*s\n", bs.length, bs.buffer);
 }
 */
 int main(int argc, char* argv[])
@@ -54,12 +65,12 @@ int main(int argc, char* argv[])
 	proto.Init(&kdb);
 
 	EventLoop::Run();
-/*	
 
+/*
 	IOProcessor::Get()->Init();
 	
-	TransportTCPReader reader;
 	reader.Init(5000);
+	reader.SetOnRead(&onReaderRead);
 	
 	me.Set("127.0.0.1", 5000);
 	writer.Init(me);

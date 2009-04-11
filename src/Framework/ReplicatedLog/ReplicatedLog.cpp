@@ -53,7 +53,7 @@ bool ReplicatedLog::Init()
 
 void ReplicatedLog::InitTransport()
 {
-	int			i;
+	unsigned	i;
 	Endpoint	endpoint;
 
 #if USE_TCP == 1
@@ -149,7 +149,7 @@ bool ReplicatedLog::IsMaster()
 	return masterLease.IsLeaseOwner();
 }
 
-int ReplicatedLog::GetNodeID()
+unsigned ReplicatedLog::GetNodeID()
 {
 	return PaxosConfig::Get()->nodeID;
 }

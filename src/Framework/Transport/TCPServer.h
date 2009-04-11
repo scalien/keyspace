@@ -12,6 +12,7 @@ class TCPServer
 {
 public:
 	TCPServer();
+	virtual ~TCPServer() {}
 	
 	bool				Init(int port);
 	

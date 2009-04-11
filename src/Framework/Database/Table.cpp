@@ -52,7 +52,7 @@ bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &val
 	if (ret == DB_KEYEMPTY || ret == DB_NOTFOUND)
 		return false;
 	
-	if (dbtValue.get_size() > value.size)
+	if (dbtValue.get_size() > (size_t) value.size)
 		return false;
 
 	value.length = dbtValue.get_size();

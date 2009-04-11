@@ -7,14 +7,14 @@
 class PLeaseProposerState
 {
 public:
-	bool					preparing;
-	bool					proposing;
+	bool		preparing;
+	bool		proposing;
 	
-	uint64_t					proposalID;
-	uint64_t					highestReceivedProposalID;
+	uint64_t	proposalID;
+	uint64_t	highestReceivedProposalID;
 
-	unsigned				leaseOwner;
-	uint64_t					expireTime;
+	unsigned	leaseOwner;
+	uint64_t	expireTime;
 			
 	bool Active() { return (preparing || proposing); }
 	
@@ -32,12 +32,12 @@ public:
 class PLeaseAcceptorState
 {
 public:
-	uint64_t					promisedProposalID;
+	uint64_t	promisedProposalID;
 
-	bool					accepted;
-	uint64_t					acceptedProposalID;
-	unsigned				acceptedLeaseOwner;
-	uint64_t					acceptedExpireTime;
+	bool		accepted;
+	uint64_t	acceptedProposalID;
+	unsigned	acceptedLeaseOwner;
+	uint64_t	acceptedExpireTime;
 	
 	void Init()
 	{
@@ -62,9 +62,9 @@ class PLeaseLearnerState
 {
 public:
 	bool		learned;
-	int			leaseOwner;
-	uint64_t		expireTime;
-	uint64_t		leaseEpoch;
+	unsigned	leaseOwner;
+	uint64_t	expireTime;
+	uint64_t	leaseEpoch;
 	
 	void Init()
 	{

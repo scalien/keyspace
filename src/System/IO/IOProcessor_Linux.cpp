@@ -132,7 +132,7 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 
 bool IOProcessor::Init()
 {
-	int i;
+	size_t i;
 	
 	for (i = 0; i < SIZE(epollOps); i++)
 	{

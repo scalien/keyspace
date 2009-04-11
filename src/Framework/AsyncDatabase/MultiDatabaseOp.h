@@ -54,7 +54,7 @@ public:
 	
 private:
 	DatabaseOp				ops[1024];
-	int						numop;
+	size_t					numop;
 	
 	Callable*				userCallback;
 	Transaction*			tx;

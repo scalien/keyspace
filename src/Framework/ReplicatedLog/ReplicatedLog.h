@@ -30,10 +30,10 @@ public:
 	void						SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	Transaction*				GetTransaction();
 	bool						GetLogItem(uint64_t paxosID, ByteString& value);
-	uint64_t						GetPaxosID();
+	uint64_t					GetPaxosID();
 	void						SetPaxosID(Transaction* transaction, uint64_t paxosID);
 	bool						IsMaster();	
-	int							GetNodeID();
+	unsigned 					GetNodeID();
 	void						Stop();
 	void						Continue();
 	bool						IsAppending();

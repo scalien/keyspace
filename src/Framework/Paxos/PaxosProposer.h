@@ -41,9 +41,9 @@ protected:
 	CdownTimer				prepareTimeout;
 	CdownTimer				proposeTimeout;
 // keeping track of messages during prepare and propose phases
-	int						numReceived;
-	int						numAccepted;
-	int						numRejected;
+	unsigned				numReceived;
+	unsigned				numAccepted;
+	unsigned				numRejected;
 };
 
 #endif

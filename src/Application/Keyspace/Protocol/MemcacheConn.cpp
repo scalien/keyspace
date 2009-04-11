@@ -272,7 +272,7 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	if (numlen != tokens[TOKEN_BYTES].len)
 		return NULL;
 	
-	if (size - (data_start - data) < num + CRLF_LENGTH)
+	if (size - (data_start - data) < num + (long) CRLF_LENGTH)
 		return data;
 	
 	op->key.buffer = (char *) tokens[TOKEN_KEY].value;
