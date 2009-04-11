@@ -91,11 +91,12 @@ void KeyspaceConn::OnRead()
 	
 		msgbegin = nread + 1;
 		msgend = nread + 1 + msglength;
+		
+		Log_Message("%d %d %d", msgbegin, msgend, tcpread.data.length);
 
 		if (tcpread.data.length < msgend)
 		{
-			// request just the right amount
-			tcpread.requested = msgend - tcpread.data.length;
+			tcpread.requested = msgend;
 			break;
 		}
 
