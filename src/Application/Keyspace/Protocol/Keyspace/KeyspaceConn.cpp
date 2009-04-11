@@ -123,8 +123,8 @@ void KeyspaceConn::Write(ByteString &bs)
 	
 	prefix.length = snprintf(prefix.buffer, prefix.size, "%d:", bs.length);
 
-	Write(prefix);
-	TCPConn<>::Write(bs.buffer, bs.length, true);
+	TCPConn<>::Write(prefix.buffer, prefix.length);
+	TCPConn<>::Write(bs.buffer, bs.length);
 }
 
 void KeyspaceConn::ProcessMsg()

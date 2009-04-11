@@ -48,9 +48,7 @@ void Log(char* file, int line, const char* func, int type, const char* fmt, ...)
 	char ts[27];
 	
 	if (type == LOG_TYPE_ERRNO)
-	{
 		msg = strerror(errno);
-	}
 	else
 	{
 		va_start(ap, fmt);

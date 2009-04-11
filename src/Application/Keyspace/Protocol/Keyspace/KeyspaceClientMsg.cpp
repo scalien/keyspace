@@ -391,9 +391,10 @@ bool KeyspaceClientResp::Write(ByteString& data)
 	int required;
 	
 	if (value.length > 0)
-		snprintf(data.buffer, data.size, "%c:%d:%.*s", type, value.length, value.length, value.buffer);
+		required = snprintf(data.buffer, data.size, "%c:%d:%.*s",
+			type, value.length, value.length, value.buffer);
 	else
-		snprintf(data.buffer, data.size, "%c", type);
+		required = snprintf(data.buffer, data.size, "%c", type);
 	
 	if (required > data.size)
 		return false;
