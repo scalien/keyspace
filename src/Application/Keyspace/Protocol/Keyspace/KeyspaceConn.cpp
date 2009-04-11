@@ -80,9 +80,13 @@ void KeyspaceConn::OnRead()
 
 void KeyspaceConn::ProcessMsg()
 {
-	if (msg.type == KEYSPACECLIENT_SUBMIT)
+	if (msg.type == KEYSPACECLIENT_GETMASTER)
 	{
 	}
+	else if (msg.type == KEYSPACECLIENT_SUBMIT)
+	{
+	}
+	
 }
 
 void KeyspaceConn::OnClose()

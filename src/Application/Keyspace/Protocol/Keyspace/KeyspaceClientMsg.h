@@ -4,6 +4,7 @@
 #include "System/Buffer.h"
 #include "KeyspaceConsts.h"
 
+#define KEYSPACECLIENT_GETMASTER	'm'
 #define KEYSPACECLIENT_GET			'g'
 #define KEYSPACECLIENT_DIRTYGET		'd'
 #define KEYSPACECLIENT_LIST			'l'
@@ -27,6 +28,7 @@ public:
 	
 	void					Init(char type_);
 	
+	bool					GetMaster();	
 	bool					Get(ByteString key_);
 	bool					DirtyGet(ByteString key_);
 	bool					List(ByteString prefix_, uint64_t count_);

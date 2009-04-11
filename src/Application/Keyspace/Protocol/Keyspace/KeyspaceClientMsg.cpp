@@ -7,6 +7,12 @@ void KeyspaceClientMsg::Init(char type_)
 	type = type_;
 }
 
+bool KeyspaceClientMsg::GetMaster()
+{
+	Init(KEYSPACECLIENT_GETMASTER);
+	return true;
+}
+
 bool KeyspaceClientMsg::Get(ByteString key_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
@@ -152,6 +158,15 @@ bool KeyspaceClientMsg::Read(ByteString data)
 		Submit();
 		return true;
 	}
+	else if (type == KEYSPACECLIENT_GETMASTER)
+	{
+		if (pos > data.buffer + data.length)
+			return false;
+
+		ValidateLength();
+		GetMaster();
+		return true;
+	}
 	
 	CheckOverflow();
 	ReadSeparator(); CheckOverflow();
@@ -266,7 +281,9 @@ bool KeyspaceClientMsg::Write(ByteString& data)
 {
 	int required;
 	
-	if (type == KEYSPACECLIENT_GET || type == KEYSPACECLIENT_DIRTYGET)
+	if (type == KEYSPACECLIENT_SUBMIT || type == KEYSPACECLIENT_GETMASTER)
+			required = snprintf(data.buffer, data.size, "%c", type);
+	else if (type == KEYSPACECLIENT_GET || type == KEYSPACECLIENT_DIRTYGET)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
 			key.length, key.length, key.buffer);
 	else if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
@@ -287,8 +304,6 @@ bool KeyspaceClientMsg::Write(ByteString& data)
 	else if (type == KEYSPACECLIENT_DELETE)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
 			key.length, key.length, key.buffer);
-	else if (type == KEYSPACECLIENT_SUBMIT)
-			required = snprintf(data.buffer, data.size, "*");
 	else
 		return false;
 	
@@ -297,5 +312,4 @@ bool KeyspaceClientMsg::Write(ByteString& data)
 		
 	data.length = required;
 	return true;
-
 }

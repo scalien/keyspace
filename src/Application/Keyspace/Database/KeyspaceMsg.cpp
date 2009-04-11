@@ -204,9 +204,7 @@ bool KeyspaceMsg::BuildFrom(KeyspaceOp* op)
 {
 	bool ret;
 	
-	if (op->type == KeyspaceOp::GET)
-		Init(KEYSPACE_GET);
-	else if (op->type == KeyspaceOp::SET)
+	if (op->type == KeyspaceOp::SET)
 		Init(KEYSPACE_SET);
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 		Init(KEYSPACE_TESTANDSET);
