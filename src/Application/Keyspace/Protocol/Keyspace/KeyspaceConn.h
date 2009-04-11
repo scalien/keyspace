@@ -28,7 +28,8 @@ private:
 	void				Write(ByteString &bs);
 	void				ProcessMsg();
 	void				AppendOps();
-	
+
+	ByteArray<KEYSPACE_VAL_SIZE + 1*KB> data;	
 	ByteArray<RESP_SIZE>response;
 	KeyspaceServer*		server;
 	KeyspaceClientReq	req;

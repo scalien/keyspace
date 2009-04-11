@@ -147,7 +147,8 @@ public:
 			return true;
 		}
 		
-		free(buffer);
+		if (buffer != NULL)
+			free(buffer);
 		
 		buffer = (char*) Alloc(size_);
 		if (buffer == NULL)

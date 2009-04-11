@@ -342,13 +342,13 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 		op->count = count;	
 	if (type == KEYSPACECLIENT_SET || op->type == KEYSPACECLIENT_TESTANDSET)
 	{
-		if (op->value.Reallocate(value.length))
+		if (!op->value.Reallocate(value.length))
 			return false;
 		op->value.Set(value);
 	}
 	if (type == KEYSPACECLIENT_TESTANDSET)
 	{
-		if (op->test.Reallocate(test.length))
+		if (!op->test.Reallocate(test.length))
 			return false;
 		op->test.Set(test);
 	}

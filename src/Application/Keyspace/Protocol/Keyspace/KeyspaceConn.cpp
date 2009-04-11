@@ -21,7 +21,6 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 {
-	static ByteArray<KEYSPACE_VAL_SIZE + 1*KB> data;
 	Log_Trace();
 	
 	if (op->type == KeyspaceOp::GET ||
@@ -135,9 +134,13 @@ void KeyspaceConn::ProcessMsg()
 	
 	if (req.type == KEYSPACECLIENT_GETMASTER)
 	{
+		return;
 	}
 	else if (req.type == KEYSPACECLIENT_SUBMIT)
+	{
 		kdb->Submit();
+		return;
+	}
 	
 	op = new KeyspaceOp;
 	op->client = this;
@@ -146,9 +149,18 @@ void KeyspaceConn::ProcessMsg()
 	{
 		delete op;
 		OnClose();
+		return;
 	}
 	
-	Add(op, false);
+	if (!Add(op, false))
+	{
+		delete op;
+		resp.Failed();
+		resp.Write(data);
+		Write(data);
+		closeAfterSend = true;
+		return;
+	}
 }
 
 void KeyspaceConn::OnClose()
