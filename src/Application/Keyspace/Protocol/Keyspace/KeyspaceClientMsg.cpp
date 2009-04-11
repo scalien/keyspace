@@ -340,7 +340,7 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 
 	if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
 		op->count = count;	
-	if (type == KEYSPACECLIENT_SET || op->type == KEYSPACECLIENT_TESTANDSET)
+	if (type == KEYSPACECLIENT_SET || type == KEYSPACECLIENT_TESTANDSET)
 	{
 		if (!op->value.Reallocate(value.length))
 			return false;

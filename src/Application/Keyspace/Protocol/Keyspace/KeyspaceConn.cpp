@@ -43,9 +43,9 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	else if (op->type == KeyspaceOp::DELETE)
 	{
 		if (status)
-			resp.Failed();
+			resp.Ok();
 		else
-			resp.NotFound();;
+			resp.NotFound();
 	}
 	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
