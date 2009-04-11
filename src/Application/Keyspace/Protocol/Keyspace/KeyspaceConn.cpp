@@ -80,6 +80,7 @@ void KeyspaceConn::OnRead()
 	
 	do
 	{
+		Log_Message("tcpread buffer %.*s", tcpread.data.length, tcpread.data.buffer);
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
 		if (nread == 0 || tcpread.data.length <= nread)
@@ -98,6 +99,7 @@ void KeyspaceConn::OnRead()
 			break;
 		}
 
+		Log_Message("Attempting Read() with %.*s", msglength, tcpread.data.buffer + msgbegin);
 		if (req.Read(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)))
 			ProcessMsg();
 		else

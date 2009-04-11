@@ -251,11 +251,14 @@ bool KeyspaceClientReq::Read(ByteString data)
 	}
 	else if (type == KEYSPACECLIENT_ADD)
 	{
+		unsigned numlen;
 		ReadUint64_t(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		CheckOverflow();
+		ReadSeparator(); CheckOverflow();
+		ReadUint64_t(numlen); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadInt64_t(num);
 		
