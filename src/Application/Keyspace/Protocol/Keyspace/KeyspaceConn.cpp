@@ -1,15 +1,6 @@
 #include "KeyspaceConn.h"
 #include "KeyspaceServer.h"
 
-#define MSG_OK				"o"
-#define MSG_NOTFOUND		"n"
-#define MSG_FAILED			"f"
-#define MSG_LISTEND			"*"
-#define RESPONSE_OK			TCPConn<>::Write(MSG_OK, strlen(MSG_OK))
-#define RESPONSE_NOTFOUND	TCPConn<>::Write(MSG_NOTFOUND, strlen(MSG_NOTFOUND))
-#define RESPONSE_FAILED		TCPConn<>::Write(MSG_FAILED, strlen(MSG_FAILED))
-#define RESPONSE_LISTEND	TCPConn<>::Write(MSG_LISTEND, strlen(MSG_LISTEND))
-
 KeyspaceConn::KeyspaceConn()
 {
 	server = NULL;
@@ -30,6 +21,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 {
+	static ByteArray<KEYSPACE_VAL_SIZE + 1*KB> data;
 	Log_Trace();
 	
 	if (op->type == KeyspaceOp::GET ||
@@ -37,33 +29,36 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		op->type == KeyspaceOp::ADD)
 	{
 		if (status)
-			Write(op->value);
+			resp.Ok(op->value);
 		else
-			RESPONSE_NOTFOUND;
+			resp.NotFound();
 	}
 	else if (op->type == KeyspaceOp::SET ||
 			 op->type == KeyspaceOp::TEST_AND_SET)
 	{
 		if (status)
-			RESPONSE_OK;
+			resp.Ok();
 		else
-			RESPONSE_FAILED;
+			resp.Failed();
 	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
 		if (status)
-			RESPONSE_OK;
+			resp.Failed();
 		else
-			RESPONSE_NOTFOUND;
+			resp.NotFound();;
 	}
 	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
 		Write(op->key);
 		if (final)
-			RESPONSE_LISTEND;
+			resp.ListEnd();
 	}
 	else
 		ASSERT_FAIL();
+	
+	resp.Write(data);
+	Write(data);
 	
 	if (final)
 	{
@@ -103,7 +98,7 @@ void KeyspaceConn::OnRead()
 			break;
 		}
 
-		if (msg.Read(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)))
+		if (req.Read(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)))
 			ProcessMsg();
 		else
 			OnClose();
@@ -138,16 +133,16 @@ void KeyspaceConn::ProcessMsg()
 	
 	KeyspaceOp* op;
 	
-	if (msg.type == KEYSPACECLIENT_GETMASTER)
+	if (req.type == KEYSPACECLIENT_GETMASTER)
 	{
 	}
-	else if (msg.type == KEYSPACECLIENT_SUBMIT)
+	else if (req.type == KEYSPACECLIENT_SUBMIT)
 		kdb->Submit();
 	
 	op = new KeyspaceOp;
 	op->client = this;
 	
-	if (!msg.ToKeyspaceOp(op))
+	if (!req.ToKeyspaceOp(op))
 	{
 		delete op;
 		OnClose();
@@ -174,12 +169,3 @@ void KeyspaceConn::OnWrite()
 	if (closeAfterSend && !tcpwrite.active)
 		Close();
 }
-
-#undef MSG_OK
-#undef MSG_NOTFOUND
-#undef MSG_FAILED
-#undef MSG_LISTEND
-#undef RESPONSE_OK
-#undef RESPONSE_NOTFOUND
-#undef RESPONSE_FAILED
-#undef RESPONSE_LISTEND

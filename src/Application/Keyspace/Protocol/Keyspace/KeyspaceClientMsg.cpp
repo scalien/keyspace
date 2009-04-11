@@ -359,13 +359,13 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 
 
 
-void KeyspaceClientResp::OK()
+void KeyspaceClientResp::Ok()
 {
 	type = KEYSPACECLIENT_OK;
 	value.length = 0;
 }
 
-void KeyspaceClientResp::OK(ByteString value_)
+void KeyspaceClientResp::Ok(ByteString value_)
 {
 	type = KEYSPACECLIENT_OK;
 	value = value_;

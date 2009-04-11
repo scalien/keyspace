@@ -59,8 +59,8 @@ public:
 	char					type;
 	ByteString				value;
 	
-	void					OK();
-	void					OK(ByteString value_);
+	void					Ok();
+	void					Ok(ByteString value_);
 	void					NotFound();
 	void					Failed();
 	void					ListEnd();
