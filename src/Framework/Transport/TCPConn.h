@@ -219,6 +219,7 @@ void TCPConn<bufferSize>::Close()
 
 	socket.Close();
 	state = DISCONNECTED;
+	readBuffer.Init();
 	
 	// Discard unnecessary buffers if there are any.
 	// Keep the last one, so that when the connection is reused it isn't
