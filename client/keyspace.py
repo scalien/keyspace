@@ -44,7 +44,7 @@ class KeyspaceClient:
 		self._send(msg)
 		return self._getValueResponse()
 
-	def list(self, prefix, count):
+	def list(self, prefix, count = 0):
 		msg = self._createMessage("l", prefix, count)
 		self._send(msg)
 		return self._getListResponse()
