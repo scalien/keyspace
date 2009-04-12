@@ -142,6 +142,8 @@ void KeyspaceConn::Write(ByteString &bs)
 void KeyspaceConn::ProcessMsg()
 {
 	Log_Trace();
+
+	static ByteArray<32> ba;
 	
 	if (req.type == KEYSPACECLIENT_GETMASTER)
 	{
@@ -149,7 +151,10 @@ void KeyspaceConn::ProcessMsg()
 		if (master < 0)
 			resp.Failed(req.cmdID);
 		else
-			resp.Master(req.cmdID, master);
+		{
+			ba.length = snprintf(ba.buffer, ba.size, "%d", master);
+			resp.Ok(req.cmdID, ba);
+		}
 		resp.Write(data);
 		Write(data);
 		return;

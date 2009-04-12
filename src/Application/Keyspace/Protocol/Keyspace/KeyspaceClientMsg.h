@@ -59,10 +59,8 @@ class KeyspaceClientResp
 public:
 	char					type;
 	uint64_t				cmdID;
-	int						masterID;
 	ByteString				value;
 	
-	void					Master(uint64_t cmdID_, unsigned masterID_);
 	void					Ok(uint64_t cmdID_);
 	void					Ok(uint64_t cmdID_, ByteString value_);
 	void					NotFound(uint64_t cmdID_);
