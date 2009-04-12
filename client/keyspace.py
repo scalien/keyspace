@@ -49,7 +49,7 @@ class KeyspaceClient:
 		self._send(msg)
 		return self._getListResponse()
 
-	def dirtylist(self, prefix, count):
+	def dirtylist(self, prefix = "", count = 0):
 		msg = self._createMessage("L", prefix, count)
 		self._send(msg)
 		return self._getListResponse()
