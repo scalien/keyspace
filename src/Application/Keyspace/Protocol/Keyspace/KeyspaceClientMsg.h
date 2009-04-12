@@ -2,7 +2,7 @@
 #define KEYSPACECLIENTMSG_H
 
 #include "System/Buffer.h"
-#include "KeyspaceConsts.h"
+#include "Application/Keyspace/Database/KeyspaceConsts.h"
 
 #define KEYSPACECLIENT_GETMASTER	'm'
 #define KEYSPACECLIENT_GET			'g'
