@@ -24,25 +24,25 @@ public:
 	ByteBuffer				key;
 	ByteBuffer				value;
 	ByteBuffer				test;
+	uint64_t				cmdID;
 	int64_t					num;
 	uint64_t				count;
 	
 	
 	void					Init(char type_);
 	
-	bool					GetMaster();	
-	bool					Get(ByteString key_);
-	bool					DirtyGet(ByteString key_);
-	bool					List(ByteString prefix_, uint64_t count_);
-	bool					DirtyList(ByteString prefix_, uint64_t count_);
-	bool					Set(ByteString key_, ByteString value_);
-	bool					TestAndSet(ByteString key_, ByteString test_, ByteString value_);
-	bool					Add(ByteString key_, int64_t num_);
-	bool					Delete(ByteString key_);
+	bool					GetMaster(uint64_t cmdID_);	
+	bool					Get(uint64_t cmdID_, ByteString key_);
+	bool					DirtyGet(uint64_t cmdID_, ByteString key_);
+	bool					List(uint64_t cmdID_, ByteString prefix_, uint64_t count_);
+	bool					DirtyList(uint64_t cmdID_, ByteString prefix_, uint64_t count_);
+	bool					Set(uint64_t cmdID_, ByteString key_, ByteString value_);
+	bool					TestAndSet(uint64_t cmdID_, ByteString key_, ByteString test_, ByteString value_);
+	bool					Add(uint64_t cmdID_, ByteString key_, int64_t num_);
+	bool					Delete(uint64_t cmdID_, ByteString key_);
 	bool					Submit();
 
 	bool					Read(ByteString data);
-	bool					Write(ByteString& data);
 	
 	bool					ToKeyspaceOp(KeyspaceOp* op);
 };
@@ -58,14 +58,15 @@ class KeyspaceClientResp
 {
 public:
 	char					type;
+	uint64_t				cmdID;
 	ByteString				value;
 	
-	void					Ok();
-	void					Ok(ByteString value_);
-	void					NotFound();
-	void					Failed();
-	void					ListItem(ByteString value_);
-	void					ListEnd();
+	void					Ok(uint64_t cmdID_);
+	void					Ok(uint64_t cmdID_, ByteString value_);
+	void					NotFound(uint64_t cmdID_);
+	void					Failed(uint64_t cmdID_);
+	void					ListItem(uint64_t cmdID_, ByteString value_);
+	void					ListEnd(uint64_t cmdID_);
 	
 	bool					Write(ByteString& data);
 };

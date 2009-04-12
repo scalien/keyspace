@@ -99,7 +99,7 @@ bool PaxosMsg::Read(ByteString& data)
 		<paxosID>#<type>#<<<type specific>>>
 	*/
 	
-#define CheckOverflow()		if ((pos - data.buffer) >= data.length) return false;
+#define CheckOverflow()		if ((pos - data.buffer) >= data.length || pos < data.buffer) return false;
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;

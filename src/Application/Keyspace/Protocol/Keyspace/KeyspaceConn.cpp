@@ -28,28 +28,28 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		op->type == KeyspaceOp::ADD)
 	{
 		if (status)
-			resp.Ok(op->value);
+			resp.Ok(op->cmdID, op->value);
 		else
-			resp.NotFound();
+			resp.NotFound(op->cmdID);
 	}
 	else if (op->type == KeyspaceOp::SET ||
 			 op->type == KeyspaceOp::TEST_AND_SET)
 	{
 		if (status)
-			resp.Ok();
+			resp.Ok(op->cmdID);
 		else
-			resp.Failed();
+			resp.Failed(op->cmdID);
 	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
 		if (status)
-			resp.Ok();
+			resp.Ok(op->cmdID);
 		else
-			resp.NotFound();
+			resp.NotFound(op->cmdID);
 	}
 	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
-		resp.ListItem(op->key);
+		resp.ListItem(op->cmdID, op->key);
 	}
 	else
 		ASSERT_FAIL();
@@ -60,7 +60,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	
 	if (((op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)) && final)
 	{
-		resp.ListEnd();
+		resp.ListEnd(op->cmdID);
 		resp.Write(data);
 		Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
 		Write(data);
@@ -165,7 +165,7 @@ void KeyspaceConn::ProcessMsg()
 	if (!Add(op, false))
 	{
 		delete op;
-		resp.Failed();
+		resp.Failed(op->cmdID);
 		resp.Write(data);
 		Write(data);
 		closeAfterSend = true;

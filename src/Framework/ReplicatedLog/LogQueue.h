@@ -9,7 +9,7 @@ public:
 	bool					Push(ByteString value);
 	ByteString*				Next();
 	ByteString*				Pop();
-	int						Size();
+	int						Length();
 	
 private:
 	List<ByteString*>		queue;

@@ -55,6 +55,7 @@ public:
 	ByteBuffer				value;
 	ByteBuffer				test;
 	ByteBuffer				prefix;
+	uint64_t				cmdID;
 	int64_t					num;
 	uint64_t				count;
 	
@@ -71,6 +72,33 @@ public:
 		value.Free();
 		test.Free();
 		prefix.Free();
+	}
+	
+	bool IsWrite()
+	{
+		return (type == KeyspaceOp::SET || type == KeyspaceOp::TEST_AND_SET ||
+			type == KeyspaceOp::DELETE || type == KeyspaceOp::ADD);
+	}
+
+	bool IsRead()
+	{
+		return !IsWrite();
+	}
+	
+	bool IsGet()
+	{
+		return (type == GET || type == DIRTY_GET);
+	}
+	
+	bool IsList()
+	{
+		return (type == LIST || type == DIRTY_LIST);
+	}
+
+	
+	bool IsDirty()
+	{
+		return (type == DIRTY_GET || type == DIRTY_LIST);
 	}
 };
 

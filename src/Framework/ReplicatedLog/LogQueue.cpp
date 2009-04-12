@@ -41,7 +41,7 @@ ByteString* LogQueue::Pop()
 	return bs;
 }
 
-int LogQueue::Size()
+int LogQueue::Length()
 {
-	return queue.Size();
+	return queue.Length();
 }

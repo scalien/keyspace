@@ -42,7 +42,7 @@ bool ReplicatedLog::Init()
 	masterLease.Init();
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	//if (PaxosConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
+	if (PaxosConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
 		masterLease.AcquireLease();
 	
 	appending = false;
@@ -275,7 +275,7 @@ void ReplicatedLog::OnLearnChosen()
 		}
 
 		
-		if (logQueue.Size() > 0)
+		if (logQueue.Length() > 0)
 		{
 			if (!rmsg.Init(GetNodeID(), PaxosConfig::Get()->restartCounter, 
 				masterLease.GetLeaseEpoch(), *(logQueue.Next())))

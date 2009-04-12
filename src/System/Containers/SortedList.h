@@ -36,7 +36,7 @@ private:
 				if (*curr == NULL)
 					this->tail = node;
 				*curr = node;
-				this->size++;		
+				this->length++;		
 				return true;
 	        } else {
 	            if (unique) {

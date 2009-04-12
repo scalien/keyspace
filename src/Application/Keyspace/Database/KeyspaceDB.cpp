@@ -366,7 +366,7 @@ void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString
 
 	Log_Message("paxosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
 	
-	if (ReplicatedLog::Get()->IsMaster() && ops.Size() > 0)
+	if (ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
 		Append();
 }
 
@@ -400,7 +400,7 @@ void KeyspaceDB::Append()
 
 void KeyspaceDB::OnMasterLease(unsigned)
 {
-	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Size() > 0)
+	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
 		Append();
 }
 

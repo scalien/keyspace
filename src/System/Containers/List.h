@@ -25,9 +25,9 @@ class List
 	public:
 		ListNode<T>*	head;
 		ListNode<T>*	tail;
-		int				size;
+		int				length;
 		
-		List() { head = NULL; tail = NULL; size = 0; }
+		List() { head = NULL; tail = NULL; length = 0; }
 		
 		virtual ~List()
 		{
@@ -39,13 +39,13 @@ class List
 				n = t->next;
 				delete t;
 				t = n;
-				size--;
+				length--;
 			}
 		}
 		
-		int Size()
+		int Length()
 		{
-			return size;
+			return length;
 		}
 		
 		T* Head()
@@ -92,7 +92,7 @@ class List
 			if (head != NULL)
 				head->prev = node;
 			head = node;
-			size++;
+			length++;
 			
 			if (tail == NULL)
 				tail = node;
@@ -108,7 +108,7 @@ class List
 			if (tail != NULL)
 				tail->next = node;
 			tail = node;
-			size++;
+			length++;
 			
 			if (head == NULL)
 				head = node;
@@ -130,7 +130,7 @@ class List
 			else
 				node->next->prev = node->prev;
 			
-			size--;
+			length--;
 			
 			ret = NULL;
 			if (node->next != NULL)
