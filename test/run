@@ -1,12 +1,13 @@
 #!/bin/sh
 
+CONF=keyspace.conf
 
 create_gdb_conf()
 {
 cat > $1.gdb << EOF
 set confirm off
 handle SIG33 nostop
-run $1.conf
+run $CONF
 EOF
 }
 
@@ -35,9 +36,9 @@ if [ "$3" = "-g" ]; then
 	fi
 	CMD="gdb -x $1.gdb $BIN"
 elif [ "$3" = "-v" ]; then
-	CMD="valgrind --leak-check=full --show-reachable=yes -v $BIN $1.conf"
+	CMD="valgrind --leak-check=full --show-reachable=yes -v $BIN $CONF"
 else
-	CMD="$BIN $1.conf"
+	CMD="$BIN $CONF"
 fi
 
 $CMD
