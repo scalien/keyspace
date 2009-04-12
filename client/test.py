@@ -52,7 +52,7 @@ def counter(client):
 	print(str(client.get("counter")))
 
 def protocolEdge(client):
-	print(str(client.set(genString(500), "value")))
+	print(str(client.set(genString(1000), "value")))
 	print(str(client.set("key", genString(1000*1000))))
 	print(str(client.set(genString(1000), genString(1000*1000))))
 
