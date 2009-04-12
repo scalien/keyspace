@@ -111,10 +111,12 @@ public:
 class AsyncListVisitor : public TableVisitor
 {
 public:
-	AsyncListVisitor(const ByteString &keyHint_, KeyspaceOp* op_) :
+	AsyncListVisitor(const ByteString &keyHint_, KeyspaceOp* op_, uint64_t count_) :
 	keyHint(keyHint_)
 	{
 		op = op_;
+		count = count_;
+		num = 0;
 		Init();
 	}
 	
@@ -124,22 +126,31 @@ public:
 		avc->op = op;
 	}
 	
+	void AppendKey(const ByteString &key)
+	{
+		if (!avc->AppendKey(key))
+		{
+			IOProcessor::Complete(avc);
+			Init();
+			avc->AppendKey(key);
+		}
+	}
+	
 	virtual bool Accept(const ByteString &key, const ByteString &)
 	{
 		// don't list system keys
 		if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
 			return true;
 
-		if (strncmp(keyHint.buffer, key.buffer, min(keyHint.length, key.length)) == 0)
+		if ((count == 0 || num < count) &&
+			strncmp(keyHint.buffer, key.buffer, min(keyHint.length, key.length)) == 0)
 		{
-			if (!avc->AppendKey(key))
-			{
-				IOProcessor::Complete(avc);
-				Init();
-			}
+			AppendKey(key);
+			num++;
+			return true;
 		}
-
-		return true;
+		else
+			return false;
 	}
 	
 	virtual const ByteString* GetKeyHint()
@@ -157,6 +168,8 @@ public:
 private:
 	const ByteString		&keyHint;
 	KeyspaceOp*				op;
+	uint64_t				count;
+	uint64_t				num;
 	AsyncVisitorCallback*	avc;
 };
 
@@ -240,7 +253,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
 			return false;
 
-		AsyncListVisitor *alv = new AsyncListVisitor(op->prefix, op);
+		AsyncListVisitor *alv = new AsyncListVisitor(op->prefix, op, op->count);
 		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
 		mdbop->Visit(table, *alv);
 		dbReader.Add(mdbop);

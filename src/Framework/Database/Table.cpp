@@ -135,6 +135,7 @@ bool Table::Visit(TableVisitor &tv)
 	bool ret = true;
 	u_int32_t flags = DB_NEXT;
 
+	// TODO call tv.OnComplete() or error handling
 	if (db->cursor(NULL, &cursor, 0) != 0)
 		return false;
 	
