@@ -20,7 +20,7 @@ class KeyspaceClient:
 		self.readbuf = ""
 		self.id = int(time.time() * 1000)
 		self.writeQueue = []
-		print("running, id = %d" % self.id)
+		self._trace("running, id = %d" % self.id)
 		self._reconnect()
 
 #####################################################################
@@ -32,27 +32,27 @@ class KeyspaceClient:
 	def getmaster(self):
 		msg = self._createMessage("m")
 		self._send(msg)
-		return self._getStatusResponse()
+		return self._getValueResponse()
 
 	def get(self, key):
 		msg = self._createMessage("g", key)
 		self._send(msg)
-		return self._getStatusResponse()
+		return self._getValueResponse()
 
 	def dirtyget(self, key):
 		msg = self._createMessage("G", key)
 		self._send(msg)
-		return self._getStatusResponse()
+		return self._getValueResponse()
 
 	def list(self, prefix, count):
 		msg = self._createMessage("l", prefix, count)
 		self._send(msg)
-		return self._getStatusResponse()
+		return self._getListResponse()
 
 	def dirtylist(self, prefix, count):
 		msg = self._createMessage("L", prefix, count)
 		self._send(msg)
-		return self._getStatusResponse()
+		return self._getListResponse()
 
 	def set(self, key, value):
 		msg = self._createMultiMessage("s", key, value)
@@ -67,7 +67,7 @@ class KeyspaceClient:
 	def add(self, key, num):
 		msg = self._createMessage("a", key, num)
 		self._send(msg)
-		return self._getStatusResponse()
+		return self._getValueResponse()
 
 	def delete(self, key):
 		msg = self._createMessage("d", key)
@@ -83,13 +83,13 @@ class KeyspaceClient:
 			while master == None:
 				try:
 					master = int(self.getmaster())
-					print("master = %s" % str(master))
+					self._trace("master = %s" % str(master))
 				except ProtocolException, e:
-					print("exception = %s" % str(e))
+					self._trace("exception = %s" % str(e))
 					master = None
-			print("connected to %s, master is %s" % (self.nodes[master], str(master)))
+			self._trace("connected to %s, master is %s" % (self.nodes[master], str(master)))
 			if self.node == self.nodes[master]:
-				print("connected to master, %s" % self.nodes[master])
+				self._trace("connected to master, %s" % self.nodes[master])
 				return
 			
 			self._disconnect()
@@ -121,10 +121,10 @@ class KeyspaceClient:
 		while True:
 			try:
 				self._connect()
-				print("connected to %s" % self.node)
+				self._trace("connected to %s" % self.node)
 				return
 			except socket.error, e:
-				print("connect failed to %s" % self.node)
+				self._trace("connect failed to %s" % self.node)
 				time.sleep(RECONNECT_TIMEOUT)
 	
 	def _createString(self, s):
@@ -152,7 +152,7 @@ class KeyspaceClient:
 		msg = self._createString(msg) + "1:*"
 		while True:
 			try:
-				print("sending: " + msg)
+				self._trace("sending: " + msg)
 				self.sock.sendall(msg)
 				return
 			except socket.error, e:
@@ -167,7 +167,7 @@ class KeyspaceClient:
 		length = len(slength) + 1 + int(slength)
 		if len(self.readbuf) < length:
 			return None
-		print("_readMessage: %s" % self.readbuf)
+		self._trace("_readMessage: %s" % self.readbuf)
 		msg = self.readbuf[:length]
 		self.readbuf = self.readbuf[length:]
 		return msg
@@ -208,7 +208,7 @@ class KeyspaceClient:
 		"""
 		try:
 			msg = self._read()
-			print("response = %s" % msg)
+			self._trace("_getValueResponse: response = %s" % msg)
 			
 			token, next = self._getToken(msg)
 			token, next = self._getToken(msg, next)
@@ -234,7 +234,7 @@ class KeyspaceClient:
 	def _getStatusResponse(self):
 		try:
 			msg = self._read()
-			print("response = %s" % msg)
+			self._trace("response = %s" % msg)
 			token, next = self._getToken(msg)
 			token, next = self._getToken(msg, next)
 			
@@ -278,50 +278,5 @@ class KeyspaceClient:
 			raise ProtocolException("Invalid response: %s" % e.args)
 	
 
-if __name__ == "__main__":
-	nodes=["localhost:7080", "localhost:7081"]
-	client = KeyspaceClient(nodes)
-
-	client.connectMaster()
-
-	# resp = client.dirtylist("", 0)
-	# print(str(resp))
-	
-
-	resp = client.dirtyget("counter")
-	print(str(resp))
-	resp = client.dirtyget("counter")
-	print(str(resp))
-
-	resp = client.set("hol", "peru")
-	print(str(resp))
-	
-	resp = client.dirtyget("hol")
-	print(str(resp))
-
-	resp = client.dirtyget("hol")
-	print(str(resp))
-
-	resp = client.testandset("hol", "peru", "budapest")
-	print(str(resp))
-
-	resp = client.get("hol")
-	print(str(resp))
-
-	resp = client.delete("hol")
-	print(str(resp))
-
-	resp = client.get("hol")
-	print(str(resp))
-
-	resp = client.set("counter", 0)
-	print(str(resp))
-
-	resp = client.add("counter", 1)
-	print(str(resp))
-
-	resp = client.add("counter", 1)
-	print(str(resp))
-
-	#~ resp = client.list("", 10)
-	#~ print(str(resp))
+	def _trace(self, msg):
+		print(msg)
