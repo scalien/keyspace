@@ -1,6 +1,6 @@
 import keyspace
 
-def genBig(x):
+def genString(x):
 	from cStringIO import StringIO
 	file_str = StringIO()
 	for num in xrange(x):
@@ -8,12 +8,11 @@ def genBig(x):
 
 	return file_str.getvalue()
 
-def setBigVal(client):
-	msg = genBig(20*1000)
+def stress(client):
+	msg = genString(20*1000) # 20KB values
 	
 	for num in xrange(10):
-		resp = client.set("big", msg)
-		print(str(resp))
+		print(str(client.set("big", msg)))
 
 def users(client):
 	print(str(client.set("user:0", "mtrencseni")))
@@ -52,14 +51,25 @@ def counter(client):
 	print(str(client.add("counter", 2**32)))
 	print(str(client.get("counter")))
 
+def protocolEdge(client):
+	print(str(client.set(genString(500), "value")))
+	print(str(client.set("key", genString(1000*1000))))
+	print(str(client.set(genString(1000), genString(1000*1000))))
+
+def protocolError(client):
+	print(str(client.set(genString(1001), "value")))
+	print(str(client.set("key", genString(1000*1000+1))))
+
 if __name__ == "__main__":
 	nodes=["127.0.0.1:7080", "127.0.0.1:7081", "127.0.0.1:7082"]
 	client = keyspace.KeyspaceClient(nodes, 2)
 	
 	client.connectMaster()
 	
-	#setBigVal(client)
+	#stress(client)
 	#users(client)
 	#counter(client)
-	hol(client)
+	#hol(client)
+	protocolEdge(client)
+	#protocolError(client)
 	
