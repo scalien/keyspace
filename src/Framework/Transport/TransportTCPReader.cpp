@@ -30,7 +30,7 @@ void TransportTCPConn::OnRead()
 		if (tcpread.data.length < msgend)
 		{
 			// request just the right amount
-			tcpread.requested = msgend - tcpread.data.length;
+			tcpread.requested = msgend;
 			break;
 		}
 		
