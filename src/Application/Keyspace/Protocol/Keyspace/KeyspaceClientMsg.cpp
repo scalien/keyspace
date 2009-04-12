@@ -165,8 +165,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 			return false;
 
 		ValidateLength();
-		Submit();
-		return true;
+		return Submit();
 	}
 	
 	CheckOverflow();
@@ -179,8 +178,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 			return false;
 
 		ValidateLength();
-		GetMaster(cmdID);
-		return true;
+		return GetMaster(cmdID);
 	}
 	
 	CheckOverflow();
@@ -195,10 +193,9 @@ bool KeyspaceClientReq::Read(ByteString data)
 		
 		ValidateLength();		
 		if (type == KEYSPACECLIENT_GET)
-			Get(cmdID, ByteString(key.length, key.length, key.buffer));
+			return Get(cmdID, ByteString(key.length, key.length, key.buffer));
 		else
-			DirtyGet(cmdID, ByteString(key.length, key.length, key.buffer));
-		return true;
+			return DirtyGet(cmdID, ByteString(key.length, key.length, key.buffer));
 	}
 	else if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
 	{
@@ -215,10 +212,9 @@ bool KeyspaceClientReq::Read(ByteString data)
 		
 		ValidateLength();
 		if (type == KEYSPACECLIENT_LIST)
-			List(cmdID, ByteString(key.length, key.length, key.buffer), count);
+			return List(cmdID, ByteString(key.length, key.length, key.buffer), count);
 		else
-			DirtyList(cmdID, ByteString(key.length, key.length, key.buffer), count);
-		return true;
+			return DirtyList(cmdID, ByteString(key.length, key.length, key.buffer), count);
 	}
 	else if (type == KEYSPACECLIENT_SET)
 	{
@@ -235,9 +231,8 @@ bool KeyspaceClientReq::Read(ByteString data)
 		pos += value.length;
 		
 		ValidateLength();
-		Set(cmdID, ByteString(key.length, key.length, key.buffer),
-			ByteString(value.length, value.length, value.buffer));
-		return true;
+		return Set(cmdID, ByteString(key.length, key.length, key.buffer),
+				   ByteString(value.length, value.length, value.buffer));
 	}
 	else if (type == KEYSPACECLIENT_TESTANDSET)
 	{
@@ -261,10 +256,9 @@ bool KeyspaceClientReq::Read(ByteString data)
 		pos += value.length;
 		
 		ValidateLength();
-		TestAndSet(cmdID, ByteString(key.length, key.length, key.buffer),
-				   ByteString(test.length, test.length, test.buffer),
-				   ByteString(value.length, value.length, value.buffer));
-		return true;
+		return TestAndSet(cmdID, ByteString(key.length, key.length, key.buffer),
+						  ByteString(test.length, test.length, test.buffer),
+						  ByteString(value.length, value.length, value.buffer));
 	}
 	else if (type == KEYSPACECLIENT_ADD)
 	{
@@ -280,8 +274,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 		ReadInt64_t(num);
 		
 		ValidateLength();
-		Add(cmdID, ByteString(key.length, key.length, key.buffer), num);
-		return true;
+		return Add(cmdID, ByteString(key.length, key.length, key.buffer), num);
 	}
 	else if (type == KEYSPACECLIENT_DELETE)
 	{
@@ -291,8 +284,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 		pos += key.length;
 		
 		ValidateLength();
-		Delete(cmdID, ByteString(key.length, key.length, key.buffer));
-		return true;
+		return Delete(cmdID, ByteString(key.length, key.length, key.buffer));
 	}
 	
 	return false;
