@@ -32,7 +32,8 @@ public:
 	bool						GetLogItem(uint64_t paxosID, ByteString& value);
 	uint64_t					GetPaxosID();
 	void						SetPaxosID(Transaction* transaction, uint64_t paxosID);
-	bool						IsMaster();	
+	bool						IsMaster();
+	int							GetMaster();
 	unsigned 					GetNodeID();
 	void						Stop();
 	void						Continue();

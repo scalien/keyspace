@@ -352,11 +352,19 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 }
 
 
+void KeyspaceClientResp::Master(uint64_t cmdID_, unsigned masterID_)
+{
+	type = KEYSPACECLIENT_OK;
+	cmdID = cmdID_;
+	masterID = masterID_;
+	value.length = 0;
+}
 
 void KeyspaceClientResp::Ok(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_OK;
 	cmdID = cmdID_;
+	masterID = -1;
 	value.length = 0;
 }
 
@@ -364,6 +372,7 @@ void KeyspaceClientResp::Ok(uint64_t cmdID_, ByteString value_)
 {
 	type = KEYSPACECLIENT_OK;
 	cmdID = cmdID_;
+	masterID = -1;
 	value = value_;
 }
 
@@ -371,6 +380,7 @@ void KeyspaceClientResp::NotFound(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_NOTFOUND;
 	cmdID = cmdID_;
+	masterID = -1;
 	value.length = 0;
 }
 
@@ -378,6 +388,7 @@ void KeyspaceClientResp::Failed(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_FAILED;
 	cmdID = cmdID_;
+	masterID = -1;
 	value.length = 0;
 }
 
@@ -385,6 +396,7 @@ void KeyspaceClientResp::ListItem(uint64_t cmdID_, ByteString value_)
 {
 	type = KEYSPACECLIENT_LISTITEM;
 	cmdID = cmdID_;
+	masterID = -1;
 	value = value_;
 }
 
@@ -392,6 +404,7 @@ void KeyspaceClientResp::ListEnd(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_LISTEND;
 	cmdID = cmdID_;
+	masterID = -1;
 	value.length = 0;
 }
 
@@ -402,6 +415,9 @@ bool KeyspaceClientResp::Write(ByteString& data)
 	if (value.length > 0)
 		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s",
 			type, cmdID, value.length, value.length, value.buffer);
+	else if (masterID >= 0)
+		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d",
+			type, cmdID, masterID);
 	else
 		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 "", type, cmdID);
 	

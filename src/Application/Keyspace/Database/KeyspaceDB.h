@@ -23,6 +23,8 @@ public:
 	bool					Add(KeyspaceOp* op, bool submit = true);
 	bool					Submit();
 	unsigned				GetNodeID();
+	bool					IsMasterKnown();
+	int						GetMaster();
 	void					OnCatchupComplete();	// called by CatchupClient
 	void					OnCatchupFailed();		// called by CatchupClient
 	

@@ -73,9 +73,12 @@ bool PLeaseLearner::LeaseKnown()
 		return false;	
 }
 
-unsigned PLeaseLearner::LeaseOwner()
+int PLeaseLearner::LeaseOwner()
 {
-	return state.leaseOwner;
+	if (state.learned && Now() < state.expireTime)
+		return state.leaseOwner;
+	else
+		return -1;
 }
 
 uint64_t PLeaseLearner::LeaseEpoch()

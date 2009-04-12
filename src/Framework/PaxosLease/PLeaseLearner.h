@@ -18,8 +18,8 @@ public:
 	void					OnLeaseTimeout();
 	bool					IsLeaseOwner();
 	bool					LeaseKnown();
-	unsigned				LeaseOwner();
-	uint64_t					LeaseEpoch();
+	int						LeaseOwner();
+	uint64_t				LeaseEpoch();
 	void					SetOnLearnLease(Callable* onLearnLeaseCallback_);
 	void					SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_);
 

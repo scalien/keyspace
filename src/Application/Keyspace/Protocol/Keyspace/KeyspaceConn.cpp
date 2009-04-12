@@ -143,10 +143,15 @@ void KeyspaceConn::ProcessMsg()
 {
 	Log_Trace();
 	
-	KeyspaceOp* op;
-	
 	if (req.type == KEYSPACECLIENT_GETMASTER)
 	{
+		int master = kdb->GetMaster();
+		if (master < 0)
+			resp.Failed(req.cmdID);
+		else
+			resp.Master(req.cmdID, master);
+		resp.Write(data);
+		Write(data);
 		return;
 	}
 	else if (req.type == KEYSPACECLIENT_SUBMIT)
@@ -154,6 +159,8 @@ void KeyspaceConn::ProcessMsg()
 		kdb->Submit();
 		return;
 	}
+	
+	KeyspaceOp* op;
 	
 	op = new KeyspaceOp;
 	op->client = this;

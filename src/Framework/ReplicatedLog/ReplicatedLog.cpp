@@ -149,6 +149,11 @@ bool ReplicatedLog::IsMaster()
 	return masterLease.IsLeaseOwner();
 }
 
+int ReplicatedLog::GetMaster()
+{
+	return masterLease.GetLeaseOwner();
+}
+
 unsigned ReplicatedLog::GetNodeID()
 {
 	return PaxosConfig::Get()->nodeID;

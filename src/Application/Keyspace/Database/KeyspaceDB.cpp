@@ -212,6 +212,16 @@ unsigned KeyspaceDB::GetNodeID()
 	return ReplicatedLog::Get()->GetNodeID();
 }
 
+bool KeyspaceDB::IsMasterKnown()
+{
+	return ReplicatedLog::Get()->GetMaster();
+}
+
+int KeyspaceDB::GetMaster()
+{
+	return ReplicatedLog::Get()->GetMaster();
+}
+
 bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 {
 	Log_Trace();
