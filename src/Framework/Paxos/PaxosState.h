@@ -11,9 +11,9 @@ public:
 	bool					preparing;
 	bool					proposing;
 	
-	uint64_t					proposalID;
-	uint64_t					highestReceivedProposalID;
-	ByteArray<VALUE_SIZE>	value;
+	uint64_t				proposalID;
+	uint64_t				highestReceivedProposalID;
+	ByteArray<PAXOS_VAL_SIZE>value;
 	
 	bool					leader;			// multi paxos
 	unsigned				numProposals;	// number of proposal runs in this Paxos round
@@ -35,10 +35,10 @@ public:
 class PaxosAcceptorState
 {
 public:
-	uint64_t					promisedProposalID;
+	uint64_t				promisedProposalID;
 	bool					accepted;	
-	uint64_t					acceptedProposalID;
-	ByteArray<VALUE_SIZE>	acceptedValue;
+	uint64_t				acceptedProposalID;
+	ByteArray<PAXOS_VAL_SIZE>acceptedValue;
 	
 	void Init()
 	{
@@ -53,7 +53,7 @@ class PaxosLearnerState
 {
 public:
 	bool					learned;
-	ByteArray<VALUE_SIZE>	value;
+	ByteArray<PAXOS_VAL_SIZE>value;
 	
 	void Init()
 	{

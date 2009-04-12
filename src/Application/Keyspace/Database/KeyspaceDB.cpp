@@ -39,7 +39,7 @@ private:
 	DynArray<1024>		out;
 };
 
-#define VISITOR_LIMIT	1024
+#define VISITOR_LIMIT	4096
 class AsyncVisitorCallback : public Callable
 {
 public:
@@ -393,8 +393,8 @@ void KeyspaceDB::Append()
 	KeyspaceOp*	op;
 	KeyspaceOp**it;
 
-	data.length = 0;
-	bs = data;
+	pvalue.length = 0;
+	bs = pvalue;
 
 	for (it = ops.Head(); it != NULL; it = ops.Next(it))
 	{
@@ -402,7 +402,7 @@ void KeyspaceDB::Append()
 		msg.FromKeyspaceOp(op);
 		if (msg.Write(bs))
 		{
-			data.length += bs.length;
+			pvalue.length += bs.length;
 			bs.Advance(bs.length);
 			
 			if (bs.length <= 0)
@@ -412,7 +412,8 @@ void KeyspaceDB::Append()
 			break;
 	}
 	
-	ReplicatedLog::Get()->Append(data);
+	if (pvalue.length > 0)
+		ReplicatedLog::Get()->Append(pvalue);
 }
 
 void KeyspaceDB::OnMasterLease(unsigned)

@@ -32,10 +32,10 @@ protected:
 	void					StartProposing();
 
 	TransportWriter**		writers;
-	ByteArray<PAXOS_BUFSIZE>wdata;
+	ByteArray<PAXOS_BUF_SIZE>wdata;
 	PaxosProposerState		state;
 	PaxosMsg				msg;
-	uint64_t					paxosID;
+	uint64_t				paxosID;
 	MFunc<PaxosProposer>	onPrepareTimeout;
 	MFunc<PaxosProposer>	onProposeTimeout;
 	CdownTimer				prepareTimeout;

@@ -16,7 +16,7 @@ public:
 	unsigned					nodeID;
 	uint64_t					restartCounter;
 	uint64_t					leaseEpoch;
-	ByteArray<PAXOS_BUFSIZE>	value;
+	ByteArray<PAXOS_BUF_SIZE>	value;
 	
 	bool						Init(unsigned nodeID_, uint64_t restartCounter_, uint64_t leaseEpoch_,
 									ByteString& value_);

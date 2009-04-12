@@ -3,8 +3,8 @@
 
 #include "System/Common.h"
 
-#define	VALUE_SIZE					(512*KB)
-#define PAXOS_BUFSIZE				(512*KB + 1*KB)
+#define	PAXOS_VAL_SIZE				(1*MB + 2*KB)
+#define PAXOS_BUF_SIZE				(PAXOS_VAL_SIZE + 1*KB)
 
 #define PAXOS_PORT_OFFSET			0
 

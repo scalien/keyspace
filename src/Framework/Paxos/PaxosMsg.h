@@ -31,13 +31,13 @@
 class PaxosMsg
 {
 public:
-	uint64_t					paxosID;
+	uint64_t				paxosID;
 	unsigned				nodeID;
 	char					type;
-	uint64_t					proposalID;
+	uint64_t				proposalID;
 	char					subtype;
-	uint64_t					acceptedProposalID;
-	ByteArray<VALUE_SIZE>	value;
+	uint64_t				acceptedProposalID;
+	ByteArray<PAXOS_VAL_SIZE>value;
 	
 	void					Init(uint64_t paxosID_, char type_, unsigned nodeID_);
 		

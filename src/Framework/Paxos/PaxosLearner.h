@@ -29,7 +29,7 @@ protected:
 	void					OnRequestChosen(PaxosMsg& msg_);
 
 	TransportWriter**		writers;
-	ByteArray<PAXOS_BUFSIZE>wdata;
+	ByteArray<PAXOS_BUF_SIZE>wdata;
 	uint64_t					paxosID;
 	PaxosMsg				msg;
 	PaxosLearnerState		state;

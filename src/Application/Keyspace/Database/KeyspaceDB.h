@@ -43,7 +43,8 @@ private:
 	List<KeyspaceOp*>		ops;
 	Table*					table;
 	KeyspaceMsg				msg;
-	ByteArray<VALUE_SIZE>	data;
+	ByteArray<PAXOS_VAL_SIZE>pvalue;
+	ByteArray<KEYSPACE_VAL_SIZE>data;
 	CatchupServer			catchupServer;
 	CatchupClient			catchupClient;
 };
