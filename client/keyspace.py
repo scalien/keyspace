@@ -11,7 +11,7 @@ class ConnectionException(KeyspaceException): pass
 class ProtocolException(KeyspaceException): pass
 
 class KeyspaceClient:
-	def __init__(self, nodes, timeout = None):
+	def __init__(self, nodes, timeout = None, trace = False):
 		self.nodes = nodes
 		self.timeout = timeout
 		self.node = None
@@ -19,6 +19,7 @@ class KeyspaceClient:
 		self.readbuf = ""
 		self.id = int(time.time() * 1000)
 		self.writeQueue = []
+		self.trace = trace
 		self._trace("running, id = %d" % self.id)
 		self._reconnect()
 
@@ -283,6 +284,8 @@ class KeyspaceClient:
 	
 
 	def _trace(self, msg):
+		if not self.trace:
+			return
 		caller = ""
 		import sys
 		frame = sys._getframe(1)

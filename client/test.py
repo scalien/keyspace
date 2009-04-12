@@ -18,7 +18,7 @@ def setBigVal(client):
 
 if __name__ == "__main__":
 	nodes=["localhost:7080", "localhost:7081"]
-	client = keyspace.KeyspaceClient(nodes, 3)
+	client = keyspace.KeyspaceClient(nodes, 3, True)
 	# setBigVal(client)
 
 
@@ -30,16 +30,12 @@ if __name__ == "__main__":
 
 	resp = client.dirtyget("counter")
 	print(str(resp))
-	# resp = client.dirtyget("counter")
-	# print(str(resp))
 
 	resp = client.set("hol", "peru")
 	print(str(resp))
 	
 	resp = client.dirtyget("hol")
 	print(str(resp))
-
-	exit()
 
 	resp = client.dirtyget("hol")
 	print(str(resp))
@@ -65,5 +61,5 @@ if __name__ == "__main__":
 	resp = client.add("counter", 1)
 	print(str(resp))
 
-	#~ resp = client.list("", 10)
-	#~ print(str(resp))
+	resp = client.list("", 10)
+	print(str(resp))
