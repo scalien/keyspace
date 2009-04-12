@@ -1,0 +1,5 @@
+To build Keyspace, type 'make' on Linux.
+
+This will create the Keyspace binary 'keyspace' in the 'bin' folder.
+
+To launch the Keyspace binary...
