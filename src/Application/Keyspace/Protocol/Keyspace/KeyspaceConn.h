@@ -9,8 +9,6 @@
 
 class KeyspaceServer;
 
-#define RESP_SIZE	KEYSPACE_VAL_SIZE + 1*KB
-
 class KeyspaceConn : public TCPConn<>, public KeyspaceClient
 {
 public:
@@ -29,14 +27,11 @@ private:
 	void				ProcessMsg();
 	void				AppendOps();
 
-	ByteArray<KEYSPACE_VAL_SIZE + 1*KB> data;	
-	ByteArray<RESP_SIZE>response;
+	ByteArray<KEYSPACE_BUF_SIZE> data;
 	KeyspaceServer*		server;
 	KeyspaceClientReq	req;
 	KeyspaceClientResp	resp;
 	bool				closeAfterSend;
 };
-
-#undef RESP_SIZE
 
 #endif

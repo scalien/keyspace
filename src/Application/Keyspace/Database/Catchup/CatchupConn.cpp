@@ -9,7 +9,7 @@ CatchupConn::CatchupConn(CatchupServer* server_)
 
 void CatchupConn::Init()
 {
-	TCPConn<BUF_SIZE>::Init(false);
+	TCPConn<PAXOS_BUF_SIZE>::Init(false);
 	
 	if (ReplicatedLog::Get()->GetTransaction()->IsActive())
 		ReplicatedLog::Get()->GetTransaction()->Commit();

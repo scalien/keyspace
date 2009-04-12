@@ -6,7 +6,7 @@
 #include "CatchupServer.h"
 #include "CatchupMsg.h"
 
-class CatchupConn : public TCPConn<BUF_SIZE>
+class CatchupConn : public TCPConn<PAXOS_BUF_SIZE>
 {
 public:
 	CatchupConn(CatchupServer* server_);
