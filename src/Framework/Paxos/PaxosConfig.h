@@ -11,7 +11,7 @@ class PaxosConfig
 public:
 	static PaxosConfig* Get();
 	
-	bool			Init(char* filename);
+	bool			Init();
 	
 	unsigned		MinMajority();
 	uint64_t		NextHighest(uint64_t proposalID);

@@ -14,52 +14,8 @@ PaxosConfig* PaxosConfig::Get()
 	return &config;
 }
 
-bool PaxosConfig::Init(char *filename)
+bool PaxosConfig::Init()
 {
-/*
-	FILE*		f;
-	char		buffer[1024];
-	Endpoint	endpoint, me;
-
-#define ReadLine()	if (fgets(buffer, sizeof(buffer), f) == NULL) \
-					{ Log_Message("fgets() failed"); return false; }
-
-	f = fopen(filename, "r");
-	if (f == NULL)
-	{
-		Log_Errno();
-		return false;
-	}
-	
-	// first line is my nodeID
-	ReadLine();
-	
-	nodeID = -1;
-	nodeID = atoi(buffer);
-	if (nodeID < 0 || nodeID > 1000)
-	{
-		Log_Message("atoi() failed to produce a sensible value");
-		return false;
-	}
-	
-	// next line is my host specification
-	ReadLine();
-	
-	me.Set(buffer);
-	port = me.GetPort();
-	
-	// read empty line
-	ReadLine();
-	
-	// now read other nodes, including myself
-	numNodes = 0;
-	while (fgets(buffer, sizeof(buffer), f) != NULL)
-	{
-		endpoint.Set(buffer);
-		endpoints[numNodes] = endpoint;
-		numNodes++;
-	}
-*/
 	Endpoint	endpoint;
 
 	nodeID = Config::GetIntValue("paxos.nodeID", 0);
