@@ -161,6 +161,8 @@ unsigned ReplicatedLog::GetNodeID()
 
 void ReplicatedLog::OnRead()
 {
+	Log_Trace();
+	
 	ByteString bs;
 	reader->GetMessage(bs);
 	pmsg.Read(bs);
@@ -272,11 +274,12 @@ void ReplicatedLog::OnLearnChosen()
 			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && masterLease.IsLeaseOwner())
 		{
 			proposer.state.leader = true;
-			Log_Message("Multi paxos enabled!");
+			Log_Message("Multi paxos enabled");
 		}
 		else
 		{
 			proposer.state.leader = false;
+			Log_Message("Multi paxos disabled");
 		}
 
 		
