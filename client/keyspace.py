@@ -13,8 +13,7 @@ class ProtocolException(KeyspaceException): pass
 class KeyspaceClient:
 	def __init__(self, nodes, timeout = None):
 		self.nodes = nodes
-		if timeout:
-			socket.setdefaulttimeout(timeout)
+		self.timeout = timeout
 		self.node = None
 		self.multi = False
 		self.readbuf = ""
@@ -92,8 +91,11 @@ class KeyspaceClient:
 				self._trace("connected to master, %s" % self.nodes[master])
 				return
 			
-			self._disconnect()
-			self._connectNode(self.nodes[master])
+			try:
+				self._disconnect()
+				self._connectNode(self.nodes[master])
+			except socket.error, e:
+				self._trace("connection to master failed, master = %d" % master)
 
 #####################################################################
 #
@@ -114,6 +116,8 @@ class KeyspaceClient:
 		host = node[0]
 		port = int(node[1])
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		if self.timeout:
+			self.sock.settimeout(self.timeout)
 		self.sock.connect((host, port))
 		self.node = nodename
 	
@@ -167,7 +171,7 @@ class KeyspaceClient:
 		length = len(slength) + 1 + int(slength)
 		if len(self.readbuf) < length:
 			return None
-		self._trace("_readMessage: %s" % self.readbuf)
+		self._trace("%s" % self.readbuf)
 		msg = self.readbuf[:length]
 		self.readbuf = self.readbuf[length:]
 		return msg
@@ -208,7 +212,7 @@ class KeyspaceClient:
 		"""
 		try:
 			msg = self._read()
-			self._trace("_getValueResponse: response = %s" % msg)
+			self._trace("response = %s" % msg)
 			
 			token, next = self._getToken(msg)
 			token, next = self._getToken(msg, next)
@@ -279,4 +283,11 @@ class KeyspaceClient:
 	
 
 	def _trace(self, msg):
-		print(msg)
+		caller = ""
+		import sys
+		frame = sys._getframe(1)
+		if frame.f_locals.has_key("self"):
+			caller = str(frame.f_locals["self"].__class__.__name__) + "."
+		caller += frame.f_code.co_name
+		logstr = caller + ": " + msg
+		print logstr
