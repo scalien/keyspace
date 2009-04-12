@@ -89,7 +89,7 @@ void KeyspaceConn::OnRead()
 		Log_Message("tcpread buffer %.*s", tcpread.data.length, tcpread.data.buffer);
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
-		if (nread == 0 || tcpread.data.length <= nread)
+		if (nread == 0 || (unsigned) tcpread.data.length <= nread)
 			break;
 			
 		if (tcpread.data.buffer[nread] != ':')
@@ -100,7 +100,7 @@ void KeyspaceConn::OnRead()
 		
 		Log_Message("%d %d %d", msgbegin, msgend, tcpread.data.length);
 
-		if (tcpread.data.length < msgend)
+		if ((unsigned) tcpread.data.length < msgend)
 		{
 			tcpread.requested = msgend;
 			break;

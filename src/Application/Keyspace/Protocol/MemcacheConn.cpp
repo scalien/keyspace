@@ -93,8 +93,8 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 	const char STORED[] = "STORED" CS_CRLF;
 	const char NOT_STORED[] = "NOT_STORED" CS_CRLF;
 	DynArray<MAX_MESSAGE_SIZE> buf;
-	const char *p;
-	int size;
+	const char *p = buf.buffer;
+	int size = 0;
 	
 	if (op->type == KeyspaceOp::GET && status)
 	{
@@ -263,13 +263,14 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	data_start = DATA_START(tokens, numtoken);
 	if (data_start > data + size)
 		return data;
-	
+
+	op = new KeyspaceOp;	
 	op->client = this;
 	op->type = KeyspaceOp::SET;
 	
 	numlen = 0;
 	num = strntoint64_t((char *) tokens[TOKEN_BYTES].value, tokens[TOKEN_BYTES].len, &numlen);
-	if (numlen != tokens[TOKEN_BYTES].len)
+	if (numlen != (unsigned) tokens[TOKEN_BYTES].len)
 		return NULL;
 	
 	if (size - (data_start - data) < num + (long) CRLF_LENGTH)

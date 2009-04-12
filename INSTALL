@@ -1,5 +1,68 @@
-To build Keyspace, type 'make' on Linux.
+
+Building Keyspace
+=================
+
+In order to build Keyspace, you will need the following libraries:
+- BerkeleyDB C++ library (libdb4.4++-dev)
+
+To build Keyspace, type 'make'.
 
 This will create the Keyspace binary 'keyspace' in the 'bin' folder.
 
-To launch the Keyspace binary...
+
+
+Running Keyspace
+================
+
+To launch the Keyspace, start it with the included safe script
+which can be found at script/safe_keyspace.
+
+Usage:
+
+	script/safe_keyspace [binary-file] [config-file]
+
+E.g.
+
+	script/safe_keyspace bin/keyspace test/0/keyspace.conf
+
+
+If you want to run more than one instances:
+
+	script/safe_keyspace bin/keyspace test/1/keyspace.conf
+	script/safe_keyspace bin/keyspace test/2/keyspace.conf
+	
+
+Configuration options
+=====================
+
+- paxos.endpoints
+
+	This must be the same on all nodes. These values define a Paxos ring.
+
+- paxos.nodeID
+	
+	This must be different on all nodes. The first node's ID is 0, the
+	seconds' is 1 and so on.
+
+- database.dir
+
+	The directory where the BerkeleyDB files are stored. If you run 
+	multiple instances on the same host, this must be different for all nodes.
+
+- database.type
+
+	Currently unused.
+
+- http.port
+
+	The port of the Keyspace HTTP server.  If you run  multiple instances 
+	on the same host, this must be different for all nodes.
+
+- memcached.port
+
+	The port of the Memcached server. Currently unused.
+
+- keyspace.port
+
+	The port of the Keyspace protocol. If you run  multiple instances 
+	on the same host, this must be different for all nodes.

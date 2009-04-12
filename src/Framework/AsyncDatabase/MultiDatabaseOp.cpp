@@ -29,7 +29,7 @@ bool MultiDatabaseOp::Get(Table* table, const ByteString &key, ByteString& value
 	if (numop >= SIZE(ops))
 		return false;
 	
-	op = &op[numop];
+	op = &ops[numop];
 	op->type = DatabaseOp::GET;
 	op->table = table;
 	op->key = key;

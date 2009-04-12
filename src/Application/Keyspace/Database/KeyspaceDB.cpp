@@ -324,7 +324,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		if (ret)
 		{
 			num = strntoint64_t(data.buffer, data.length, &nread); // parse number
-			if (nread == data.length)
+			if (nread == (unsigned) data.length)
 			{
 				num = num + msg.num;
 				data.length = snprintf(data.buffer, data.size, "%" PRIi64 "", num); // print number

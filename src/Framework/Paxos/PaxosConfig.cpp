@@ -20,7 +20,7 @@ bool PaxosConfig::Init()
 
 	nodeID = Config::GetIntValue("paxos.nodeID", 0);
 	numNodes = Config::GetListNum("paxos.endpoints");
-	for (int i = 0; i < numNodes; i++)
+	for (unsigned i = 0; i < numNodes; i++)
 	{
 		endpoint.Set(Config::GetListValue("paxos.endpoints", i, NULL));
 		endpoints[i] = endpoint;
@@ -57,7 +57,7 @@ void PaxosConfig::InitRestartCounter()
 	if (ret)
 	{
 		restartCounter = strntouint64_t(baRestartCounter.buffer, baRestartCounter.length, &nread);
-		if (nread != baRestartCounter.length)
+		if (nread != (unsigned) baRestartCounter.length)
 			restartCounter = 0;
 	}
 	else

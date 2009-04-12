@@ -355,7 +355,7 @@ bool IOProcessor::Poll(int sleep)
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
 	int							newev, currentev;
-	int							newfd;
+	int							newfd = -1;
 	
 	called = Now();
 	

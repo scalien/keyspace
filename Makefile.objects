@@ -11,10 +11,10 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Database/KeyspaceMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/MemcacheServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpConn.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpRequest.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/IMF.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/MemcacheConn.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpServer.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpRequest.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceConn.o \
@@ -44,6 +44,7 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Framework/PaxosLease/PLeaseLearner.o \
 	$(BUILD_DIR)/Framework/PaxosLease/PLeaseAcceptor.o \
 	$(BUILD_DIR)/System/Common.o \
+	$(BUILD_DIR)/System/Config.o \
 	$(BUILD_DIR)/System/Events/Scheduler.o \
 	$(BUILD_DIR)/System/Log.o \
 	$(BUILD_DIR)/System/ThreadPool.o \

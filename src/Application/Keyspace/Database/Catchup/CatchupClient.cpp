@@ -40,7 +40,7 @@ void CatchupClient::OnRead()
 	{
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
-		if (nread == 0 || tcpread.data.length <= nread)
+		if (nread == 0 || (unsigned) tcpread.data.length <= nread)
 			break;
 			
 		if (tcpread.data.buffer[nread] != ':')
@@ -49,7 +49,7 @@ void CatchupClient::OnRead()
 		msgbegin = nread + 1;
 		msgend = nread + 1 + msglength;
 
-		if (tcpread.data.length < msgend)
+		if ((unsigned) tcpread.data.length < msgend)
 		{
 			tcpread.requested = msgend;
 			break;

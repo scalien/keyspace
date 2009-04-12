@@ -36,7 +36,7 @@ bool ReplicatedLogMsg::Read(ByteString& data)
 	ReadUint64_t(length); CheckOverflow();
 	ReadSeparator();
 		
-	if (pos - data.buffer != data.length - length)
+	if (pos - data.buffer != (int) (data.length - length))
 		return false;
 	
 	value.Set(ByteString(data.size - (pos - data.buffer), length, pos));
