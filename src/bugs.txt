@@ -1,3 +1,0 @@
-MemoMsg.msgID is not handled correctly --- this should be "global" per MemoServer
-
-PaxosInstance should know about epochIDs so it can tell its messages apart

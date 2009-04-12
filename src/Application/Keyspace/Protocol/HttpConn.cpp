@@ -144,10 +144,12 @@ int HttpConn::ProcessGetRequest()
 	const char* value;
 	const char* test;
 	const char* prefix;
+	const char* count;
 	int keylen;
 	int valuelen;
 	int testlen;
 	int prefixlen;
+	int countlen;
 	unsigned nread;
 	// http://localhost:8080/get/key
 	// http://localhost:8080/set/key/value
@@ -370,10 +372,37 @@ int HttpConn::ProcessGetRequest()
 	else if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0)
 	{
 		prefix = request.line.uri + strlen("/list/");
-		prefixlen = strlen(prefix);
 		
 		op->type = KeyspaceOp::LIST;
 		
+		count = strchr(prefix, '/');
+		if (count == NULL)
+		{
+			prefixlen = strlen(prefix);
+			op->count = 0;
+		}
+		else
+		{
+			prefixlen = count - prefix;
+			count++;
+			countlen = strlen(count);
+			
+			if (countlen < 1)
+			{
+				op->count = 0;
+			}
+			else
+			{
+				op->count = strntouint64_t(count, countlen, &nread);
+				if (nread != countlen)
+				{
+					delete op;
+					RESPONSE_FAIL;
+					return 0;
+				}
+			}
+		}
+				
 		// HACK +1 is to handle empty string (solution is to use DynBuffer)
 		if (!op->prefix.Allocate(prefixlen + 1))
 		{
@@ -394,10 +423,37 @@ int HttpConn::ProcessGetRequest()
 	else if (strncmp(request.line.uri, "/dirtylist/", strlen("/dirtylist/")) == 0)
 	{
 		prefix = request.line.uri + strlen("/dirtylist/");
-		prefixlen = strlen(prefix);
 		
 		op->type = KeyspaceOp::DIRTY_LIST;
 		
+		count = strchr(prefix, '/');
+		if (count == NULL)
+		{
+			prefixlen = strlen(prefix);
+			op->count = 0;
+		}
+		else
+		{
+			prefixlen = count - prefix;
+			count++;
+			countlen = strlen(count);
+			
+			if (countlen < 1)
+			{
+				op->count = 0;
+			}
+			else
+			{
+				op->count = strntouint64_t(count, countlen, &nread);
+				if (nread != countlen)
+				{
+					delete op;
+					RESPONSE_FAIL;
+					return 0;
+				}
+			}
+		}
+				
 		// HACK +1 is to handle empty string (solution is to use DynBuffer)
 		if (!op->prefix.Allocate(prefixlen + 1))
 		{
