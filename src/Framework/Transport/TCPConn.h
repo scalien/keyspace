@@ -227,7 +227,7 @@ void TCPConn<bufferSize>::Close()
 	{
 		Buffer* buf = writeQueue.Get();
 		if (writeQueue.Size() == 1)
-			buf.Init()
+			buf->Init();
 		else
 			delete buf;
 	}
