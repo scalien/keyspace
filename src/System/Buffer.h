@@ -126,6 +126,11 @@ public:
 		Free();
 	}
 	
+	virtual void Init()
+	{
+		length = 0;
+	}
+	
 	bool Allocate(int size_)
 	{
 		if (buffer != NULL)
@@ -167,11 +172,6 @@ public:
 		length = 0;
 	}
 	
-	void Init()
-	{
-		length = 0;
-	}
-	
 private:
 	ByteString& operator=(const ByteString&) { return *this; } // we would loose our pointer
 };
@@ -191,6 +191,8 @@ public:
 		memcpy(data, str, length);
 		buffer = data;
 	}
+	
+	virtual void Init() { length = 0; }
 	
 	bool Set(const char* str) { return ByteString::Set(str); }
 

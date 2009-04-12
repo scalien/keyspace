@@ -386,6 +386,9 @@ void KeyspaceDB::Append()
 {
 	Log_Trace();
 	
+	if (ops.Length() == 0)
+		return;
+	
 	ByteString	bs;
 	KeyspaceOp*	op;
 	KeyspaceOp**it;
