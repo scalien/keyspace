@@ -221,6 +221,11 @@ public:
 			delete[] buffer;
 	}
 	
+	void Init()
+	{
+		length = 0;
+	}
+	
 	bool Append(const char *str, int len)
 	{
 		if (length + len > size)
