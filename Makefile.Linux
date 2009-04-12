@@ -72,7 +72,7 @@ release:
 
 include Makefile.dirs
 	
-targets: $(BUILD_DIR) $(BIN_DIR)/scalien
+targets: $(BUILD_DIR) $(BIN_DIR)/keyspace
 
 
 ##############################################################################
@@ -118,7 +118,7 @@ LIBS = \
 $(SCALIEN_LIBS):
 	cd $(SCALIEN_DIR); $(MAKE) targets BUILD=$(BUILD)
 	
-$(BIN_DIR)/scalien: $(BUILD_DIR) $(LIBS) $(OBJECTS)
+$(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c

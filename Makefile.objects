@@ -15,6 +15,9 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/MemcacheConn.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpRequest.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceServer.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceConn.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLog.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/LogQueue.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLogMsg.o \

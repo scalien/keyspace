@@ -42,3 +42,4 @@ else
 fi
 
 $CMD
+exit $?

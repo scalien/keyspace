@@ -4,6 +4,11 @@ safe_keyspace()
 {
 	while (:); do
 		test/run $1 &> /dev/null
+		EXITSTATUS=$?
+		#echo "keyspace exited with $EXITSTATUS"
+		if [ "$EXITSTATUS" = "0" -o "$EXITSTATUS" = "1" -o "$EXITSTATUS" = "143" ]; then
+			exit 0
+		fi
 	done
 }
 
