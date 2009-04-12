@@ -284,6 +284,8 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 
 bool KeyspaceDB::Submit()
 {
+	Log_Trace();
+	
 	// only handle writes if I'm the master
 	if (!ReplicatedLog::Get()->IsMaster())
 		return false;
@@ -382,6 +384,8 @@ void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString
 
 void KeyspaceDB::Append()
 {
+	Log_Trace();
+	
 	ByteString	bs;
 	KeyspaceOp*	op;
 	KeyspaceOp**it;
