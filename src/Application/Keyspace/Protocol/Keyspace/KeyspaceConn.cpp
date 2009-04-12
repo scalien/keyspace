@@ -204,5 +204,5 @@ void KeyspaceConn::OnWrite()
 	
 	TCPConn<>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
-		Close();
+		OnClose();
 }

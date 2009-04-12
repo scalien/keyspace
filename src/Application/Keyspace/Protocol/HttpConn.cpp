@@ -112,7 +112,7 @@ void HttpConn::OnWrite()
 	Log_Trace();
 	TCPConn<>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
-		Close();
+		OnClose();
 }
 
 
