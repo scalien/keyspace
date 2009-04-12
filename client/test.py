@@ -11,13 +11,13 @@ def genBig(x):
 def setBigVal(client):
 	client.connectMaster()
 	
-	msg = genBig(500000)
+	msg = genBig(50000)
 	
 	client.set("big", msg)
 	
 
 if __name__ == "__main__":
-	nodes=["192.168.1.240:7080", "192.168.1.240:7081"]
+	nodes=["localhost:7080", "localhost:7081"]
 	client = keyspace.KeyspaceClient(nodes)
 	setBigVal(client)
 

@@ -4,9 +4,9 @@
 #define KEYSPACE_PORT	7080
 #define CONN_BACKLOG	10
 
-void KeyspaceServer::Init(KeyspaceDB* kdb_)
+void KeyspaceServer::Init(KeyspaceDB* kdb_, int port_)
 {
-	TCPServerT<KeyspaceServer, KeyspaceConn>::Init(KEYSPACE_PORT + kdb->GetNodeID(), CONN_BACKLOG);
+	TCPServerT<KeyspaceServer, KeyspaceConn>::Init(port_, CONN_BACKLOG);
 	kdb = kdb_;
 }
 

@@ -10,7 +10,7 @@ class KeyspaceDB;
 class KeyspaceServer : public TCPServerT<KeyspaceServer, KeyspaceConn>
 {
 public:
-	void			Init(KeyspaceDB* kdb);
+	void			Init(KeyspaceDB* kdb, int port);
 	void			InitConn(KeyspaceConn* conn);
 
 private:

@@ -1,3 +1,4 @@
+#include "System/Config.h"
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
@@ -46,9 +47,12 @@ int main(int argc, char* argv[])
 	}
 	
 	//Log_SetTimestamping(true);
-	
+
+	if (!Config::Init("keyspace.conf"))
+		ASSERT_FAIL();
+
 	IOProcessor::Init();
-	database.Init(".");
+	database.Init(Config::GetValue("database.dir", "."));	
 	
 	if (!PaxosConfig::Get()->Init(argv[1]))
 		ASSERT_FAIL();
@@ -62,10 +66,10 @@ int main(int argc, char* argv[])
 //	testdb.Init(ioproc, eventloop, &rl);
 
 	HttpServer protoHttp;
-	protoHttp.Init(&kdb);
+	protoHttp.Init(&kdb, Config::GetIntValue("http.port", 8080));
 
 	KeyspaceServer protoKeyspace;
-	protoKeyspace.Init(&kdb);
+	protoKeyspace.Init(&kdb, Config::GetIntValue("keyspace.port", 7080));
 
 	EventLoop::Run();
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <inttypes.h>
+#include "System/Config.h"
 #include "Framework/Database/Table.h"
 #include "Framework/Database/Transaction.h"
 #include "PaxosConsts.h"
@@ -15,6 +16,7 @@ PaxosConfig* PaxosConfig::Get()
 
 bool PaxosConfig::Init(char *filename)
 {
+/*
 	FILE*		f;
 	char		buffer[1024];
 	Endpoint	endpoint, me;
@@ -57,7 +59,19 @@ bool PaxosConfig::Init(char *filename)
 		endpoints[numNodes] = endpoint;
 		numNodes++;
 	}
-		
+*/
+	Endpoint	endpoint;
+
+	nodeID = Config::GetIntValue("paxos.nodeID", 0);
+	numNodes = Config::GetListNum("paxos.endpoints");
+	for (int i = 0; i < numNodes; i++)
+	{
+		endpoint.Set(Config::GetListValue("paxos.endpoints", i, NULL));
+		endpoints[i] = endpoint;
+		if (i == nodeID)
+			port = endpoint.GetPort();
+	}
+	
 	InitRestartCounter();
 	
 	return true;

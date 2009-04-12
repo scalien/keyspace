@@ -28,7 +28,7 @@ public:
 	
 	void Append(T* elem)
 	{
-		elem->*pnext = NULL;
+		elem->*pnext = 0;
 		if (tail)
 			tail->*pnext = elem;
 		else
@@ -45,8 +45,8 @@ public:
 		{
 			head = elem->*pnext;
 			if (tail == elem)
-				tail = NULL;
-			elem->*pnext = NULL;
+				tail = 0;
+			elem->*pnext = 0;
 			size--;
 		}
 		return elem;

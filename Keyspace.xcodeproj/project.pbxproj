@@ -693,6 +693,8 @@
 				5481472E0F31B6B200F3D2B6 /* Buffer.h */,
 				548147300F31B6B200F3D2B6 /* Common.h */,
 				5481472F0F31B6B200F3D2B6 /* Common.cpp */,
+				9AF508670F8AB05300F7F49E /* Config.h */,
+				9AF508680F8AB05300F7F49E /* Config.cpp */,
 				9A89F5860F3F444C0041D4A1 /* ThreadPool.h */,
 				9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */,
 				548147440F31B6B200F3D2B6 /* Log.h */,
@@ -700,8 +702,6 @@
 				548147450F31B6B200F3D2B6 /* Platform.h */,
 				548147460F31B6B200F3D2B6 /* Stopwatch.h */,
 				548147470F31B6B200F3D2B6 /* Time.h */,
-				9AF508670F8AB05300F7F49E /* Config.h */,
-				9AF508680F8AB05300F7F49E /* Config.cpp */,
 			);
 			path = System;
 			sourceTree = "<group>";
