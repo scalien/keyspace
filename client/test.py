@@ -9,7 +9,7 @@ def genString(x):
 	return file_str.getvalue()
 
 def stress(client):
-	msg = genString(20*1000) # 20KB values
+	msg = genString(500*1000) # 20KB values
 	
 	for num in xrange(10):
 		print(str(client.set("big", msg)))
@@ -66,10 +66,10 @@ if __name__ == "__main__":
 	
 	client.connectMaster()
 	
-	#stress(client)
-	#users(client)
-	#counter(client)
-	#hol(client)
-	protocolEdge(client)
-	#protocolError(client)
+	stress(client)
+	users(client)
+	counter(client)
+	hol(client)
+	#protocolEdge(client)    these cause problems..
+	#protocolError(client)   these cause problems..
 	
