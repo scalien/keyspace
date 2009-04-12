@@ -5,6 +5,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/Database/Transaction.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "PaxosConfig.h"
 #include "PaxosConsts.h"
 
@@ -187,7 +188,8 @@ void PaxosProposer::OnPrepareTimeout()
 	
 	assert(state.preparing);
 	
-	StartPreparing();
+	if (ReplicatedLog::Get()->IsMaster())
+		StartPreparing();
 }
 
 void PaxosProposer::OnProposeTimeout()
@@ -196,5 +198,6 @@ void PaxosProposer::OnProposeTimeout()
 	
 	assert(state.proposing);
 	
-	StartPreparing();
+	if (ReplicatedLog::Get()->IsMaster())
+		StartPreparing();
 }
