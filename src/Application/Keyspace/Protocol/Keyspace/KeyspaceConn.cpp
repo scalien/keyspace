@@ -110,7 +110,10 @@ void KeyspaceConn::OnRead()
 		if (req.Read(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)))
 			ProcessMsg();
 		else
+		{
 			OnClose();
+			return;
+		}
 		
 		// move the rest back to the beginning of the buffer
 		memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
