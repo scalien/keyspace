@@ -223,10 +223,13 @@ void TCPConn<bufferSize>::Close()
 	// Discard unnecessary buffers if there are any.
 	// Keep the last one, so that when the connection is reused it isn't
 	// need to be allocated.
-	while (writeQueue.Size() > 1)
+	while (writeQueue.Size() > 0)
 	{
 		Buffer* buf = writeQueue.Get();
-		delete buf;
+		if (writeQueue.Size() == 1)
+			buf.Init()
+		else
+			delete buf;
 	}
 	
 	// TODO ? if the last buffer size exceeds some limit, 
