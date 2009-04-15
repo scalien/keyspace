@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
-	//Log_SetTimestamping(true);
+	Log_SetTimestamping(true);
 
 	if (!Config::Init(argv[1]))
 		ASSERT_FAIL();
@@ -25,7 +25,8 @@ int main(int argc, char* argv[])
 	if (!PaxosConfig::Get()->Init())
 		ASSERT_FAIL();
 
-	ReplicatedLog::Get()->Init();
+	if (PaxosConfig::Get()->numNodes > 1)
+		ReplicatedLog::Get()->Init();
 	
 	KeyspaceDB kdb;
 	kdb.Init();
