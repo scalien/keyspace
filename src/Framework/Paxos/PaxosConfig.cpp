@@ -76,7 +76,7 @@ void PaxosConfig::InitRestartCounter()
 
 unsigned PaxosConfig::MinMajority()
 {
-	return (unsigned)(floor(numNodes / 2) + 1);
+	return (unsigned)(floor((double)numNodes / 2) + 1);
 }
 
 uint64_t PaxosConfig::NextHighest(uint64_t proposalID)

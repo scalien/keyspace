@@ -96,7 +96,7 @@ void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 			ASSERT_FAIL();
 	}
 	
-	if (numRejected >= ceil(PaxosConfig::Get()->numNodes / 2))
+	if (numRejected >= ceil((double)(PaxosConfig::Get()->numNodes) / 2))
 		StartPreparing();
 	else if ((numReceived - numRejected) >= PaxosConfig::Get()->MinMajority())
 		StartProposing();

@@ -80,7 +80,7 @@ void PLeaseProposer::OnPrepareResponse()
 		state.leaseOwner = msg.leaseOwner;
 	}
 
-	if (numRejected >= ceil(PaxosConfig::Get()->numNodes / 2))
+	if (numRejected >= ceil((double)(PaxosConfig::Get()->numNodes) / 2))
 	{
 		StartPreparing();
 		return;
