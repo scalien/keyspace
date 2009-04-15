@@ -117,6 +117,8 @@ void TCPConn<bufferSize>::OnWrite()
 {
 	Log_Trace();
 
+	Log_Message("Written %d bytes", tcpwrite.data.length);
+
 	Buffer* buf;
 	
 	buf = writeQueue.Get();
