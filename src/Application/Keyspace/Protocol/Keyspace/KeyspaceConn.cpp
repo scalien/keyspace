@@ -89,6 +89,12 @@ void KeyspaceConn::OnRead()
 		Log_Message("tcpread buffer %.*s", tcpread.data.length, tcpread.data.buffer);
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
+		if (msglength > (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
+		{
+			OnClose();
+			return;
+		}
+		
 		if (nread == 0 || (unsigned) tcpread.data.length <= nread)
 			break;
 			
