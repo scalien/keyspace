@@ -191,6 +191,7 @@ public:
 KeyspaceDB::KeyspaceDB()
 {
 	catchingUp = false;
+	writePaxosID = true; // single node case
 }
 
 bool KeyspaceDB::Init()
@@ -209,17 +210,26 @@ bool KeyspaceDB::Init()
 
 unsigned KeyspaceDB::GetNodeID()
 {
-	return ReplicatedLog::Get()->GetNodeID();
+	if (PaxosConfig::Get()->numNodes == 1)
+		return 0;
+	else
+		return ReplicatedLog::Get()->GetNodeID();
 }
 
 bool KeyspaceDB::IsMasterKnown()
 {
-	return ReplicatedLog::Get()->GetMaster();
+	if (PaxosConfig::Get()->numNodes == 1)
+		return true;
+	else
+		return ReplicatedLog::Get()->GetMaster();
 }
 
 int KeyspaceDB::GetMaster()
 {
-	return ReplicatedLog::Get()->GetMaster();
+	if (PaxosConfig::Get()->numNodes == 1)
+		return 0;
+	else
+		return ReplicatedLog::Get()->GetMaster();
 }
 
 bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
@@ -228,18 +238,19 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 
 	bool ret;
 	Transaction* transaction;
+
+	// don't allow writes for @@ keys
+	if (op->IsWrite() && op->key.length > 2 && op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
+		return false;
+
+	if (PaxosConfig::Get()->numNodes == 1)
+		return AddWithoutReplicatedLog(op);
 	
 	if (catchingUp)
 		return false;
 	
-	// don't allow writes for @@ keys
-	if ((op->type == KeyspaceOp::SET || op->type == KeyspaceOp::TEST_AND_SET ||
-		 op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::ADD)
-		 && op->key.length > 2 && op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
-			return false;
-	
 	// reads are handled locally, they don't have to be added to the ReplicatedLog
-	if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
+	if (op->IsGet())
 	{
 		// only handle GETs if I'm the master and it's safe to do so (I have NOPed)
 		if (op->type == KeyspaceOp::GET &&
@@ -257,7 +268,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 		return true;
 	}
 	
-	if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
+	if (op->IsList())
 	{
 		if (op->type == KeyspaceOp::LIST &&
 		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
@@ -285,6 +296,9 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 bool KeyspaceDB::Submit()
 {
 	Log_Trace();
+	
+	if (PaxosConfig::Get()->numNodes == 1)
+		return true;
 	
 	// only handle writes if I'm the master
 	if (!ReplicatedLog::Get()->IsMaster())
@@ -355,6 +369,82 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		op->client->OnComplete(op, ret);
 		ops.Remove(op);
 	}
+}
+
+bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
+{
+	Log_Trace();
+	
+	bool			ret;
+	int64_t			num;
+	unsigned		nread;
+	Transaction*	transaction = NULL; //TODO: transaction mngmt is not limited by Paxos in the n=1 case
+	
+	ret = true;
+	if (op->IsWrite() && writePaxosID)
+	{
+		if (table->Set(transaction, "@@paxosID", "1"))
+			writePaxosID = false;
+	}
+	
+	if (op->IsGet())
+	{
+		op->value.Allocate(KEYSPACE_VAL_SIZE);
+		ret &= table->Get(transaction, op->key, op->value);
+		op->client->OnComplete(op, ret);
+	}
+	else if (op->IsList())
+	{
+		AsyncListVisitor *alv = new AsyncListVisitor(op->prefix, op, op->count);
+		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
+		mdbop->Visit(table, *alv);
+		dbReader.Add(mdbop);
+	}
+	else if (op->type == KeyspaceOp::SET)
+	{
+		Log_Trace();
+		ret &= table->Set(transaction, op->key, op->value);
+		Log_Trace();
+		op->client->OnComplete(op, ret);
+	}
+	else if (op->type == KeyspaceOp::TEST_AND_SET)
+	{
+		ret &= table->Get(transaction, op->key, data);
+		if (data == op->test)
+			ret &= table->Set(transaction, op->key, op->value);
+		else
+			ret = false;
+		op->client->OnComplete(op, ret);
+	}
+	else if (op->type == KeyspaceOp::ADD)
+	{
+		ret = table->Get(transaction, op->key, data); // read number
+		
+		if (ret)
+		{
+			num = strntoint64_t(data.buffer, data.length, &nread); // parse number
+			if (nread == (unsigned) data.length)
+			{
+				num = num + op->num;
+				data.length = snprintf(data.buffer, data.size, "%" PRIi64 "", num); // print number
+				ret &= table->Set(transaction, op->key, data); // write number
+				op->value.Allocate(data.length);
+				op->value.Set(data);
+			}
+			else
+				ret = false;
+		}
+		op->client->OnComplete(op, ret);
+	}
+	else if (op->type == KeyspaceOp::DELETE)
+	{
+		ret &= table->Delete(transaction, op->key);
+		op->client->OnComplete(op, ret);
+	}
+	else
+		ASSERT_FAIL();
+
+	return true;
 }
 
 void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString value, bool ownAppend)

@@ -36,10 +36,12 @@ public:
 	virtual void			OnDoCatchup(unsigned nodeID);
 	
 private:
+	bool					AddWithoutReplicatedLog(KeyspaceOp* op);
 	void					Execute(Transaction* transaction, bool ownAppend);
 	void					Append();
 	
 	bool					catchingUp;
+	bool					writePaxosID;  // single node case
 	List<KeyspaceOp*>		ops;
 	Table*					table;
 	KeyspaceMsg				msg;
