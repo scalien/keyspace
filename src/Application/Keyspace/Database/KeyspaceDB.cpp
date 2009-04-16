@@ -454,8 +454,10 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 		ASSERT_FAIL();
 
 	if (op->IsWrite())
+	{
+		transaction->Commit();
 		delete transaction;
-
+	}
 	return true;
 }
 
