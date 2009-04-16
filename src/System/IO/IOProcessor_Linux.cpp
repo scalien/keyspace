@@ -422,16 +422,13 @@ bool IOProcessor::Poll(int sleep)
 				
 				epollOp->read = NULL;
 				ProcessIOOperation(ioop);
-				
 			}
-			
-			if (currentev & EPOLLOUT)
+			else if (currentev & EPOLLOUT)
 			{
 				ioop = epollOp->write;
 				assert(ioop != NULL);
 				epollOp->write = NULL;
 				ProcessIOOperation(ioop);
-				
 			}
 		}
 			
