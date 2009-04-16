@@ -202,9 +202,12 @@ bool KeyspaceDB::Init()
 	
 	table = database.GetTable("keyspace");
 	
-	catchupServer.Init(PaxosConfig::Get()->port + CATCHUP_PORT_OFFSET);
-	catchupClient.Init(this, table);
-	
+	if (PaxosConfig::Get()->numNodes > 1)
+	{
+		catchupServer.Init(PaxosConfig::Get()->port + CATCHUP_PORT_OFFSET);
+		catchupClient.Init(this, table);
+	}
+
 	return true;
 }
 
@@ -380,6 +383,12 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 	unsigned		nread;
 	Transaction*	transaction = NULL; //TODO: transaction mngmt is not limited by Paxos in the n=1 case
 	
+	if (op->IsWrite())
+	{
+		transaction = new Transaction(table);
+		transaction->Begin();
+	}
+	
 	ret = true;
 	if (op->IsWrite() && writePaxosID)
 	{
@@ -443,6 +452,9 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 	}
 	else
 		ASSERT_FAIL();
+
+	if (op->IsWrite())
+		delete transaction;
 
 	return true;
 }
