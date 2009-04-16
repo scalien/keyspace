@@ -51,6 +51,25 @@ def counter(client):
 	print(str(client.add("counter", 2**32)))
 	print(str(client.get("counter")))
 
+def elapsedGet(client):
+	import time
+	starttime = time.time()
+	client.get("counter")
+	endtime = time.time()
+	elapsed = endtime - starttime
+	print("elapsedGet: %f" % elapsed)
+	return elapsed
+	
+def elapsedSet(client):
+	import time
+	starttime = time.time()
+	client.set("counter", 0)
+	endtime = time.time()
+	elapsed = endtime - starttime
+	print("elapsedGet: %f" % elapsed)
+	return elapsed
+	
+
 def protocolEdge(client):
 	print(str(client.set(genString(1000), "value")))
 	print(str(client.set("key", genString(1000*1000))))
@@ -61,9 +80,10 @@ def protocolError(client):
 	print(str(client.set("key", genString(1000*1000+1))))
 
 if __name__ == "__main__":
-	nodes=["127.0.0.1:7080", "127.0.0.1:7081", "127.0.0.1:7082"]
-	client = keyspace.KeyspaceClient(nodes, 2)
-	
+	# nodes=["scalien.com:7080", "scalien.com:7081", "scalien.com:7082"]
+	nodes = ["localhost:7080", "localhost:7081"]
+	client = keyspace.KeyspaceClient(nodes, 3, True)
+	# setBigVal(client)
 	client.connectMaster()
 	
 	stress(client)
@@ -72,4 +92,3 @@ if __name__ == "__main__":
 	hol(client)
 	#protocolEdge(client)    these cause problems..
 	#protocolError(client)   these cause problems..
-	

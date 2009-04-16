@@ -86,6 +86,7 @@ class KeyspaceClient:
 					self._trace("master = %s" % str(master))
 				except ProtocolException, e:
 					self._trace("exception = %s" % str(e))
+					self._disconnect()
 					master = None
 			self._trace("connected to %s, master is %s" % (self.nodes[master], str(master)))
 			if self.node == self.nodes[master]:
@@ -172,7 +173,7 @@ class KeyspaceClient:
 		length = len(slength) + 1 + int(slength)
 		if len(self.readbuf) < length:
 			return None
-		self._trace("%s" % self.readbuf)
+		# self._trace("%2s" % self.readbuf)
 		msg = self.readbuf[:length]
 		self.readbuf = self.readbuf[length:]
 		return msg
