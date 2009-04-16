@@ -232,6 +232,7 @@
 		5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceServer.cpp; sourceTree = "<group>"; };
 		5449D4590F90B66000F95C2F /* KeyspaceConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConn.h; sourceTree = "<group>"; };
 		5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceConn.cpp; sourceTree = "<group>"; };
+		5449D8170F91146B00F95C2F /* KeyspaceProto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KeyspaceProto.c; sourceTree = "<group>"; };
 		545C60330F7979B4006540BC /* KeyspaceClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClient.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
 		545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceMsg.cpp; sourceTree = "<group>"; };
@@ -502,7 +503,8 @@
 				5421DCCC0F648B86004BBDB4 /* MemcacheServer.h */,
 				5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */,
 			);
-			path = Protocol;
+			name = Protocol;
+			path = ../Protocol;
 			sourceTree = "<group>";
 		};
 		5421E3440F6C130E004BBDB4 /* Transport */ = {
@@ -529,6 +531,7 @@
 		544611EE0F533FAB00EFBBDE /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				5449D8170F91146B00F95C2F /* KeyspaceProto.c */,
 				9AC698D40F979720003C631E /* BDBTest.cpp */,
 				544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */,
 				544611F00F533FAB00EFBBDE /* IOTest.cpp */,
@@ -551,7 +554,6 @@
 			isa = PBXGroup;
 			children = (
 				5446122B0F53488D00EFBBDE /* Database */,
-				5421DCC00F648B86004BBDB4 /* Protocol */,
 			);
 			path = Keyspace;
 			sourceTree = "<group>";
@@ -560,6 +562,7 @@
 			isa = PBXGroup;
 			children = (
 				547A75E20F7589B8003084C9 /* Catchup */,
+				5421DCC00F648B86004BBDB4 /* Protocol */,
 				547A75AC0F756FA1003084C9 /* KeyspaceConsts.h */,
 				545C60570F797BA3006540BC /* KeyspaceMsg.h */,
 				545C60580F797BA3006540BC /* KeyspaceMsg.cpp */,
