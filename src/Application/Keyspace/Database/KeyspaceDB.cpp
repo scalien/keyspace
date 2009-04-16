@@ -383,7 +383,7 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 	unsigned		nread;
 	Transaction*	transaction = NULL; //TODO: transaction mngmt is not limited by Paxos in the n=1 case
 	
-	bool isWrite = op->IsWrite();
+	isWrite = op->IsWrite();
 	
 	if (isWrite)
 	{
