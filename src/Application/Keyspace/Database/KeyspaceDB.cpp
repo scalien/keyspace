@@ -378,12 +378,14 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 {
 	Log_Trace();
 	
-	bool			ret;
+	bool			ret, isWrite;
 	int64_t			num;
 	unsigned		nread;
 	Transaction*	transaction = NULL; //TODO: transaction mngmt is not limited by Paxos in the n=1 case
 	
-	if (op->IsWrite())
+	bool isWrite = op->IsWrite();
+	
+	if (isWrite)
 	{
 		transaction = new Transaction(table);
 		transaction->Begin();
@@ -453,7 +455,7 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 	else
 		ASSERT_FAIL();
 
-	if (op->IsWrite())
+	if (isWrite)
 	{
 		transaction->Commit();
 		delete transaction;
