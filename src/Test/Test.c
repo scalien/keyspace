@@ -143,6 +143,8 @@ test_system(const char *cmdline)
 int
 test_names_parse(testfn_t *test_functions, char *test_names, int *names, int size)
 {
+	(void) test_functions;
+	(void) size;
 	int i = 0;
 	char *p = test_names;
 	while (*p) {

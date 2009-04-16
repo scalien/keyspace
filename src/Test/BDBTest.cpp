@@ -169,7 +169,7 @@ bdb_txn_test()
 }
 
 int
-main(int argc, char *argv[])
+bdbtest()
 {
 	try
 	{
