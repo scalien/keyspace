@@ -83,7 +83,7 @@ def protocolError(client):
 	print(str(client.set("key", genString(1000*1000+1))))
 
 if __name__ == "__main__":
-	nodes=["127.0.0.1:7080", "127.0.0.1:7081", "127.0.0.1:7082"]
+	nodes=["127.0.0.1:7080"]
 	client = keyspace.KeyspaceClient(nodes, 5)
 	
 	client.connectMaster()
