@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import keyspace
 
 def genString(x):
@@ -9,9 +11,11 @@ def genString(x):
 	return file_str.getvalue()
 
 def stress(client):
-	msg = genString(500*1000) # 20KB values
+	msg = genString(64*1000)
+
+	print("Starting Keyspace run...")
 	
-	for num in xrange(10):
+	for num in xrange(100):
 		print(str(client.set("big", msg)))
 
 def users(client):
@@ -67,8 +71,7 @@ def elapsedSet(client):
 	endtime = time.time()
 	elapsed = endtime - starttime
 	print("elapsedGet: %f" % elapsed)
-	return elapsed
-	
+	return elapsed	
 
 def protocolEdge(client):
 	print(str(client.set(genString(1000), "value")))
@@ -76,19 +79,26 @@ def protocolEdge(client):
 	print(str(client.set(genString(1000), genString(1000*1000))))
 
 def protocolError(client):
-	print(str(client.set(genString(1001), "value")))
+	#print(str(client.set(genString(1000+1), "value")))
 	print(str(client.set("key", genString(1000*1000+1))))
 
 if __name__ == "__main__":
-	# nodes=["scalien.com:7080", "scalien.com:7081", "scalien.com:7082"]
-	nodes = ["localhost:7080", "localhost:7081"]
-	client = keyspace.KeyspaceClient(nodes, 3, True)
-	# setBigVal(client)
-	client.connectMaster()
+	nodes=["127.0.0.1:7080", "127.0.0.1:7081", "127.0.0.1:7082"]
+	client = keyspace.KeyspaceClient(nodes, 5)
 	
+	client.connectMaster()
+
+	import time
+	starttime = time.time()
+
 	stress(client)
-	users(client)
-	counter(client)
-	hol(client)
-	#protocolEdge(client)    these cause problems..
-	#protocolError(client)   these cause problems..
+
+	endtime = time.time()
+	elapsed = endtime - starttime
+	print("elapsedGet: %f" % elapsed)
+	
+	#users(client)
+	#counter(client)
+	#hol(client)
+	#protocolEdge(client)
+	#protocolError(client)	
