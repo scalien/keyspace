@@ -16,6 +16,7 @@ database(database)
 	int mode = 0;
 	
 	db = new Db(&database->env, 0);
+	db->set_pagesize(64*1024);
 	db->open(txnid, filename, dbname, type, flags, mode);
 }
 
@@ -41,13 +42,16 @@ bool Table::Iterate(Transaction* transaction, Cursor& cursor)
 bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &value)
 {
 	Dbt dbtKey(key.buffer, key.length);
+//	Dbt dbtValue(value.buffer, value.size);
 	Dbt dbtValue;
 	DbTxn* txn = NULL;
 	int ret;
 	
 	if (transaction)
 		txn = transaction->txn;
-		
+
+//	dbtKey.set_flags(DB_DBT_USERMEM);
+//	dbtValue.set_flags(DB_DBT_USERMEM);		
 	ret = db->get(txn, &dbtKey, &dbtValue, 0);
 	if (ret == DB_KEYEMPTY || ret == DB_NOTFOUND)
 		return false;
