@@ -62,7 +62,6 @@ private:
 	PaxosAcceptor				acceptor;
 	PaxosLearner				learner;
 	PaxosLease					masterLease;
-	bool						appending;
 	PaxosMsg					pmsg;
 	ReplicatedLogMsg			rmsg;
 	ByteArray<PAXOS_BUF_SIZE>	value;

@@ -21,6 +21,7 @@ public:
 	void					SetPaxosID(uint64_t paxosID_);
 	bool					IsActive();	
 	bool					Propose(ByteString& value);
+	void					Stop();
 
 protected:
 	void					BroadcastMessage();

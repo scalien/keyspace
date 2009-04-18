@@ -50,6 +50,15 @@ bool PaxosProposer::Propose(ByteString& value)
 	return true;
 }
 
+void PaxosProposer::Stop()
+{
+	state.value.Init();
+	state.preparing = false;
+	state.proposing = false;
+	EventLoop::Remove(&prepareTimeout);
+	EventLoop::Remove(&proposeTimeout);
+}
+
 bool PaxosProposer::IsActive()
 {
 	return (state.preparing || state.proposing);
@@ -188,8 +197,7 @@ void PaxosProposer::OnPrepareTimeout()
 	
 	assert(state.preparing);
 	
-	if (ReplicatedLog::Get()->IsMaster())
-		StartPreparing();
+	StartPreparing();
 }
 
 void PaxosProposer::OnProposeTimeout()
@@ -197,7 +205,6 @@ void PaxosProposer::OnProposeTimeout()
 	Log_Trace();
 	
 	assert(state.proposing);
-	
-	if (ReplicatedLog::Get()->IsMaster())
-		StartPreparing();
+
+	StartPreparing();
 }

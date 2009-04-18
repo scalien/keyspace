@@ -40,12 +40,12 @@ void TransportUDPReader::GetMessage(ByteString& bs_)
 
 void TransportUDPReader::Stop()
 {
-	stopped = false;
+	stopped = true;
 }
 
 void TransportUDPReader::Continue()
 {
-	stopped = true;
+	stopped = false;
 }
 
 void TransportUDPReader::OnRead()

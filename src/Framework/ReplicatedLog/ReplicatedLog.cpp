@@ -42,11 +42,13 @@ bool ReplicatedLog::Init()
 	masterLease.Init();
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	//if (PaxosConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING KGJDFKGJDFKGJDFKLGJDLKFJGLDKFJGDLKFJGDLFKGJ
+	//if (PaxosConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
 		masterLease.AcquireLease();
 	
-	appending = false;
 	safeDB = false;
+	
+	Log_Message("appending NOP to trigger potential catchup");
+	Append(BS_MSG_NOP);
 	
 	return true;
 }
@@ -100,7 +102,7 @@ bool ReplicatedLog::Append(ByteString value_)
 	if (!logQueue.Push(value_))
 		return false;
 	
-	if (!appending)
+	if (!proposer.IsActive())
 	{
 		if (!rmsg.Init(PaxosConfig::Get()->nodeID, PaxosConfig::Get()->restartCounter,
 					   masterLease.GetLeaseEpoch(), value_))
@@ -109,7 +111,6 @@ bool ReplicatedLog::Append(ByteString value_)
 		if (!rmsg.Write(value))
 			return false;
 		
-		appending = true;
 		return proposer.Propose(value);
 	}
 	
@@ -294,11 +295,8 @@ void ReplicatedLog::OnLearnChosen()
 			if (!rmsg.Write(value))
 				ASSERT_FAIL();
 			
-			appending = true;
 			proposer.Propose(value);
 		}
-		else
-			appending = false;
 		
 		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
 			ownAppend = true;
@@ -394,9 +392,9 @@ void ReplicatedLog::OnCatchupTimeout()
 
 void ReplicatedLog::OnLearnLease()
 {
-	if (masterLease.IsLeaseOwner() && !safeDB && !(appending && rmsg.value == BS_MSG_NOP))
+	if (masterLease.IsLeaseOwner() && !safeDB && !(proposer.IsActive() && rmsg.value == BS_MSG_NOP))
 	{
-		Log_Message("appending NOP");
+		Log_Message("appending NOP to assure safeDB");
 		Append(BS_MSG_NOP);
 	}
 }
@@ -406,12 +404,15 @@ void ReplicatedLog::OnLeaseTimeout()
 	safeDB = false;
 	
 	if (replicatedDB)
+	{
+		proposer.Stop();
 		replicatedDB->OnMasterLeaseExpired();
+	}
 }
 
 bool ReplicatedLog::IsAppending()
 {
-	return appending;
+	return proposer.IsActive();
 }
 
 Transaction* ReplicatedLog::GetTransaction()

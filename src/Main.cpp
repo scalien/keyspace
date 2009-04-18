@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
-	Log_SetTimestamping(true);
+	//Log_SetTimestamping(true);
 
 	if (!Config::Init(argv[1]))
 		ASSERT_FAIL();
