@@ -86,9 +86,9 @@ uint64_t strntouint64_t(const char* buffer, int length, unsigned* nread)
 #undef ADVANCE
 }
 
-char* rprintf(const char* format, ...)
+const char* rprintf(const char* format, ...)
 {
-	static char buffer[1024];
+	static char buffer[8*1024];
 	va_list		ap;
 	
 	va_start(ap, format);

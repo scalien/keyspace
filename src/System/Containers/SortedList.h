@@ -11,7 +11,7 @@ public:
     void Add(T t)
     {
 		if (!Add(t, true))
-			ASSERT_FAIL(); // application-specific, that's how we use SortedList<>
+			ASSERT_FAIL(); // TODO: application-specific, that's how we use SortedList<>
     }
 		
 private:

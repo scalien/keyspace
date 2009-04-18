@@ -10,7 +10,7 @@ class TransportReader
 public:
 	virtual			~TransportReader() {}
 
-	virtual void	Init(int port_) = 0;
+	virtual bool	Init(int port_) = 0;
 
 	virtual void	SetOnRead(Callable* onRead) = 0;
 	virtual void	GetMessage(ByteString& bs) = 0;

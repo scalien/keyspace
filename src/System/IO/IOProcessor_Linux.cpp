@@ -541,7 +541,6 @@ void ProcessTCPRead(TCPRead* tcpread)
 	if (readlen <= 0)
 		return;
 
-	//Log_Message(rprintf("Calling read() to read %d bytes", readlen));
 	nread = read(tcpread->fd, tcpread->data.buffer + tcpread->data.length, readlen);
 	if (nread < 0)
 	{
@@ -593,7 +592,6 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 		ASSERT_FAIL();
 	}
 	
-	//Log_Message(rprintf("Calling write() to write %d bytes", writelen));
 	nwrite = write(tcpwrite->fd, tcpwrite->data.buffer, writelen);
 	if (nwrite < 0)
 	{
@@ -623,8 +621,6 @@ void ProcessUDPRead(UDPRead* udpread)
 {
 	int			salen, nread;
 	
-	//Log_Message(rprintf("Calling recvfrom() to read max %d bytes", udpread->size));
-
 	salen = sizeof(udpread->endpoint.sa);
 
 	do {
@@ -657,7 +653,6 @@ void ProcessUDPWrite(UDPWrite* udpwrite)
 {
 	int			nwrite;
 
-	//Log_Message(rprintf("Calling sendto() to write %d bytes", udpwrite->data));
 	nwrite = sendto(udpwrite->fd, udpwrite->data.buffer + udpwrite->offset, udpwrite->data.length - udpwrite->offset, 0,
 				(const sockaddr*)&udpwrite->endpoint.sa, sizeof(udpwrite->endpoint.sa));
 

@@ -4,10 +4,11 @@
 #define CONNECT_TIMEOUT		2000
 
 
-void TransportTCPWriter::Init(Endpoint &endpoint_)
+bool TransportTCPWriter::Init(Endpoint &endpoint_)
 {
 	endpoint = endpoint_;
 	TCPConn<>::Connect(endpoint, CONNECT_TIMEOUT);
+	return true;
 }
 
 void TransportTCPWriter::Write(ByteString &bs)

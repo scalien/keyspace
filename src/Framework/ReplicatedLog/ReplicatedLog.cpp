@@ -61,7 +61,8 @@ void ReplicatedLog::InitTransport()
 #else
 	reader = new TransportUDPReader;
 #endif
-	reader->Init(PaxosConfig::Get()->port + PAXOS_PORT_OFFSET);
+	if (!reader->Init(PaxosConfig::Get()->port + PAXOS_PORT_OFFSET))
+		ASSERT_FAIL();
 	reader->SetOnRead(&onRead);
 
 	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
@@ -75,7 +76,8 @@ void ReplicatedLog::InitTransport()
 		writers[i] = new TransportUDPWriter;
 #endif
 		Log_Message("Connecting to %s", endpoint.ToString());
-		writers[i]->Init(endpoint);
+		if (!writers[i]->Init(endpoint))
+			ASSERT_FAIL();
 	}
 }
 

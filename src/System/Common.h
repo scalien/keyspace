@@ -13,27 +13,19 @@
 
 #define SIZE(a) (sizeof((a)) / sizeof((a[0])))
 
-inline int min(int a, int b)
-{
-	if (a < b) return a; else return b;
-}
+#define ASSERT_FAIL() assert(false)
 
-inline int max(int a, int b)
-{
-	if (a > b) return a; else return b;
-}
+inline int min(int a, int b) { if (a < b) return a; else return b; }
 
-//long strntol(char* buffer, int size, int* nread);
+inline int max(int a, int b) { if (a > b) return a; else return b; }
 
 int64_t strntoint64_t(const char* buffer, int length, unsigned* nread);
 
 uint64_t strntouint64_t(const char* buffer, int length, unsigned* nread);
 
-char* rprintf(const char* format, ...);
+const char* rprintf(const char* format, ...);
 
 void* Alloc(int num, int size = 1);
-
-#define ASSERT_FAIL() assert(false)
 
 inline bool Xor(bool a, bool b, bool c) { return (((int)a + (int)b + (int)c) == 1); }
 

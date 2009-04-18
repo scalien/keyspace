@@ -39,18 +39,13 @@ bool PaxosAcceptor::Persist(Transaction* transaction)
 	
 	if (table == NULL)
 		return false;
-		
-	bytearrays[0].Set(rprintf("%" PRIu64 "",			paxosID));
-	bytearrays[1].Set(rprintf("%d",				state.accepted));
-	bytearrays[2].Set(rprintf("%" PRIu64 "",			state.promisedProposalID));
-	bytearrays[3].Set(rprintf("%" PRIu64 "",			state.acceptedProposalID));
 	
 	ret = true;
-	ret = ret && table->Set(transaction, "@@paxosID",				bytearrays[0]);
-	ret = ret && table->Set(transaction, "@@accepted",				bytearrays[1]);
-	ret = ret && table->Set(transaction, "@@promisedProposalID",	bytearrays[2]);
-	ret = ret && table->Set(transaction, "@@acceptedProposalID",	bytearrays[3]);
-	ret = ret && table->Set(transaction, "@@acceptedValue",			state.acceptedValue);
+	ret &= table->Set(transaction, "@@paxosID", rprintf("%" PRIu64 "", paxosID));
+	ret &= table->Set(transaction, "@@accepted", rprintf("%d", state.accepted));
+	ret &= table->Set(transaction, "@@promisedProposalID", rprintf("%" PRIu64 "", state.promisedProposalID));
+	ret &= table->Set(transaction, "@@acceptedProposalID", rprintf("%" PRIu64 "", state.acceptedProposalID));
+	ret &= table->Set(transaction, "@@acceptedValue",	state.acceptedValue);
 	
 	if (!ret)
 		return false;
@@ -69,38 +64,38 @@ bool PaxosAcceptor::ReadState()
 		return false;
 
 	ret = true;
-	ret = ret && table->Get(NULL, "@@paxosID",				bytearrays[0]);
-	ret = ret && table->Get(NULL, "@@accepted",				bytearrays[1]);
-	ret = ret && table->Get(NULL, "@@promisedProposalID",	bytearrays[2]);
-	ret = ret && table->Get(NULL, "@@acceptedProposalID",	bytearrays[3]);
-	ret = ret && table->Get(NULL, "@@acceptedValue",		state.acceptedValue);
+	ret &= table->Get(NULL, "@@paxosID",			data[0]);
+	ret &= table->Get(NULL, "@@accepted",			data[1]);
+	ret &= table->Get(NULL, "@@promisedProposalID",	data[2]);
+	ret &= table->Get(NULL, "@@acceptedProposalID",	data[3]);
+	ret &= table->Get(NULL, "@@acceptedValue",		state.acceptedValue);
 
 	if (!ret)
 		return false;
 
-	paxosID = strntouint64_t(bytearrays[0].buffer, bytearrays[0].length, &nread);
-	if (nread != (unsigned) bytearrays[0].length)
+	paxosID = strntouint64_t(data[0].buffer, data[0].length, &nread);
+	if (nread != (unsigned) data[0].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.accepted = strntoint64_t(bytearrays[1].buffer, bytearrays[1].length, &nread);
-	if (nread != (unsigned) bytearrays[1].length)
+	state.accepted = strntoint64_t(data[1].buffer, data[1].length, &nread);
+	if (nread != (unsigned) data[1].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.promisedProposalID = strntouint64_t(bytearrays[2].buffer, bytearrays[2].length, &nread);
-	if (nread != (unsigned) bytearrays[2].length)
+	state.promisedProposalID = strntouint64_t(data[2].buffer, data[2].length, &nread);
+	if (nread != (unsigned) data[2].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.acceptedProposalID = strntouint64_t(bytearrays[3].buffer, bytearrays[3].length, &nread);
-	if (nread != (unsigned) bytearrays[3].length)
+	state.acceptedProposalID = strntouint64_t(data[3].buffer, data[3].length, &nread);
+	if (nread != (unsigned) data[3].length)
 	{
 		Log_Trace();
 		return false;
@@ -120,19 +115,19 @@ bool PaxosAcceptor::WriteState()
 	
 	writtenPaxosID = paxosID;
 	
-	bytearrays[0].Set(rprintf("%" PRIu64 "",			paxosID));
-	bytearrays[1].Set(rprintf("%d",				state.accepted));
-	bytearrays[2].Set(rprintf("%" PRIu64 "",			state.promisedProposalID));
-	bytearrays[3].Set(rprintf("%" PRIu64 "",			state.acceptedProposalID));
+	data[0].Set(rprintf("%" PRIu64 "",	paxosID));
+	data[1].Set(rprintf("%d",			state.accepted));
+	data[2].Set(rprintf("%" PRIu64 "",	state.promisedProposalID));
+	data[3].Set(rprintf("%" PRIu64 "",	state.acceptedProposalID));
 	
 	mdbop.Init();
 	
 	ret = true;
-	ret = ret && mdbop.Set(table, "@@paxosID",				bytearrays[0]);
-	ret = ret && mdbop.Set(table, "@@accepted",				bytearrays[1]);
-	ret = ret && mdbop.Set(table, "@@promisedProposalID",	bytearrays[2]);
-	ret = ret && mdbop.Set(table, "@@acceptedProposalID",	bytearrays[3]);
-	ret = ret && mdbop.Set(table, "@@acceptedValue",		state.acceptedValue);
+	ret &= mdbop.Set(table, "@@paxosID",			data[0]);
+	ret &= mdbop.Set(table, "@@accepted",			data[1]);
+	ret &= mdbop.Set(table, "@@promisedProposalID",	data[2]);
+	ret &= mdbop.Set(table, "@@acceptedProposalID",	data[3]);
+	ret &= mdbop.Set(table, "@@acceptedValue",		state.acceptedValue);
 
 	if (!ret)
 		return false;

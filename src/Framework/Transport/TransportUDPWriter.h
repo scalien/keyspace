@@ -11,7 +11,7 @@ public:
 	~TransportUDPWriter();
 	
 	// TransportWriter interface
-	virtual void	Init(Endpoint &endpoint);
+	virtual bool	Init(Endpoint &endpoint);
 	virtual	void	Write(ByteString &bs);
 
 private:

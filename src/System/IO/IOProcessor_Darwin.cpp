@@ -319,7 +319,6 @@ void ProcessTCPRead(struct kevent* ev)
 		readlen = min(ev->data, readlen);
 		if (readlen > 0)
 		{
-			//Log_Message(rprintf("Calling read() to read %d bytes", readlen));
 			nread = read(tcpread->fd, tcpread->data.buffer + tcpread->data.length, readlen);
 			if (nread < 0)
 			{
@@ -370,7 +369,6 @@ void ProcessTCPWrite(struct kevent* ev)
 	
 	if (writelen > 0)
 	{
-		//Log_Message(rprintf("Calling write() to write %d bytes", writelen));
 		nwrite = write(tcpwrite->fd, tcpwrite->data.buffer, writelen);
 		if (nwrite < 0)
 		{
@@ -396,7 +394,6 @@ void ProcessUDPRead(struct kevent* ev)
 
 	udpread = (UDPRead*) ev->udata;
 	
-	//Log_Message(rprintf("Calling recvfrom() to read max %d bytes", udpread->size));
 	salen = sizeof(udpread->endpoint.sa);
 	nread = recvfrom(udpread->fd, udpread->data.buffer, udpread->data.size, 0,
 				(sockaddr*)&udpread->endpoint.sa, (socklen_t*)&salen);
@@ -425,7 +422,6 @@ void ProcessUDPWrite(struct kevent* ev)
 
 	if (ev->data >= udpwrite->data.length)
 	{
-		//Log_Message(rprintf("Calling sendto() to write %d bytes", udpwrite->data));
 		nwrite = sendto(udpwrite->fd, udpwrite->data.buffer, udpwrite->data.length, 0,
 					(const sockaddr*)&udpwrite->endpoint.sa, sizeof(udpwrite->endpoint.sa));
 		if (nwrite < 0)

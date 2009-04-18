@@ -14,7 +14,7 @@ class TransportTCPWriter :
 public:
 	
 	// TransportWriter interface
-	virtual void	Init(Endpoint &endpoint_);
+	virtual bool	Init(Endpoint &endpoint_);
 	virtual void	Write(ByteString &bs);
 
 private:

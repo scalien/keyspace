@@ -36,12 +36,17 @@ public:
 	
 	bool Init(int port_, int backlog_)
 	{
+		bool ret;
+		
 		Log_Trace();
 		backlog = backlog_;
-
-		listener.Create(TCP);
-		listener.Listen(port_);
-		listener.SetNonblocking();
+	
+		ret = true;
+		ret &= listener.Create(TCP);
+		ret &= listener.Listen(port_);
+		ret &= listener.SetNonblocking();
+		if (!ret)
+			return false;
 		
 		tcpread.fd = listener.fd;
 		tcpread.listening = true;

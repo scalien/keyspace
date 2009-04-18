@@ -29,7 +29,7 @@ class TransportTCPReader : public TransportReader, public TCPServer
 friend class TransportTCPConn;
 
 public:
-	void				Init(int port);
+	bool				Init(int port);
 
 	void				SetOnRead(Callable* onRead);
 	void				GetMessage(ByteString& bs_);

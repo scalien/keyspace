@@ -11,7 +11,7 @@ class TransportWriter
 public:
 	virtual			~TransportWriter() {}
 
-	virtual void	Init(Endpoint &endpoint) = 0;
+	virtual bool 	Init(Endpoint &endpoint) = 0;
 	virtual	void	Write(ByteString &bs) = 0;
 };
 

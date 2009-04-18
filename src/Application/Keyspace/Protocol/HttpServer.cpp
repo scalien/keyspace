@@ -5,7 +5,8 @@
 
 void HttpServer::Init(KeyspaceDB* kdb_, int port)
 {
-	TCPServerT<HttpServer, HttpConn>::Init(port, CONN_BACKLOG);
+	if (!TCPServerT<HttpServer, HttpConn>::Init(port, CONN_BACKLOG))
+		ASSERT_FAIL();
 	kdb = kdb_;
 }
 

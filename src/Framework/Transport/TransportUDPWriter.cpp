@@ -10,11 +10,16 @@ TransportUDPWriter::~TransportUDPWriter()
 	socket.Close();
 }
 
-void TransportUDPWriter::Init(Endpoint &endpoint_)
+bool TransportUDPWriter::Init(Endpoint &endpoint_)
 {
-	socket.Create(UDP);
-	socket.SetNonblocking();
+	bool ret;
+
 	endpoint = endpoint_;
+
+	ret = true;
+	ret &= socket.Create(UDP);
+	ret &= socket.SetNonblocking();
+	return ret;
 }
 
 void TransportUDPWriter::Write(ByteString &bs)

@@ -7,20 +7,25 @@ onRead(this, &TransportUDPReader::OnRead)
 {
 }
 
-void TransportUDPReader::Init(int port)
+bool TransportUDPReader::Init(int port)
 {
+	bool ret;
 	
 	stopped = false;
 	
-	socket.Create(UDP);
-	socket.Bind(port);
-	socket.SetNonblocking();
+	ret = true;
+	ret &= socket.Create(UDP);
+	ret &= socket.Bind(port);
+	ret &= socket.SetNonblocking();
+	
+	if (!ret)
+		return false;
 	
 	udpread.fd = socket.fd;
 	udpread.data = data;
 	udpread.onComplete = &onRead;
 	
-	IOProcessor::Add(&udpread);
+	return IOProcessor::Add(&udpread);
 }
 
 void TransportUDPReader::SetOnRead(Callable* onRead_)

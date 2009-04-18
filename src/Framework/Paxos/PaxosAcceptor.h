@@ -37,7 +37,7 @@ protected:
 	Table*					table;
 	Transaction				transaction;
 	MultiDatabaseOp			mdbop;
-	ByteArray<128>			bytearrays[4];
+	ByteArray<128>			data[4];
 	uint64_t				writtenPaxosID;
 	MFunc<PaxosAcceptor>	onDBComplete;
 };

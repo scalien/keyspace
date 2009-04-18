@@ -24,7 +24,8 @@ void PaxosLease::InitTransport()
 	Endpoint	endpoint;
 	
 	reader = new TransportUDPReader;
-	reader->Init(PaxosConfig::Get()->port + PLEASE_PORT_OFFSET);
+	if (!reader->Init(PaxosConfig::Get()->port + PLEASE_PORT_OFFSET))
+		ASSERT_FAIL();
 	reader->SetOnRead(&onRead);
 	
 	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
@@ -33,7 +34,8 @@ void PaxosLease::InitTransport()
 		endpoint = PaxosConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
-		writers[i]->Init(endpoint);
+		if (!writers[i]->Init(endpoint))
+			ASSERT_FAIL();
 	}	
 }
 
