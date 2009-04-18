@@ -1,4 +1,15 @@
 
+Preliminaries (IMPORTANT, READ THIS!)
+=====================================
+
+Keyspace nodes need to have their system clocks synchronized to
+within 1 second. This is fairly easy to accomplish using the
+Network Time Protocol, more specifically the NTP daemon,
+which comes standard with most UNIX-like distributions.
+See 'man ntpd'.
+
+
+
 Building Keyspace
 =================
 
