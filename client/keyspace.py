@@ -20,6 +20,10 @@ class KeyspaceClient:
 		self.id = int(time.time() * 1000)
 		self.writeQueue = []
 		self.trace = trace
+		self.requests = {}
+		self.responses = {}
+		self.requestQueue = []
+		self.pendingRequest = 0
 		self._trace("running, id = %d" % self.id)
 		self._reconnect()
 
@@ -74,8 +78,25 @@ class KeyspaceClient:
 		self._send(msg)
 		return self._getStatusResponse()
 	
+	def begin(self):
+		self.requests = {}
+		self.responses = {}
+		self.requestQueue = []
+		self.pendingRequest = 0
+	
+	def setRequest(self, key, value):
+		req = self._createMultiMessage()
+		reqId = len(self.requestQueue)
+		self.requestQueue.append(req)
+		self.requests[self.id] = req;
+		self.responses[self.id] = "";
+		self.pendingRequest += 1
+		return reqId
+	
 	def submit(self):
-		pass
+		while self.pendingRequest > 0:
+			
+			pass
 	
 	def connectMaster(self):
 		while True:
@@ -283,6 +304,11 @@ class KeyspaceClient:
 		except Exception, e:
 			raise ProtocolException("Invalid response: %s" % e.args)
 	
+	def _getResponseFunction(self, cmd):
+		if cmd == "G":
+			return self._getValueResponse
+		elif cmd == "s":
+			return self._getStatusResponse
 
 	def _trace(self, msg):
 		if not self.trace:

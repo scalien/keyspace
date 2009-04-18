@@ -130,16 +130,35 @@ bdb_test_loop_get_set(Db *db)
 }
 
 void
+bdb_test_big_value(Db *db)
+{
+	char buffer[1024 * 1024];
+	char key[20];
+	int keylen;
+	
+	db->set_pagesize(sizeof(buffer));
+	
+	for (int i = 0; i < 10; i++)
+	{
+		keylen = snprintf(key, sizeof(key), "%i", i);
+		Dbt dbtKey(key, keylen);
+		Dbt dbtValue(buffer, sizeof(buffer));
+		int ret = db->put(&dbtKey, &dbtValue, 0);
+	}
+}
+
+void
 bdb_test(Db *db)
 {
-	const char *filename = "fs.db";
+	const char *filename = "test.db";
 	const char *dbname = NULL;
 	int filemode = 0;
 	
 	db->open(NULL, filename, dbname, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, filemode);
 	
 //	bdb_test_loop_get_set(db);
-	bdb_test_loop_set_param(db, 20, 10);
+//	bdb_test_loop_set_param(db, 20, 10);
+	bdb_test_big_values(db);
 
 	db->close(0);
 }
@@ -173,8 +192,8 @@ bdbtest()
 {
 	try
 	{
-		bdb_txn_test();
-//		bdb_simple_test();
+//		bdb_txn_test();
+		bdb_simple_test();
 	}
 	catch (DbException &e)
 	{
