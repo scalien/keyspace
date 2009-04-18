@@ -162,6 +162,13 @@ int HttpConn::ProcessGetRequest()
 		key = request.line.uri + strlen("/get/");
 		keylen = strlen(key);
 		
+		if (keylen > KEYSPACE_KEY_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		
 		op->type = KeyspaceOp::GET;
 		
 		if (!op->key.Allocate(keylen))
@@ -184,6 +191,13 @@ int HttpConn::ProcessGetRequest()
 	{
 		key = request.line.uri + strlen("/dirtyget/");
 		keylen = strlen(key);
+		
+		if (keylen > KEYSPACE_KEY_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
 		
 		op->type = KeyspaceOp::DIRTY_GET;
 		
@@ -216,6 +230,13 @@ int HttpConn::ProcessGetRequest()
 		keylen = value - key;
 		value++;
 		valuelen = strlen(value);
+		
+		if (keylen > KEYSPACE_KEY_SIZE || valuelen > KEYSPACE_VAL_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
 		
 		op->type = KeyspaceOp::SET;
 		
@@ -268,6 +289,13 @@ int HttpConn::ProcessGetRequest()
 		
 		valuelen = strlen(value);
 		
+		if (keylen > KEYSPACE_KEY_SIZE || testlen > KEYSPACE_VAL_SIZE || valuelen > KEYSPACE_VAL_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		
 		op->type = KeyspaceOp::TEST_AND_SET;
 		
 		if (!op->key.Allocate(keylen))
@@ -315,9 +343,18 @@ int HttpConn::ProcessGetRequest()
 		keylen = value - key;
 		value++;
 		valuelen = strlen(value);
+		
+		if (keylen > KEYSPACE_KEY_SIZE || valuelen > KEYSPACE_VAL_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		
 		if (valuelen < 1)
 		{
 			delete op;
+			RESPONSE_FAIL;
 			return -1;
 		}
 		
@@ -325,6 +362,7 @@ int HttpConn::ProcessGetRequest()
 		if (nread != (unsigned) valuelen)
 		{
 			delete op;
+			RESPONSE_FAIL;
 			return -1;
 		}
 		
@@ -350,6 +388,13 @@ int HttpConn::ProcessGetRequest()
 	{
 		key = request.line.uri + strlen("/delete/");
 		keylen = strlen(key);
+		
+		if (keylen > KEYSPACE_KEY_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
 		
 		op->type = KeyspaceOp::DELETE;
 		
@@ -384,6 +429,14 @@ int HttpConn::ProcessGetRequest()
 		else
 		{
 			prefixlen = count - prefix;
+			
+			if (prefixlen > KEYSPACE_KEY_SIZE)
+			{
+				delete op;
+				RESPONSE_FAIL;
+				return 0;
+			}
+			
 			count++;
 			countlen = strlen(count);
 			
@@ -435,6 +488,14 @@ int HttpConn::ProcessGetRequest()
 		else
 		{
 			prefixlen = count - prefix;
+			
+			if (prefixlen > KEYSPACE_KEY_SIZE)
+			{
+				delete op;
+				RESPONSE_FAIL;
+				return 0;
+			}
+			
 			count++;
 			countlen = strlen(count);
 			
