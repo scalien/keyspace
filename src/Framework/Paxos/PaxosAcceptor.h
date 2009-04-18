@@ -8,8 +8,6 @@
 #include "PaxosMsg.h"
 #include "PaxosState.h"
 
-#define ACCEPTOR_PORT_OFFSET 1
-
 class PaxosAcceptor
 {
 friend class ReplicatedLog;

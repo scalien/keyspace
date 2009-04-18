@@ -61,7 +61,7 @@ void ReplicatedLog::InitTransport()
 #else
 	reader = new TransportUDPReader;
 #endif
-	if (!reader->Init(PaxosConfig::Get()->port + PAXOS_PORT_OFFSET))
+	if (!reader->Init(PaxosConfig::Get()->port))
 		ASSERT_FAIL();
 	reader->SetOnRead(&onRead);
 
@@ -69,7 +69,7 @@ void ReplicatedLog::InitTransport()
 	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
 	{
 		endpoint = PaxosConfig::Get()->endpoints[i];
-		endpoint.SetPort(endpoint.GetPort() + PAXOS_PORT_OFFSET);
+		endpoint.SetPort(endpoint.GetPort());
 #if USE_TCP == 1
 		writers[i] = new TransportTCPWriter;
 #else
