@@ -50,6 +50,10 @@ Configuration options
 
 	This must be the same on all nodes. These values define a Paxos ring.
 
+	The nodes use 3 consecutive port numbers for Paxos related protocols,
+	starting with the values defined here. (These are different than the
+	ports you define below such as http.port)
+
 - paxos.nodeID
 	
 	This must be different on all nodes. The first node's ID is 0, the
