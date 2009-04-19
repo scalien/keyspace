@@ -3,7 +3,7 @@
 #include "System/IO/IOProcessor.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
-#include "Application/Keyspace/Protocol/HttpServer.h"
+#include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 
 int main(int argc, char* argv[])
