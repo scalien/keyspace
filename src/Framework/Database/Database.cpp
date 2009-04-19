@@ -13,7 +13,8 @@ env(DB_CXX_NO_EXCEPTIONS)
 
 bool Database::Init(const char* dbdir)
 {
-	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL/* | DB_THREAD*/;
+	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL |
+					  DB_LOG_AUTOREMOVE/* | DB_THREAD*/;
 	int mode = 0;
 	int ret;
 	
