@@ -61,15 +61,15 @@
 		548147750F31B8BE00F3D2B6 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
 		54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
-		54D96E960F9B332C005658C9 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E820F9B332C005658C9 /* HttpConn.cpp */; };
-		54D96E970F9B332C005658C9 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E840F9B332C005658C9 /* HttpRequest.cpp */; };
-		54D96E980F9B332C005658C9 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E860F9B332C005658C9 /* HttpServer.cpp */; };
-		54D96E990F9B332C005658C9 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E880F9B332C005658C9 /* IMF.cpp */; };
 		54D96E9A0F9B332C005658C9 /* KeyspaceClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */; };
 		54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */; };
 		54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */; };
 		54D96E9D0F9B332C005658C9 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E920F9B332C005658C9 /* MemcacheConn.cpp */; };
 		54D96E9E0F9B332C005658C9 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E940F9B332C005658C9 /* MemcacheServer.cpp */; };
+		54D96EC00F9B35CB005658C9 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EB80F9B35CB005658C9 /* HttpConn.cpp */; };
+		54D96EC10F9B35CB005658C9 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EBA0F9B35CB005658C9 /* HttpRequest.cpp */; };
+		54D96EC20F9B35CB005658C9 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EBC0F9B35CB005658C9 /* HttpServer.cpp */; };
+		54D96EC30F9B35CB005658C9 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EBE0F9B35CB005658C9 /* IMF.cpp */; };
 		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
 		9A05218B0F78633D0066338D /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
 		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
@@ -275,14 +275,6 @@
 		54814D450F35DD9400F3D2B6 /* ReplicatedDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedDB.h; sourceTree = "<group>"; };
 		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
 		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
-		54D96E820F9B332C005658C9 /* HttpConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpConn.cpp; sourceTree = "<group>"; };
-		54D96E830F9B332C005658C9 /* HttpConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpConn.h; sourceTree = "<group>"; };
-		54D96E840F9B332C005658C9 /* HttpRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequest.cpp; sourceTree = "<group>"; };
-		54D96E850F9B332C005658C9 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
-		54D96E860F9B332C005658C9 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
-		54D96E870F9B332C005658C9 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
-		54D96E880F9B332C005658C9 /* IMF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IMF.cpp; sourceTree = "<group>"; };
-		54D96E890F9B332C005658C9 /* IMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMF.h; sourceTree = "<group>"; };
 		54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientMsg.cpp; sourceTree = "<group>"; };
 		54D96E8C0F9B332C005658C9 /* KeyspaceClientMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientMsg.h; sourceTree = "<group>"; };
 		54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceConn.cpp; sourceTree = "<group>"; };
@@ -293,6 +285,14 @@
 		54D96E930F9B332C005658C9 /* MemcacheConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheConn.h; sourceTree = "<group>"; };
 		54D96E940F9B332C005658C9 /* MemcacheServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheServer.cpp; sourceTree = "<group>"; };
 		54D96E950F9B332C005658C9 /* MemcacheServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheServer.h; sourceTree = "<group>"; };
+		54D96EB80F9B35CB005658C9 /* HttpConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpConn.cpp; sourceTree = "<group>"; };
+		54D96EB90F9B35CB005658C9 /* HttpConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpConn.h; sourceTree = "<group>"; };
+		54D96EBA0F9B35CB005658C9 /* HttpRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequest.cpp; sourceTree = "<group>"; };
+		54D96EBB0F9B35CB005658C9 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
+		54D96EBC0F9B35CB005658C9 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
+		54D96EBD0F9B35CB005658C9 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
+		54D96EBE0F9B35CB005658C9 /* IMF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IMF.cpp; sourceTree = "<group>"; };
+		54D96EBF0F9B35CB005658C9 /* IMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMF.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* Keyspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Keyspace; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncDatabase.h; path = AsyncDatabase/AsyncDatabase.h; sourceTree = "<group>"; };
 		9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabase.cpp; path = AsyncDatabase/AsyncDatabase.cpp; sourceTree = "<group>"; };
@@ -735,26 +735,11 @@
 		54D96E800F9B332C005658C9 /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
-				54D96E810F9B332C005658C9 /* Http */,
+				54D96EB70F9B35CB005658C9 /* HTTP */,
 				54D96E8A0F9B332C005658C9 /* Keyspace */,
 				54D96E910F9B332C005658C9 /* Memcache */,
 			);
 			path = Protocol;
-			sourceTree = "<group>";
-		};
-		54D96E810F9B332C005658C9 /* Http */ = {
-			isa = PBXGroup;
-			children = (
-				54D96E820F9B332C005658C9 /* HttpConn.cpp */,
-				54D96E830F9B332C005658C9 /* HttpConn.h */,
-				54D96E840F9B332C005658C9 /* HttpRequest.cpp */,
-				54D96E850F9B332C005658C9 /* HttpRequest.h */,
-				54D96E860F9B332C005658C9 /* HttpServer.cpp */,
-				54D96E870F9B332C005658C9 /* HttpServer.h */,
-				54D96E880F9B332C005658C9 /* IMF.cpp */,
-				54D96E890F9B332C005658C9 /* IMF.h */,
-			);
-			path = Http;
 			sourceTree = "<group>";
 		};
 		54D96E8A0F9B332C005658C9 /* Keyspace */ = {
@@ -779,6 +764,21 @@
 				54D96E950F9B332C005658C9 /* MemcacheServer.h */,
 			);
 			path = Memcache;
+			sourceTree = "<group>";
+		};
+		54D96EB70F9B35CB005658C9 /* HTTP */ = {
+			isa = PBXGroup;
+			children = (
+				54D96EB80F9B35CB005658C9 /* HttpConn.cpp */,
+				54D96EB90F9B35CB005658C9 /* HttpConn.h */,
+				54D96EBA0F9B35CB005658C9 /* HttpRequest.cpp */,
+				54D96EBB0F9B35CB005658C9 /* HttpRequest.h */,
+				54D96EBC0F9B35CB005658C9 /* HttpServer.cpp */,
+				54D96EBD0F9B35CB005658C9 /* HttpServer.h */,
+				54D96EBE0F9B35CB005658C9 /* IMF.cpp */,
+				54D96EBF0F9B35CB005658C9 /* IMF.h */,
+			);
+			path = HTTP;
 			sourceTree = "<group>";
 		};
 		9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */ = {
@@ -1086,15 +1086,15 @@
 				545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */,
 				9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */,
 				9AF508690F8AB05300F7F49E /* Config.cpp in Sources */,
-				54D96E960F9B332C005658C9 /* HttpConn.cpp in Sources */,
-				54D96E970F9B332C005658C9 /* HttpRequest.cpp in Sources */,
-				54D96E980F9B332C005658C9 /* HttpServer.cpp in Sources */,
-				54D96E990F9B332C005658C9 /* IMF.cpp in Sources */,
 				54D96E9A0F9B332C005658C9 /* KeyspaceClientMsg.cpp in Sources */,
 				54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */,
 				54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */,
 				54D96E9D0F9B332C005658C9 /* MemcacheConn.cpp in Sources */,
 				54D96E9E0F9B332C005658C9 /* MemcacheServer.cpp in Sources */,
+				54D96EC00F9B35CB005658C9 /* HttpConn.cpp in Sources */,
+				54D96EC10F9B35CB005658C9 /* HttpRequest.cpp in Sources */,
+				54D96EC20F9B35CB005658C9 /* HttpServer.cpp in Sources */,
+				54D96EC30F9B35CB005658C9 /* IMF.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
