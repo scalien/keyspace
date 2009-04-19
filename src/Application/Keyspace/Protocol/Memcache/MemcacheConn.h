@@ -7,8 +7,8 @@
 #include "System/IO/IOOperation.h"
 #include "System/IO/IOProcessor.h"
 
-#include "../Database/KeyspaceDB.h"
-#include "../Database/KeyspaceClient.h"
+#include "Application/Keyspace/Database/KeyspaceDB.h"
+#include "Application/Keyspace/Database/KeyspaceClient.h"
 
 class MemcacheServer;
 

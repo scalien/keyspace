@@ -17,12 +17,6 @@
 		5421D56B0F61DB32004BBDB4 /* PLeaseLearner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D56A0F61DB32004BBDB4 /* PLeaseLearner.cpp */; };
 		5421D5AB0F61DE2A004BBDB4 /* PaxosLease.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D5AA0F61DE2A004BBDB4 /* PaxosLease.cpp */; };
 		5421D81D0F6424CE004BBDB4 /* PaxosLearner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D81C0F6424CE004BBDB4 /* PaxosLearner.cpp */; };
-		5421DCD00F648B86004BBDB4 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */; };
-		5421DCD10F648B86004BBDB4 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */; };
-		5421DCD20F648B86004BBDB4 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC50F648B86004BBDB4 /* HttpServer.cpp */; };
-		5421DCD30F648B86004BBDB4 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC70F648B86004BBDB4 /* IMF.cpp */; };
-		5421DCD40F648B86004BBDB4 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */; };
-		5421DCD50F648B86004BBDB4 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */; };
 		5421E1060F68121B004BBDB4 /* ReplicatedLogMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */; };
 		5421E3600F6C13CC004BBDB4 /* TransportTCPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */; };
 		5421E3F30F6C1E50004BBDB4 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
@@ -41,10 +35,7 @@
 		54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */; };
 		544611FB0F533FAB00EFBBDE /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
-		5449D4520F90B5CE00F95C2F /* KeyspaceServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */; };
-		5449D45B0F90B66000F95C2F /* KeyspaceConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */; };
 		545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */; };
-		545C76740F8F8180006540BC /* KeyspaceClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */; };
 		547A75F80F758C3D003084C9 /* CatchupMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F30F758C3D003084C9 /* CatchupMsg.cpp */; };
 		547A75F90F758C3D003084C9 /* CatchupClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F40F758C3D003084C9 /* CatchupClient.cpp */; };
 		547A75FA0F758C3D003084C9 /* CatchupServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F50F758C3D003084C9 /* CatchupServer.cpp */; };
@@ -70,6 +61,15 @@
 		548147750F31B8BE00F3D2B6 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
 		54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
+		54D96E960F9B332C005658C9 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E820F9B332C005658C9 /* HttpConn.cpp */; };
+		54D96E970F9B332C005658C9 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E840F9B332C005658C9 /* HttpRequest.cpp */; };
+		54D96E980F9B332C005658C9 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E860F9B332C005658C9 /* HttpServer.cpp */; };
+		54D96E990F9B332C005658C9 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E880F9B332C005658C9 /* IMF.cpp */; };
+		54D96E9A0F9B332C005658C9 /* KeyspaceClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */; };
+		54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */; };
+		54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */; };
+		54D96E9D0F9B332C005658C9 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E920F9B332C005658C9 /* MemcacheConn.cpp */; };
+		54D96E9E0F9B332C005658C9 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E940F9B332C005658C9 /* MemcacheServer.cpp */; };
 		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
 		9A05218B0F78633D0066338D /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
 		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
@@ -81,11 +81,6 @@
 		9A2723270F5F9DB600EE25E2 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		9A2724310F654C5400EE25E2 /* Test.agazso.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A2724300F654C5400EE25E2 /* Test.agazso.cpp */; };
 		9A2724340F654FEA00EE25E2 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
-		9A2724350F654FF100EE25E2 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */; };
-		9A27245E0F6550B300EE25E2 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC10F648B86004BBDB4 /* HttpConn.cpp */; };
-		9A27245F0F6550B300EE25E2 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */; };
-		9A2724600F6550B300EE25E2 /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC70F648B86004BBDB4 /* IMF.cpp */; };
-		9A2724630F6550E000EE25E2 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */; };
 		9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
 		9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
 		9A2724660F6550E000EE25E2 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
@@ -98,7 +93,6 @@
 		9A2724700F6551B100EE25E2 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		9A2724720F6551C600EE25E2 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
 		9A2724730F6551C600EE25E2 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
-		9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC50F648B86004BBDB4 /* HttpServer.cpp */; };
 		9A2725AF0F66E45800EE25E2 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		9A2725B00F66E45800EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
 		9A2725B10F66E45800EE25E2 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
@@ -144,13 +138,11 @@
 		9ADCA0800F8385580025A7AB /* Channel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA07F0F8385580025A7AB /* Channel.cpp */; };
 		9AF5010A0F83953500F7F49E /* kdbfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501090F83953500F7F49E /* kdbfs.cpp */; };
 		9AF5011A0F83A9F600F7F49E /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */; };
-		9AF5011B0F83A9F600F7F49E /* IMF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC70F648B86004BBDB4 /* IMF.cpp */; };
 		9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
 		9AF5011F0F83A9F600F7F49E /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
 		9AF501200F83A9F600F7F49E /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
-		9AF501220F83AA0100F7F49E /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */; };
 		9AF5012D0F85198E00F7F49E /* kdbfs_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA0250F82D5980025A7AB /* kdbfs_main.c */; };
 		9AF501FD0F8826A900F7F49E /* BDBTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501F10F88226400F7F49E /* BDBTool.cpp */; };
 		9AF502000F8826CC00F7F49E /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
@@ -199,18 +191,6 @@
 		5421D6B10F63092E004BBDB4 /* PaxosConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConsts.h; sourceTree = "<group>"; };
 		5421D81B0F6424CE004BBDB4 /* PaxosLearner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosLearner.h; sourceTree = "<group>"; };
 		5421D81C0F6424CE004BBDB4 /* PaxosLearner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosLearner.cpp; sourceTree = "<group>"; };
-		5421DCC10F648B86004BBDB4 /* HttpConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpConn.cpp; sourceTree = "<group>"; };
-		5421DCC20F648B86004BBDB4 /* HttpConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpConn.h; sourceTree = "<group>"; };
-		5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequest.cpp; sourceTree = "<group>"; };
-		5421DCC40F648B86004BBDB4 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
-		5421DCC50F648B86004BBDB4 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
-		5421DCC60F648B86004BBDB4 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
-		5421DCC70F648B86004BBDB4 /* IMF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IMF.cpp; sourceTree = "<group>"; };
-		5421DCC80F648B86004BBDB4 /* IMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMF.h; sourceTree = "<group>"; };
-		5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheConn.cpp; sourceTree = "<group>"; };
-		5421DCCA0F648B86004BBDB4 /* MemcacheConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheConn.h; sourceTree = "<group>"; };
-		5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheServer.cpp; sourceTree = "<group>"; };
-		5421DCCC0F648B86004BBDB4 /* MemcacheServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheServer.h; sourceTree = "<group>"; };
 		5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedLogMsg.h; sourceTree = "<group>"; };
 		5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedLogMsg.cpp; sourceTree = "<group>"; };
 		5421E35E0F6C13CC004BBDB4 /* TransportTCPReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportTCPReader.h; sourceTree = "<group>"; };
@@ -228,16 +208,10 @@
 		544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPoolTest.cpp; sourceTree = "<group>"; };
 		544611F60F533FAB00EFBBDE /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPEchoClient.c; sourceTree = "<group>"; };
 		5446122C0F53488D00EFBBDE /* KeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceDB.h; sourceTree = "<group>"; };
-		5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceServer.h; sourceTree = "<group>"; };
-		5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceServer.cpp; sourceTree = "<group>"; };
-		5449D4590F90B66000F95C2F /* KeyspaceConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConn.h; sourceTree = "<group>"; };
-		5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceConn.cpp; sourceTree = "<group>"; };
 		5449D8170F91146B00F95C2F /* KeyspaceProto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KeyspaceProto.c; sourceTree = "<group>"; };
 		545C60330F7979B4006540BC /* KeyspaceClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClient.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
 		545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceMsg.cpp; sourceTree = "<group>"; };
-		545C76720F8F8180006540BC /* KeyspaceClientMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientMsg.h; sourceTree = "<group>"; };
-		545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientMsg.cpp; sourceTree = "<group>"; };
 		547A75AC0F756FA1003084C9 /* KeyspaceConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConsts.h; sourceTree = "<group>"; };
 		547A75F20F758C3D003084C9 /* CatchupMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupMsg.h; sourceTree = "<group>"; };
 		547A75F30F758C3D003084C9 /* CatchupMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupMsg.cpp; sourceTree = "<group>"; };
@@ -301,6 +275,24 @@
 		54814D450F35DD9400F3D2B6 /* ReplicatedDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedDB.h; sourceTree = "<group>"; };
 		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
 		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
+		54D96E820F9B332C005658C9 /* HttpConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpConn.cpp; sourceTree = "<group>"; };
+		54D96E830F9B332C005658C9 /* HttpConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpConn.h; sourceTree = "<group>"; };
+		54D96E840F9B332C005658C9 /* HttpRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequest.cpp; sourceTree = "<group>"; };
+		54D96E850F9B332C005658C9 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
+		54D96E860F9B332C005658C9 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
+		54D96E870F9B332C005658C9 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
+		54D96E880F9B332C005658C9 /* IMF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IMF.cpp; sourceTree = "<group>"; };
+		54D96E890F9B332C005658C9 /* IMF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMF.h; sourceTree = "<group>"; };
+		54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientMsg.cpp; sourceTree = "<group>"; };
+		54D96E8C0F9B332C005658C9 /* KeyspaceClientMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientMsg.h; sourceTree = "<group>"; };
+		54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceConn.cpp; sourceTree = "<group>"; };
+		54D96E8E0F9B332C005658C9 /* KeyspaceConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConn.h; sourceTree = "<group>"; };
+		54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceServer.cpp; sourceTree = "<group>"; };
+		54D96E900F9B332C005658C9 /* KeyspaceServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceServer.h; sourceTree = "<group>"; };
+		54D96E920F9B332C005658C9 /* MemcacheConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheConn.cpp; sourceTree = "<group>"; };
+		54D96E930F9B332C005658C9 /* MemcacheConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheConn.h; sourceTree = "<group>"; };
+		54D96E940F9B332C005658C9 /* MemcacheServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemcacheServer.cpp; sourceTree = "<group>"; };
+		54D96E950F9B332C005658C9 /* MemcacheServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemcacheServer.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* Keyspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Keyspace; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncDatabase.h; path = AsyncDatabase/AsyncDatabase.h; sourceTree = "<group>"; };
 		9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabase.cpp; path = AsyncDatabase/AsyncDatabase.cpp; sourceTree = "<group>"; };
@@ -486,27 +478,6 @@
 			path = PaxosLease;
 			sourceTree = "<group>";
 		};
-		5421DCC00F648B86004BBDB4 /* Protocol */ = {
-			isa = PBXGroup;
-			children = (
-				545C76710F8F816A006540BC /* Keyspace */,
-				5421DCC20F648B86004BBDB4 /* HttpConn.h */,
-				5421DCC10F648B86004BBDB4 /* HttpConn.cpp */,
-				5421DCC40F648B86004BBDB4 /* HttpRequest.h */,
-				5421DCC30F648B86004BBDB4 /* HttpRequest.cpp */,
-				5421DCC60F648B86004BBDB4 /* HttpServer.h */,
-				5421DCC50F648B86004BBDB4 /* HttpServer.cpp */,
-				5421DCC80F648B86004BBDB4 /* IMF.h */,
-				5421DCC70F648B86004BBDB4 /* IMF.cpp */,
-				5421DCCA0F648B86004BBDB4 /* MemcacheConn.h */,
-				5421DCC90F648B86004BBDB4 /* MemcacheConn.cpp */,
-				5421DCCC0F648B86004BBDB4 /* MemcacheServer.h */,
-				5421DCCB0F648B86004BBDB4 /* MemcacheServer.cpp */,
-			);
-			name = Protocol;
-			path = ../Protocol;
-			sourceTree = "<group>";
-		};
 		5421E3440F6C130E004BBDB4 /* Transport */ = {
 			isa = PBXGroup;
 			children = (
@@ -554,6 +525,7 @@
 			isa = PBXGroup;
 			children = (
 				5446122B0F53488D00EFBBDE /* Database */,
+				54D96E800F9B332C005658C9 /* Protocol */,
 			);
 			path = Keyspace;
 			sourceTree = "<group>";
@@ -562,7 +534,6 @@
 			isa = PBXGroup;
 			children = (
 				547A75E20F7589B8003084C9 /* Catchup */,
-				5421DCC00F648B86004BBDB4 /* Protocol */,
 				547A75AC0F756FA1003084C9 /* KeyspaceConsts.h */,
 				545C60570F797BA3006540BC /* KeyspaceMsg.h */,
 				545C60580F797BA3006540BC /* KeyspaceMsg.cpp */,
@@ -571,19 +542,6 @@
 				5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */,
 			);
 			path = Database;
-			sourceTree = "<group>";
-		};
-		545C76710F8F816A006540BC /* Keyspace */ = {
-			isa = PBXGroup;
-			children = (
-				545C76720F8F8180006540BC /* KeyspaceClientMsg.h */,
-				545C76730F8F8180006540BC /* KeyspaceClientMsg.cpp */,
-				5449D4500F90B5CE00F95C2F /* KeyspaceServer.h */,
-				5449D4510F90B5CE00F95C2F /* KeyspaceServer.cpp */,
-				5449D4590F90B66000F95C2F /* KeyspaceConn.h */,
-				5449D45A0F90B66000F95C2F /* KeyspaceConn.cpp */,
-			);
-			path = Keyspace;
 			sourceTree = "<group>";
 		};
 		547A75E20F7589B8003084C9 /* Catchup */ = {
@@ -772,6 +730,55 @@
 				54814D450F35DD9400F3D2B6 /* ReplicatedDB.h */,
 			);
 			path = ReplicatedDB;
+			sourceTree = "<group>";
+		};
+		54D96E800F9B332C005658C9 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				54D96E810F9B332C005658C9 /* Http */,
+				54D96E8A0F9B332C005658C9 /* Keyspace */,
+				54D96E910F9B332C005658C9 /* Memcache */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		54D96E810F9B332C005658C9 /* Http */ = {
+			isa = PBXGroup;
+			children = (
+				54D96E820F9B332C005658C9 /* HttpConn.cpp */,
+				54D96E830F9B332C005658C9 /* HttpConn.h */,
+				54D96E840F9B332C005658C9 /* HttpRequest.cpp */,
+				54D96E850F9B332C005658C9 /* HttpRequest.h */,
+				54D96E860F9B332C005658C9 /* HttpServer.cpp */,
+				54D96E870F9B332C005658C9 /* HttpServer.h */,
+				54D96E880F9B332C005658C9 /* IMF.cpp */,
+				54D96E890F9B332C005658C9 /* IMF.h */,
+			);
+			path = Http;
+			sourceTree = "<group>";
+		};
+		54D96E8A0F9B332C005658C9 /* Keyspace */ = {
+			isa = PBXGroup;
+			children = (
+				54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */,
+				54D96E8C0F9B332C005658C9 /* KeyspaceClientMsg.h */,
+				54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */,
+				54D96E8E0F9B332C005658C9 /* KeyspaceConn.h */,
+				54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */,
+				54D96E900F9B332C005658C9 /* KeyspaceServer.h */,
+			);
+			path = Keyspace;
+			sourceTree = "<group>";
+		};
+		54D96E910F9B332C005658C9 /* Memcache */ = {
+			isa = PBXGroup;
+			children = (
+				54D96E920F9B332C005658C9 /* MemcacheConn.cpp */,
+				54D96E930F9B332C005658C9 /* MemcacheConn.h */,
+				54D96E940F9B332C005658C9 /* MemcacheServer.cpp */,
+				54D96E950F9B332C005658C9 /* MemcacheServer.h */,
+			);
+			path = Memcache;
 			sourceTree = "<group>";
 		};
 		9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */ = {
@@ -1065,12 +1072,6 @@
 				5421D56B0F61DB32004BBDB4 /* PLeaseLearner.cpp in Sources */,
 				5421D5AB0F61DE2A004BBDB4 /* PaxosLease.cpp in Sources */,
 				5421D81D0F6424CE004BBDB4 /* PaxosLearner.cpp in Sources */,
-				5421DCD00F648B86004BBDB4 /* HttpConn.cpp in Sources */,
-				5421DCD10F648B86004BBDB4 /* HttpRequest.cpp in Sources */,
-				5421DCD20F648B86004BBDB4 /* HttpServer.cpp in Sources */,
-				5421DCD30F648B86004BBDB4 /* IMF.cpp in Sources */,
-				5421DCD40F648B86004BBDB4 /* MemcacheConn.cpp in Sources */,
-				5421DCD50F648B86004BBDB4 /* MemcacheServer.cpp in Sources */,
 				5421E1060F68121B004BBDB4 /* ReplicatedLogMsg.cpp in Sources */,
 				5421E3600F6C13CC004BBDB4 /* TransportTCPReader.cpp in Sources */,
 				5421E3F30F6C1E50004BBDB4 /* TCPServer.cpp in Sources */,
@@ -1085,9 +1086,15 @@
 				545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */,
 				9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */,
 				9AF508690F8AB05300F7F49E /* Config.cpp in Sources */,
-				545C76740F8F8180006540BC /* KeyspaceClientMsg.cpp in Sources */,
-				5449D4520F90B5CE00F95C2F /* KeyspaceServer.cpp in Sources */,
-				5449D45B0F90B66000F95C2F /* KeyspaceConn.cpp in Sources */,
+				54D96E960F9B332C005658C9 /* HttpConn.cpp in Sources */,
+				54D96E970F9B332C005658C9 /* HttpRequest.cpp in Sources */,
+				54D96E980F9B332C005658C9 /* HttpServer.cpp in Sources */,
+				54D96E990F9B332C005658C9 /* IMF.cpp in Sources */,
+				54D96E9A0F9B332C005658C9 /* KeyspaceClientMsg.cpp in Sources */,
+				54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */,
+				54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */,
+				54D96E9D0F9B332C005658C9 /* MemcacheConn.cpp in Sources */,
+				54D96E9E0F9B332C005658C9 /* MemcacheServer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1109,11 +1116,6 @@
 			files = (
 				9A2724310F654C5400EE25E2 /* Test.agazso.cpp in Sources */,
 				9A2724340F654FEA00EE25E2 /* KeyspaceDB.cpp in Sources */,
-				9A2724350F654FF100EE25E2 /* MemcacheServer.cpp in Sources */,
-				9A27245E0F6550B300EE25E2 /* HttpConn.cpp in Sources */,
-				9A27245F0F6550B300EE25E2 /* HttpRequest.cpp in Sources */,
-				9A2724600F6550B300EE25E2 /* IMF.cpp in Sources */,
-				9A2724630F6550E000EE25E2 /* MemcacheConn.cpp in Sources */,
 				9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */,
 				9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */,
 				9A2724660F6550E000EE25E2 /* Socket.cpp in Sources */,
@@ -1125,7 +1127,6 @@
 				9A2724700F6551B100EE25E2 /* Scheduler.cpp in Sources */,
 				9A2724720F6551C600EE25E2 /* Common.cpp in Sources */,
 				9A2724730F6551C600EE25E2 /* ThreadPool.cpp in Sources */,
-				9A2724750F6551D100EE25E2 /* HttpServer.cpp in Sources */,
 				9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */,
 				9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */,
 				9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */,
@@ -1197,13 +1198,11 @@
 				9ADCA0800F8385580025A7AB /* Channel.cpp in Sources */,
 				9AF5010A0F83953500F7F49E /* kdbfs.cpp in Sources */,
 				9AF5011A0F83A9F600F7F49E /* HttpClient.cpp in Sources */,
-				9AF5011B0F83A9F600F7F49E /* IMF.cpp in Sources */,
 				9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */,
 				9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */,
 				9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */,
 				9AF5011F0F83A9F600F7F49E /* Socket.cpp in Sources */,
 				9AF501200F83A9F600F7F49E /* Log.cpp in Sources */,
-				9AF501220F83AA0100F7F49E /* HttpRequest.cpp in Sources */,
 				9AF5012D0F85198E00F7F49E /* kdbfs_main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
