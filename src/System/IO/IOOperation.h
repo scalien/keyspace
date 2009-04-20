@@ -5,6 +5,7 @@
 #include <aio.h>
 #endif
 #ifdef PLATFORM_DARWIN
+#include <sys/types.h>
 #include <sys/aio.h>
 #endif
 
