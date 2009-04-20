@@ -17,8 +17,9 @@ BIN_DIR = $(BASE_DIR)/bin
 
 SCRIPT_DIR = $(BASE_DIR)/scripts
 DIST_DIR = $(BASE_DIR)/dist
+VERSION = `$(BASE_DIR)/script/version.sh $(SRC_DIR)/Version.h`
 PACKAGE_DIR = $(BASE_DIR)/packages
-PACKAGE_FILE = keyspace.deb
+PACKAGE_FILE = keyspace-$(VERSION).deb
 PACKAGE_REPOSITORY = /
 
 BUILD_ROOT = $(BASE_DIR)/build
