@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5406777E0F3C48FD00E80088 /* TestDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5406777C0F3C48FD00E80088 /* TestDB.cpp */; };
 		5421D00F0F573DD7004BBDB4 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
 		5421D14A0F5C5ED9004BBDB4 /* PaxosProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */; };
 		5421D14E0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */; };
@@ -169,8 +168,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5406777C0F3C48FD00E80088 /* TestDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestDB.cpp; sourceTree = "<group>"; };
-		5406777D0F3C48FD00E80088 /* TestDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestDB.h; sourceTree = "<group>"; };
 		5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceDB.cpp; sourceTree = "<group>"; };
 		5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosProposer.h; sourceTree = "<group>"; };
 		5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosProposer.cpp; sourceTree = "<group>"; };
@@ -448,15 +445,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5406777B0F3C48FD00E80088 /* TestDB */ = {
-			isa = PBXGroup;
-			children = (
-				5406777D0F3C48FD00E80088 /* TestDB.h */,
-				5406777C0F3C48FD00E80088 /* TestDB.cpp */,
-			);
-			path = TestDB;
-			sourceTree = "<group>";
-		};
 		5421D3850F5EAD65004BBDB4 /* PaxosLease */ = {
 			isa = PBXGroup;
 			children = (
@@ -577,7 +565,6 @@
 				9ADCA0240F82D4860025A7AB /* Fuse */,
 				9A6204DA0F6C098F009576A1 /* HubSim */,
 				5446122A0F53488D00EFBBDE /* Keyspace */,
-				5406777B0F3C48FD00E80088 /* TestDB */,
 				548146FF0F31B6B200F3D2B6 /* EchoServer */,
 			);
 			path = Application;
@@ -1055,7 +1042,6 @@
 				548147620F31B6B300F3D2B6 /* Log.cpp in Sources */,
 				54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */,
 				54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */,
-				5406777E0F3C48FD00E80088 /* TestDB.cpp in Sources */,
 				9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */,
 				9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */,
 				9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */,
@@ -1262,6 +1248,7 @@
 				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -1298,6 +1285,7 @@
 				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = YES;
