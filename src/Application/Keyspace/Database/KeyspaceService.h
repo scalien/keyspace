@@ -1,15 +1,15 @@
-#ifndef KEYSPACECLIENT_H
-#define KEYSPACECLIENT_H
+#ifndef KEYSPACESERVICE_H
+#define KEYSPACESERVICE_H
 
 #include "System/Buffer.h"
 #include "KeyspaceDB.h"
 
 class KeyspaceOp;
 
-class KeyspaceClient
+class KeyspaceService
 {
 public:
-	virtual			~KeyspaceClient() {}
+	virtual			~KeyspaceService() {}
 	virtual	void	OnComplete(KeyspaceOp* op, bool status, bool final = true) = 0;
 	
 	void Init(KeyspaceDB* kdb_)
@@ -59,7 +59,7 @@ public:
 	int64_t					num;
 	uint64_t				count;
 	
-	KeyspaceClient*			client;
+	KeyspaceService*		service;
 	
 	~KeyspaceOp()
 	{

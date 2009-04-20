@@ -1,6 +1,6 @@
 #include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "KeyspaceDB.h"
-#include "KeyspaceClient.h"
+#include "KeyspaceService.h"
 #include <assert.h>
 #include <stdlib.h>
 #include "System/Log.h"
@@ -93,15 +93,15 @@ public:
 			}
 			op->key.Set(keys[i].buffer, keys[i].length);
 			if (i == numkey - 1)
-				op->client->OnComplete(op, true, complete);
+				op->service->OnComplete(op, true, complete);
 			else
-				op->client->OnComplete(op, true, false);
+				op->service->OnComplete(op, true, false);
 		}
 
 		if (numkey == 0 && complete)
 		{
 			op->key.length = 0;
-			op->client->OnComplete(op, true, complete);
+			op->service->OnComplete(op, true, complete);
 		}
 				
 		delete this;
@@ -267,7 +267,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		ret = table->Get(transaction, op->key, op->value);
 
-		op->client->OnComplete(op, ret);
+		op->service->OnComplete(op, ret);
 		return true;
 	}
 	
@@ -369,7 +369,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 			op->value.Set(data);
 
 		}
-		op->client->OnComplete(op, ret);
+		op->service->OnComplete(op, ret);
 		ops.Remove(op);
 	}
 }
@@ -402,7 +402,7 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		ret &= table->Get(transaction, op->key, op->value);
-		op->client->OnComplete(op, ret);
+		op->service->OnComplete(op, ret);
 	}
 	else if (op->IsList())
 	{
@@ -416,7 +416,7 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 		Log_Trace();
 		ret &= table->Set(transaction, op->key, op->value);
 		Log_Trace();
-		op->client->OnComplete(op, ret);
+		op->service->OnComplete(op, ret);
 	}
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 	{
@@ -425,7 +425,7 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 			ret &= table->Set(transaction, op->key, op->value);
 		else
 			ret = false;
-		op->client->OnComplete(op, ret);
+		op->service->OnComplete(op, ret);
 	}
 	else if (op->type == KeyspaceOp::ADD)
 	{
@@ -445,12 +445,12 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 			else
 				ret = false;
 		}
-		op->client->OnComplete(op, ret);
+		op->service->OnComplete(op, ret);
 	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
 		ret &= table->Delete(transaction, op->key);
-		op->client->OnComplete(op, ret);
+		op->service->OnComplete(op, ret);
 	}
 	else
 		ASSERT_FAIL();

@@ -27,7 +27,7 @@ void MemcacheConn::Init(MemcacheServer* server_, KeyspaceDB* kdb_)
 	Log_Trace();
 	
 	TCPConn<>::Init();
-	KeyspaceClient::Init(kdb_);
+	KeyspaceService::Init(kdb_);
 	
 	server = server_;
 
@@ -232,7 +232,7 @@ const char* MemcacheConn::ProcessGetCommand(const char* data, int size, Token* t
 		return data;
 
 	op = new KeyspaceOp;
-	op->client = this;
+	op->service = this;
 	op->type = KeyspaceOp::GET;
 	for (i = 1; i < numtoken; i++)
 	{
@@ -265,7 +265,7 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 		return data;
 
 	op = new KeyspaceOp;	
-	op->client = this;
+	op->service = this;
 	op->type = KeyspaceOp::SET;
 	
 	numlen = 0;

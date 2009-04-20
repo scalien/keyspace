@@ -206,7 +206,7 @@
 		544611F60F533FAB00EFBBDE /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPEchoClient.c; sourceTree = "<group>"; };
 		5446122C0F53488D00EFBBDE /* KeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceDB.h; sourceTree = "<group>"; };
 		5449D8170F91146B00F95C2F /* KeyspaceProto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KeyspaceProto.c; sourceTree = "<group>"; };
-		545C60330F7979B4006540BC /* KeyspaceClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClient.h; sourceTree = "<group>"; };
+		545C60330F7979B4006540BC /* KeyspaceService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceService.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
 		545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceMsg.cpp; sourceTree = "<group>"; };
 		547A75AC0F756FA1003084C9 /* KeyspaceConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConsts.h; sourceTree = "<group>"; };
@@ -523,7 +523,7 @@
 				547A75AC0F756FA1003084C9 /* KeyspaceConsts.h */,
 				545C60570F797BA3006540BC /* KeyspaceMsg.h */,
 				545C60580F797BA3006540BC /* KeyspaceMsg.cpp */,
-				545C60330F7979B4006540BC /* KeyspaceClient.h */,
+				545C60330F7979B4006540BC /* KeyspaceService.h */,
 				5446122C0F53488D00EFBBDE /* KeyspaceDB.h */,
 				5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */,
 			);

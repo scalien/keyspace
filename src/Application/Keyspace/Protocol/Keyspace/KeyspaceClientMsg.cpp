@@ -1,7 +1,7 @@
 #include "KeyspaceClientMsg.h"
 #include <stdio.h>
 #include <inttypes.h>
-#include "Application/Keyspace/Database/KeyspaceClient.h"
+#include "Application/Keyspace/Database/KeyspaceService.h"
 
 void KeyspaceClientReq::Init(char type_)
 {

@@ -5,11 +5,11 @@
 #include "Framework/Transport/TCPConn.h"
 #include "HttpRequest.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
-#include "Application/Keyspace/Database/KeyspaceClient.h"
+#include "Application/Keyspace/Database/KeyspaceService.h"
 
 class HttpServer;
 
-class HttpConn : public TCPConn<>, public KeyspaceClient
+class HttpConn : public TCPConn<>, public KeyspaceService
 {
 public:
 	HttpConn();

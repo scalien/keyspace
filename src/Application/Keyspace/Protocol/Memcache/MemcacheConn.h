@@ -8,11 +8,11 @@
 #include "System/IO/IOProcessor.h"
 
 #include "Application/Keyspace/Database/KeyspaceDB.h"
-#include "Application/Keyspace/Database/KeyspaceClient.h"
+#include "Application/Keyspace/Database/KeyspaceService.h"
 
 class MemcacheServer;
 
-class MemcacheConn : public TCPConn<>, public KeyspaceClient
+class MemcacheConn : public TCPConn<>, public KeyspaceService
 {
 public:		
 	void			Init(MemcacheServer* server_, KeyspaceDB* kdb_);
@@ -21,7 +21,7 @@ public:
 	virtual void	OnRead();
 	virtual void	OnClose();
 	
-	// KeyspaceClient interface
+	// KeyspaceService interface
 	virtual void	OnComplete(KeyspaceOp* op, bool status);
 	
 private:

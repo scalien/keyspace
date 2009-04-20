@@ -4,12 +4,12 @@
 #include "System/Containers/LinkedList.h"
 #include "Framework/Transport/TCPConn.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
-#include "Application/Keyspace/Database/KeyspaceClient.h"
+#include "Application/Keyspace/Database/KeyspaceService.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.h"
 
 class KeyspaceServer;
 
-class KeyspaceConn : public TCPConn<>, public KeyspaceClient
+class KeyspaceConn : public TCPConn<>, public KeyspaceService
 {
 public:
 	KeyspaceConn();

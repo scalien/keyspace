@@ -11,7 +11,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	Log_Trace();
 	
 	TCPConn<>::Init();
-	KeyspaceClient::Init(kdb_);
+	KeyspaceService::Init(kdb_);
 	
 	server = server_;
 	closeAfterSend = false;
@@ -174,7 +174,7 @@ void KeyspaceConn::ProcessMsg()
 	KeyspaceOp* op;
 	
 	op = new KeyspaceOp;
-	op->client = this;
+	op->service = this;
 	
 	if (!req.ToKeyspaceOp(op))
 	{

@@ -20,7 +20,7 @@ HttpConn::HttpConn()
 void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 {
 	TCPConn<>::Init();
-	KeyspaceClient::Init(kdb_);
+	KeyspaceService::Init(kdb_);
 	
 	server = server_;
 	
@@ -155,7 +155,7 @@ int HttpConn::ProcessGetRequest()
 	// http://localhost:8080/set/key/value
 	
 	op = new KeyspaceOp;
-	op->client = this;
+	op->service = this;
 	
 	if (strncmp(request.line.uri, "/get/", strlen("/get/")) == 0)
 	{
