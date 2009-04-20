@@ -8,7 +8,7 @@ class Callable;
 class IOProcessor
 {
 public:
-	static bool Init();
+	static bool Init(int maxfd);
 	static void Shutdown();
 
 	static bool Add(IOOperation* ioop);

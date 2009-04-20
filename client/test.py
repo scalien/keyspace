@@ -11,12 +11,12 @@ def genString(x):
 	return file_str.getvalue()
 
 def stress(client):
-	msg = genString(64*1000)
+	msg = genString(1000*1000)
 
 	print("Starting Keyspace run...")
 	
 	for num in xrange(100):
-		print(str(client.set("big", msg)))
+		print(str(client.set("big" + str(num), msg)))
 
 def users(client):
 	print(str(client.set("user:0", "mtrencseni")))

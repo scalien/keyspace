@@ -1,10 +1,16 @@
+##############################################################################
 #
-# Scalien Makefile for Linux
+# Keyspace Makefile
 #
+##############################################################################
 
+
+##############################################################################
 #
-# directories
+# Directories
 #
+##############################################################################
+
 BASE_DIR = .
 KEYSPACE_DIR = .
 BIN_DIR = $(BASE_DIR)/bin
@@ -22,11 +28,12 @@ DEB_DIR = $(BUILD_ROOT)/deb
 BUILD_DEBUG_DIR = $(BUILD_ROOT)/debug
 BUILD_RELEASE_DIR = $(BUILD_ROOT)/release
 
+
+##############################################################################
 #
-# compiler/linker options
+# Platform selector
 #
-CC = gcc
-CXX = g++
+##############################################################################
 
 ifeq ($(shell uname),Darwin)
 PLATFORM=Darwin
@@ -38,12 +45,21 @@ PLATFORM_UCASE=$(shell echo $(PLATFORM) | tr [a-z] [A-Z])
 
 include Makefile.$(PLATFORM)
 
+
+##############################################################################
+#
+# Compiler/linker options
+#
+##############################################################################
+
+CC = gcc
+CXX = g++
+
 DEBUG_CFLAGS = -g #-pg
 DEBUG_LDFLAGS = #-pg -lc_p
 
 RELEASE_CFLAGS = -O3 #-g
 
-# default to debug build
 ifneq ($(BUILD), release)
 BUILD_DIR = $(BUILD_DEBUG_DIR)
 CFLAGS = $(BASE_CFLAGS) $(DEBUG_CFLAGS)
@@ -103,18 +119,6 @@ OBJECTS = \
 
 LIBS = \
 	$(KEYSPACE_LIBS)
-
-#$(BUILD_DIR):
-#	-mkdir -p $(BUILD_DIR) \
-#		$(BUILD_DIR)/System \
-#		$(BUILD_DIR)/System/Events \
-#		$(BUILD_DIR)/System/IO \
-#		$(BUILD_DIR)/Framework \
-#		$(BUILD_DIR)/Framework/MasterLease \
-#		$(BUILD_DIR)/Framework/Paxos \
-#		$(BUILD_DIR)/Framework/ReplicatedLog \
-#		$(BUILD_DIR)/Framework/Database \
-#		$(BUILD_DIR)/Framework/Transport \
 
 $(KEYSPACE_LIBS):
 	cd $(KEYSPACE_DIR); $(MAKE) targets BUILD=$(BUILD)

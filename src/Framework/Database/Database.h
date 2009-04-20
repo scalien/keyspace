@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include <db_cxx.h>
+#include "System/ThreadPool.h"
 
 class Table;
 class Transaction;
@@ -19,9 +20,14 @@ public:
 	Table* GetTable(const char* name);
 	
 private:
-	DbEnv env;
-	Table* keyspace;
-	Table* test;
+	DbEnv		env;
+	Table*		keyspace;
+	Table*		test;
+	ThreadPool	cpThread;
+	bool		running;
+	Callable*	checkpoint;
+
+	void		Checkpoint();
 };
 
 // the global database object

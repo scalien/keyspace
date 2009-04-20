@@ -30,13 +30,22 @@ static void ProcessUDPRead(struct kevent* ev);
 static void ProcessUDPWrite(struct kevent* ev);
 static void ProcessFileOp(struct kevent* ev);
 
-bool IOProcessor::Init()
+bool IOProcessor::Init(int maxfd_)
 {
+	rlimit rl;
+	
 	kq = kqueue();
 	if (kq < 0)
 	{
 		Log_Errno();
 		return false;
+	}
+	
+	rl.rlim_cur = maxfd_;
+	rl.rlim_max = maxfd_;
+	if (setrlimit(RLIMIT_NOFILE, &rl) < 0)
+	{
+		Log_Errno();
 	}
 	
 	// setup AIO
@@ -295,7 +304,7 @@ void ProcessAsyncOp()
 		for (i = 0; i < count; i++)
 			Call(callables[i]);
 		
-		if (count < SIZE(callables))
+		if (count < (int) SIZE(callables))
 			break;
 	}
 }

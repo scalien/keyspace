@@ -12,7 +12,6 @@
 #include "System/Log.h"
 #include "System/Time.h"
 
-#define EPOLL_EVENT_SIZE	1024
 #define	MAX_EVENTS			1
 #define PIPEOP				'p'
 
@@ -63,10 +62,11 @@ public:
 };
 
 static int			epollfd;
+static int			maxfd;
 static PipeOp		filePipeOp;
 static PipeOp		asyncPipeOp;
 static IOOperation*	canceledOps;
-static EpollOp		epollOps[1024];
+static EpollOp*		epollOps;
 
 static bool			AddEvent(int fd, uint32_t filter, IOOperation* ioop);
 static bool			AddAio(FileOp* ioop);
@@ -130,19 +130,29 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 	return true;
 }
 
-bool IOProcessor::Init()
+bool IOProcessor::Init(int maxfd_)
 {
 	size_t i;
+	rlimit rl;
 	
-	for (i = 0; i < SIZE(epollOps); i++)
+	maxfd = maxfd_;
+	rl.rlim_cur = maxfd;
+	rl.rlim_max = maxfd;
+	if (setrlimit(RLIMIT_NOFILE, &rl) < 0)
+	{
+		Log_Errno();
+	}
+	
+	epollOps = new EpollOp[maxfd];
+	for (i = 0; i < maxfd; i++)
 	{
 		epollOps[i].read = NULL;
 		epollOps[i].write = NULL;
 	}
-		
+
 	canceledOps = NULL;
 
-	epollfd = epoll_create(EPOLL_EVENT_SIZE);
+	epollfd = epoll_create(maxfd);
 	if (epollfd < 0)
 	{
 		Log_Errno();

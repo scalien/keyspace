@@ -39,6 +39,25 @@ public:
 		return value.buffer;
 	}
 	
+	bool GetBoolValue(bool defval)
+	{
+		if (strcmp(value.buffer, "yes") == 0 ||
+			strcmp(value.buffer, "true") == 0 ||
+			strcmp(value.buffer, "on") == 0)
+		{
+			return true;
+		}
+		
+		if (strcmp(value.buffer, "no") == 0 ||
+			strcmp(value.buffer, "false") == 0 ||
+			strcmp(value.buffer, "off") == 0)
+		{
+			return false;
+		}
+		
+		return defval;
+	}
+	
 	int GetListNum()
 	{
 		return numelem;
@@ -221,6 +240,17 @@ const char* Config::GetValue(const char* name, const char* defval)
 		return defval;
 		
 	return var->GetValue();
+}
+
+bool Config::GetBoolValue(const char* name, bool defval)
+{
+	ConfigVar* var;
+	
+	var = GetVar(name);
+	if (!var)
+		return defval;
+	
+	return var->GetBoolValue(defval);
 }
 
 int Config::GetListNum(const char* name)

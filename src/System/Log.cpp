@@ -8,6 +8,7 @@
 #define LOG_MSG_SIZE	1024
 
 static bool timestamping = false;
+static bool trace = true;
 
 static char* GetFullTimestamp(char ts[27])
 {
@@ -39,6 +40,11 @@ void Log_SetTimestamping(bool ts)
 	timestamping = ts;
 }
 
+void Log_SetTrace(bool trace_)
+{
+	trace = trace_;
+}
+
 void Log(char* file, int line, const char* func, int type, const char* fmt, ...)
 {
 	int i, len;
@@ -46,6 +52,9 @@ void Log(char* file, int line, const char* func, int type, const char* fmt, ...)
 	char *msg;
 	va_list ap;
 	char ts[27];
+	
+	if (type == LOG_TYPE_TRACE && !trace)
+		return;
 	
 	if (type == LOG_TYPE_ERRNO)
 		msg = strerror(errno);
