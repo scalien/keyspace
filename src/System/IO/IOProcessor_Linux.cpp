@@ -4,6 +4,7 @@
 #include <sys/epoll.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <sys/resource.h>
 #include <unistd.h>
 #include <signal.h>
 #include <math.h>
@@ -132,7 +133,7 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 
 bool IOProcessor::Init(int maxfd_)
 {
-	size_t i;
+	int i;
 	rlimit rl;
 	
 	maxfd = maxfd_;
