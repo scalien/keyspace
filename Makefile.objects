@@ -9,15 +9,15 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Database/Catchup/CatchupClient.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/KeyspaceDB.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/KeyspaceMsg.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/MemcacheServer.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpConn.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpRequest.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HttpServer.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/IMF.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/MemcacheConn.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpConn.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpRequest.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpServer.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/IMF.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceConn.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/Memcache/MemcacheConn.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/Memcache/MemcacheServer.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLog.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/LogQueue.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLogMsg.o \
