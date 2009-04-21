@@ -39,6 +39,7 @@ private:
 	bool					AddWithoutReplicatedLog(KeyspaceOp* op);
 	void					Execute(Transaction* transaction, bool ownAppend);
 	void					Append();
+	void					FailKeyspaceOps();
 	
 	bool					catchingUp;
 	bool					writePaxosID;  // single node case

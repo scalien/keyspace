@@ -522,6 +522,19 @@ void KeyspaceDB::Append()
 		ReplicatedLog::Get()->Append(pvalue);
 }
 
+void KeyspaceDB::FailKeyspaceOps()
+{
+	KeyspaceOp	**it;
+	KeyspaceOp	*op;
+	for (it = ops.Head(); it != NULL; /* advanded in body */)
+	{
+		op = *it;
+		
+		op->service->OnComplete(op, false);
+		it = ops.Remove(it);
+	}
+}
+
 void KeyspaceDB::OnMasterLease(unsigned)
 {
 	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
@@ -531,6 +544,9 @@ void KeyspaceDB::OnMasterLease(unsigned)
 void KeyspaceDB::OnMasterLeaseExpired()
 {
 	Log_Trace();
+	
+	if (!ReplicatedLog::Get()->IsMaster())
+		FailKeyspaceOps();
 }
 
 void KeyspaceDB::OnDoCatchup(unsigned nodeID)
