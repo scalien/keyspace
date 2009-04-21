@@ -94,7 +94,7 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 	const char NOT_STORED[] = "NOT_STORED" CS_CRLF;
 	DynArray<MAX_MESSAGE_SIZE> buf;
 	const char *p = buf.buffer;
-	int size = 0;
+	unsigned size = 0;
 	
 	if (op->type == KeyspaceOp::GET && status)
 	{

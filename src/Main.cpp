@@ -19,7 +19,8 @@ int main(int argc, char* argv[])
 		ASSERT_FAIL();
 
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
-	Log_Message("Keyspace v" VERSION_STRING " r%.*s started", VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+	Log_Message("Keyspace v" VERSION_STRING " r%.*s started",
+		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
 
 	IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024));
 	database.Init(Config::GetValue("database.dir", "."));	

@@ -561,7 +561,7 @@ const char* HttpConn::Status(int code)
 void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 {	
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
-	int size;
+	unsigned size;
 
 	do {
 		size = snprintf(httpHeader.buffer, httpHeader.size,
@@ -591,7 +591,7 @@ void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 void HttpConn::ResponseHeader(int code, bool close, char* header)
 {
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
-	int size;
+	unsigned size;
 
 	do {
 		size = snprintf(httpHeader.buffer, httpHeader.size,

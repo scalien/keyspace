@@ -52,7 +52,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	char		*pos;
 	ByteString  key, value, test;
 		
-#define CheckOverflow()		if ((pos - data.buffer) >= data.length || pos < data.buffer) return false;
+#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
 #define ReadUint64_t(num)	(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadInt64_t(num)	(num) = strntoint64_t(pos, data.length - (pos - data.buffer), &nread); \
@@ -169,7 +169,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 
 bool KeyspaceMsg::Write(ByteString& data)
 {
-	int required;
+	unsigned required;
 	
 	if (type == KEYSPACE_GET)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,

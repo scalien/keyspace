@@ -146,14 +146,14 @@ bool KeyspaceClientReq::Read(ByteString data)
 	char		*pos;
 	ByteString  key, value, test;
 		
-#define CheckOverflow()		if ((pos - data.buffer) >= data.length || pos < data.buffer) return false;
+#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
 #define ReadUint64_t(num)	(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadInt64_t(num)	(num) = strntoint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
-#define ValidateLength()	if ((pos - data.buffer) != data.length) return false;
+#define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
 
 	pos = data.buffer;
 	CheckOverflow();
@@ -388,7 +388,7 @@ void KeyspaceClientResp::ListEnd(uint64_t cmdID_)
 
 bool KeyspaceClientResp::Write(ByteString& data)
 {
-	int required;
+	unsigned required;
 	
 	if (value.length > 0)
 		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s",

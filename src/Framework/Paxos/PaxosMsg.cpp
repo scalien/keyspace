@@ -99,12 +99,12 @@ bool PaxosMsg::Read(ByteString& data)
 		<paxosID>#<type>#<<<type specific>>>
 	*/
 	
-#define CheckOverflow()		if ((pos - data.buffer) >= data.length || pos < data.buffer) return false;
+#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != '#') return false; pos++;
-#define ValidateLength()	if ((pos - data.buffer) != data.length) return false;
+#define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
 
 	pos = data.buffer;
 	CheckOverflow();
@@ -141,8 +141,8 @@ bool PaxosMsg::Read(ByteString& data)
 		// the <n_accepted>#<length>#<value> is only present if
 		// response == PREPARE_PREVIOUSLY_ACCEPTED
 		uint64_t	proposalID, acceptedProposalID;
-		char	response;
-		int		length;
+		char		response;
+		unsigned	length;
 		
 		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
@@ -167,7 +167,7 @@ bool PaxosMsg::Read(ByteString& data)
 		ReadUint64_t(length); CheckOverflow();
 		ReadSeparator();
 		
-		if (pos - data.buffer != data.length - length)
+		if (pos - data.buffer != (int)(data.length - length))
 			return false;
 
 		PrepareResponse(paxosID, nodeID, proposalID, response, acceptedProposalID,
@@ -178,14 +178,14 @@ bool PaxosMsg::Read(ByteString& data)
 	{
 		// <<<type specific>>> := <n>#<length>#<value>
 		uint64_t	proposalID;
-		int		length;
+		unsigned	length;
 		
 		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadUint64_t(length); CheckOverflow();
 		ReadSeparator();
 		
-		if (pos - data.buffer != data.length - length)
+		if (pos - data.buffer != (int)(data.length - length))
 			return false;
 		
 		ProposeRequest(paxosID, nodeID, proposalID, ByteString(data.size - (pos - data.buffer),
@@ -196,7 +196,7 @@ bool PaxosMsg::Read(ByteString& data)
 	{
 		// <<<type specific>>> := <n>#<response>
 		uint64_t	proposalID;
-		char	response;
+		char		response;
 		
 		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
@@ -213,7 +213,7 @@ bool PaxosMsg::Read(ByteString& data)
 	else if (type == LEARN_CHOSEN)
 	{
 		// <<<type specific>>> := <length>#<value>
-		int		length;
+		unsigned		length;
 		
 		ReadChar(subtype); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
@@ -223,7 +223,7 @@ bool PaxosMsg::Read(ByteString& data)
 			ReadUint64_t(length); CheckOverflow();
 			ReadSeparator();
 			
-			if (pos - data.buffer != data.length - length)
+			if (pos - data.buffer != (int)(data.length - length))
 				return false;
 			
 			LearnChosen(paxosID, nodeID, LEARN_VALUE,
@@ -246,7 +246,7 @@ bool PaxosMsg::Read(ByteString& data)
 
 bool PaxosMsg::Write(ByteString& data)
 {
-	int required;
+	unsigned required;
 	
 	if (type == PREPARE_REQUEST)
 		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "", paxosID, type, nodeID, proposalID);

@@ -29,12 +29,12 @@ bool CatchupMsg::Read(ByteString data)
 	uint64_t	paxosID;
 	ByteString	key, value, dbCommand;
 	
-#define CheckOverflow()		if ((pos - data.buffer) >= data.length || pos < data.buffer) return false;
+#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
-#define ValidateLength()	if ((pos - data.buffer) != data.length) return false;
+#define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
 
 	pos = data.buffer;
 	CheckOverflow();
@@ -79,7 +79,7 @@ bool CatchupMsg::Read(ByteString data)
 	
 bool CatchupMsg::Write(ByteString& data)
 {
-	int		required;
+	unsigned required;
 	
 	if (type == KEY_VALUE)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%d:%.*s", type,

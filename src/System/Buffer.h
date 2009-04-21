@@ -9,9 +9,9 @@
 class ByteString
 {
 public:
-	int		size;
-	int		length;
-	char*	buffer;
+	unsigned	size;
+	unsigned	length;
+	char*		buffer;
 	
 	ByteString() { Init(); }
 	
@@ -42,7 +42,7 @@ public:
 		return Set(str, len);
 	}
 	
-	virtual bool Set(const char* str, int len)
+	virtual bool Set(const char* str, unsigned len)
 	{
 		if (buffer == NULL)
 			ASSERT_FAIL();
@@ -76,7 +76,7 @@ public:
 	
 	bool Advance(unsigned n)
 	{
-		if (length < (int) n)
+		if (length < n)
 			return false;
 		
 		buffer += n;
@@ -144,7 +144,7 @@ public:
 		return true;
 	}
 
-	bool Reallocate(int size_)
+	bool Reallocate(unsigned size_)
 	{
 		if (size_ <= size)
 		{

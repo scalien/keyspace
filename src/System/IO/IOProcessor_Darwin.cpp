@@ -338,7 +338,7 @@ void ProcessTCPRead(struct kevent* ev)
 			} else
 			{
 				tcpread->data.length += nread;
-				if (tcpread->requested == IO_READ_ANY || tcpread->data.length == tcpread->requested)
+				if (tcpread->requested == IO_READ_ANY || (int) tcpread->data.length == tcpread->requested)
 					Call(tcpread->onComplete);
 				else
 					IOProcessor::Add(tcpread);
@@ -388,7 +388,7 @@ void ProcessTCPWrite(struct kevent* ev)
 		} else
 		{
 			tcpwrite->transferred += nwrite;
-			if (tcpwrite->transferred == tcpwrite->data.length)
+			if (tcpwrite->transferred == (int) tcpwrite->data.length)
 				Call(tcpwrite->onComplete);
 			else
 				IOProcessor::Add(tcpwrite);
@@ -429,7 +429,7 @@ void ProcessUDPWrite(struct kevent* ev)
 
 	udpwrite = (UDPWrite*) ev->udata;
 
-	if (ev->data >= udpwrite->data.length)
+	if (ev->data >= (int) udpwrite->data.length)
 	{
 		nwrite = sendto(udpwrite->fd, udpwrite->data.buffer, udpwrite->data.length, 0,
 					(const sockaddr*)&udpwrite->endpoint.sa, sizeof(udpwrite->endpoint.sa));
@@ -441,7 +441,7 @@ void ProcessUDPWrite(struct kevent* ev)
 				Log_Errno();
 		} else
 		{
-			if (nwrite == udpwrite->data.length)
+			if (nwrite == (int) udpwrite->data.length)
 			{
 				Call(udpwrite->onComplete);
 			} else
