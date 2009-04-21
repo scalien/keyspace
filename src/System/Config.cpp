@@ -29,7 +29,7 @@ public:
 		return false;
 	}
 
-	int GetIntValue(int defval)
+	int GetIntValue(int)
 	{
 		return atoi(value.buffer);
 	}
@@ -89,7 +89,7 @@ public:
 Queue<ConfigVar, &ConfigVar::next> vars;
 
 
-char* ParseToken(char* start, char* token, size_t tokensize)
+char* ParseToken(char* start, char* token, size_t)
 {
 	char* p;
 	int len = 0;
