@@ -310,11 +310,11 @@ void ReplicatedLog::OnLearnChosen()
 			if (replicatedDB != NULL & IsMaster())
 				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
 		}
-		else if (IsMaster() && replicatedDB != NULL && rmsg.value.length > 0)
+		else if (replicatedDB != NULL && rmsg.value.length > 0)
 			{
 				if (!acceptor.transaction.IsActive())
 					acceptor.transaction.Begin();
-				replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend);
+				replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend && IsMaster());
 				// client calls Append() here
 			}
 	}
