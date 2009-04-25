@@ -28,6 +28,8 @@ public:
 	bool GetEndpoint(Endpoint &endpoint);
 
 	bool SendTo(void* data, int count, const Endpoint &endpoint);
+	int	 Send(const char* data, int count, int timeout = 0);
+	int  Read(char* data, int count, int timeout = 0);
 	
 	void Close();	
 };

@@ -19,7 +19,7 @@ void TransportTCPConn::OnRead()
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		Log_Message("tcpread.data.length: %d msglength: %d", tcpread.data.length, msglength);
 		
-		if (msglength > (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
+		if (msglength > (unsigned) (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
 		{
 			OnClose();
 			return;

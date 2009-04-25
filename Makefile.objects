@@ -1,8 +1,4 @@
 ALL_OBJECTS = \
-	$(BUILD_DIR)/Application/EchoServer/UDPEchoServer.o \
-	$(BUILD_DIR)/Application/EchoServer/TCPEchoServer.o \
-	$(BUILD_DIR)/Application/EchoServer/TCPEchoConn.o \
-	$(BUILD_DIR)/Application/TestDB/TestDB.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/Catchup/CatchupMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/Catchup/CatchupServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/Catchup/CatchupConn.o \

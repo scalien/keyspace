@@ -167,6 +167,106 @@ bool Socket::SendTo(void *data, int count, const Endpoint &endpoint)
 	return true;
 }
 
+int Socket::Send(const char* data, int count, int timeout)
+{
+	size_t		left;
+	ssize_t		nwritten;
+	timeval		tv;
+	fd_set		fds;
+	int			ret;
+	
+	left = count;
+	while (left > 0)
+	{
+		if ((nwritten = send(fd, data, count, 0)) < 0)
+		{
+			if (errno == EINTR)
+			{
+				nwritten = 0;
+			}
+			else if (errno == EPIPE)
+			{
+				return -1;
+			}
+			else if (errno == EAGAIN)
+			{
+				FD_ZERO(&fds);
+				FD_SET(fd, &fds);
+				if (timeout)
+				{
+					tv.tv_sec = timeout / 1000;
+					tv.tv_usec = (timeout % 1000) * 1000;
+					ret = select(fd + 1, NULL, &fds, NULL, &tv);
+				}
+				else
+					ret = select(fd + 1, NULL, &fds, NULL, NULL);
+
+				if (ret <= 0)
+					return -1;
+
+				nwritten = 0;
+			}
+			else
+				return -1;
+		}
+
+		left -= nwritten;
+		data += nwritten;
+	}
+	
+	return count;
+}
+
+int Socket::Read(char* data, int count, int timeout)
+{
+	size_t		left;
+	ssize_t		nread;
+	timeval		tv;
+	fd_set		fds;
+	int			ret;
+	
+	left = count;
+again:
+	if ((nread = read(fd, data, left)) < 0)
+	{
+		if (errno == EINTR)
+		{
+			nread = 0;
+			goto again;
+		}
+		else if (errno == EAGAIN)
+		{
+			FD_ZERO(&fds);
+			FD_SET(fd, &fds);
+			if (timeout)
+			{
+				tv.tv_sec = timeout / 1000;
+				tv.tv_usec = (timeout % 1000) * 1000;
+				ret = select(fd + 1, &fds, NULL, NULL, &tv);
+			}
+			else
+				ret = select(fd + 1, &fds, NULL, NULL, NULL);
+
+			if (ret <= 0)
+				return -1;
+
+			goto again;
+		}
+		else
+			return -1;
+	}
+	else if (nread == 0)
+	{
+		// End of stream
+		return 0;
+	}
+		
+	left -= nread;
+	data += nread;
+	
+	return count - left;
+}
+
 void Socket::Close()
 {
 	int ret;

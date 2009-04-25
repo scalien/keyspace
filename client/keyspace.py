@@ -95,7 +95,15 @@ class KeyspaceClient:
 	
 	def submit(self):
 		while self.pendingRequest > 0:
-			
+			try:
+				msg = self._read()
+				self._trace("response = %s" % msg)
+				token, next = self._getToken(msg)
+				token, next = self._getToken(msg, next)
+				token, next = self._getToken(msg, next)
+				id = token
+				responseFunc = self._getResponseFunc(self.requests[id])
+				
 			pass
 	
 	def connectMaster(self):

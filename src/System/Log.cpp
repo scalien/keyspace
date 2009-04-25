@@ -9,6 +9,7 @@
 
 static bool timestamping = false;
 static bool trace = true;
+static int	maxLine = LOG_MSG_SIZE;
 
 static char* GetFullTimestamp(char ts[27])
 {
@@ -45,10 +46,15 @@ void Log_SetTrace(bool trace_)
 	trace = trace_;
 }
 
+void Log_SetMaxLine(int maxLine_)
+{
+	maxLine = maxLine_ > LOG_MSG_SIZE ? LOG_MSG_SIZE : maxLine_;
+}
+
 void Log(char* file, int line, const char* func, int type, const char* fmt, ...)
 {
 	int i, len;
-	char buf[LOG_MSG_SIZE];
+	char buf[maxLine];
 	char *msg;
 	va_list ap;
 	char ts[27];
@@ -61,7 +67,7 @@ void Log(char* file, int line, const char* func, int type, const char* fmt, ...)
 	else
 	{
 		va_start(ap, fmt);
-		vsnprintf(buf, sizeof(buf), fmt, ap);
+		vsnprintf(buf, maxLine, fmt, ap);
 		va_end(ap);
 		msg = buf;
 	}
@@ -77,12 +83,15 @@ void Log(char* file, int line, const char* func, int type, const char* fmt, ...)
 #endif
 	
 	if (timestamping)
-		fprintf(stdout, "%s:", GetFullTimestamp(ts));
+		fprintf(stdout, "%s: ", GetFullTimestamp(ts));
+
+	if (type == LOG_TYPE_TRACE)
+		fprintf(stdout, "%s:%d:%s(): ", file, line, func);
 
 	if (msg[0] != '\0')
-		fprintf(stdout, "%s:%d:%s(): %s\n", file, line, func, msg);		
+		fprintf(stdout, "%s\n", msg);		
 	else
-		fprintf(stdout, "%s:%d:%s()\n", file, line, func);
+		fprintf(stdout, "\n");
 		
 	fflush(stdout);
 }

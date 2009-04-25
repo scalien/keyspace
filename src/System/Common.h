@@ -15,6 +15,8 @@
 
 #define ASSERT_FAIL() assert(false)
 
+#define CS_INT_SIZE(int_type) ((size_t)(0.30103 * sizeof(int_type) * 8) + 2 + 1)
+
 inline int min(int a, int b) { if (a < b) return a; else return b; }
 
 inline int max(int a, int b) { if (a > b) return a; else return b; }
@@ -31,6 +33,6 @@ inline bool Xor(bool a, bool b, bool c) { return (((int)a + (int)b + (int)c) == 
 
 inline bool Xor(bool a, bool b) { return Xor(a, b, false); }
 
-inline unsigned NumLen(int n) { return (unsigned) floor(log10(n) + 1); }
+inline unsigned NumLen(int n) { return n == 0 ? 1 : (unsigned) floor(log10(n) + 1); }
 
 #endif

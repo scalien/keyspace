@@ -17,9 +17,14 @@ public:
 	
 	ByteString(int size_, int length_, char* buffer_)
 		: size(size_), length(length_), buffer(buffer_) {}
+
+	ByteString(const char* str)
+	{
+		buffer = (char*) str;
+		size = strlen(str) - 1;
+		length = strlen(str) - 1;
+	}
 	
-	// FIXME this should be virtual, but then KeyspaceOp will
-	// call the destructor when returning to the client...
 	virtual ~ByteString() {}
 	
 	virtual void Init() { size = 0; length = 0; buffer = 0; }
@@ -88,7 +93,7 @@ public:
 	
 	void Clear() { length = 0; }
 	
-	bool Printf(const char* fmt, ...)
+	virtual bool Printf(const char* fmt, ...)
 	{
 		va_list ap;
 		
@@ -233,7 +238,7 @@ public:
 		if (length + len > size)
 			Reallocate(length + len, true);
 
-		memcpy(data + length, str, len);
+		memcpy(buffer + length, str, len);
 		length += len;
 		
 		return true;
@@ -255,6 +260,34 @@ public:
 			delete[] buffer;
 		
 		buffer = newbuffer;
+		size = newsize;
+	}
+	
+	virtual bool Printf(const char* fmt, ...)
+	{
+		va_list ap;
+
+		while (true)
+		{
+			va_start(ap, fmt);
+			length = vsnprintf(buffer, size, fmt, ap);
+			va_end(ap);
+			
+			if (length <= size)
+				return true;
+
+			Reallocate(length, false);
+		}
+		
+		return true;
+	}
+
+	DynArray<n> & Remove(int start, int count)
+	{
+		length -= count;
+		memmove(buffer + start, buffer + start + count, length - start);
+
+		return *this;
 	}
 };
 

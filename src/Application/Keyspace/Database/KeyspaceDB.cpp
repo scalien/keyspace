@@ -10,39 +10,61 @@
 class AsyncVisitorCallback : public Callable
 {
 public:
-	typedef ByteArray<VISITOR_LIMIT> Buffer; // TODO better initial value
-	ByteString*		keys;
+	typedef ByteArray<VISITOR_LIMIT>		KeyBuffer; // TODO better initial value
+	typedef DynArray<100 * VISITOR_LIMIT>	ValueBuffer;
+	
+	ByteString		keys[VISITOR_LIMIT];
+	ByteString		values[VISITOR_LIMIT];
+	KeyBuffer		keybuf;
+	ValueBuffer		valuebuf;
 	int				numkey;
-	Buffer*			buffer;
 	KeyspaceOp*		op;
 	bool			complete;
 	
 	AsyncVisitorCallback()
 	{
-		keys = new ByteString[VISITOR_LIMIT];
-		buffer = new Buffer;
 		numkey = 0;
 		op = NULL;
-		complete = false;
 	}
 	
 	~AsyncVisitorCallback()
 	{
-		delete[] keys;
-		delete buffer;	
 	}
 	
 	bool AppendKey(const ByteString &key)
 	{
-		if (key.length + buffer->length <= buffer->size && numkey < VISITOR_LIMIT - 1)
+		if (key.length + keybuf.length <= keybuf.size && numkey < VISITOR_LIMIT - 1)
 		{
 			keys[numkey].length = key.length;
 			keys[numkey].size = key.size;
-			keys[numkey].buffer = buffer->buffer + buffer->length;
-			memcpy(buffer->buffer + buffer->length, key.buffer, key.length);
-			buffer->length += key.length;
+			keys[numkey].buffer = keybuf.buffer + keybuf.length;
+			memcpy(keybuf.buffer + keybuf.length, key.buffer, key.length);
+			keybuf.length += key.length;
 			
 			numkey++;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	bool AppendKeyValue(const ByteString &key, const ByteString &value)
+	{
+		int numvalue;
+
+		if (key.length + keybuf.length <= keybuf.size && 
+			numkey < VISITOR_LIMIT - 1 &&
+			value.length + valuebuf.length <= valuebuf.size)
+		{
+			// save numkey here, because AppendKey increments it
+			numvalue = numkey;
+			AppendKey(key);
+
+			values[numvalue].length = value.length;
+			values[numvalue].size = value.size;
+			values[numvalue].buffer = valuebuf.buffer + valuebuf.length;
+			valuebuf.Append(value.buffer, value.length);
+			
 			return true;
 		}
 		
@@ -53,24 +75,36 @@ public:
 	{
 		for (int i = 0; i < numkey; i++)
 		{
-			if (op->key.size < keys[i].length)
+			// HACK in order to not copy the buffer we set the members of
+			// the key and value manually and set it back before deleting 
+			op->key.buffer = keys[i].buffer;
+			op->key.size = keys[i].size;
+			op->key.length = keys[i].length;
+			
+			if (op->type == KeyspaceOp::LISTP)
 			{
-				op->key.Free();
-				op->key.Allocate(keys[i].length);
+				op->value.buffer = values[i].buffer;
+				op->value.size = values[i].size;
+				op->value.length = values[i].length;
 			}
-			op->key.Set(keys[i].buffer, keys[i].length);
-			if (i == numkey - 1)
-				op->service->OnComplete(op, true, complete);
-			else
-				op->service->OnComplete(op, true, false);
+			
+			op->service->OnComplete(op, true, false);
 		}
 
-		if (numkey == 0 && complete)
+		op->key.buffer = NULL;
+		op->key.size = 0;
+		op->key.length = 0;
+		
+		if (op->type == KeyspaceOp::LISTP)
 		{
-			op->key.length = 0;
-			op->service->OnComplete(op, true, complete);
+			op->value.buffer = NULL;
+			op->value.size = 0;
+			op->value.length = 0;
 		}
-				
+
+		if (complete)
+			op->service->OnComplete(op, true, complete);
+
 		delete this;
 	}
 };
@@ -89,6 +123,8 @@ public:
 	
 	void Init()
 	{
+		op->key.Free();
+		op->value.Free();
 		avc = new AsyncVisitorCallback;
 		avc->op = op;
 	}
@@ -102,8 +138,18 @@ public:
 			avc->AppendKey(key);
 		}
 	}
+
+	void AppendKeyValue(const ByteString &key, const ByteString &value)
+	{
+		if (!avc->AppendKeyValue(key, value))
+		{
+			IOProcessor::Complete(avc);
+			Init();
+			avc->AppendKeyValue(key, value);
+		}
+	}
 	
-	virtual bool Accept(const ByteString &key, const ByteString &)
+	virtual bool Accept(const ByteString &key, const ByteString &value)
 	{
 		// don't list system keys
 		if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
@@ -112,7 +158,10 @@ public:
 		if ((count == 0 || num < count) &&
 			strncmp(keyHint.buffer, key.buffer, min(keyHint.length, key.length)) == 0)
 		{
-			AppendKey(key);
+			if (op->type == KeyspaceOp::LIST)
+				AppendKey(key);
+			if (op->type == KeyspaceOp::LISTP)
+				AppendKeyValue(key, value);
 			num++;
 			return true;
 		}

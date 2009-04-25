@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
 	if (!Config::Init(argv[1]))
 		ASSERT_FAIL();
 
+	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
 	Log_Message("Keyspace v" VERSION_STRING " r%.*s started",
 		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);

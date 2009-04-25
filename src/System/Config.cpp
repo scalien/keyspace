@@ -140,7 +140,7 @@ skipwhite:
 	}
 		
 	// regular word or number
-	while (*p > ' ' && *p != '=' && *p != ',')
+	while (*p > ' ' && *p != ',' && *p != '#' && *p != '=')
 	{
 		token[len++] = *p++;
 	}

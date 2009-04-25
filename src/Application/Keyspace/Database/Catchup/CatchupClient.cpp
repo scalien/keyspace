@@ -40,7 +40,7 @@ void CatchupClient::OnRead()
 	{
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
-		if (msglength > (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
+		if (msglength > (unsigned) (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
 		{
 			OnClose();
 			return;

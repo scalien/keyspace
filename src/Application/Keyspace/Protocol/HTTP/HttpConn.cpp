@@ -77,10 +77,13 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			ResponseHeader(200, false, "Content-type: text/plain" CS_CRLF CS_CRLF);
 			headerSent = true;
 		}
-		Write(op->key.buffer, op->key.length, false);
-		Write(":", 1);
-		Write(op->value.buffer, op->value.length, false);
-		Write("\n", 1);
+		if (op->key.length > 0)
+		{
+			Write(op->key.buffer, op->key.length, false);
+			Write(":", 1);
+			Write(op->value.buffer, op->value.length, false);
+			Write("\n", 1);
+		}
 	}
 	else
 		ASSERT_FAIL();

@@ -49,11 +49,13 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	}
 	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
-		resp.ListItem(op->cmdID, op->key);
+		if (op->key.length > 0)
+			resp.ListItem(op->cmdID, op->key);
 	}
 	else if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
 	{
-		resp.ListPItem(op->cmdID, op->key, op->value);
+		if (op->key.length > 0)
+			resp.ListPItem(op->cmdID, op->key, op->value);
 	}
 	else
 		ASSERT_FAIL();
@@ -93,7 +95,7 @@ void KeyspaceConn::OnRead()
 		Log_Message("tcpread buffer %.*s", tcpread.data.length, tcpread.data.buffer);
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
-		if (msglength > (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
+		if (msglength > (unsigned) (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
 		{
 			OnClose();
 			return;

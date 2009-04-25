@@ -170,18 +170,21 @@ void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 	
 	Buffer* buf;
 
-	buf = writeQueue.Tail();
-
-	if (!buf ||
-		(tcpwrite.active && writeQueue.Size() == 1) || 
-		(buf->length > 0 && buf->Remaining() < count))
+	if (data && count > 0)
 	{
-		buf = new Buffer;
-		writeQueue.Append(buf);
+		buf = writeQueue.Tail();
+
+		if (!buf ||
+			(tcpwrite.active && writeQueue.Size() == 1) || 
+			(buf->length > 0 && buf->Remaining() < count))
+		{
+			buf = new Buffer;
+			writeQueue.Append(buf);
+		}
+
+		buf->Append(data, count);
 	}
 
-	buf->Append(data, count);
-	
 	if (flush)
 		WritePending();
 }
