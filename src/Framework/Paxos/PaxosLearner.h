@@ -30,7 +30,7 @@ protected:
 
 	TransportWriter**		writers;
 	ByteArray<PAXOS_BUF_SIZE>wdata;
-	uint64_t					paxosID;
+	uint64_t				paxosID;
 	PaxosMsg				msg;
 	PaxosLearnerState		state;
 	

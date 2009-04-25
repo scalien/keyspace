@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		541FBB330FA33CF100429B43 /* TimeCheck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 541FBB320FA33CF100429B43 /* TimeCheck.cpp */; };
+		541FBBCF0FA34BA800429B43 /* TimeCheckMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 541FBBCE0FA34BA800429B43 /* TimeCheckMsg.cpp */; };
 		5421D00F0F573DD7004BBDB4 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
 		5421D14A0F5C5ED9004BBDB4 /* PaxosProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */; };
 		5421D14E0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */; };
@@ -171,6 +172,8 @@
 /* Begin PBXFileReference section */
 		541FBB310FA33CF100429B43 /* TimeCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeCheck.h; sourceTree = "<group>"; };
 		541FBB320FA33CF100429B43 /* TimeCheck.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeCheck.cpp; sourceTree = "<group>"; };
+		541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeCheckMsg.h; sourceTree = "<group>"; };
+		541FBBCE0FA34BA800429B43 /* TimeCheckMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeCheckMsg.cpp; sourceTree = "<group>"; };
 		5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceDB.cpp; sourceTree = "<group>"; };
 		5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosProposer.h; sourceTree = "<group>"; };
 		5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosProposer.cpp; sourceTree = "<group>"; };
@@ -451,6 +454,8 @@
 		541FBB2B0FA33C8A00429B43 /* TimeCheck */ = {
 			isa = PBXGroup;
 			children = (
+				541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */,
+				541FBBCE0FA34BA800429B43 /* TimeCheckMsg.cpp */,
 				541FBB310FA33CF100429B43 /* TimeCheck.h */,
 				541FBB320FA33CF100429B43 /* TimeCheck.cpp */,
 			);
@@ -1091,6 +1096,7 @@
 				54D96EC20F9B35CB005658C9 /* HttpServer.cpp in Sources */,
 				54D96EC30F9B35CB005658C9 /* IMF.cpp in Sources */,
 				541FBB330FA33CF100429B43 /* TimeCheck.cpp in Sources */,
+				541FBBCF0FA34BA800429B43 /* TimeCheckMsg.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
