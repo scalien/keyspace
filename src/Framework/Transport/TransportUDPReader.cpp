@@ -50,8 +50,8 @@ void TransportUDPReader::Continue()
 
 void TransportUDPReader::OnRead()
 {
-	Log_Message("received %.*s from: %s", udpread.data.length, udpread.data.buffer,
-		udpread.endpoint.ToString());
+//	Log_Message("received %.*s from: %s", udpread.data.length, udpread.data.buffer,
+//		udpread.endpoint.ToString());
 
 	if (!stopped)
 		Call(userCallback);

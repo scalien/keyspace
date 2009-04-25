@@ -43,7 +43,8 @@ void PaxosLease::OnRead()
 {
 	ByteString bs;
 	reader->GetMessage(bs);
-	msg.Read(bs);
+	if (!msg.Read(bs))
+		return;
 	
 	if (msg.type == PREPARE_RESPONSE || msg.type == PROPOSE_RESPONSE)
 		proposer.ProcessMsg(msg);

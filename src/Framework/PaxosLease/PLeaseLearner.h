@@ -25,6 +25,7 @@ public:
 
 private:
 	void					OnLearnChosen();
+	void					CheckLease();
 
 	MFunc<PLeaseLearner>	onLeaseTimeout;
 	Timer					leaseTimeout;

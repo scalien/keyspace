@@ -13,12 +13,14 @@ class TimeCheckMsg
 {
 public:
 	char			type;
+	unsigned		nodeID;
 	uint64_t		series;
 	uint64_t		requestTimestamp;
 	uint64_t		responseTimestamp;
 	
-	void			Request(uint64_t series_, uint64_t requestTimestamp_);
-	void			Response(uint64_t series_, uint64_t requestTimestamp_, uint64_t responseTimestamp_);
+	void			Request(unsigned nodeID_, uint64_t series_,uint64_t requestTimestamp_);
+	void			Response(unsigned nodeID_, uint64_t series_,
+							 uint64_t requestTimestamp_, uint64_t responseTimestamp_);
 	
 	bool			Read(ByteString& data);
 	bool			Write(ByteString& data);

@@ -27,13 +27,13 @@ class PLeaseMsg
 public:
 	char			type;
 	unsigned		nodeID;
-	uint64_t			proposalID;
+	uint64_t		proposalID;
 	char			response;
 	
-	uint64_t			acceptedProposalID;
+	uint64_t		acceptedProposalID;
 	unsigned int	leaseOwner;
-	uint64_t			expireTime;
-	uint64_t			paxosID; // so only up-to-date nodes can become masters
+	uint64_t		expireTime;
+	uint64_t		paxosID; // so only up-to-date nodes can become masters
 	
 	void			Init(char type_, unsigned nodeID_);
 		

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <math.h>
+#include "Log.h"
 
 #define KB 1000
 #define MB 1000000
@@ -14,6 +15,8 @@
 #define SIZE(a) (sizeof((a)) / sizeof((a[0])))
 
 #define ASSERT_FAIL() assert(false)
+
+#define STOP_FAIL(msg, code) { Log_Message(msg); _exit(code); }
 
 #define CS_INT_SIZE(int_type) ((size_t)(0.30103 * sizeof(int_type) * 8) + 2 + 1)
 

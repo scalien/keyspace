@@ -6,6 +6,7 @@
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
+#include "Application/TimeCheck/TimeCheck.h"
 
 int main(int argc, char* argv[])
 {
@@ -31,6 +32,9 @@ int main(int argc, char* argv[])
 
 	if (PaxosConfig::Get()->numNodes > 1)
 		ReplicatedLog::Get()->Init();
+	
+	TimeCheck timeCheck;
+	timeCheck.Init();
 	
 	KeyspaceDB kdb;
 	kdb.Init();

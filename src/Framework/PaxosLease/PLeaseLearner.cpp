@@ -34,6 +34,11 @@ void PLeaseLearner::OnLearnChosen()
 {
 	Log_Trace();
 	
+	CheckLease();
+	
+	if (state.learned && state.leaseOwner != msg.leaseOwner)
+		STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
+				
 	if (msg.expireTime > Now())
 	{
 		state.learned = true;
@@ -59,6 +64,8 @@ void PLeaseLearner::OnLeaseTimeout()
 
 bool PLeaseLearner::IsLeaseOwner()
 {
+	CheckLease();
+	
 	if (state.learned && state.leaseOwner == PaxosConfig::Get()->nodeID && Now() < state.expireTime)
 		return true;
 	else
@@ -67,6 +74,8 @@ bool PLeaseLearner::IsLeaseOwner()
 
 bool PLeaseLearner::LeaseKnown()
 {
+	CheckLease();
+	
 	if (state.learned && Now() < state.expireTime)
 		return true;
 	else
@@ -75,6 +84,8 @@ bool PLeaseLearner::LeaseKnown()
 
 int PLeaseLearner::LeaseOwner()
 {
+	CheckLease();
+	
 	if (state.learned && Now() < state.expireTime)
 		return state.leaseOwner;
 	else
@@ -83,22 +94,7 @@ int PLeaseLearner::LeaseOwner()
 
 uint64_t PLeaseLearner::LeaseEpoch()
 {
-	if (msg.expireTime < Now())
-		state.OnLeaseTimeout();
-
-	/*uint64_t left, middle, right, leaseEpoch;
-
-	// <leaseEpoch since last restart> <restartCounter> <nodeID>
-	
-	left = state.leaseEpoch << (WIDTH_NODEID + WIDTH_RESTART_COUNTER);
-
-	middle = config->restartCounter << WIDTH_NODEID;
-
-	right = config->nodeID;
-
-	leaseEpoch = left | middle | right;
-	
-	return leaseEpoch;*/
+	CheckLease();
 	
 	return state.leaseEpoch;
 
@@ -112,4 +108,10 @@ void PLeaseLearner::SetOnLearnLease(Callable* onLearnLeaseCallback_)
 void PLeaseLearner::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_)
 {
 	onLeaseTimeoutCallback = onLeaseTimeoutCallback_;
+}
+
+void PLeaseLearner::CheckLease()
+{
+	if (state.expireTime < Now())
+		state.OnLeaseTimeout();
 }

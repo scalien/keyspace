@@ -93,6 +93,9 @@ void PLeaseAcceptor::OnProposeRequest()
 			msg.expireTime, Now());
 		return;
 	}
+	
+	if (msg.expireTime > Now() + MAX_LEASE_TIME + MAX_CLOCK_SKEW)
+		STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
 
 	if (msg.proposalID < state.promisedProposalID)
 		msg.ProposeResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);

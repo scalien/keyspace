@@ -1,36 +1,42 @@
 #ifndef TIMECHECK_H
 #define TIMECHECK_H
 
-#include "System/IO/IOProcessor.h"
-#include "System/IO/Socket.h"
-#include "System/Events/Scheduler.h"
+#include "System/Events/Timer.h"
+#include "Framework/Transport/TransportReader.h"
+#include "Framework/Transport/TransportWriter.h"
+#include "Framework/Paxos/PaxosConfig.h"
+#include "TimeCheckMsg.h"
 
-#define TIMECHECK_PORT	4000
+#define TIMECHECK_PORT_OFFSET	3
+#define NUMMSGS					50
+#define SERIES_TIMEOUT			60*1000 // run every 60 seconds
 
 class TimeCheck
 {
 public:
 	TimeCheck();
 
-private:
-	Socket				socket;
-	UDPRead				udpread;
-	UDPWrite			udpwrite;
-	ByteArray<1024>		data;
+	void				Init();
 
-	bool				Init();
-	
 	void				OnRead();
-	void				OnWrite();
+	void				OnSeriesTimeout();
+	void				NextSeries();
 	
-	void				NextCheck();
-	void				SendRequests(Endpoint &endpoint);
+private:
+	void				InitTransport();
 	
+	TransportReader*	reader;
+	TransportWriter**	writers;
 	MFunc<TimeCheck>	onRead;
-	MFunc<TimeCheck>	onWrite;
+	TimeCheckMsg		msg;
 	
-	unsigned			series;
-	ByteArray<1024>		reqdata;
+	MFunc<TimeCheck>	onSeriesTimeout;
+	CdownTimer			seriesTimeout;
+	
+	ByteArray<1024>		data;
+	uint64_t			series;
+	int*				numReplies;
+	double*				totalSkew;
 };
 
 #endif
