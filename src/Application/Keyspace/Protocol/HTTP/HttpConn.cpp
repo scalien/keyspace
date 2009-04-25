@@ -70,6 +70,18 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		Write(op->key.buffer, op->key.length, false);
 		Write("\n", 1);
 	}
+	else if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
+	{
+		if (!headerSent)
+		{
+			ResponseHeader(200, false, "Content-type: text/plain" CS_CRLF CS_CRLF);
+			headerSent = true;
+		}
+		Write(op->key.buffer, op->key.length, false);
+		Write(":", 1);
+		Write(op->value.buffer, op->value.length, false);
+		Write("\n", 1);
+	}
 	else
 		ASSERT_FAIL();
 
@@ -414,70 +426,31 @@ int HttpConn::ProcessGetRequest()
 		
 		return 0;
 	}
-	else if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0)
+	else if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0 ||
+			 strncmp(request.line.uri, "/dirtylist/", strlen("/dirtylist/")) == 0 ||
+			 strncmp(request.line.uri, "/listp/", strlen("/listp/")) == 0 ||
+			 strncmp(request.line.uri, "/dirtylistp/", strlen("/dirtylistp/")) == 0)
 	{
-		prefix = request.line.uri + strlen("/list/");
-		
-		op->type = KeyspaceOp::LIST;
-		
-		count = strchr(prefix, '/');
-		if (count == NULL)
+		if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0)
 		{
-			prefixlen = strlen(prefix);
-			op->count = 0;
+			prefix = request.line.uri + strlen("/list/");
+			op->type = KeyspaceOp::LIST;
 		}
-		else
+		else if (strncmp(request.line.uri, "/dirtylist/", strlen("/dirtylist/")) == 0)
 		{
-			prefixlen = count - prefix;
-			
-			if (prefixlen > KEYSPACE_KEY_SIZE)
-			{
-				delete op;
-				RESPONSE_FAIL;
-				return 0;
-			}
-			
-			count++;
-			countlen = strlen(count);
-			
-			if (countlen < 1)
-			{
-				op->count = 0;
-			}
-			else
-			{
-				op->count = strntouint64_t(count, countlen, &nread);
-				if (nread != (unsigned) countlen)
-				{
-					delete op;
-					RESPONSE_FAIL;
-					return 0;
-				}
-			}
+			prefix = request.line.uri + strlen("/dirtylist/");
+			op->type = KeyspaceOp::DIRTY_LIST;
 		}
-				
-		// HACK +1 is to handle empty string (solution is to use DynBuffer)
-		if (!op->prefix.Allocate(prefixlen + 1))
+		else if (strncmp(request.line.uri, "/listp/", strlen("/listp/")) == 0)
 		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
+			prefix = request.line.uri + strlen("/listp/");
+			op->type = KeyspaceOp::LISTP;
 		}
-		op->prefix.Set((char*) prefix, prefixlen);
-		
-		if (!Add(op))
+		else if (strncmp(request.line.uri, "/dirtylistp/", strlen("/dirtylistp/")) == 0)
 		{
-			delete op;
-			RESPONSE_FAIL;
+			prefix = request.line.uri + strlen("/dirtylistp/");
+			op->type = KeyspaceOp::DIRTY_LISTP;
 		}
-			
-		return 0;
-	}
-	else if (strncmp(request.line.uri, "/dirtylist/", strlen("/dirtylist/")) == 0)
-	{
-		prefix = request.line.uri + strlen("/dirtylist/");
-		
-		op->type = KeyspaceOp::DIRTY_LIST;
 		
 		count = strchr(prefix, '/');
 		if (count == NULL)
