@@ -4,7 +4,6 @@
 #include "System/Buffer.h"
 #include "KeyspaceConsts.h"
 
-#define KEYSPACE_GET		'g'
 #define KEYSPACE_SET		's'
 #define KEYSPACE_TESTANDSET	't'
 #define KEYSPACE_DELETE		'd'
@@ -24,7 +23,6 @@ public:
 	
 	void							Init(char type_);
 	
-	void							Get(ByteString key_);
 	void							Set(ByteString key_, ByteString value_);
 	void							TestAndSet(ByteString key_, ByteString test_, ByteString value_);
 	void							Add(ByteString key_, int64_t num_);

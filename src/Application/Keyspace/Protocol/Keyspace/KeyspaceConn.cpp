@@ -51,6 +51,10 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	{
 		resp.ListItem(op->cmdID, op->key);
 	}
+	else if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
+	{
+		resp.ListPItem(op->cmdID, op->key, op->value);
+	}
 	else
 		ASSERT_FAIL();
 	

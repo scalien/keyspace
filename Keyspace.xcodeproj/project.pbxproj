@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		541FBB330FA33CF100429B43 /* TimeCheck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 541FBB320FA33CF100429B43 /* TimeCheck.cpp */; };
 		5421D00F0F573DD7004BBDB4 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
 		5421D14A0F5C5ED9004BBDB4 /* PaxosProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */; };
 		5421D14E0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */; };
@@ -168,6 +169,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		541FBB310FA33CF100429B43 /* TimeCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeCheck.h; sourceTree = "<group>"; };
+		541FBB320FA33CF100429B43 /* TimeCheck.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeCheck.cpp; sourceTree = "<group>"; };
 		5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceDB.cpp; sourceTree = "<group>"; };
 		5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosProposer.h; sourceTree = "<group>"; };
 		5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosProposer.cpp; sourceTree = "<group>"; };
@@ -445,6 +448,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		541FBB2B0FA33C8A00429B43 /* TimeCheck */ = {
+			isa = PBXGroup;
+			children = (
+				541FBB310FA33CF100429B43 /* TimeCheck.h */,
+				541FBB320FA33CF100429B43 /* TimeCheck.cpp */,
+			);
+			path = TimeCheck;
+			sourceTree = "<group>";
+		};
 		5421D3850F5EAD65004BBDB4 /* PaxosLease */ = {
 			isa = PBXGroup;
 			children = (
@@ -566,6 +578,7 @@
 				9A6204DA0F6C098F009576A1 /* HubSim */,
 				5446122A0F53488D00EFBBDE /* Keyspace */,
 				548146FF0F31B6B200F3D2B6 /* EchoServer */,
+				541FBB2B0FA33C8A00429B43 /* TimeCheck */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -728,12 +741,12 @@
 		54D96E8A0F9B332C005658C9 /* Keyspace */ = {
 			isa = PBXGroup;
 			children = (
-				54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */,
 				54D96E8C0F9B332C005658C9 /* KeyspaceClientMsg.h */,
-				54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */,
+				54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */,
 				54D96E8E0F9B332C005658C9 /* KeyspaceConn.h */,
-				54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */,
+				54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */,
 				54D96E900F9B332C005658C9 /* KeyspaceServer.h */,
+				54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */,
 			);
 			path = Keyspace;
 			sourceTree = "<group>";
@@ -1077,6 +1090,7 @@
 				54D96EC10F9B35CB005658C9 /* HttpRequest.cpp in Sources */,
 				54D96EC20F9B35CB005658C9 /* HttpServer.cpp in Sources */,
 				54D96EC30F9B35CB005658C9 /* IMF.cpp in Sources */,
+				541FBB330FA33CF100429B43 /* TimeCheck.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

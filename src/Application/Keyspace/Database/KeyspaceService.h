@@ -44,6 +44,8 @@ public:
 		DIRTY_GET,
 		LIST,
 		DIRTY_LIST,
+		LISTP,
+		DIRTY_LISTP,
 		SET,
 		TEST_AND_SET,
 		ADD,
@@ -92,7 +94,7 @@ public:
 	
 	bool IsList()
 	{
-		return (type == LIST || type == DIRTY_LIST);
+		return (type == LIST || type == DIRTY_LIST || type == LISTP || type == DIRTY_LISTP);
 	}
 
 	

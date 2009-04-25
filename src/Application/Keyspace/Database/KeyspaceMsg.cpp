@@ -7,13 +7,6 @@ void KeyspaceMsg::Init(char type_)
 	type = type_;
 }
 
-void KeyspaceMsg::Get(ByteString key_)
-{
-	Init(KEYSPACE_GET);
-	
-	key.Set(key_);
-}
-	
 void KeyspaceMsg::Set(ByteString key_, ByteString value_)
 {
 	Init(KEYSPACE_SET);
@@ -66,21 +59,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	ReadChar(type); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
 	
-	if (type == KEYSPACE_GET)
-	{
-		ReadUint64_t(key.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		key.buffer = pos;
-		pos += key.length;
-		
-		if (pos > data.buffer + data.length)
-			return false;
-		
-		Get(ByteString(key.length, key.length, key.buffer));
-		n = pos - data.buffer;
-		return true;
-	}
-	else if (type == KEYSPACE_SET)
+	if (type == KEYSPACE_SET)
 	{
 		ReadUint64_t(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
@@ -171,10 +150,7 @@ bool KeyspaceMsg::Write(ByteString& data)
 {
 	unsigned required;
 	
-	if (type == KEYSPACE_GET)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
-			key.length, key.length, key.buffer);
-	else if (type == KEYSPACE_SET)
+	if (type == KEYSPACE_SET)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%d:%.*s", type,
 			key.length, key.length, key.buffer,
 			value.length, value.length, value.buffer);

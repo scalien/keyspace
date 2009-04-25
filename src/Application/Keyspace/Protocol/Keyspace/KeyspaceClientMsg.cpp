@@ -69,6 +69,34 @@ bool KeyspaceClientReq::DirtyList(uint64_t cmdID_, ByteString prefix_, uint64_t 
 	return true;
 }
 
+bool KeyspaceClientReq::ListP(uint64_t cmdID_, ByteString prefix_, uint64_t count_)
+{
+	if (prefix_.length > KEYSPACE_KEY_SIZE)
+		return false;
+
+	Init(KEYSPACECLIENT_LISTP);
+	cmdID = cmdID_;
+	
+	key.Reallocate(prefix_.length);
+	key.Set(prefix_);
+	count = count_;
+	return true;
+}
+
+bool KeyspaceClientReq::DirtyListP(uint64_t cmdID_, ByteString prefix_, uint64_t count_)
+{
+	if (prefix_.length > KEYSPACE_KEY_SIZE)
+		return false;
+
+	Init(KEYSPACECLIENT_DIRTYLISTP);
+	cmdID = cmdID_;
+	
+	key.Reallocate(prefix_.length);
+	key.Set(prefix_);
+	count = count_;
+	return true;
+}
+
 bool KeyspaceClientReq::Set(uint64_t cmdID_, ByteString key_, ByteString value_)
 {
 	if (key_.length > KEYSPACE_KEY_SIZE)
@@ -197,7 +225,8 @@ bool KeyspaceClientReq::Read(ByteString data)
 		else
 			return DirtyGet(cmdID, ByteString(key.length, key.length, key.buffer));
 	}
-	else if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
+	else if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST || 
+			 type == KEYSPACECLIENT_LISTP || type == KEYSPACECLIENT_DIRTYLISTP)
 	{
 		unsigned countlen;
 		ReadUint64_t(key.length); CheckOverflow();
@@ -213,8 +242,13 @@ bool KeyspaceClientReq::Read(ByteString data)
 		ValidateLength();
 		if (type == KEYSPACECLIENT_LIST)
 			return List(cmdID, ByteString(key.length, key.length, key.buffer), count);
-		else
+		else if (type == KEYSPACECLIENT_DIRTYLIST)
 			return DirtyList(cmdID, ByteString(key.length, key.length, key.buffer), count);
+		else if (type == KEYSPACECLIENT_LISTP)
+			return ListP(cmdID, ByteString(key.length, key.length, key.buffer), count);
+		else if (type == KEYSPACECLIENT_DIRTYLISTP)
+			return DirtyListP(cmdID, ByteString(key.length, key.length, key.buffer), count);
+
 	}
 	else if (type == KEYSPACECLIENT_SET)
 	{
@@ -300,6 +334,10 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 		op->type = KeyspaceOp::LIST;
 	else if (type == KEYSPACECLIENT_DIRTYLIST)
 		op->type = KeyspaceOp::DIRTY_LIST;
+	else if (type == KEYSPACECLIENT_LISTP)
+		op->type = KeyspaceOp::LISTP;
+	else if (type == KEYSPACECLIENT_DIRTYLISTP)
+		op->type = KeyspaceOp::DIRTY_LISTP;
 	else if (type == KEYSPACECLIENT_SET)
 		op->type = KeyspaceOp::SET;
 	else if (type == KEYSPACECLIENT_TESTANDSET)
@@ -313,7 +351,8 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 		
 	op->cmdID = cmdID;
 	
-	if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST)
+	if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST ||
+		type == KEYSPACECLIENT_LISTP || type == KEYSPACECLIENT_DIRTYLISTP)
 	{
 		if (!op->prefix.Reallocate(key.length))
 			return false;
@@ -348,6 +387,7 @@ void KeyspaceClientResp::Ok(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_OK;
 	cmdID = cmdID_;
+	key.length = 0;
 	value.length = 0;
 }
 
@@ -355,6 +395,7 @@ void KeyspaceClientResp::Ok(uint64_t cmdID_, ByteString value_)
 {
 	type = KEYSPACECLIENT_OK;
 	cmdID = cmdID_;
+	key.length = 0;
 	value = value_;
 }
 
@@ -362,6 +403,7 @@ void KeyspaceClientResp::NotFound(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_NOTFOUND;
 	cmdID = cmdID_;
+	key.length = 0;
 	value.length = 0;
 }
 
@@ -369,13 +411,23 @@ void KeyspaceClientResp::Failed(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_FAILED;
 	cmdID = cmdID_;
+	key.length = 0;
 	value.length = 0;
 }
 
-void KeyspaceClientResp::ListItem(uint64_t cmdID_, ByteString value_)
+void KeyspaceClientResp::ListItem(uint64_t cmdID_, ByteString key_)
 {
 	type = KEYSPACECLIENT_LISTITEM;
 	cmdID = cmdID_;
+	key = key_;
+	value.length = 0;
+}
+
+void KeyspaceClientResp::ListPItem(uint64_t cmdID_, ByteString key_, ByteString value_)
+{
+	type = KEYSPACECLIENT_LISTPITEM;
+	cmdID = cmdID_;
+	key = key_;
 	value = value_;
 }
 
@@ -383,6 +435,7 @@ void KeyspaceClientResp::ListEnd(uint64_t cmdID_)
 {
 	type = KEYSPACECLIENT_LISTEND;
 	cmdID = cmdID_;
+	key.length = 0;
 	value.length = 0;
 }
 
@@ -390,7 +443,13 @@ bool KeyspaceClientResp::Write(ByteString& data)
 {
 	unsigned required;
 	
-	if (value.length > 0)
+	if (key.length > 0 && value.length > 0)
+		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s:%d:%.*s",
+			type, cmdID, key.length, key.length, key.buffer, value.length, value.length, value.buffer);
+	else if (key.length > 0)
+		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s",
+			type, cmdID, key.length, key.length, key.buffer);
+	else if (value.length > 0)
 		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s",
 			type, cmdID, value.length, value.length, value.buffer);
 	else

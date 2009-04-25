@@ -6,7 +6,7 @@
 #include "System/Log.h"
 #include "System/Common.h"
 
-class ListVisitor : public TableVisitor
+/*class ListVisitor : public TableVisitor
 {
 public:
 	ListVisitor(const ByteString &keyHint_) :
@@ -37,7 +37,7 @@ public:
 private:
 	const ByteString	&keyHint;
 	DynArray<1024>		out;
-};
+};*/
 
 #define VISITOR_LIMIT	4096
 class AsyncVisitorCallback : public Callable
@@ -273,7 +273,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 	
 	if (op->IsList())
 	{
-		if (op->type == KeyspaceOp::LIST &&
+		if ((op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::LISTP) &&
 		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
 			return false;
 
@@ -322,9 +322,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	KeyspaceOp**it;
 	
 	ret = true;
-	if (msg.type == KEYSPACE_GET)
-		ASSERT_FAIL(); // GETs are not put in the ReplicatedLog
-	else if (msg.type == KEYSPACE_SET)
+	if (msg.type == KEYSPACE_SET)
 		ret &= table->Set(transaction, msg.key, msg.value);
 	else if (msg.type == KEYSPACE_TESTANDSET)
 	{
