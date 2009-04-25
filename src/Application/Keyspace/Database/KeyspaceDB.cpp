@@ -6,39 +6,6 @@
 #include "System/Log.h"
 #include "System/Common.h"
 
-/*class ListVisitor : public TableVisitor
-{
-public:
-	ListVisitor(const ByteString &keyHint_) :
-	keyHint(keyHint_)
-	{}
-	
-	virtual bool Accept(const ByteString &key, const ByteString &)
-	{
-		// don't list system keys
-		if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
-			return true;
-
-		out.Append(key.buffer, key.length);
-		out.Append("\n", 1);
-		return true;
-	}
-	
-	virtual const ByteString* GetKeyHint()
-	{
-		return &keyHint;
-	}
-	
-	ByteString &GetOutput()
-	{
-		return out;
-	}
-	
-private:
-	const ByteString	&keyHint;
-	DynArray<1024>		out;
-};*/
-
 #define VISITOR_LIMIT	4096
 class AsyncVisitorCallback : public Callable
 {
