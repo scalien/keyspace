@@ -178,7 +178,7 @@ int Socket::Send(const char* data, int count, int timeout)
 	left = count;
 	while (left > 0)
 	{
-		if ((nwritten = send(fd, data, count, 0)) < 0)
+		if ((nwritten = write(fd, data, count)) < 0)
 		{
 			if (errno == EINTR)
 			{

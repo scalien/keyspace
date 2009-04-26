@@ -10,9 +10,14 @@ bool TCPServer::Init(int port)
 {
 	Log_Trace();
 
-	listener.Create(TCP);
-	listener.Listen(port);
-	listener.SetNonblocking();
+	bool ret;
+
+	ret = true;
+	ret &= listener.Create(TCP);
+	ret &= listener.Listen(port);
+	ret &= listener.SetNonblocking();
+	if (!ret)
+		return false;
 	
 	tcpread.fd = listener.fd;
 	tcpread.listening = true;
