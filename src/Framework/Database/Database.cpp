@@ -7,6 +7,7 @@
 #include "Database.h"
 #include "Table.h"
 
+#define DATABASE_DEFAULT_CACHESIZE	(256*1024)
 
 // the global database
 Database database;
@@ -28,7 +29,7 @@ Database::~Database()
 	env.close(0);
 }
 
-bool Database::Init(const char* dbdir)
+bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 {
 	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL /* | DB_THREAD*/;
 	int mode = 0;
@@ -39,9 +40,11 @@ bool Database::Init(const char* dbdir)
 		return false;
 
 	env.set_flags(DB_LOG_AUTOREMOVE, 1);
+	if (cacheSize != 0)
+		env.set_cachesize(cacheSize, cacheSize, 1);
 	
-	keyspace = new Table(this, "keyspace");
-	test = new Table(this, "test");
+	keyspace = new Table(this, "keyspace", pageSize);
+	test = new Table(this, "test", pageSize);
 	
 	checkpoint = new MFunc<Database>(this, &Database::Checkpoint);
 	running = true;

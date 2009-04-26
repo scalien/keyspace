@@ -18,7 +18,7 @@ class Table
 {
 	friend class Transaction;
 public:
-	Table(Database* database, const char *name);
+	Table(Database* database, const char *name, int pageSize = 0);
 	~Table();
 	
 	bool		Iterate(Transaction* transaction, Cursor& cursor);

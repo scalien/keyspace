@@ -25,7 +25,9 @@ int main(int argc, char* argv[])
 		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
 
 	IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024));
-	database.Init(Config::GetValue("database.dir", "."));	
+	database.Init(Config::GetValue("database.dir", "."),
+					Config::GetIntValue("database.pageSize", 0),
+					Config::GetIntValue("database.cacheSize", 0));
 	
 	if (!PaxosConfig::Get()->Init())
 		ASSERT_FAIL();

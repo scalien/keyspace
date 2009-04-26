@@ -5,7 +5,7 @@
 #include "System/Buffer.h"
 #include "Transaction.h"
 
-Table::Table(Database* database, const char *name) :
+Table::Table(Database* database, const char *name, int pageSize) :
 database(database)
 {
 	DbTxn *txnid = NULL;
@@ -18,6 +18,8 @@ database(database)
 	db = new Db(&database->env, 0);
 	db->set_pagesize(64*1024);
 	db->open(txnid, filename, dbname, type, flags, mode);
+	if (pageSize != 0)
+		db->set_pagesize(pageSize);
 }
 
 Table::~Table()

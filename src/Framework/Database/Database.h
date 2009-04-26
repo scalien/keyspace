@@ -15,7 +15,7 @@ public:
 	Database();
 	~Database();
 	
-	bool Init(const char *dbdir);
+	bool Init(const char *dbdir, int pageSize, int cacheSize);
 	
 	Table* GetTable(const char* name);
 	
