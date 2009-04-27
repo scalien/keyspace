@@ -348,7 +348,7 @@ int KeyspaceClient::ConnectMaster()
 	if (timeout)
 		starttime = Now();
 
-	while (master < 0 && (timeout == 0 || Now() - starttime > timeout))
+	while (master < 0 && (timeout == 0 || Now() - starttime < timeout))
 	{
 		master = GetMaster();
 		if (master >= 0 && endpoint == &endpoints[master])
@@ -388,7 +388,7 @@ int KeyspaceClient::GetMaster()
 	msg.Printf("%u:%.*s", cmd.length, cmd.length, cmd.buffer);
 	
 	starttime = Now();
-	while (master < 0 && (timeout == 0 || Now() - starttime > timeout))
+	while (master < 0 && (timeout == 0 || Now() - starttime < timeout))
 	{
 		while (!endpoint)
 		{

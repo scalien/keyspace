@@ -3,14 +3,11 @@
 
 void IgnorePipeSignal()
 {
-	struct sigaction act;
+	sigset_t	sigset;
 	
-	act.sa_handler = SIG_IGN;
-	sigemptyset (&act.sa_mask);
-	act.sa_flags = 0;
-	sigaction (SIGPIPE, &act, NULL);
-
-	signal(SIGPIPE, SIG_IGN);
+	sigemptyset(&sigset);
+	sigaddset(&sigset, SIGPIPE);
+	sigprocmask(SIG_BLOCK, &sigset, NULL);
 }
 
 int KeyspaceClientTest()
