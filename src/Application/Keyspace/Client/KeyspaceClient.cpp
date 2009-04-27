@@ -772,11 +772,16 @@ bool KeyspaceClient::ConnectRandom()
 
 bool KeyspaceClient::Connect(int n)
 {
+	bool	ret;
+	
 	endpoint = &endpoints[n];
 	socket.Close();
 	socket.Create(TCP);
-	socket.SetNonblocking();
-	return socket.Connect(*endpoint);		
+	ret = socket.Connect(*endpoint);
+	if (ret)
+		socket.SetNonblocking();
+	
+	return ret;
 }
 
 void KeyspaceClient::Disconnect()
