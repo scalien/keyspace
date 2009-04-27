@@ -399,6 +399,7 @@ int KeyspaceClient::GetMaster()
 				return KEYSPACE_ERROR;
 		}
 
+		Log_Trace("sending = %.*s", msg.length, msg.buffer);
 		ret = socket.Send(msg.buffer, msg.length, timeout);
 		if ((unsigned) ret < msg.length)
 		{
