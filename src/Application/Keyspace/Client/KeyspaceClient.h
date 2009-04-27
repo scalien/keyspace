@@ -93,8 +93,8 @@ private:
 	bool			ConnectRandom();
 	bool			Connect(int n);
 	void			Disconnect();
-	void			SendMessage(char cmd, bool submit, int msgc, const ByteString *msgv);
-	void			Send(const ByteString &msg);
+	int				SendMessage(char cmd, bool submit, int msgc, const ByteString *msgv);
+	int				Send(const ByteString &msg);
 	void			ResetReadBuffer();
 	int				Read(ByteString &msg);
 	int				ReadMessage(ByteString &msg);

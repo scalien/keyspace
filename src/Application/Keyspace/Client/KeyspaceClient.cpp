@@ -439,7 +439,9 @@ int KeyspaceClient::Get(const ByteString &key, ByteString &value, bool dirty)
 	else
 		cmd = KEYSPACECLIENT_GET;
 
-	SendMessage(cmd, false, 1, args);
+	if (SendMessage(cmd, false, 1, args) < 0)
+		return KEYSPACE_ERROR;
+
 	return GetValueResponse(value);
 }
 
@@ -470,7 +472,8 @@ int KeyspaceClient::Get(const ByteString &key, bool dirty)
 	else
 		cmd = KEYSPACECLIENT_GET;
 
-	SendMessage(cmd, false, 1, args);
+	if (SendMessage(cmd, false, 1, args) < 0)
+		return KEYSPACE_ERROR;
 
 	result.id = id;
 	result.type = KEYSPACECLIENT_GET;
@@ -510,7 +513,8 @@ int KeyspaceClient::List(const ByteString &prefix, uint64_t count, bool dirty)
 	else
 		cmd = KEYSPACECLIENT_LIST;
 	
-	SendMessage(cmd, false, 2, args);
+	if (SendMessage(cmd, false, 2, args) < 0)
+		return KEYSPACE_ERROR;
 
 	result.id = id;
 	result.type = KEYSPACECLIENT_LIST;
@@ -544,7 +548,8 @@ int KeyspaceClient::ListP(const ByteString &prefix, uint64_t count, bool dirty)
 	else
 		cmd = KEYSPACECLIENT_LISTP;
 	
-	SendMessage(cmd, false, 2, args);
+	if (SendMessage(cmd, false, 2, args) < 0)
+		return KEYSPACE_ERROR;
 
 	result.id = id;
 	result.type = KEYSPACECLIENT_LISTP;
@@ -579,7 +584,9 @@ int KeyspaceClient::Set(const ByteString &key, const ByteString &value, bool sub
 	args[0] = key;
 	args[1] = value;
 	
-	SendMessage(KEYSPACECLIENT_SET, submit, 2, args);
+	if (SendMessage(KEYSPACECLIENT_SET, submit, 2, args) < 0)
+		return KEYSPACE_ERROR;
+	
 	if (!submit)
 	{
 		numPending++;
@@ -600,7 +607,9 @@ int KeyspaceClient::TestAndSet(const ByteString &key, const ByteString &test, co
 	args[1] = test;
 	args[2] = value;
 	
-	SendMessage(KEYSPACECLIENT_TESTANDSET, submit, 3, args);
+	if (SendMessage(KEYSPACECLIENT_TESTANDSET, submit, 3, args) < 0)
+		return KEYSPACE_ERROR;
+
 	if (!submit)
 	{
 		numPending++;
@@ -625,7 +634,9 @@ int KeyspaceClient::Add(const ByteString &key, int64_t num, int64_t &result, boo
 	args[0] = key;
 	args[1] = snum;
 	
-	SendMessage(KEYSPACECLIENT_ADD, submit, 2, args);
+	if (SendMessage(KEYSPACECLIENT_ADD, submit, 2, args) < 0)
+		return KEYSPACE_ERROR;
+
 	if (!submit)
 	{
 		numPending++;
@@ -651,7 +662,9 @@ int KeyspaceClient::Delete(const ByteString &key, bool submit)
 	
 	args[0] = key;
 	
-	SendMessage(KEYSPACECLIENT_DELETE, submit, 1, args);
+	if (SendMessage(KEYSPACECLIENT_DELETE, submit, 1, args) < 0)
+		return KEYSPACE_ERROR;
+
 	if (!submit)
 	{
 		numPending++;
@@ -760,7 +773,7 @@ void KeyspaceClient::Disconnect()
 	}
 }
 
-void KeyspaceClient::SendMessage(char cmd, bool submit, int msgc, const ByteString *msgv)
+int KeyspaceClient::SendMessage(char cmd, bool submit, int msgc, const ByteString *msgv)
 {
 	DynArray<128>	msg;
 	int				len;
@@ -794,23 +807,28 @@ void KeyspaceClient::SendMessage(char cmd, bool submit, int msgc, const ByteStri
 	if (submit)
 		msg.Append("1:*", 3);
 	
-	Send(msg);
+	return Send(msg);
 }
 
-void KeyspaceClient::Send(const ByteString &msg)
+int KeyspaceClient::Send(const ByteString &msg)
 {
-	int		ret;
+	int			ret;
+	uint64_t	starttime;
+	
+	starttime = Now();
 	
 	Log_Trace("sending %.*s", msg.length, msg.buffer);
-	while (true)
+	while (timeout == 0 || Now() - starttime < timeout)
 	{
 		ret = socket.Send(msg.buffer, msg.length, timeout);
 		if (ret == (int) msg.length)
-			return;
+			return KEYSPACE_OK;
 
 		Disconnect();
 		Reconnect();
 	}
+	
+	return KEYSPACE_ERROR;
 }
 
 void KeyspaceClient::ResetReadBuffer()
