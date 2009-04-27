@@ -8,7 +8,7 @@
 #include "TimeCheckMsg.h"
 
 #define TIMECHECK_PORT_OFFSET	3
-#define NUMMSGS					30
+#define NUMMSGS					60
 #define SERIES_TIMEOUT			60*1000 // run every 60 seconds
 
 class TimeCheck
