@@ -13,7 +13,7 @@ void IgnorePipeSignal()
 int KeyspaceClientTest()
 {
 	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081"};
-	KeyspaceClient	client(SIZE(nodes), nodes, 10000);
+	KeyspaceClient	client;
 	int				master;
 	DynArray<128>	key;
 	DynArray<128>	value;
@@ -23,55 +23,57 @@ int KeyspaceClientTest()
 	
 	IgnorePipeSignal();
 	
-//	master = client.GetMaster();
-	client.ConnectMaster();
-/*	
-	key.Printf("counter");
-	value.Printf("0");
-	client.Set(key, value);
-	client.DirtyGet(key, value);
+	status = client.Init(SIZE(nodes), nodes, 10000);
+	if (status != KEYSPACE_OK)
+		return 1;
 	
-	client.Add(key, 1, num);
+	// all the operations we do below are safe (not dirty) or write operations
+	// so we connect to the master
+	status = client.ConnectMaster();
+	if (status != KEYSPACE_OK)
+		return 1;
 	
-	key.Clear();
-	client.DirtyList(key);
-*/
-	client.Begin();
-	for (int i = 0; i < 100; i++)
+	// set 100 keyvalues named user:
+	status = client.Begin();
+	if (status == KEYSPACE_OK)
 	{
-		key.Printf("user:%d", i);
-		value.Printf("User %d", i);
-		client.Set(key, value, false);
+		for (int i = 0; i < 100; i++)
+		{
+			key.Printf("user:%d", i);
+			value.Printf("User %d", i);
+			client.Set(key, value, false);
+		}
+		client.Submit();
 	}
-	client.Submit();
 
-
+	// get a key named "counter"
 	key.Printf("counter");
 	client.Get(key);
 	result = client.GetResult(status);
-	if (result)
+	if (status == KEYSPACE_OK && result)
 	{
-		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
+		Log_Trace("Get result: key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
 				  result->Value().length, result->Value().buffer);
 		result->Close();
 	}
 
 	key.Printf("user:");		
 
+	// list all keys starting with "user:"
 	client.List(key);
 	result = client.GetResult(status);
-	while (result)
+	while (status == KEYSPACE_OK && result)
 	{
-		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
-				  result->Value().length, result->Value().buffer);		
+		Log_Trace("List result: key = %.*s", result->Key().length, result->Key().buffer);
 		result = result->Next(status);
 	}
 	
+	// list all keys and values starting with "user:" (List Key-Value Pairs)
 	client.ListP(key);
 	result = client.GetResult(status);
-	while (result)
+	while (status == KEYSPACE_OK && result)
 	{
-		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
+		Log_Trace("ListP result: key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
 				  result->Value().length, result->Value().buffer);		
 		result = result->Next(status);
 	}

@@ -41,8 +41,10 @@ public:
 		int					ParseListPResponse(const ByteString &resp);
 	};
 	
-	KeyspaceClient(int nodec, char* nodev[], uint64_t timeout);
+	KeyspaceClient();
 	~KeyspaceClient();
+	
+	int				Init(int nodec, char* nodev[], uint64_t timeout);
 	
 	// master connection related commands
 	int				ConnectMaster();
@@ -89,7 +91,7 @@ private:
 	Result			result;
 		
 	uint64_t		GetNextID();
-	void			Reconnect();
+	int				Reconnect();
 	bool			ConnectRandom();
 	bool			Connect(int n);
 	void			Disconnect();

@@ -315,15 +315,22 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 //
 /////////////////////////////////////////////////////////////////////
 
-KeyspaceClient::KeyspaceClient(int nodec, char* nodev[], uint64_t timeout_) :
+KeyspaceClient::KeyspaceClient() :
 result(*this)
 {
+	endpoints = NULL;
+}
+
+int KeyspaceClient::Init(int nodec, char* nodev[], uint64_t timeout_)
+{
 	timeout = timeout_;
+	numEndpoints = nodec;
 
 	connectMaster = false;
 	endpoint = NULL;
+
+	delete[] endpoints;
 	endpoints = new Endpoint[nodec];
-	numEndpoints = nodec;
 	for (int i = 0; i < numEndpoints; i++)
 		endpoints[i].Set(nodev[i]);
 	
@@ -331,7 +338,7 @@ result(*this)
 	startId = 0;
 	numPending = 0;
 	srand(time(NULL));
-	Reconnect();
+	return Reconnect();
 }
 
 KeyspaceClient::~KeyspaceClient()
@@ -729,11 +736,13 @@ uint64_t KeyspaceClient::GetNextID()
 	return ++id;
 }
 
-void KeyspaceClient::Reconnect()
+int KeyspaceClient::Reconnect()
 {
-	bool ret;
+	bool		ret;
+	uint64_t	starttime;
 	
-	while (true)
+	starttime = Now();
+	while (timeout == 0 || Now() - starttime < timeout)
 	{
 		if (connectMaster && ConnectMaster() >= 0)
 			ret = true;
@@ -741,9 +750,11 @@ void KeyspaceClient::Reconnect()
 			ret = ConnectRandom();
 
 		if (ret)
-			return;
+			return KEYSPACE_OK;
 		Sleep(RECONNECT_TIMEOUT);
 	}
+	
+	return KEYSPACE_ERROR;
 }
 
 bool KeyspaceClient::ConnectRandom()
