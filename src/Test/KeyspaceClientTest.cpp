@@ -39,7 +39,8 @@ int KeyspaceClientTest()
 	result = client.GetResult(status);
 	if (result)
 	{
-		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
+		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
+				  result->Value().length, result->Value().buffer);
 		result->Close();
 	}
 
@@ -49,7 +50,8 @@ int KeyspaceClientTest()
 	result = client.GetResult(status);
 	while (result)
 	{
-		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);		
+		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
+				  result->Value().length, result->Value().buffer);		
 		result = result->Next(status);
 	}
 	
@@ -57,7 +59,8 @@ int KeyspaceClientTest()
 	result = client.GetResult(status);
 	while (result)
 	{
-		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);		
+		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
+				  result->Value().length, result->Value().buffer);		
 		result = result->Next(status);
 	}
 	

@@ -21,6 +21,8 @@ void PLeaseProposer::Init(TransportWriter** writers_)
 {
 	writers = writers_;
 	
+	highestProposalID = 0;
+	
 	state.Init();
 }
 
@@ -141,8 +143,11 @@ void PLeaseProposer::StartPreparing()
 	
 	state.highestReceivedProposalID = 0;
 
-	state.proposalID = PaxosConfig::Get()->NextHighest(state.proposalID);
+	state.proposalID = PaxosConfig::Get()->NextHighest(highestProposalID);
 		
+	if (state.proposalID > highestProposalID)
+		highestProposalID = state.proposalID;
+	
 	msg.PrepareRequest(PaxosConfig::Get()->nodeID, state.proposalID, ReplicatedLog::Get()->GetPaxosID());
 	
 	BroadcastMessage();

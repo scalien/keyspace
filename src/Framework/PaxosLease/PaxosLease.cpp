@@ -46,6 +46,10 @@ void PaxosLease::OnRead()
 	if (!msg.Read(bs))
 		return;
 	
+	if ((msg.type == PREPARE_REQUEST || msg.type == PROPOSE_REQUEST) &&
+		msg.proposalID > proposer.highestProposalID)
+			proposer.highestProposalID = msg.proposalID;
+	
 	if (msg.type == PREPARE_RESPONSE || msg.type == PROPOSE_RESPONSE)
 		proposer.ProcessMsg(msg);
 	else if (msg.type == PREPARE_REQUEST || msg.type == PROPOSE_REQUEST)

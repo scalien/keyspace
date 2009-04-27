@@ -22,6 +22,8 @@ public:
 	void					OnExtendLeaseTimeout();
 	void					AcquireLease();
 
+	uint64_t				highestProposalID;
+
 private:
 	void					BroadcastMessage();
 	void					OnPrepareResponse();

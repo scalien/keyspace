@@ -85,11 +85,11 @@ void Log(char* file, int line, const char* func, int type, const char* fmt, ...)
 	if (timestamping)
 		fprintf(stdout, "%s: ", GetFullTimestamp(ts));
 
-	if (type == LOG_TYPE_TRACE)
-		fprintf(stdout, "%s:%d:%s(): ", file, line, func);
+//	if (type == LOG_TYPE_TRACE)
+		fprintf(stdout, "%s:%d:%s()", file, line, func);
 
 	if (msg[0] != '\0')
-		fprintf(stdout, "%s\n", msg);		
+		fprintf(stdout, ": %s\n", msg);		
 	else
 		fprintf(stdout, "\n");
 		

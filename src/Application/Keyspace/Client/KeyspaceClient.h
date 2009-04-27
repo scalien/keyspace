@@ -60,7 +60,8 @@ public:
 	Result*			GetResult(int &status);
 
 	int				Set(const ByteString &key, const ByteString &value, bool sumbit = true);
-	int				TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, bool submit = true);
+	int				TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, 
+							   bool submit = true);
 	int				Add(const ByteString &key, int64_t num, int64_t &result, bool submit = true);
 	int				Delete(const ByteString &key, bool submit = true);
 
