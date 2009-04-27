@@ -8,8 +8,8 @@
 #include "TimeCheckMsg.h"
 
 #define TIMECHECK_PORT_OFFSET	3
-#define NUMMSGS					50
-#define SERIES_TIMEOUT			60*1000 // run every 60 seconds
+#define NUMMSGS					100
+#define SERIES_TIMEOUT			30*1000 // run every 60 seconds
 
 class TimeCheck
 {
@@ -20,6 +20,7 @@ public:
 
 	void				OnRead();
 	void				OnSeriesTimeout();
+	void				OnSendTimeout();
 	void				NextSeries();
 	
 private:
@@ -31,10 +32,13 @@ private:
 	TimeCheckMsg		msg;
 	
 	MFunc<TimeCheck>	onSeriesTimeout;
+	MFunc<TimeCheck>	onSendTimeout;
 	CdownTimer			seriesTimeout;
+	CdownTimer			sendTimeout;
 	
 	ByteArray<1024>		data;
 	uint64_t			series;
+	unsigned			sentInSeries;
 	int*				numReplies;
 	double*				totalSkew;
 };

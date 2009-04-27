@@ -12,7 +12,9 @@
 TimeCheck::TimeCheck() :
 	onRead(this, &TimeCheck::OnRead),
 	onSeriesTimeout(this, &TimeCheck::OnSeriesTimeout),
-	seriesTimeout(SERIES_TIMEOUT, &onSeriesTimeout)
+	onSendTimeout(this, &TimeCheck::OnSendTimeout),
+	seriesTimeout(SERIES_TIMEOUT, &onSeriesTimeout),
+	sendTimeout(SERIES_TIMEOUT/(2*NUMMSGS), &onSendTimeout)
 {
 }
 
@@ -23,7 +25,7 @@ void TimeCheck::Init()
 	
 	InitTransport();
 	
-	series = 666;
+	series = 0;
 	
 	NextSeries();
 }
@@ -51,22 +53,18 @@ void TimeCheck::InitTransport()
 
 void TimeCheck::NextSeries()
 {
-	unsigned i, j;
+	unsigned i;
 
 	series++;
+	sentInSeries = 0;
 	
 	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
 	{
-		for (j = 0; j < NUMMSGS; j++)
-		{
-			msg.Request(PaxosConfig::Get()->nodeID, series, Now());
-			msg.Write(data);
-			writers[i]->Write(data);
-		}
-		
 		numReplies[i] = 0;
 		totalSkew[i] = 0.0;
 	}
+
+	EventLoop::Reset(&sendTimeout);
 
 	EventLoop::Reset(&seriesTimeout);
 }
@@ -81,8 +79,8 @@ void TimeCheck::OnSeriesTimeout()
 		{
 			double skew = totalSkew[i] / numReplies[i];
 			
-			Log_Message("%lf %d\n", totalSkew[i], numReplies[i]);
-			Log_Message("skew for nodeID %d: %lf\n", i, skew);
+//			Log_Message("%lf %d\n", totalSkew[i], numReplies[i]);
+//			Log_Message("skew for nodeID %d: %lf\n", i, skew);
 			
 			if (skew > MAX_CLOCK_SKEW)
 				STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
@@ -90,6 +88,23 @@ void TimeCheck::OnSeriesTimeout()
 	}
 	
 	NextSeries();
+}
+
+void TimeCheck::OnSendTimeout()
+{
+	unsigned i;
+	
+	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
+	{
+		msg.Request(PaxosConfig::Get()->nodeID, series, Now());
+		msg.Write(data);
+		writers[i]->Write(data);
+	}
+	
+	sentInSeries++;
+	
+	if (sentInSeries < NUMMSGS)
+		EventLoop::Reset(&sendTimeout);
 }
 
 void TimeCheck::OnRead()
@@ -102,7 +117,6 @@ void TimeCheck::OnRead()
 	if (msg.type == TIMECHECK_REQUEST)
 	{
 		unsigned senderID = msg.nodeID;
-		//Log_Message("%" PRIu64 " %" PRIu64 "", msg.series, msg.requestTimestamp);
 		msg.Response(PaxosConfig::Get()->nodeID, msg.series, msg.requestTimestamp, Now());
 		msg.Write(data);
 		writers[senderID]->Write(data);
@@ -117,13 +131,14 @@ void TimeCheck::OnRead()
 		uint64_t elapsed = now - msg.requestTimestamp;
 		double middle = msg.requestTimestamp + elapsed/2.0;
 		double skew = msg.responseTimestamp - middle;
-		//Log_Message("%" PRIu64 "", now);
-		//Log_Message("%lf", skew);
 		if (msg.nodeID < PaxosConfig::Get()->numNodes)
 		{
-			//Log_Message("%d", msg.nodeID);
 			numReplies[msg.nodeID]++;
 			totalSkew[msg.nodeID] += skew;
+			
+//			double skew = totalSkew[msg.nodeID] / numReplies[msg.nodeID];
+//			Log_Message("Running skew for nodeID %d after %d msgs: %lf\n",
+//				msg.nodeID, numReplies[msg.nodeID], skew);
 		}
 	}
 }

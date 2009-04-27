@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 		ReplicatedLog::Get()->Init();
 	
 	TimeCheck timeCheck;
-	if (Config::GetBoolValue("timecheck.active", false))
+	if (Config::GetBoolValue("timecheck.active", true))
 		timeCheck.Init();
 	
 	KeyspaceDB kdb;
