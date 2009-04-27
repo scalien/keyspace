@@ -364,6 +364,9 @@ int KeyspaceClient::ConnectMaster()
 		Disconnect();
 		if (master >= 0)
 		{
+			if (master >= numEndpoints)
+				return KEYSPACE_ERROR;
+
 			if (Connect(master))
 				return master;
 		}

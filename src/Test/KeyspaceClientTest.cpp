@@ -13,6 +13,7 @@ void IgnorePipeSignal()
 int KeyspaceClientTest()
 {
 	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081"};
+//	char			*nodes[] = {"127.0.0.1:7080"};
 	KeyspaceClient	client;
 	int				master;
 	DynArray<128>	key;
@@ -24,13 +25,13 @@ int KeyspaceClientTest()
 	IgnorePipeSignal();
 	
 	status = client.Init(SIZE(nodes), nodes, 10000);
-	if (status != KEYSPACE_OK)
+	if (status < 0)
 		return 1;
 	
 	// all the operations we do below are safe (not dirty) or write operations
 	// so we connect to the master
 	status = client.ConnectMaster();
-	if (status != KEYSPACE_OK)
+	if (status < 0)
 		return 1;
 	
 	// set 100 keyvalues named user:
