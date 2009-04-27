@@ -735,8 +735,8 @@ void KeyspaceClient::Reconnect()
 	
 	while (true)
 	{
-		if (connectMaster	)
-			ret = ConnectMaster();
+		if (connectMaster && ConnectMaster() >= 0)
+			ret = true;
 		else
 			ret = ConnectRandom();
 
