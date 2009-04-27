@@ -170,6 +170,8 @@ void ReplicatedLog::OnRead()
 	reader->GetMessage(bs);
 	pmsg.Read(bs);
 	
+	Log_Trace("Received paxos msg: %.*s", bs.length, bs.buffer);
+	
 	ProcessMsg();
 }
 

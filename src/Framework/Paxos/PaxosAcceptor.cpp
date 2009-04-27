@@ -157,6 +157,9 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	senderID = msg.nodeID;
 	
+	Log_Trace("state.promisedProposasID: %" PRIu64 " msg.proposalID: %" PRIu64 "",
+				state.promisedProposalID, msg.proposalID);
+	
 	if (msg.proposalID < state.promisedProposalID)
 	{
 		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_REJECTED);
@@ -187,6 +190,9 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	msg = msg_;
 	
 	senderID = msg.nodeID;
+
+	Log_Trace("state.promisedProposasID: %" PRIu64 " msg.proposalID: %" PRIu64 "",
+				state.promisedProposalID, msg.proposalID);
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
