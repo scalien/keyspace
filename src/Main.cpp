@@ -35,11 +35,9 @@ int main(int argc, char* argv[])
 	if (PaxosConfig::Get()->numNodes > 1)
 		ReplicatedLog::Get()->Init();
 	
+	TimeCheck timeCheck;
 	if (Config::GetBoolValue("timecheck.active", true))
-	{
-		TimeCheck timeCheck;
 		timeCheck.Init();
-	}
 	
 	KeyspaceDB kdb;
 	kdb.Init();
