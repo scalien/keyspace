@@ -531,10 +531,7 @@ void KeyspaceDB::Append()
 		if (msg.Write(bs))
 		{
 			pvalue.length += bs.length;
-			bs.Advance(bs.length);
-			
-			if (bs.length <= 0)
-				break;
+			bs.Advance(bs.length);			
 		}
 		else
 			break;
