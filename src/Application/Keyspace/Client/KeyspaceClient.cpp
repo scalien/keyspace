@@ -823,7 +823,7 @@ int KeyspaceClient::Send(const ByteString &msg)
 		ret = socket.Send(msg.buffer, msg.length, timeout);
 		if (ret == (int) msg.length)
 			return KEYSPACE_OK;
-
+		
 		Disconnect();
 		Reconnect();
 	}
