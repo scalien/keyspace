@@ -406,7 +406,7 @@ int KeyspaceClient::GetMaster()
 				return KEYSPACE_ERROR;
 		}
 
-		Log_Trace("sending = %.*s", msg.length, msg.buffer);
+		Log_Trace("sending %.*s, node = %d", msg.length, msg.buffer, endpoint - endpoints);
 		ret = socket.Send(msg.buffer, msg.length, timeout);
 		if ((unsigned) ret < msg.length)
 		{
@@ -699,6 +699,7 @@ int KeyspaceClient::Submit()
 	if (startId == 0 || numPending == 0)
 		return KEYSPACE_OK;
 
+	Log_Trace("sending 1:*, node = %d", endpoint - endpoints);
 	if (socket.Send("1:*", 3, timeout) < 0)
 	{
 		startId = 0;
@@ -828,9 +829,10 @@ int KeyspaceClient::Send(const ByteString &msg)
 	
 	starttime = Now();
 	
-	Log_Trace("sending %.*s", msg.length, msg.buffer);
+//	Log_Trace("sending %.*s, node = %d", msg.length, msg.buffer, endpoint - endpoints);
 	while (timeout == 0 || Now() - starttime < timeout)
 	{
+		Log_Trace("sending %.*s, node = %d", msg.length, msg.buffer, endpoint - endpoints);
 		ret = socket.Send(msg.buffer, msg.length, timeout);
 		if (ret == (int) msg.length)
 			return KEYSPACE_OK;

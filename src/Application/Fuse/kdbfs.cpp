@@ -36,11 +36,15 @@ int kdbfs_getattr(const char *path, struct stat *stbuf)
 int kdbfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
                          off_t offset, struct fuse_file_info *fi)
 {
+	size_t	pathlen;
+
     (void) offset;
     (void) fi;
 
     if(strcmp(path, "/") != 0)
         return -ENOENT;
+
+	pathlen = strlen(path);
 
     filler(buf, ".", NULL, 0);
     filler(buf, "..", NULL, 0);
