@@ -13,6 +13,7 @@ public:
 	
 	uint64_t				proposalID;
 	uint64_t				highestReceivedProposalID;
+	uint64_t				highestPromisedProposalID;
 	ByteArray<PAXOS_VAL_SIZE>value;
 	
 	bool					leader;			// multi paxos
@@ -26,6 +27,7 @@ public:
 		proposing =					false;
 		proposalID =				0;
 		highestReceivedProposalID =	0;
+		highestPromisedProposalID = 0;
 		value.Clear();
 		leader = false;
 		numProposals = 0;

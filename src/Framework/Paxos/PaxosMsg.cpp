@@ -30,6 +30,18 @@ bool PaxosMsg::PrepareResponse(uint64_t paxosID_, unsigned nodeID_, uint64_t pro
 }
 
 bool PaxosMsg::PrepareResponse(uint64_t paxosID_, unsigned nodeID_, uint64_t proposalID_, char subtype_,
+	uint64_t promisedProposalID_)
+{
+	Init(paxosID_, PREPARE_RESPONSE, nodeID_);
+	proposalID = proposalID_;
+	subtype = subtype_;
+	promisedProposalID = promisedProposalID_;
+	
+	return true;
+}
+
+
+bool PaxosMsg::PrepareResponse(uint64_t paxosID_, unsigned nodeID_, uint64_t proposalID_, char subtype_,
 	uint64_t acceptedProposalID_, ByteString value_)
 {
 	Init(paxosID_, PREPARE_RESPONSE, nodeID_);
@@ -94,11 +106,7 @@ bool PaxosMsg::Read(ByteString& data)
 	
 	unsigned	nread;
 	char		*pos;
-	
-	/*	format for paxos messages, numbers are textual:
-		<paxosID>#<type>#<<<type specific>>>
-	*/
-	
+		
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
@@ -126,7 +134,6 @@ bool PaxosMsg::Read(ByteString& data)
 	
 	if (type == PREPARE_REQUEST)
 	{
-		// <<<type specific>>> := <n>
 		uint64_t proposalID;
 		
 		ReadUint64_t(proposalID);
@@ -137,9 +144,6 @@ bool PaxosMsg::Read(ByteString& data)
 	}
 	else if (type == PREPARE_RESPONSE)
 	{
-		// <<<type specific>>> := <n>#<response>#<n_accepted>#<length>#<value>
-		// the <n_accepted>#<length>#<value> is only present if
-		// response == PREPARE_PREVIOUSLY_ACCEPTED
 		uint64_t	proposalID, acceptedProposalID;
 		char		response;
 		unsigned	length;
@@ -152,8 +156,19 @@ bool PaxosMsg::Read(ByteString& data)
 			response != PREPARE_PREVIOUSLY_ACCEPTED &&
 			response != PREPARE_CURRENTLY_OPEN)
 				return false;
+
+		if (response == PREPARE_REJECTED)
+		{
+			CheckOverflow();
+			ReadSeparator(); CheckOverflow();
+			ReadUint64_t(promisedProposalID);
+			ValidateLength();
+			PrepareResponse(paxosID, nodeID, proposalID, response, promisedProposalID);
+			return true;
+		}
+
 		
-		if (response == PREPARE_REJECTED || response == PREPARE_CURRENTLY_OPEN)
+		if (response == PREPARE_CURRENTLY_OPEN)
 		{
 			ValidateLength();
 			PrepareResponse(paxosID, nodeID, proposalID, response);
@@ -176,7 +191,6 @@ bool PaxosMsg::Read(ByteString& data)
 	}
 	else if (type == PROPOSE_REQUEST)
 	{
-		// <<<type specific>>> := <n>#<length>#<value>
 		uint64_t	proposalID;
 		unsigned	length;
 		
@@ -194,7 +208,6 @@ bool PaxosMsg::Read(ByteString& data)
 	}
 	else if (type == PROPOSE_RESPONSE)
 	{
-		// <<<type specific>>> := <n>#<response>
 		uint64_t	proposalID;
 		char		response;
 		
@@ -212,7 +225,6 @@ bool PaxosMsg::Read(ByteString& data)
 	}
 	else if (type == LEARN_CHOSEN)
 	{
-		// <<<type specific>>> := <length>#<value>
 		unsigned		length;
 		
 		ReadChar(subtype); CheckOverflow();
@@ -249,32 +261,39 @@ bool PaxosMsg::Write(ByteString& data)
 	unsigned required;
 	
 	if (type == PREPARE_REQUEST)
-		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "", paxosID, type, nodeID, proposalID);
+		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "",
+			paxosID, type, nodeID, proposalID);
 	else if (type == PREPARE_RESPONSE)
 	{
-		if (subtype == PREPARE_REJECTED || subtype == PREPARE_CURRENTLY_OPEN)
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c", paxosID, type, nodeID,
-				proposalID, subtype);
+		if (subtype == PREPARE_REJECTED)
+		{
+			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c#%" PRIu64 "",
+				paxosID, type, nodeID, proposalID, subtype, promisedProposalID);
+		}
+		else if (subtype == PREPARE_CURRENTLY_OPEN)
+			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c",
+				paxosID, type, nodeID, proposalID, subtype);
 		else
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c#%" PRIu64 "#%d#%.*s", paxosID,
+			required = snprintf(data.buffer, data.size,
+				"%" PRIu64 "#%c#%d#%" PRIu64 "#%c#%" PRIu64 "#%d#%.*s", paxosID,
 				type, nodeID, proposalID, subtype, acceptedProposalID, 
 				value.length, value.length, value.buffer);
 	}
 	else if (type == PROPOSE_REQUEST)
-		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%d#%.*s", paxosID, type, nodeID,
-			proposalID, value.length, value.length, value.buffer);
+		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%d#%.*s",
+			paxosID, type, nodeID, proposalID, value.length, value.length, value.buffer);
 	else if (type == PROPOSE_RESPONSE)
-		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c", paxosID, type, nodeID,
-			proposalID, subtype);
+		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c",
+			paxosID, type, nodeID, proposalID, subtype);
 	else if (type == LEARN_CHOSEN)
-		{
+	{
 		if (subtype == LEARN_VALUE)
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%c#%d#%.*s", paxosID, type, nodeID,
-				subtype, value.length, value.length, value.buffer);
+			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%c#%d#%.*s",
+				paxosID, type, nodeID, subtype, value.length, value.length, value.buffer);
 		else
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%c#%" PRIu64 "", paxosID, type, nodeID,
-				subtype, proposalID);
-		}
+			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%c#%" PRIu64 "",
+				paxosID, type, nodeID, subtype, proposalID);
+	}
 	else if (type == REQUEST_CHOSEN)
 		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d", paxosID, type, nodeID);
 	else

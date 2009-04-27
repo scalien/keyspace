@@ -37,6 +37,7 @@ public:
 	uint64_t				proposalID;
 	char					subtype;
 	uint64_t				acceptedProposalID;
+	uint64_t				promisedProposalID;
 	ByteArray<PAXOS_VAL_SIZE>value;
 	
 	void					Init(uint64_t paxosID_, char type_, unsigned nodeID_);
@@ -44,6 +45,8 @@ public:
 	bool					PrepareRequest(uint64_t paxosID_, unsigned nodeID_, uint64_t proposalID_);
 	bool					PrepareResponse(uint64_t paxosID_, unsigned nodeID_,
 								uint64_t proposalID_, char subtype_);
+	bool					PrepareResponse(uint64_t paxosID_, unsigned nodeID_,
+								uint64_t proposalID_, char subtype_, uint64_t promisedProposalID_);
 	bool					PrepareResponse(uint64_t paxosID_, unsigned nodeID_, uint64_t proposalID_,
 								char subtype_, uint64_t acceptedProposalID_, ByteString value_);
 	

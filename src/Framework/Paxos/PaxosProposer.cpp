@@ -90,7 +90,11 @@ void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 	numReceived++;
 	
 	if (msg.subtype == PREPARE_REJECTED)
+	{
+		if (msg.promisedProposalID > state.highestPromisedProposalID)
+			state.highestPromisedProposalID = msg.promisedProposalID;
 		numRejected++;
+	}
 	else if (msg.subtype == PREPARE_PREVIOUSLY_ACCEPTED &&
 			 msg.acceptedProposalID >= state.highestReceivedProposalID)
 	{
@@ -165,7 +169,8 @@ void PaxosProposer::StartPreparing()
 	
 	state.numProposals++;
 	
-	state.proposalID = PaxosConfig::Get()->NextHighest(state.proposalID);
+	state.proposalID = PaxosConfig::Get()->NextHighest(
+		max(state.proposalID, state.highestPromisedProposalID));
 	
 	state.highestReceivedProposalID = 0; // TODO: should be -1 ?
 	

@@ -162,7 +162,8 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_REJECTED);
+		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID,
+			PREPARE_REJECTED, state.promisedProposalID);
 		
 		SendReply(senderID);
 		return;
