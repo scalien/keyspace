@@ -81,7 +81,7 @@ bool PLeaseMsg::Read(ByteString& data)
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != '#') return false; pos++;
+#define ReadSeparator()		if (*pos != '$') return false; pos++;
 #define ValidateLength()	if ((pos - data.buffer) != (int)data.length) return false;
 
 	pos = data.buffer;
@@ -112,10 +112,6 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == PREPARE_RESPONSE)
 	{
-		// <<<type specific>>> := <n>#<response>#<n_accepted>#<length>#<value>
-		// the <n_accepted>#<length>#<value> is only present if
-		// response == PREPARE_PREVIOUSLY_ACCEPTED
-		
 		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadChar(response);
@@ -158,8 +154,6 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == PROPOSE_RESPONSE)
 	{
-		// <<<type specific>>> := <n>#<response>
-
 		ReadUint64_t(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadChar(response);
@@ -192,29 +186,29 @@ bool PLeaseMsg::Write(ByteString& data)
 	
 	if		(type == PREPARE_REQUEST)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%" PRIu64 "", type, nodeID, proposalID, paxosID);
+		required = snprintf(data.buffer, data.size, "%c$%d$%" PRIu64 "$%" PRIu64 "", type, nodeID, proposalID, paxosID);
 	}
 	else if (type == PREPARE_RESPONSE)
 	{
 		if (response == PREPARE_REJECTED || response == PREPARE_CURRENTLY_OPEN)
-			required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%c", type, nodeID,
+			required = snprintf(data.buffer, data.size, "%c$%d$%" PRIu64 "$%c", type, nodeID,
 				proposalID, response);
 		else
-			required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%c#%" PRIu64 "#%d#%" PRIu64 "",
+			required = snprintf(data.buffer, data.size, "%c$%d$%" PRIu64 "$%c$%" PRIu64 "$%d$%" PRIu64 "",
 				type, nodeID, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_REQUEST)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%d#%" PRIu64 "", type, nodeID, proposalID,
+		required = snprintf(data.buffer, data.size, "%c$%d$%" PRIu64 "$%d$%" PRIu64 "", type, nodeID, proposalID,
 			leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_RESPONSE)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%" PRIu64 "#%c", type, nodeID, proposalID, response);
+		required = snprintf(data.buffer, data.size, "%c$%d$%" PRIu64 "$%c", type, nodeID, proposalID, response);
 	}
 	else if (type == LEARN_CHOSEN)
 	{
-		required = snprintf(data.buffer, data.size, "%c#%d#%d#%" PRIu64 "", type, nodeID, leaseOwner, expireTime);
+		required = snprintf(data.buffer, data.size, "%c$%d$%d$%" PRIu64 "", type, nodeID, leaseOwner, expireTime);
 	}
 	else
 		ASSERT_FAIL();
