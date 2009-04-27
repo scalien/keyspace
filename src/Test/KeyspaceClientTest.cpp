@@ -1,4 +1,17 @@
 #include "Application/Keyspace/Client/KeyspaceClient.h"
+#include <signal.h>
+
+void IgnorePipeSignal()
+{
+	struct sigaction act;
+	
+	act.sa_handler = SIG_IGN;
+	sigemptyset (&act.sa_mask);
+	act.sa_flags = 0;
+	sigaction (SIGPIPE, &act, NULL);
+
+	signal(SIGPIPE, SIG_IGN);
+}
 
 int KeyspaceClientTest()
 {
@@ -11,7 +24,7 @@ int KeyspaceClientTest()
 	int				status;
 	KeyspaceClient::Result* result;
 	
-	signal(SIGPIPE, SIG_IGN);
+	IgnorePipeSignal();
 	
 //	master = client.GetMaster();
 	client.ConnectMaster();

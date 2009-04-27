@@ -678,9 +678,15 @@ int KeyspaceClient::Submit()
 	if (startId == 0 || numPending == 0)
 		return KEYSPACE_OK;
 
-	memset(readBuf.buffer, 0, readBuf.size);
-	readBuf.Clear();
+	if (socket.Send("1:*", 3, timeout) < 0)
+	{
+		startId = 0;
+		numPending = 0;
+		return KEYSPACE_ERROR;
+	}
 
+	ResetReadBuffer();
+	
 	while (numPending > 0)
 	{
 		if (Read(msg) < 0)
