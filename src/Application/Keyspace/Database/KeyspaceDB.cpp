@@ -81,7 +81,7 @@ public:
 			op->key.size = keys[i].size;
 			op->key.length = keys[i].length;
 			
-			if (op->type == KeyspaceOp::LISTP)
+			if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
 			{
 				op->value.buffer = values[i].buffer;
 				op->value.size = values[i].size;
@@ -95,7 +95,7 @@ public:
 		op->key.size = 0;
 		op->key.length = 0;
 		
-		if (op->type == KeyspaceOp::LISTP)
+		if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
 		{
 			op->value.buffer = NULL;
 			op->value.size = 0;
@@ -158,9 +158,9 @@ public:
 		if ((count == 0 || num < count) &&
 			strncmp(keyHint.buffer, key.buffer, min(keyHint.length, key.length)) == 0)
 		{
-			if (op->type == KeyspaceOp::LIST)
+			if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 				AppendKey(key);
-			if (op->type == KeyspaceOp::LISTP)
+			if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
 				AppendKeyValue(key, value);
 			num++;
 			return true;

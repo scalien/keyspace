@@ -284,19 +284,6 @@ void ReplicatedLog::OnLearnChosen()
 			proposer.state.leader = false;
 			Log_Message("Multi paxos disabled");
 		}
-
-		
-		if (logQueue.Length() > 0)
-		{
-			if (!rmsg.Init(GetNodeID(), PaxosConfig::Get()->restartCounter, 
-				masterLease.GetLeaseEpoch(), *(logQueue.Next())))
-					ASSERT_FAIL();
-		
-			if (!rmsg.Write(value))
-				ASSERT_FAIL();
-			
-			proposer.Propose(value);
-		}
 		
 		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
 			ownAppend = true;
@@ -311,12 +298,24 @@ void ReplicatedLog::OnLearnChosen()
 				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
 		}
 		else if (replicatedDB != NULL && rmsg.value.length > 0)
-			{
-				if (!acceptor.transaction.IsActive())
-					acceptor.transaction.Begin();
-				replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend && IsMaster());
-				// client calls Append() here
-			}
+		{
+			if (!acceptor.transaction.IsActive())
+				acceptor.transaction.Begin();
+			replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend && IsMaster());
+			// client calls Append() here
+		}
+		
+		if (!proposer.IsActive() && logQueue.Length() > 0)
+		{
+			if (!rmsg.Init(PaxosConfig::Get()->nodeID, PaxosConfig::Get()->restartCounter,
+						   masterLease.GetLeaseEpoch(), *(logQueue.Next())))
+				ASSERT_FAIL();
+			
+			if (!rmsg.Write(value))
+				ASSERT_FAIL();
+			
+			proposer.Propose(value);
+		}
 	}
 	else if (pmsg.paxosID > learner.paxosID)
 	{
