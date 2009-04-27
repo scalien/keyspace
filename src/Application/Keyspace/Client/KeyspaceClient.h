@@ -71,16 +71,15 @@ private:
 	friend class Result;
 	
 	int				numEndpoints;
-	//int				master;
+	bool			master;
 	Endpoint*		endpoints;
 	Endpoint*		endpoint;
 	int				timeout;
 	uint64_t		id;
 	uint64_t		startId;
-	DynArray<1024>	requests;
 	int				numPending;
 	Socket			socket;
-	DynArray<1024>	readBuf;
+	DynArray<4096>	readBuf;
 	Result			result;
 		
 	uint64_t		GetNextID();
@@ -96,7 +95,6 @@ private:
 
 	int				GetValueResponse(ByteString &resp);
 	int				GetStatusResponse();
-	bool			GetListResponse(ByteString &resp);
 };
 
 #endif

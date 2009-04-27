@@ -1,4 +1,5 @@
 #include <inttypes.h>
+#include <time.h>
 #include "System/Time.h"
 #include "KeyspaceClient.h"
 #include "../Protocol/Keyspace/KeyspaceClientMsg.h"
@@ -78,7 +79,7 @@ KeyspaceClient::Result* KeyspaceClient::Result::Next(int &status_)
 	if (ret < 0)
 	{
 		Close();
-		status_ = KEYSPACE_ERROR;
+		status_ = ret;
 		return NULL;
 	}
 
@@ -129,18 +130,24 @@ int KeyspaceClient::Result::ParseValueResponse(const ByteString &resp)
 	code = colon;
 	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
+	
+	if (code[0] == KEYSPACECLIENT_NOTFOUND || code[0] == KEYSPACECLIENT_FAILED)
+		return KEYSPACE_FAILED;
+	
+	if (code[0] != KEYSPACECLIENT_OK)
+		return KEYSPACE_ERROR;
 	
 	colon++;
 	// response id
 	sid = colon;
 	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 
 	respId = strntoint64_t(sid, colon - sid, &nread);
 	if (respId != id)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
 	// length of value
@@ -151,11 +158,11 @@ int KeyspaceClient::Result::ParseValueResponse(const ByteString &resp)
 	
 	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
 	if (nread < 1)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
-	if (len != resp.length - (colon - resp.buffer))
-		return -1;
+	if ((unsigned) len != resp.length - (colon - resp.buffer))
+		return KEYSPACE_ERROR;
 	
 	value.Clear();
 	value.Append(colon, len);
@@ -183,24 +190,24 @@ int KeyspaceClient::Result::ParseListResponse(const ByteString &resp)
 	code = colon;
 	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 
 	if (code[0] != KEYSPACECLIENT_LISTITEM && code[0] != KEYSPACECLIENT_LISTEND)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	if (code[0] == KEYSPACECLIENT_LISTEND)
-		return 0;
+		return KEYSPACE_OK;
 	
 	colon++;
 	// response id
 	sid = colon;
 	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 
 	respId = strntoint64_t(sid, colon - sid, &nread);
 	if (respId != id)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
 	// length of value
@@ -211,11 +218,11 @@ int KeyspaceClient::Result::ParseListResponse(const ByteString &resp)
 	
 	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
 	if (nread < 1)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
-	if (len != resp.length - (colon - resp.buffer))
-		return -1;
+	if ((unsigned) len != resp.length - (colon - resp.buffer))
+		return KEYSPACE_ERROR;
 	
 	key.Clear();
 	key.Append(colon, len);
@@ -236,31 +243,31 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 	// length of the full response
 	colon = strnchr(resp.buffer, ':', resp.length);
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
 	// response code
 	code = colon;
 	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 
 	if (code[0] != KEYSPACECLIENT_LISTPITEM && code[0] != KEYSPACECLIENT_LISTEND)
-		return 0;
+		return KEYSPACE_ERROR;
 
 	if (code[0] == KEYSPACECLIENT_LISTEND)
-		return 0;
+		return KEYSPACE_OK;
 	
 	colon++;
 	// response id
 	sid = colon;
 	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 
 	respId = strntoint64_t(sid, colon - sid, &nread);
 	if (respId != id)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
 	// length of key
@@ -270,8 +277,8 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 		return false;
 	
 	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
-	if (nread < 0)
-		return -1;
+	if (nread < 1)
+		return KEYSPACE_ERROR;
 
 	colon += nread;
 	key.Clear();
@@ -285,12 +292,12 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 		return false;
 	
 	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
-	if (nread < 0)
-		return -1;
+	if (nread < 1)
+		return KEYSPACE_ERROR;
 
 	colon += nread;
-	if (len != resp.length - (colon - resp.buffer))
-		return -1;
+	if ((unsigned) len != resp.length - (colon - resp.buffer))
+		return KEYSPACE_ERROR;
 
 	value.Clear();
 	value.Append(colon, len);
@@ -320,6 +327,7 @@ result(*this)
 	id = Now();
 	startId = 0;
 	numPending = 0;
+	srand(time(NULL));
 	ReconnectRandom();
 }
 
@@ -671,7 +679,8 @@ bool KeyspaceClient::ConnectRandom()
 {
 	int rnd;
 	
-	rnd = random() & (numEndpoints - 1);
+	rnd = rand();
+	rnd &= (numEndpoints - 1);
 	return Connect(rnd);
 }
 
@@ -801,7 +810,6 @@ int KeyspaceClient::GetValueResponse(ByteString &resp)
 	int			len;
 	unsigned	nread;
 	
-	memset(readBuf.buffer, 0, readBuf.size);
 	readBuf.Clear();
 	Read(msg);
 	Log_Trace("%.*s", msg.length, msg.buffer);
@@ -870,21 +878,3 @@ int KeyspaceClient::GetStatusResponse()
 	return KEYSPACE_OK;
 }
 
-bool KeyspaceClient::GetListResponse(ByteString &/*resp*/)
-{
-	ByteString	msg;
-	
-	memset(readBuf.buffer, 0, readBuf.size);
-	readBuf.Clear();
-
-	while (true)
-	{
-		Read(msg);
-		Log_Trace("%.*s", msg.length, msg.buffer);
-		if (msg.buffer[0] == KEYSPACECLIENT_LISTEND)
-			break;
-		
-		readBuf.Remove(0, (msg.buffer - readBuf.buffer) + msg.length);
-	}
-	return true;
-}

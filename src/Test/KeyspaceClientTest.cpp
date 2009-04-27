@@ -23,7 +23,7 @@ int KeyspaceClientTest()
 	
 	key.Clear();
 	client.DirtyList(key);
-
+*/
 	client.Begin();
 	for (int i = 0; i < 100; i++)
 	{
@@ -33,14 +33,26 @@ int KeyspaceClientTest()
 	}
 	client.Submit();
 
+
+	key.Printf("counter");
 	client.Get(key);
 	result = client.GetResult(status);
 	if (result)
 	{
 		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
+		result->Close();
 	}
-*/
-	key.Printf("user:0");
+
+	key.Printf("user:");		
+
+	client.List(key);
+	result = client.GetResult(status);
+	while (result)
+	{
+		Log_Trace("result key = %.*s, value = %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);		
+		result = result->Next(status);
+	}
+	
 	client.ListP(key);
 	result = client.GetResult(status);
 	while (result)

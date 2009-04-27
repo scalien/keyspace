@@ -16,10 +16,9 @@ database(database)
 	int mode = 0;
 	
 	db = new Db(&database->env, 0);
-	db->set_pagesize(64*1024);
-	db->open(txnid, filename, dbname, type, flags, mode);
 	if (pageSize != 0)
 		db->set_pagesize(pageSize);
+	db->open(txnid, filename, dbname, type, flags, mode);
 }
 
 Table::~Table()

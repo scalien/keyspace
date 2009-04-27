@@ -23,6 +23,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 {
 	Log_Trace();
 	
+	data.Clear();
+	
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
 		op->type == KeyspaceOp::ADD)
@@ -31,6 +33,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			resp.Ok(op->cmdID, op->value);
 		else
 			resp.NotFound(op->cmdID);
+
+		resp.Write(data);
 	}
 	else if (op->type == KeyspaceOp::SET ||
 			 op->type == KeyspaceOp::TEST_AND_SET)
@@ -39,6 +43,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			resp.Ok(op->cmdID);
 		else
 			resp.Failed(op->cmdID);
+
+		resp.Write(data);
 	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
@@ -46,25 +52,37 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			resp.Ok(op->cmdID);
 		else
 			resp.NotFound(op->cmdID);
+
+		resp.Write(data);
 	}
 	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
 	{
 		if (op->key.length > 0)
+		{
 			resp.ListItem(op->cmdID, op->key);
+			resp.Write(data);
+		}
 	}
 	else if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
 	{
 		if (op->key.length > 0)
+		{
 			resp.ListPItem(op->cmdID, op->key, op->value);
+			resp.Write(data);
+		}
 	}
 	else
 		ASSERT_FAIL();
 	
-	resp.Write(data);
-	Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
-	Write(data);
+	if (data.length > 0)
+	{
+		Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
+		Write(data);
+	}
 	
-	if (((op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)) && final)
+	if (final && 
+		(op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST ||
+		 op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP))
 	{
 		resp.ListEnd(op->cmdID);
 		resp.Write(data);
