@@ -251,6 +251,14 @@ int KeyspaceDB::GetMaster()
 		return ReplicatedLog::Get()->GetMaster();
 }
 
+bool KeyspaceDB::IsMaster()
+{
+	if (PaxosConfig::Get()->numNodes == 1)
+		return true;
+	else
+		return ReplicatedLog::Get()->IsMaster();
+}
+
 bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 {
 	Log_Trace();

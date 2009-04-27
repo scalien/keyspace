@@ -25,6 +25,7 @@ public:
 	unsigned				GetNodeID();
 	bool					IsMasterKnown();
 	int						GetMaster();
+	bool					IsMaster();
 	void					OnCatchupComplete();	// called by CatchupClient
 	void					OnCatchupFailed();		// called by CatchupClient
 	

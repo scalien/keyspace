@@ -53,8 +53,8 @@ public:
 
 
 #define KEYSPACECLIENT_OK			'o'
-#define KEYSPACECLIENT_NOTFOUND		'n'
 #define KEYSPACECLIENT_FAILED		'f'
+#define KEYSPACECLIENT_NOTMASTER	'n'
 #define KEYSPACECLIENT_LISTITEM		'i'
 #define KEYSPACECLIENT_LISTPITEM	'j'
 #define KEYSPACECLIENT_LISTEND		'.'
@@ -69,8 +69,8 @@ public:
 	
 	void			Ok(uint64_t cmdID_);
 	void			Ok(uint64_t cmdID_, ByteString value_);
-	void			NotFound(uint64_t cmdID_);
 	void			Failed(uint64_t cmdID_);
+	void			NotMaster(uint64_t cmdID_);
 	void			ListItem(uint64_t cmdID_, ByteString key_);
 	void			ListPItem(uint64_t cmdID_, ByteString key_, ByteString value_);
 	void			ListEnd(uint64_t cmdID_);

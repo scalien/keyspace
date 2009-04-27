@@ -100,7 +100,12 @@ public:
 	
 	bool IsDirty()
 	{
-		return (type == DIRTY_GET || type == DIRTY_LIST);
+		return (type == DIRTY_GET || type == DIRTY_LIST || DIRTY_LISTP);
+	}
+	
+	bool MasterOnly()
+	{
+		return (type == GET || type == LIST || type == LISTP || IsWrite());
 	}
 };
 

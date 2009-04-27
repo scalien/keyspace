@@ -399,17 +399,17 @@ void KeyspaceClientResp::Ok(uint64_t cmdID_, ByteString value_)
 	value = value_;
 }
 
-void KeyspaceClientResp::NotFound(uint64_t cmdID_)
+void KeyspaceClientResp::Failed(uint64_t cmdID_)
 {
-	type = KEYSPACECLIENT_NOTFOUND;
+	type = KEYSPACECLIENT_FAILED;
 	cmdID = cmdID_;
 	key.length = 0;
 	value.length = 0;
 }
 
-void KeyspaceClientResp::Failed(uint64_t cmdID_)
+void KeyspaceClientResp::NotMaster(uint64_t cmdID_)
 {
-	type = KEYSPACECLIENT_FAILED;
+	type = KEYSPACECLIENT_NOTMASTER;
 	cmdID = cmdID_;
 	key.length = 0;
 	value.length = 0;
