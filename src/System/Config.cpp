@@ -31,7 +31,25 @@ public:
 
 	int GetIntValue(int)
 	{
-		return atoi(value.buffer);
+		int			ret;
+		unsigned	nread;
+		char		last;
+		
+		ret = (int) strntoint64_t(value.buffer, value.length, &nread);
+
+		// value is zero-terminated so we need the second character from backwards
+		if (nread == value.length - 2)
+		{
+			last = value.buffer[value.length - 2];
+			if (last == 'K')
+				return ret * 1024;
+			if (last == 'M')
+				return ret * 1024 * 1024;
+			if (last == 'G')
+				return ret * 1024 * 1024 * 1024;
+		}
+
+		return ret;
 	}
 
 	const char *GetValue()

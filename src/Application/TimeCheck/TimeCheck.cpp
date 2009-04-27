@@ -35,7 +35,7 @@ void TimeCheck::InitTransport()
 	
 	reader = new TransportUDPReader;
 	if (!reader->Init(PaxosConfig::Get()->port + TIMECHECK_PORT_OFFSET))
-		ASSERT_FAIL();
+		STOP_FAIL("Cannot initialize TimeCheck", 1);
 	reader->SetOnRead(&onRead);
 	
 	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
@@ -45,7 +45,7 @@ void TimeCheck::InitTransport()
 		endpoint.SetPort(endpoint.GetPort() + TIMECHECK_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
 		if (!writers[i]->Init(endpoint))
-			ASSERT_FAIL();
+			STOP_FAIL("Cannot initialize TimeCheck", 1);
 	}
 }
 

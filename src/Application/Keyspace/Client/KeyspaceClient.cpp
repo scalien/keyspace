@@ -123,7 +123,7 @@ int KeyspaceClient::Result::ParseValueResponse(const ByteString &resp)
 	// length of the full response
 	colon = strnchr(resp.buffer, ':', resp.length);
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
 	// response code
@@ -132,7 +132,9 @@ int KeyspaceClient::Result::ParseValueResponse(const ByteString &resp)
 	if (!colon)
 		return KEYSPACE_ERROR;
 	
-	if (code[0] == KEYSPACECLIENT_NOTFOUND || code[0] == KEYSPACECLIENT_FAILED)
+	if (code[0] == KEYSPACECLIENT_NOTMASTER)
+		return KEYSPACE_NOTMASTER;
+	if (code[0] == KEYSPACECLIENT_FAILED)
 		return KEYSPACE_FAILED;
 	
 	if (code[0] != KEYSPACECLIENT_OK)
@@ -183,7 +185,7 @@ int KeyspaceClient::Result::ParseListResponse(const ByteString &resp)
 	// length of the full response
 	colon = strnchr(resp.buffer, ':', resp.length);
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
 	// response code
@@ -313,11 +315,12 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 //
 /////////////////////////////////////////////////////////////////////
 
-KeyspaceClient::KeyspaceClient(int nodec, char* nodev[], int timeout_) :
+KeyspaceClient::KeyspaceClient(int nodec, char* nodev[], uint64_t timeout_) :
 result(*this)
 {
 	timeout = timeout_;
 
+	connectMaster = false;
 	endpoint = NULL;
 	endpoints = new Endpoint[nodec];
 	numEndpoints = nodec;
@@ -328,7 +331,7 @@ result(*this)
 	startId = 0;
 	numPending = 0;
 	srand(time(NULL));
-	ReconnectRandom();
+	Reconnect();
 }
 
 KeyspaceClient::~KeyspaceClient()
@@ -338,12 +341,17 @@ KeyspaceClient::~KeyspaceClient()
 
 int KeyspaceClient::ConnectMaster()
 {
-	int		master = -1;
+	int			master = KEYSPACE_ERROR;
+	uint64_t	starttime;
 	
-	while (master < 0)
+	connectMaster = true;
+	if (timeout)
+		starttime = Now();
+
+	while (master < 0 && (timeout == 0 || Now() - starttime > timeout))
 	{
 		master = GetMaster();
-		if (master >= 0 && endpoint == &endpoint[master])
+		if (master >= 0 && endpoint == &endpoints[master])
 			break;
 
 		Disconnect();
@@ -353,7 +361,7 @@ int KeyspaceClient::ConnectMaster()
 				return master;
 		}
 		
-		master = -1;
+		master = KEYSPACE_ERROR;
 	}
 	return master;
 }
@@ -364,19 +372,58 @@ int KeyspaceClient::ConnectMaster()
 //
 /////////////////////////////////////////////////////////////////////
 
+// GetMaster is special because it combines application logic with low-level
+// connect logic.
 int KeyspaceClient::GetMaster()
 {
-	ByteString		resp;
-	int				master;
+	int				master = -1;
 	unsigned		nread;
+	int				ret;
+	uint64_t		starttime;
+	DynArray<32>	msg;
+	DynArray<32>	cmd;
+	ByteArray<CS_INT_SIZE(int)>	resp;
 	
-	SendMessage(KEYSPACECLIENT_GETMASTER, false, 0, NULL);
-	if (!GetValueResponse(resp))
-		return -1;
+	cmd.Printf("%c:%" PRIu64 "", KEYSPACECLIENT_GETMASTER, GetNextID());
+	msg.Printf("%u:%.*s", cmd.length, cmd.length, cmd.buffer);
 	
-	master = (int) strntoint64_t(resp.buffer, resp.length, &nread);
+	starttime = Now();
+	while (master < 0 && (timeout == 0 || Now() - starttime > timeout))
+	{
+		while (!endpoint)
+		{
+			Disconnect();
+			if (ConnectRandom())
+				break;
+			if (timeout && Now() - starttime > timeout)
+				return KEYSPACE_ERROR;
+		}
+
+		ret = socket.Send(msg.buffer, msg.length, timeout);
+		if ((unsigned) ret < msg.length)
+		{
+			Disconnect();
+			continue;
+		}
+			
+		if (GetValueResponse(resp) < 0)
+		{
+			Disconnect();
+			continue;
+		}
+			
+		master = (int) strntoint64_t(resp.buffer, resp.length, &nread);
+		if (nread < 1)
+		{
+			master = -1;
+			Disconnect();
+			continue;
+		}
+		
+		return master;
+	}
 	
-	return master;
+	return KEYSPACE_ERROR;
 }
 
 int KeyspaceClient::Get(const ByteString &key, ByteString &value, bool dirty)
@@ -565,9 +612,9 @@ int KeyspaceClient::TestAndSet(const ByteString &key, const ByteString &test, co
 int KeyspaceClient::Add(const ByteString &key, int64_t num, int64_t &result, bool submit)
 {
 	ByteString		args[2];
-	ByteString		resp;
 	unsigned		nread;
-	ByteArray<CS_INT_SIZE(num)> snum;
+	ByteArray<CS_INT_SIZE(num)>		snum;
+	ByteArray<CS_INT_SIZE(result)>	resp;
 	
 	if (!submit && startId == 0)
 		return KEYSPACE_ERROR;
@@ -584,7 +631,7 @@ int KeyspaceClient::Add(const ByteString &key, int64_t num, int64_t &result, boo
 		return KEYSPACE_OK;
 	}
 
-	if (!GetValueResponse(resp))
+	if (GetValueResponse(resp) < 0)
 		return KEYSPACE_ERROR;
 	
 	result = strntoint64_t(resp.buffer, resp.length, &nread);
@@ -636,9 +683,9 @@ int KeyspaceClient::Submit()
 
 	while (numPending > 0)
 	{
-		if (!Read(msg))
+		if (Read(msg) < 0)
 			return KEYSPACE_ERROR;
-			
+		
 		Log_Trace("%.*s", msg.length, msg.buffer);
 		readBuf.Remove(0, (msg.buffer - readBuf.buffer) + msg.length);
 
@@ -652,7 +699,7 @@ int KeyspaceClient::Submit()
 
 /////////////////////////////////////////////////////////////////////
 //
-// private implementation
+// KeyspaceClient private implementation
 //
 /////////////////////////////////////////////////////////////////////
 
@@ -662,13 +709,17 @@ uint64_t KeyspaceClient::GetNextID()
 	return ++id;
 }
 
-void KeyspaceClient::ReconnectRandom()
+void KeyspaceClient::Reconnect()
 {
 	bool ret;
 	
 	while (true)
 	{
-		ret = ConnectRandom();
+		if (connectMaster	)
+			ret = ConnectMaster();
+		else
+			ret = ConnectRandom();
+
 		if (ret)
 			return;
 		Sleep(RECONNECT_TIMEOUT);
@@ -689,14 +740,17 @@ bool KeyspaceClient::Connect(int n)
 	endpoint = &endpoints[n];
 	socket.Close();
 	socket.Create(TCP);
-//	socket.SetNonblocking();
+	socket.SetNonblocking();
 	return socket.Connect(*endpoint);		
 }
 
 void KeyspaceClient::Disconnect()
 {
-	socket.Close();
-	endpoint = NULL;
+	if (endpoint)
+	{
+		socket.Close();
+		endpoint = NULL;
+	}
 }
 
 void KeyspaceClient::SendMessage(char cmd, bool submit, int msgc, const ByteString *msgv)
@@ -748,7 +802,7 @@ void KeyspaceClient::Send(const ByteString &msg)
 			return;
 
 		Disconnect();
-		ReconnectRandom();
+		Reconnect();
 	}
 }
 
@@ -796,7 +850,7 @@ int KeyspaceClient::Read(ByteString &msg)
 		
 		ret = socket.Read(buf, sizeof(buf), timeout);
 		if (ret <= 0)
-			return ret;
+			return KEYSPACE_ERROR;
 		
 		readBuf.Append(buf, ret);
 	}
@@ -804,26 +858,54 @@ int KeyspaceClient::Read(ByteString &msg)
 
 int KeyspaceClient::GetValueResponse(ByteString &resp)
 {
-	ByteString	msg;
-	char*		colon;
-	char*		vallen;
-	int			len;
-	unsigned	nread;
+	ByteString		msg;
+	const char*		colon;
+	const char*		sid;
+	const char*		vallen;
+	const char*		code;
+	uint64_t		respId;
+	unsigned		nread;
+	int				len;
 	
-	readBuf.Clear();
-	Read(msg);
+	ResetReadBuffer();
+	if (Read(msg) < 0)
+		return KEYSPACE_ERROR;
+
 	Log_Trace("%.*s", msg.length, msg.buffer);
 	
+	// length of the full response
 	colon = strnchr(msg.buffer, ':', msg.length);
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
 	
 	colon++;
+	// response code
+	code = colon;
 	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
 	if (!colon)
-		return -1;
+		return KEYSPACE_ERROR;
+	
+	if (code[0] == KEYSPACECLIENT_NOTMASTER)
+		return KEYSPACE_NOTMASTER;
+	if (code[0] == KEYSPACECLIENT_FAILED)
+		return KEYSPACE_FAILED;
+	
+	if (code[0] != KEYSPACECLIENT_OK)
+		return KEYSPACE_ERROR;
 	
 	colon++;
+	// response id
+	sid = colon;
+	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
+	if (!colon)
+		return KEYSPACE_ERROR;
+
+	respId = strntoint64_t(sid, colon - sid, &nread);
+	if (respId != id)
+		return KEYSPACE_ERROR;
+	
+	colon++;
+	// length of value
 	vallen = colon;
 	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
 	if (!colon)
@@ -831,12 +913,16 @@ int KeyspaceClient::GetValueResponse(ByteString &resp)
 	
 	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
 	if (nread < 1)
-		return -1;
+		return KEYSPACE_ERROR;
+	
+	colon++;
+	if ((unsigned) len != msg.length - (colon - msg.buffer))
+		return KEYSPACE_ERROR;
 	
 	if (resp.size < (unsigned) len)
 		return len;
-	
-	memcpy(resp.buffer, colon + 1, len);
+
+	memcpy(resp.buffer, colon, len);
 	resp.length = len;
 	
 	return len;
@@ -844,22 +930,37 @@ int KeyspaceClient::GetValueResponse(ByteString &resp)
 
 int KeyspaceClient::GetStatusResponse()
 {
-	ByteString	msg;
-	char*		colon;
-	uint64_t	cmdID;
-	unsigned	nread;
+	ByteString		msg;
+	const char*		colon;
+	const char*		code;
+	uint64_t		cmdID;
+	unsigned		nread;
 	
-	readBuf.Clear();
-	Read(msg);
-	Log_Trace("%.*s", msg.length, msg.buffer);
+	ResetReadBuffer();
+	if (Read(msg) < 0)
+		return KEYSPACE_ERROR;
 
-	if (msg.buffer[0] == KEYSPACECLIENT_NOTFOUND)
+	Log_Trace("%.*s", msg.length, msg.buffer);
+	
+	// length of the full response
+	colon = strnchr(msg.buffer, ':', msg.length);
+	if (!colon)
+		return KEYSPACE_ERROR;
+	
+	colon++;
+	// response code
+	code = colon;
+	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
+	if (!colon)
+		return KEYSPACE_ERROR;
+
+	if (code[0] == KEYSPACECLIENT_NOTMASTER)
+		return KEYSPACE_NOTMASTER;
+	
+	if (code[0] == KEYSPACECLIENT_FAILED)
 		return KEYSPACE_FAILED;
 	
-	if (msg.buffer[0] == KEYSPACECLIENT_FAILED)
-		return KEYSPACE_FAILED;
-	
-	if (msg.buffer[0] != KEYSPACECLIENT_OK)
+	if (code[0] != KEYSPACECLIENT_OK)
 		return KEYSPACE_ERROR;
 	
 	colon = strnchr(msg.buffer, ':', msg.length);

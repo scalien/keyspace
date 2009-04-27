@@ -3,13 +3,15 @@
 int KeyspaceClientTest()
 {
 	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081"};
-	KeyspaceClient	client(SIZE(nodes), nodes, 0);
+	KeyspaceClient	client(SIZE(nodes), nodes, 10000);
 	int				master;
 	DynArray<128>	key;
 	DynArray<128>	value;
 	int64_t			num;
 	int				status;
 	KeyspaceClient::Result* result;
+	
+	signal(SIGPIPE, SIG_IGN);
 	
 //	master = client.GetMaster();
 	client.ConnectMaster();

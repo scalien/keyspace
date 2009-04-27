@@ -41,15 +41,18 @@ public:
 		int					ParseListPResponse(const ByteString &resp);
 	};
 	
-	KeyspaceClient(int nodec, char* nodev[], int timeout);
+	KeyspaceClient(int nodec, char* nodev[], uint64_t timeout);
 	~KeyspaceClient();
 	
+	// master connection related commands
 	int				ConnectMaster();
 	int				GetMaster();
 	
+	// simple get commands with preallocated value
 	int				Get(const ByteString &key, ByteString &value, bool dirty = false);
 	int				DirtyGet(const ByteString &key, ByteString &value);
 
+	// commands that return a Result
 	int				Get(const ByteString &key, bool dirty = false);
 	int				DirtyGet(const ByteString &key);
 	int				List(const ByteString &prefix, uint64_t count = 0, bool dirty = false);
@@ -59,23 +62,25 @@ public:
 
 	Result*			GetResult(int &status);
 
+	// write commands
 	int				Set(const ByteString &key, const ByteString &value, bool sumbit = true);
 	int				TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, 
 							   bool submit = true);
 	int				Add(const ByteString &key, int64_t num, int64_t &result, bool submit = true);
 	int				Delete(const ByteString &key, bool submit = true);
 
+	// grouping write commands
 	int				Begin();
 	int				Submit();
 
 private:
 	friend class Result;
 	
+	bool			connectMaster;
 	int				numEndpoints;
-	bool			master;
 	Endpoint*		endpoints;
 	Endpoint*		endpoint;
-	int				timeout;
+	uint64_t		timeout;
 	uint64_t		id;
 	uint64_t		startId;
 	int				numPending;
@@ -84,7 +89,7 @@ private:
 	Result			result;
 		
 	uint64_t		GetNextID();
-	void			ReconnectRandom();
+	void			Reconnect();
 	bool			ConnectRandom();
 	bool			Connect(int n);
 	void			Disconnect();

@@ -234,6 +234,10 @@ again:
 			nread = 0;
 			goto again;
 		}
+		else if (errno == EPIPE)
+		{
+			return -1;
+		}
 		else if (errno == EAGAIN)
 		{
 			FD_ZERO(&fds);

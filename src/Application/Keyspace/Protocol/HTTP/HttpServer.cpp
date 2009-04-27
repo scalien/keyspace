@@ -6,7 +6,7 @@
 void HttpServer::Init(KeyspaceDB* kdb_, int port)
 {
 	if (!TCPServerT<HttpServer, HttpConn>::Init(port, CONN_BACKLOG))
-		ASSERT_FAIL();
+		STOP_FAIL("Cannot initialize HttpServer", 1);
 	kdb = kdb_;
 }
 

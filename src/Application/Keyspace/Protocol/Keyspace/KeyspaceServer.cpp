@@ -7,7 +7,7 @@
 void KeyspaceServer::Init(KeyspaceDB* kdb_, int port_)
 {
 	if (!TCPServerT<KeyspaceServer, KeyspaceConn>::Init(port_, CONN_BACKLOG))
-		ASSERT_FAIL();
+		STOP_FAIL("Cannot initialize KeyspaceServer", 1);
 	kdb = kdb_;
 }
 
