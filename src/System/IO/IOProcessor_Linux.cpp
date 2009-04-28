@@ -571,7 +571,7 @@ void ProcessTCPRead(TCPRead* tcpread)
 	{
 		tcpread->data.length += nread;
 		if (tcpread->requested == IO_READ_ANY || 
-			tcpread->data.length == tcpread->requested)
+			tcpread->data.length == (unsigned)tcpread->requested)
 			Call(tcpread->onComplete);
 		else
 			IOProcessor::Add(tcpread);
@@ -683,7 +683,7 @@ void ProcessUDPWrite(UDPWrite* udpwrite)
 	}
 	else
 	{
-		if (nwrite == udpwrite->data.length - udpwrite->offset)
+		if (nwrite == (int)udpwrite->data.length - udpwrite->offset)
 		{
 			Call(udpwrite->onComplete);
 		} else

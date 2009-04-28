@@ -102,7 +102,7 @@ class TCPWrite : public IOOperation
 public:
 	TCPWrite() : IOOperation() { type = TCP_WRITE; transferred = 0; }
 	
-	int				transferred;		/*	the IO subsystem has given the first 'transferred'
+	unsigned	transferred;		/*	the IO subsystem has given the first 'transferred'
 										    bytes to the kernel */
 };
 

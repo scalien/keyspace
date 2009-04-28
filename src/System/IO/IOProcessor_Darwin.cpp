@@ -388,7 +388,7 @@ void ProcessTCPWrite(struct kevent* ev)
 		} else
 		{
 			tcpwrite->transferred += nwrite;
-			if (tcpwrite->transferred == (int) tcpwrite->data.length)
+			if (tcpwrite->transferred == tcpwrite->data.length)
 				Call(tcpwrite->onComplete);
 			else
 				IOProcessor::Add(tcpwrite);
