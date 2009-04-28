@@ -26,7 +26,7 @@ public:
 	static ReplicatedLog*		Get();
 	bool						Init();
 	void						OnRead();
-	bool						Append(ByteString value);
+	bool						Append(ByteString &value);
 	void						SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	Transaction*				GetTransaction();
 	bool						GetLogItem(uint64_t paxosID, ByteString& value);

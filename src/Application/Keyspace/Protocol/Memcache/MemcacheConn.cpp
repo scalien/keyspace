@@ -168,7 +168,7 @@ int MemcacheConn::Tokenize(const char *data, int size, Token *tokens, int maxtok
 		
 		if (p[0] == CR)
 		{
-			if (newline[1] != '\0' && p[1] == LF ||
+			if ((newline[1] != '\0' && p[1] == LF) ||
 				newline[1] == '\0')
 			{
 				numtoken = i;

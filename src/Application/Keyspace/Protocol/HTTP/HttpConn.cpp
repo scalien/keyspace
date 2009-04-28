@@ -537,7 +537,7 @@ const char* HttpConn::Status(int code)
 	return "";
 }
 
-void HttpConn::Response(int code, char* data, int len, bool close, char* header)
+void HttpConn::Response(int code, const char* data, int len, bool close, const char* header)
 {	
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
@@ -567,7 +567,7 @@ void HttpConn::Response(int code, char* data, int len, bool close, char* header)
 	Write(data, len);
 }
 
-void HttpConn::ResponseHeader(int code, bool close, char* header)
+void HttpConn::ResponseHeader(int code, bool close, const char* header)
 {
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;

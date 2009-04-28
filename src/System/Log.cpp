@@ -11,7 +11,7 @@ static bool timestamping = false;
 static bool trace = true;
 static int	maxLine = LOG_MSG_SIZE;
 
-static char* GetFullTimestamp(char ts[27])
+static const char* GetFullTimestamp(char ts[27])
 {
 	struct timeval tv;
 	struct tm tm;

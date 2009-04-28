@@ -28,6 +28,8 @@ bool ReplicatedLog::Init()
 {
 	Log_Trace();
 	
+	ByteString	nop(MSG_NOP);
+	
 	replicatedDB = NULL;
 	
 	InitTransport();
@@ -48,7 +50,7 @@ bool ReplicatedLog::Init()
 	safeDB = false;
 	
 	Log_Message("appending NOP to trigger potential catchup");
-	Append(BS_MSG_NOP);
+	Append(nop);
 	
 	return true;
 }
@@ -95,7 +97,7 @@ void ReplicatedLog::Continue()
 	masterLease.Continue();
 }
 
-bool ReplicatedLog::Append(ByteString value_)
+bool ReplicatedLog::Append(ByteString &value_)
 {
 	Log_Trace();
 	
@@ -296,7 +298,7 @@ void ReplicatedLog::OnLearnChosen()
 		if (ownAppend && rmsg.value == BS_MSG_NOP)
 		{
 			safeDB = true;
-			if (replicatedDB != NULL & IsMaster())
+			if (replicatedDB != NULL && IsMaster())
 				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
 		}
 		else if (replicatedDB != NULL && rmsg.value.length > 0)
@@ -395,8 +397,10 @@ void ReplicatedLog::OnLearnLease()
 {
 	if (masterLease.IsLeaseOwner() && !safeDB && !(proposer.IsActive() && rmsg.value == BS_MSG_NOP))
 	{
+		ByteString	nop(MSG_NOP);
+		
 		Log_Message("appending NOP to assure safeDB");
-		Append(BS_MSG_NOP);
+		Append(nop);
 	}
 }
 
