@@ -233,18 +233,18 @@ public:
 		length = 0;
 	}
 	
-	bool Append(const char *str, int len)
+	bool Append(const void *buf, unsigned len)
 	{
 		if (length + len > size)
 			Reallocate(length + len, true);
 
-		memcpy(buffer + length, str, len);
+		memcpy(buffer + length, buf, len);
 		length += len;
 		
 		return true;
 	}
 	
-	void Reallocate(int newsize, bool keepold)
+	void Reallocate(unsigned newsize, bool keepold)
 	{
 		char *newbuffer;
 		
