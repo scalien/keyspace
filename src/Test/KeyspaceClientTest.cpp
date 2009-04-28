@@ -1,14 +1,6 @@
 #include "Application/Keyspace/Client/KeyspaceClient.h"
 #include <signal.h>
 
-int
-main(int, char**)
-{
-	KeyspaceClientTest();
-
-	return 0;
-}
-
 void IgnorePipeSignal()
 {
 	sigset_t	sigset;
@@ -87,5 +79,13 @@ int KeyspaceClientTest()
 		result = result->Next(status);
 	}
 	
+	return 0;
+}
+
+int
+main(int, char**)
+{
+	KeyspaceClientTest();
+
 	return 0;
 }
