@@ -54,7 +54,7 @@ void Log_SetMaxLine(int maxLine_)
 void Log(const char* file, int line, const char* func, int type, const char* fmt, ...)
 {
 	int i, len;
-	char buf[maxLine];
+	char buf[LOG_MSG_SIZE];
 	char *msg;
 	va_list ap;
 	char ts[27];

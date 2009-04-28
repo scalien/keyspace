@@ -21,8 +21,8 @@ public:
 	ByteString(const char* str)
 	{
 		buffer = (char*) str;
-		size = strlen(str) - 1;
-		length = strlen(str) - 1;
+		size = strlen(str);
+		length = size;
 	}
 	
 	virtual ~ByteString() {}

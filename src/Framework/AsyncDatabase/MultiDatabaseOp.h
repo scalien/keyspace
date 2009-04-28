@@ -16,7 +16,7 @@ public:
 	enum Type {
 		GET,
 		SET,
-		VISIT,
+		VISIT
 	};
 	
 	Type				type;

@@ -437,6 +437,7 @@ int HttpConn::ProcessGetRequest()
 			 strncmp(request.line.uri, "/listp/", strlen("/listp/")) == 0 ||
 			 strncmp(request.line.uri, "/dirtylistp/", strlen("/dirtylistp/")) == 0)
 	{
+		prefix = "";
 		if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0)
 		{
 			prefix = request.line.uri + strlen("/list/");
