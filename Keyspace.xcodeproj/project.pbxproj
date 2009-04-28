@@ -1439,6 +1439,11 @@
 					"$(inherited)",
 					/opt/local/lib/db46,
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DTEST",
+					"-DPLATFORM_DARWIN",
+					"-D__STDC_FORMAT_MACROS",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Test.agazso;
 			};

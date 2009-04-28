@@ -82,6 +82,8 @@ int KeyspaceClientTest()
 	return 0;
 }
 
+#ifndef TEST
+
 int
 main(int, char**)
 {
@@ -89,3 +91,5 @@ main(int, char**)
 
 	return 0;
 }
+
+#endif
