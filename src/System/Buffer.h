@@ -15,8 +15,8 @@ public:
 	
 	ByteString() { Init(); }
 	
-	ByteString(int size_, int length_, char* buffer_)
-		: size(size_), length(length_), buffer(buffer_) {}
+	ByteString(int size_, int length_, const char* buffer_)
+		: size(size_), length(length_), buffer((char*) buffer_) {}
 
 	ByteString(const char* str)
 	{

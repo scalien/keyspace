@@ -36,8 +36,8 @@ public:
 
 	bool					Get(Table* table, const ByteString& key, ByteString& value);
 	bool					Set(Table* table, const ByteString& key, ByteString& value);
-	bool					Set(Table* table, char* key, ByteString &value);
-	bool					Set(Table* table, char* key, char* value);
+	bool					Set(Table* table, const char* key, ByteString &value);
+	bool					Set(Table* table, const char* key, const char* value);
 	bool					Visit(Table* table, TableVisitor &tv);
 	bool					Add(DatabaseOp& op);
 

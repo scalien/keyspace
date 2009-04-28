@@ -59,7 +59,7 @@ bool MultiDatabaseOp::Set(Table* table, const ByteString& key, ByteString& value
 	return true;
 }
 
-bool MultiDatabaseOp::Set(Table* table, char* key, ByteString &value)
+bool MultiDatabaseOp::Set(Table* table, const char* key, ByteString &value)
 {
 	int len;
 	
@@ -69,7 +69,7 @@ bool MultiDatabaseOp::Set(Table* table, char* key, ByteString &value)
 	return MultiDatabaseOp::Set(table, bsKey, value);
 }
 
-bool MultiDatabaseOp::Set(Table* table, char* key, char* value)
+bool MultiDatabaseOp::Set(Table* table, const char* key, const char* value)
 {
 	int len;
 	
