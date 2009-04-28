@@ -88,10 +88,14 @@ debug:
 release:
 	$(MAKE) targets BUILD="release"
 
+clienttest:
+	$(MAKE) test_targets BUILD="release"
+
 include Makefile.dirs
 	
 targets: $(BUILD_DIR) $(BIN_DIR)/keyspace
 
+test_targets: $(BUILD_DIR) $(BIN_DIR)/clienttest
 
 ##############################################################################
 #
@@ -118,6 +122,11 @@ OBJECTS = \
 	$(ALL_OBJECTS) \
 	$(BUILD_DIR)/Main.o
 
+TEST_OBJECTS = \
+        $(ALL_OBJECTS) \
+	$(BUILD_DIR)/Application/Keyspace/Client/KeyspaceClient.o \
+	$(BUILD_DIR)/Test/KeyspaceClientTest.o
+
 LIBS = \
 	$(KEYSPACE_LIBS)
 
@@ -126,6 +135,9 @@ $(KEYSPACE_LIBS):
 	
 $(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+
+$(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<

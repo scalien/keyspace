@@ -1,6 +1,14 @@
 #include "Application/Keyspace/Client/KeyspaceClient.h"
 #include <signal.h>
 
+int
+main(int, char**)
+{
+	KeyspaceClientTest();
+
+	return 0;
+}
+
 void IgnorePipeSignal()
 {
 	sigset_t	sigset;
@@ -12,7 +20,7 @@ void IgnorePipeSignal()
 
 int KeyspaceClientTest()
 {
-	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081"};
+	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 //	char			*nodes[] = {"127.0.0.1:7080"};
 	KeyspaceClient	client;
 	int				master;
