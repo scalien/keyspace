@@ -766,7 +766,7 @@ bool KeyspaceClient::ConnectRandom()
 	int rnd;
 	
 	rnd = rand();
-	rnd &= (numEndpoints - 1);
+	rnd = rnd % numEndpoints;
 	return Connect(rnd);
 }
 
