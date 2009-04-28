@@ -11,6 +11,7 @@ $(BUILD_DIR):
 		$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP \
 		$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace \
 		$(BUILD_DIR)/Application/Keyspace/Protocol/Memcache \
+		$(BUILD_DIR)/Application/TimeCheck \
 		$(BUILD_DIR)/Framework/ReplicatedLog/ \
 		$(BUILD_DIR)/Framework/Transport/ \
 		$(BUILD_DIR)/Framework/MasterLease/ \
