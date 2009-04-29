@@ -387,7 +387,6 @@ bool IOProcessor::Poll(int sleep)
 		{
 			currentev = events[i].events;
 			
-			//ioop = (IOOperation *) events[i].data.ptr;
 			epollOp = (EpollOp*) events[i].data.ptr;
 
 			newev = 0;
@@ -396,7 +395,7 @@ bool IOProcessor::Poll(int sleep)
 				newev |= EPOLLOUT;
 				newfd = epollOp->write->fd;
 			}
-			if ((events[i].events & EPOLLOUT) && epollOp->read)
+			else if ((events[i].events & EPOLLOUT) && epollOp->read)
 			{
 				newev |= EPOLLIN;
 				newfd = epollOp->read->fd;
