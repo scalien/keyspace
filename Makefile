@@ -55,6 +55,7 @@ include Makefile.$(PLATFORM)
 
 CC = gcc
 CXX = g++
+RANLIB = ranlib
 
 DEBUG_CFLAGS = -g #-pg
 DEBUG_LDFLAGS = #-pg -lc_p
@@ -91,11 +92,16 @@ release:
 clienttest:
 	$(MAKE) test_targets BUILD="release"
 
+clientlib:
+	$(MAKE) clientlib_targets BUILD="release"
+
 include Makefile.dirs
 	
 targets: $(BUILD_DIR) $(BIN_DIR)/keyspace
 
 test_targets: $(BUILD_DIR) $(BIN_DIR)/clienttest
+
+clientlib_targets: $(BUILD_DIR) $(BIN_DIR)/clientlib.a $(BIN_DIR)/clientlib.so
 
 ##############################################################################
 #
@@ -104,6 +110,7 @@ test_targets: $(BUILD_DIR) $(BIN_DIR)/clienttest
 ##############################################################################
 
 include Makefile.objects
+include Makefile.clientlib
 
 KEYSPACE_LIBS =
 	
@@ -133,11 +140,7 @@ LIBS = \
 $(KEYSPACE_LIBS):
 	cd $(KEYSPACE_DIR); $(MAKE) targets BUILD=$(BUILD)
 	
-$(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
-$(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS)
-	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -145,6 +148,24 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
+$(BIN_DIR)/%.so: $(BIN_DIR)/%.a
+	$(CC) $(SOLINK) -o $@ $< $(SOLIBS)
+
+$(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+
+$(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS)
+
+
+
+$(BIN_DIR)/clientlib.a: $(BUILD_DIR) $(LIBS) $(CLIENTLIB_OBJECTS)
+	$(AR) -r $@ $(CLIENTLIB_OBJECTS)
+	$(RANLIB) $@
+
+$(BIN_DIR)/clientlib.so: $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
+	$(CC) $(SOLINK) -o $@ $(CLIENTLIB_OBJECTS)
+	
 
 ##############################################################################
 #

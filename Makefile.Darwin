@@ -9,3 +9,4 @@ INCLUDE = \
 BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE) -D__STDC_FORMAT_MACROS
 BASE_CXXFLAGS = $(BASE_CFLAGS)
 BASE_LDFLAGS = -L/opt/local/lib/db46 -lpthread -ldb_cxx
+SOLINK = -Xlinker -x -fPIC -dylib -undefined dynamic_lookup -bundle
