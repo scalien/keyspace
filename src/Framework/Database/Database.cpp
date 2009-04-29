@@ -35,17 +35,19 @@ bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 	int mode = 0;
 	int ret;
 	
+	if (cacheSize != 0)
+	{
+		u_int32_t gbytes = cacheSize / (1024 * 1024 * 1024);
+		u_int32_t bytes = cacheSize % (1024 * 1024 * 1024);
+		
+		env.set_cache_max(gbytes, bytes);
+	}
+
 	ret = env.open(dbdir, flags, mode);
 	if (ret != 0)
 		return false;
 
 	env.set_flags(DB_LOG_AUTOREMOVE, 1);
-	if (cacheSize != 0)
-	{
-		u_int32_t gbytes = cacheSize / (1024 * 1024 * 1024);
-		u_int32_t bytes = cacheSize % (1024 * 1024 * 1024);
-		env.set_cachesize(gbytes, bytes, 1);
-	}
 	
 	keyspace = new Table(this, "keyspace", pageSize);
 	test = new Table(this, "test", pageSize);
