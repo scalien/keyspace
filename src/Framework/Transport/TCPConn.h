@@ -37,8 +37,8 @@ public:
 	Socket&			GetSocket() { return socket; }
 	
 protected:
-	typedef DynArray<bufferSize> Buffer;
-	typedef Queue<Buffer, &Buffer::next> BufferQueue;
+	typedef DynArray<bufferSize>			Buffer;
+	typedef Queue<Buffer, &Buffer::next>	BufferQueue;
 
 	enum State 
 	{
@@ -104,7 +104,7 @@ void TCPConn<bufferSize>::Init(bool startRead)
 {
 	state = CONNECTED;
 	
-	readBuffer.Init();
+	readBuffer.Clear();
 	AsyncRead(startRead);
 	
 	tcpwrite.fd = socket.fd;
@@ -233,7 +233,7 @@ void TCPConn<bufferSize>::Close()
 	{
 		Buffer* buf = writeQueue.Get();
 		if (writeQueue.Size() == 1)
-			buf->Init();
+			buf->Clear();
 		else
 			delete buf;
 	}

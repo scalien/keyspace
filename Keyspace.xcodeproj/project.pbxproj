@@ -105,6 +105,8 @@
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
+		9A8B41CD0FA74EE1003EA36E /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
+		9A8B41E60FA760EE003EA36E /* keyspace_client_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */; };
 		9AC698E50F97982D003C631E /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		9AC698E60F979836003C631E /* BDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC698D40F979720003C631E /* BDBTest.cpp */; };
 		9AC698E70F9798A7003C631E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
@@ -322,6 +324,9 @@
 		9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportUDPWriter.cpp; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
+		9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyspace_client.h; sourceTree = "<group>"; };
+		9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyspace_client.cpp; sourceTree = "<group>"; };
+		9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keyspace_client_test.c; sourceTree = "<group>"; };
 		9AC698D40F979720003C631E /* BDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBTest.cpp; sourceTree = "<group>"; };
 		9AC698DB0F9797D8003C631E /* Tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tester.cpp; sourceTree = "<group>"; };
 		9AC698E00F979809003C631E /* Tester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Tester; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -527,6 +532,7 @@
 				9ADC98430F7C004E0025A7AB /* QueueTest.cpp */,
 				9AC698DB0F9797D8003C631E /* Tester.cpp */,
 				9AC69C520F9E3144003C631E /* KeyspaceClientTest.cpp */,
+				9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -817,6 +823,8 @@
 			children = (
 				9AC69B0F0F9D2158003C631E /* KeyspaceClient.h */,
 				9AC69B100F9D2158003C631E /* KeyspaceClient.cpp */,
+				9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */,
+				9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -1176,6 +1184,8 @@
 				9AC69C530F9E3144003C631E /* KeyspaceClientTest.cpp in Sources */,
 				9AC69C590F9E32BA003C631E /* Config.cpp in Sources */,
 				9AC69C5A0F9E32C4003C631E /* KeyspaceClient.cpp in Sources */,
+				9A8B41CD0FA74EE1003EA36E /* keyspace_client.cpp in Sources */,
+				9A8B41E60FA760EE003EA36E /* keyspace_client_test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1438,6 +1448,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib/db46,
+				);
+				OTHER_CFLAGS = (
+					"-DTEST",
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-DTEST",

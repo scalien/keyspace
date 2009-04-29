@@ -9,9 +9,9 @@ class ConfigVar
 public:
 	ConfigVar(const char* name_)
 	{
-		name.Init();
+		name.Clear();
 		name.Append(name_, strlen(name_));
-		value.Init();
+		value.Clear();
 		numelem = 0;
 		next = NULL;
 	}

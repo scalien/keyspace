@@ -15,7 +15,7 @@ public:
 	
 	ByteString() { Init(); }
 	
-	ByteString(int size_, int length_, const char* buffer_)
+	ByteString(int size_, int length_, const void* buffer_)
 		: size(size_), length(length_), buffer((char*) buffer_) {}
 
 	ByteString(const char* str)
@@ -47,7 +47,7 @@ public:
 		return Set(str, len);
 	}
 	
-	virtual bool Set(const char* str, unsigned len)
+	virtual bool Set(const void* str, unsigned len)
 	{
 		if (buffer == NULL)
 			ASSERT_FAIL();

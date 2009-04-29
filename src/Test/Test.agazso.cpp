@@ -1,9 +1,12 @@
 int KeyspaceClientTest();
+extern "C" int keyspace_client_test();
 
 int
 main(int, char**)
 {
-	KeyspaceClientTest();
+	int ret;
+	ret = KeyspaceClientTest();
+//	ret = keyspace_client_test();
 
-	return 0;
+	return ret;
 }
