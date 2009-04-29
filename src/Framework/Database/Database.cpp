@@ -42,9 +42,9 @@ bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 	env.set_flags(DB_LOG_AUTOREMOVE, 1);
 	if (cacheSize != 0)
 	{
-		uint32_t gbytes = cacheSize / (1024 * 1024 * 1024);
-		uint32_t bytes = cacheSize % (1024 * 1024 * 1024);
-		env.set_cachesize(&gbytes, &bytes, 1);
+		u_int32_t gbytes = cacheSize / (1024 * 1024 * 1024);
+		u_int32_t bytes = cacheSize % (1024 * 1024 * 1024);
+		env.set_cachesize(gbytes, bytes, 1);
 	}
 	
 	keyspace = new Table(this, "keyspace", pageSize);
