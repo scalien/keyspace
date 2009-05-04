@@ -28,6 +28,8 @@ public:
 	
 	void Append(T* elem)
 	{
+		assert(elem != 0);
+		
 		elem->*pnext = 0;
 		if (tail)
 			tail->*pnext = elem;
