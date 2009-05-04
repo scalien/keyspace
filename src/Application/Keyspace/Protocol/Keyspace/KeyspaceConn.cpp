@@ -116,7 +116,8 @@ void KeyspaceConn::OnRead()
 {
 	Log_Trace();
 
-	EventLoop::Reset(&connectionTimeout);
+	if (connectionTimeout.IsActive())
+		EventLoop::Reset(&connectionTimeout);
 
 	unsigned msglength, nread, msgbegin, msgend;
 	
@@ -249,7 +250,8 @@ void KeyspaceConn::OnWrite()
 {
 	Log_Trace();
 
-	EventLoop::Reset(&connectionTimeout);
+	if (connectionTimeout.IsActive())
+		EventLoop::Reset(&connectionTimeout);
 	
 	TCPConn<>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)

@@ -102,6 +102,8 @@ TCPConn<bufferSize>::~TCPConn()
 template<int bufferSize>
 void TCPConn<bufferSize>::Init(bool startRead)
 {
+	Log_Trace();
+	
 	state = CONNECTED;
 	
 	readBuffer.Clear();
