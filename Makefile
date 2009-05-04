@@ -138,8 +138,6 @@ OBJECTS = \
 	$(BUILD_DIR)/Main.o
 
 TEST_OBJECTS = \
-        $(ALL_OBJECTS) \
-	$(BUILD_DIR)/Application/Keyspace/Client/KeyspaceClient.o \
 	$(BUILD_DIR)/Test/KeyspaceClientTest.o
 
 LIBS = \
@@ -162,9 +160,6 @@ $(BIN_DIR)/%.so: $(BIN_DIR)/%.a
 $(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
-$(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS)
-	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS)
-
 
 
 $(BIN_DIR)/clientlib.a: $(BUILD_DIR) $(LIBS) $(CLIENTLIB_OBJECTS)
@@ -174,6 +169,8 @@ $(BIN_DIR)/clientlib.a: $(BUILD_DIR) $(LIBS) $(CLIENTLIB_OBJECTS)
 $(BIN_DIR)/clientlib.so: $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
 	$(CC) $(SOLINK) -o $@ $(CLIENTLIB_OBJECTS)
 	
+$(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS) $(BIN_DIR)/clientlib.a
+	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS) $(BIN_DIR)/clientlib.a
 
 ##############################################################################
 #
