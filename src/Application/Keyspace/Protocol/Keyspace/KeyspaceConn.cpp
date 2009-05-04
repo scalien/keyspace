@@ -4,7 +4,6 @@
 KeyspaceConn::KeyspaceConn()
 :	onConnectionTimeout(this, &KeyspaceConn::OnConnectionTimeout),
 	connectionTimeout(KEYSPACE_CONN_TIMEOUT, &onConnectionTimeout)
-
 {
 	server = NULL;
 }
