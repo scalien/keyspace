@@ -2,6 +2,9 @@
 #include "KeyspaceServer.h"
 
 KeyspaceConn::KeyspaceConn()
+:	onConnectionTimeout(this, &KeyspaceConn::OnConnectionTimeout),
+	connectionTimeout(KEYSPACE_CONN_TIMEOUT, &onConnectionTimeout)
+
 {
 	server = NULL;
 }
@@ -17,6 +20,8 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	closeAfterSend = false;
 	
 	AsyncRead();
+	
+	Scheduler::Reset(&connectionTimeout);
 }
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
@@ -111,6 +116,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 void KeyspaceConn::OnRead()
 {
 	Log_Trace();
+
+	Scheduler::Reset(&connectionTimeout);
 
 	unsigned msglength, nread, msgbegin, msgend;
 	
@@ -239,8 +246,17 @@ void KeyspaceConn::OnClose()
 void KeyspaceConn::OnWrite()
 {
 	Log_Trace();
+
+	Scheduler::Reset(&connectionTimeout);
 	
 	TCPConn<>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
 		OnClose();
+}
+
+void KeyspaceConn::OnConnectionTimeout()
+{
+	Log_Trace();
+	
+	OnClose();
 }

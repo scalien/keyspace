@@ -7,6 +7,8 @@
 #include "Application/Keyspace/Database/KeyspaceService.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.h"
 
+#define KEYSPACE_CONN_TIMEOUT 3000
+
 class KeyspaceServer;
 
 class KeyspaceConn : public TCPConn<>, public KeyspaceService
@@ -16,6 +18,7 @@ public:
 	
 	void				Init(KeyspaceDB* kdb_, KeyspaceServer* server_);
 	void				OnComplete(KeyspaceOp* op, bool status, bool final);
+	void				OnConnectionTimeout();
 
 private:
 	// TCPConn interface
@@ -27,6 +30,8 @@ private:
 	void				ProcessMsg();
 	void				AppendOps();
 
+	MFunc<KeyspaceConn>	onConnectionTimeout;
+	CdownTimer			connectionTimeout;
 	ByteArray<KEYSPACE_BUF_SIZE> data;
 	KeyspaceServer*		server;
 	KeyspaceClientReq	req;
