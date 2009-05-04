@@ -93,6 +93,7 @@ const char* rprintf(const char* format, ...)
 	
 	va_start(ap, format);
 	vsnprintf(buffer, sizeof(buffer), format, ap);
+	va_end(ap);
 	
 	return buffer;
 }
