@@ -232,8 +232,11 @@ void TCPConn<bufferSize>::Close()
 	while (writeQueue.Size() > 0)
 	{
 		Buffer* buf = writeQueue.Get();
-		if (writeQueue.Size() == 1)
+		if (writeQueue.Size() == 0)
+		{
 			buf->Clear();
+			writeQueue.Append(buf);
+		}
 		else
 			delete buf;
 	}
