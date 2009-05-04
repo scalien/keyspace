@@ -70,7 +70,6 @@ static EpollOp*		epollOps;
 
 static bool			AddEvent(int fd, uint32_t filter, IOOperation* ioop);
 
-static void			ProcessFileOp();
 static void			ProcessAsyncOp();
 static void			ProcessIOOperation(IOOperation* ioop);
 static void			ProcessTCPRead(TCPRead* tcpread);
@@ -122,8 +121,6 @@ bool IOProcessor::Init(int maxfd_)
 		epollOps[i].write = NULL;
 	}
 
-	canceledOps = NULL;
-
 	epollfd = epoll_create(maxfd);
 	if (epollfd < 0)
 	{
@@ -147,20 +144,13 @@ bool IOProcessor::Add(IOOperation* ioop)
 {
 	uint32_t	filter;
 	
-	if (ioop->type == FILE_READ || ioop->type == FILE_WRITE)
-	{
-		return AddAio((FileOp*) ioop);
-	}
-	else
-	{
-		filter = EPOLLONESHOT;
-		if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-			filter |= EPOLLIN;
-		else if (ioop->type == TCP_WRITE || ioop->type == UDP_WRITE)
-			filter |= EPOLLOUT;
-		
-		return AddEvent(ioop->fd, filter, ioop);
-	}
+	filter = EPOLLONESHOT;
+	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
+		filter |= EPOLLIN;
+	else if (ioop->type == TCP_WRITE || ioop->type == UDP_WRITE)
+		filter |= EPOLLOUT;
+	
+	return AddEvent(ioop->fd, filter, ioop);
 }
 
 bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
@@ -229,10 +219,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		Log_Message("eventfd < 0");
 		return false;
 	}
-
-	if (ioop->type == FILE_READ || ioop->type == FILE_WRITE)
-		return Remove((FileOp*) ioop);
-
+	
 	epollOp = &epollOps[ioop->fd];	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 	{
