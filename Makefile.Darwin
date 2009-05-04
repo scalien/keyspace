@@ -5,8 +5,9 @@
 INCLUDE = \
 	-I$(KEYSPACE_DIR)/src \
 	-I/opt/local/include/db46 \
+	-I/usr/local/include/db4 \
 
 BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE) -D__STDC_FORMAT_MACROS
 BASE_CXXFLAGS = $(BASE_CFLAGS)
-BASE_LDFLAGS = -L/opt/local/lib/db46 -lpthread -ldb_cxx
+BASE_LDFLAGS = -L/opt/local/lib/db46 -L/usr/local/lib/db4 -lpthread -ldb_cxx
 SOLINK = -Xlinker -x -fPIC -dylib -undefined dynamic_lookup -bundle
