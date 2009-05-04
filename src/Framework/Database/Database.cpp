@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "System/Events/Callable.h"
+#include "System/Events/EventLoop.h"
 #include "System/Time.h"
 #include "System/Log.h"
 
@@ -14,18 +15,20 @@ Database database;
 
 Database::Database() :
 env(DB_CXX_NO_EXCEPTIONS),
-cpThread(1)
+cpThread(1),
+checkpoint(this, &Database::Checkpoint),
+onCheckpointTimeout(this, &Database::OnCheckpointTimeout),
+checkpointTimeout(&onCheckpointTimeout)
 {
 }
 
 Database::~Database()
 {
+	running = false;
+	cpThread.Stop();
 	delete keyspace;
 	delete test;
 
-	running = false;
-	cpThread.Stop();
-	delete checkpoint;
 	env.close(0);
 }
 
@@ -40,7 +43,8 @@ bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 		u_int32_t gbytes = cacheSize / (1024 * 1024 * 1024);
 		u_int32_t bytes = cacheSize % (1024 * 1024 * 1024);
 		
-		env.set_cache_max(gbytes, bytes);
+		//env.set_cache_max(gbytes, bytes);
+		env.set_cachesize(gbytes, bytes, 4);
 	}
 
 	ret = env.open(dbdir, flags, mode);
@@ -52,10 +56,9 @@ bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 	keyspace = new Table(this, "keyspace", pageSize);
 	test = new Table(this, "test", pageSize);
 	
-	checkpoint = new MFunc<Database>(this, &Database::Checkpoint);
 	running = true;
 	cpThread.Start();
-	cpThread.Execute(checkpoint);
+	EventLoop::Add(&checkpointTimeout);
 	
 	return true;
 }
@@ -71,17 +74,17 @@ Table* Database::GetTable(const char* name)
 	return NULL;
 }
 
+void Database::OnCheckpointTimeout()
+{
+	cpThread.Execute(&checkpoint);
+}
+
 void Database::Checkpoint()
 {
 	int ret;
 
-	while (running)
-	{
-		Log_Trace();
-		ret = env.txn_checkpoint(100000, 0, 0);
-		if (ret < 0)
-			ASSERT_FAIL();
-		
-		Sleep(60 * 1000);
-	}
+	Log_Trace();
+	ret = env.txn_checkpoint(100000, 0, 0);
+	if (ret < 0)
+		ASSERT_FAIL();
 }

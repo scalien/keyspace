@@ -3,6 +3,8 @@
 
 #include <db_cxx.h>
 #include "System/ThreadPool.h"
+#include "System/Events/Timer.h"
+#include "System/Events/Callable.h"
 
 class Table;
 class Transaction;
@@ -20,14 +22,17 @@ public:
 	Table* GetTable(const char* name);
 	
 private:
-	DbEnv		env;
-	Table*		keyspace;
-	Table*		test;
-	ThreadPool	cpThread;
-	bool		running;
-	Callable*	checkpoint;
+	DbEnv			env;
+	Table*			keyspace;
+	Table*			test;
+	ThreadPool		cpThread;
+	bool			running;
+	CdownTimer		checkpointTimeout;
+	MFunc<Database>	onCheckpointTimeout;
+	MFunc<Database>	checkpoint;
 
-	void		Checkpoint();
+	void			OnCheckpointTimeout();
+	void			Checkpoint();
 };
 
 // the global database object
