@@ -227,8 +227,8 @@ void TCPConn<bufferSize>::Close()
 	state = DISCONNECTED;
 	
 	// Discard unnecessary buffers if there are any.
-	// Keep the last one, so that when the connection is reused it isn't
-	// need to be allocated.
+	// Keep the last one, so that when the connection
+	// is reused it isn't reallocated.
 	while (writeQueue.Size() > 0)
 	{
 		Buffer* buf = writeQueue.Get();
@@ -236,6 +236,7 @@ void TCPConn<bufferSize>::Close()
 		{
 			buf->Clear();
 			writeQueue.Append(buf);
+			break;
 		}
 		else
 			delete buf;
