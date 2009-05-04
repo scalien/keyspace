@@ -58,6 +58,7 @@ public:
 	Callable*		onClose;
 };
 
+#ifdef IOPROCESSOR_AIO
 class FileOp : public IOOperation
 {
 public:
@@ -80,6 +81,7 @@ class FileRead : public FileOp
 public:
 	FileRead() : FileOp() { type = FILE_READ; }
 };
+#endif
 
 class UDPWrite : public IOOperation
 {

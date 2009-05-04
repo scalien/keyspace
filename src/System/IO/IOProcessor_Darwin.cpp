@@ -16,6 +16,8 @@
 
 // see http://wiki.netbsd.se/index.php/kqueue_tutorial
 
+class FileOp;
+
 static int				kq;			// the kqueue
 static List<FileOp*>	fileops;	// the list of aio ops
 static int				asyncOpPipe[2];
@@ -97,6 +99,7 @@ bool IOProcessor::Add(IOOperation* ioop)
 
 bool AddAio(FileOp* fileop)
 {
+#ifdef IOPROCESSOR_AIO
 	memset(&(fileop->cb), 0, sizeof(struct aiocb));
 	
 	fileop->cb.aio_fildes	= fileop->fd;
@@ -128,7 +131,9 @@ bool AddAio(FileOp* fileop)
 
 	fileop->active = true;	
 	fileops.Add(fileop);
-	
+
+#endif // IOPROCESSOR_AIO
+
 	return true;
 }
 
@@ -458,6 +463,7 @@ void ProcessUDPWrite(struct kevent* ev)
 
 void ProcessFileOp(struct kevent*)
 {
+#ifdef IOPROCESSOR_AIO
 	int			ret, nbytes;
 	FileOp**	it;
 	FileOp*		fileop;
@@ -492,6 +498,7 @@ void ProcessFileOp(struct kevent*)
 		
 		it = fileops.Head();		
 	}
+#endif // IOPROCESSOR_AIO
 }
 
 #endif // PLATFORM_DARWIN
