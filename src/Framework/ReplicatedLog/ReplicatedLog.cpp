@@ -8,11 +8,14 @@
 #include "Framework/Transport/TransportUDPWriter.h"
 #include <stdlib.h>
 
-ReplicatedLog replicatedLog;
+ReplicatedLog* replicatedLog = NULL;
 
 ReplicatedLog* ReplicatedLog::Get()
 {
-	return &replicatedLog;
+	if (replicatedLog == NULL)
+		replicatedLog = new ReplicatedLog;
+	
+	return replicatedLog;
 }
 
 ReplicatedLog::ReplicatedLog()

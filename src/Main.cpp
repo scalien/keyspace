@@ -42,14 +42,14 @@ int main(int argc, char* argv[])
 	if (Config::GetBoolValue("timecheck.active", true))
 		timeCheck.Init();
 	
-	KeyspaceDB kdb;
-	kdb.Init();
+	KeyspaceDB* kdb = new KeyspaceDB;
+	kdb->Init();
 	
 	HttpServer protoHttp;
-	protoHttp.Init(&kdb, Config::GetIntValue("http.port", 8080));
+	protoHttp.Init(kdb, Config::GetIntValue("http.port", 8080));
 
 	KeyspaceServer protoKeyspace;
-	protoKeyspace.Init(&kdb, Config::GetIntValue("keyspace.port", 7080));
+	protoKeyspace.Init(kdb, Config::GetIntValue("keyspace.port", 7080));
 
 	EventLoop::Run();
 }
