@@ -1,14 +1,8 @@
 #ifndef IOOPERATION_H
 #define IOOPERATION_H
 
-#ifdef PLATFORM_LINUX
-#include <aio.h>
-#endif
 #ifdef PLATFORM_DARWIN
 #include <sys/types.h>
-#ifdef IOPROCESSOR_AIO
-#include <sys/aio.h>
-#endif
 #endif
 
 #include <unistd.h>
@@ -22,8 +16,6 @@
 #define	TCP_WRITE	'b'
 #define	UDP_READ	'x'
 #define	UDP_WRITE	'y'
-#define FILE_READ	'r'
-#define FILE_WRITE	'w'
 
 #define IO_READ_ANY -1
 
@@ -59,31 +51,6 @@ public:
 	Callable*		onComplete;
 	Callable*		onClose;
 };
-
-#ifdef IOPROCESSOR_AIO
-class FileOp : public IOOperation
-{
-public:
-	FileOp() : IOOperation() { offset = 0; nbytes = 0; }
-	
-	int				nbytes;
-	
-	struct aiocb	cb;
-};
-
-class FileWrite : public FileOp
-{
-public:
-	FileWrite() : FileOp() { type = FILE_WRITE; }
-};	
-
-
-class FileRead : public FileOp
-{
-public:
-	FileRead() : FileOp() { type = FILE_READ; }
-};
-#endif
 
 class UDPWrite : public IOOperation
 {

@@ -18,14 +18,10 @@
 
 // see http://wiki.netbsd.se/index.php/kqueue_tutorial
 
-class FileOp;
-
 static int				kq;			// the kqueue
-static List<FileOp*>	fileops;	// the list of aio ops
 static int				asyncOpPipe[2];
 
 static bool AddKq(int ident, short filter, IOOperation* ioop);
-static bool AddAio(FileOp* ioop);
 
 static void ProcessAsyncOp();
 static void ProcessTCPRead(struct kevent* ev);
@@ -84,59 +80,12 @@ bool IOProcessor::Add(IOOperation* ioop)
 {
 	short	filter;
 	
-	if (ioop->type == FILE_READ || ioop->type == FILE_WRITE)
-	{
-		return AddAio((FileOp*) ioop);
-	}
+	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
+		filter = EVFILT_READ;
 	else
-	{
-		if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-			filter = EVFILT_READ;
-		else
-			filter = EVFILT_WRITE;
-		
-		return AddKq(ioop->fd, filter, ioop);
-	}
-}
-
-bool AddAio(FileOp* fileop)
-{
-#ifdef IOPROCESSOR_AIO
-	memset(&(fileop->cb), 0, sizeof(struct aiocb));
+		filter = EVFILT_WRITE;
 	
-	fileop->cb.aio_fildes	= fileop->fd;
-	fileop->cb.aio_offset	= fileop->offset;
-	fileop->cb.aio_buf		= fileop->data.buffer;
-		
-	fileop->cb.aio_sigevent.sigev_notify = SIGEV_SIGNAL;
-	fileop->cb.aio_sigevent.sigev_signo = SIGIO;
-	
-	if (fileop->type == FILE_READ)
-	{
-		fileop->cb.aio_nbytes = fileop->nbytes;
-		
-		if (aio_read(&(fileop->cb)) < 0)
-		{
-			Log_Errno();
-			return false;
-		}
-	} else
-	{
-		fileop->cb.aio_nbytes = fileop->data.length;
-		
-		if (aio_write(&(fileop->cb)) < 0)
-		{
-			Log_Errno();
-			return false;
-		}
-	}
-
-	fileop->active = true;	
-	fileops.Add(fileop);
-
-#endif // IOPROCESSOR_AIO
-
-	return true;
+	return AddKq(ioop->fd, filter, ioop);
 }
 
 bool AddKq(int ident, short filter, IOOperation* ioop)

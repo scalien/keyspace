@@ -64,13 +64,10 @@ public:
 
 static int			epollfd;
 static int			maxfd;
-static PipeOp		filePipeOp;
 static PipeOp		asyncPipeOp;
-static IOOperation*	canceledOps;
 static EpollOp*		epollOps;
 
 static bool			AddEvent(int fd, uint32_t filter, IOOperation* ioop);
-static bool			AddAio(FileOp* ioop);
 
 static void			ProcessFileOp();
 static void			ProcessAsyncOp();
@@ -80,33 +77,6 @@ static void			ProcessTCPWrite(TCPWrite* tcpwrite);
 static void			ProcessUDPRead(UDPRead* udpread);
 static void			ProcessUDPWrite(UDPWrite* udpwrite);
 
-
-static void IOProc_sigev_thread_handler(union sigval value)
-{
-	FileOp* fileop = (FileOp *) value.sival_ptr;
-	IOOperation* prev = NULL;
-	ssize_t ret;
-
-	for (IOOperation* f = canceledOps; f; f = f->next)
-	{
-		if (f == fileop)
-		{
-			// unlink fileop from canceled ops list
-			if (prev)
-				prev->next = f->next;
-			else
-				canceledOps = f->next;
-				
-			f->next = NULL;
-			return;
-		}
-		prev = f;
-	}
-
-	ret = write(filePipeOp.pipe[1], &fileop, sizeof(FileOp *));
-	
-	Log_Message("ret = %d", ret);
-}
 
 bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 {
@@ -160,9 +130,6 @@ bool IOProcessor::Init(int maxfd_)
 		return false;
 	}
 	
-	if (!InitPipe(filePipeOp, ProcessFileOp))
-		return false;
-	
 	if (!InitPipe(asyncPipeOp, ProcessAsyncOp))
 		return false;
 
@@ -173,8 +140,7 @@ void IOProcessor::Shutdown()
 {
 	close(epollfd);
 	asyncPipeOp.Close();
-	filePipeOp.Close();
-}
+
 
 bool IOProcessor::Add(IOOperation* ioop)
 {
@@ -194,46 +160,6 @@ bool IOProcessor::Add(IOOperation* ioop)
 		
 		return AddEvent(ioop->fd, filter, ioop);
 	}
-}
-
-bool AddAio(FileOp* fileop)
-{
-	memset(&(fileop->cb), 0, sizeof(struct aiocb));
-	
-	fileop->cb.aio_fildes	= fileop->fd;
-	fileop->cb.aio_offset	= fileop->offset;
-	fileop->cb.aio_buf		= fileop->data.buffer;
-
-	// On Linux SIGEV_SIGNAL does not seem to work
-	// therefore we use threads for async notification.		
-	fileop->cb.aio_sigevent.sigev_notify = SIGEV_THREAD;
-	fileop->cb.aio_sigevent.sigev_value.sival_ptr = fileop;
-	fileop->cb.aio_sigevent.sigev_notify_attributes = NULL;
-	fileop->cb.aio_sigevent.sigev_notify_function = IOProc_sigev_thread_handler;
-	Log_Message("fileop = %p\n", fileop->cb.aio_sigevent.sigev_value.sival_ptr);
-
-	if (fileop->type == FILE_READ)
-	{
-		fileop->cb.aio_nbytes	= fileop->nbytes;
-
-		if (aio_read(&(fileop->cb)) < 0)
-		{
-			Log_Errno();
-			return false;
-		}
-	} else
-	{
-		fileop->cb.aio_nbytes = fileop->data.length;
-		
-		if (aio_write(&(fileop->cb)) < 0)
-		{
-			Log_Errno();
-			return false;
-		}
-	}
-	
-	fileop->active = true;
-	return true;
 }
 
 bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
@@ -289,24 +215,6 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 		ioop->active = true;
 	
 	return true;
-}
-
-bool /*IOProcessor::*/Remove(FileOp* fileop)
-{
-	int ret;
-	
-	ret = aio_cancel(fileop->fd, &fileop->cb);
-	if (ret == AIO_ALLDONE)
-		return true;
-	
-	if (ret == AIO_CANCELED)
-	{
-		fileop->next = canceledOps;
-		canceledOps = fileop;
-		return true;
-	}
-	
-	return false;
 }
 
 bool IOProcessor::Remove(IOOperation* ioop)
@@ -475,39 +383,6 @@ void ProcessIOOperation(IOOperation* ioop)
 		ProcessUDPRead((UDPRead*) ioop);
 	else if (ioop && ioop->type == UDP_WRITE)
 		ProcessUDPWrite((UDPWrite*) ioop);
-}
-
-void ProcessFileOp()
-{
-	int	size;
-	FileOp	*ops[256];
-	FileOp	*fileop;
-	int	pipefd;
-	int	numBytes;
-	int	count;
-	int	i;
-
-	Log_Message("");
-	
-	while (1)
-	{
-		pipefd = filePipeOp.pipe[0];
-		size = read(pipefd, ops, sizeof(ops) * sizeof(FileOp *));
-		count = size / sizeof(FileOp *);
-		
-		for (i = 0; i < count; i++)
-		{
-			fileop = ops[i];
-			numBytes = aio_return(&fileop->cb);
-			if (numBytes == EINPROGRESS)
-				continue;
-			
-			Call(fileop->onComplete);
-		}
-		
-		if ((size_t) size < SIZE(ops))
-			break;
-	}
 }
 
 #define MAX_CALLABLE 256	
