@@ -221,7 +221,7 @@ bool IOProcessor::Poll(int sleep)
 		wait = sleep - (Now() - called);
 		if (wait < 0) wait = 0;
 		
-		timeout.tv_sec = floor(wait / 1000.0);
+		timeout.tv_sec = (time_t) floor(wait / 1000.0);
 		timeout.tv_nsec = (wait - 1000 * timeout.tv_sec) * 1000000;
 		
 		nevents = kevent(kq, NULL, 0, events, SIZE(events), &timeout);
