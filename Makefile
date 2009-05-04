@@ -35,12 +35,20 @@ BUILD_RELEASE_DIR = $(BUILD_ROOT)/release
 # Platform selector
 #
 ##############################################################################
-
 ifeq ($(shell uname),Darwin)
 PLATFORM=Darwin
 else
+ifeq ($(shell uname),FreeBSD)
+PLATFORM=Darwin
+else
+ifeq ($(shell uname),OpenBSD)
+PLATFORM=Darwin 
+else
 PLATFORM=Linux
 endif
+endif
+endif
+
 export PLATFORM
 PLATFORM_UCASE=$(shell echo $(PLATFORM) | tr [a-z] [A-Z])
 
