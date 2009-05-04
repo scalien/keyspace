@@ -397,44 +397,4 @@ void ProcessUDPWrite(struct kevent* ev)
 		Call(udpwrite->onClose);
 }
 
-void ProcessFileOp(struct kevent*)
-{
-#ifdef IOPROCESSOR_AIO
-	int			ret, nbytes;
-	FileOp**	it;
-	FileOp*		fileop;
-
-	for (it = fileops.Head(); it != NULL; /* advanced in body */)
-	{
-		fileop = *it;
-		
-		ret = aio_error(&fileop->cb);
-		if (ret == EINPROGRESS)
-		{
-			it = fileops.Next(it);
-			continue;
-		}
-
-		nbytes = aio_return(&fileop->cb);
-		if (nbytes >= 0)
-		{
-			if (fileop->type == FILE_READ)
-				fileop->data.length = nbytes;
-			else
-				fileop->nbytes = nbytes;
-		}
-	
-		fileops.Remove(it);
-		fileop->active = false;
-
-		if (ret == 0)
-			Call(fileop->onComplete);
-		else
-			Call(fileop->onClose); // todo: should be onError
-		
-		it = fileops.Head();		
-	}
-#endif // IOPROCESSOR_AIO
-}
-
 #endif // PLATFORM_DARWIN
