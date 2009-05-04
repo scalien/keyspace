@@ -21,7 +21,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	
 	AsyncRead();
 	
-	Scheduler::Reset(&connectionTimeout);
+	EventLoop::Reset(&connectionTimeout);
 }
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
@@ -117,7 +117,7 @@ void KeyspaceConn::OnRead()
 {
 	Log_Trace();
 
-	Scheduler::Reset(&connectionTimeout);
+	EventLoop::Reset(&connectionTimeout);
 
 	unsigned msglength, nread, msgbegin, msgend;
 	
@@ -237,6 +237,9 @@ void KeyspaceConn::OnClose()
 {
 	Log_Trace();
 	
+	if (connectionTimeout.IsActive())
+		EventLoop::Remove(&connectionTimeout);
+	
 	Close();
 	if (numpending == 0)
 		server->DeleteConn(this);
@@ -247,7 +250,7 @@ void KeyspaceConn::OnWrite()
 {
 	Log_Trace();
 
-	Scheduler::Reset(&connectionTimeout);
+	EventLoop::Reset(&connectionTimeout);
 	
 	TCPConn<>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
