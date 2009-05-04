@@ -138,7 +138,7 @@ void IOProcessor::Shutdown()
 {
 	close(epollfd);
 	asyncPipeOp.Close();
-
+}
 
 bool IOProcessor::Add(IOOperation* ioop)
 {
