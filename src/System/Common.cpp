@@ -92,7 +92,7 @@ const char* rprintf(const char* format, ...)
 	va_list		ap;
 	
 	va_start(ap, format);
-	vsprintf(buffer, format, ap);
+	vsnprintf(buffer, sizeof(buffer), format, ap);
 	
 	return buffer;
 }
