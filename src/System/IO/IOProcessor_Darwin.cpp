@@ -47,11 +47,7 @@ bool IOProcessor::Init(int maxfd_)
 	{
 		Log_Errno();
 	}
-	
-	// setup AIO
-	if (!AddKq(SIGIO, EVFILT_SIGNAL, NULL))
-		return false;
-	
+		
 	// setup async pipe
 	if (pipe(asyncOpPipe) < 0)
 	{
@@ -187,40 +183,29 @@ bool IOProcessor::Poll(int sleep)
 			if (events[i].flags & EV_ERROR)
 				Log_Message(strerror(events[i].data));
 			
-			if (events[i].filter == EVFILT_SIGNAL)
+			if (events[i].udata == NULL)
 			{
-				// re-register for signal notification
-				if (!AddKq(SIGIO, EVFILT_SIGNAL, NULL))
+				ProcessAsyncOp();
+
+				// re-register for notification
+				if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
 					return false;
 				
-				ProcessFileOp(&events[i]);
+				continue;
 			}
-			else
-			{
-				if (events[i].udata == NULL)
-				{
-					ProcessAsyncOp();
-
-					// re-register for notification
-					if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
-						return false;
-					
-					continue;
-				}
-				
-				ioop = (IOOperation*) events[i].udata;
-				
-				ioop->active = false;
-				
-				if (ioop && ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))
-					ProcessTCPRead(&events[i]);
-				else if (ioop && ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
-					ProcessTCPWrite(&events[i]);
-				else if (ioop && ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
-					ProcessUDPRead(&events[i]);
-				else if (ioop && ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
-					ProcessUDPWrite(&events[i]);
-			}
+			
+			ioop = (IOOperation*) events[i].udata;
+			
+			ioop->active = false;
+			
+			if (ioop && ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))
+				ProcessTCPRead(&events[i]);
+			else if (ioop && ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
+				ProcessTCPWrite(&events[i]);
+			else if (ioop && ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
+				ProcessUDPRead(&events[i]);
+			else if (ioop && ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
+				ProcessUDPWrite(&events[i]);
 		}
 	} while (nevents > 0 && wait > 0);
 	
