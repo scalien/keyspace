@@ -27,9 +27,9 @@ private:
 	Table*			test;
 	ThreadPool		cpThread;
 	bool			running;
+	MFunc<Database>	checkpoint;
 	CdownTimer		checkpointTimeout;
 	MFunc<Database>	onCheckpointTimeout;
-	MFunc<Database>	checkpoint;
 
 	void			OnCheckpointTimeout();
 	void			Checkpoint();
