@@ -2,7 +2,7 @@
 #define TIME_H
 
 #include <time.h>
-#include <sys/timeb.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -10,13 +10,13 @@
 inline uint64_t Now()
 {
 	uint64_t now;
-	struct timeb tp;
+	struct timeval tv;
 	
-    ftime(&tp);
+    gettimeofday(&tv, NULL);
 	
-	now = tp.time;
+	now = tv.tv_sec;
 	now *= 1000;
-	now += tp.millitm;
+	now += tv.tv_usec / 1000;
     
 	return now;
 }
