@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/event.h>
 #include <sys/time.h>
+#include <sys/resource.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <math.h>
