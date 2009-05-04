@@ -17,8 +17,8 @@ Database::Database() :
 env(DB_CXX_NO_EXCEPTIONS),
 cpThread(1),
 checkpoint(this, &Database::Checkpoint),
-onCheckpointTimeout(this, &Database::OnCheckpointTimeout),
-checkpointTimeout(&onCheckpointTimeout)
+checkpointTimeout(&onCheckpointTimeout),
+onCheckpointTimeout(this, &Database::OnCheckpointTimeout)
 {
 }
 
