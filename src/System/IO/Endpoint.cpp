@@ -1,5 +1,6 @@
 #include "Endpoint.h"
 #include <stdlib.h>
+#include <sys/socket.h>
 
 bool Endpoint::Set(struct sockaddr_in &sa_)
 {
