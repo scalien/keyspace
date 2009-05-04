@@ -6,7 +6,9 @@
 #endif
 #ifdef PLATFORM_DARWIN
 #include <sys/types.h>
+#ifdef IOPROCESSOR_AIO
 #include <sys/aio.h>
+#endif
 #endif
 
 #include <unistd.h>
