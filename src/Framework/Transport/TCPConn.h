@@ -127,8 +127,11 @@ void TCPConn<bufferSize>::OnWrite()
 	
 	if (writeQueue.Size() == 0)
 		writeQueue.Append(buf);
-	else	
+	else
+	{
+		delete buf;
 		WritePending();
+	}
 }
 
 template<int bufferSize>
