@@ -1,6 +1,7 @@
 #ifndef TIME_H
 #define TIME_H
 
+#include <time.h>
 #include <sys/timeb.h>
 #include <unistd.h>
 #include <stdio.h>
