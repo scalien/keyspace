@@ -80,7 +80,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 			ByteString(value.length, value.length, value.buffer));
 		n = pos - data.buffer;
 
-		Log_Message("Read *.*s", n, data.buffer);
+		Log_Message("Read %.*s", n, data.buffer);
 
 		return true;
 	}
