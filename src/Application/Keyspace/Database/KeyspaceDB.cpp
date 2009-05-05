@@ -330,9 +330,13 @@ bool KeyspaceDB::Submit()
 	// only handle writes if I'm the master
 	if (!ReplicatedLog::Get()->IsMaster())
 		return false;
+
+	Log_Message("ops.size() = %d", ops.Length());
 	
 	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster())
 		Append();
+
+	Log_Message("ops.size() = %d", ops.Length());
 	
 	return true;
 }
@@ -377,7 +381,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		ret &= table->Delete(transaction, msg.key);
 	else
 		ASSERT_FAIL();
-		
+	
 	if (ownAppend)
 	{
 		it = ops.Head();
@@ -392,8 +396,7 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 
 		}
 		ops.Remove(op);
-		op->service->OnComplete(op, ret);
-	}
+		op->service->OnComplete(op, ret);	}
 }
 
 bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
@@ -506,8 +509,12 @@ void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString
 
 	Log_Message("paxosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
 	
+	Log_Message("ops.size() = %d", ops.Length());
+	
 	if (ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
 		Append();
+		
+	Log_Message("ops.size() = %d", ops.Length());
 }
 
 void KeyspaceDB::Append()
@@ -566,16 +573,24 @@ void KeyspaceDB::FailKeyspaceOps()
 
 void KeyspaceDB::OnMasterLease(unsigned)
 {
+	Log_Message("ops.size() = %d", ops.Length());
+
 	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
 		Append();
+
+	Log_Message("ops.size() = %d", ops.Length());
 }
 
 void KeyspaceDB::OnMasterLeaseExpired()
 {
 	Log_Trace();
+
+	Log_Message("ops.size() = %d", ops.Length());
 	
 	if (!ReplicatedLog::Get()->IsMaster())
 		FailKeyspaceOps();
+		
+	Log_Message("ops.size() = %d", ops.Length());
 }
 
 void KeyspaceDB::OnDoCatchup(unsigned nodeID)
