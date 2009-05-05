@@ -25,7 +25,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 {
-	Log_Trace();
+//	Log_Trace();
 	
 	data.Clear();
 	
@@ -117,7 +117,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 
 void KeyspaceConn::OnRead()
 {
-	Log_Trace();
+//	Log_Trace();
 
 	if (connectionTimeout.IsActive())
 		EventLoop::Reset(&connectionTimeout);
@@ -128,7 +128,8 @@ void KeyspaceConn::OnRead()
 	
 	do
 	{
-		Log_Message("tcpread buffer %.*s", tcpread.data.length, tcpread.data.buffer);
+//		Log_Message("tcpread buffer %.*s", tcpread.data.length, tcpread.data.buffer);
+
 		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
 		
 		if (msglength > (unsigned) (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
@@ -146,7 +147,7 @@ void KeyspaceConn::OnRead()
 		msgbegin = nread + 1;
 		msgend = nread + 1 + msglength;
 		
-		Log_Message("%d %d %d", msgbegin, msgend, tcpread.data.length);
+//		Log_Message("%d %d %d", msgbegin, msgend, tcpread.data.length);
 
 		if ((unsigned) tcpread.data.length < msgend)
 		{
@@ -154,7 +155,8 @@ void KeyspaceConn::OnRead()
 			break;
 		}
 
-		Log_Message("Attempting Read() with %.*s", msglength, tcpread.data.buffer + msgbegin);
+//		Log_Message("Attempting Read() with %.*s", msglength, tcpread.data.buffer + msgbegin);
+		
 		if (req.Read(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)))
 			ProcessMsg();
 		else
@@ -189,7 +191,7 @@ void KeyspaceConn::Write(ByteString &bs)
 
 void KeyspaceConn::ProcessMsg()
 {
-	Log_Trace();
+//	Log_Trace();
 
 	static ByteArray<32> ba;
 	
