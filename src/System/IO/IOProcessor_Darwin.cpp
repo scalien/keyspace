@@ -319,7 +319,7 @@ void ProcessTCPWrite(struct kevent* ev)
 	
 	if (writelen > 0)
 	{
-		nwrite = write(tcpwrite->fd, tcpwrite->data.buffer, writelen);
+		nwrite = write(tcpwrite->fd, tcpwrite->data.buffer + tcpwrite->transferred, writelen);
 		if (nwrite < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)

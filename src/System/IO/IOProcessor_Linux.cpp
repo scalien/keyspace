@@ -465,7 +465,7 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 		ASSERT_FAIL();
 	}
 	
-	nwrite = write(tcpwrite->fd, tcpwrite->data.buffer, writelen);
+	nwrite = write(tcpwrite->fd, tcpwrite->data.buffer + tcpwrite->transferred, writelen);
 	if (nwrite < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
