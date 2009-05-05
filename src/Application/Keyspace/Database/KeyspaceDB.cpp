@@ -261,8 +261,6 @@ bool KeyspaceDB::IsMaster()
 
 bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 {
-	Log_Trace();
-
 	bool ret;
 	Transaction* transaction;
 
