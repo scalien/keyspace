@@ -527,11 +527,16 @@ void KeyspaceDB::Append()
 	for (it = ops.Head(); it != NULL; it = ops.Next(it))
 	{
 		op = *it;
+		
+		if (op->appended)
+			ASSERT_FAIL();
+		
 		msg.FromKeyspaceOp(op);
 		if (msg.Write(bs))
 		{
 			pvalue.length += bs.length;
-			bs.Advance(bs.length);			
+			bs.Advance(bs.length);
+			op->appended = true;
 		}
 		else
 			break;

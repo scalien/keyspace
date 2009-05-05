@@ -52,6 +52,8 @@ public:
 		DELETE
 	};
 	
+	bool					appended;
+	
 	Type					type;
 	ByteBuffer				key;
 	ByteBuffer				value;
@@ -62,6 +64,11 @@ public:
 	uint64_t				count;
 	
 	KeyspaceService*		service;
+	
+	KeyspaceOp()
+	{
+		appended = false;
+	}
 	
 	~KeyspaceOp()
 	{
