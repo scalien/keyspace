@@ -114,6 +114,6 @@ void PLeaseLearner::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_)
 
 void PLeaseLearner::CheckLease()
 {
-	if (state.expireTime < Now())
+	if (state.learned && state.expireTime < Now())
 		OnLeaseTimeout();
 }
