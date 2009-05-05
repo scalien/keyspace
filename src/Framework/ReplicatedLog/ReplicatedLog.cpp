@@ -105,19 +105,30 @@ bool ReplicatedLog::Append(ByteString &value_)
 	Log_Trace();
 	
 	if (!logQueue.Push(value_))
+	{
+		ASSERT_FAIL();
 		return false;
+	}
 	
 	if (!proposer.IsActive())
 	{
 		if (!rmsg.Init(PaxosConfig::Get()->nodeID, PaxosConfig::Get()->restartCounter,
 					   masterLease.GetLeaseEpoch(), value_))
+		{	
+			ASSERT_FAIL();
 			return false;
+		}
 		
 		if (!rmsg.Write(value))
+		{
+			ASSERT_FAIL();
 			return false;
+		}
 		
 		return proposer.Propose(value);
 	}
+	else
+		ASSERT_FAIL();
 	
 	return true;
 }
