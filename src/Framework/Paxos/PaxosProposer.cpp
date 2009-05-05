@@ -33,12 +33,20 @@ void PaxosProposer::SetPaxosID(uint64_t paxosID_)
 
 bool PaxosProposer::Propose(ByteString& value)
 {
+	Log_Trace();
+	
 	if (IsActive())
+	{
+		ASSERT_FAIL();
 		return false;
+	}
 	
 	if (!state.value.Set(value))
+	{
+		ASSERT_FAIL();
 		return false;
-
+	}
+	
 	if (state.leader && state.numProposals == 0)
 	{
 		state.numProposals++;
