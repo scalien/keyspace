@@ -505,7 +505,7 @@ void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString
 			break;
 	}
 
-	Log_Message("paxosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
+	Log_Message("pa	xosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
 	
 	Log_Message("ops.size() = %d", ops.Length());
 	
@@ -529,6 +529,8 @@ void KeyspaceDB::Append()
 	pvalue.length = 0;
 	bs = pvalue;
 
+	unsigned numAppended = 0;
+	
 	for (it = ops.Head(); it != NULL; it = ops.Next(it))
 	{
 		op = *it;
@@ -542,13 +544,17 @@ void KeyspaceDB::Append()
 			pvalue.length += bs.length;
 			bs.Advance(bs.length);
 			op->appended = true;
+			numAppended++;
 		}
 		else
 			break;
 	}
 	
 	if (pvalue.length > 0)
+	{
 		ReplicatedLog::Get()->Append(pvalue);
+		Log_Message("appending %d ops", numAppended);
+	}
 }
 
 void KeyspaceDB::FailKeyspaceOps()
