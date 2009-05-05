@@ -44,6 +44,8 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	unsigned	nread;
 	char		*pos;
 	ByteString  key, value, test;
+	
+	Log_Trace();
 		
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
 #define ReadUint64_t(num)	(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
