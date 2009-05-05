@@ -505,6 +505,8 @@ void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString
 		}
 		else
 		{
+			Log_Message("Failed parsing:");
+			Log_Message("%.*s", value.length, value.buffer);
 			ASSERT_FAIL();
 			break;
 		}
