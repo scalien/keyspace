@@ -79,6 +79,9 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 		Set(ByteString(key.length, key.length, key.buffer),
 			ByteString(value.length, value.length, value.buffer));
 		n = pos - data.buffer;
+
+		Log_Message("Read *.*s", n, data.buffer);
+
 		return true;
 	}
 	else if (type == KEYSPACE_TESTANDSET)
