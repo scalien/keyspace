@@ -548,6 +548,8 @@ void KeyspaceDB::Append()
 
 void KeyspaceDB::FailKeyspaceOps()
 {
+	Log_Trace();
+
 	KeyspaceOp	**it;
 	KeyspaceOp	*op;
 	for (it = ops.Head(); it != NULL; /* advanded in body */)
@@ -557,6 +559,9 @@ void KeyspaceDB::FailKeyspaceOps()
 		it = ops.Remove(it);
 		op->service->OnComplete(op, false);
 	}
+	
+	if (ops.Length() > 0)
+		ASSERT_FAIL();
 }
 
 void KeyspaceDB::OnMasterLease(unsigned)
