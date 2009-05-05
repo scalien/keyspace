@@ -9,17 +9,52 @@ which comes standard with most UNIX-like distributions.
 See 'man ntpd'.
 
 
-
 Building Keyspace
 =================
 
-In order to build Keyspace, you will need the following libraries:
-- BerkeleyDB C++ library (libdb4.4++-dev)
+In order to build Keyspace, you will need a working GNU C++ compiler,
+GNU make and BerkeleyDB C++ library.
 
-To build Keyspace, type 'make'.
+- Debian 4.0 
+	
+	$ sudo apt-get install g++ make libdb4.4++-dev
+
+- Debian 5.0 
+
+	$ sudo apt-get install g++ make libdb4.6++-dev
+
+- Fedora 10
+
+	$ sudo yum install gcc-c++ db4
+
+- Mac OS X 10.4 & 10.5
+
+	Install the Developer Tools from installation DVD.
+	Use a port system such as MacPorts or Fink to install Berkeley DB.
+
+	$ sudo port install db46
+
+- FreeBSD 7.2
+
+	$ cd /usr/ports/databases/db; sudo make install
+
+- OpenBSD 4.5
+
+	$ export PKG_PATH=ftp://ftp.openbsd.org/pub/OpenBSD/4.5/packages/`machine -a`
+	$ pkg_add -i db
+	
+	Select from the interactive menu.
+
+On Linux/BSD systems edit Makefile.Linux/Makefile.Darwin accordingly; 
+modify INCLUDE and LDPATH according to the location of Berkeley DB in 
+your system.
+
+To build Keyspace, type 'make' (or on FreeBSD and OpenBSD use the 
+'gmake' command). 
 
 This will create the Keyspace binary 'keyspace' in the 'bin' folder.
 
+If something went wrong, type 'make clean' before recompiling.
 
 
 Running Keyspace
@@ -48,36 +83,75 @@ Configuration options
 
 - paxos.endpoints
 
-	This must be the same on all nodes. These values define a Paxos ring.
+	This value must be the same on all nodes. These values define a 
+	Paxos ring.
 
-	The nodes use 3 consecutive port numbers for Paxos related protocols,
-	starting with the values defined here. (These are different than the
-	ports you define below such as http.port)
+	The nodes use 4 consecutive port numbers for Paxos related 
+	protocols, starting with the values defined here. (These are 
+	different than the ports you define below such as http.port, see
+	Firewall & ports info)
 
 - paxos.nodeID
 	
 	This must be different on all nodes. The first node's ID is 0, the
 	seconds' is 1 and so on.
 
+- io.maxfd
+
+	Roughly equals to the maximum number of connections the server can
+	handle.
+	
 - database.dir
 
 	The directory where the BerkeleyDB files are stored. If you run 
-	multiple instances on the same host, this must be different for all nodes.
+	multiple instances on the same host, this must be different for
+	all nodes.
 
-- database.type
+- database.pageSize
 
-	Currently unused.
+	Set the page size (in bytes) in the backend database. The default 
+	value is 4096 that offer a good trade-off between speed and disk 
+	space used. It cannot be bigger than 65536.
+
+- database.cacheSize
+
+	Set cache size in backend database.
+
+- asyncDatabase.numReader
+
+	Set the number of parallel threads that is used for servicing
+	read-type operations.
 
 - http.port
 
 	The port of the Keyspace HTTP server.  If you run  multiple instances 
 	on the same host, this must be different for all nodes.
 
-- memcached.port
-
-	The port of the Memcached server. Currently unused.
-
 - keyspace.port
 
 	The port of the Keyspace protocol. If you run  multiple instances 
 	on the same host, this must be different for all nodes.
+
+
+Firewall & ports info
+=====================
+
+Keyspace uses several ports to communicate with other nodes. These are
+the following, with relative offset to Paxos port (see Configuration
+options, paxos.endpoints regarding configuration of Paxos port).
+
+0	Paxos (tcp)
+1	PaxosLease (udp)
+2	Catchup (tcp)
+3	TimeCheck (udp)
+
+So for example you have nodes with Paxos port on 10000/tcp, you need
+to open the following ports on your firewall: 
+
+10000/tcp, 10001/udp, 10002/tcp, 10003/udp
+
+In addition the server ports, you need to open the client protocol
+ports too (see Configuration options: http.port, keyspace.port).
+
+
+
