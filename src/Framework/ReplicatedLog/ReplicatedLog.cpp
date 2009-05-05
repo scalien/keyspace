@@ -308,7 +308,8 @@ void ReplicatedLog::OnLearnChosen()
 		{
 			if (!acceptor.transaction.IsActive())
 				acceptor.transaction.Begin();
-			replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value, ownAppend && IsMaster());
+			replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value,
+				ownAppend && rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && IsMaster());
 			// client calls Append() here
 		}
 		
