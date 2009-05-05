@@ -391,8 +391,8 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 			op->value.Set(data);
 
 		}
-		op->service->OnComplete(op, ret);
 		ops.Remove(op);
+		op->service->OnComplete(op, ret);
 	}
 }
 
@@ -554,8 +554,8 @@ void KeyspaceDB::FailKeyspaceOps()
 	{
 		op = *it;
 		
-		op->service->OnComplete(op, false);
 		it = ops.Remove(it);
+		op->service->OnComplete(op, false);
 	}
 }
 

@@ -248,7 +248,6 @@ void KeyspaceConn::OnClose()
 		server->DeleteConn(this);
 }
 
-
 void KeyspaceConn::OnWrite()
 {
 	Log_Trace();
