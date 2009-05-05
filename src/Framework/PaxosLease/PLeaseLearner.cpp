@@ -57,6 +57,8 @@ void PLeaseLearner::OnLearnChosen()
 
 void PLeaseLearner::OnLeaseTimeout()
 {
+	EventLoop::Remove(&leaseTimeout);
+
 	state.OnLeaseTimeout();
 	
 	Call(onLeaseTimeoutCallback);
@@ -113,5 +115,5 @@ void PLeaseLearner::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_)
 void PLeaseLearner::CheckLease()
 {
 	if (state.expireTime < Now())
-		state.OnLeaseTimeout();
+		OnLeaseTimeout();
 }
