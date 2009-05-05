@@ -315,7 +315,7 @@ void ReplicatedLog::OnLearnChosen()
 			if (replicatedDB != NULL && IsMaster())
 				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
 		}
-		else if (replicatedDB != NULL && rmsg.value.length > 0)
+		else if (replicatedDB != NULL && rmsg.value.length > 0 && !(rmsg.value == BS_MSG_NOP))
 		{
 			if (!acceptor.transaction.IsActive())
 				acceptor.transaction.Begin();
