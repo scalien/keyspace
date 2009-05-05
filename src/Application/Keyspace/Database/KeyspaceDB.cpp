@@ -504,7 +504,10 @@ void KeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString
 				break;
 		}
 		else
+		{
+			ASSERT_FAIL();
 			break;
+		}
 	}
 
 	Log_Message("paxosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
