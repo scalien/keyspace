@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import keyspace
 
 def genString(x):
@@ -56,7 +57,6 @@ def counter(client):
 	print(str(client.get("counter")))
 
 def elapsedGet(client):
-	import time
 	starttime = time.time()
 	client.get("counter")
 	endtime = time.time()
@@ -65,7 +65,6 @@ def elapsedGet(client):
 	return elapsed
 	
 def elapsedSet(client):
-	import time
 	starttime = time.time()
 	client.set("counter", 0)
 	endtime = time.time()
@@ -82,6 +81,13 @@ def protocolError(client):
 	#print(str(client.set(genString(1000+1), "value")))
 	print(str(client.set("key", genString(1000*1000+1))))
 
+def submitTest(client):
+	client.begin()
+	for i in xrange(10000):
+		client.set("test" + str(i), i, False)
+	client.submit()
+	
+
 if __name__ == "__main__":
 	nodes=["127.0.0.1:7080"]
 	client = keyspace.KeyspaceClient(nodes, 5)
@@ -91,7 +97,8 @@ if __name__ == "__main__":
 	import time
 	starttime = time.time()
 
-	stress(client)
+	# stress(client)
+	submitTest(client)
 
 	endtime = time.time()
 	elapsed = endtime - starttime

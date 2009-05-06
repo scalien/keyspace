@@ -25,7 +25,7 @@ void PaxosLease::InitTransport()
 	
 	reader = new TransportUDPReader;
 	if (!reader->Init(PaxosConfig::Get()->port + PLEASE_PORT_OFFSET))
-		ASSERT_FAIL();
+		STOP_FAIL("cannot bind PaxosLease port", 1);
 	reader->SetOnRead(&onRead);
 	
 	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
@@ -35,7 +35,7 @@ void PaxosLease::InitTransport()
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
 		if (!writers[i]->Init(endpoint))
-			ASSERT_FAIL();
+			STOP_FAIL("cannot bind PaxosLease port", 1);
 	}	
 }
 

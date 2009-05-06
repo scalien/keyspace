@@ -1,5 +1,6 @@
 CLIENTLIB_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Client/KeyspaceClient.o \
+	$(BUILD_DIR)/Application/Keyspace/Client/keyspace_client.o \
 	$(BUILD_DIR)/System/Common.o \
 	$(BUILD_DIR)/System/Log.o \
 	$(BUILD_DIR)/System/IO/Endpoint.o \

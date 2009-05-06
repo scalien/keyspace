@@ -1,15 +1,18 @@
-#include "kdbfs.h"
+#include <stdlib.h>
+#include <fuse.h>
 
-static struct fuse_operations kdbfs_oper = {
-    .getattr	= kdbfs_getattr,
-    .readdir	= kdbfs_readdir,
-    .open		= kdbfs_open,
-    .read		= kdbfs_read,
-};
+extern struct fuse_operations kdbfs_oper;
 
 int main(int argc, char *argv[])
 {
-	// TODO fuse_main
-	return 0;
+	int ret;
+
+	umask(0);
+
+	if (argc > 1) {
+		ret = mkdir(argv[1], 0777);
+	}
+		
+	return fuse_main(argc, argv, &kdbfs_oper, NULL);
 }
 

@@ -103,7 +103,7 @@ Keyspace supports the following client commands (note the dirty-read operations 
 \item \texttt{LISTP(prefix, n)}: returns at most n keys and their values starting with \texttt{prefix}.
 \item \texttt{DIRTY-GET}: returns the value of \texttt{key}, if it exists in the database, without making any consistency guarantees about reflecting previous write operations.
 \item \texttt{DIRTY-LIST(prefix, n)}: returns at most n keys starting with \texttt{prefix}, without making any consistency guarantees about reflecting previous write operations.
-\item \texttt{DIRTY-LISTP(prefix, n)}: returns at most n keys and their values starting with \texttt{prefix}, without making any consistency guarantees about reflecting previous write operations..
+\item \texttt{DIRTY-LISTP(prefix, n)}: returns at most n keys and their values starting with \texttt{prefix}, without making any consistency guarantees about reflecting previous write operations.
 \end{itemize}
 
 \section{ Master leases }
@@ -142,7 +142,7 @@ The protocol layer passes the client commands to the KeyspaceDB module, which, i
 
 If the client submitted a safe-read operation, the node will read the value(s) from its local database and return it. If the node is not the master it will only serve dirty-read requests. Clients can initially connect to any node to find out who the master is.
 
-In terms of implementatin, Keyspace is a completely asynchronous network server. On Linux, it uses the \texttt{epoll} event notification API, while on BSD-like platforms it uses \texttt{kqueue}. Since the BDB API is not asynchronous, we use multi-threading to avoid blocking the application during database operations.
+In terms of implementation, Keyspace is a completely asynchronous network server. On Linux, it uses the \texttt{epoll} event notification API, while on BSD-like platforms it uses \texttt{kqueue}. Since the BDB API is not asynchronous, we use multi-threading to avoid blocking the application during database operations.
 
 \section{ Catchup }
 %%%%%%%%%%%%%%%%%%

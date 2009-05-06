@@ -69,7 +69,7 @@ void ReplicatedLog::InitTransport()
 	reader = new TransportUDPReader;
 #endif
 	if (!reader->Init(PaxosConfig::Get()->port))
-		ASSERT_FAIL();
+		STOP_FAIL("cannot bind Paxos port", 1);
 	reader->SetOnRead(&onRead);
 
 	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
@@ -84,7 +84,7 @@ void ReplicatedLog::InitTransport()
 #endif
 		Log_Message("Connecting to %s", endpoint.ToString());
 		if (!writers[i]->Init(endpoint))
-			ASSERT_FAIL();
+			STOP_FAIL("cannot bind PaxosLease port", 1);
 	}
 }
 

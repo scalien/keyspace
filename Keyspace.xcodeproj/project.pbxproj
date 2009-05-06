@@ -56,7 +56,6 @@
 		5481475D0F31B6B300F3D2B6 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		5481475E0F31B6B300F3D2B6 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		5481475F0F31B6B300F3D2B6 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
-		548147600F31B6B300F3D2B6 /* IOProcessor_Linux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147400F31B6B200F3D2B6 /* IOProcessor_Linux.cpp */; };
 		548147610F31B6B300F3D2B6 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
 		548147620F31B6B300F3D2B6 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
 		548147750F31B8BE00F3D2B6 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
@@ -107,6 +106,11 @@
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		9A8B41CD0FA74EE1003EA36E /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
 		9A8B41E60FA760EE003EA36E /* keyspace_client_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */; };
+		9A8B44C30FA8C17F003EA36E /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
+		9A8B44C50FA8C188003EA36E /* KeyspaceClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC69B100F9D2158003C631E /* KeyspaceClient.cpp */; };
+		9A8B44C80FA8C1E9003EA36E /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
+		9A8B44C90FA8C1F2003EA36E /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
+		9A8B461A0FA9EF12003EA36E /* kdbfs_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B46170FA9EED9003EA36E /* kdbfs_main.c */; };
 		9AC698E50F97982D003C631E /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		9AC698E60F979836003C631E /* BDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC698D40F979720003C631E /* BDBTest.cpp */; };
 		9AC698E70F9798A7003C631E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
@@ -141,15 +145,12 @@
 		9ADC9A5A0F7E78ED0025A7AB /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A765F0F7680D6003084C9 /* Cursor.cpp */; };
 		9ADC9AD30F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
-		9ADCA0800F8385580025A7AB /* Channel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA07F0F8385580025A7AB /* Channel.cpp */; };
-		9AF5010A0F83953500F7F49E /* kdbfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501090F83953500F7F49E /* kdbfs.cpp */; };
-		9AF5011A0F83A9F600F7F49E /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */; };
+		9AF5010A0F83953500F7F49E /* kdbfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501090F83953500F7F49E /* kdbfs.c */; };
 		9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
 		9AF5011F0F83A9F600F7F49E /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
 		9AF501200F83A9F600F7F49E /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
-		9AF5012D0F85198E00F7F49E /* kdbfs_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ADCA0250F82D5980025A7AB /* kdbfs_main.c */; };
 		9AF501FD0F8826A900F7F49E /* BDBTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501F10F88226400F7F49E /* BDBTool.cpp */; };
 		9AF502000F8826CC00F7F49E /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		9AF502010F8826CC00F7F49E /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
@@ -266,7 +267,6 @@
 		5481473D0F31B6B200F3D2B6 /* IOOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOOperation.h; sourceTree = "<group>"; };
 		5481473E0F31B6B200F3D2B6 /* IOProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOProcessor.h; sourceTree = "<group>"; };
 		5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Darwin.cpp; sourceTree = "<group>"; };
-		548147400F31B6B200F3D2B6 /* IOProcessor_Linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Linux.cpp; sourceTree = "<group>"; };
 		548147410F31B6B200F3D2B6 /* Socket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Socket.cpp; sourceTree = "<group>"; };
 		548147420F31B6B200F3D2B6 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		548147430F31B6B200F3D2B6 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
@@ -327,6 +327,8 @@
 		9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyspace_client.h; sourceTree = "<group>"; };
 		9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keyspace_client.cpp; sourceTree = "<group>"; };
 		9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keyspace_client_test.c; sourceTree = "<group>"; };
+		9A8B46170FA9EED9003EA36E /* kdbfs_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kdbfs_main.c; sourceTree = "<group>"; };
+		9A8B47420FAF54EB003EA36E /* IOProcessor_Linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Linux.cpp; sourceTree = "<group>"; };
 		9AC698D40F979720003C631E /* BDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBTest.cpp; sourceTree = "<group>"; };
 		9AC698DB0F9797D8003C631E /* Tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tester.cpp; sourceTree = "<group>"; };
 		9AC698E00F979809003C631E /* Tester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Tester; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -339,14 +341,12 @@
 		9ADC98480F7C00960025A7AB /* QueueTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = QueueTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkedList.h; sourceTree = "<group>"; };
 		9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventLoop.cpp; sourceTree = "<group>"; };
-		9ADCA0250F82D5980025A7AB /* kdbfs_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kdbfs_main.c; sourceTree = "<group>"; };
 		9ADCA0290F82D6EE0025A7AB /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
 		9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpClient.cpp; sourceTree = "<group>"; };
 		9ADCA04B0F82D7C90025A7AB /* Kdbfs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Kdbfs; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADCA07E0F8385580025A7AB /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
 		9ADCA07F0F8385580025A7AB /* Channel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Channel.cpp; sourceTree = "<group>"; };
-		9AF501080F83953500F7F49E /* kdbfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kdbfs.h; sourceTree = "<group>"; };
-		9AF501090F83953500F7F49E /* kdbfs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kdbfs.cpp; sourceTree = "<group>"; };
+		9AF501090F83953500F7F49E /* kdbfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kdbfs.c; sourceTree = "<group>"; };
 		9AF501F10F88226400F7F49E /* BDBTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBTool.cpp; sourceTree = "<group>"; };
 		9AF501F50F88229800F7F49E /* bdblist */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bdblist; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AF508670F8AB05300F7F49E /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
@@ -731,8 +731,8 @@
 				5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */,
 				5481473D0F31B6B200F3D2B6 /* IOOperation.h */,
 				5481473E0F31B6B200F3D2B6 /* IOProcessor.h */,
+				9A8B47420FAF54EB003EA36E /* IOProcessor_Linux.cpp */,
 				5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */,
-				548147400F31B6B200F3D2B6 /* IOProcessor_Linux.cpp */,
 				548147420F31B6B200F3D2B6 /* Socket.h */,
 				548147410F31B6B200F3D2B6 /* Socket.cpp */,
 			);
@@ -832,13 +832,12 @@
 		9ADCA0240F82D4860025A7AB /* Fuse */ = {
 			isa = PBXGroup;
 			children = (
+				9A8B46170FA9EED9003EA36E /* kdbfs_main.c */,
 				9ADCA0290F82D6EE0025A7AB /* HttpClient.h */,
 				9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */,
 				9ADCA07E0F8385580025A7AB /* Channel.h */,
 				9ADCA07F0F8385580025A7AB /* Channel.cpp */,
-				9AF501080F83953500F7F49E /* kdbfs.h */,
-				9AF501090F83953500F7F49E /* kdbfs.cpp */,
-				9ADCA0250F82D5980025A7AB /* kdbfs_main.c */,
+				9AF501090F83953500F7F49E /* kdbfs.c */,
 			);
 			path = Fuse;
 			sourceTree = "<group>";
@@ -1080,7 +1079,6 @@
 				5481475D0F31B6B300F3D2B6 /* Scheduler.cpp in Sources */,
 				5481475E0F31B6B300F3D2B6 /* Endpoint.cpp in Sources */,
 				5481475F0F31B6B300F3D2B6 /* IOProcessor_Darwin.cpp in Sources */,
-				548147600F31B6B300F3D2B6 /* IOProcessor_Linux.cpp in Sources */,
 				548147610F31B6B300F3D2B6 /* Socket.cpp in Sources */,
 				548147620F31B6B300F3D2B6 /* Log.cpp in Sources */,
 				54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */,
@@ -1227,15 +1225,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9ADCA0800F8385580025A7AB /* Channel.cpp in Sources */,
-				9AF5010A0F83953500F7F49E /* kdbfs.cpp in Sources */,
-				9AF5011A0F83A9F600F7F49E /* HttpClient.cpp in Sources */,
+				9AF5010A0F83953500F7F49E /* kdbfs.c in Sources */,
 				9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */,
 				9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */,
 				9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */,
 				9AF5011F0F83A9F600F7F49E /* Socket.cpp in Sources */,
 				9AF501200F83A9F600F7F49E /* Log.cpp in Sources */,
-				9AF5012D0F85198E00F7F49E /* kdbfs_main.c in Sources */,
+				9A8B44C30FA8C17F003EA36E /* keyspace_client.cpp in Sources */,
+				9A8B44C50FA8C188003EA36E /* KeyspaceClient.cpp in Sources */,
+				9A8B44C80FA8C1E9003EA36E /* Endpoint.cpp in Sources */,
+				9A8B44C90FA8C1F2003EA36E /* Common.cpp in Sources */,
+				9A8B461A0FA9EF12003EA36E /* kdbfs_main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1598,13 +1598,16 @@
 					"-D_FILE_OFFSET_BITS=64",
 					"-D__FreeBSD__=10",
 					"-DFUSE_USE_VERSION=26",
+					"-D__STDC_FORMAT_MACROS",
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-DPLATFORM_DARWIN",
 					"-D_FILE_OFFSET_BITS=64",
 					"-D__FreeBSD__=10",
 					"-DFUSE_USE_VERSION=26",
+					"-D__STDC_FORMAT_MACROS",
 				);
+				OTHER_LDFLAGS = "-lfuse_ino64";
 				PREBINDING = NO;
 				PRODUCT_NAME = Kdbfs;
 			};

@@ -11,9 +11,6 @@
 
 bool Socket::Create(int type_)
 {
-	int ret;
-	int	sockopt;
-	
 	if (fd >= 0)
 	{
 		Log_Message("Called Create() on existing socket");
@@ -26,16 +23,7 @@ bool Socket::Create(int type_)
 		Log_Errno();
 		return false;
 	}
-	
-	sockopt = 1;
-	ret = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(sockopt));
-	if (ret < 0)
-	{
-		Log_Errno();
-		Close();
-		return false;
-	}
-	
+		
 	type = type_;
 	listening = false;
 	
@@ -52,7 +40,14 @@ bool Socket::SetNonblocking()
 		return false;
 	}
 	
-	ret = fcntl(fd, F_SETFL, FNONBLOCK | FASYNC);
+	ret = fcntl(fd, F_GETFL, 0);
+	if (ret < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+
+	ret = fcntl(fd, F_SETFL, ret | O_NONBLOCK);
 	if (ret < 0)
 	{
 		Log_Errno();
@@ -66,6 +61,16 @@ bool Socket::Bind(int port)
 {
 	int					ret;
 	struct sockaddr_in	sa;
+	int					sockopt;
+
+	sockopt = 1;
+	ret = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(sockopt));
+	if (ret < 0)
+	{
+		Log_Errno();
+		Close();
+		return false;
+	}
 	
 	memset(&sa, 0, sizeof(sa));
 	sa.sin_port = htons((uint16_t)port);
@@ -219,24 +224,19 @@ int Socket::Send(const char* data, int count, int timeout)
 
 int Socket::Read(char* data, int count, int timeout)
 {
-	size_t		left;
 	ssize_t		nread;
 	timeval		tv;
 	fd_set		fds;
 	int			ret;
 	
-	left = count;
 again:
-	if ((nread = read(fd, data, left)) < 0)
+	if ((nread = read(fd, data, count)) < 0)
 	{
+		Log_Errno();
 		if (errno == EINTR)
 		{
 			nread = 0;
 			goto again;
-		}
-		else if (errno == EPIPE)
-		{
-			return -1;
 		}
 		else if (errno == EAGAIN)
 		{
@@ -246,10 +246,10 @@ again:
 			{
 				tv.tv_sec = timeout / 1000;
 				tv.tv_usec = (timeout % 1000) * 1000;
-				ret = select(fd + 1, &fds, NULL, NULL, &tv);
+				ret = select(fd + 1, &fds, NULL, &fds, &tv);
 			}
 			else
-				ret = select(fd + 1, &fds, NULL, NULL, NULL);
+				ret = select(fd + 1, &fds, NULL, &fds, NULL);
 
 			if (ret <= 0)
 				return -1;
@@ -259,16 +259,8 @@ again:
 		else
 			return -1;
 	}
-	else if (nread == 0)
-	{
-		// End of stream
-		return 0;
-	}
-		
-	left -= nread;
-	data += nread;
-	
-	return count - left;
+
+	return nread;
 }
 
 void Socket::Close()

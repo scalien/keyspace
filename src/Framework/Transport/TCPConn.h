@@ -68,6 +68,7 @@ protected:
 	virtual void	OnConnectTimeout();
 	
 	void			AsyncRead(bool start = true);
+	void			Append(const char* data, int count);
 	void			Write(const char* data, int count, bool flush = true);
 	void			WritePending();
 	void			Close();
@@ -167,6 +168,26 @@ void TCPConn<bufferSize>::AsyncRead(bool start)
 		IOProcessor::Add(&tcpread);
 }
 
+template<int bufferSize>
+void TCPConn<bufferSize>::Append(const char *data, int count)
+{
+	Buffer* buf;
+
+	if (!data || count == 0)
+		return;
+
+	buf = writeQueue.Tail();
+
+	if (!buf ||
+		(tcpwrite.active && writeQueue.Size() == 1) || 
+		(buf->length > 0 && buf->Remaining() < count))
+	{
+		buf = new Buffer;
+		writeQueue.Append(buf);
+	}
+
+	buf->Append(data, count);
+}
 
 template<int bufferSize>
 void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)

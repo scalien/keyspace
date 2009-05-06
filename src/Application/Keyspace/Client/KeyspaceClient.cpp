@@ -349,7 +349,7 @@ KeyspaceClient::~KeyspaceClient()
 int KeyspaceClient::ConnectMaster()
 {
 	int			master = KEYSPACE_ERROR;
-	uint64_t	starttime;
+	uint64_t	starttime = 0;
 	
 	connectMaster = true;
 	if (timeout)
@@ -698,6 +698,8 @@ int KeyspaceClient::Begin()
 int KeyspaceClient::Submit()
 {
 	ByteString	msg;
+	int			status = KEYSPACE_OK;
+	char*		colon;
 
 	if (startId == 0 || numPending == 0)
 		return KEYSPACE_OK;
@@ -717,15 +719,30 @@ int KeyspaceClient::Submit()
 		if (Read(msg) < 0)
 			return KEYSPACE_ERROR;
 		
+		colon = strnchr(msg.buffer, ':', msg.length);
+		if (!colon)
+			status = KEYSPACE_ERROR;
+		else
+		{
+			colon++;
+
+			if (colon[0] == KEYSPACECLIENT_FAILED)
+				status = KEYSPACECLIENT_FAILED;
+			else if (colon[0] == KEYSPACECLIENT_NOTMASTER)
+				status = KEYSPACE_NOTMASTER;
+			else if (colon[0] != KEYSPACECLIENT_OK)
+				status = KEYSPACE_ERROR;
+		}
+		
 		Log_Trace("%.*s", msg.length, msg.buffer);
-		readBuf.Remove(0, (msg.buffer - readBuf.buffer) + msg.length);
+		readBuf.Remove(0, msg.length);
 
 		numPending--;
 	}
 	
 	startId = 0;
 	
-	return KEYSPACE_OK;
+	return status;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -885,8 +902,8 @@ int KeyspaceClient::ReadMessage(ByteString &msg)
 
 int KeyspaceClient::Read(ByteString &msg)
 {
-	char		buf[4096];
-	int			ret;
+	char	buf[4096];
+	int		ret;
 	
 	while (true)
 	{
@@ -1009,10 +1026,6 @@ int KeyspaceClient::GetStatusResponse()
 	if (code[0] != KEYSPACECLIENT_OK)
 		return KEYSPACE_ERROR;
 	
-	colon = strnchr(msg.buffer, ':', msg.length);
-	if (!colon)
-		return KEYSPACE_ERROR;
-
 	// TODO compare ids
 	colon++;
 	cmdID = (uint64_t) strntouint64_t(colon, msg.length - (colon - msg.buffer), &nread);

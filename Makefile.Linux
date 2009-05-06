@@ -5,7 +5,9 @@
 INCLUDE = \
 	-I$(KEYSPACE_DIR)/src \
 
+LDPATH = \
+
 BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE) -D__STDC_FORMAT_MACROS
 BASE_CXXFLAGS = $(BASE_CFLAGS)
-BASE_LDFLAGS = -lpthread -ldb_cxx -lrt
+BASE_LDFLAGS = -lpthread -ldb_cxx -lrt $(LDPATH)
 SOLINK =  -Xlinker -x -rdynamic -shared -fPIC

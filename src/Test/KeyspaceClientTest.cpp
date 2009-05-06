@@ -26,13 +26,14 @@ int KeyspaceClientTest()
 	
 	IgnorePipeSignal();
 
-	Log_SetTrace(false);
+	Log_SetTrace(true);
+	Log_SetTimestamping(true);
 	
 	status = client.Init(SIZE(nodes), nodes, 10000);
 	if (status < 0)
 		return 1;
 
-/*	
+
 	// all the operations we do below are safe (not dirty) or write operations
 	// so we connect to the master
 	status = client.ConnectMaster();
@@ -51,13 +52,18 @@ int KeyspaceClientTest()
 			value.Printf("User %d", i);
 			client.Set(key, value, false);
 		}
-		client.Submit();
+		status = client.Submit();
 		
 		sw.Stop();
 		Log_SetTrace(true);
-		Log_Trace("write/sec = %lf", num / (sw.elapsed / 1000.0));
+		if (status == KEYSPACE_OK)
+			Log_Trace("write/sec = %lf", num / (sw.elapsed / 1000.0));
+		else
+			Log_Trace("failed, status = %d", status);
 	}
-*/
+
+	return 0;
+
 	sw.Start();
 	num = 100000;
 	for (int i = 0; i < num; i++)

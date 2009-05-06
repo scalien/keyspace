@@ -75,6 +75,8 @@ bool CatchupMsg::Read(ByteString data)
 	}
 	else
 		ASSERT_FAIL();
+	
+	return false;
 }
 	
 bool CatchupMsg::Write(ByteString& data)

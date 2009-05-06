@@ -28,7 +28,6 @@ static void ProcessTCPRead(struct kevent* ev);
 static void ProcessTCPWrite(struct kevent* ev);
 static void ProcessUDPRead(struct kevent* ev);
 static void ProcessUDPWrite(struct kevent* ev);
-static void ProcessFileOp(struct kevent* ev);
 
 bool IOProcessor::Init(int maxfd_)
 {
