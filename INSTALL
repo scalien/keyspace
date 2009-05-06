@@ -120,7 +120,8 @@ Configuration options
 - asyncDatabase.numReader
 
 	Set the number of parallel threads that is used for servicing
-	read-type operations.
+	read-type operations. A good value is about the number of cores
+	in your machine.
 
 - http.port
 
@@ -131,6 +132,9 @@ Configuration options
 
 	The port of the Keyspace protocol. If you run  multiple instances 
 	on the same host, this must be different for all nodes.
+
+For numeric values you may use the K, M, G suffices that mean 1024, 
+1024^2, 1024^3 respectively.
 
 
 Firewall & ports info
