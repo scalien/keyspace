@@ -6,9 +6,15 @@ import time
 
 RECONNECT_TIMEOUT=1
 
+OK = 0
+NOTMASTER = -1
+FAILED = -2
+ERROR = -3
+
 class KeyspaceException(Exception): pass
 class ConnectionException(KeyspaceException): pass
 class ProtocolException(KeyspaceException): pass
+class NotMasterException(KeyspaceException): pass
 
 class KeyspaceClient:
 	def __init__(self, nodes, timeout = None, trace = False):
@@ -20,10 +26,8 @@ class KeyspaceClient:
 		self.id = int(time.time() * 1000)
 		self.writeQueue = []
 		self.trace = trace
-		self.requests = {}
-		self.responses = {}
-		self.requestQueue = []
 		self.pendingRequest = 0
+		self.startId = 0
 		self._trace("running, id = %d" % self.id)
 		self._reconnect()
 
@@ -58,53 +62,80 @@ class KeyspaceClient:
 		self._send(msg)
 		return self._getListResponse()
 
-	def set(self, key, value):
-		msg = self._createMultiMessage("s", key, value)
+	def set(self, key, value, submit = True):
+		msg = self._createMessage("s", key, value)
+		if submit:
+			msg += self._submitMessage()
+		else:
+			self.pendingRequest += 1
+		
 		self._send(msg)
-		return self._getStatusResponse()
+		if submit:
+			return self._getStatusResponse()
 
-	def testandset(self, key, test, value):
+	def testandset(self, key, test, value, submit = True):
 		msg = self._createMessage("t", key, test, value)
+		if submit:
+			msg += self._submitMessage()
+		else:
+			self.pendingRequest += 1
+		
 		self._send(msg)
-		return self._getStatusResponse()
+		if submit:
+			return self._getStatusResponse()
 
-	def add(self, key, num):
+	def add(self, key, num, submit = True):
 		msg = self._createMessage("a", key, num)
+		if submit:
+			msg += self._submitMessage()
+		else:
+			self.pendingRequest += 1
+		
 		self._send(msg)
-		return self._getValueResponse()
+		if submit:
+			return self._getStatusResponse()
 
-	def delete(self, key):
+	def delete(self, key, sumbit = True):
 		msg = self._createMessage("d", key)
+		if submit:
+			msg += self._submitMessage()
+		else:
+			self.pendingRequest += 1
+		
 		self._send(msg)
-		return self._getStatusResponse()
+		if submit:
+			return self._getStatusResponse()
 	
 	def begin(self):
-		self.requests = {}
-		self.responses = {}
-		self.requestQueue = []
+		if self.pendingRequest > 0:
+			raise ProtocolException
+
 		self.pendingRequest = 0
-	
-	def setRequest(self, key, value):
-		req = self._createMultiMessage()
-		reqId = len(self.requestQueue)
-		self.requestQueue.append(req)
-		self.requests[self.id] = req;
-		self.responses[self.id] = "";
-		self.pendingRequest += 1
-		return reqId
-	
+		self.startId = self.id + 1
+		
 	def submit(self):
+		self._send(self._submitMessage())
+		protocolError = False
+		connectionError = False
 		while self.pendingRequest > 0:
-			try:
-				msg = self._read()
-				self._trace("response = %s" % msg)
-				token, next = self._getToken(msg)
-				token, next = self._getToken(msg, next)
-				token, next = self._getToken(msg, next)
-				id = token
-				responseFunc = self._getResponseFunc(self.requests[id])
-				
-			pass
+			msg = self._read()
+			self._trace("response = %s" % msg)
+			token, next = self._getToken(msg)
+			token, next = self._getToken(msg, next)
+			if token == "f":
+				protocolError = True
+			elif token == "n":
+				connectionError = True
+			elif token != "o":
+				protocolError = True
+		
+		self.pendingRequest = 0
+		self.startId = 0
+
+		if protocolError:
+			raise ProtocolException("")
+		if connectionError:
+			raise ConnectionException("")
 	
 	def connectMaster(self):
 		while True:
@@ -134,7 +165,7 @@ class KeyspaceClient:
 # 
 #####################################################################
 
-	def _connect(self):
+	def _connectRandom(self):
 		node = random.choice(self.nodes)
 		self._connectNode(node)
 	
@@ -155,7 +186,7 @@ class KeyspaceClient:
 	def _reconnect(self):
 		while True:
 			try:
-				self._connect()
+				self._connectRandom()
 				self._trace("connected to %s" % self.node)
 				return
 			except socket.error, e:
@@ -169,22 +200,17 @@ class KeyspaceClient:
 		self.id += 1
 		return self.id
 	
-	def _createMultiMessage(self, command, *args):
-		msg = command + ":" + str(self._getNextId())
-		for arg in args:
-			s = str(arg)
-			msg = "".join((msg, ":", self._createString(s)))
-		return msg
-
 	def _createMessage(self, command, *args):
 		msg = command + ":" + str(self._getNextId())
 		for arg in args:
 			s = str(arg)
 			msg = "".join((msg, ":", self._createString(s)))
-		return msg
+		return self._createString(msg)
+	
+	def _submitMessage(self):
+		return "1:*"
 	
 	def _send(self, msg):
-		msg = self._createString(msg) + "1:*"
 		while True:
 			try:
 				self._trace("sending: " + msg)
