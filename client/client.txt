@@ -60,3 +60,6 @@ $KEYSPACE_SOURCE/Test/keyspace_client_test.c program.
 Python API
 ==========
 
+You can find the Python client library in $KEYSPACE_ROOT/client/keyspace.py.
+For examples on how to use the API, see $KEYSPACE_ROOT/client/test.py 
+program.
