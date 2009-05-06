@@ -1,0 +1,62 @@
+Keyspace Client Application Programming Interface (API)
+=======================================================
+
+Keyspace is a replicated database, meaning that there may be more 
+than one servers running at a time from which there is only one 
+master.
+The master is distinguished because write operations (i.e. that
+modify the database) and safe read operations (i.e. that return the
+latest value consistently) can only be done on it. Dirty read 
+operations (i.e. that return values without making any consistency
+guarantees) can be done on any servers.
+Basically if your client wants to modify the database, it must be
+connected to the master. On the other hand, if you have many clients
+that have to fetch large amounts of data, you can connect to any 
+nodes and make dirty reads.
+
+Operations
+----------
+
+The Keyspace Client API supports the following commands:
+
+- GET-MASTER 
+- GET (*)
+- DIRTY-GET
+- LIST (*)
+- DIRTY-LIST
+- LISTP (*)
+- DIRTY-LISTP
+- SET (*)
+- TEST-AND-SET (*)
+- ADD (*)
+- DELETE (*)
+
+Commands marked with an asterisk (*) can only be handled by the
+master.
+
+There is an additional command used for connecting to the master:
+CONNECT-MASTER.
+
+
+
+Keyspace C API
+==============
+
+Building the C API from the Keyspace source tree:
+
+	$ make clientlib
+	
+This will create the client library (clientlib.a and clientlib.so)
+in 'bin' directory.
+
+In order to compile your program with the Keyspace C API, you have
+to add $KEYSPACE_SOURCE/Application/Keyspace/KeyspaceClient to the
+include directory and you have to include "keyspace_client.h" from
+your program.
+
+For more information regarding the C API, see the included
+$KEYSPACE_SOURCE/Test/keyspace_client_test.c program.
+
+Python API
+==========
+
