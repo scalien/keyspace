@@ -117,7 +117,7 @@ void PLeaseProposer::OnProposeResponse()
 		
 		EventLoop::Remove(&acquireLeaseTimeout);
 		
-		extendLeaseTimeout.Set(Now() + (state.expireTime - Now()) / 2);
+		extendLeaseTimeout.Set(Now() + (state.expireTime - Now()) / 4);
 		EventLoop::Reset(&extendLeaseTimeout);
 		
 		BroadcastMessage();
