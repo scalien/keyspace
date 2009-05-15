@@ -20,7 +20,7 @@ public:
 	KeyspaceDB();
 	
 	bool					Init();
-	bool					Add(KeyspaceOp* op, bool submit = true);
+	bool					Add(KeyspaceOp* op);
 	bool					Submit();
 	unsigned				GetNodeID();
 	bool					IsMasterKnown();
@@ -37,7 +37,7 @@ public:
 	virtual void			OnDoCatchup(unsigned nodeID);
 	
 private:
-	bool					AddWithoutReplicatedLog(KeyspaceOp* op, bool submit);
+	bool					AddWithoutReplicatedLog(KeyspaceOp* op);
 	void					Execute(Transaction* transaction, bool ownAppend);
 	void					Append();
 	void					FailKeyspaceOps();
@@ -51,6 +51,7 @@ private:
 	ByteArray<KEYSPACE_VAL_SIZE>data;
 	CatchupServer			catchupServer;
 	CatchupClient			catchupClient;
+	Transaction				singleTransaction;
 };
 
 #endif

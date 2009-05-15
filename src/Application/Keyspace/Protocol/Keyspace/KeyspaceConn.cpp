@@ -230,7 +230,7 @@ void KeyspaceConn::ProcessMsg()
 		return;
 	}
 	
-	if (!Add(op, false))
+	if (!Add(op))
 	{
 		delete op;
 		resp.Failed(op->cmdID);

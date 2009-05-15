@@ -259,7 +259,7 @@ bool KeyspaceDB::IsMaster()
 		return ReplicatedLog::Get()->IsMaster();
 }
 
-bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
+bool KeyspaceDB::Add(KeyspaceOp* op)
 {
 	bool ret;
 	Transaction* transaction;
@@ -269,7 +269,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 		return false;
 
 	if (PaxosConfig::Get()->numNodes == 1)
-		return AddWithoutReplicatedLog(op, submit);
+		return AddWithoutReplicatedLog(op);
 	
 	if (catchingUp)
 		return false;
@@ -312,9 +312,6 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 	
 	ops.Append(op);
 	
-	if (submit && !ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster())
-		Append();
-	
 	return true;
 }
 
@@ -323,7 +320,10 @@ bool KeyspaceDB::Submit()
 	Log_Trace();
 	
 	if (PaxosConfig::Get()->numNodes == 1)
-		return true;
+	{
+		if (singleTransaction.IsActive())
+			singleTransaction.Commit();
+	}
 	
 	// only handle writes if I'm the master
 	if (!ReplicatedLog::Get()->IsMaster())
@@ -398,37 +398,30 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		}
 }
 
-bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op, bool submit)
+bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 {
 	Log_Trace();
 	
 	bool			ret, isWrite;
 	int64_t			num;
 	unsigned		nread;
-	static Transaction*	transaction; //TODO: transaction mngmt is not limited by Paxos in the n=1 case
 	
 	isWrite = op->IsWrite();
 	
-	if (isWrite)
-	{
-		if (transaction == NULL)
-		{
-			transaction = new Transaction(table);
-			transaction->Begin();
-		}
-	}
+	if (isWrite && !singleTransaction.IsActive())
+		singleTransaction.Begin();
 	
 	ret = true;
 	if (op->IsWrite() && writePaxosID)
 	{
-		if (table->Set(transaction, "@@paxosID", "1"))
+		if (table->Set(&singleTransaction, "@@paxosID", "1"))
 			writePaxosID = false;
 	}
 	
 	if (op->IsGet())
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		ret &= table->Get(transaction, op->key, op->value);
+		ret &= table->Get(&singleTransaction, op->key, op->value);
 		op->service->OnComplete(op, ret);
 	}
 	else if (op->IsList())
@@ -441,22 +434,22 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op, bool submit)
 	else if (op->type == KeyspaceOp::SET)
 	{
 		Log_Trace();
-		ret &= table->Set(transaction, op->key, op->value);
+		ret &= table->Set(&singleTransaction, op->key, op->value);
 		Log_Trace();
 		op->service->OnComplete(op, ret);
 	}
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 	{
-		ret &= table->Get(transaction, op->key, data);
+		ret &= table->Get(&singleTransaction, op->key, data);
 		if (data == op->test)
-			ret &= table->Set(transaction, op->key, op->value);
+			ret &= table->Set(&singleTransaction, op->key, op->value);
 		else
 			ret = false;
 		op->service->OnComplete(op, ret);
 	}
 	else if (op->type == KeyspaceOp::ADD)
 	{
-		ret = table->Get(transaction, op->key, data); // read number
+		ret = table->Get(&singleTransaction, op->key, data); // read number
 		
 		if (ret)
 		{
@@ -465,7 +458,7 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op, bool submit)
 			{
 				num = num + op->num;
 				data.length = snprintf(data.buffer, data.size, "%" PRIi64 "", num); // print number
-				ret &= table->Set(transaction, op->key, data); // write number
+				ret &= table->Set(&singleTransaction, op->key, data); // write number
 				op->value.Allocate(data.length);
 				op->value.Set(data);
 			}
@@ -476,21 +469,12 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op, bool submit)
 	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
-		ret &= table->Delete(transaction, op->key);
+		ret &= table->Delete(&singleTransaction, op->key);
 		op->service->OnComplete(op, ret);
 	}
 	else
 		ASSERT_FAIL();
 
-	if (isWrite)
-	{
-		if (submit && transaction != NULL)
-		{
-			transaction->Commit();
-			delete transaction;
-			transaction = NULL;
-		}
-	}
 	return true;
 }
 
