@@ -409,7 +409,10 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 	isWrite = op->IsWrite();
 	
 	if (isWrite && !singleTransaction.IsActive())
+	{
+		singleTransaction.Set(table);
 		singleTransaction.Begin();
+	}
 	
 	ret = true;
 	if (op->IsWrite() && writePaxosID)
