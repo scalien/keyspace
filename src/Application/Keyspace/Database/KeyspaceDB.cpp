@@ -422,7 +422,7 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 	if (op->IsGet())
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		ret &= table->Get(&singleTransaction, op->key, op->value);
+		ret &= table->Get(NULL, op->key, op->value);
 		op->service->OnComplete(op, ret);
 	}
 	else if (op->IsList())
