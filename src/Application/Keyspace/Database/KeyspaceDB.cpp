@@ -269,7 +269,7 @@ bool KeyspaceDB::Add(KeyspaceOp* op, bool submit)
 		return false;
 
 	if (PaxosConfig::Get()->numNodes == 1)
-		return AddWithoutReplicatedLog(op);
+		return AddWithoutReplicatedLog(op, submit);
 	
 	if (catchingUp)
 		return false;
@@ -394,24 +394,28 @@ void KeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 
 		}
 		ops.Remove(op);
-		op->service->OnComplete(op, ret);	}
+		op->service->OnComplete(op, ret);
+		}
 }
 
-bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
+bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op, bool submit)
 {
 	Log_Trace();
 	
 	bool			ret, isWrite;
 	int64_t			num;
 	unsigned		nread;
-	Transaction*	transaction = NULL; //TODO: transaction mngmt is not limited by Paxos in the n=1 case
+	static Transaction*	transaction; //TODO: transaction mngmt is not limited by Paxos in the n=1 case
 	
 	isWrite = op->IsWrite();
 	
 	if (isWrite)
 	{
-		transaction = new Transaction(table);
-		transaction->Begin();
+		if (transaction == NULL)
+		{
+			transaction = new Transaction(table);
+			transaction->Begin();
+		}
 	}
 	
 	ret = true;
@@ -480,8 +484,12 @@ bool KeyspaceDB::AddWithoutReplicatedLog(KeyspaceOp* op)
 
 	if (isWrite)
 	{
-		transaction->Commit();
-		delete transaction;
+		if (submit && transaction != NULL)
+		{
+			transaction->Commit();
+			delete transaction;
+			transaction = NULL;
+		}
 	}
 	return true;
 }

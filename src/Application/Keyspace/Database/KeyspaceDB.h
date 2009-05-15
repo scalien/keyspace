@@ -37,7 +37,7 @@ public:
 	virtual void			OnDoCatchup(unsigned nodeID);
 	
 private:
-	bool					AddWithoutReplicatedLog(KeyspaceOp* op);
+	bool					AddWithoutReplicatedLog(KeyspaceOp* op, bool submit);
 	void					Execute(Transaction* transaction, bool ownAppend);
 	void					Append();
 	void					FailKeyspaceOps();
