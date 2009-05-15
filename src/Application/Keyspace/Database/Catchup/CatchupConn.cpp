@@ -72,6 +72,7 @@ void CatchupConn::WriteNext()
 		
 		if (!kv)
 		{
+			Log_Trace("Sending commit!");
 			msg.Commit(paxosID);
 			break;
 		}
