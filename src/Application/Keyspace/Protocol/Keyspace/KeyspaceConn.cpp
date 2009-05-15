@@ -20,7 +20,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	
 	AsyncRead();
 	
-	EventLoop::Reset(&connectionTimeout);
+//	EventLoop::Reset(&connectionTimeout);
 }
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
@@ -89,7 +89,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			
 			if (data.length > 0)
 			{
-				Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
+				//Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
 				Write(data);
 			}
 			
@@ -99,7 +99,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			{
 				resp.ListEnd(op->cmdID);
 				resp.Write(data);
-				Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
+				//Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
 				Write(data);
 			}
 		}
@@ -119,8 +119,8 @@ void KeyspaceConn::OnRead()
 {
 //	Log_Trace();
 
-	if (connectionTimeout.IsActive())
-		EventLoop::Reset(&connectionTimeout);
+//	if (connectionTimeout.IsActive())
+//		EventLoop::Reset(&connectionTimeout);
 
 	unsigned msglength, nread, msgbegin, msgend;
 	
@@ -212,6 +212,9 @@ void KeyspaceConn::ProcessMsg()
 	else if (req.type == KEYSPACECLIENT_SUBMIT)
 	{
 		kdb->Submit();
+		
+		Log_Message("numpending: %d", numpending);
+		
 		return;
 	}
 	
@@ -242,8 +245,10 @@ void KeyspaceConn::OnClose()
 {
 	Log_Trace();
 	
-	if (connectionTimeout.IsActive())
-		EventLoop::Remove(&connectionTimeout);
+	Log_Message("numpending: %d", numpending);
+	
+//	if (connectionTimeout.IsActive())
+//		EventLoop::Remove(&connectionTimeout);
 	
 	Close();
 	if (numpending == 0)
@@ -254,8 +259,8 @@ void KeyspaceConn::OnWrite()
 {
 	Log_Trace();
 
-	if (connectionTimeout.IsActive())
-		EventLoop::Reset(&connectionTimeout);
+//	if (connectionTimeout.IsActive())
+//		EventLoop::Reset(&connectionTimeout);
 	
 	TCPConn<>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
@@ -265,6 +270,8 @@ void KeyspaceConn::OnWrite()
 void KeyspaceConn::OnConnectionTimeout()
 {
 	Log_Trace();
+
+	Log_Message("numpending: %d", numpending);
 	
 	OnClose();
 }
