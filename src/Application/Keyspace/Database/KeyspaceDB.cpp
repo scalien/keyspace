@@ -123,8 +123,6 @@ public:
 	
 	void Init()
 	{
-		op->key.Free();
-		op->value.Free();
 		avc = new AsyncVisitorCallback;
 		avc->op = op;
 	}
