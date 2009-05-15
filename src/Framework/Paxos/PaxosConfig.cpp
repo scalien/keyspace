@@ -28,7 +28,8 @@ bool PaxosConfig::Init()
 			port = endpoint.GetPort();
 	}
 	
-	InitRestartCounter();
+	if (numNodes > 1)
+		InitRestartCounter();
 	
 	return true;
 }
