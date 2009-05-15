@@ -3,6 +3,7 @@
 Transaction::Transaction()
 {
 	active = false;
+	database = NULL;
 }
 
 Transaction::Transaction(Database* database_)
