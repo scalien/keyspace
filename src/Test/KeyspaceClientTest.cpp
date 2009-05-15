@@ -18,7 +18,7 @@ int KeyspaceClientTest()
 	KeyspaceClient	client;
 	int				master;
 	DynArray<128>	key;
-	DynArray<128>	value;
+	DynArray<1024>	value;
 	int64_t			num;
 	int				status;
 	KeyspaceClient::Result* result;
@@ -46,10 +46,15 @@ int KeyspaceClientTest()
 		Log_SetTrace(false);
 		sw.Start();
 		num = 10000;
+
+		value.length = 1000;
+		for (int i = 0; i < 1000; i++)
+			value.buffer[i] = '$';
+
 		for (int i = 0; i < num; i++)
 		{
 			key.Printf("user:%d", i);
-			value.Printf("User %d", i);
+//			value.Printf("User %d", i);
 			client.Set(key, value, false);
 		}
 		status = client.Submit();

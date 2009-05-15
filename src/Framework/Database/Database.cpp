@@ -27,14 +27,13 @@ Database::~Database()
 	running = false;
 	cpThread.Stop();
 	delete keyspace;
-	delete test;
 
 	env.close(0);
 }
 
 bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 {
-	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL /* | DB_THREAD*/;
+	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL | DB_THREAD;
 	int mode = 0;
 	int ret;
 	
@@ -54,7 +53,6 @@ bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 	env.set_flags(DB_LOG_AUTOREMOVE, 1);
 	
 	keyspace = new Table(this, "keyspace", pageSize);
-	test = new Table(this, "test", pageSize);
 	
 	running = true;
 	cpThread.Start();
@@ -67,9 +65,6 @@ Table* Database::GetTable(const char* name)
 {
 	if (strcmp(name, "keyspace") == 0)
 		return keyspace;
-		
-	if (strcmp(name, "test") == 0)
-		return test;
 		
 	return NULL;
 }

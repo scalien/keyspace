@@ -192,7 +192,7 @@ void TCPConn<bufferSize>::Append(const char *data, int count)
 template<int bufferSize>
 void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 {
-	Log_Trace();
+//	Log_Trace();
 	
 	if (state == DISCONNECTED)
 		return;
@@ -221,7 +221,7 @@ void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 template<int bufferSize>
 void TCPConn<bufferSize>::WritePending()
 {
-	Log_Trace();
+//	Log_Trace();
 	
 	if (state == DISCONNECTED)
 		return;

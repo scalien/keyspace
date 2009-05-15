@@ -24,7 +24,6 @@ public:
 private:
 	DbEnv			env;
 	Table*			keyspace;
-	Table*			test;
 	ThreadPool		cpThread;
 	bool			running;
 	MFunc<Database>	checkpoint;

@@ -42,8 +42,7 @@ bool Table::Iterate(Transaction* transaction, Cursor& cursor)
 
 bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &value)
 {
-	Dbt dbtKey(key.buffer, key.length);
-//	Dbt dbtValue(value.buffer, value.size);
+	Dbt dbtKey;
 	Dbt dbtValue;
 	DbTxn* txn = NULL;
 	int ret;
@@ -51,8 +50,15 @@ bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &val
 	if (transaction)
 		txn = transaction->txn;
 
-//	dbtKey.set_flags(DB_DBT_USERMEM);
-//	dbtValue.set_flags(DB_DBT_USERMEM);		
+	dbtKey.set_flags(DB_DBT_USERMEM);
+	dbtKey.set_data(key.buffer);
+	dbtKey.set_ulen(key.length);
+	dbtKey.set_size(key.length);
+	
+	dbtValue.set_flags(DB_DBT_USERMEM);
+	dbtValue.set_data(value.buffer);
+	dbtValue.set_ulen(value.size);
+	
 	ret = db->get(txn, &dbtKey, &dbtValue, 0);
 	if (ret == DB_KEYEMPTY || ret == DB_NOTFOUND)
 		return false;
@@ -61,7 +67,6 @@ bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &val
 		return false;
 
 	value.length = dbtValue.get_size();
-	memcpy(value.buffer, dbtValue.get_data(), value.length);
 	
 	return true;
 }
@@ -145,7 +150,7 @@ bool Table::Visit(TableVisitor &tv)
 		return false;
 	
 	Dbt key, value;
-	if (tv.GetKeyHint())
+	if (tv.GetKeyHint() && tv.GetKeyHint()->length > 0)
 	{
 		key.set_data(tv.GetKeyHint()->buffer);
 		key.set_size(tv.GetKeyHint()->length);

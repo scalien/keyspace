@@ -1449,9 +1449,7 @@
 					"$(inherited)",
 					/opt/local/lib/db46,
 				);
-				OTHER_CFLAGS = (
-					"-DTEST",
-				);
+				OTHER_CFLAGS = "-DTEST";
 				OTHER_CPLUSPLUSFLAGS = (
 					"-DTEST",
 					"-DPLATFORM_DARWIN",
