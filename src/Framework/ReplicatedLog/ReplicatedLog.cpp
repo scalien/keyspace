@@ -52,9 +52,6 @@ bool ReplicatedLog::Init()
 	
 	safeDB = false;
 	
-	Log_Message("appending NOP to trigger potential catchup");
-	Append(nop);
-	
 	return true;
 }
 
@@ -444,3 +441,15 @@ bool ReplicatedLog::IsSafeDB()
 {
 	return safeDB;
 }
+
+void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
+{
+	if (paxosID > learner.paxosID)
+	{
+		if (!catchupTimeout.IsActive())
+			EventLoop::Add(&catchupTimeout);
+			
+		learner.RequestChosen(nodeID);
+	}
+}
+

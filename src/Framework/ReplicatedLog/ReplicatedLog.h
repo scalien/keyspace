@@ -39,6 +39,7 @@ public:
 	void						Continue();
 	bool						IsAppending();
 	bool						IsSafeDB();
+	void						OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID);
 
 private:
 	void						InitTransport();

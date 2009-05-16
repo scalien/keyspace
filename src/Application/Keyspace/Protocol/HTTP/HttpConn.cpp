@@ -202,6 +202,7 @@ int HttpConn::ProcessGetRequest()
 			delete op;
 			RESPONSE_FAIL;
 		}
+		kdb->Submit();
 		
 		return 0;
 	}
@@ -232,6 +233,7 @@ int HttpConn::ProcessGetRequest()
 			delete op;
 			RESPONSE_FAIL;
 		}
+		kdb->Submit();
 		
 		return 0;
 	}
@@ -279,6 +281,7 @@ int HttpConn::ProcessGetRequest()
 			delete op;
 			RESPONSE_FAIL;
 		}
+		kdb->Submit();
 		
 		return 0;
 	}
@@ -345,6 +348,7 @@ int HttpConn::ProcessGetRequest()
 			delete op;
 			RESPONSE_FAIL;
 		}
+		kdb->Submit();
 		
 		return 0;
 	}
@@ -399,6 +403,7 @@ int HttpConn::ProcessGetRequest()
 			delete op;
 			RESPONSE_FAIL;
 		}
+		kdb->Submit();
 		
 		return 0;
 	}
@@ -429,6 +434,7 @@ int HttpConn::ProcessGetRequest()
 			delete op;
 			RESPONSE_FAIL;
 		}
+		kdb->Submit();
 		
 		return 0;
 	}
@@ -509,6 +515,7 @@ int HttpConn::ProcessGetRequest()
 			delete op;
 			RESPONSE_FAIL;
 		}
+		kdb->Submit();
 			
 		return 0;
 	}

@@ -48,9 +48,11 @@ void PLeaseAcceptor::OnPrepareRequest()
 	
 	Log_Message("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "", msg.paxosID,
 		ReplicatedLog::Get()->GetPaxosID());
-	
+
 	if (msg.paxosID < ReplicatedLog::Get()->GetPaxosID())
 		return; // only up-to-date nodes can become masters
+
+	ReplicatedLog::Get()->OnPaxosLeaseMsg(msg.paxosID, msg.nodeID);
 	
 	unsigned senderID = msg.nodeID;
 	
