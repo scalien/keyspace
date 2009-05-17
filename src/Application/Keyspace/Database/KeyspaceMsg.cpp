@@ -1,6 +1,7 @@
 #include "KeyspaceMsg.h"
 #include "KeyspaceService.h"
 #include <stdio.h>
+#include <inttypes.h>
 
 void KeyspaceMsg::Init(char type_)
 {

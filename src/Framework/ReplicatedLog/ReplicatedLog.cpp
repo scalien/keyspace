@@ -47,7 +47,7 @@ bool ReplicatedLog::Init()
 	masterLease.Init();
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	//if (PaxosConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
+	//if (ReplicatedConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
 		masterLease.AcquireLease();
 	
 	safeDB = false;
@@ -65,14 +65,14 @@ void ReplicatedLog::InitTransport()
 #else
 	reader = new TransportUDPReader;
 #endif
-	if (!reader->Init(PaxosConfig::Get()->port))
+	if (!reader->Init(ReplicatedConfig::Get()->GetPort()))
 		STOP_FAIL("cannot bind Paxos port", 1);
 	reader->SetOnRead(&onRead);
 
-	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
-	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
+	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * ReplicatedConfig::Get()->numNodes);
+	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
 	{
-		endpoint = PaxosConfig::Get()->endpoints[i];
+		endpoint = ReplicatedConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort());
 #if USE_TCP == 1
 		writers[i] = new TransportTCPWriter;
@@ -109,7 +109,7 @@ bool ReplicatedLog::Append(ByteString &value_)
 	
 	if (!proposer.IsActive())
 	{
-		if (!rmsg.Init(PaxosConfig::Get()->nodeID, PaxosConfig::Get()->restartCounter,
+		if (!rmsg.Init(ReplicatedConfig::Get()->nodeID, ReplicatedConfig::Get()->restartCounter,
 					   masterLease.GetLeaseEpoch(), value_))
 		{	
 			ASSERT_FAIL();
@@ -172,7 +172,7 @@ int ReplicatedLog::GetMaster()
 
 unsigned ReplicatedLog::GetNodeID()
 {
-	return PaxosConfig::Get()->nodeID;
+	return ReplicatedConfig::Get()->nodeID;
 }
 
 void ReplicatedLog::OnRead()
@@ -284,11 +284,11 @@ void ReplicatedLog::OnLearnChosen()
 		}
 
 		Log_Message("%d %d %" PRIu64 " %" PRIu64 "", rmsg.nodeID, GetNodeID(), rmsg.restartCounter,
-			PaxosConfig::Get()->restartCounter);
-		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
+			ReplicatedConfig::Get()->restartCounter);
+		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter)
 			logQueue.Pop(); // we just appended this
 
-		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter &&
+		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter &&
 			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && masterLease.IsLeaseOwner())
 		{
 			proposer.state.leader = true;
@@ -300,7 +300,7 @@ void ReplicatedLog::OnLearnChosen()
 			Log_Message("Multi paxos disabled");
 		}
 		
-		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == PaxosConfig::Get()->restartCounter)
+		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter)
 			ownAppend = true;
 		else
 			ownAppend = false;
@@ -323,7 +323,7 @@ void ReplicatedLog::OnLearnChosen()
 		
 		if (!proposer.IsActive() && logQueue.Length() > 0)
 		{
-			if (!rmsg.Init(PaxosConfig::Get()->nodeID, PaxosConfig::Get()->restartCounter,
+			if (!rmsg.Init(ReplicatedConfig::Get()->nodeID, ReplicatedConfig::Get()->restartCounter,
 						   masterLease.GetLeaseEpoch(), *(logQueue.Next())))
 				ASSERT_FAIL();
 			

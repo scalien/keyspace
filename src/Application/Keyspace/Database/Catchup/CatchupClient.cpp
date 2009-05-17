@@ -1,8 +1,8 @@
 #include "CatchupClient.h"
-#include "Framework/Paxos/PaxosConfig.h"
-#include "Application/Keyspace/Database/KeyspaceDB.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
+#include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
 
-void CatchupClient::Init(KeyspaceDB* keyspaceDB_, Table* table_)
+void CatchupClient::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 {
 	keyspaceDB = keyspaceDB_;
 	table = table_;
@@ -23,7 +23,7 @@ void CatchupClient::Start(unsigned nodeID)
 	if (!ret)
 		ASSERT_FAIL();
 
-	endpoint = PaxosConfig::Get()->endpoints[nodeID];
+	endpoint = ReplicatedConfig::Get()->endpoints[nodeID];
 	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);
 	Connect(endpoint, CATCHUP_CONNECT_TIMEOUT);
 }

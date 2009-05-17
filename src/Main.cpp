@@ -3,7 +3,8 @@
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
-#include "Application/Keyspace/Database/KeyspaceDB.h"
+#include "Application/Keyspace/Database/SingleKeyspaceDB.h"
+#include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
 #include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 #include "Application/TimeCheck/TimeCheck.h"
@@ -32,17 +33,26 @@ int main(int argc, char* argv[])
 					Config::GetIntValue("database.cacheSize", 0)))
 		STOP_FAIL("Cannot initialize database!", 1);
 	
-	if (!PaxosConfig::Get()->Init())
+	if (!ReplicatedConfig::Get()->Init())
 		STOP_FAIL("Cannot initialize paxos!", 1);
 
-	if (PaxosConfig::Get()->numNodes > 1)
+	KeyspaceDB* kdb;
+
+	if (ReplicatedConfig::Get()->numNodes > 1)
+	{
 		ReplicatedLog::Get()->Init();
-	
-	TimeCheck timeCheck;
-	if (Config::GetBoolValue("timecheck.active", true) && PaxosConfig::Get()->numNodes > 1)
-		timeCheck.Init();
-	
-	KeyspaceDB* kdb = new KeyspaceDB;
+		
+		TimeCheck timeCheck;
+		if (Config::GetBoolValue("timecheck.active", true))
+			timeCheck.Init();
+		
+		kdb = new ReplicatedKeyspaceDB;
+	}
+	else
+	{
+		kdb = new SingleKeyspaceDB;
+	}
+
 	kdb->Init();
 	
 	HttpServer protoHttp;

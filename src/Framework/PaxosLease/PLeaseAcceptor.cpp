@@ -5,7 +5,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
-#include "Framework/Paxos/PaxosConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
 
 PLeaseAcceptor::PLeaseAcceptor() :
@@ -63,15 +63,15 @@ void PLeaseAcceptor::OnPrepareRequest()
 	}
 	
 	if (msg.proposalID < state.promisedProposalID)
-		msg.PrepareResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_REJECTED);
+		msg.PrepareResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PREPARE_REJECTED);
 	else
 	{
 		state.promisedProposalID = msg.proposalID;
 
 		if (!state.accepted)
-			msg.PrepareResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
+			msg.PrepareResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
 		else
-			msg.PrepareResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
+			msg.PrepareResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
 				state.acceptedProposalID, state.acceptedLeaseOwner, state.acceptedExpireTime);
 	}
 	
@@ -101,7 +101,7 @@ void PLeaseAcceptor::OnProposeRequest()
 		STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
 
 	if (msg.proposalID < state.promisedProposalID)
-		msg.ProposeResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
+		msg.ProposeResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
 	else
 	{
 		state.accepted = true;
@@ -112,7 +112,7 @@ void PLeaseAcceptor::OnProposeRequest()
 		leaseTimeout.Set(state.acceptedExpireTime);
 		EventLoop::Reset(&leaseTimeout);
 		
-		msg.ProposeResponse(PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
+		msg.ProposeResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
 	}
 	
 	SendReply(senderID);

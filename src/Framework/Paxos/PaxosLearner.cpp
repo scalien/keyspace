@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
-#include "PaxosConfig.h"
+#include "ReplicatedConfig.h"
 #include "PaxosConsts.h"
 
 PaxosLearner::PaxosLearner()
@@ -21,7 +21,7 @@ bool PaxosLearner::RequestChosen(unsigned nodeID)
 {
 	Log_Trace();
 	
-	msg.RequestChosen(paxosID, PaxosConfig::Get()->nodeID);
+	msg.RequestChosen(paxosID, ReplicatedConfig::Get()->nodeID);
 	
 	msg.Write(wdata);
 
@@ -34,7 +34,7 @@ bool PaxosLearner::SendChosen(unsigned nodeID, uint64_t paxosID, ByteString& val
 {
 	Log_Trace();
 	
-	msg.LearnChosen(paxosID, PaxosConfig::Get()->nodeID, LEARN_VALUE, value);
+	msg.LearnChosen(paxosID, ReplicatedConfig::Get()->nodeID, LEARN_VALUE, value);
 	
 	msg.Write(wdata);
 

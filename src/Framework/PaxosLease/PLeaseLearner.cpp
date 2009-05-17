@@ -6,7 +6,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/Paxos/PaxosConsts.h"
-#include "Framework/Paxos/PaxosConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
 
 PLeaseLearner::PLeaseLearner() :
@@ -68,7 +68,7 @@ bool PLeaseLearner::IsLeaseOwner()
 {
 	CheckLease();
 	
-	if (state.learned && state.leaseOwner == PaxosConfig::Get()->nodeID && Now() < state.expireTime)
+	if (state.learned && state.leaseOwner == ReplicatedConfig::Get()->nodeID && Now() < state.expireTime)
 		return true;
 	else
 		return false;		

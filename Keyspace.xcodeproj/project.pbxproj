@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		541FBB330FA33CF100429B43 /* TimeCheck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 541FBB320FA33CF100429B43 /* TimeCheck.cpp */; };
 		541FBBCF0FA34BA800429B43 /* TimeCheckMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 541FBBCE0FA34BA800429B43 /* TimeCheckMsg.cpp */; };
-		5421D00F0F573DD7004BBDB4 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
+		5421D00F0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp */; };
 		5421D14A0F5C5ED9004BBDB4 /* PaxosProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */; };
 		5421D14E0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */; };
 		5421D3880F5EAD7F004BBDB4 /* PLeaseMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D3870F5EAD7F004BBDB4 /* PLeaseMsg.cpp */; };
@@ -24,6 +24,9 @@
 		5421E61D0F6C3F98004BBDB4 /* TransportUDPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */; };
 		5421E7E20F6D2E84004BBDB4 /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
 		5421EA7B0F6DA0D8004BBDB4 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
+		5430A5360FC04BF800AA8EC9 /* SingleKeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5350FC04BF800AA8EC9 /* SingleKeyspaceDB.cpp */; };
+		5430A5980FC0513400AA8EC9 /* AsyncListVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */; };
+		5430A67F0FC0581D00AA8EC9 /* ReplicatedConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */; };
 		54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		54460CF10F519A8000EFBBDE /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
@@ -47,7 +50,6 @@
 		5481474C0F31B6B200F3D2B6 /* UDPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147040F31B6B200F3D2B6 /* UDPEchoServer.cpp */; };
 		548147520F31B6B300F3D2B6 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
 		548147530F31B6B300F3D2B6 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
-		548147560F31B6B300F3D2B6 /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */; };
 		548147580F31B6B300F3D2B6 /* PaxosMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */; };
 		548147590F31B6B300F3D2B6 /* LogCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147280F31B6B200F3D2B6 /* LogCache.cpp */; };
 		5481475A0F31B6B300F3D2B6 /* ReplicatedLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */; };
@@ -64,8 +66,6 @@
 		54D96E9A0F9B332C005658C9 /* KeyspaceClientMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */; };
 		54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */; };
 		54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */; };
-		54D96E9D0F9B332C005658C9 /* MemcacheConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E920F9B332C005658C9 /* MemcacheConn.cpp */; };
-		54D96E9E0F9B332C005658C9 /* MemcacheServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E940F9B332C005658C9 /* MemcacheServer.cpp */; };
 		54D96EC00F9B35CB005658C9 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EB80F9B35CB005658C9 /* HttpConn.cpp */; };
 		54D96EC10F9B35CB005658C9 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EBA0F9B35CB005658C9 /* HttpRequest.cpp */; };
 		54D96EC20F9B35CB005658C9 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EBC0F9B35CB005658C9 /* HttpServer.cpp */; };
@@ -80,7 +80,7 @@
 		9A2723240F5F9D9F00EE25E2 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		9A2723270F5F9DB600EE25E2 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		9A2724310F654C5400EE25E2 /* Test.agazso.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A2724300F654C5400EE25E2 /* Test.agazso.cpp */; };
-		9A2724340F654FEA00EE25E2 /* KeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */; };
+		9A2724340F654FEA00EE25E2 /* ReplicatedKeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp */; };
 		9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
 		9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
 		9A2724660F6550E000EE25E2 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */; };
@@ -126,7 +126,6 @@
 		9ADC9A3F0F7E789B0025A7AB /* CatchupMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F30F758C3D003084C9 /* CatchupMsg.cpp */; };
 		9ADC9A400F7E789B0025A7AB /* CatchupServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A75F50F758C3D003084C9 /* CatchupServer.cpp */; };
 		9ADC9A410F7E789B0025A7AB /* PaxosLease.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D5AA0F61DE2A004BBDB4 /* PaxosLease.cpp */; };
-		9ADC9A420F7E789B0025A7AB /* PaxosConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */; };
 		9ADC9A430F7E789B0025A7AB /* PaxosMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */; };
 		9ADC9A440F7E789B0025A7AB /* PaxosProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */; };
 		9ADC9A450F7E789B0025A7AB /* PaxosAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */; };
@@ -180,7 +179,7 @@
 		541FBB320FA33CF100429B43 /* TimeCheck.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeCheck.cpp; sourceTree = "<group>"; };
 		541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeCheckMsg.h; sourceTree = "<group>"; };
 		541FBBCE0FA34BA800429B43 /* TimeCheckMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeCheckMsg.cpp; sourceTree = "<group>"; };
-		5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceDB.cpp; sourceTree = "<group>"; };
+		5421D00E0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedKeyspaceDB.cpp; sourceTree = "<group>"; };
 		5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosProposer.h; sourceTree = "<group>"; };
 		5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosProposer.cpp; sourceTree = "<group>"; };
 		5421D14C0F5C5F1B004BBDB4 /* PaxosAcceptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosAcceptor.h; sourceTree = "<group>"; };
@@ -207,6 +206,13 @@
 		5421E3EC0F6C1DD5004BBDB4 /* TransportReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportReader.h; sourceTree = "<group>"; };
 		5421E61B0F6C3F98004BBDB4 /* TransportUDPReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportUDPReader.h; sourceTree = "<group>"; };
 		5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportUDPReader.cpp; sourceTree = "<group>"; };
+		5430A5340FC04BF800AA8EC9 /* SingleKeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleKeyspaceDB.h; sourceTree = "<group>"; };
+		5430A5350FC04BF800AA8EC9 /* SingleKeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SingleKeyspaceDB.cpp; sourceTree = "<group>"; };
+		5430A53F0FC04CD900AA8EC9 /* KeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceDB.h; sourceTree = "<group>"; };
+		5430A5960FC0513400AA8EC9 /* AsyncListVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncListVisitor.h; sourceTree = "<group>"; };
+		5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncListVisitor.cpp; sourceTree = "<group>"; };
+		5430A67D0FC0581D00AA8EC9 /* ReplicatedConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedConfig.h; sourceTree = "<group>"; };
+		5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedConfig.cpp; sourceTree = "<group>"; };
 		54460CD40F5198E800EFBBDE /* AsyncDBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncDBTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncDBTest.cpp; sourceTree = "<group>"; };
 		544611F00F533FAB00EFBBDE /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOTest.cpp; sourceTree = "<group>"; };
@@ -216,7 +222,7 @@
 		544611F40F533FAB00EFBBDE /* Test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test.h; sourceTree = "<group>"; };
 		544611F50F533FAB00EFBBDE /* ThreadPoolTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPoolTest.cpp; sourceTree = "<group>"; };
 		544611F60F533FAB00EFBBDE /* UDPEchoClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPEchoClient.c; sourceTree = "<group>"; };
-		5446122C0F53488D00EFBBDE /* KeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceDB.h; sourceTree = "<group>"; };
+		5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedKeyspaceDB.h; sourceTree = "<group>"; };
 		5449D8170F91146B00F95C2F /* KeyspaceProto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KeyspaceProto.c; sourceTree = "<group>"; };
 		545C60330F7979B4006540BC /* KeyspaceService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceService.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
@@ -242,8 +248,6 @@
 		548147170F31B6B200F3D2B6 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
 		548147180F31B6B200F3D2B6 /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Table.cpp; sourceTree = "<group>"; };
 		548147190F31B6B200F3D2B6 /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
-		548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosConfig.cpp; sourceTree = "<group>"; };
-		548147210F31B6B200F3D2B6 /* PaxosConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConfig.h; sourceTree = "<group>"; };
 		548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosMsg.cpp; sourceTree = "<group>"; };
 		548147250F31B6B200F3D2B6 /* PaxosMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosMsg.h; sourceTree = "<group>"; };
 		548147260F31B6B200F3D2B6 /* PaxosState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosState.h; sourceTree = "<group>"; };
@@ -277,7 +281,6 @@
 		548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
 		54814BFE0F35084500F3D2B6 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
 		54814BFF0F35084500F3D2B6 /* Transaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Transaction.cpp; sourceTree = "<group>"; };
-		54814D450F35DD9400F3D2B6 /* ReplicatedDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedDB.h; sourceTree = "<group>"; };
 		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
 		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
 		54D96E8B0F9B332C005658C9 /* KeyspaceClientMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientMsg.cpp; sourceTree = "<group>"; };
@@ -555,8 +558,13 @@
 				545C60570F797BA3006540BC /* KeyspaceMsg.h */,
 				545C60580F797BA3006540BC /* KeyspaceMsg.cpp */,
 				545C60330F7979B4006540BC /* KeyspaceService.h */,
-				5446122C0F53488D00EFBBDE /* KeyspaceDB.h */,
-				5421D00E0F573DD7004BBDB4 /* KeyspaceDB.cpp */,
+				5430A53F0FC04CD900AA8EC9 /* KeyspaceDB.h */,
+				5430A5340FC04BF800AA8EC9 /* SingleKeyspaceDB.h */,
+				5430A5350FC04BF800AA8EC9 /* SingleKeyspaceDB.cpp */,
+				5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */,
+				5421D00E0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp */,
+				5430A5960FC0513400AA8EC9 /* AsyncListVisitor.h */,
+				5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -624,7 +632,6 @@
 				5421D3850F5EAD65004BBDB4 /* PaxosLease */,
 				5481471F0F31B6B200F3D2B6 /* Paxos */,
 				548147270F31B6B200F3D2B6 /* ReplicatedLog */,
-				54814D440F35DD7400F3D2B6 /* ReplicatedDB */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -648,8 +655,6 @@
 			isa = PBXGroup;
 			children = (
 				5421D6B10F63092E004BBDB4 /* PaxosConsts.h */,
-				548147210F31B6B200F3D2B6 /* PaxosConfig.h */,
-				548147200F31B6B200F3D2B6 /* PaxosConfig.cpp */,
 				548147250F31B6B200F3D2B6 /* PaxosMsg.h */,
 				548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */,
 				548147260F31B6B200F3D2B6 /* PaxosState.h */,
@@ -666,6 +671,8 @@
 		548147270F31B6B200F3D2B6 /* ReplicatedLog */ = {
 			isa = PBXGroup;
 			children = (
+				5430A67D0FC0581D00AA8EC9 /* ReplicatedConfig.h */,
+				5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */,
 				5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */,
 				5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */,
 				548147290F31B6B200F3D2B6 /* LogCache.h */,
@@ -737,14 +744,6 @@
 				548147410F31B6B200F3D2B6 /* Socket.cpp */,
 			);
 			path = IO;
-			sourceTree = "<group>";
-		};
-		54814D440F35DD7400F3D2B6 /* ReplicatedDB */ = {
-			isa = PBXGroup;
-			children = (
-				54814D450F35DD9400F3D2B6 /* ReplicatedDB.h */,
-			);
-			path = ReplicatedDB;
 			sourceTree = "<group>";
 		};
 		54D96E800F9B332C005658C9 /* Protocol */ = {
@@ -1070,7 +1069,6 @@
 				5481474C0F31B6B200F3D2B6 /* UDPEchoServer.cpp in Sources */,
 				548147520F31B6B300F3D2B6 /* Database.cpp in Sources */,
 				548147530F31B6B300F3D2B6 /* Table.cpp in Sources */,
-				548147560F31B6B300F3D2B6 /* PaxosConfig.cpp in Sources */,
 				548147580F31B6B300F3D2B6 /* PaxosMsg.cpp in Sources */,
 				548147590F31B6B300F3D2B6 /* LogCache.cpp in Sources */,
 				5481475A0F31B6B300F3D2B6 /* ReplicatedLog.cpp in Sources */,
@@ -1086,7 +1084,7 @@
 				9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */,
 				9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */,
 				9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */,
-				5421D00F0F573DD7004BBDB4 /* KeyspaceDB.cpp in Sources */,
+				5421D00F0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp in Sources */,
 				5421D14A0F5C5ED9004BBDB4 /* PaxosProposer.cpp in Sources */,
 				5421D14E0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp in Sources */,
 				5421D3880F5EAD7F004BBDB4 /* PLeaseMsg.cpp in Sources */,
@@ -1112,14 +1110,15 @@
 				54D96E9A0F9B332C005658C9 /* KeyspaceClientMsg.cpp in Sources */,
 				54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */,
 				54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */,
-				54D96E9D0F9B332C005658C9 /* MemcacheConn.cpp in Sources */,
-				54D96E9E0F9B332C005658C9 /* MemcacheServer.cpp in Sources */,
 				54D96EC00F9B35CB005658C9 /* HttpConn.cpp in Sources */,
 				54D96EC10F9B35CB005658C9 /* HttpRequest.cpp in Sources */,
 				54D96EC20F9B35CB005658C9 /* HttpServer.cpp in Sources */,
 				54D96EC30F9B35CB005658C9 /* IMF.cpp in Sources */,
 				541FBB330FA33CF100429B43 /* TimeCheck.cpp in Sources */,
 				541FBBCF0FA34BA800429B43 /* TimeCheckMsg.cpp in Sources */,
+				5430A5360FC04BF800AA8EC9 /* SingleKeyspaceDB.cpp in Sources */,
+				5430A5980FC0513400AA8EC9 /* AsyncListVisitor.cpp in Sources */,
+				5430A67F0FC0581D00AA8EC9 /* ReplicatedConfig.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1140,7 +1139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A2724310F654C5400EE25E2 /* Test.agazso.cpp in Sources */,
-				9A2724340F654FEA00EE25E2 /* KeyspaceDB.cpp in Sources */,
+				9A2724340F654FEA00EE25E2 /* ReplicatedKeyspaceDB.cpp in Sources */,
 				9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */,
 				9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */,
 				9A2724660F6550E000EE25E2 /* Socket.cpp in Sources */,
@@ -1161,7 +1160,6 @@
 				9ADC9A3F0F7E789B0025A7AB /* CatchupMsg.cpp in Sources */,
 				9ADC9A400F7E789B0025A7AB /* CatchupServer.cpp in Sources */,
 				9ADC9A410F7E789B0025A7AB /* PaxosLease.cpp in Sources */,
-				9ADC9A420F7E789B0025A7AB /* PaxosConfig.cpp in Sources */,
 				9ADC9A430F7E789B0025A7AB /* PaxosMsg.cpp in Sources */,
 				9ADC9A440F7E789B0025A7AB /* PaxosProposer.cpp in Sources */,
 				9ADC9A450F7E789B0025A7AB /* PaxosAcceptor.cpp in Sources */,

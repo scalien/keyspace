@@ -3,7 +3,7 @@
 
 #include "Framework/Transport/TransportReader.h"
 #include "Framework/Transport/TransportWriter.h"
-#include "Framework/Paxos/PaxosConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseProposer.h"

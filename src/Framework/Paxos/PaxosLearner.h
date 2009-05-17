@@ -7,7 +7,7 @@
 #include "Framework/Database/Transaction.h"
 #include "PaxosMsg.h"
 #include "PaxosState.h"
-#include "PaxosConfig.h"
+#include "ReplicatedConfig.h"
 
 class PaxosLearner
 {

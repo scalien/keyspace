@@ -9,12 +9,12 @@
 
 #define CATCHUP_CONNECT_TIMEOUT	2000
 
-class KeyspaceDB;
+class ReplicatedKeyspaceDB;
 
 class CatchupClient : public TCPConn<>
 {
 public:
-	void						Init(KeyspaceDB* keyspaceDB_, Table* table_);
+	void						Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_);
 
 	void						Start(unsigned nodeID);
 	void						OnRead();
@@ -31,7 +31,7 @@ private:
 	CatchupMsg					msg;
 	uint64_t					paxosID;
 	Transaction					transaction;
-	KeyspaceDB*					keyspaceDB;
+	ReplicatedKeyspaceDB*		keyspaceDB;
 };
 
 #endif

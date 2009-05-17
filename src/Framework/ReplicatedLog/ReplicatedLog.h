@@ -9,7 +9,7 @@
 #include "Framework/Paxos/PaxosAcceptor.h"
 #include "Framework/Paxos/PaxosLearner.h"
 #include "Framework/PaxosLease/PaxosLease.h"
-#include "Framework/ReplicatedDB/ReplicatedDB.h"
+#include "Framework/ReplicatedLog/ReplicatedDB.h"
 #include "ReplicatedLogMsg.h"
 #include "LogCache.h"
 #include "LogQueue.h"

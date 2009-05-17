@@ -4,7 +4,7 @@
 #include "System/Events/Timer.h"
 #include "Framework/Transport/TransportReader.h"
 #include "Framework/Transport/TransportWriter.h"
-#include "Framework/Paxos/PaxosConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "TimeCheckMsg.h"
 
 #define TIMECHECK_PORT_OFFSET	3

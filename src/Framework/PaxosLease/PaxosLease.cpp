@@ -24,14 +24,14 @@ void PaxosLease::InitTransport()
 	Endpoint	endpoint;
 	
 	reader = new TransportUDPReader;
-	if (!reader->Init(PaxosConfig::Get()->port + PLEASE_PORT_OFFSET))
+	if (!reader->Init(ReplicatedConfig::Get()->GetPort() + PLEASE_PORT_OFFSET))
 		STOP_FAIL("cannot bind PaxosLease port", 1);
 	reader->SetOnRead(&onRead);
 	
-	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * PaxosConfig::Get()->numNodes);
-	for (i = 0; i < PaxosConfig::Get()->numNodes; i++)
+	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * ReplicatedConfig::Get()->numNodes);
+	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
 	{
-		endpoint = PaxosConfig::Get()->endpoints[i];
+		endpoint = ReplicatedConfig::Get()->endpoints[i];
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
 		if (!writers[i]->Init(endpoint))

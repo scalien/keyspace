@@ -6,7 +6,7 @@
 #include "System/Events/EventLoop.h"
 #include "Framework/Database/Transaction.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
-#include "Framework/Paxos/PaxosConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
 
 PLeaseProposer::PLeaseProposer() :
@@ -44,7 +44,7 @@ void PLeaseProposer::BroadcastMessage()
 	
 	msg.Write(wdata);
 	
-	for (unsigned nodeID = 0; nodeID < PaxosConfig::Get()->numNodes; nodeID++)
+	for (unsigned nodeID = 0; nodeID < ReplicatedConfig::Get()->numNodes; nodeID++)
 		writers[nodeID]->Write(wdata);
 }
 
@@ -82,14 +82,14 @@ void PLeaseProposer::OnPrepareResponse()
 		state.leaseOwner = msg.leaseOwner;
 	}
 
-	if (numRejected >= ceil((double)(PaxosConfig::Get()->numNodes) / 2))
+	if (numRejected >= ceil((double)(ReplicatedConfig::Get()->numNodes) / 2))
 	{
 		StartPreparing();
 		return;
 	}
 	
 	// see if we have enough positive replies to advance	
-	if ((numReceived - numRejected) >= PaxosConfig::Get()->MinMajority())
+	if ((numReceived - numRejected) >= ReplicatedConfig::Get()->MinMajority())
 		StartProposing();	
 }
 
@@ -109,11 +109,11 @@ void PLeaseProposer::OnProposeResponse()
 		numAccepted++;
 
 	// see if we have enough positive replies to advance
-	if (numAccepted >= PaxosConfig::Get()->MinMajority())
+	if (numAccepted >= ReplicatedConfig::Get()->MinMajority())
 	{
 		// a majority have accepted our proposal, we have consensus
 		state.proposing = false;
-		msg.LearnChosen(PaxosConfig::Get()->nodeID, state.leaseOwner, state.expireTime);
+		msg.LearnChosen(ReplicatedConfig::Get()->nodeID, state.leaseOwner, state.expireTime);
 		
 		EventLoop::Remove(&acquireLeaseTimeout);
 		
@@ -124,7 +124,7 @@ void PLeaseProposer::OnProposeResponse()
 		return;
 	}
 	
-	if (numReceived == PaxosConfig::Get()->numNodes)
+	if (numReceived == ReplicatedConfig::Get()->numNodes)
 		StartPreparing();
 }
 
@@ -138,17 +138,17 @@ void PLeaseProposer::StartPreparing()
 
 	state.preparing = true;
 	
-	state.leaseOwner = PaxosConfig::Get()->nodeID;
+	state.leaseOwner = ReplicatedConfig::Get()->nodeID;
 	state.expireTime = Now() + MAX_LEASE_TIME;
 	
 	state.highestReceivedProposalID = 0;
 
-	state.proposalID = PaxosConfig::Get()->NextHighest(highestProposalID);
+	state.proposalID = ReplicatedConfig::Get()->NextHighest(highestProposalID);
 		
 	if (state.proposalID > highestProposalID)
 		highestProposalID = state.proposalID;
 	
-	msg.PrepareRequest(PaxosConfig::Get()->nodeID, state.proposalID, ReplicatedLog::Get()->GetPaxosID());
+	msg.PrepareRequest(ReplicatedConfig::Get()->nodeID, state.proposalID, ReplicatedLog::Get()->GetPaxosID());
 	
 	BroadcastMessage();
 }
@@ -159,13 +159,13 @@ void PLeaseProposer::StartProposing()
 	
 	state.preparing = false;
 
-	if (state.leaseOwner != PaxosConfig::Get()->nodeID)
+	if (state.leaseOwner != ReplicatedConfig::Get()->nodeID)
 		return; // no point in getting someone else a lease, wait for OnAcquireLeaseTimeout
 
 	state.proposing = true;
 
 	// acceptors get (t_e + S)
-	msg.ProposeRequest(PaxosConfig::Get()->nodeID, state.proposalID,
+	msg.ProposeRequest(ReplicatedConfig::Get()->nodeID, state.proposalID,
 		state.leaseOwner, state.expireTime + MAX_CLOCK_SKEW);
 
 	BroadcastMessage();

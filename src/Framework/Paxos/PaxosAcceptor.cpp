@@ -5,7 +5,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/Database/Transaction.h"
-#include "PaxosConfig.h"
+#include "ReplicatedConfig.h"
 #include "PaxosConsts.h"
 
 PaxosAcceptor::PaxosAcceptor() :
@@ -162,7 +162,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID,
+		msg.PrepareResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID,
 			PREPARE_REJECTED, state.promisedProposalID);
 		
 		SendReply(senderID);
@@ -172,10 +172,10 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	state.promisedProposalID = msg.proposalID;
 
 	if (!state.accepted)
-		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID,
+		msg.PrepareResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID,
 			msg.proposalID, PREPARE_CURRENTLY_OPEN);
 	else
-		msg.PrepareResponse(msg.paxosID, PaxosConfig::Get()->nodeID,
+		msg.PrepareResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID,
 			msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED, state.acceptedProposalID, state.acceptedValue);
 	
 	WriteState();
@@ -197,7 +197,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.ProposeResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
+		msg.ProposeResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
 		
 		SendReply(senderID);
 		return;
@@ -207,7 +207,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	state.acceptedProposalID = msg.proposalID;
 	if (!state.acceptedValue.Set(msg.value))
 		ASSERT_FAIL();
-	msg.ProposeResponse(msg.paxosID, PaxosConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
+	msg.ProposeResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
 	
 	WriteState();
 }
