@@ -8,7 +8,4 @@
 
 #define PAXOS_TIMEOUT				3000 // TODO: I increased this for testing
 
-#define WIDTH_NODEID				8
-#define WIDTH_RESTART_COUNTER		16
-
 #endif

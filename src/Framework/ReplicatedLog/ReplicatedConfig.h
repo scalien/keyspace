@@ -4,7 +4,10 @@
 #include <stdint.h>
 #include "System/IO/Endpoint.h"
 
-#define MAX_CELL_SIZE 256
+#define MAX_CELL_SIZE				256
+#define WIDTH_NODEID				8
+#define WIDTH_RESTART_COUNTER		16
+
 
 class ReplicatedConfig
 {
