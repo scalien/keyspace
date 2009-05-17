@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
-#include "ReplicatedConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PaxosConsts.h"
 
 PaxosLearner::PaxosLearner()

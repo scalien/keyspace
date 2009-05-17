@@ -5,7 +5,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/Database/Transaction.h"
-#include "ReplicatedConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PaxosConsts.h"
 
 PaxosAcceptor::PaxosAcceptor() :

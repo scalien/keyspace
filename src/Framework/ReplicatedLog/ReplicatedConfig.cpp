@@ -5,7 +5,7 @@
 #include "System/Config.h"
 #include "Framework/Database/Table.h"
 #include "Framework/Database/Transaction.h"
-#include "PaxosConsts.h"
+#include "Framework/Paxos/PaxosConsts.h"
 
 ReplicatedConfig config;
 

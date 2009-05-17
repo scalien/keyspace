@@ -95,7 +95,7 @@ class KeyspaceClient:
 		if submit:
 			return self._getStatusResponse()
 
-	def delete(self, key, sumbit = True):
+	def delete(self, key, submit = True):
 		msg = self._createMessage("d", key)
 		if submit:
 			msg += self._submitMessage()

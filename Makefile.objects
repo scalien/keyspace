@@ -3,7 +3,9 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Database/Catchup/CatchupServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/Catchup/CatchupConn.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/Catchup/CatchupClient.o \
-	$(BUILD_DIR)/Application/Keyspace/Database/KeyspaceDB.o \
+	$(BUILD_DIR)/Application/Keyspace/Database/AsyncListVisitor.o \
+	$(BUILD_DIR)/Application/Keyspace/Database/SingleKeyspaceDB.o \
+	$(BUILD_DIR)/Application/Keyspace/Database/ReplicatedKeyspaceDB.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/KeyspaceMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpConn.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpRequest.o \
@@ -12,10 +14,9 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceConn.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/Memcache/MemcacheConn.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/Memcache/MemcacheServer.o \
 	$(BUILD_DIR)/Application/TimeCheck/TimeCheckMsg.o \
 	$(BUILD_DIR)/Application/TimeCheck/TimeCheck.o \
+	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedConfig.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLog.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/LogQueue.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLogMsg.o \
@@ -29,7 +30,6 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Framework/Paxos/PaxosLearner.o \
 	$(BUILD_DIR)/Framework/Paxos/PaxosProposer.o \
 	$(BUILD_DIR)/Framework/Paxos/PaxosAcceptor.o \
-	$(BUILD_DIR)/Framework/Paxos/PaxosConfig.o \
 	$(BUILD_DIR)/Framework/AsyncDatabase/MultiDatabaseOp.o \
 	$(BUILD_DIR)/Framework/AsyncDatabase/AsyncDatabase.o \
 	$(BUILD_DIR)/Framework/Database/Cursor.o \
