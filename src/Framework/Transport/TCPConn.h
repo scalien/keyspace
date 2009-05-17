@@ -169,30 +169,9 @@ void TCPConn<bufferSize>::AsyncRead(bool start)
 }
 
 template<int bufferSize>
-void TCPConn<bufferSize>::Append(const char *data, int count)
-{
-	Buffer* buf;
-
-	if (!data || count == 0)
-		return;
-
-	buf = writeQueue.Tail();
-
-	if (!buf ||
-		(tcpwrite.active && writeQueue.Size() == 1) || 
-		(buf->length > 0 && buf->Remaining() < count))
-	{
-		buf = new Buffer;
-		writeQueue.Append(buf);
-	}
-
-	buf->Append(data, count);
-}
-
-template<int bufferSize>
 void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 {
-//	Log_Trace();
+	//Log_Trace();
 	
 	if (state == DISCONNECTED)
 		return;
