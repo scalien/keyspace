@@ -31,10 +31,11 @@ public:
 	bool		Set(Transaction* transaction, const char* key, const char* value);
 	
 	bool		Delete(Transaction* transaction, const ByteString &key);
+	bool		Prune(Transaction* transaction, const ByteString &prefix);
+	bool		Truncate(Transaction* transaction = NULL);
 	
 	bool		Visit(TableVisitor &tv);
 	
-	bool		Truncate(Transaction* transaction = NULL);
 private:
 	Database*	database;
 	Db*			db;

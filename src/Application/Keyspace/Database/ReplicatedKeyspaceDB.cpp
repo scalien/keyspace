@@ -155,6 +155,8 @@ void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	}
 	else if (msg.type == KEYSPACE_DELETE)
 		ret &= table->Delete(transaction, msg.key);
+	else if (msg.type == KEYSPACE_PRUNE)
+		ret &= table->Prune(transaction, msg.prefix);
 	else
 		ASSERT_FAIL();
 	

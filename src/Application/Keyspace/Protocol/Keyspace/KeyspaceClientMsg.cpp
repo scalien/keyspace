@@ -162,6 +162,25 @@ bool KeyspaceClientReq::Delete(uint64_t cmdID_, ByteString key_)
 	return true;
 }
 
+bool KeyspaceClientReq::Prune(uint64_t cmdID_, ByteString prefix_)
+{
+	if (prefix_.length > KEYSPACE_KEY_SIZE)
+		return false;
+
+	Init(KEYSPACECLIENT_PRUNE);
+	cmdID = cmdID_;
+	
+	if (prefix_.length > 0)
+	{
+		key.Reallocate(prefix_.length);
+		key.Set(prefix_);
+	}
+	else
+		key.length = 0;
+
+	return true;
+}
+
 bool KeyspaceClientReq::Submit()
 {
 	Init(KEYSPACECLIENT_SUBMIT);
@@ -320,6 +339,16 @@ bool KeyspaceClientReq::Read(ByteString data)
 		ValidateLength();
 		return Delete(cmdID, ByteString(key.length, key.length, key.buffer));
 	}
+	else if (type == KEYSPACECLIENT_PRUNE)
+	{
+		ReadUint64_t(key.length); CheckOverflow();
+		ReadSeparator(); if (key.length > 0) CheckOverflow();
+		key.buffer = pos;
+		pos += key.length;
+		
+		ValidateLength();
+		return Prune(cmdID, ByteString(key.length, key.length, key.buffer));
+	}
 	
 	return false;
 }
@@ -344,14 +373,27 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 		op->type = KeyspaceOp::TEST_AND_SET;
 	else if (type == KEYSPACECLIENT_DELETE)
 		op->type = KeyspaceOp::DELETE;
+	else if (type == KEYSPACECLIENT_PRUNE)
+		op->type = KeyspaceOp::PRUNE;
 	else if (type == KEYSPACECLIENT_ADD)
 		op->type = KeyspaceOp::ADD;
 	else
 		ASSERT_FAIL();
-		
+	
 	op->cmdID = cmdID;
 	
-	if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST ||
+	if (type == KEYSPACECLIENT_PRUNE)
+	{
+		if (key.length == 0)
+			op->prefix.length = 0;
+		else
+		{
+			if (!op->prefix.Reallocate(key.length))
+				return false;
+			op->prefix.Set(key);
+		}
+	}
+	else if (type == KEYSPACECLIENT_LIST || type == KEYSPACECLIENT_DIRTYLIST ||
 		type == KEYSPACECLIENT_LISTP || type == KEYSPACECLIENT_DIRTYLISTP)
 	{
 		if (!op->prefix.Reallocate(key.length))
@@ -379,6 +421,7 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 	}
 	if (type == KEYSPACECLIENT_ADD)
 		op->num = num;
+		
 	return true;
 }
 

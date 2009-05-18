@@ -39,6 +39,13 @@ void KeyspaceMsg::Delete(ByteString key_)
 	
 	key.Set(key_);
 }
+
+void KeyspaceMsg::Prune(ByteString prefix_)
+{
+	Init(KEYSPACE_PRUNE);
+	
+	prefix.Set(prefix_);
+}
 	
 bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 {
@@ -144,6 +151,20 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 		n = pos - data.buffer;
 		return true;
 	}
+	else if (type == KEYSPACE_PRUNE)
+	{
+		ReadUint64_t(prefix.length); CheckOverflow();
+		ReadSeparator(); if (prefix.length > 0) CheckOverflow();
+		prefix.buffer = pos;
+		pos += prefix.length;
+		
+		if (pos > data.buffer + data.length)
+			return false;
+		
+		Prune(ByteString(prefix.length, prefix.length, prefix.buffer));
+		n = pos - data.buffer;
+		return true;
+	}
 	
 	return false;
 }
@@ -167,6 +188,9 @@ bool KeyspaceMsg::Write(ByteString& data)
 	else if (type == KEYSPACE_DELETE)
 		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
 			key.length, key.length, key.buffer);
+	else if (type == KEYSPACE_PRUNE)
+		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
+			prefix.length, prefix.length, prefix.buffer);
 	else
 		return false;
 	
@@ -190,11 +214,18 @@ bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
 		Init(KEYSPACE_ADD);
 	else if (op->type == KeyspaceOp::DELETE)
 		Init(KEYSPACE_DELETE);
+	else if (op->type == KeyspaceOp::PRUNE)
+		Init(KEYSPACE_PRUNE);
 	else
 		ASSERT_FAIL();
 	
 	ret = true;
-	ret &= key.Set(op->key);
+	
+	if (op->type == KeyspaceOp::PRUNE)
+		ret &= prefix.Set(op->prefix);
+	else
+		ret &= key.Set(op->key);
+	
 	if (op->type == KeyspaceOp::SET || op->type == KeyspaceOp::TEST_AND_SET)
 		ret &= value.Set(op->value);
 	if (op->type == KeyspaceOp::TEST_AND_SET)

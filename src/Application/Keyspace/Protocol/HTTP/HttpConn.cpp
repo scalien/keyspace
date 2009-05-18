@@ -53,7 +53,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		else
 			Response(200, "Failed", strlen("Failed"));
 	}
-	else if (op->type == KeyspaceOp::DELETE)
+	else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE)
 	{
 		if (status)
 			Response(200, "OK", strlen("OK"));
@@ -93,6 +93,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 
 	if (final)
 	{
+		WritePending(); // flush data to TCP socket
 		numpending--;
 		delete op;
 		closeAfterSend = true;
@@ -428,6 +429,40 @@ int HttpConn::ProcessGetRequest()
 			return 0;
 		}
 		op->key.Set((char*) key, keylen);
+		
+		if (!Add(op))
+		{
+			delete op;
+			RESPONSE_FAIL;
+		}
+		kdb->Submit();
+		
+		return 0;
+	}
+	else if (strncmp(request.line.uri, "/prune/", strlen("/prune/")) == 0)
+	{
+		prefix = request.line.uri + strlen("/prune/");
+		prefixlen = strlen(prefix);
+		
+		if (prefixlen > KEYSPACE_KEY_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		
+		op->type = KeyspaceOp::PRUNE;
+		
+		if (prefixlen > 0)
+		{
+			if (!op->prefix.Allocate(prefixlen))
+			{
+				delete op;
+				RESPONSE_FAIL;
+				return 0;
+			}
+			op->prefix.Set((char*) prefix, prefixlen);
+		}
 		
 		if (!Add(op))
 		{

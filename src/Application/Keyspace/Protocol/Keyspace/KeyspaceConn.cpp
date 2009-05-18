@@ -59,7 +59,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 
 				resp.Write(data);
 			}
-			else if (op->type == KeyspaceOp::DELETE)
+			else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE)
 			{
 				if (status)
 					resp.Ok(op->cmdID);

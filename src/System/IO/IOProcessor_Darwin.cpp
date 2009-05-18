@@ -127,8 +127,6 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		return false;
 	}
 
-	// TODO Remove(FileOp*)
-	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 		filter = EVFILT_READ;
 	else

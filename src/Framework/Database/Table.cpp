@@ -139,6 +139,66 @@ bool Table::Delete(Transaction* transaction, const ByteString &key)
 	return true;
 }
 
+bool Table::Prune(Transaction* transaction, const ByteString &prefix)
+{
+	Dbc* cursor = NULL;
+	u_int32_t flags = DB_NEXT;
+
+	DbTxn* txn;
+	
+	if (transaction == NULL)
+		txn = NULL;
+	else
+		txn = transaction->txn;
+
+	if (db->cursor(txn, &cursor, 0) != 0)
+		return false;
+	
+	Dbt key, value;
+	if (prefix.length > 0)
+	{
+		key.set_data(prefix.buffer);
+		key.set_size(prefix.length);
+		flags = DB_SET_RANGE;		
+	}
+	
+	while (cursor->get(&key, &value, flags) == 0)
+	{
+		if (key.get_size() < prefix.length)
+			break;
+		
+		if (strncmp(prefix.buffer, (char*)key.get_data(), prefix.length) != 0)
+			break;
+		
+		// don't delete keys starting with @@
+		if (!(key.get_size() >= 2 &&
+		 ((char*)key.get_data())[0] == '@' &&
+		 ((char*)key.get_data())[1] == '@'))
+			cursor->del(0);
+
+		flags = DB_NEXT;
+	}
+	
+	if (cursor)
+		cursor->close();
+	
+	return true;
+}
+
+bool Table::Truncate(Transaction* transaction)
+{
+	u_int32_t count;
+	u_int32_t flags = 0;
+	int ret;
+	DbTxn* txn;
+	
+	txn = transaction ? transaction->txn : NULL;
+	// TODO error handling
+	ret = db->truncate(txn, &count, flags);
+	
+	return true;
+}
+
 bool Table::Visit(TableVisitor &tv)
 {
 	Dbc* cursor = NULL;
@@ -175,19 +235,4 @@ bool Table::Visit(TableVisitor &tv)
 	tv.OnComplete();
 	
 	return ret;
-}
-
-
-bool Table::Truncate(Transaction* transaction)
-{
-	u_int32_t count;
-	u_int32_t flags = 0;
-	int ret;
-	DbTxn* txn;
-	
-	txn = transaction ? transaction->txn : NULL;
-	// TODO error handling
-	ret = db->truncate(txn, &count, flags);
-	
-	return true;
 }

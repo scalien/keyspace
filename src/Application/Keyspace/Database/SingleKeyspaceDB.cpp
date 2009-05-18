@@ -114,6 +114,11 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		ret &= table->Delete(&transaction, op->key);
 		op->service->OnComplete(op, ret);
 	}
+	else if (op->type == KeyspaceOp::PRUNE)
+	{
+		ret &= table->Prune(&transaction, op->prefix);
+		op->service->OnComplete(op, ret);
+	}
 	else
 		ASSERT_FAIL();
 

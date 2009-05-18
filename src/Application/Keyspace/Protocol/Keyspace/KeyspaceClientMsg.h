@@ -14,6 +14,7 @@
 #define KEYSPACECLIENT_SET			's'
 #define KEYSPACECLIENT_TESTANDSET	't'
 #define KEYSPACECLIENT_DELETE		'd'
+#define KEYSPACECLIENT_PRUNE		'z'
 #define KEYSPACECLIENT_ADD			'a'
 #define KEYSPACECLIENT_SUBMIT		'*'
 
@@ -44,6 +45,7 @@ public:
 	bool			TestAndSet(uint64_t cmdID_, ByteString key_, ByteString test_, ByteString value_);
 	bool			Add(uint64_t cmdID_, ByteString key_, int64_t num_);
 	bool			Delete(uint64_t cmdID_, ByteString key_);
+	bool			Prune(uint64_t cmdID_, ByteString prefix_);
 	bool			Submit();
 
 	bool			Read(ByteString data);

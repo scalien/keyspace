@@ -49,7 +49,8 @@ public:
 		SET,
 		TEST_AND_SET,
 		ADD,
-		DELETE
+		DELETE,
+		PRUNE
 	};
 	
 	bool					appended;
@@ -86,7 +87,8 @@ public:
 	bool IsWrite()
 	{
 		return (type == KeyspaceOp::SET || type == KeyspaceOp::TEST_AND_SET ||
-			type == KeyspaceOp::DELETE || type == KeyspaceOp::ADD);
+			type == KeyspaceOp::DELETE || type == KeyspaceOp::ADD ||
+			type == KeyspaceOp::PRUNE);
 	}
 
 	bool IsRead()
