@@ -128,6 +128,7 @@ class KeyspaceClient:
 				connectionError = True
 			elif token != "o":
 				protocolError = True
+			self.pendingRequest -= 1
 		
 		self.pendingRequest = 0
 		self.startId = 0
