@@ -99,6 +99,7 @@ Keyspace supports the following client commands (note the dirty-read operations 
 \item \texttt{TESTANDSET(key, test, value)}: atomically changes the value of \texttt{key} to \texttt{value} if its current value is \texttt{test}.
 \item \texttt{ADD(key, a)}: treats the value of \texttt{key} as a number and atomically increments it by \texttt{a}, where \texttt{a} may be a negative number. Useful for building indexes and counters.
 \item \texttt{DELETE(key)}: deletes \texttt{key} and its value from the database.
+\item \texttt{PRUNE(prefix)}: deletes all key-value pairs where key starts with \texttt{prefix}.
 \item \texttt{LIST(prefix, n)}: returns at most n keys starting with \texttt{prefix}.
 \item \texttt{LISTP(prefix, n)}: returns at most n keys and their values starting with \texttt{prefix}.
 \item \texttt{DIRTY-GET(key)}: returns the value of \texttt{key}, if it exists in the database, without making any consistency guarantees about reflecting previous write operations.
@@ -113,7 +114,7 @@ Keyspace is a master-slave system. Any node can obtain a master lease, which is 
 
 In Keyspace, only the master node serves read and write operations. but all nodes will perform dirty-reads. The advantage is that, since all write operations go through the master, it can be sure that is has seen all write operations, thus it can safely serve read operations without contacting other nodes. This means read operations are cheap, while write operations are not more expensive. The downside is that only a single node services client requests, meaning it could become a performance bottleneck.
 
-Keyspace uses the PaxosLease protocol for master leases, a variant of Paxos which does not require disk writes during lease negotiation. PaxosLease, like similar lease algorithms have to make assumptions about clock skew on the nodes participating in the distributed algorithm. Thus servers running Keyspace are required to synhronize their clocks (eg. by using the standard Network Time Protocol (NTP) UNIX service) to guarantee clock skew is less less than $100 msec$. As a safeguard, Keyspace runs a simple TimeCheck module every minute which uses timestamped UDP messages to estimate clock skew between nodes and halts the program if the estimate exceeds the limit.
+Keyspace uses the PaxosLease protocol for master leases, a variant of Paxos which does not require disk writes during lease negotiation. PaxosLease, like similar lease algorithms have to make assumptions about clock skew on the nodes participating in the distributed algorithm. Thus servers running Keyspace are required to synchronize their clocks (eg. by using the standard Network Time Protocol (NTP) UNIX service) to guarantee clock skew is less than $100 msec$. As a safeguard, Keyspace runs a simple TimeCheck module every minute which uses timestamped UDP messages to estimate clock skew between nodes and halts the program if the estimate exceeds the limit.
 
 \section{ Architecture }
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,12 +143,12 @@ The protocol layer passes the client commands to the KeyspaceDB module, which, i
 
 If the client submitted a safe-read operation, the node will read the value(s) from its local database and return it. If the node is not the master it will only serve dirty-read requests. Clients can initially connect to any node to find out who the master is.
 
-In terms of implementation, Keyspace is a completely asynchronous network server. On Linux, it uses the \texttt{epoll} event notification API, while on BSD-like platforms it uses \texttt{kqueue}. Since the BDB API is not asynchronous, we use multi-threading to avoid blocking the application during database operations.
+In terms of implementation, Keyspace is a completely asynchronous network server. On Linux, it uses the \texttt{epoll} event notification API, while on BSD-like platforms it uses \texttt{kqueue}. Since the Berkeley DB API is not asynchronous, we use multi-threading to avoid blocking the application during database operations.
 
 \section{ Catchup }
 %%%%%%%%%%%%%%%%%%
 
-Keyspace services write requests if a majority of nodes are alive and connected. Nodes who are down or disconnected for some time and then rejoin the network need to \textit{catch up} to the rest. In Keyspace, there are two catchup-mechanisms:
+Keyspace serves write requests if a majority of nodes are alive and connected. Nodes who are down or disconnected for some time and then rejoin the network need to \textit{catch up} to the rest. In Keyspace, there are two catchup-mechanisms:
 
 \begin{enumerate}
 \item If a node has been down or disconnected for a short time (ie. only few database commands have been entered into the replicated log), it can simply fetch the missing database commands from the up-to-date nodes who cache the tail of the log.
