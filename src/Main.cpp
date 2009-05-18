@@ -37,14 +37,14 @@ int main(int argc, char* argv[])
 		STOP_FAIL("Cannot initialize paxos!", 1);
 
 	KeyspaceDB* kdb;
-
+	TimeCheck *tc;
 	if (ReplicatedConfig::Get()->numNodes > 1)
 	{
 		ReplicatedLog::Get()->Init();
 		
-		TimeCheck timeCheck;
+		tc = new TimeCheck;
 		if (Config::GetBoolValue("timecheck.active", true))
-			timeCheck.Init();
+			tc->Init();
 		
 		kdb = new ReplicatedKeyspaceDB;
 	}
