@@ -40,4 +40,6 @@ inline bool Xor(bool a, bool b) { return Xor(a, b, false); }
 
 inline unsigned NumLen(int n) { return n == 0 ? 1 : (unsigned) floor(log10(n) + 1); }
 
+int snwritef(char* buffer, unsigned size, const char* format, ...);
+
 #endif
