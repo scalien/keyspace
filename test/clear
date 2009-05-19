@@ -1,4 +1,3 @@
-rm $1/__*
-rm $1/log*
-rm $1/keyspace
-rm $1/test
+rm test/$1/__*
+rm test/$1/log*
+rm test/$1/keyspace
