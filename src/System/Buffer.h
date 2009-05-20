@@ -110,6 +110,23 @@ public:
 		return true;
 	}
 	
+	virtual bool Writef(const char* fmt, ...)
+	{
+		va_list ap;
+		
+		va_start(ap, fmt);
+		length = vsnwritef(buffer, size, fmt, ap);
+		va_end(ap);
+		
+		if (length > size)
+		{
+			length = size;
+			return false;
+		}
+		
+		return true;
+	}
+	
 	int Remaining() const
 	{
 		return size - length;
@@ -271,6 +288,25 @@ public:
 		{
 			va_start(ap, fmt);
 			length = vsnprintf(buffer, size, fmt, ap);
+			va_end(ap);
+			
+			if (length <= size)
+				return true;
+
+			Reallocate(length, false);
+		}
+		
+		return true;
+	}
+	
+	virtual bool Writef(const char* fmt, ...)
+	{
+		va_list ap;
+
+		while (true)
+		{
+			va_start(ap, fmt);
+			length = vsnwritef(buffer, size, fmt, ap);
 			va_end(ap);
 			
 			if (length <= size)
