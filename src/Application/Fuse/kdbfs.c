@@ -144,7 +144,7 @@ kdbfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		if (filelen > MAX_PATH)
 			continue;
 		
-		snprintf(file, sizeof(file), "%.*s", filelen - dirlen, pfile + dirlen);
+		snwritef(file, sizeof(file), "%B", filelen - dirlen, pfile + dirlen);
 		filler(buf, file, NULL, 0);
 		
 		kr = keyspace_result_next(kr, &status);

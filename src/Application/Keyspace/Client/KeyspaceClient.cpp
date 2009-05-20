@@ -394,8 +394,8 @@ int KeyspaceClient::GetMaster()
 	DynArray<32>	cmd;
 	ByteArray<CS_INT_SIZE(int)>	resp;
 	
-	cmd.Printf("%c:%" PRIu64 "", KEYSPACECLIENT_GETMASTER, GetNextID());
-	msg.Printf("%u:%.*s", cmd.length, cmd.length, cmd.buffer);
+	cmd.Writef("%c:%U", KEYSPACECLIENT_GETMASTER, GetNextID());
+	msg.Writef("%u:%B", cmd.length, cmd.length, cmd.buffer);
 	
 	starttime = Now();
 	while (master < 0 && (timeout == 0 || Now() - starttime < timeout))
@@ -513,7 +513,7 @@ int KeyspaceClient::List(const ByteString &prefix, uint64_t count, bool dirty)
 	if (result.id != 0)
 		return KEYSPACE_ERROR;
 	
-	scount.Printf("%" PRIu64, count);
+	scount.Writef("%U", count);
 	
 	args[0] = prefix;
 	args[1] = scount;
@@ -548,7 +548,7 @@ int KeyspaceClient::ListP(const ByteString &prefix, uint64_t count, bool dirty)
 	if (result.id != 0)
 		return KEYSPACE_ERROR;
 	
-	scount.Printf("%" PRIu64, count);
+	scount.Writef("%U", count);
 	
 	args[0] = prefix;
 	args[1] = scount;
@@ -639,7 +639,7 @@ int KeyspaceClient::Add(const ByteString &key, int64_t num, int64_t &result, boo
 	if (!submit && startId == 0)
 		return KEYSPACE_ERROR;
 
-	snum.Printf("%" PRIu64, num);
+	snum.Writef("%U", num);
 	
 	args[0] = key;
 	args[1] = snum;
@@ -822,7 +822,7 @@ int KeyspaceClient::SendMessage(char cmd, bool submit, int msgc, const ByteStrin
 	cmdID = GetNextID();
 	
 	len = 2; // command + colon
-	idlen = snprintf(idbuf, sizeof(idbuf), "%" PRIu64, cmdID);
+	idlen = snwritef(idbuf, sizeof(idbuf), "%U", cmdID);
 	len += idlen;
 	for (int i = 0; msgv && i < msgc; i++)
 		len += 1 + NumLen(msgv[i].length) + 1 + msgv[i].length;
