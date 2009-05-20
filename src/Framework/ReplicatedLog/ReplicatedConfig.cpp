@@ -64,7 +64,7 @@ void ReplicatedConfig::InitRestartCounter()
 	restartCounter++;
 	
 	baRestartCounter.length =
-		snprintf(baRestartCounter.buffer, baRestartCounter.size, "%" PRIu64 "", restartCounter);
+		snwritef(baRestartCounter.buffer, baRestartCounter.size, "%U", restartCounter);
 	
 	table->Set(&tx, "@@restartCounter", baRestartCounter);
 	tx.Commit();
