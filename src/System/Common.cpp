@@ -1,5 +1,4 @@
 #include "Common.h"
-#include <stdarg.h>
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
@@ -108,14 +107,16 @@ void* Alloc(int num, int size)
 }
 
 /*
- * snwritef is a simple snprintf replacement for working with non-null terminated strings
+ * snwritef/vsnwritef is a simple snprintf replacement for working with non-null terminated strings
  *
  * supported specifiers:
  * %%							prints the '%' character
  * %c (char)					prints a char
  * %d (int)						prints a signed int
+ * %d (unsigned)				prints an unsigned int
  * %I (int64_t)					prints a signed int64
  * %U (uint64_t)				prints an unsigned int64
+ * %s (char* p)					copries strlen(p) bytes from p to the output buffer
  * %B (int length, char* p)		copies length bytes from p to the output buffer, irrespective of \0 chars
  *
  * snwritef does not null-terminate the resulting buffer!
@@ -123,16 +124,29 @@ void* Alloc(int num, int size)
  * (if size bytes were not enough, snwritef writes size bytes and returns the
  * number of bytes that would have been required)
  */
+
 int snwritef(char* buffer, unsigned size, const char* format, ...)
+{
+	int			required;
+	va_list		ap;	
+	
+	va_start(ap, format);
+	required = vsnwritef(buffer, size, format, ap);
+	va_end(ap);
+	
+	return required;
+}
+
+int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 {
 	char		c;
 	int			d;
+	unsigned	u;
 	int			n;
 	int64_t		i64;
 	uint64_t	u64;
 	char*		p;
 	unsigned	length;
-	va_list		ap;	
 	unsigned	required;
 	char		local[64];
 	bool		ghost;
@@ -143,8 +157,6 @@ int snwritef(char* buffer, unsigned size, const char* format, ...)
 
 	ghost = false;
 	required = 0;
-
-	va_start(ap, format);
 
 	while(format[0] != '\0')
 	{
@@ -173,6 +185,15 @@ int snwritef(char* buffer, unsigned size, const char* format, ...)
 				if (ghost) n = size;
 				memcpy(buffer, local, n);
 				ADVANCE(2, n);
+			} else if (format[1] == 'u') // %u
+			{
+				u = va_arg(ap, unsigned);
+				n = snprintf(local, sizeof(local), "%u", u);
+				if (n < 0) EXIT();
+				REQUIRE(n);
+				if (ghost) n = size;
+				memcpy(buffer, local, n);
+				ADVANCE(2, n);
 			} else if (format[1] == 'I') // %i to print an int64_t 
 			{
 				i64 = va_arg(ap, int64_t);
@@ -191,6 +212,14 @@ int snwritef(char* buffer, unsigned size, const char* format, ...)
 				if (ghost) n = size;
 				memcpy(buffer, local, n);
 				ADVANCE(2, n);
+			} else if (format[1] == 's') // %s to print a string
+			{
+				p = va_arg(ap, char*);
+				length = strlen(p);
+				REQUIRE(length);
+				if (ghost) length = size;
+				memcpy(buffer, p, length);
+				ADVANCE(2, length);
 			} else if (format[1] == 'B') // %b to print a buffer
 			{
 				length = va_arg(ap, unsigned);
@@ -200,6 +229,10 @@ int snwritef(char* buffer, unsigned size, const char* format, ...)
 				memcpy(buffer, p, length);
 				ADVANCE(2, length);
 			}
+			else
+			{
+				ASSERT_FAIL();
+			}
 		}
 		else
 		{
@@ -208,8 +241,6 @@ int snwritef(char* buffer, unsigned size, const char* format, ...)
 			ADVANCE(1, (ghost ? 0 : 1));
 		}
 	}
-	
-	va_end(ap);
 	
 	return required;
 
