@@ -31,7 +31,7 @@ Database::~Database()
 	env.close(0);
 }
 
-bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
+bool Database::Init(const char* dbdir, int pageSize, int cacheSize, int logBufferSize)
 {
 	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER_FATAL | DB_THREAD;
 	int mode = 0;
@@ -46,6 +46,9 @@ bool Database::Init(const char* dbdir, int pageSize, int cacheSize)
 		env.set_cachesize(gbytes, bytes, 4);
 	}
 
+	if (logBufferSize != 0)
+		env.set_lg_bsize(logBufferSize);
+	
 	ret = env.open(dbdir, flags, mode);
 	if (ret != 0)
 		return false;

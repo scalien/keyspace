@@ -30,7 +30,8 @@ int main(int argc, char* argv[])
 		
 	if (!database.Init(Config::GetValue("database.dir", "."),
 					Config::GetIntValue("database.pageSize", 0),
-					Config::GetIntValue("database.cacheSize", 0)))
+					Config::GetIntValue("database.cacheSize", 0),
+					Config::GetIntValue("database.logCacheSize", 0)))
 		STOP_FAIL("Cannot initialize database!", 1);
 	
 	if (!ReplicatedConfig::Get()->Init())
