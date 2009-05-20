@@ -99,7 +99,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 			if (nread == (unsigned) data.length)
 			{
 				num = num + op->num;
-				data.length = snprintf(data.buffer, data.size, "%" PRIi64 "", num); // print number
+				data.length = snwritef(data.buffer, data.size, "%I", num); // print number
 				ret &= table->Set(&transaction, op->key, data); // write number
 				op->value.Allocate(data.length);
 				op->value.Set(data);

@@ -146,7 +146,7 @@ void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 			if (nread == (unsigned) data.length)
 			{
 				num = num + msg.num;
-				data.length = snprintf(data.buffer, data.size, "%" PRIi64 "", num); // print number
+				data.length = snwritef(data.buffer, data.size, "%I", num); // print number
 				ret &= table->Set(transaction, msg.key, data); // write number
 			}
 			else

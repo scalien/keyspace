@@ -171,35 +171,34 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 
 bool KeyspaceMsg::Write(ByteString& data)
 {
-	unsigned required;
+	int required;
 	
 	if (type == KEYSPACE_SET)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%d:%.*s", type,
+		required = snwritef(data.buffer, data.size, "%c:%d:%B:%d:%B", type,
 			key.length, key.length, key.buffer,
 			value.length, value.length, value.buffer);
 	else if (type == KEYSPACE_TESTANDSET)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%d:%.*s:%d:%.*s", type,
+		required = snwritef(data.buffer, data.size, "%c:%d:%B:%d:%B:%d:%B", type,
 			key.length, key.length, key.buffer,
 			test.length, test.length, test.buffer,
 			value.length, value.length, value.buffer);
 	else if (type == KEYSPACE_ADD)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%" PRIi64 "", type,
+		required = snwritef(data.buffer, data.size, "%c:%d:%B:%I", type,
 			key.length, key.length, key.buffer, num);
 	else if (type == KEYSPACE_DELETE)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
+		required = snwritef(data.buffer, data.size, "%c:%d:%B", type,
 			key.length, key.length, key.buffer);
 	else if (type == KEYSPACE_PRUNE)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s", type,
+		required = snwritef(data.buffer, data.size, "%c:%d:%B", type,
 			prefix.length, prefix.length, prefix.buffer);
 	else
 		return false;
 	
-	if (required > data.size)
+	if (required < 0 || (unsigned)required > data.size)
 		return false;
 		
 	data.length = required;
 	return true;
-
 }
 
 bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
