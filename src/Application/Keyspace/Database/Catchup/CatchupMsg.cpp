@@ -81,17 +81,17 @@ bool CatchupMsg::Read(ByteString data)
 	
 bool CatchupMsg::Write(ByteString& data)
 {
-	unsigned required;
+	int required;
 	
 	if (type == KEY_VALUE)
-		required = snprintf(data.buffer, data.size, "%c:%d:%.*s:%d:%.*s", type,
+		required = snwritef(data.buffer, data.size, "%c:%d:%B:%d:%B", type,
 			key.length, key.length, key.buffer, value.length, value.length, value.buffer);
 	else if (type == CATCHUP_COMMIT)
-		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 "", type, paxosID);
+		required = snwritef(data.buffer, data.size, "%c:%U", type, paxosID);
 	else
 		return false;
 	
-	if (required > data.size)
+	if (required < 0 || (unsigned)required > data.size)
 		return false;
 		
 	data.length = required;
