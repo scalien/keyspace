@@ -28,9 +28,24 @@ void PLeaseProposer::Init(TransportWriter** writers_)
 
 void PLeaseProposer::AcquireLease()
 {
+	Log_Trace();
+	
 	EventLoop::Remove(&extendLeaseTimeout);
 	
 	if (!(state.preparing || state.proposing))
+		StartPreparing();
+}
+
+void PLeaseProposer::OnNewPaxosRound()
+{
+	// since PaxosLease msgs carry the paxosID, and nodes
+	// won't reply if their paxosID is larges than the msg's
+	// if the paxosID increases we must restart the
+	// PaxosLease round, if it's active
+	
+	Log_Trace();
+	
+	if (acquireLeaseTimeout.active)
 		StartPreparing();
 }
 
@@ -119,7 +134,7 @@ void PLeaseProposer::OnProposeResponse()
 		
 		extendLeaseTimeout.Set(Now() + (state.expireTime - Now()) / 4);
 		EventLoop::Reset(&extendLeaseTimeout);
-		
+	
 		BroadcastMessage();
 		return;
 	}
