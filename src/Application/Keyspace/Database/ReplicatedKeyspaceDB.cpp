@@ -6,6 +6,7 @@
 #include "System/Log.h"
 #include "System/Common.h"
 #include "AsyncListVisitor.h"
+#include "Stopwatch.h"
 
 ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
 {
@@ -175,7 +176,7 @@ void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		}
 		ops.Remove(op);
 		op->service->OnComplete(op, ret);
-		}
+	}
 }
 
 void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString value, bool ownAppend)
@@ -183,13 +184,19 @@ void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, 
 	unsigned numOps, nread;
 
 	Log_Message("length: %d", value.length);
-
+	
+	Stopwatch sw1, sw2;
+	
 	numOps = 0;
 	while (true)
 	{
+		sw1.Start();
 		if (msg.Read(value, nread))
 		{
+			sw1.Stop();
+			sw2.Start();
 			Execute(transaction, ownAppend);
+			sw2.Stop();
 			value.Advance(nread);
 			numOps++;
 			if (value.length == 0)
@@ -203,6 +210,9 @@ void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, 
 			break;
 		}
 	}
+	
+	Log_Message("time spent in msg.Read(): %ld", sw1.elapsed);
+	Log_Message("time spent in Execute(): %ld", sw2.elapsed);
 
 	Log_Message("paxosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
 	
