@@ -183,7 +183,7 @@ void KeyspaceConn::Write(ByteString &bs)
 {
 	static ByteArray<64> prefix;
 	
-	prefix.length = snprintf(prefix.buffer, prefix.size, "%d:", bs.length);
+	prefix.length = snwritef(prefix.buffer, prefix.size, "%d:", bs.length);
 
 	TCPConn<>::Write(prefix.buffer, prefix.length, false);
 	TCPConn<>::Write(bs.buffer, bs.length);
@@ -202,7 +202,7 @@ void KeyspaceConn::ProcessMsg()
 			resp.Failed(req.cmdID);
 		else
 		{
-			ba.length = snprintf(ba.buffer, ba.size, "%d", master);
+			ba.length = snwritef(ba.buffer, ba.size, "%d", master);
 			resp.Ok(req.cmdID, ba);
 		}
 		resp.Write(data);

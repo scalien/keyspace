@@ -484,21 +484,21 @@ void KeyspaceClientResp::ListEnd(uint64_t cmdID_)
 
 bool KeyspaceClientResp::Write(ByteString& data)
 {
-	unsigned required;
+	int required;
 	
 	if (key.length > 0 && value.length > 0)
-		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s:%d:%.*s",
+		required = snwritef(data.buffer, data.size, "%c:%U:%d:%B:%d:%B",
 			type, cmdID, key.length, key.length, key.buffer, value.length, value.length, value.buffer);
 	else if (key.length > 0)
-		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s",
+		required = snwritef(data.buffer, data.size, "%c:%U:%d:%B",
 			type, cmdID, key.length, key.length, key.buffer);
 	else if (value.length > 0)
-		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 ":%d:%.*s",
+		required = snwritef(data.buffer, data.size, "%c:%U:%d:%B",
 			type, cmdID, value.length, value.length, value.buffer);
 	else
-		required = snprintf(data.buffer, data.size, "%c:%" PRIu64 "", type, cmdID);
+		required = snwritef(data.buffer, data.size, "%c:%U", type, cmdID);
 	
-	if (required > data.size)
+	if (required < 0 || (unsigned)required > data.size)
 		return false;
 		
 	data.length = required;
