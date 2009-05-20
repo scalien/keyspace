@@ -104,3 +104,8 @@ void PaxosLease::Continue()
 {
 	reader->Continue();
 }
+
+void PaxosLease::OnNewPaxosRound()
+{
+	proposer.OnNewPaxosRound();
+}

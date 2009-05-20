@@ -28,6 +28,7 @@ public:
 	void				SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback);
 	void				Stop();
 	void				Continue();
+	void				OnNewPaxosRound();
 	
 private:
 	void				InitTransport();
