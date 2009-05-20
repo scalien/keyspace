@@ -586,7 +586,7 @@ void HttpConn::Response(int code, const char* data, int len, bool close, const c
 	unsigned size;
 
 	do {
-		size = snprintf(httpHeader.buffer, httpHeader.size,
+		size = snwritef(httpHeader.buffer, httpHeader.size,
 					"%s %d %s" CS_CRLF
 					"Accept-Range: bytes" CS_CRLF
 					"Content-Length: %d" CS_CRLF
@@ -616,7 +616,7 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 	unsigned size;
 
 	do {
-		size = snprintf(httpHeader.buffer, httpHeader.size,
+		size = snwritef(httpHeader.buffer, httpHeader.size,
 					"%s %d %s" CS_CRLF
 					"Cache-Control: no-cache" CS_CRLF
 					"%s"
