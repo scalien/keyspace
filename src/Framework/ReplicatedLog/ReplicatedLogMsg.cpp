@@ -46,15 +46,15 @@ bool ReplicatedLogMsg::Read(ByteString& data)
 
 bool ReplicatedLogMsg::Write(ByteString& data)
 {
-	unsigned required;
+	int required;
 	
-	required = snprintf(data.buffer, data.size, "%d|%" PRIu64 "|%" PRIu64 "|%d|%.*s",
+	required = snwritef(data.buffer, data.size, "%d|%U|%U|%d|%B",
 			nodeID, restartCounter, leaseEpoch,
 			value.length, value.length, value.buffer);
 	
-	if (required > data.size)
+	if (required < 0 || (unsigned)required > data.size)
 		return false;
-		
+	
 	data.length = required;
 	return true;
 }
