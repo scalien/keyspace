@@ -395,6 +395,8 @@ void ReplicatedLog::NewPaxosRound()
 
 	learner.paxosID++;
 	learner.state.Init();
+	
+	masterLease.OnNewPaxosRound();
 }
 
 void ReplicatedLog::OnCatchupTimeout()
