@@ -151,60 +151,51 @@ bool IOProcessor::Poll(int sleep)
 {
 #define	MAX_KEVENTS 1
 	
-	uint64_t				called;
-	int						i, nevents, wait;
+	int						i, nevents;
 	static struct kevent	events[MAX_KEVENTS];
 	struct timespec			timeout;
 	IOOperation*			ioop;
 	
-	called = Now();
+	timeout.tv_sec = (time_t) floor(sleep / 1000.0);
+	timeout.tv_nsec = (sleep - 1000 * timeout.tv_sec) * 1000000;
 	
-	do
+	nevents = kevent(kq, NULL, 0, events, SIZE(events), &timeout);
+	
+	if (nevents < 0)
 	{
-		wait = sleep - (Now() - called);
-		if (wait < 0) wait = 0;
+		Log_Errno();
+		return false;
+	}
+	
+	for (i = 0; i < nevents; i++)
+	{
+		if (events[i].flags & EV_ERROR)
+			Log_Message(strerror(events[i].data));
 		
-		timeout.tv_sec = (time_t) floor(wait / 1000.0);
-		timeout.tv_nsec = (wait - 1000 * timeout.tv_sec) * 1000000;
-		
-		nevents = kevent(kq, NULL, 0, events, SIZE(events), &timeout);
-		
-		if (nevents < 0)
+		if (events[i].udata == NULL)
 		{
-			Log_Errno();
-			return false;
-		}
-		
-		for (i = 0; i < nevents; i++)
-		{
-			if (events[i].flags & EV_ERROR)
-				Log_Message(strerror(events[i].data));
-			
-			if (events[i].udata == NULL)
-			{
-				ProcessAsyncOp();
+			ProcessAsyncOp();
 
-				// re-register for notification
-				if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
-					return false;
-				
-				continue;
-			}
+			// re-register for notification
+			if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
+				return false;
 			
-			ioop = (IOOperation*) events[i].udata;
-			
-			ioop->active = false;
-			
-			if (ioop && ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))
-				ProcessTCPRead(&events[i]);
-			else if (ioop && ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
-				ProcessTCPWrite(&events[i]);
-			else if (ioop && ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
-				ProcessUDPRead(&events[i]);
-			else if (ioop && ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
-				ProcessUDPWrite(&events[i]);
+			continue;
 		}
-	} while (nevents > 0 && wait > 0);
+		
+		ioop = (IOOperation*) events[i].udata;
+		
+		ioop->active = false;
+		
+		if (ioop && ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))
+			ProcessTCPRead(&events[i]);
+		else if (ioop && ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
+			ProcessTCPWrite(&events[i]);
+		else if (ioop && ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
+			ProcessUDPRead(&events[i]);
+		else if (ioop && ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
+			ProcessUDPWrite(&events[i]);
+	}
 	
 	return true;
 }

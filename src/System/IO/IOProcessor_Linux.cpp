@@ -256,89 +256,79 @@ bool IOProcessor::Remove(IOOperation* ioop)
 bool IOProcessor::Poll(int sleep)
 {
 	
-	long long					called;
-	int							i, nevents, nev, wait;
+	int							i, nevents, nev;
 	static struct epoll_event	events[MAX_EVENTS];
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
 	int							newev, currentev;
 	int							newfd = -1;
 	
-	called = Now();
+	nevents = epoll_wait(epollfd, events, SIZE(events), sleep);
 	
-	do
+	if (nevents < 0)
 	{
-		wait = sleep - (Now() - called);
-		if (wait < 0) wait = 0;
+		Log_Errno();
+		return false;
+	}
+	
+	for (i = 0; i < nevents; i++)
+	{
+		currentev = events[i].events;
 		
-		nevents = epoll_wait(epollfd, events, SIZE(events), wait);
-		
-		if (nevents < 0)
+		epollOp = (EpollOp*) events[i].data.ptr;
+
+		newev = 0;
+		if ((events[i].events & EPOLLIN) && epollOp->write)
 		{
-			Log_Errno();
-			return false;
+			newev |= EPOLLOUT;
+			newfd = epollOp->write->fd;
+		}
+		else if ((events[i].events & EPOLLOUT) && epollOp->read)
+		{
+			newev |= EPOLLIN;
+			newfd = epollOp->read->fd;
 		}
 		
-		for (i = 0; i < nevents; i++)
+		if (newev)
 		{
-			currentev = events[i].events;
-			
-			epollOp = (EpollOp*) events[i].data.ptr;
+			if ((epollOp->read &&
+				(epollOp->read->type == TCP_READ || epollOp->read->type == UDP_READ)) ||
+				(epollOp->write &&
+				(epollOp->write->type == TCP_WRITE || epollOp->write->type == UDP_WRITE)))
+					newev |= EPOLLONESHOT;
 
-			newev = 0;
-			if ((events[i].events & EPOLLIN) && epollOp->write)
+			events[i].events = newev;
+			nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, &events[i]);
+			if (nev < 0)
 			{
-				newev |= EPOLLOUT;
-				newfd = epollOp->write->fd;
-			}
-			else if ((events[i].events & EPOLLOUT) && epollOp->read)
-			{
-				newev |= EPOLLIN;
-				newfd = epollOp->read->fd;
-			}
-			
-			if (newev)
-			{
-				if ((epollOp->read &&
-					(epollOp->read->type == TCP_READ || epollOp->read->type == UDP_READ)) ||
-					(epollOp->write &&
-					(epollOp->write->type == TCP_WRITE || epollOp->write->type == UDP_WRITE)))
-						newev |= EPOLLONESHOT;
-
-				events[i].events = newev;
-				nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, &events[i]);
-				if (nev < 0)
-				{
-					Log_Errno();
-					return false;
-				}
-			}
-			
-			if (currentev & EPOLLIN)
-			{
-				ioop = epollOp->read;
-				assert(ioop != NULL);
-								
-				if (ioop->type == PIPEOP)
-				{
-					PipeOp* pipeop = (PipeOp*) ioop;
-					pipeop->callback();
-					continue;
-				}
-				
-				epollOp->read = NULL;
-				ProcessIOOperation(ioop);
-			}
-			else if (currentev & EPOLLOUT)
-			{
-				ioop = epollOp->write;
-				assert(ioop != NULL);
-				epollOp->write = NULL;
-				ProcessIOOperation(ioop);
+				Log_Errno();
+				return false;
 			}
 		}
+		
+		if (currentev & EPOLLIN)
+		{
+			ioop = epollOp->read;
+			assert(ioop != NULL);
+							
+			if (ioop->type == PIPEOP)
+			{
+				PipeOp* pipeop = (PipeOp*) ioop;
+				pipeop->callback();
+				continue;
+			}
 			
-	} while (nevents > 0 && wait > 0);
+			epollOp->read = NULL;
+			ProcessIOOperation(ioop);
+		}
+		else if (currentev & EPOLLOUT)
+		{
+			ioop = epollOp->write;
+			assert(ioop != NULL);
+			epollOp->write = NULL;
+			ProcessIOOperation(ioop);
+		}
+	}			
 	
 	return true;
 }
