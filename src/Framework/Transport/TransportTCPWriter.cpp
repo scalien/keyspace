@@ -20,7 +20,7 @@ void TransportTCPWriter::Write(ByteString &bs)
 	
 	if (state == CONNECTED || state == CONNECTING)
 	{
-		llen = snprintf(lbuf, sizeof(lbuf), "%d:", bs.length);
+		llen = snwritef(lbuf, sizeof(lbuf), "%d:", bs.length);
 		
 		TCPConn<>::Write(lbuf, llen, false);		
 		TCPConn<>::Write(bs.buffer, bs.length);
