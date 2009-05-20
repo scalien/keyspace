@@ -69,15 +69,15 @@ bool TimeCheckMsg::Write(ByteString& data)
 	unsigned required;
 	
 	if (type == TIMECHECK_REQUEST)
-		required = snprintf(data.buffer, data.size, "%c@%d@%" PRIu64 "@%" PRIu64 "", type, nodeID,
+		required = snwritef(data.buffer, data.size, "%c@%d@%U@%U", type, nodeID,
 							series, requestTimestamp);
 	else if (type == TIMECHECK_RESPONSE)
-		required = snprintf(data.buffer, data.size, "%c@%d@%" PRIu64 "@%" PRIu64 "@%" PRIu64 "", type,
+		required = snwritef(data.buffer, data.size, "%c@%d@%U@%U@%U", type,
 							nodeID, series, requestTimestamp, responseTimestamp);
 	else
 		return false;
 	
-	if (required > data.size)
+	if (required < 0 || (unsigned)required > data.size)
 		return false;
 		
 	data.length = required;
