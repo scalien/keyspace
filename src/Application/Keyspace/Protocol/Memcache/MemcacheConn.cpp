@@ -99,7 +99,7 @@ void MemcacheConn::OnComplete(KeyspaceOp* op, bool status)
 	if (op->type == KeyspaceOp::GET && status)
 	{
 		do {
-			size = snprintf(buf.buffer, buf.size, "VALUE %.*s %d %d" CS_CRLF "%.*s" CS_CRLF "END" CS_CRLF, 
+			size = snwritef(buf.buffer, buf.size, "VALUE %B %d %d" CS_CRLF "%B" CS_CRLF "END" CS_CRLF, 
 				 op->key.length, op->key.buffer,
 				 0,
 				 op->value.length,
