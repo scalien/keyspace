@@ -18,6 +18,7 @@ public:
 	void					Init(TransportWriter** writers_);
 	
 	void					ProcessMsg(PLeaseMsg &msg_);
+	void					OnNewPaxosRound();
 	void					OnAcquireLeaseTimeout();
 	void					OnExtendLeaseTimeout();
 	void					AcquireLease();
