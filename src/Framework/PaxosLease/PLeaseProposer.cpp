@@ -45,7 +45,7 @@ void PLeaseProposer::OnNewPaxosRound()
 	
 	Log_Trace();
 	
-	if (acquireLeaseTimeout.active)
+	if (acquireLeaseTimeout.IsActive())
 		StartPreparing();
 }
 
