@@ -258,48 +258,46 @@ bool PaxosMsg::Read(ByteString& data)
 
 bool PaxosMsg::Write(ByteString& data)
 {
-	unsigned required;
+	int required;
 	
 	if (type == PREPARE_REQUEST)
-		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "",
-			paxosID, type, nodeID, proposalID);
+		required = snwritef(data.buffer, data.size, "%U#%c#%d#%U", paxosID, type, nodeID, proposalID);
 	else if (type == PREPARE_RESPONSE)
 	{
 		if (subtype == PREPARE_REJECTED)
 		{
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c#%" PRIu64 "",
+			required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c#%U",
 				paxosID, type, nodeID, proposalID, subtype, promisedProposalID);
 		}
 		else if (subtype == PREPARE_CURRENTLY_OPEN)
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c",
+			required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c",
 				paxosID, type, nodeID, proposalID, subtype);
 		else
-			required = snprintf(data.buffer, data.size,
-				"%" PRIu64 "#%c#%d#%" PRIu64 "#%c#%" PRIu64 "#%d#%.*s", paxosID,
+			required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c#%U#%d#%B", paxosID,
 				type, nodeID, proposalID, subtype, acceptedProposalID, 
 				value.length, value.length, value.buffer);
 	}
 	else if (type == PROPOSE_REQUEST)
-		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%d#%.*s",
+		required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%d#%B",
 			paxosID, type, nodeID, proposalID, value.length, value.length, value.buffer);
 	else if (type == PROPOSE_RESPONSE)
-		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%" PRIu64 "#%c",
+		required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c",
 			paxosID, type, nodeID, proposalID, subtype);
 	else if (type == LEARN_CHOSEN)
 	{
 		if (subtype == LEARN_VALUE)
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%c#%d#%.*s",
+			required = snwritef(data.buffer, data.size, "%U#%c#%d#%c#%d#%B",
 				paxosID, type, nodeID, subtype, value.length, value.length, value.buffer);
 		else
-			required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d#%c#%" PRIu64 "",
+			required = snwritef(data.buffer, data.size, "%U#%c#%d#%c#%U",
 				paxosID, type, nodeID, subtype, proposalID);
 	}
 	else if (type == REQUEST_CHOSEN)
-		required = snprintf(data.buffer, data.size, "%" PRIu64 "#%c#%d", paxosID, type, nodeID);
+		required = snwritef(data.buffer, data.size, "%U#%c#%d", paxosID, type, nodeID);
 	else
 		return false;
 	
-	if (required > data.size)
+	if (required < 0 || (unsigned)required > data.size)
 		return false;
 		
 	data.length = required;
