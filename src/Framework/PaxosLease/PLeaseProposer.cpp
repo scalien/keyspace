@@ -42,10 +42,11 @@ void PLeaseProposer::OnNewPaxosRound()
 	// won't reply if their paxosID is larges than the msg's
 	// if the paxosID increases we must restart the
 	// PaxosLease round, if it's active
+	// only restart if we're masters
 	
 	Log_Trace();
 	
-	if (acquireLeaseTimeout.IsActive())
+	if (acquireLeaseTimeout.IsActive() && ReplicatedLog::Get()->IsMaster())
 		StartPreparing();
 }
 
