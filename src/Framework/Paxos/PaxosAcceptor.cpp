@@ -28,7 +28,7 @@ void PaxosAcceptor::Init(TransportWriter** writers_)
 	state.Init();
 
 	if (!ReadState())
-		Log_Message("*** Paxos is starting from scratch (ReadState() failed) *** ");
+		Log_Message("*** No Keyspace database found. Starting from scratch... *** ");
 }
 
 bool PaxosAcceptor::Persist(Transaction* transaction)

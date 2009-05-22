@@ -16,6 +16,8 @@ PLeaseAcceptor::PLeaseAcceptor() :
 
 void PLeaseAcceptor::Init(TransportWriter** writers_)
 {
+	Log_Message("*** Waiting %d miliseconds... (this is normal) ***", MAX_LEASE_TIME);
+
 	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
 	
 	writers = writers_;
