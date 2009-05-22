@@ -2,7 +2,7 @@
 #define KEYSPACECONN_H
 
 #include "System/Containers/LinkedList.h"
-#include "Framework/Transport/TCPConn.h"
+#include "Framework/Transport/MessageConn.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Database/KeyspaceService.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.h"
@@ -11,7 +11,7 @@
 
 class KeyspaceServer;
 
-class KeyspaceConn : public TCPConn<>, public KeyspaceService
+class KeyspaceConn : public MessageConn<>, public KeyspaceService
 {
 public:
 	KeyspaceConn();
@@ -19,10 +19,10 @@ public:
 	void				Init(KeyspaceDB* kdb_, KeyspaceServer* server_);
 	void				OnComplete(KeyspaceOp* op, bool status, bool final);
 	void				OnConnectionTimeout();
+	void				OnMessageRead(const ByteString& message);
 
 private:
 	// TCPConn interface
-	virtual void		OnRead();
 	virtual void		OnClose();
 	virtual void		OnWrite();
 

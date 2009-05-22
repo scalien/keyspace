@@ -115,68 +115,12 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		server->DeleteConn(this);
 }
 
-void KeyspaceConn::OnRead()
+void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
-//	Log_Trace();
-
-//	if (connectionTimeout.IsActive())
-//		EventLoop::Reset(&connectionTimeout);
-
-	unsigned msglength, nread, msgbegin, msgend;
-	
-	tcpread.requested = IO_READ_ANY;
-	
-	do
-	{
-//		Log_Message("tcpread buffer %.*s", tcpread.data.length, tcpread.data.buffer);
-
-		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
-		
-		if (msglength > (unsigned) (tcpread.data.size - 8) || nread > 7) // largest prefix: 100xxxx:
-		{
-			OnClose();
-			return;
-		}
-		
-		if (nread == 0 || (unsigned) tcpread.data.length <= nread)
-			break;
-			
-		if (tcpread.data.buffer[nread] != ':')
-			ASSERT_FAIL();
-	
-		msgbegin = nread + 1;
-		msgend = nread + 1 + msglength;
-		
-//		Log_Message("%d %d %d", msgbegin, msgend, tcpread.data.length);
-
-		if ((unsigned) tcpread.data.length < msgend)
-		{
-			tcpread.requested = msgend;
-			break;
-		}
-
-//		Log_Message("Attempting Read() with %.*s", msglength, tcpread.data.buffer + msgbegin);
-		
-		if (req.Read(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin)))
-			ProcessMsg();
-		else
-		{
-			OnClose();
-			return;
-		}
-		
-		// move the rest back to the beginning of the buffer
-		memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
-			tcpread.data.length - msgend);
-		tcpread.data.length = tcpread.data.length - msgend;
-		
-		if (tcpread.data.length == 0)
-			break;
-	}
-	while (true);
-	
-	if (state == CONNECTED)
-		IOProcessor::Add(&tcpread);
+	if (req.Read(message))
+		ProcessMsg();
+	else
+		OnClose();
 }
 
 void KeyspaceConn::Write(ByteString &bs)

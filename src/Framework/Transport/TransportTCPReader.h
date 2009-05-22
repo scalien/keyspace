@@ -4,11 +4,11 @@
 #include "Transport.h"
 #include "TransportReader.h"
 #include "TCPServer.h"
-#include "TCPConn.h"
+#include "MessageConn.h"
 
 class TransportTCPReader; // forward
 
-class TransportTCPConn : public TCPConn<MAX_TCP_MESSAGE_SIZE>
+class TransportTCPConn : public MessageConn<MAX_TCP_MESSAGE_SIZE>
 {
 public:
 	TransportTCPConn(TransportTCPReader* reader_)
@@ -16,7 +16,7 @@ public:
 		reader = reader_;
 	}
 	
-	void				OnRead();
+	void				OnMessageRead(const ByteString& message);
 	void				OnClose();
 
 private:

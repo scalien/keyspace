@@ -51,6 +51,10 @@ void MessageConn<bufferSize>::OnRead()
 
 		OnMessageRead(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin));
 		
+		// if the user called Close() in OnMessageRead()
+		if (TCPConn<bufferSize>::state != TCPConn<bufferSize>::CONNECTED)
+			return;
+		
 		// move the rest back to the beginning of the buffer
 		memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
 			tcpread.data.length - msgend);

@@ -1,7 +1,7 @@
 #ifndef CATCHUPCLIENT_H
 #define CATCHUPCLIENT_H
 
-#include "Framework/Transport/TCPConn.h"
+#include "Framework/Transport/MessageConn.h"
 #include "Framework/Database/Table.h"
 #include "Framework/Database/Transaction.h"
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
@@ -11,13 +11,13 @@
 
 class ReplicatedKeyspaceDB;
 
-class CatchupClient : public TCPConn<>
+class CatchupClient : public MessageConn<>
 {
 public:
 	void						Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_);
 
 	void						Start(unsigned nodeID);
-	void						OnRead();
+	void						OnMessageRead(const ByteString& message);
 	void						OnClose();
 	virtual void				OnConnect();
 	virtual void				OnConnectTimeout();
