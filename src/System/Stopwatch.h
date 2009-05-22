@@ -8,8 +8,9 @@ class Stopwatch
 public:
 	long elapsed;
 	
-	Stopwatch () { elapsed = 0; }
+	Stopwatch () { Reset(); }
 	
+	void Reset() { elapsed = 0; }
 	void Start() { started = Now(); }
 	void Stop() { elapsed += Now() - started; }
 
