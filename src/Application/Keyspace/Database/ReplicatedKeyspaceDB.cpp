@@ -311,7 +311,8 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 	Log_Trace();
 
 	catchingUp = true;
-	ReplicatedLog::Get()->Stop();
+	ReplicatedLog::Get()->StopPaxos();
+	ReplicatedLog::Get()->StopMasterLease();
 	if (ReplicatedLog::Get()->GetTransaction()->IsActive())
 		ReplicatedLog::Get()->GetTransaction()->Commit();
 	catchupClient.Start(nodeID);
@@ -322,7 +323,8 @@ void ReplicatedKeyspaceDB::OnCatchupComplete()
 	Log_Trace();
 	
 	catchingUp = false;
-	ReplicatedLog::Get()->Continue();
+	ReplicatedLog::Get()->ContinuePaxos();
+	ReplicatedLog::Get()->ContinueMasterLease();
 }
 
 void ReplicatedKeyspaceDB::OnCatchupFailed()
@@ -330,5 +332,6 @@ void ReplicatedKeyspaceDB::OnCatchupFailed()
 	Log_Trace();
 
 	catchingUp = false;
-	ReplicatedLog::Get()->Continue();	
+	ReplicatedLog::Get()->ContinuePaxos();
+	ReplicatedLog::Get()->ContinueMasterLease();
 }

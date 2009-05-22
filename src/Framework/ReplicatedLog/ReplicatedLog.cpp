@@ -85,15 +85,23 @@ void ReplicatedLog::InitTransport()
 	}
 }
 
-void ReplicatedLog::Stop()
+void ReplicatedLog::StopPaxos()
 {
 	reader->Stop();
+}
+
+void ReplicatedLog::StopMasterLease()
+{
 	masterLease.Stop();
 }
 
-void ReplicatedLog::Continue()
+void ReplicatedLog::ContinuePaxos()
 {
 	reader->Continue();
+}
+
+void ReplicatedLog::ContinueMasterLease()
+{
 	masterLease.Continue();
 }
 
@@ -315,7 +323,10 @@ void ReplicatedLog::OnLearnChosen()
 		else if (replicatedDB != NULL && rmsg.value.length > 0 && !(rmsg.value == BS_MSG_NOP))
 		{
 			if (!acceptor.transaction.IsActive())
+			{
+				Log_Message("starting new transaction");
 				acceptor.transaction.Begin();
+			}
 			replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value,
 				ownAppend && rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && IsMaster());
 			// client calls Append() here

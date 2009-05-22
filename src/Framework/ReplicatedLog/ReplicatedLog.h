@@ -35,8 +35,10 @@ public:
 	bool						IsMaster();
 	int							GetMaster();
 	unsigned 					GetNodeID();
-	void						Stop();
-	void						Continue();
+	void						StopPaxos();
+	void						StopMasterLease();
+	void						ContinuePaxos();
+	void						ContinueMasterLease();
 	bool						IsAppending();
 	bool						IsSafeDB();
 	void						OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID);
