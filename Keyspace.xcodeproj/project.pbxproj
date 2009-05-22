@@ -213,6 +213,7 @@
 		5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncListVisitor.cpp; sourceTree = "<group>"; };
 		5430A67D0FC0581D00AA8EC9 /* ReplicatedConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedConfig.h; sourceTree = "<group>"; };
 		5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedConfig.cpp; sourceTree = "<group>"; };
+		544032D30FC711E800A2AA8A /* MessageConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageConn.h; sourceTree = "<group>"; };
 		54460CD40F5198E800EFBBDE /* AsyncDBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncDBTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncDBTest.cpp; sourceTree = "<group>"; };
 		544611F00F533FAB00EFBBDE /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOTest.cpp; sourceTree = "<group>"; };
@@ -512,6 +513,7 @@
 				9A62050B0F6C1789009576A1 /* TCPServer.h */,
 				9A62050A0F6C1789009576A1 /* TCPServer.cpp */,
 				9A6205090F6C1789009576A1 /* TCPConn.h */,
+				544032D30FC711E800A2AA8A /* MessageConn.h */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
