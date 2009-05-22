@@ -113,11 +113,12 @@ void* Alloc(int num, int size)
  * %%							prints the '%' character
  * %c (char)					prints a char
  * %d (int)						prints a signed int
- * %d (unsigned)				prints an unsigned int
+ * %u (unsigned)				prints an unsigned int
  * %I (int64_t)					prints a signed int64
  * %U (uint64_t)				prints an unsigned int64
- * %s (char* p)					copries strlen(p) bytes from p to the output buffer
+ * %s (char* p)					copies strlen(p) bytes from p to the output buffer
  * %B (int length, char* p)		copies length bytes from p to the output buffer, irrespective of \0 chars
+ * %M (int length, char* p)		same as %u:%B with (length, length, char* p)
  *
  * snwritef does not null-terminate the resulting buffer!
  * returns the number of bytes required or written, or -1 on error
@@ -194,7 +195,7 @@ int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 				if (ghost) n = size;
 				memcpy(buffer, local, n);
 				ADVANCE(2, n);
-			} else if (format[1] == 'I') // %i to print an int64_t 
+			} else if (format[1] == 'I') // %I to print an int64_t 
 			{
 				i64 = va_arg(ap, int64_t);
 				n = snprintf(local, sizeof(local), "%" PRIi64 "", i64);
@@ -203,7 +204,7 @@ int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 				if (ghost) n = size;
 				memcpy(buffer, local, n);
 				ADVANCE(2, n);
-			} else if (format[1] == 'U') // %u tp print an uint64_t
+			} else if (format[1] == 'U') // %U tp print an uint64_t
 			{
 				u64 = va_arg(ap, uint64_t);
 				n = snprintf(local, sizeof(local), "%" PRIu64 "", u64);
@@ -220,10 +221,24 @@ int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 				if (ghost) length = size;
 				memcpy(buffer, p, length);
 				ADVANCE(2, length);
-			} else if (format[1] == 'B') // %b to print a buffer
+			} else if (format[1] == 'B') // %B to print a buffer
 			{
 				length = va_arg(ap, unsigned);
 				p = va_arg(ap, char*);
+				REQUIRE(length);
+				if (ghost) length = size;
+				memcpy(buffer, p, length);
+				ADVANCE(2, length);
+			} else if (format[1] == 'M') // %M to print a message
+			{
+				length = va_arg(ap, unsigned);
+				p = va_arg(ap, char*);
+				n = snprintf(local, sizeof(local), "%u:", length);
+				if (n < 0) EXIT();
+				REQUIRE(n);
+				if (ghost) n = size;
+				memcpy(buffer, local, n);
+				ADVANCE(0, n);
 				REQUIRE(length);
 				if (ghost) length = size;
 				memcpy(buffer, p, length);
