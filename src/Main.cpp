@@ -27,11 +27,16 @@ int main(int argc, char* argv[])
 
 	if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
 		STOP_FAIL("Cannot initalize IOProcessor!", 1);
-		
-	if (!database.Init(Config::GetValue("database.dir", "."),
-					Config::GetIntValue("database.pageSize", 0),
-					Config::GetIntValue("database.cacheSize", 0),
-					Config::GetIntValue("database.logCacheSize", 0)))
+	
+	DatabaseConfig dbConfig;
+	dbConfig.dir = Config::GetValue("database.dir", DATABASE_CONFIG_DIR);
+	dbConfig.pageSize = Config::GetIntValue("database.pageSize", DATABASE_CONFIG_PAGE_SIZE);
+	dbConfig.cacheSize = Config::GetIntValue("database.cacheSize", DATABASE_CONFIG_CACHE_SIZE);
+	dbConfig.logBufferSize = Config::GetIntValue("database.logBufferSize", DATABASE_CONFIG_LOG_BUFFER_SIZE);
+	dbConfig.checkpointTimeout = Config::GetIntValue("database.checkpointTimeout", DATABASE_CONFIG_CHECKPOINT_TIMEOUT);
+	dbConfig.verbose = Config::GetBoolValue("database.verbose", DATABASE_CONFIG_VERBOSE);
+
+	if (!database.Init(dbConfig))
 		STOP_FAIL("Cannot initialize database!", 1);
 	
 	if (!ReplicatedConfig::Get()->Init())
