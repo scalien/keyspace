@@ -17,9 +17,13 @@ public:
 	Database();
 	~Database();
 	
-	bool Init(const char *dbdir, int pageSize, int cacheSize, int logBufferSize);
+	bool	Init(const char *dbdir, int pageSize, int cacheSize, int logBufferSize);
 	
-	Table* GetTable(const char* name);
+	Table*	GetTable(const char* name);
+	
+	void	OnCheckpointTimeout();
+	void	Checkpoint();
+
 	
 private:
 	DbEnv			env;
@@ -29,9 +33,6 @@ private:
 	MFunc<Database>	checkpoint;
 	CdownTimer		checkpointTimeout;
 	MFunc<Database>	onCheckpointTimeout;
-
-	void			OnCheckpointTimeout();
-	void			Checkpoint();
 };
 
 // the global database object
