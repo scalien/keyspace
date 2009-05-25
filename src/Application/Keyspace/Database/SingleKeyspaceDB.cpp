@@ -84,9 +84,15 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	{
 		ret &= table->Get(&transaction, op->key, data);
 		if (data == op->test)
+		{
 			ret &= table->Set(&transaction, op->key, op->value);
+		}
 		else
-			ret = false;
+		{
+			op->value.Reallocate(data.length);
+			op->value.Set(data);
+		}
+		
 		op->service->OnComplete(op, ret);
 	}
 	else if (op->type == KeyspaceOp::ADD)
