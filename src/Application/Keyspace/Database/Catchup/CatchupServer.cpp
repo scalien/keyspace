@@ -1,36 +1,20 @@
 #include "CatchupServer.h"
 #include "CatchupConn.h"
 
-bool CatchupServer::Init(int port)
+void CatchupServer::Init(int port_)
 {
-	Log_Trace();
-	
-	table = database.GetTable("keyspace");
-	
-	return TCPServer::Init(port);
+	if (!TCPServerT<CatchupServer, CatchupConn, PAXOS_BUF_SIZE>::Init(port_, CONN_BACKLOG))
+		STOP_FAIL("Cannot initialize CatchupServer", 1);
 }
 
-void CatchupServer::OnConnect()
+void CatchupServer::InitConn(CatchupConn* conn)
 {
-	Log_Trace();
-	
-	CatchupConn* conn = new CatchupConn(this);
-	
-	if (listener.Accept(&(conn->GetSocket())))
+	if (numActive > 1)
 	{
-		Endpoint endpoint;
-		conn->GetSocket().GetEndpoint(endpoint);
-		
-		Log_Message("%s connected", endpoint.ToString());
-		
-		conn->GetSocket().SetNonblocking();
-		conn->Init();
+		conn->Close();
+		DeleteConn(conn);
+		return;
 	}
-	else
-	{
-		Log_Message("Accept() failed");
-		delete conn;
-	}
-	
-	IOProcessor::Add(&tcpread);
+
+	conn->Init();
 }
