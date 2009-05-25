@@ -38,15 +38,15 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
-		op->type == KeyspaceOp::ADD)
+		op->type == KeyspaceOp::ADD ||
+		op->type == KeyspaceOp::TEST_AND_SET)
 	{
 		if (status)
 			Response(200, op->value.buffer, op->value.length);
 		else
 			RESPONSE_NOTFOUND;
 	}
-	else if (op->type == KeyspaceOp::SET ||
-			 op->type == KeyspaceOp::TEST_AND_SET)
+	else if (op->type == KeyspaceOp::SET)
 	{
 		if (status)
 			Response(200, "OK", strlen("OK"));
