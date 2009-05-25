@@ -22,7 +22,7 @@ private:
 	int					next;
 	int					size;
 	unsigned long		allocated;
-	uint64_t				paxosID;
+	uint64_t			paxosID;
 };
 
 #endif

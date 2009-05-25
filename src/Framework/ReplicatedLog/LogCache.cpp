@@ -63,7 +63,7 @@ bool LogCache::Get(uint64_t paxosID_, ByteString& value)
 	tail = INDEX(next - count);
 	head = INDEX(next - 1);
 	
-	if (paxosID_ <= paxosID - count)
+	if ((int64_t)paxosID_ <= (int64_t)(paxosID - count))
 		return false;
 	
 	if (paxosID < paxosID_)
