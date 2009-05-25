@@ -1,27 +1,25 @@
 #include "CatchupConn.h"
 #include <math.h>
 #include "Framework/Transport/Transport.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 
-CatchupConn::CatchupConn(CatchupServer* server_)
+CatchupConn::CatchupConn()
 {
-	server = server_;
 }
 
 void CatchupConn::Init()
 {
 	TCPConn<PAXOS_BUF_SIZE>::Init(false);
 	
-	if (ReplicatedLog::Get()->GetTransaction()->IsActive())
-		ReplicatedLog::Get()->GetTransaction()->Commit();
-		
-	// commit the current transaction so we see the latest state
-	// or we could use get @@paxosID instead of ReplicatedLog::Get()->GetPaxosID()
-	
-	transaction.Set(server->table);
+	table = database.GetTable("keyspace");
+	transaction.Set(table);
 	transaction.Begin();
-	server->table->Iterate(&transaction, cursor);
+	table->Iterate(&transaction, cursor);
 	tcpwrite.data = writeBuffer;
-	paxosID = ReplicatedLog::Get()->GetPaxosID();
+
+	// this is not good, I'm not seeing the currently active transaction
+	if (!table->Get(&transaction, "@@paxosID", paxosID))
+		ASSERT_FAIL();
 	
 	WriteNext();
 }
