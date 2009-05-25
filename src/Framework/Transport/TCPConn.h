@@ -33,6 +33,7 @@ public:
 	
 	void			Init(bool startRead = true);
 	void			Connect(Endpoint &endpoint_, unsigned timeout);
+	void			Close();
 
 	Socket&			GetSocket() { return socket; }
 	
@@ -71,7 +72,6 @@ protected:
 	void			Append(const char* data, int count);
 	void			Write(const char* data, int count, bool flush = true);
 	void			WritePending();
-	void			Close();
 };
 
 

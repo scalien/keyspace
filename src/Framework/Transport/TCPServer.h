@@ -30,8 +30,9 @@ class TCPServerT
 {
 public:
 	TCPServerT() :
-	onConnect(this, &TCPServerT<T, Conn>::OnConnect)
+	onConnect(this, &TCPServerT<T, Conn, bufferSize>::OnConnect)
 	{
+		numActive = 0;
 	}
 	
 	bool Init(int port_, int backlog_)
@@ -59,6 +60,9 @@ public:
 	{
 		Log_Trace();
 		
+		numActive--;
+		assert(numActive >= 0);
+		
 		if (conns.Size() >= backlog)
 			delete conn;
 		else
@@ -73,11 +77,13 @@ protected:
 	MFunc<TCPServerT>	onConnect;
 	int					backlog;
 	ConnList			conns;
+	int					numActive;
 	
 	void OnConnect()
 	{
 		T* pT = static_cast<T*>(this);
 		Conn* conn = pT->GetConn();
+		numActive++;
 		if (listener.Accept(&(conn->GetSocket())))
 		{
 			conn->GetSocket().SetNonblocking();
