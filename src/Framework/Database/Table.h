@@ -25,6 +25,7 @@ public:
 	
 	bool		Get(Transaction* transaction, const ByteString &key, ByteString &value);
 	bool		Get(Transaction* transaction, const char* key, ByteString &value);
+	bool		Get(Transaction* transaction, const char* key, uint64_t &value);
 	
 	bool		Set(Transaction* transaction, const ByteString &key, const ByteString &value);
 	bool		Set(Transaction* transaction, const char* key, const ByteString &value);

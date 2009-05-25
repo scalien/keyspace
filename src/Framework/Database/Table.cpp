@@ -82,6 +82,22 @@ bool Table::Get(Transaction* transaction, const char* key, ByteString &value)
 	return Table::Get(transaction, bsKey, value);
 }
 
+bool Table::Get(Transaction* transaction, const char* key, uint64_t& value)
+{
+	ByteArray<32> ba;
+	unsigned nread;
+	
+	if (!Get(transaction, key, ba))
+		return false;
+	
+	value = strntouint64_t(ba.buffer, ba.length, &nread);
+	
+	if (nread != ba.length)
+		return false;
+	
+	return true;
+}
+
 bool Table::Set(Transaction* transaction, const ByteString &key, const ByteString &value)
 {
 	Dbt dbtKey(key.buffer, key.length);
