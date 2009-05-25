@@ -87,8 +87,8 @@ void CatchupConn::WriteNext()
 	msg.Write(msgData);
 	
 	// prepend with the "length:" header
-	tcpwrite.data.length = snwritef(tcpwrite.data.buffer, tcpwrite.data.size, "%d:%B",
-		msgData.length, msgData.length, msgData.buffer);
+	tcpwrite.data.length = snwritef(tcpwrite.data.buffer, tcpwrite.data.size, "%M",
+		msgData.length, msgData.buffer);
 	tcpwrite.transferred = 0;
 
 	IOProcessor::Add(&tcpwrite);

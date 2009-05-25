@@ -84,8 +84,8 @@ bool CatchupMsg::Write(ByteString& data)
 	int required;
 	
 	if (type == KEY_VALUE)
-		required = snwritef(data.buffer, data.size, "%c:%d:%B:%d:%B", type,
-			key.length, key.length, key.buffer, value.length, value.length, value.buffer);
+		required = snwritef(data.buffer, data.size, "%c:%M:%M", type,
+			key.length, key.buffer, value.length, value.buffer);
 	else if (type == CATCHUP_COMMIT)
 		required = snwritef(data.buffer, data.size, "%c:%U", type, paxosID);
 	else

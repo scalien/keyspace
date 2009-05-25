@@ -273,21 +273,21 @@ bool PaxosMsg::Write(ByteString& data)
 			required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c",
 				paxosID, type, nodeID, proposalID, subtype);
 		else
-			required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c:%U:%d:%B", paxosID,
+			required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c:%U:%M", paxosID,
 				type, nodeID, proposalID, subtype, acceptedProposalID, 
-				value.length, value.length, value.buffer);
+				value.length, value.buffer);
 	}
 	else if (type == PROPOSE_REQUEST)
-		required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%d:%B",
-			paxosID, type, nodeID, proposalID, value.length, value.length, value.buffer);
+		required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%M",
+			paxosID, type, nodeID, proposalID, value.length, value.buffer);
 	else if (type == PROPOSE_RESPONSE)
 		required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c",
 			paxosID, type, nodeID, proposalID, subtype);
 	else if (type == LEARN_CHOSEN)
 	{
 		if (subtype == LEARN_VALUE)
-			required = snwritef(data.buffer, data.size, "%U:%c:%d:%c:%d:%B",
-				paxosID, type, nodeID, subtype, value.length, value.length, value.buffer);
+			required = snwritef(data.buffer, data.size, "%U:%c:%d:%c:%M",
+				paxosID, type, nodeID, subtype, value.length, value.buffer);
 		else
 			required = snwritef(data.buffer, data.size, "%U:%c:%d:%c:%U",
 				paxosID, type, nodeID, subtype, proposalID);

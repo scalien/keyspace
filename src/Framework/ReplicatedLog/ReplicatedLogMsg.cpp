@@ -48,9 +48,9 @@ bool ReplicatedLogMsg::Write(ByteString& data)
 {
 	int required;
 	
-	required = snwritef(data.buffer, data.size, "%d:%U:%U:%d:%B",
+	required = snwritef(data.buffer, data.size, "%d:%U:%U:%M",
 			nodeID, restartCounter, leaseEpoch,
-			value.length, value.length, value.buffer);
+			value.length, value.buffer);
 	
 	if (required < 0 || (unsigned)required > data.size)
 		return false;

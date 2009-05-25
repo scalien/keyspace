@@ -487,14 +487,14 @@ bool KeyspaceClientResp::Write(ByteString& data)
 	int required;
 	
 	if (key.length > 0 && value.length > 0)
-		required = snwritef(data.buffer, data.size, "%c:%U:%d:%B:%d:%B",
-			type, cmdID, key.length, key.length, key.buffer, value.length, value.length, value.buffer);
+		required = snwritef(data.buffer, data.size, "%c:%U:%M:%M",
+			type, cmdID, key.length, key.buffer, value.length, value.buffer);
 	else if (key.length > 0)
-		required = snwritef(data.buffer, data.size, "%c:%U:%d:%B",
-			type, cmdID, key.length, key.length, key.buffer);
+		required = snwritef(data.buffer, data.size, "%c:%U:%M",
+			type, cmdID, key.length, key.buffer);
 	else if (value.length > 0)
-		required = snwritef(data.buffer, data.size, "%c:%U:%d:%B",
-			type, cmdID, value.length, value.length, value.buffer);
+		required = snwritef(data.buffer, data.size, "%c:%U:%M",
+			type, cmdID, value.length, value.buffer);
 	else
 		required = snwritef(data.buffer, data.size, "%c:%U", type, cmdID);
 	
