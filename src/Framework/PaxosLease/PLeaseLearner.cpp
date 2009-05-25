@@ -99,7 +99,6 @@ uint64_t PLeaseLearner::LeaseEpoch()
 	CheckLease();
 	
 	return state.leaseEpoch;
-
 }
 
 void PLeaseLearner::SetOnLearnLease(Callable* onLearnLeaseCallback_)
