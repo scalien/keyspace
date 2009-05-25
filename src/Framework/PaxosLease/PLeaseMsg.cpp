@@ -81,7 +81,7 @@ bool PLeaseMsg::Read(ByteString& data)
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != '$') return false; pos++;
+#define ReadSeparator()		if (*pos != ':') return false; pos++;
 #define ValidateLength()	if ((pos - data.buffer) != (int)data.length) return false;
 
 	pos = data.buffer;
@@ -186,29 +186,29 @@ bool PLeaseMsg::Write(ByteString& data)
 	
 	if		(type == PREPARE_REQUEST)
 	{
-		required = snwritef(data.buffer, data.size, "%c$%d$%U$%U", type, nodeID, proposalID, paxosID);
+		required = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID, proposalID, paxosID);
 	}
 	else if (type == PREPARE_RESPONSE)
 	{
 		if (response == PREPARE_REJECTED || response == PREPARE_CURRENTLY_OPEN)
-			required = snwritef(data.buffer, data.size, "%c$%d$%U$%c", type, nodeID,
+			required = snwritef(data.buffer, data.size, "%c:%d:%U:%c", type, nodeID,
 				proposalID, response);
 		else
-			required = snwritef(data.buffer, data.size, "%c$%d$%U$%c$%U$%d$%U",
+			required = snwritef(data.buffer, data.size, "%c:%d:%U:%c:%U:%d:%U",
 				type, nodeID, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_REQUEST)
 	{
-		required = snwritef(data.buffer, data.size, "%c$%d$%U$%d$%U", type, nodeID, proposalID,
+		required = snwritef(data.buffer, data.size, "%c:%d:%U:%d:%U", type, nodeID, proposalID,
 			leaseOwner, expireTime);
 	}
 	else if (type == PROPOSE_RESPONSE)
 	{
-		required = snwritef(data.buffer, data.size, "%c$%d$%U$%c", type, nodeID, proposalID, response);
+		required = snwritef(data.buffer, data.size, "%c:%d:%U:%c", type, nodeID, proposalID, response);
 	}
 	else if (type == LEARN_CHOSEN)
 	{
-		required = snwritef(data.buffer, data.size, "%c$%d$%d$%U", type, nodeID, leaseOwner, expireTime);
+		required = snwritef(data.buffer, data.size, "%c:%d:%d:%U", type, nodeID, leaseOwner, expireTime);
 	}
 	else
 		ASSERT_FAIL();

@@ -111,7 +111,7 @@ bool PaxosMsg::Read(ByteString& data)
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != '#') return false; pos++;
+#define ReadSeparator()		if (*pos != ':') return false; pos++;
 #define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
 
 	pos = data.buffer;
@@ -261,39 +261,39 @@ bool PaxosMsg::Write(ByteString& data)
 	int required;
 	
 	if (type == PREPARE_REQUEST)
-		required = snwritef(data.buffer, data.size, "%U#%c#%d#%U", paxosID, type, nodeID, proposalID);
+		required = snwritef(data.buffer, data.size, "%U:%c:%d:%U", paxosID, type, nodeID, proposalID);
 	else if (type == PREPARE_RESPONSE)
 	{
 		if (subtype == PREPARE_REJECTED)
 		{
-			required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c#%U",
+			required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c:%U",
 				paxosID, type, nodeID, proposalID, subtype, promisedProposalID);
 		}
 		else if (subtype == PREPARE_CURRENTLY_OPEN)
-			required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c",
+			required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c",
 				paxosID, type, nodeID, proposalID, subtype);
 		else
-			required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c#%U#%d#%B", paxosID,
+			required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c:%U:%d:%B", paxosID,
 				type, nodeID, proposalID, subtype, acceptedProposalID, 
 				value.length, value.length, value.buffer);
 	}
 	else if (type == PROPOSE_REQUEST)
-		required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%d#%B",
+		required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%d:%B",
 			paxosID, type, nodeID, proposalID, value.length, value.length, value.buffer);
 	else if (type == PROPOSE_RESPONSE)
-		required = snwritef(data.buffer, data.size, "%U#%c#%d#%U#%c",
+		required = snwritef(data.buffer, data.size, "%U:%c:%d:%U:%c",
 			paxosID, type, nodeID, proposalID, subtype);
 	else if (type == LEARN_CHOSEN)
 	{
 		if (subtype == LEARN_VALUE)
-			required = snwritef(data.buffer, data.size, "%U#%c#%d#%c#%d#%B",
+			required = snwritef(data.buffer, data.size, "%U:%c:%d:%c:%d:%B",
 				paxosID, type, nodeID, subtype, value.length, value.length, value.buffer);
 		else
-			required = snwritef(data.buffer, data.size, "%U#%c#%d#%c#%U",
+			required = snwritef(data.buffer, data.size, "%U:%c:%d:%c:%U",
 				paxosID, type, nodeID, subtype, proposalID);
 	}
 	else if (type == REQUEST_CHOSEN)
-		required = snwritef(data.buffer, data.size, "%U#%c#%d", paxosID, type, nodeID);
+		required = snwritef(data.buffer, data.size, "%U:%c:%d", paxosID, type, nodeID);
 	else
 		return false;
 	

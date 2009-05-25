@@ -32,7 +32,7 @@ bool TimeCheckMsg::Read(ByteString& data)
 #define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != '@') return false; pos++;
+#define ReadSeparator()		if (*pos != ':') return false; pos++;
 #define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
 
 	pos = data.buffer;
@@ -69,10 +69,10 @@ bool TimeCheckMsg::Write(ByteString& data)
 	unsigned required;
 	
 	if (type == TIMECHECK_REQUEST)
-		required = snwritef(data.buffer, data.size, "%c@%d@%U@%U", type, nodeID,
+		required = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID,
 							series, requestTimestamp);
 	else if (type == TIMECHECK_RESPONSE)
-		required = snwritef(data.buffer, data.size, "%c@%d@%U@%U@%U", type,
+		required = snwritef(data.buffer, data.size, "%c:%d:%U:%U:%U", type,
 							nodeID, series, requestTimestamp, responseTimestamp);
 	else
 		return false;
