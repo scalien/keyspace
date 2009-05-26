@@ -49,25 +49,25 @@ bool TimeCheckMsg::Read(ByteString& data)
 
 bool TimeCheckMsg::Write(ByteString& data)
 {
-	unsigned required;
+	unsigned req;
 	
 	switch (type)
 	{
 		case TIMECHECK_REQUEST:
-			required = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID,
-								series, requestTimestamp);
+			req = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID,
+						   series, requestTimestamp);
 			break;
 		case TIMECHECK_RESPONSE:
-			required = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U", type,
-								nodeID, series, requestTimestamp, responseTimestamp);
+			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U", type,
+						   nodeID, series, requestTimestamp, responseTimestamp);
 			break;
 		default:
 			return false;
 	}
 	
-	if (required < 0 || (unsigned)required > data.size)
+	if (req < 0 || (unsigned)req > data.size)
 		return false;
 		
-	data.length = required;
+	data.length = req;
 	return true;
 }
