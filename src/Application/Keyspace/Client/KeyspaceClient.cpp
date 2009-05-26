@@ -1,24 +1,170 @@
-#include <inttypes.h>
-#include <time.h>
-#include "System/Time.h"
-#include "KeyspaceClient.h"
-#include "../Protocol/Keyspace/KeyspaceClientMsg.h"
+#include "KeyspaceClient2.h"
+#include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.h"
 
-#define RECONNECT_TIMEOUT	1000
+using namespace Keyspace;
 
-
-static char* strnchr(const char* s, int c, int len)
+/////////////////////////////////////////////////////////////////////
+//
+// Response implementation
+//
+/////////////////////////////////////////////////////////////////////
+bool Response::Read(const ByteString& data_)
 {
-	const char* p;
+	bool		ret;
+	char		cmd;
+	uint64_t	cmdID;
+	ByteString	tmp;
+
+	status = KEYSPACE_ERROR;
+	data = data_;
+	pos = data.buffer;
+	separator = ':';
+
+	msg.Clear();
+	key.Clear();
+	value.Clear();
 	
-	p = s;
-	while (p - s < len)
+	ret = ReadChar(cmd);
+	ret = ret && ReadSeparator();
+	ret = ret && ReadUint64(cmdID);
+	if (!ret)
+		return false;
+	
+	id = cmdID;
+	
+	if (cmd == KEYSPACECLIENT_NOTMASTER)
 	{
-		if (*p == c)
-			return (char*) p;
-		p++;
+		status = KEYSPACE_NOTMASTER;
+		return ValidateLength();
 	}
-	return NULL;
+	
+	if (cmd == KEYSPACECLIENT_FAILED)
+	{
+		status = KEYSPACE_FAILED;
+		return ValidateLength();
+	}
+	
+	if (cmd == KEYSPACECLIENT_LISTEND)
+	{
+		status = KEYSPACE_OK;
+		return ValidateLength();
+	}
+	
+	if (cmd == KEYSPACECLIENT_OK)
+	{
+		status = KEYSPACE_OK;
+		ret = ReadMessage(tmp);
+		if (ret)
+			value.Append(tmp.buffer, tmp.length);
+
+		return ValidateLength();
+	}
+	
+	if (cmd == KEYSPACECLIENT_LISTITEM)
+	{
+		status = KEYSPACE_OK;
+		ret = ReadMessage(tmp);
+		if (ret)
+			key.Append(tmp.buffer, tmp.length);
+		ret = ret && ValidateLength();
+		return ret;
+	}
+	
+	if (cmd == KEYSPACECLIENT_LISTPITEM)
+	{
+		status = KEYSPACE_OK;
+		ret = ReadMessage(tmp);
+		if (ret)
+			key.Append(tmp.buffer, tmp.length);
+		ret = ret && ReadMessage(tmp);
+		if (ret)
+			value.Append(tmp.buffer, tmp.length);
+		
+		ret = ret && ValidateLength();
+		return ret;
+	}
+	
+	return false;
+}
+
+bool Response::CheckOverflow()
+{
+	if ((pos - data.buffer) >= (int) data.length || pos < data.buffer)
+		return false;
+	return true;
+}
+
+bool Response::ReadUint64(uint64_t& num)
+{
+	unsigned	nread;
+	
+	if (!CheckOverflow())
+		return false;
+
+	num = strntouint64(pos, data.length - (pos - data.buffer), &nread);
+	if (nread < 1)
+		return false;
+	
+	pos += nread;
+	return true;
+}
+
+bool Response::ReadChar(char& c)
+{
+	if (!CheckOverflow())
+		return false;
+
+	c = *pos; 
+	pos++;
+	
+	return true;
+}
+
+bool Response::ReadSeparator()
+{
+	if (!CheckOverflow())
+		return false;
+	
+	if (*pos != separator) 
+		return false; 
+	
+	pos++;
+	return true;
+}
+
+bool Response::ReadMessage(ByteString& bs)
+{
+	bool		ret;
+	uint64_t	num;
+	
+	ret = true;
+	ret = ret && ReadSeparator();
+	ret = ret && ReadUint64(num);
+	ret = ret && ReadSeparator();
+	ret = ret && ReadData(bs, num);
+	
+	return ret;
+}
+
+bool Response::ReadData(ByteString& bs, uint64_t length)
+{
+	if (pos - length > data.buffer + data.length)
+		return false;
+	
+	bs.buffer = pos;
+	bs.length = length;
+
+	pos += length;
+	
+	return true;
+}
+
+bool Response::ValidateLength()
+{
+	if ((pos - data.buffer) != (int) data.length) 
+		return false;
+	
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -27,1014 +173,648 @@ static char* strnchr(const char* s, int c, int len)
 //
 /////////////////////////////////////////////////////////////////////
 
-KeyspaceClient::Result::Result(KeyspaceClient &client_) :
-client(client_)
+
+void Result::Close()
 {
-	id = 0;
-	type = 0;
-	status = KEYSPACE_OK;
+	Response**	it;
+	
+	while ((it = responses.Head()) != NULL)
+	{
+		responses.Remove(it);
+		delete *it;
+	}
 }
 
-KeyspaceClient::Result::~Result()
+Result* Result::Next(int &status)
 {
-}
+	Response**	it;
 
-void KeyspaceClient::Result::Close()
-{
-	id = 0;
-	type = 0;
-	key.Clear();
-	value.Clear();
-	status = KEYSPACE_OK;
-}
-
-KeyspaceClient::Result* KeyspaceClient::Result::Next(int &status_)
-{
-	ByteString	resp;
-	int			ret;
-	
-	if (id == 0)
+	it = responses.Head();
+	if (!it)
 	{
-		status_ = KEYSPACE_ERROR;
-		return NULL;
-	}
-	
-	ret = client.Read(resp);
-	if (ret < 0)
-	{
-		Close();
-		status_ = KEYSPACE_ERROR;
-		return NULL;
-	}
-	
-	if (type == KEYSPACECLIENT_GET)
-		ret = ParseValueResponse(resp);
-	else if (type == KEYSPACECLIENT_LIST)
-		ret = ParseListResponse(resp);
-	else if (type == KEYSPACECLIENT_LISTP)
-		ret = ParseListPResponse(resp);
-	
-	client.readBuf.Remove(0, resp.length);
-
-	if (ret < 0)
-	{
-		Close();
-		status_ = ret;
+		status = KEYSPACE_OK;
 		return NULL;
 	}
 
-	if (ret == 0)
+	delete *it;
+	responses.Remove(it);
+
+	if (!responses.Head())
 	{
-		Close();
-		status_ = KEYSPACE_OK;
+		status = KEYSPACE_OK;
 		return NULL;
 	}
-	
-	status_ = status = KEYSPACE_OK;
 	
 	return this;
 }
 
-const ByteString& KeyspaceClient::Result::Key()
+const ByteString& Result::Key()
 {
-	return key;
-}
-
-const ByteString& KeyspaceClient::Result::Value()
-{
-	return value;
-}
-
-int KeyspaceClient::Result::Status()
-{
-	return status;
-}
-
-int KeyspaceClient::Result::ParseValueResponse(const ByteString &resp)
-{
-	const char*		colon;
-	const char*		sid;
-	const char*		vallen;
-	const char*		code;
-	uint64_t		respId;
-	unsigned		nread;
-	int				len;
+	Response**	it;
 	
-	// length of the full response
-	colon = strnchr(resp.buffer, ':', resp.length);
-	if (!colon)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// response code
-	code = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-	
-	if (code[0] == KEYSPACECLIENT_NOTMASTER)
-		return KEYSPACE_NOTMASTER;
-	if (code[0] == KEYSPACECLIENT_FAILED)
-		return KEYSPACE_FAILED;
-	
-	if (code[0] != KEYSPACECLIENT_OK)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// response id
-	sid = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-
-	respId = strntoint64(sid, colon - sid, &nread);
-	if (respId != id)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// length of value
-	vallen = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return false;
-	
-	len = (int) strntoint64(vallen, colon - vallen, &nread);
-	if (nread < 1)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	if ((unsigned) len != resp.length - (colon - resp.buffer))
-		return KEYSPACE_ERROR;
-	
-	value.Clear();
-	value.Append(colon, len);
-	
-	return len;
-}
-
-int KeyspaceClient::Result::ParseListResponse(const ByteString &resp)
-{
-	const char*		colon;
-	const char*		sid;
-	const char*		vallen;
-	const char*		code;
-	uint64_t		respId;
-	unsigned		nread;
-	int				len;
-	
-	// length of the full response
-	colon = strnchr(resp.buffer, ':', resp.length);
-	if (!colon)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// response code
-	code = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-
-	if (code[0] != KEYSPACECLIENT_LISTITEM && code[0] != KEYSPACECLIENT_LISTEND)
-		return KEYSPACE_ERROR;
-	
-	if (code[0] == KEYSPACECLIENT_LISTEND)
-		return KEYSPACE_OK;
-	
-	colon++;
-	// response id
-	sid = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-
-	respId = strntoint64(sid, colon - sid, &nread);
-	if (respId != id)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// length of value
-	vallen = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return false;
-	
-	len = (int) strntoint64(vallen, colon - vallen, &nread);
-	if (nread < 1)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	if ((unsigned) len != resp.length - (colon - resp.buffer))
-		return KEYSPACE_ERROR;
-	
-	key.Clear();
-	key.Append(colon, len);
-	
-	return len;
-}
-
-int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
-{
-	const char*		colon;
-	const char*		sid;
-	const char*		vallen;
-	const char*		code;
-	uint64_t		respId;
-	unsigned		nread;
-	int				len;
-	
-	// length of the full response
-	colon = strnchr(resp.buffer, ':', resp.length);
-	if (!colon)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// response code
-	code = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-
-	if (code[0] != KEYSPACECLIENT_LISTPITEM && code[0] != KEYSPACECLIENT_LISTEND)
-		return KEYSPACE_ERROR;
-
-	if (code[0] == KEYSPACECLIENT_LISTEND)
-		return KEYSPACE_OK;
-	
-	colon++;
-	// response id
-	sid = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-
-	respId = strntoint64(sid, colon - sid, &nread);
-	if (respId != id)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// length of key
-	vallen = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return false;
-	
-	len = (int) strntoint64(vallen, colon - vallen, &nread);
-	if (nread < 1)
-		return KEYSPACE_ERROR;
-
-	colon += nread;
-	key.Clear();
-	key.Append(colon, len);
-	
-	colon += len + 1;
-	// length of value
-	vallen = colon;
-	colon = strnchr(colon, ':', resp.length - (colon - resp.buffer));
-	if (!colon)
-		return false;
-	
-	len = (int) strntoint64(vallen, colon - vallen, &nread);
-	if (nread < 1)
-		return KEYSPACE_ERROR;
-
-	colon += nread;
-	if ((unsigned) len != resp.length - (colon - resp.buffer))
-		return KEYSPACE_ERROR;
-
-	value.Clear();
-	value.Append(colon, len);
-	
-	
-	return len;
-}
-
-
-/////////////////////////////////////////////////////////////////////
-//
-// KeyspaceClient implementation
-//
-/////////////////////////////////////////////////////////////////////
-
-KeyspaceClient::KeyspaceClient() :
-result(*this)
-{
-	endpoints = NULL;
-}
-
-int KeyspaceClient::Init(int nodec, char* nodev[], uint64_t timeout_)
-{
-	timeout = timeout_;
-	numEndpoints = nodec;
-
-	connectMaster = false;
-	endpoint = NULL;
-
-	delete[] endpoints;
-	endpoints = new Endpoint[nodec];
-	for (int i = 0; i < numEndpoints; i++)
-		endpoints[i].Set(nodev[i]);
-	
-	id = Now();
-	startId = 0;
-	numPending = 0;
-	srand(time(NULL));
-	return Reconnect();
-}
-
-KeyspaceClient::~KeyspaceClient()
-{
-	delete[] endpoints;
-}
-
-int KeyspaceClient::ConnectMaster()
-{
-	int			master = KEYSPACE_ERROR;
-	uint64_t	starttime = 0;
-	
-	connectMaster = true;
-	if (timeout)
-		starttime = Now();
-
-	while (master < 0 && (timeout == 0 || Now() - starttime < timeout))
-	{
-		master = GetMaster();
-		if (master >= 0 && endpoint == &endpoints[master])
-			break;
-
-		Disconnect();
-		if (master >= 0)
-		{
-			if (master >= numEndpoints)
-				return KEYSPACE_ERROR;
-
-			if (Connect(master))
-				return master;
-		}
+	it = responses.Head();
+	if (it)
+		return (*it)->key;
 		
-		master = KEYSPACE_ERROR;
-	}
-	return master;
+	return empty;
 }
 
-/////////////////////////////////////////////////////////////////////
-//
-// read commands
-//
-/////////////////////////////////////////////////////////////////////
-
-// GetMaster is special because it combines application logic with low-level
-// connect logic.
-int KeyspaceClient::GetMaster()
+const ByteString& Result::Value()
 {
-	int				master = -1;
-	unsigned		nread;
-	int				ret;
-	uint64_t		starttime;
-	DynArray<32>	msg;
-	DynArray<32>	cmd;
-	ByteArray<CS_INT_SIZE(int)>	resp;
+	Response**	it;
 	
-	cmd.Writef("%c:%U", KEYSPACECLIENT_GETMASTER, GetNextID());
-	msg.Writef("%u:%B", cmd.length, cmd.length, cmd.buffer);
-	
-	starttime = Now();
-	while (master < 0 && (timeout == 0 || Now() - starttime < timeout))
-	{
-		while (!endpoint)
-		{
-			Disconnect();
-			if (ConnectRandom())
-				break;
-			if (timeout && Now() - starttime > timeout)
-				return KEYSPACE_ERROR;
-		}
-
-		Log_Trace("sending %.*s, node = %d", msg.length, msg.buffer, endpoint - endpoints);
-		ret = socket.Send(msg.buffer, msg.length, timeout);
-		if ((unsigned) ret < msg.length)
-		{
-			Disconnect();
-			continue;
-		}
-			
-		if (GetValueResponse(resp) < 0)
-		{
-			Disconnect();
-			continue;
-		}
-			
-		master = (int) strntoint64(resp.buffer, resp.length, &nread);
-		if (nread < 1)
-		{
-			master = -1;
-			Disconnect();
-			continue;
-		}
+	it = responses.Head();
+	if (it)
+		return (*it)->value;
 		
-		return master;
-	}
+	return empty;
+}
+
+int Result::Status()
+{
+	Response**	it;
 	
+	it = responses.Head();
+	if (it)
+		return (*it)->status;
+		
 	return KEYSPACE_ERROR;
 }
 
-int KeyspaceClient::Get(const ByteString &key, ByteString &value, bool dirty)
+void Result::AppendResponse(Response* resp_)
 {
-	ByteString		args[1];
-	char			cmd;
-	
-	args[0] = key;
-	
-	if (dirty)
-		cmd = KEYSPACECLIENT_DIRTYGET;
-	else
-		cmd = KEYSPACECLIENT_GET;
-
-	if (SendMessage(cmd, false, 1, args) < 0)
-		return KEYSPACE_ERROR;
-
-	return GetValueResponse(value);
+	responses.Append(resp_);
 }
 
-int KeyspaceClient::DirtyGet(const ByteString &key, ByteString &value)
+//===================================================================
+//
+// ClientConn
+//
+//===================================================================
+ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_) :
+client(client),
+endpoint(endpoint_)
+{
+	nodeID = nodeID_;
+}
+
+void ClientConn::Send(Command &cmd)
+{
+	cmd.nodeID = nodeID;
+	
+	if (cmd.submit)
+	{
+		Write(cmd.msg.buffer, cmd.msg.length, false);
+		Write("1:*", 3);
+	}
+	else
+	{
+		Write(cmd.msg.buffer, cmd.msg.length);
+	}
+}
+
+bool ClientConn::ProcessMessage(Response* resp)
+{
+	Command**	it;
+	unsigned	nread;
+	
+	for (it = client.sentCommands.Head(); it != NULL; /* advanced in body */)
+	{
+		Command* cmd = *it;
+		
+		if (cmd->cmdID == resp->id)
+		{
+			cmd->status = resp->status;
+			
+			if (cmd->type == KEYSPACECLIENT_GETMASTER)
+			{
+				getMasterPending = false;
+				if (resp->status == KEYSPACE_OK)
+					client.master = (int) strntoint64(resp->value.buffer, resp->value.length, &nread);
+				if (nread != resp->value.length)
+					resp->status = KEYSPACE_ERROR;
+				
+				delete cmd;
+				client.sentCommands.Remove(it);
+				return false;
+			}
+			
+			if (cmd->type == KEYSPACECLIENT_LIST ||
+				cmd->type == KEYSPACECLIENT_LISTP ||
+				cmd->type == KEYSPACECLIENT_DIRTYLIST ||
+				cmd->type == KEYSPACECLIENT_DIRTYLISTP)
+			{
+				if (resp->key.length == 0)
+				{
+					delete cmd;
+					client.sentCommands.Remove(it);
+				}
+				else
+					client.result.AppendResponse(resp);
+			}
+			else
+			{
+				delete cmd;
+				client.sentCommands.Remove(it);
+				client.result.AppendResponse(resp);
+			}
+			
+			return true;
+		}
+		else
+			it = client.sentCommands.Next(it);
+	}
+	
+	return true;
+}
+
+void ClientConn::DeleteCommands()
+{
+	Command**	it;
+
+	for (it = client.sentCommands.Head(); it != NULL; /* advanced in body */)
+	{
+		Command*	cmd;
+
+		cmd = *it;
+		if (cmd->nodeID == nodeID)
+		{
+			it = client.sentCommands.Remove(it);
+			client.result.Close();
+		}
+		else
+			it = client.sentCommands.Next(it);
+	}
+}
+
+void ClientConn::GetMaster()
+{
+	Command* cmd;
+	
+	cmd = client.CreateCommand(KEYSPACECLIENT_GETMASTER, false, 0, NULL);
+	client.sentCommands.Append(cmd);
+	Send(*cmd);
+	getMasterPending = true;
+}
+
+Endpoint& ClientConn::GetEndpoint()
+{
+	return endpoint;
+}
+
+void ClientConn::OnMessageRead(const ByteString& msg)
+{
+	Response	*resp;
+	
+	resp = new Response;
+	if (resp->Read(msg))
+	{
+		if (!ProcessMessage(resp))
+			delete resp;
+		client.StateFunc();
+	}
+	else
+		delete resp;
+}
+
+void ClientConn::OnWrite()
+{
+	TCPConn<>::OnWrite();
+	if (!tcpwrite.active)
+		client.StateFunc();
+}
+
+void ClientConn::OnClose()
+{
+	Close();
+	client.StateFunc();
+	DeleteCommands();
+}
+
+void ClientConn::OnConnect()
+{
+	TCPConn<>::OnConnect();
+	AsyncRead();
+	client.StateFunc();
+}
+
+void ClientConn::OnConnectTimeout()
+{
+	Close();
+	client.StateFunc();
+}
+
+//===================================================================
+//
+// Command
+//
+//===================================================================
+Command::Command()
+{
+	type = 0;
+	nodeID = -1;
+	status = 0;
+	cmdID = 0;
+	submit = false;
+}
+
+//===================================================================
+//
+// Client
+//
+//===================================================================
+Client::~Client()
+{
+	for (int i = 0; i < numConns; i++)
+	{
+		delete conns[i];
+	}
+	delete[] conns;
+	IOProcessor::Shutdown();
+}
+
+int Client::Init(int nodec, char* nodev[], uint64_t timeout_)
+{
+	timeout = timeout_;
+	IOProcessor::Init(nodec + 64);
+	conns = new ClientConn*[nodec];
+	
+	for (int i = 0; i < nodec; i++)
+	{
+		Endpoint endpoint;
+		
+		endpoint.Set(nodev[i]);
+		conns[i] = new ClientConn(*this, i, endpoint);
+	}
+	numConns = nodec;
+	master = -1;
+	cmdID = 0;
+	
+	return KEYSPACECLIENT_OK;
+}
+
+int Client::GetMaster()
+{
+	return master;
+}
+
+int Client::Get(const ByteString &key, ByteString &value, bool dirty)
+{
+	int		ret;
+
+	ret = Get(key, dirty);
+	if (ret < 0)
+		return ret;
+	
+	if (value.size < result.Value().length)
+		return result.Value().length;
+	
+	value.Set(result.Value());
+	return KEYSPACE_OK;
+}
+
+int	Client::DirtyGet(const ByteString &key, ByteString &value)
 {
 	return Get(key, value, true);
 }
 
-/////////////////////////////////////////////////////////////////////
-//
-// read commands with result
-//
-/////////////////////////////////////////////////////////////////////
-
-int KeyspaceClient::Get(const ByteString &key, bool dirty)
+int Client::Get(const ByteString &key, bool dirty)
 {
-	ByteString		args[1];
-	char			cmd;
+	Command*	cmd;
+	ByteString	args[1];
 
-	// there is an active operation
-	if (result.id != 0)
-		return KEYSPACE_ERROR;
-	
 	args[0] = key;
+
+	if (dirty)
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTYGET, false, 1, args);
+		dirtyCommands.Add(cmd);
+	}
+	else
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_GET, false, 1, args);
+		safeCommands.Add(cmd);
+	}
+
+	result.Close();
+	
+	EventLoop();	
+	return result.Status();
+}
+
+int Client::DirtyGet(const ByteString &key)
+{
+	return Get(key);
+}
+
+int	Client::List(const ByteString &prefix, uint64_t count, bool dirty)
+{
+	Command*	cmd;
+	ByteString	args[2];
+	DynArray<32> countString;
+	
+	countString.Writef("%U", count);
+	
+	args[0] = prefix;
+	args[1] = countString;
 	
 	if (dirty)
-		cmd = KEYSPACECLIENT_DIRTYGET;
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTYLIST, false, 2, args);
+		dirtyCommands.Add(cmd);
+	}
 	else
-		cmd = KEYSPACECLIENT_GET;
-
-	if (SendMessage(cmd, false, 1, args) < 0)
-		return KEYSPACE_ERROR;
-
-	result.id = id;
-	result.type = KEYSPACECLIENT_GET;
-	result.key.Append(key.buffer, key.length);
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_LIST, false, 2, args);
+		safeCommands.Add(cmd);
+	}
 	
-	return KEYSPACE_OK;
+	result.Close();
+	
+	EventLoop();
+	return result.Status();
 }
 
-int KeyspaceClient::DirtyGet(const ByteString &key)
-{
-	return Get(key, true);
-}
-
-int	KeyspaceClient::DirtyList(const ByteString &prefix, uint64_t count)
+int	Client::DirtyList(const ByteString &prefix, uint64_t count)
 {
 	return List(prefix, count, true);
 }
 
-int KeyspaceClient::List(const ByteString &prefix, uint64_t count, bool dirty)
+int Client::ListP(const ByteString &prefix, uint64_t count, bool dirty)
 {
-	ByteString		args[2];
-	ByteString		resp;
-	char			cmd;
-	ByteArray<CS_INT_SIZE(count)> scount;
-
-	// there is an active operation
-	if (result.id != 0)
-		return KEYSPACE_ERROR;
+	Command*	cmd;
+	ByteString	args[2];
+	DynArray<32> countString;
 	
-	scount.Writef("%U", count);
+	countString.Writef("%U", count);
 	
 	args[0] = prefix;
-	args[1] = scount;
+	args[1] = countString;
 	
 	if (dirty)
-		cmd = KEYSPACECLIENT_DIRTYLIST;
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTYLISTP, false, 2, args);
+		dirtyCommands.Add(cmd);
+	}
 	else
-		cmd = KEYSPACECLIENT_LIST;
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_LISTP, false, 2, args);
+		safeCommands.Add(cmd);
+	}
 	
-	if (SendMessage(cmd, false, 2, args) < 0)
-		return KEYSPACE_ERROR;
-
-	result.id = id;
-	result.type = KEYSPACECLIENT_LIST;
+	result.Close();
 	
-	return KEYSPACE_OK;
+	EventLoop();
+	return result.Status();	
 }
 
-int	KeyspaceClient::DirtyListP(const ByteString &prefix, uint64_t count)
+int Client::DirtyListP(const ByteString &prefix, uint64_t count)
 {
 	return ListP(prefix, count, true);
 }
 
-int KeyspaceClient::ListP(const ByteString &prefix, uint64_t count, bool dirty)
+Result* Client::GetResult(int &status)
 {
-	ByteString		args[2];
-	ByteString		resp;
-	char			cmd;
-	ByteArray<CS_INT_SIZE(count)> scount;
-
-	// there is an active operation
-	if (result.id != 0)
-		return KEYSPACE_ERROR;
+	status = result.Status();
 	
-	scount.Writef("%U", count);
+	if (result.responses.Head())
+		return &result;
 	
-	args[0] = prefix;
-	args[1] = scount;
-	
-	if (dirty)
-		cmd = KEYSPACECLIENT_DIRTYLISTP;
-	else
-		cmd = KEYSPACECLIENT_LISTP;
-	
-	if (SendMessage(cmd, false, 2, args) < 0)
-		return KEYSPACE_ERROR;
-
-	result.id = id;
-	result.type = KEYSPACECLIENT_LISTP;
-
-	return KEYSPACE_OK;
+	return NULL;
 }
 
-KeyspaceClient::Result* KeyspaceClient::GetResult(int &status)
+int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 {
-	status = KEYSPACE_ERROR;
-	if (result.id == 0)
-		return NULL;
-	
-	status = KEYSPACE_OK;
-	ResetReadBuffer();
-	return result.Next(status);
-}
-
-/////////////////////////////////////////////////////////////////////
-//
-// write commands
-//
-/////////////////////////////////////////////////////////////////////
-
-int KeyspaceClient::Set(const ByteString &key, const ByteString &value, bool submit)
-{
-	ByteString		args[2];
-
-	if (!submit && startId == 0)
-		return KEYSPACE_ERROR;
+	Command*	cmd;
+	ByteString	args[2];
+	int			status;
 	
 	args[0] = key;
 	args[1] = value;
 	
-	if (SendMessage(KEYSPACECLIENT_SET, submit, 2, args) < 0)
-		return KEYSPACE_ERROR;
+	cmd = CreateCommand(KEYSPACECLIENT_SET, submit, 2, args);
+	safeCommands.Add(cmd);
 	
 	if (!submit)
-	{
-		numPending++;
 		return KEYSPACE_OK;
-	}
 	
-	return GetStatusResponse();
+	result.Close();
+	EventLoop();
+	status = result.Status();
+	
+	return status;
 }
 
-int KeyspaceClient::TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, bool submit)
+int Client::TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, bool submit)
 {
-	ByteString		args[3];
-
-	if (!submit && startId == 0)
-		return KEYSPACE_ERROR;
+	Command*	cmd;
+	ByteString	args[3];
+	int			status;
 	
 	args[0] = key;
 	args[1] = test;
 	args[2] = value;
 	
-	if (SendMessage(KEYSPACECLIENT_TESTANDSET, submit, 3, args) < 0)
-		return KEYSPACE_ERROR;
-
+	cmd = CreateCommand(KEYSPACECLIENT_TESTANDSET, submit, 3, args);
+	safeCommands.Add(cmd);
+	
 	if (!submit)
-	{
-		numPending++;
-		return KEYSPACE_OK;
-	}
-
-	return GetStatusResponse();
-}
-
-int KeyspaceClient::Add(const ByteString &key, int64_t num, int64_t &result, bool submit)
-{
-	ByteString		args[2];
-	unsigned		nread;
-	ByteArray<CS_INT_SIZE(num)>		snum;
-	ByteArray<CS_INT_SIZE(result)>	resp;
-	
-	if (!submit && startId == 0)
-		return KEYSPACE_ERROR;
-
-	snum.Writef("%U", num);
-	
-	args[0] = key;
-	args[1] = snum;
-	
-	if (SendMessage(KEYSPACECLIENT_ADD, submit, 2, args) < 0)
-		return KEYSPACE_ERROR;
-
-	if (!submit)
-	{
-		numPending++;
-		return KEYSPACE_OK;
-	}
-
-	if (GetValueResponse(resp) < 0)
-		return KEYSPACE_ERROR;
-	
-	result = strntoint64(resp.buffer, resp.length, &nread);
-	if (nread < 1)
-		return KEYSPACE_ERROR;
-		
-	return KEYSPACE_OK;
-}
-
-int KeyspaceClient::Delete(const ByteString &key, bool submit)
-{
-	ByteString		args[1];
-
-	if (!submit && startId == 0)
-		return KEYSPACE_ERROR;
-	
-	args[0] = key;
-	
-	if (SendMessage(KEYSPACECLIENT_DELETE, submit, 1, args) < 0)
-		return KEYSPACE_ERROR;
-
-	if (!submit)
-	{
-		numPending++;
-		return KEYSPACE_OK;
-	}
-
-	return GetStatusResponse();
-}
-
-int KeyspaceClient::Begin()
-{
-	if (numPending > 0)
-		return KEYSPACE_ERROR;
-
-	numPending = 0;
-	startId = id + 1;
-	
-	return KEYSPACE_OK;
-}
-
-int KeyspaceClient::Submit()
-{
-	ByteString	msg;
-	int			status = KEYSPACE_OK;
-	char*		colon;
-
-	if (startId == 0 || numPending == 0)
 		return KEYSPACE_OK;
 
-	Log_Trace("sending 1:*, node = %d", endpoint - endpoints);
-	if (socket.Send("1:*", 3, timeout) < 0)
-	{
-		startId = 0;
-		numPending = 0;
-		return KEYSPACE_ERROR;
-	}
-
-	ResetReadBuffer();
-	
-	while (numPending > 0)
-	{
-		if (Read(msg) < 0)
-			return KEYSPACE_ERROR;
-		
-		colon = strnchr(msg.buffer, ':', msg.length);
-		if (!colon)
-			status = KEYSPACE_ERROR;
-		else
-		{
-			colon++;
-
-			if (colon[0] == KEYSPACECLIENT_FAILED)
-				status = KEYSPACECLIENT_FAILED;
-			else if (colon[0] == KEYSPACECLIENT_NOTMASTER)
-				status = KEYSPACE_NOTMASTER;
-			else if (colon[0] != KEYSPACECLIENT_OK)
-				status = KEYSPACE_ERROR;
-		}
-		
-		Log_Trace("%.*s", msg.length, msg.buffer);
-		readBuf.Remove(0, msg.length);
-
-		numPending--;
-	}
-	
-	startId = 0;
+	result.Close();
+	EventLoop();
+	status = result.Status();
 	
 	return status;
 }
 
-/////////////////////////////////////////////////////////////////////
-//
-// KeyspaceClient private implementation
-//
-/////////////////////////////////////////////////////////////////////
-
-
-uint64_t KeyspaceClient::GetNextID()
+int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 {
-	return ++id;
-}
-
-int KeyspaceClient::Reconnect()
-{
-	bool		ret;
-	uint64_t	starttime;
+	Command*	cmd;
+	ByteString	args[2];
+	DynArray<32> numString;
+	unsigned	nread;
+	int			status;
 	
-	starttime = Now();
-	while (timeout == 0 || Now() - starttime < timeout)
-	{
-		if (connectMaster && ConnectMaster() >= 0)
-			ret = true;
-		else
-			ret = ConnectRandom();
+	numString.Writef("%U", num);
+	
+	args[0] = key;
+	args[1] = numString;
+	
+	cmd = CreateCommand(KEYSPACECLIENT_ADD, submit, 2, args);
+	safeCommands.Add(cmd);
+	
+	if (!submit)
+		return KEYSPACE_OK;
 
-		if (ret)
-			return KEYSPACE_OK;
-		Sleep(RECONNECT_TIMEOUT);
+	result.Close();
+	EventLoop();
+	status = result.Status();
+	
+	if (status != KEYSPACE_OK)
+	{
+		result.Close();
+		return status;
 	}
 	
-	return KEYSPACE_ERROR;
+	// TODO check conversion
+	res = strntoint64(result.Value().buffer, result.Value().length, &nread);
+	result.Close();
+	return status;
 }
 
-bool KeyspaceClient::ConnectRandom()
+int Client::Delete(const ByteString &key, bool submit)
 {
-	int rnd;
+	Command*	cmd;
+	ByteString	args[1];
+	int			status;
 	
-	rnd = rand();
-	rnd = rnd % numEndpoints;
-	return Connect(rnd);
+	args[0] = key;
+	
+	cmd = CreateCommand(KEYSPACECLIENT_DELETE, submit, 1, args);
+	safeCommands.Add(cmd);
+	
+	if (!submit)
+		return KEYSPACE_OK;
+
+	result.Close();
+	EventLoop();
+	status = result.Status();
+	
+	return status;
 }
 
-bool KeyspaceClient::Connect(int n)
+int Client::Begin()
 {
-	bool	ret;
-	
-	endpoint = &endpoints[n];
-	socket.Close();
-	socket.Create(TCP);
-	ret = socket.Connect(*endpoint);
-	if (ret)
-		socket.SetNonblocking();
-	
-	return ret;
+	if (!IsDone())
+		return KEYSPACE_ERROR;
+
+	result.Close();
+
+	return KEYSPACE_OK;
 }
 
-void KeyspaceClient::Disconnect()
+int Client::Submit()
 {
-	if (endpoint)
+	Command**	it;
+	
+	it = safeCommands.Tail();
+	if (it)
+		(*it)->submit = true;
+	else
+		return KEYSPACE_OK;
+	
+	EventLoop();
+	return result.Status();
+}
+
+void Client::EventLoop()
+{
+	while(!IsDone())
 	{
-		socket.Close();
-		endpoint = NULL;
+		StateFunc();
+		EventLoop::RunOnce();
 	}
 }
 
-int KeyspaceClient::SendMessage(char cmd, bool submit, int msgc, const ByteString *msgv)
+bool Client::IsDone()
 {
-	DynArray<128>	msg;
+	if (safeCommands.Length() == 0 &&
+		dirtyCommands.Length() == 0 &&
+		sentCommands.Length() == 0)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+void Client::StateFunc()
+{
+	for (int i = 0; i < numConns; i++)
+	{
+		if (conns[i]->GetState() == ClientConn::DISCONNECTED)
+			conns[i]->Connect(conns[i]->GetEndpoint(), timeout);
+	}
+	
+	if (safeCommands.Length() > 0 && master == -1)
+	{
+		for (int i = 0; i < numConns; i++)
+		{
+			if (conns[i]->GetState() == ClientConn::CONNECTED && !conns[i]->getMasterPending)
+				conns[i]->GetMaster();
+		}
+	}
+	
+	if (safeCommands.Length() > 0 && master != -1 && conns[master]->GetState() == ClientConn::CONNECTED)
+	{
+		Command** it;
+		
+		it = safeCommands.Head();
+		safeCommands.Remove(it);
+		sentCommands.Append(*it);
+			
+		conns[master]->Send(**it);
+	}
+	
+	
+	if (dirtyCommands.Length() > 0)
+	{
+		for (int i = 0; i < numConns; i++)
+		{
+			if (conns[i]->GetState() == ClientConn::CONNECTED)
+			{
+				Command** it;
+				
+				it = dirtyCommands.Head();
+				dirtyCommands.Remove(it);
+				sentCommands.Append(*it);
+				
+				conns[i]->Send(**it);
+				break;
+			}
+		}
+	}
+}
+
+uint64_t Client::GetNextID()
+{
+	return cmdID++;
+}
+
+Command* Client::CreateCommand(char type, bool submit, int msgc, ByteString *msgv)
+{
+	Command*		cmd;
 	int				len;
 	char			tmp[20];
 	char			idbuf[20];
 	int				idlen;
-	uint64_t		cmdID;
-	
-	cmdID = GetNextID();
+
+	cmd = new Command;
+	cmd->cmdID = GetNextID();
+	cmd->type = type;
+	cmd->submit = submit;
 	
 	len = 2; // command + colon
-	idlen = snwritef(idbuf, sizeof(idbuf), "%U", cmdID);
+	idlen = snwritef(idbuf, sizeof(idbuf), "%U", cmd->cmdID);
 	len += idlen;
 	for (int i = 0; msgv && i < msgc; i++)
 		len += 1 + NumLen(msgv[i].length) + 1 + msgv[i].length;
 	
-	len = snprintf(tmp, sizeof(tmp), "%d:", len);
-	msg.Append(tmp, len);
+	len = snwritef(tmp, sizeof(tmp), "%d:", len);
+	cmd->msg.Append(tmp, len);
 	
-	msg.Append(&cmd, 1);
-	msg.Append(":", 1);
-	msg.Append(idbuf, idlen);
+	cmd->msg.Append(&type, 1);
+	cmd->msg.Append(":", 1);
+	cmd->msg.Append(idbuf, idlen);
 	
 	for (int i = 0; msgv && i < msgc; i++)
 	{
-		len = snprintf(tmp, sizeof(tmp), ":%d:", msgv[i].length);
-		msg.Append(tmp, len);
-		msg.Append(msgv[i].buffer, msgv[i].length);
+		len = snwritef(tmp, sizeof(tmp), ":%d:", msgv[i].length);
+		cmd->msg.Append(tmp, len);
+		cmd->msg.Append(msgv[i].buffer, msgv[i].length);
 	}
 	
-	if (submit)
-		msg.Append("1:*", 3);
-	
-	return Send(msg);
-}
-
-int KeyspaceClient::Send(const ByteString &msg)
-{
-	int			ret;
-	uint64_t	starttime;
-	
-	starttime = Now();
-	
-//	Log_Trace("sending %.*s, node = %d", msg.length, msg.buffer, endpoint - endpoints);
-	while (timeout == 0 || Now() - starttime < timeout)
-	{
-		Log_Trace("sending %.*s, node = %d", msg.length, msg.buffer, endpoint - endpoints);
-		ret = socket.Send(msg.buffer, msg.length, timeout);
-		if (ret == (int) msg.length)
-			return KEYSPACE_OK;
-		
-		Disconnect();
-		Reconnect();
-	}
-	
-	return KEYSPACE_ERROR;
-}
-
-void KeyspaceClient::ResetReadBuffer()
-{
-	readBuf.Clear();
-}
-
-int KeyspaceClient::ReadMessage(ByteString &msg)
-{
-	char*		colon;
-	int			length;
-	int			slength;
-	unsigned	nread;
-	
-	colon = strnchr(readBuf.buffer, ':', readBuf.length);
-	if (!colon)
-		return -1;
-	
-	slength = (int) strntoint64(readBuf.buffer, colon - readBuf.buffer, &nread);
-	if (nread < 0)
-		return -1;
-	
-	length = colon - readBuf.buffer + 1 + slength;
-	if (readBuf.length < (unsigned) length)
-		return -1;
-	
-	msg.buffer = readBuf.buffer;
-	msg.length = length;
-	msg.size = length;
-	
-	return length;
-}
-
-int KeyspaceClient::Read(ByteString &msg)
-{
-	char	buf[4096];
-	int		ret;
-	
-	while (true)
-	{
-		ret = ReadMessage(msg);
-		if (ret >= 0)
-			return ret;
-		
-		ret = socket.Read(buf, sizeof(buf), timeout);
-		if (ret <= 0)
-			return KEYSPACE_ERROR;
-		
-		readBuf.Append(buf, ret);
-	}
-}
-
-int KeyspaceClient::GetValueResponse(ByteString &resp)
-{
-	ByteString		msg;
-	const char*		colon;
-	const char*		sid;
-	const char*		vallen;
-	const char*		code;
-	uint64_t		respId;
-	unsigned		nread;
-	int				len;
-	
-	ResetReadBuffer();
-	if (Read(msg) < 0)
-		return KEYSPACE_ERROR;
-
-	Log_Trace("%.*s", msg.length, msg.buffer);
-	
-	// length of the full response
-	colon = strnchr(msg.buffer, ':', msg.length);
-	if (!colon)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// response code
-	code = colon;
-	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-	
-	if (code[0] == KEYSPACECLIENT_NOTMASTER)
-		return KEYSPACE_NOTMASTER;
-	if (code[0] == KEYSPACECLIENT_FAILED)
-		return KEYSPACE_FAILED;
-	
-	if (code[0] != KEYSPACECLIENT_OK)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// response id
-	sid = colon;
-	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-
-	respId = strntoint64(sid, colon - sid, &nread);
-	if (respId != id)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// length of value
-	vallen = colon;
-	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
-	if (!colon)
-		return false;
-	
-	len = (int) strntoint64(vallen, colon - vallen, &nread);
-	if (nread < 1)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	if ((unsigned) len != msg.length - (colon - msg.buffer))
-		return KEYSPACE_ERROR;
-	
-	if (resp.size < (unsigned) len)
-		return len;
-
-	memcpy(resp.buffer, colon, len);
-	resp.length = len;
-	
-	return len;
-}
-
-int KeyspaceClient::GetStatusResponse()
-{
-	ByteString		msg;
-	const char*		colon;
-	const char*		code;
-	uint64_t		cmdID;
-	unsigned		nread;
-	
-	ResetReadBuffer();
-	if (Read(msg) < 0)
-		return KEYSPACE_ERROR;
-
-	Log_Trace("%.*s", msg.length, msg.buffer);
-	
-	// length of the full response
-	colon = strnchr(msg.buffer, ':', msg.length);
-	if (!colon)
-		return KEYSPACE_ERROR;
-	
-	colon++;
-	// response code
-	code = colon;
-	colon = strnchr(colon, ':', msg.length - (colon - msg.buffer));
-	if (!colon)
-		return KEYSPACE_ERROR;
-
-	if (code[0] == KEYSPACECLIENT_NOTMASTER)
-		return KEYSPACE_NOTMASTER;
-	
-	if (code[0] == KEYSPACECLIENT_FAILED)
-		return KEYSPACE_FAILED;
-	
-	if (code[0] != KEYSPACECLIENT_OK)
-		return KEYSPACE_ERROR;
-	
-	// TODO compare ids
-	colon++;
-	cmdID = (uint64_t) strntouint64(colon, msg.length - (colon - msg.buffer), &nread);
-	if (nread < 1)
-		return KEYSPACE_ERROR;
-	
-	if (id != cmdID)
-		return KEYSPACE_ERROR;
-	
-	return KEYSPACE_OK;
+	return cmd;
 }
 

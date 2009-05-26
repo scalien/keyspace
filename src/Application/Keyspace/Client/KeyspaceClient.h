@@ -4,51 +4,120 @@
 #include "System/IO/Endpoint.h"
 #include "System/IO/Socket.h"
 #include "System/Buffer.h"
+#include "System/Containers/List.h"
+#include "System/Stopwatch.h"
+#include "Framework/Transport/MessageConn.h"
 
 #define KEYSPACE_OK			0
 #define KEYSPACE_NOTMASTER	-1
 #define KEYSPACE_FAILED		-2
 #define KEYSPACE_ERROR		-3
 
-class KeyspaceClient
+namespace Keyspace
+{
+
+class Client;
+class Command;
+
+class Response
 {
 public:
-	class Result
-	{
-	public:
-		friend class KeyspaceClient;
-		
-		Result(KeyspaceClient &client);
-		~Result();
-		
-		void				Close();
-		Result*				Next(int &status);
-
-		const ByteString&	Key();
-		const ByteString&	Value();
-		int					Status();
-
-	private:
-		KeyspaceClient		&client;
-		uint64_t			id;
-		int					type;
-		DynArray<128>		key;
-		DynArray<128>		value;
-		int					status;
-		
-		int					ParseValueResponse(const ByteString &resp);
-		int					ParseListResponse(const ByteString &resp);
-		int					ParseListPResponse(const ByteString &resp);
-	};
+	DynArray<128>	key;
+	DynArray<128>	value;
+	char			status;
+	uint64_t		id;
 	
-	KeyspaceClient();
-	~KeyspaceClient();
+	bool			Read(const ByteString& data);
+private:
+	char*			pos;
+	char			separator;
+	ByteString		data;
+	ByteString		msg;
+	
+	bool			CheckOverflow();
+	bool			ReadUint64(uint64_t& num);
+	bool			ReadChar(char& c);
+	bool			ReadSeparator();
+	bool			ReadMessage(ByteString& bs);
+	bool			ReadData(ByteString& bs, uint64_t length);
+
+	bool			ValidateLength();
+};
+
+class ClientConn : public MessageConn<>
+{
+public:
+	ClientConn(Client &client, int nodeID, const Endpoint &endpoint_);
+
+	virtual void	OnMessageRead(const ByteString& msg);
+	virtual void	OnWrite();
+	virtual void	OnClose();
+	virtual void	OnConnect();
+	virtual void	OnConnectTimeout();
+
+	Endpoint&		GetEndpoint();
+	void			Send(Command &cmd);
+	bool			ProcessMessage(Response* msg);
+	bool			ReadMessage(ByteString &msg);
+	void			GetMaster();
+	void			DeleteCommands();
+
+private:
+	friend class Client;
+
+	Client&			client;
+	Endpoint		endpoint;
+	bool			getMasterPending;
+	int				nodeID;
+};
+
+typedef List<Response*> ResponseList;
+
+class Result
+{
+public:
+	void				Close();
+	Result*				Next(int &status);
+
+	const ByteString&	Key();
+	const ByteString&	Value();
+	int					Status();
+
+private:
+	friend class ClientConn;
+	friend class Client;
+	
+	ResponseList		responses;
+	ByteString			empty;
+	
+	void				AppendResponse(Response* resp);
+};
+
+class Command
+{
+public:
+	Command();
+
+	char				type;
+	DynArray<128>		msg;
+	int					nodeID;
+	int					status;
+	uint64_t			cmdID;
+	bool				submit;
+};
+
+typedef List<Command*> CommandList;
+
+class Client
+{
+public:
+	~Client();
 	
 	int				Init(int nodec, char* nodev[], uint64_t timeout);
 	
-	// master connection related commands
-	int				ConnectMaster();
+	// connection state related commands
 	int				GetMaster();
+	int				GetState(int node);
 	
 	// simple get commands with preallocated value
 	int				Get(const ByteString &key, ByteString &value, bool dirty = false);
@@ -76,33 +145,27 @@ public:
 	int				Submit();
 
 private:
-	friend class Result;
+	friend class ClientConn;
 	
-	bool			connectMaster;
-	int				numEndpoints;
-	Endpoint*		endpoints;
-	Endpoint*		endpoint;
-	uint64_t		timeout;
-	uint64_t		id;
-	uint64_t		startId;
-	int				numPending;
-	Socket			socket;
-	DynArray<4096>	readBuf;
-	Result			result;
-		
+	void			StateFunc();
+	void			EventLoop();
+	bool			IsDone();
 	uint64_t		GetNextID();
-	int				Reconnect();
-	bool			ConnectRandom();
-	bool			Connect(int n);
-	void			Disconnect();
-	int				SendMessage(char cmd, bool submit, int msgc, const ByteString *msgv);
-	int				Send(const ByteString &msg);
-	void			ResetReadBuffer();
-	int				Read(ByteString &msg);
-	int				ReadMessage(ByteString &msg);
-
-	int				GetValueResponse(ByteString &resp);
-	int				GetStatusResponse();
+	Command*		CreateCommand(char cmd, bool submit, int msgc, ByteString *msgv);
+	
+	
+	CommandList		safeCommands;
+	CommandList		dirtyCommands;
+	CommandList		sentCommands;
+	ClientConn		**conns;
+	int				numConns;
+	int				numFinished;
+	int				master;
+	uint64_t		timeout;
+	uint64_t		cmdID;
+	Result			result;
 };
+
+}; // namespace
 
 #endif

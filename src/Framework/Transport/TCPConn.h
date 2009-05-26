@@ -120,9 +120,7 @@ void TCPConn<bufferSize>::Init(bool startRead)
 template<int bufferSize>
 void TCPConn<bufferSize>::OnWrite()
 {
-	Log_Trace();
-
-	Log_Message("Written %d bytes", tcpwrite.data.length);
+	Log_Trace("Written %d bytes", tcpwrite.data.length);
 
 	Buffer* buf;
 	
