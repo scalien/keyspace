@@ -3,6 +3,7 @@
 #include <string>
 #include <stdlib.h>
 #include <inttypes.h>
+#include "Buffer.h"
 
 int64_t strntoint64_t(const char* buffer, int length, unsigned* nread)
 {
@@ -104,6 +105,123 @@ void* Alloc(int num, int size)
 		return NULL;
 		
 	return malloc(num * size);
+}
+
+
+int snreadf(char* buffer, unsigned length, const char* format, ...)
+{
+	int			required;
+	va_list		ap;	
+	
+	va_start(ap, format);
+	required = vsnreadf(buffer, length, format, ap);
+	va_end(ap);
+	
+	return required;
+}
+
+int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
+{
+	char*		c;
+	int*		d;
+	unsigned*	u;
+	int64_t*	i64;
+	uint64_t*	u64;
+	ByteString*	bs;
+	unsigned	nread;
+	bool		ret;
+
+#define ADVANCE(f, b)	{ format += f; buffer += b; length -= b; }
+#define EXIT()			{ ret = false; break; }
+#define REQUIRE(r)		{ if (length < r) EXIT() }
+
+	ret = true;
+
+	while(format[0] != '\0')
+	{
+		if (format[0] == '%')
+		{
+			if (format[1] == '\0')
+				EXIT(); // % cannot be at the end of the format string
+			
+			if (format[1] == '%') // %%
+			{
+				REQUIRE(1);
+				if (buffer[0] != '%') EXIT();
+				ADVANCE(2, 1);
+			} else if (format[1] == 'c') // %c
+			{
+				REQUIRE(1);
+				c = va_arg(ap, char*);
+				*c = buffer[0];
+				ADVANCE(2, 1);
+			} else if (format[1] == 'd') // %d
+			{
+				d = va_arg(ap, int*);
+				*d = strntoint64_t(buffer, length, &nread);
+				if (nread < 1) EXIT();
+				ADVANCE(2, nread);
+			} else if (format[1] == 'u') // %u
+			{
+				u = va_arg(ap, unsigned*);
+				*u = strntouint64_t(buffer, length, &nread);
+				if (nread < 1) EXIT();
+				ADVANCE(2, nread);
+			} else if (format[1] == 'I') // %I
+			{
+				i64 = va_arg(ap, int64_t*);
+				*i64 = strntoint64_t(buffer, length, &nread);
+				if (nread < 1) EXIT();
+				ADVANCE(2, nread);
+			} else if (format[1] == 'U') // %U
+			{
+				u64 = va_arg(ap, uint64_t*);
+				*u64 = strntouint64_t(buffer, length, &nread);
+				if (nread < 1) EXIT();
+				ADVANCE(2, nread);
+			}
+			else if (format[1] == 'M') // %M
+			{
+				bs = va_arg(ap, ByteString*);
+				// read the length prefix
+				bs->length = strntouint64_t(buffer, length, &nread);
+				if (nread < 1) EXIT();
+				if (bs->length > bs->size)
+				{
+					bs->length = 0;
+					EXIT();
+				}
+				ADVANCE(0, nread);
+				// read the ':'
+				REQUIRE(1);
+				if (buffer[0] != ':') EXIT();
+				ADVANCE(0, 1);
+				// read the message body
+				REQUIRE(bs->length);
+				memcpy(bs->buffer, buffer, bs->length);
+				ADVANCE(2, bs->length);
+			}
+			else
+			{
+				ASSERT_FAIL();
+			}
+		}
+		else
+		{
+			REQUIRE(1);
+			if (buffer[0] != format[0]) EXIT();
+			ADVANCE(1, 1);
+		}
+	}
+	
+	if (length != 0 || format[0] != '\0')
+		ret = false;
+	
+	return ret;
+
+#undef ADVANCE
+#undef EXIT
+#undef REQUIRE
 }
 
 /*
