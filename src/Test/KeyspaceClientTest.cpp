@@ -1,4 +1,4 @@
-#include "Application/Keyspace/Client/KeyspaceClient2.h"
+#include "Application/Keyspace/Client/KeyspaceClient.h"
 #include "System/Stopwatch.h"
 #include <signal.h>
 
@@ -13,8 +13,8 @@ void IgnorePipeSignal()
 
 int KeyspaceClientTest()
 {
-//	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
-	char			*nodes[] = {"127.0.0.1:7080"};
+	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
+//	char			*nodes[] = {"127.0.0.1:7080"};
 	Keyspace::Client client;
 	int				master;
 	DynArray<128>	key;
