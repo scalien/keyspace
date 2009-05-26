@@ -33,7 +33,7 @@ bool TimeCheckMsg::Read(ByteString& data)
 	switch (data.buffer[0])
 	{
 		case TIMECHECK_REQUEST:
-			ret = snreadf(data.buffer, data.length, "%c:%U:%U:%U", &type, &nodeID,
+			ret = snreadf(data.buffer, data.length, "%c:%u:%U:%U", &type, &nodeID,
 						  &series, &requestTimestamp);
 			break;
 		case TIMECHECK_RESPONSE:
@@ -54,7 +54,7 @@ bool TimeCheckMsg::Write(ByteString& data)
 	switch (type)
 	{
 		case TIMECHECK_REQUEST:
-			req = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID,
+			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U", type, nodeID,
 						   series, requestTimestamp);
 			break;
 		case TIMECHECK_RESPONSE:
