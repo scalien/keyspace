@@ -1,5 +1,4 @@
 #include "keyspace_client.h"
-
 #include "KeyspaceClient.h"
 
 keyspace_result_t
