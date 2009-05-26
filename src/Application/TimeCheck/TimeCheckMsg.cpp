@@ -25,36 +25,45 @@ void TimeCheckMsg::Response(unsigned nodeID_, uint64_t series_,
 
 bool TimeCheckMsg::Read(ByteString& data)
 {
-	if (snreadf(data.buffer, data.length, "%c:%U:%U:%U", &type, &nodeID,
-				&series, &requestTimestamp))
-	{
-		if (type != TIMECHECK_REQUEST)
-			return false;
-	}
-	else if (snreadf(data.buffer, data.length, "%c:%u:%U:%U:%U", &type, &nodeID,
-					 &series, &requestTimestamp, &responseTimestamp))
-	{
-		if (type != TIMECHECK_RESPONSE)
-			return false;
-	}
-	else
-		return false;
+	bool ret;
 	
-	return true;
+	if (data.length < 1)
+		return false;
+
+	switch (data.buffer[0])
+	{
+		case TIMECHECK_REQUEST:
+			ret = snreadf(data.buffer, data.length, "%c:%U:%U:%U", &type, &nodeID,
+						  &series, &requestTimestamp);
+			break;
+		case TIMECHECK_RESPONSE:
+			ret = snreadf(data.buffer, data.length, "%c:%u:%U:%U:%U", &type, &nodeID,
+						  &series, &requestTimestamp, &responseTimestamp);
+			break;
+		default:
+			ret = false;
+	}
+	
+	return ret;
 }
 
 bool TimeCheckMsg::Write(ByteString& data)
 {
 	unsigned required;
 	
-	if (type == TIMECHECK_REQUEST)
-		required = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID,
-							series, requestTimestamp);
-	else if (type == TIMECHECK_RESPONSE)
-		required = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U", type,
-							nodeID, series, requestTimestamp, responseTimestamp);
-	else
-		return false;
+	switch (type)
+	{
+		case TIMECHECK_REQUEST:
+			required = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID,
+								series, requestTimestamp);
+			break;
+		case TIMECHECK_RESPONSE:
+			required = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U", type,
+								nodeID, series, requestTimestamp, responseTimestamp);
+			break;
+		default:
+			return false;
+	}
 	
 	if (required < 0 || (unsigned)required > data.size)
 		return false;
