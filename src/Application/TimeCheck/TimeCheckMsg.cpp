@@ -25,43 +25,22 @@ void TimeCheckMsg::Response(unsigned nodeID_, uint64_t series_,
 
 bool TimeCheckMsg::Read(ByteString& data)
 {
-	unsigned	nread;
-	char		*pos;
-	
-#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64(num)		(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
-								if (nread < 1) return false; pos += nread;
-#define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != ':') return false; pos++;
-#define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
-
-	pos = data.buffer;
-	CheckOverflow();
-	ReadChar(type); CheckOverflow();
-	ReadSeparator(); CheckOverflow();
-	ReadUint64(nodeID); CheckOverflow();
-	ReadSeparator(); CheckOverflow();
-	ReadUint64(series); CheckOverflow();
-	ReadSeparator(); CheckOverflow();
-	ReadUint64(requestTimestamp);
-		
-	if (type == TIMECHECK_REQUEST)
+	if (snreadf(data.buffer, data.length, "%c:%U:%U:%U", &type, &nodeID,
+				&series, &requestTimestamp))
 	{
-		ValidateLength();
-		Request(nodeID, series, requestTimestamp);
-		return true;
+		if (type != TIMECHECK_REQUEST)
+			return false;
 	}
-	else if (type == TIMECHECK_RESPONSE)
+	else if (snreadf(data.buffer, data.length, "%c:%u:%U:%U:%U", &type, &nodeID,
+					 &series, &requestTimestamp, &responseTimestamp))
 	{
-		CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		ReadUint64(responseTimestamp);
-		ValidateLength();
-		Response(nodeID, series, requestTimestamp, responseTimestamp);
-		return true;
+		if (type != TIMECHECK_RESPONSE)
+			return false;
 	}
+	else
+		return false;
 	
-	return false;
+	return true;
 }
 
 bool TimeCheckMsg::Write(ByteString& data)
@@ -72,7 +51,7 @@ bool TimeCheckMsg::Write(ByteString& data)
 		required = snwritef(data.buffer, data.size, "%c:%d:%U:%U", type, nodeID,
 							series, requestTimestamp);
 	else if (type == TIMECHECK_RESPONSE)
-		required = snwritef(data.buffer, data.size, "%c:%d:%U:%U:%U", type,
+		required = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U", type,
 							nodeID, series, requestTimestamp, responseTimestamp);
 	else
 		return false;
