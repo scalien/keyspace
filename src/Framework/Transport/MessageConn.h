@@ -16,13 +16,15 @@ template<int bufferSize>
 void MessageConn<bufferSize>::OnRead()
 {
 	TCPRead& tcpread = TCPConn<bufferSize>::tcpread;
-	unsigned msglength, nread, msgbegin, msgend;
+	unsigned pos, msglength, nread, msgbegin, msgend;
 			
 	tcpread.requested = IO_READ_ANY;
 
+	pos = 0;
+
 	do
 	{
-		msglength = strntouint64(tcpread.data.buffer, tcpread.data.length, &nread);
+		msglength = strntouint64(tcpread.data.buffer + pos, tcpread.data.length - pos, &nread);
 		
 		if (msglength > tcpread.data.size - NumLen(msglength) - 1)
 		{
@@ -30,40 +32,40 @@ void MessageConn<bufferSize>::OnRead()
 			return;
 		}
 		
-		if (nread == 0 || (unsigned) tcpread.data.length <= nread)
+		if (nread == 0 || (unsigned) tcpread.data.length - pos <= nread)
 			break;
 			
-		if (tcpread.data.buffer[nread] != ':')
+		if (tcpread.data.buffer[pos + nread] != ':')
 		{
 			Log_Trace("Message protocol error");
 			OnClose();
 			return;
 		}
 	
-		msgbegin = nread + 1;
-		msgend = nread + 1 + msglength;
+		msgbegin = pos + nread + 1;
+		msgend = pos + nread + 1 + msglength;
 		
 		if ((unsigned) tcpread.data.length < msgend)
 		{
-			tcpread.requested = msgend;
+			tcpread.requested = msgend - pos;
 			break;
 		}
 
 		OnMessageRead(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin));
 		
+		pos = msgend;
+		
 		// if the user called Close() in OnMessageRead()
 		if (TCPConn<bufferSize>::state != TCPConn<bufferSize>::CONNECTED)
 			return;
 		
-		// move the rest back to the beginning of the buffer
-		memcpy(tcpread.data.buffer, tcpread.data.buffer + msgend,
-			tcpread.data.length - msgend);
-		tcpread.data.length = tcpread.data.length - msgend;
-		
-		if (tcpread.data.length == 0)
+		if (tcpread.data.length == msgend)
 			break;
 	}
 	while (true);
+	
+	if (pos > 0)
+		memcpy(tcpread.data.buffer, tcpread.data.buffer + pos, tcpread.data.length - pos);
 	
 	if (TCPConn<bufferSize>::state == TCPConn<bufferSize>::CONNECTED)
 		IOProcessor::Add(&tcpread);
