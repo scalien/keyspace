@@ -145,7 +145,7 @@ void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		
 		if (ret)
 		{
-			num = strntoint64_t(data.buffer, data.length, &nread); // parse number
+			num = strntoint64(data.buffer, data.length, &nread); // parse number
 			if (nread == (unsigned) data.length)
 			{
 				num = num + msg.num;

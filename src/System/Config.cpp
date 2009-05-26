@@ -35,7 +35,7 @@ public:
 		unsigned	nread;
 		char		last;
 		
-		ret = (int) strntoint64_t(value.buffer, value.length, &nread);
+		ret = (int) strntoint64(value.buffer, value.length, &nread);
 
 		// value is zero-terminated so we need the second character from backwards
 		if (nread == value.length - 2)

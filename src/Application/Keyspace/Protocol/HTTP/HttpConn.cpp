@@ -381,7 +381,7 @@ int HttpConn::ProcessGetRequest()
 			return -1;
 		}
 		
-		op->num = strntoint64_t(value, valuelen, &nread);
+		op->num = strntoint64(value, valuelen, &nread);
 		if (nread != (unsigned) valuelen)
 		{
 			delete op;
@@ -526,7 +526,7 @@ int HttpConn::ProcessGetRequest()
 			}
 			else
 			{
-				op->count = strntouint64_t(count, countlen, &nread);
+				op->count = strntouint64(count, countlen, &nread);
 				if (nread != (unsigned) countlen)
 				{
 					delete op;

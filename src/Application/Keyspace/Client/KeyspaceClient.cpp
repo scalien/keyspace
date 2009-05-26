@@ -147,7 +147,7 @@ int KeyspaceClient::Result::ParseValueResponse(const ByteString &resp)
 	if (!colon)
 		return KEYSPACE_ERROR;
 
-	respId = strntoint64_t(sid, colon - sid, &nread);
+	respId = strntoint64(sid, colon - sid, &nread);
 	if (respId != id)
 		return KEYSPACE_ERROR;
 	
@@ -158,7 +158,7 @@ int KeyspaceClient::Result::ParseValueResponse(const ByteString &resp)
 	if (!colon)
 		return false;
 	
-	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
+	len = (int) strntoint64(vallen, colon - vallen, &nread);
 	if (nread < 1)
 		return KEYSPACE_ERROR;
 	
@@ -207,7 +207,7 @@ int KeyspaceClient::Result::ParseListResponse(const ByteString &resp)
 	if (!colon)
 		return KEYSPACE_ERROR;
 
-	respId = strntoint64_t(sid, colon - sid, &nread);
+	respId = strntoint64(sid, colon - sid, &nread);
 	if (respId != id)
 		return KEYSPACE_ERROR;
 	
@@ -218,7 +218,7 @@ int KeyspaceClient::Result::ParseListResponse(const ByteString &resp)
 	if (!colon)
 		return false;
 	
-	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
+	len = (int) strntoint64(vallen, colon - vallen, &nread);
 	if (nread < 1)
 		return KEYSPACE_ERROR;
 	
@@ -267,7 +267,7 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 	if (!colon)
 		return KEYSPACE_ERROR;
 
-	respId = strntoint64_t(sid, colon - sid, &nread);
+	respId = strntoint64(sid, colon - sid, &nread);
 	if (respId != id)
 		return KEYSPACE_ERROR;
 	
@@ -278,7 +278,7 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 	if (!colon)
 		return false;
 	
-	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
+	len = (int) strntoint64(vallen, colon - vallen, &nread);
 	if (nread < 1)
 		return KEYSPACE_ERROR;
 
@@ -293,7 +293,7 @@ int KeyspaceClient::Result::ParseListPResponse(const ByteString &resp)
 	if (!colon)
 		return false;
 	
-	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
+	len = (int) strntoint64(vallen, colon - vallen, &nread);
 	if (nread < 1)
 		return KEYSPACE_ERROR;
 
@@ -423,7 +423,7 @@ int KeyspaceClient::GetMaster()
 			continue;
 		}
 			
-		master = (int) strntoint64_t(resp.buffer, resp.length, &nread);
+		master = (int) strntoint64(resp.buffer, resp.length, &nread);
 		if (nread < 1)
 		{
 			master = -1;
@@ -656,7 +656,7 @@ int KeyspaceClient::Add(const ByteString &key, int64_t num, int64_t &result, boo
 	if (GetValueResponse(resp) < 0)
 		return KEYSPACE_ERROR;
 	
-	result = strntoint64_t(resp.buffer, resp.length, &nread);
+	result = strntoint64(resp.buffer, resp.length, &nread);
 	if (nread < 1)
 		return KEYSPACE_ERROR;
 		
@@ -885,7 +885,7 @@ int KeyspaceClient::ReadMessage(ByteString &msg)
 	if (!colon)
 		return -1;
 	
-	slength = (int) strntoint64_t(readBuf.buffer, colon - readBuf.buffer, &nread);
+	slength = (int) strntoint64(readBuf.buffer, colon - readBuf.buffer, &nread);
 	if (nread < 0)
 		return -1;
 	
@@ -963,7 +963,7 @@ int KeyspaceClient::GetValueResponse(ByteString &resp)
 	if (!colon)
 		return KEYSPACE_ERROR;
 
-	respId = strntoint64_t(sid, colon - sid, &nread);
+	respId = strntoint64(sid, colon - sid, &nread);
 	if (respId != id)
 		return KEYSPACE_ERROR;
 	
@@ -974,7 +974,7 @@ int KeyspaceClient::GetValueResponse(ByteString &resp)
 	if (!colon)
 		return false;
 	
-	len = (int) strntoint64_t(vallen, colon - vallen, &nread);
+	len = (int) strntoint64(vallen, colon - vallen, &nread);
 	if (nread < 1)
 		return KEYSPACE_ERROR;
 	
@@ -1028,7 +1028,7 @@ int KeyspaceClient::GetStatusResponse()
 	
 	// TODO compare ids
 	colon++;
-	cmdID = (uint64_t) strntouint64_t(colon, msg.length - (colon - msg.buffer), &nread);
+	cmdID = (uint64_t) strntouint64(colon, msg.length - (colon - msg.buffer), &nread);
 	if (nread < 1)
 		return KEYSPACE_ERROR;
 	

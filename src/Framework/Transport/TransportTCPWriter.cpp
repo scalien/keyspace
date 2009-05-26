@@ -41,7 +41,6 @@ void TransportTCPWriter::OnConnect()
 	TCPConn<>::OnConnect();
 	
 	Log_Message("endpoint = %s", endpoint.ToString());
-	tcpwrite.onComplete = &onWrite;
 	
 	AsyncRead();
 }

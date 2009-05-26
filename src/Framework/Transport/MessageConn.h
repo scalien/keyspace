@@ -22,7 +22,7 @@ void MessageConn<bufferSize>::OnRead()
 
 	do
 	{
-		msglength = strntouint64_t(tcpread.data.buffer, tcpread.data.length, &nread);
+		msglength = strntouint64(tcpread.data.buffer, tcpread.data.length, &nread);
 		
 		if (msglength > tcpread.data.size - NumLen(msglength) - 1)
 		{

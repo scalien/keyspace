@@ -269,7 +269,7 @@ const char* MemcacheConn::ProcessSetCommand(const char* data, int size, Token* t
 	op->type = KeyspaceOp::SET;
 	
 	numlen = 0;
-	num = strntoint64_t((char *) tokens[TOKEN_BYTES].value, tokens[TOKEN_BYTES].len, &numlen);
+	num = strntoint64((char *) tokens[TOKEN_BYTES].value, tokens[TOKEN_BYTES].len, &numlen);
 	if (numlen != (unsigned) tokens[TOKEN_BYTES].len)
 		return NULL;
 	

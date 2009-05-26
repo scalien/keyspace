@@ -54,9 +54,9 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	ByteString  key, value, test;
 	
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64_t(num)	(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64(num)	(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
-#define ReadInt64_t(num)	(num) = strntoint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadInt64_t(num)	(num) = strntoint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
@@ -69,14 +69,14 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	
 	if (type == KEYSPACE_SET)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(value.length); CheckOverflow();
+		ReadUint64(value.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		value.buffer = pos;
 		pos += value.length;
@@ -92,21 +92,21 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	}
 	else if (type == KEYSPACE_TESTANDSET)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(test.length); CheckOverflow();
+		ReadUint64(test.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		test.buffer = pos;
 		pos += test.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(value.length); CheckOverflow();
+		ReadUint64(value.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		value.buffer = pos;
 		pos += value.length;
@@ -122,7 +122,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	}
 	else if (type == KEYSPACE_ADD)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
@@ -139,7 +139,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	}
 	else if (type == KEYSPACE_DELETE)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
@@ -153,7 +153,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	}
 	else if (type == KEYSPACE_PRUNE)
 	{
-		ReadUint64_t(prefix.length); CheckOverflow();
+		ReadUint64(prefix.length); CheckOverflow();
 		ReadSeparator(); if (prefix.length > 0) CheckOverflow();
 		prefix.buffer = pos;
 		pos += prefix.length;

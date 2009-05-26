@@ -30,7 +30,7 @@ bool CatchupMsg::Read(ByteString data)
 	ByteString	key, value, dbCommand;
 	
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64(num)		(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
@@ -44,7 +44,7 @@ bool CatchupMsg::Read(ByteString data)
 	{
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		
 		key.buffer = pos;
@@ -52,7 +52,7 @@ bool CatchupMsg::Read(ByteString data)
 		
 		pos += key.length;
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(value.length); CheckOverflow();
+		ReadUint64(value.length); CheckOverflow();
 		ReadSeparator();
 
 		value.buffer = pos;
@@ -67,7 +67,7 @@ bool CatchupMsg::Read(ByteString data)
 	{
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(paxosID);
+		ReadUint64(paxosID);
 		
 		ValidateLength();
 		Commit(paxosID);

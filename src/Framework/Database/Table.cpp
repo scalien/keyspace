@@ -90,7 +90,7 @@ bool Table::Get(Transaction* transaction, const char* key, uint64_t& value)
 	if (!Get(transaction, key, ba))
 		return false;
 	
-	value = strntouint64_t(ba.buffer, ba.length, &nread);
+	value = strntouint64(ba.buffer, ba.length, &nread);
 	
 	if (nread != ba.length)
 		return false;

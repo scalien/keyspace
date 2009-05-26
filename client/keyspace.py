@@ -218,6 +218,7 @@ class KeyspaceClient:
 				self.sock.sendall(msg)
 				return
 			except socket.error, e:
+				self._trace(str(e))
 				self._disconnect()
 				self._reconnect()
 	

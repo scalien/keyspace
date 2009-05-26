@@ -9,7 +9,8 @@
 class EventLoop : public Scheduler
 {
 public:	
-	static long			RunOnce();	
+	static long			RunTimers();	
+	static void			RunOnce();
 	static void			Run();
 	static void			Shutdown();
 };

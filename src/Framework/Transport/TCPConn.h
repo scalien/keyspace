@@ -26,6 +26,13 @@ template<int bufferSize = MAX_TCP_MESSAGE_SIZE>
 class TCPConn
 {
 public:
+	enum State 
+	{
+		DISCONNECTED,
+		CONNECTED,
+		CONNECTING
+	};
+
 	TCPConn			*next;
 
 	TCPConn();
@@ -36,17 +43,12 @@ public:
 	void			Close();
 
 	Socket&			GetSocket() { return socket; }
+	const State		GetState() { return state; }
 	
 protected:
 	typedef DynArray<bufferSize>			Buffer;
 	typedef Queue<Buffer, &Buffer::next>	BufferQueue;
 
-	enum State 
-	{
-		DISCONNECTED,
-		CONNECTED,
-		CONNECTING
-	};
 	
 	State			state;
 	Socket			socket;
@@ -143,6 +145,7 @@ void TCPConn<bufferSize>::OnConnect()
 	Log_Trace();
 	
 	state = CONNECTED;
+	tcpwrite.onComplete = &onWrite;
 	
 	EventLoop::Remove(&connectTimeout);
 	WritePending();

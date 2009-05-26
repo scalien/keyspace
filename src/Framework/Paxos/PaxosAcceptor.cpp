@@ -73,28 +73,28 @@ bool PaxosAcceptor::ReadState()
 	if (!ret)
 		return false;
 
-	paxosID = strntouint64_t(data[0].buffer, data[0].length, &nread);
+	paxosID = strntouint64(data[0].buffer, data[0].length, &nread);
 	if (nread != (unsigned) data[0].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.accepted = strntoint64_t(data[1].buffer, data[1].length, &nread);
+	state.accepted = strntoint64(data[1].buffer, data[1].length, &nread);
 	if (nread != (unsigned) data[1].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.promisedProposalID = strntouint64_t(data[2].buffer, data[2].length, &nread);
+	state.promisedProposalID = strntouint64(data[2].buffer, data[2].length, &nread);
 	if (nread != (unsigned) data[2].length)
 	{
 		Log_Trace();
 		return false;
 	}
 	
-	state.acceptedProposalID = strntouint64_t(data[3].buffer, data[3].length, &nread);
+	state.acceptedProposalID = strntouint64(data[3].buffer, data[3].length, &nread);
 	if (nread != (unsigned) data[3].length)
 	{
 		Log_Trace();

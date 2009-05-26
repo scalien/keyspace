@@ -5,7 +5,7 @@
 #include <inttypes.h>
 #include "Buffer.h"
 
-int64_t strntoint64_t(const char* buffer, int length, unsigned* nread)
+int64_t strntoint64(const char* buffer, int length, unsigned* nread)
 {
 	bool	neg;
 	long	i, digit;
@@ -55,7 +55,7 @@ int64_t strntoint64_t(const char* buffer, int length, unsigned* nread)
 #undef ADVANCE
 }
 
-uint64_t strntouint64_t(const char* buffer, int length, unsigned* nread)
+uint64_t strntouint64(const char* buffer, int length, unsigned* nread)
 {
 	long		i, digit;
 	uint64_t	n;
@@ -158,25 +158,25 @@ int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
 			} else if (format[1] == 'd') // %d
 			{
 				d = va_arg(ap, int*);
-				*d = strntoint64_t(buffer, length, &nread);
+				*d = strntoint64(buffer, length, &nread);
 				if (nread < 1) EXIT();
 				ADVANCE(2, nread);
 			} else if (format[1] == 'u') // %u
 			{
 				u = va_arg(ap, unsigned*);
-				*u = strntouint64_t(buffer, length, &nread);
+				*u = strntouint64(buffer, length, &nread);
 				if (nread < 1) EXIT();
 				ADVANCE(2, nread);
 			} else if (format[1] == 'I') // %I
 			{
 				i64 = va_arg(ap, int64_t*);
-				*i64 = strntoint64_t(buffer, length, &nread);
+				*i64 = strntoint64(buffer, length, &nread);
 				if (nread < 1) EXIT();
 				ADVANCE(2, nread);
 			} else if (format[1] == 'U') // %U
 			{
 				u64 = va_arg(ap, uint64_t*);
-				*u64 = strntouint64_t(buffer, length, &nread);
+				*u64 = strntouint64(buffer, length, &nread);
 				if (nread < 1) EXIT();
 				ADVANCE(2, nread);
 			}
@@ -184,7 +184,7 @@ int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
 			{
 				bs = va_arg(ap, ByteString*);
 				// read the length prefix
-				bs->length = strntouint64_t(buffer, length, &nread);
+				bs->length = strntouint64(buffer, length, &nread);
 				if (nread < 1) EXIT();
 				if (bs->length > bs->size)
 				{

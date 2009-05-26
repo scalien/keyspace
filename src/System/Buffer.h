@@ -62,7 +62,7 @@ public:
 		return true;		
 	}
 	
-	bool Set(ByteString other)
+	bool Set(const ByteString& other)
 	{
 		if (other.length > size)
 			return false;
@@ -279,7 +279,7 @@ public:
 		buffer = newbuffer;
 		size = newsize;
 	}
-	
+/*	
 	virtual bool Printf(const char* fmt, ...)
 	{
 		va_list ap;
@@ -298,7 +298,7 @@ public:
 		
 		return true;
 	}
-	
+*/	
 	virtual bool Writef(const char* fmt, ...)
 	{
 		va_list ap;

@@ -2,7 +2,7 @@
 
 EventLoop eventLoop;
 
-long EventLoop::RunOnce()
+long EventLoop::RunTimers()
 {
 	Timer** it;
 	Timer* timer;
@@ -25,19 +25,22 @@ long EventLoop::RunOnce()
 	return -1; // no timers to wait for
 }
 
-void EventLoop::Run()
+void EventLoop::RunOnce()
 {
 	long sleep;
+
+	sleep = RunTimers();
 	
+	if (sleep < 0)
+		sleep = SLEEP_MSEC;
+	
+	IOProcessor::Poll(sleep);
+}
+
+void EventLoop::Run()
+{
 	while(true)
-	{
-		sleep = RunOnce();
-		
-		if (sleep < 0)
-			sleep = SLEEP_MSEC;
-		
-		IOProcessor::Poll(sleep);
-	}
+		RunOnce();
 }
 
 void EventLoop::Shutdown()

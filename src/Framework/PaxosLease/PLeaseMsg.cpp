@@ -78,7 +78,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	char		*pos;
 		
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64(num)		(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
@@ -88,7 +88,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	CheckOverflow();
 	ReadChar(type);	CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(nodeID); CheckOverflow();
+	ReadUint64(nodeID); CheckOverflow();
 	
 	if (type != PREPARE_REQUEST	&&
 		type != PREPARE_RESPONSE &&
@@ -102,9 +102,9 @@ bool PLeaseMsg::Read(ByteString& data)
 	if (type == PREPARE_REQUEST)
 	{
 		
-		ReadUint64_t(proposalID); CheckOverflow();
+		ReadUint64(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(paxosID);
+		ReadUint64(paxosID);
 		
 		ValidateLength();
 		PrepareRequest(nodeID, proposalID, paxosID);
@@ -112,7 +112,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == PREPARE_RESPONSE)
 	{
-		ReadUint64_t(proposalID); CheckOverflow();
+		ReadUint64(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadChar(response);
 	
@@ -130,11 +130,11 @@ bool PLeaseMsg::Read(ByteString& data)
 
 		CheckOverflow();		
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(acceptedProposalID); CheckOverflow();
+		ReadUint64(acceptedProposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(leaseOwner); CheckOverflow();
+		ReadUint64(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(expireTime);
+		ReadUint64(expireTime);
 		
 		ValidateLength();
 		PrepareResponse(nodeID, proposalID, response, acceptedProposalID, leaseOwner, expireTime);
@@ -142,11 +142,11 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == PROPOSE_REQUEST)
 	{		
-		ReadUint64_t(proposalID); CheckOverflow();
+		ReadUint64(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(leaseOwner); CheckOverflow();
+		ReadUint64(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(expireTime);
+		ReadUint64(expireTime);
 		
 		ValidateLength();
 		ProposeRequest(nodeID, proposalID, leaseOwner, expireTime);
@@ -154,7 +154,7 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == PROPOSE_RESPONSE)
 	{
-		ReadUint64_t(proposalID); CheckOverflow();
+		ReadUint64(proposalID); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadChar(response);
 		
@@ -168,9 +168,9 @@ bool PLeaseMsg::Read(ByteString& data)
 	}
 	else if (type == LEARN_CHOSEN)
 	{
-		ReadUint64_t(leaseOwner); CheckOverflow();
+		ReadUint64(leaseOwner); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(expireTime);
+		ReadUint64(expireTime);
 		
 		ValidateLength();
 		LearnChosen(nodeID, leaseOwner, expireTime);

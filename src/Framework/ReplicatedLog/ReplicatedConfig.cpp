@@ -54,7 +54,7 @@ void ReplicatedConfig::InitRestartCounter()
 
 	if (ret)
 	{
-		restartCounter = strntouint64_t(baRestartCounter.buffer, baRestartCounter.length, &nread);
+		restartCounter = strntouint64(baRestartCounter.buffer, baRestartCounter.length, &nread);
 		if (nread != (unsigned) baRestartCounter.length)
 			restartCounter = 0;
 	}

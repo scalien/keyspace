@@ -29,7 +29,7 @@ bool TimeCheckMsg::Read(ByteString& data)
 	char		*pos;
 	
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64(num)		(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
@@ -39,11 +39,11 @@ bool TimeCheckMsg::Read(ByteString& data)
 	CheckOverflow();
 	ReadChar(type); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(nodeID); CheckOverflow();
+	ReadUint64(nodeID); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(series); CheckOverflow();
+	ReadUint64(series); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(requestTimestamp);
+	ReadUint64(requestTimestamp);
 		
 	if (type == TIMECHECK_REQUEST)
 	{
@@ -55,7 +55,7 @@ bool TimeCheckMsg::Read(ByteString& data)
 	{
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(responseTimestamp);
+		ReadUint64(responseTimestamp);
 		ValidateLength();
 		Response(nodeID, series, requestTimestamp, responseTimestamp);
 		return true;

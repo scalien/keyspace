@@ -194,9 +194,9 @@ bool KeyspaceClientReq::Read(ByteString data)
 	ByteString  key, value, test;
 		
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64_t(num)	(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64(num)	(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
-#define ReadInt64_t(num)	(num) = strntoint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadInt64_t(num)	(num) = strntoint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadChar(c)			(c) = *pos; pos++;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
@@ -217,7 +217,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 	
 	CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(cmdID);
+	ReadUint64(cmdID);
 		
 	if (type == KEYSPACECLIENT_GETMASTER)
 	{
@@ -233,7 +233,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 	
 	if (type == KEYSPACECLIENT_GET || type == KEYSPACECLIENT_DIRTYGET)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
@@ -248,13 +248,13 @@ bool KeyspaceClientReq::Read(ByteString data)
 			 type == KEYSPACECLIENT_LISTP || type == KEYSPACECLIENT_DIRTYLISTP)
 	{
 		unsigned countlen;
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(countlen); CheckOverflow();
+		ReadUint64(countlen); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadInt64_t(count);
 		
@@ -271,14 +271,14 @@ bool KeyspaceClientReq::Read(ByteString data)
 	}
 	else if (type == KEYSPACECLIENT_SET)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(value.length); CheckOverflow();
+		ReadUint64(value.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		value.buffer = pos;
 		pos += value.length;
@@ -289,21 +289,21 @@ bool KeyspaceClientReq::Read(ByteString data)
 	}
 	else if (type == KEYSPACECLIENT_TESTANDSET)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(test.length); CheckOverflow();
+		ReadUint64(test.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		test.buffer = pos;
 		pos += test.length;
 		
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(value.length); CheckOverflow();
+		ReadUint64(value.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		value.buffer = pos;
 		pos += value.length;
@@ -316,13 +316,13 @@ bool KeyspaceClientReq::Read(ByteString data)
 	else if (type == KEYSPACECLIENT_ADD)
 	{
 		unsigned numlen;
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
 		CheckOverflow();
 		ReadSeparator(); CheckOverflow();
-		ReadUint64_t(numlen); CheckOverflow();
+		ReadUint64(numlen); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		ReadInt64_t(num);
 		
@@ -331,7 +331,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 	}
 	else if (type == KEYSPACECLIENT_DELETE)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;
@@ -341,7 +341,7 @@ bool KeyspaceClientReq::Read(ByteString data)
 	}
 	else if (type == KEYSPACECLIENT_PRUNE)
 	{
-		ReadUint64_t(key.length); CheckOverflow();
+		ReadUint64(key.length); CheckOverflow();
 		ReadSeparator(); if (key.length > 0) CheckOverflow();
 		key.buffer = pos;
 		pos += key.length;

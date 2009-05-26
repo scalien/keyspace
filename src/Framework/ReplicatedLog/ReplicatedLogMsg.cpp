@@ -20,20 +20,20 @@ bool ReplicatedLogMsg::Read(ByteString& data)
 	char		*pos;
 	
 #define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64_t(num)		(num) = strntouint64_t(pos, data.length - (pos - data.buffer), &nread); \
+#define ReadUint64(num)		(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
 								if (nread < 1) return false; pos += nread;
 #define ReadSeparator()		if (*pos != ':') return false; pos++;
 #define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
 
 	pos = data.buffer;
 	CheckOverflow();
-	ReadUint64_t(nodeID); CheckOverflow();
+	ReadUint64(nodeID); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(restartCounter); CheckOverflow();
+	ReadUint64(restartCounter); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(leaseEpoch); CheckOverflow();
+	ReadUint64(leaseEpoch); CheckOverflow();
 	ReadSeparator(); CheckOverflow();
-	ReadUint64_t(length); CheckOverflow();
+	ReadUint64(length); CheckOverflow();
 	ReadSeparator();
 		
 	if (pos - data.buffer != (int) (data.length - length))
