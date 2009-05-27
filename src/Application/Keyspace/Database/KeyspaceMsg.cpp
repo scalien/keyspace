@@ -1,7 +1,5 @@
 #include "KeyspaceMsg.h"
 #include "KeyspaceService.h"
-#include <stdio.h>
-#include <inttypes.h>
 
 void KeyspaceMsg::Init(char type_)
 {
@@ -18,7 +16,7 @@ void KeyspaceMsg::Set(ByteString key_, ByteString value_)
 	
 void KeyspaceMsg::TestAndSet(ByteString key_, ByteString test_, ByteString value_)
 {
-	Init(KEYSPACE_TESTANDSET);
+	Init(KEYSPACE_TEST_AND_SET);
 	
 	key.Set(key_);
 	test.Set(test_);
@@ -49,153 +47,79 @@ void KeyspaceMsg::Prune(ByteString prefix_)
 	
 bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 {
-	unsigned	nread;
-	char		*pos;
-	ByteString  key, value, test;
+	int read;
 	
-#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64(num)	(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
-								if (nread < 1) return false; pos += nread;
-#define ReadInt64_t(num)	(num) = strntoint64(pos, data.length - (pos - data.buffer), &nread); \
-								if (nread < 1) return false; pos += nread;
-#define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != ':') return false; pos++;
-#define ValidateLength()	if ((pos - data.buffer) != data.length) return false;
-
-	pos = data.buffer;
-	CheckOverflow();
-	ReadChar(type); CheckOverflow();
-	ReadSeparator(); CheckOverflow();
+	if (data.length < 1)
+		return false;
 	
-	if (type == KEYSPACE_SET)
+	switch (data.buffer[0])
 	{
-		ReadUint64(key.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		key.buffer = pos;
-		pos += key.length;
-		
-		CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		ReadUint64(value.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		value.buffer = pos;
-		pos += value.length;
-		
-		if (pos > data.buffer + data.length)
+		case KEYSPACE_SET:
+			read = snreadf(data.buffer, data.length, "%c:%M:%M",
+						   &type, &key, &value);
+			break;
+		case KEYSPACE_TEST_AND_SET:
+			read = snreadf(data.buffer, data.length, "%c:%M:%M:%M",
+						   &type, &key, &test, &value);
+			break;
+		case KEYSPACE_ADD:
+			read = snreadf(data.buffer, data.length, "%c:%M:%I",
+						   &type, &key, &num);
+			break;
+		case KEYSPACE_DELETE:
+			read = snreadf(data.buffer, data.length, "%c:%M",
+						   &type, &key);
+			break;
+		case KEYSPACE_PRUNE:
+			read = snreadf(data.buffer, data.length, "%c:%M",
+						   &type, &prefix);
+			break;
+		default:
 			return false;
-		
-		Set(ByteString(key.length, key.length, key.buffer),
-			ByteString(value.length, value.length, value.buffer));
-		n = pos - data.buffer;
-
-		return true;
-	}
-	else if (type == KEYSPACE_TESTANDSET)
-	{
-		ReadUint64(key.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		key.buffer = pos;
-		pos += key.length;
-		
-		CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		ReadUint64(test.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		test.buffer = pos;
-		pos += test.length;
-		
-		CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		ReadUint64(value.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		value.buffer = pos;
-		pos += value.length;
-		
-		if (pos > data.buffer + data.length)
-			return false;
-		
-		TestAndSet(ByteString(key.length, key.length, key.buffer),
-				   ByteString(test.length, test.length, test.buffer),
-				   ByteString(value.length, value.length, value.buffer));
-		n = pos - data.buffer;
-		return true;
-	}
-	else if (type == KEYSPACE_ADD)
-	{
-		ReadUint64(key.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		key.buffer = pos;
-		pos += key.length;
-		CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		ReadInt64_t(num);
-		
-		if (pos > data.buffer + data.length)
-			return false;
-		
-		Add(ByteString(key.length, key.length, key.buffer), num);
-		n = pos - data.buffer;
-		return true;
-	}
-	else if (type == KEYSPACE_DELETE)
-	{
-		ReadUint64(key.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		key.buffer = pos;
-		pos += key.length;
-		
-		if (pos > data.buffer + data.length)
-			return false;
-		
-		Delete(ByteString(key.length, key.length, key.buffer));
-		n = pos - data.buffer;
-		return true;
-	}
-	else if (type == KEYSPACE_PRUNE)
-	{
-		ReadUint64(prefix.length); CheckOverflow();
-		ReadSeparator(); if (prefix.length > 0) CheckOverflow();
-		prefix.buffer = pos;
-		pos += prefix.length;
-		
-		if (pos > data.buffer + data.length)
-			return false;
-		
-		Prune(ByteString(prefix.length, prefix.length, prefix.buffer));
-		n = pos - data.buffer;
-		return true;
 	}
 	
-	return false;
+	if (read < 0)
+		return false;
+	
+	n = read;
+	
+	return true;
 }
 
 bool KeyspaceMsg::Write(ByteString& data)
 {
-	int required;
+	int req;
 	
-	if (type == KEYSPACE_SET)
-		required = snwritef(data.buffer, data.size, "%c:%M:%M", type,
-			key.length, key.buffer, value.length, value.buffer);
-	else if (type == KEYSPACE_TESTANDSET)
-		required = snwritef(data.buffer, data.size, "%c:%M:%M:%M", type,
-			key.length, key.buffer, test.length, test.buffer,
-			value.length, value.buffer);
-	else if (type == KEYSPACE_ADD)
-		required = snwritef(data.buffer, data.size, "%c:%M:%I", type,
-			key.length, key.buffer, num);
-	else if (type == KEYSPACE_DELETE)
-		required = snwritef(data.buffer, data.size, "%c:%M", type,
-			key.length, key.buffer);
-	else if (type == KEYSPACE_PRUNE)
-		required = snwritef(data.buffer, data.size, "%c:%M", type,
-			prefix.length, prefix.buffer);
-	else
-		return false;
-	
-	if (required < 0 || (unsigned)required > data.size)
+	switch (type)
+	{
+		case KEYSPACE_SET:
+			req = snwritef(data.buffer, data.size, "%c:%M:%M",
+						   type, &key, &value);
+			break;
+		case KEYSPACE_TEST_AND_SET:
+			req = snwritef(data.buffer, data.size, "%c:%M:%M:%M",
+						   type, &key, &test, &value);
+			break;
+		case KEYSPACE_ADD:
+			req = snwritef(data.buffer, data.size, "%c:%M:%I",
+						   type, &key, num);
+			break;
+		case KEYSPACE_DELETE:
+			req = snwritef(data.buffer, data.size, "%c:%M",
+						   type, &key);
+			break;
+		case KEYSPACE_PRUNE:
+			req = snwritef(data.buffer, data.size, "%c:%M",
+						   type, &prefix);
+			break;
+		default:
+			return false;
+	}
+		
+	if (req < 0 || (unsigned)req > data.size)
 		return false;
 		
-	data.length = required;
+	data.length = req;
 	return true;
 }
 
@@ -206,7 +130,7 @@ bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
 	if (op->type == KeyspaceOp::SET)
 		Init(KEYSPACE_SET);
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
-		Init(KEYSPACE_TESTANDSET);
+		Init(KEYSPACE_TEST_AND_SET);
 	else if (op->type == KeyspaceOp::ADD)
 		Init(KEYSPACE_ADD);
 	else if (op->type == KeyspaceOp::DELETE)

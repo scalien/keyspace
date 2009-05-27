@@ -4,11 +4,11 @@
 #include "System/Buffer.h"
 #include "KeyspaceConsts.h"
 
-#define KEYSPACE_SET		's'
-#define KEYSPACE_TESTANDSET	't'
-#define KEYSPACE_ADD		'a'
-#define KEYSPACE_DELETE		'd'
-#define KEYSPACE_PRUNE		'p'
+#define KEYSPACE_SET			's'
+#define KEYSPACE_TEST_AND_SET	't'
+#define KEYSPACE_ADD			'a'
+#define KEYSPACE_DELETE			'd'
+#define KEYSPACE_PRUNE			'p'
 
 class KeyspaceOp;
 

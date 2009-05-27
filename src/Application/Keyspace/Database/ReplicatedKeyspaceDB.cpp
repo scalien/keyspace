@@ -129,7 +129,7 @@ void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	ret = true;
 	if (msg.type == KEYSPACE_SET)
 		ret &= table->Set(transaction, msg.key, msg.value);
-	else if (msg.type == KEYSPACE_TESTANDSET)
+	else if (msg.type == KEYSPACE_TEST_AND_SET)
 	{
 		ret &= table->Get(transaction, msg.key, data);
 		if (data == msg.test)
@@ -170,10 +170,7 @@ void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 		if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
 			ASSERT_FAIL();
 		if ((op->type == KeyspaceOp::ADD || op->type == KeyspaceOp::TEST_AND_SET) && ret)
-		{
-			op->value.Reallocate(data.length);
 			op->value.Set(data);
-		}
 		ops.Remove(op);
 		op->service->OnComplete(op, ret);
 	}
