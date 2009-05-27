@@ -5,9 +5,6 @@
 #include "Framework/Transport/TransportUDPReader.h"
 #include "Framework/Transport/TransportUDPWriter.h"
 #include "Framework/PaxosLease/PLeaseConsts.h"
-#include <stdio.h>
-#include <inttypes.h>
-#include <stdlib.h>
 
 TimeCheck::TimeCheck() :
 	onRead(this, &TimeCheck::OnRead),

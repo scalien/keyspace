@@ -1,9 +1,4 @@
 #include "TimeCheckMsg.h"
-#include <stdint.h>
-#include <stdio.h>
-#include <inttypes.h>
-#include <stdlib.h>
-#include "System/Common.h"
 
 void TimeCheckMsg::Request(unsigned nodeID_, uint64_t series_, uint64_t requestTimestamp_)
 {
@@ -23,9 +18,9 @@ void TimeCheckMsg::Response(unsigned nodeID_, uint64_t series_,
 	responseTimestamp = responseTimestamp_;
 }
 
-bool TimeCheckMsg::Read(ByteString& data)
+bool TimeCheckMsg::Read(const ByteString& data)
 {
-	bool ret;
+	int read;
 	
 	if (data.length < 1)
 		return false;
@@ -33,33 +28,35 @@ bool TimeCheckMsg::Read(ByteString& data)
 	switch (data.buffer[0])
 	{
 		case TIMECHECK_REQUEST:
-			ret = snreadf(data.buffer, data.length, "%c:%u:%U:%U", &type, &nodeID,
-						  &series, &requestTimestamp);
+			read = snreadf(data.buffer, data.length, "%c:%u:%U:%U",
+						   &type, &nodeID, &series, &requestTimestamp);
 			break;
 		case TIMECHECK_RESPONSE:
-			ret = snreadf(data.buffer, data.length, "%c:%u:%U:%U:%U", &type, &nodeID,
-						  &series, &requestTimestamp, &responseTimestamp);
+			read = snreadf(data.buffer, data.length, "%c:%u:%U:%U:%U",
+						   &type, &nodeID, &series,
+						   &requestTimestamp, &responseTimestamp);
 			break;
 		default:
-			ret = false;
+			return false;
 	}
 	
-	return ret;
+	return (read == (signed)data.length ? true : false);
 }
 
 bool TimeCheckMsg::Write(ByteString& data)
 {
-	unsigned req;
+	int req;
 	
 	switch (type)
 	{
 		case TIMECHECK_REQUEST:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U", type, nodeID,
-						   series, requestTimestamp);
+			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U",
+						   type, nodeID, series, requestTimestamp);
 			break;
 		case TIMECHECK_RESPONSE:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U", type,
-						   nodeID, series, requestTimestamp, responseTimestamp);
+			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U",
+						   type, nodeID, series,
+						   requestTimestamp, responseTimestamp);
 			break;
 		default:
 			return false;

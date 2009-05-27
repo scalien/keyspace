@@ -22,7 +22,7 @@ public:
 	void			Response(unsigned nodeID_, uint64_t series_,
 							 uint64_t requestTimestamp_, uint64_t responseTimestamp_);
 	
-	bool			Read(ByteString& data);
+	bool			Read(const ByteString& data);
 	bool			Write(ByteString& data);
 };
 
