@@ -210,7 +210,7 @@ int KeyspaceClientTest()
 	return 0;
 
 	// get a key named "counter"
-	key.Printf("counter");
+	key.Writef("counter");
 	client.Get(key);
 	result = client.GetResult(status);
 	if (status == KEYSPACE_OK && result)
@@ -220,7 +220,7 @@ int KeyspaceClientTest()
 		result->Close();
 	}
 
-	key.Printf("user:");		
+	key.Writef("user:");		
 
 	// list all keys starting with "user:"
 	client.List(key);
