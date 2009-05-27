@@ -176,7 +176,6 @@
 		5421D56A0F61DB32004BBDB4 /* PLeaseLearner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PLeaseLearner.cpp; sourceTree = "<group>"; };
 		5421D5A90F61DE2A004BBDB4 /* PaxosLease.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosLease.h; sourceTree = "<group>"; };
 		5421D5AA0F61DE2A004BBDB4 /* PaxosLease.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosLease.cpp; sourceTree = "<group>"; };
-		5421D6B10F63092E004BBDB4 /* PaxosConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConsts.h; sourceTree = "<group>"; };
 		5421D81B0F6424CE004BBDB4 /* PaxosLearner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosLearner.h; sourceTree = "<group>"; };
 		5421D81C0F6424CE004BBDB4 /* PaxosLearner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaxosLearner.cpp; sourceTree = "<group>"; };
 		5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedLogMsg.h; sourceTree = "<group>"; };
@@ -638,7 +637,6 @@
 		5481471F0F31B6B200F3D2B6 /* Paxos */ = {
 			isa = PBXGroup;
 			children = (
-				5421D6B10F63092E004BBDB4 /* PaxosConsts.h */,
 				548147250F31B6B200F3D2B6 /* PaxosMsg.h */,
 				548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */,
 				548147260F31B6B200F3D2B6 /* PaxosState.h */,

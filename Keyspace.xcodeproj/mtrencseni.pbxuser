@@ -1858,6 +1858,19 @@
 			54507FC50FCD7E92009D9B99 /* PBXTextBookmark */ = 54507FC50FCD7E92009D9B99 /* PBXTextBookmark */;
 			54507FC60FCD7E92009D9B99 /* PBXTextBookmark */ = 54507FC60FCD7E92009D9B99 /* PBXTextBookmark */;
 			54507FC70FCD7E92009D9B99 /* PBXTextBookmark */ = 54507FC70FCD7E92009D9B99 /* PBXTextBookmark */;
+			54507FCB0FCD7F13009D9B99 /* PBXTextBookmark */ = 54507FCB0FCD7F13009D9B99 /* PBXTextBookmark */;
+			54507FCC0FCD7F13009D9B99 /* PBXTextBookmark */ = 54507FCC0FCD7F13009D9B99 /* PBXTextBookmark */;
+			54507FCD0FCD7F13009D9B99 /* PBXTextBookmark */ = 54507FCD0FCD7F13009D9B99 /* PBXTextBookmark */;
+			54507FCE0FCD7F13009D9B99 /* PBXTextBookmark */ = 54507FCE0FCD7F13009D9B99 /* PBXTextBookmark */;
+			54507FD20FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD20FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FD30FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD30FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FD40FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD40FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FD50FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD50FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FD60FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD60FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FD70FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD70FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FD80FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD80FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FD90FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FD90FCD7F2D009D9B99 /* PBXTextBookmark */;
+			54507FDA0FCD7F2D009D9B99 /* PBXTextBookmark */ = 54507FDA0FCD7F2D009D9B99 /* PBXTextBookmark */;
 			54E8E5E70FC4075A00EB673B = 54E8E5E70FC4075A00EB673B /* PBXTextBookmark */;
 			54E8E62C0FC40B0300EB673B = 54E8E62C0FC40B0300EB673B /* PBXTextBookmark */;
 			54E8E6400FC4398100EB673B = 54E8E6400FC4398100EB673B /* PBXTextBookmark */;
@@ -1939,9 +1952,9 @@
 	};
 	5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{797, 0}";
-			sepNavVisRange = "{0, 1166}";
+			sepNavIntBoundsRect = "{{0, 0}, {645, 848}}";
+			sepNavSelRange = "{863, 0}";
+			sepNavVisRange = "{735, 203}";
 		};
 	};
 	5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */ = {
@@ -2094,10 +2107,16 @@
 		};
 	};
 	5421D6B10F63092E004BBDB4 /* PaxosConsts.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = PaxosConsts.h;
+		path = /Users/mtrencseni/Code/Keyspace/src/Framework/Paxos/PaxosConsts.h;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{73, 0}";
-			sepNavVisRange = "{0, 146}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 0}";
 		};
 	};
 	5421D81B0F6424CE004BBDB4 /* PaxosLearner.h */ = {
@@ -3077,7 +3096,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 10";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 240;
 		vrLoc = 0;
@@ -6464,7 +6483,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 10";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 240;
 		vrLoc = 0;
@@ -7164,7 +7183,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 10";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 240;
 		vrLoc = 0;
@@ -15154,7 +15173,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 10";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 240;
 		vrLoc = 0;
@@ -15234,7 +15253,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 10";
 		rLen = 0;
-		rLoc = 138;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 240;
 		vrLoc = 0;
@@ -17957,7 +17976,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 7";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 231;
 		vrLoc = 0;
@@ -17977,7 +17996,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 14;
-		rLoc = 783;
+		rLoc = 849;
 		rType = 0;
 		vrLen = 1177;
 		vrLoc = 0;
@@ -18027,7 +18046,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 7";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 244;
 		vrLoc = 0;
@@ -18217,7 +18236,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 863;
 		rType = 0;
 		vrLen = 1166;
 		vrLoc = 0;
@@ -18527,7 +18546,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 5;
-		rLoc = 797;
+		rLoc = 863;
 		rType = 0;
 		vrLen = 1166;
 		vrLoc = 0;
@@ -18557,7 +18576,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 7";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 231;
 		vrLoc = 0;
@@ -18567,7 +18586,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 0;
-		rLoc = 784;
+		rLoc = 850;
 		rType = 0;
 		vrLen = 1177;
 		vrLoc = 0;
@@ -18587,7 +18606,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 14;
-		rLoc = 783;
+		rLoc = 849;
 		rType = 0;
 		vrLen = 1177;
 		vrLoc = 0;
@@ -19317,7 +19336,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 22;
-		rLoc = 782;
+		rLoc = 848;
 		rType = 0;
 		vrLen = 1177;
 		vrLoc = 0;
@@ -19327,7 +19346,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 7";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 235;
 		vrLoc = 0;
@@ -19407,7 +19426,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 7";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 235;
 		vrLoc = 0;
@@ -19417,7 +19436,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 22;
-		rLoc = 782;
+		rLoc = 848;
 		rType = 0;
 		vrLen = 1177;
 		vrLoc = 0;
@@ -19427,7 +19446,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 7";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 231;
 		vrLoc = 0;
@@ -19467,7 +19486,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 863;
 		rType = 0;
 		vrLen = 1166;
 		vrLoc = 0;
@@ -19497,7 +19516,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 6";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 146;
 		vrLoc = 0;
@@ -19577,7 +19596,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 7";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 235;
 		vrLoc = 0;
@@ -19627,7 +19646,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 863;
 		rType = 0;
 		vrLen = 1166;
 		vrLoc = 0;
@@ -19687,7 +19706,7 @@
 		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
 		name = "PaxosProposer.h: 36";
 		rLen = 0;
-		rLoc = 797;
+		rLoc = 863;
 		rType = 0;
 		vrLen = 1166;
 		vrLoc = 0;
@@ -19717,7 +19736,7 @@
 		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
 		name = "PaxosConsts.h: 6";
 		rLen = 0;
-		rLoc = 73;
+		rLoc = 0;
 		rType = 0;
 		vrLen = 146;
 		vrLoc = 0;
@@ -19994,6 +20013,134 @@
 		rLoc = 1203;
 		rType = 0;
 		vrLen = 1499;
+		vrLoc = 0;
+	};
+	54507FCB0FCD7F13009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 12";
+		rLen = 0;
+		rLoc = 422;
+		rType = 0;
+		vrLen = 291;
+		vrLoc = 350;
+	};
+	54507FCC0FCD7F13009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: 'PAXOS_BUF_SIZE' was not declared in this scope";
+		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
+		rLen = 1;
+		rLoc = 37;
+		rType = 1;
+	};
+	54507FCD0FCD7F13009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 12";
+		rLen = 0;
+		rLoc = 422;
+		rType = 0;
+		vrLen = 291;
+		vrLoc = 350;
+	};
+	54507FCE0FCD7F13009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
+		name = "PaxosProposer.h: 36";
+		rLen = 0;
+		rLoc = 863;
+		rType = 0;
+		vrLen = 228;
+		vrLoc = 724;
+	};
+	54507FD20FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
+		name = "ReplicatedLog.cpp: 50";
+		rLen = 0;
+		rLoc = 1203;
+		rType = 0;
+		vrLen = 1499;
+		vrLoc = 0;
+	};
+	54507FD30FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
+		name = "PaxosMsg.h: 60";
+		rLen = 0;
+		rLoc = 1847;
+		rType = 0;
+		vrLen = 1883;
+		vrLoc = 0;
+	};
+	54507FD40FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
+		name = "PaxosProposer.h: 10";
+		rLen = 38;
+		rLoc = 231;
+		rType = 0;
+		vrLen = 1232;
+		vrLoc = 0;
+	};
+	54507FD50FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
+		name = "PaxosConsts.h: 6";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 146;
+		vrLoc = 0;
+	};
+	54507FD60FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481472A0F31B6B200F3D2B6 /* ReplicatedLog.cpp */;
+		name = "ReplicatedLog.cpp: 50";
+		rLen = 0;
+		rLoc = 1203;
+		rType = 0;
+		vrLen = 1499;
+		vrLoc = 0;
+	};
+	54507FD70FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
+		name = "PaxosMsg.h: 60";
+		rLen = 0;
+		rLoc = 1847;
+		rType = 0;
+		vrLen = 1883;
+		vrLoc = 0;
+	};
+	54507FD80FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
+		name = "PaxosConsts.h: 6";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 146;
+		vrLoc = 0;
+	};
+	54507FD90FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
+		name = "PaxosProposer.h: 10";
+		rLen = 38;
+		rLoc = 231;
+		rType = 0;
+		vrLen = 1232;
+		vrLoc = 0;
+	};
+	54507FDA0FCD7F2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D6B10F63092E004BBDB4 /* PaxosConsts.h */;
+		name = "PaxosConsts.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
 		vrLoc = 0;
 	};
 	545C60330F7979B4006540BC /* KeyspaceService.h */ = {
@@ -20344,9 +20491,9 @@
 	};
 	548147240F31B6B200F3D2B6 /* PaxosMsg.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {877, 3904}}";
+			sepNavIntBoundsRect = "{{0, 0}, {645, 3664}}";
 			sepNavSelRange = "{4716, 0}";
-			sepNavVisRange = "{3774, 1936}";
+			sepNavVisRange = "{4586, 257}";
 		};
 	};
 	548147250F31B6B200F3D2B6 /* PaxosMsg.h */ = {
