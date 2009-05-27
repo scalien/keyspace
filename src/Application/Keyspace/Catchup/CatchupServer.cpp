@@ -1,5 +1,5 @@
 #include "CatchupServer.h"
-#include "CatchupConn.h"
+#include "CatchupWriter.h"
 
 void CatchupServer::Init(int port_)
 {

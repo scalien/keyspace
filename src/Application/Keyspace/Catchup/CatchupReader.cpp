@@ -1,4 +1,4 @@
-#include "CatchupClient.h"
+#include "CatchupReader.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
 
