@@ -2,9 +2,6 @@
 #define TIMECHECKMSG_H
 
 #include "System/Buffer.h"
-#include <unistd.h>
-#include <string.h>
-#include <stdint.h>
 
 #define TIMECHECK_REQUEST			'1'
 #define	TIMECHECK_RESPONSE			'2'

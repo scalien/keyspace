@@ -5,7 +5,6 @@
 #include <sys/types.h>
 #endif
 
-#include <unistd.h>
 #include "System/Events/Callable.h"
 #include "System/Buffer.h"
 #include "Endpoint.h"

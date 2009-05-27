@@ -7,7 +7,6 @@
 #include <sys/resource.h>
 #include <sys/socket.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <math.h>
 
 #include "IOProcessor.h"

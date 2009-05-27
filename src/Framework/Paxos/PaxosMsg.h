@@ -1,7 +1,6 @@
 #ifndef PAXOSMSG_H
 #define PAXOSMSG_H
 
-#include <unistd.h>
 #include "System/Buffer.h"
 
 #define PAXOS_PREPARE_REQUEST				'1'

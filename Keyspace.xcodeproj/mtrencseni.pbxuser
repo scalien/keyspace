@@ -1906,6 +1906,33 @@
 			545080140FCD7FF0009D9B99 /* PBXTextBookmark */ = 545080140FCD7FF0009D9B99 /* PBXTextBookmark */;
 			545080150FCD7FF0009D9B99 /* PBXTextBookmark */ = 545080150FCD7FF0009D9B99 /* PBXTextBookmark */;
 			545080160FCD7FF0009D9B99 /* PBXTextBookmark */ = 545080160FCD7FF0009D9B99 /* PBXTextBookmark */;
+			545080240FCD80A5009D9B99 /* PBXTextBookmark */ = 545080240FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080250FCD80A5009D9B99 /* PBXTextBookmark */ = 545080250FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080260FCD80A5009D9B99 /* PBXTextBookmark */ = 545080260FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080270FCD80A5009D9B99 /* PBXTextBookmark */ = 545080270FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080280FCD80A5009D9B99 /* PBXTextBookmark */ = 545080280FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080290FCD80A5009D9B99 /* PBXTextBookmark */ = 545080290FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450802A0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450802A0FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450802B0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450802B0FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450802C0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450802C0FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450802D0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450802D0FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450802E0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450802E0FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450802F0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450802F0FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080300FCD80A5009D9B99 /* PBXTextBookmark */ = 545080300FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080310FCD80A5009D9B99 /* PBXTextBookmark */ = 545080310FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080320FCD80A5009D9B99 /* PBXTextBookmark */ = 545080320FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080330FCD80A5009D9B99 /* PBXTextBookmark */ = 545080330FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080340FCD80A5009D9B99 /* PBXTextBookmark */ = 545080340FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080350FCD80A5009D9B99 /* PBXTextBookmark */ = 545080350FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080360FCD80A5009D9B99 /* PBXTextBookmark */ = 545080360FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080370FCD80A5009D9B99 /* PBXTextBookmark */ = 545080370FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080380FCD80A5009D9B99 /* PBXTextBookmark */ = 545080380FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080390FCD80A5009D9B99 /* PBXTextBookmark */ = 545080390FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450803A0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450803A0FCD80A5009D9B99 /* PBXTextBookmark */;
+			5450803B0FCD80A5009D9B99 /* PBXTextBookmark */ = 5450803B0FCD80A5009D9B99 /* PBXTextBookmark */;
+			545080400FCD80B8009D9B99 /* PBXTextBookmark */ = 545080400FCD80B8009D9B99 /* PBXTextBookmark */;
+			545080410FCD80B8009D9B99 /* PBXTextBookmark */ = 545080410FCD80B8009D9B99 /* PBXTextBookmark */;
+			545080420FCD80B8009D9B99 /* PBXTextBookmark */ = 545080420FCD80B8009D9B99 /* PBXTextBookmark */;
 			54E8E5E70FC4075A00EB673B = 54E8E5E70FC4075A00EB673B /* PBXTextBookmark */;
 			54E8E62C0FC40B0300EB673B = 54E8E62C0FC40B0300EB673B /* PBXTextBookmark */;
 			54E8E6400FC4398100EB673B = 54E8E6400FC4398100EB673B /* PBXTextBookmark */;
@@ -1949,9 +1976,9 @@
 	};
 	541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{563, 0}";
-			sepNavVisRange = "{0, 626}";
+			sepNavIntBoundsRect = "{{0, 0}, {1325, 648}}";
+			sepNavSelRange = "{74, 0}";
+			sepNavVisRange = "{0, 566}";
 		};
 	};
 	541FBBCE0FA34BA800429B43 /* TimeCheckMsg.cpp */ = {
@@ -2015,9 +2042,9 @@
 	};
 	5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{1182, 0}";
-			sepNavVisRange = "{0, 1632}";
+			sepNavIntBoundsRect = "{{0, 0}, {1325, 864}}";
+			sepNavSelRange = "{67, 0}";
+			sepNavVisRange = "{0, 1334}";
 		};
 	};
 	5421D3870F5EAD7F004BBDB4 /* PLeaseMsg.cpp */ = {
@@ -2198,9 +2225,9 @@
 	};
 	5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{142, 0}";
-			sepNavVisRange = "{0, 546}";
+			sepNavIntBoundsRect = "{{0, 0}, {1325, 648}}";
+			sepNavSelRange = "{55, 0}";
+			sepNavVisRange = "{0, 486}";
 		};
 	};
 	5421E1050F68121B004BBDB4 /* ReplicatedLogMsg.cpp */ = {
@@ -2622,7 +2649,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 156";
 		rLen = 0;
-		rLoc = 2673;
+		rLoc = 2653;
 		rType = 0;
 		vrLen = 1480;
 		vrLoc = 2674;
@@ -2732,7 +2759,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 20";
 		rLen = 0;
-		rLoc = 129;
+		rLoc = 69;
 		rType = 0;
 		vrLen = 1508;
 		vrLoc = 0;
@@ -2872,7 +2899,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 20";
 		rLen = 0;
-		rLoc = 129;
+		rLoc = 69;
 		rType = 0;
 		vrLen = 1508;
 		vrLoc = 0;
@@ -3151,7 +3178,7 @@
 		fRef = 5481473D0F31B6B200F3D2B6 /* IOOperation.h */;
 		name = "IOOperation.h: 30";
 		rLen = 0;
-		rLoc = 507;
+		rLoc = 487;
 		rType = 0;
 		vrLen = 1004;
 		vrLoc = 0;
@@ -3181,7 +3208,7 @@
 		fRef = 5481473D0F31B6B200F3D2B6 /* IOOperation.h */;
 		name = "IOOperation.h: 30";
 		rLen = 0;
-		rLoc = 507;
+		rLoc = 487;
 		rType = 0;
 		vrLen = 1004;
 		vrLoc = 0;
@@ -3441,7 +3468,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 341;
+		rLoc = 281;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -3471,7 +3498,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 341;
+		rLoc = 281;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -7703,9 +7730,9 @@
 	};
 	5449D8170F91146B00F95C2F /* KeyspaceProto.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {645, 1632}}";
-			sepNavSelRange = "{1822, 0}";
-			sepNavVisRange = "{763, 109}";
+			sepNavIntBoundsRect = "{{0, 0}, {1325, 1616}}";
+			sepNavSelRange = "{123, 6}";
+			sepNavVisRange = "{0, 825}";
 		};
 	};
 	545076490FCAA851009D9B99 /* PBXTextBookmark */ = {
@@ -8066,7 +8093,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1849;
 		vrLoc = 38;
@@ -8096,7 +8123,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1849;
 		vrLoc = 38;
@@ -8613,7 +8640,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 341;
+		rLoc = 281;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -8633,7 +8660,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 341;
+		rLoc = 281;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -9986,7 +10013,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 22";
 		rLen = 0;
-		rLoc = 475;
+		rLoc = 415;
 		rType = 0;
 		vrLen = 620;
 		vrLoc = 0;
@@ -10046,7 +10073,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 22";
 		rLen = 0;
-		rLoc = 475;
+		rLoc = 415;
 		rType = 0;
 		vrLen = 620;
 		vrLoc = 0;
@@ -10386,7 +10413,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 22";
 		rLen = 0;
-		rLoc = 475;
+		rLoc = 415;
 		rType = 0;
 		vrLen = 620;
 		vrLoc = 0;
@@ -10436,7 +10463,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 22";
 		rLen = 0;
-		rLoc = 475;
+		rLoc = 415;
 		rType = 0;
 		vrLen = 620;
 		vrLoc = 0;
@@ -10456,7 +10483,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 22";
 		rLen = 0;
-		rLoc = 475;
+		rLoc = 415;
 		rType = 0;
 		vrLen = 620;
 		vrLoc = 0;
@@ -10476,7 +10503,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 22";
 		rLen = 0;
-		rLoc = 475;
+		rLoc = 415;
 		rType = 0;
 		vrLen = 620;
 		vrLoc = 0;
@@ -10526,7 +10553,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 25";
 		rLen = 0;
-		rLoc = 563;
+		rLoc = 503;
 		rType = 0;
 		vrLen = 626;
 		vrLoc = 0;
@@ -10846,7 +10873,7 @@
 		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
 		name = "TimeCheckMsg.h: 25";
 		rLen = 0;
-		rLoc = 563;
+		rLoc = 503;
 		rType = 0;
 		vrLen = 626;
 		vrLoc = 0;
@@ -11847,7 +11874,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 34";
 		rLen = 0;
-		rLoc = 575;
+		rLoc = 515;
 		rType = 0;
 		vrLen = 1505;
 		vrLoc = 0;
@@ -11897,7 +11924,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 20";
 		rLen = 0;
-		rLoc = 129;
+		rLoc = 69;
 		rType = 0;
 		vrLen = 1508;
 		vrLoc = 0;
@@ -11917,7 +11944,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 34";
 		rLen = 0;
-		rLoc = 575;
+		rLoc = 515;
 		rType = 0;
 		vrLen = 1505;
 		vrLoc = 0;
@@ -11937,7 +11964,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 34";
 		rLen = 0;
-		rLoc = 575;
+		rLoc = 515;
 		rType = 0;
 		vrLen = 1505;
 		vrLoc = 0;
@@ -11957,7 +11984,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 10";
 		rLen = 0;
-		rLoc = 129;
+		rLoc = 69;
 		rType = 0;
 		vrLen = 1505;
 		vrLoc = 0;
@@ -11985,7 +12012,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1868;
 		vrLoc = 19;
@@ -12045,7 +12072,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 31";
 		rLen = 0;
-		rLoc = 679;
+		rLoc = 619;
 		rType = 0;
 		vrLen = 1553;
 		vrLoc = 0;
@@ -12065,7 +12092,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 10";
 		rLen = 0;
-		rLoc = 129;
+		rLoc = 69;
 		rType = 0;
 		vrLen = 1505;
 		vrLoc = 0;
@@ -12085,7 +12112,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 34";
 		rLen = 0;
-		rLoc = 902;
+		rLoc = 842;
 		rType = 0;
 		vrLen = 1447;
 		vrLoc = 0;
@@ -12105,7 +12132,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 34";
 		rLen = 0;
-		rLoc = 902;
+		rLoc = 842;
 		rType = 0;
 		vrLen = 1447;
 		vrLoc = 0;
@@ -12125,7 +12152,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 34";
 		rLen = 0;
-		rLoc = 902;
+		rLoc = 842;
 		rType = 0;
 		vrLen = 1447;
 		vrLoc = 0;
@@ -12145,7 +12172,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 34";
 		rLen = 0;
-		rLoc = 902;
+		rLoc = 842;
 		rType = 0;
 		vrLen = 1447;
 		vrLoc = 0;
@@ -12165,7 +12192,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 10";
 		rLen = 39;
-		rLoc = 167;
+		rLoc = 107;
 		rType = 0;
 		vrLen = 1447;
 		vrLoc = 0;
@@ -12185,7 +12212,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1868;
 		vrLoc = 19;
@@ -12205,7 +12232,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 9";
 		rLen = 0;
-		rLoc = 136;
+		rLoc = 76;
 		rType = 0;
 		vrLen = 1447;
 		vrLoc = 0;
@@ -12215,7 +12242,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1868;
 		vrLoc = 19;
@@ -12235,7 +12262,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 9";
 		rLen = 0;
-		rLoc = 136;
+		rLoc = 76;
 		rType = 0;
 		vrLen = 1447;
 		vrLoc = 0;
@@ -12355,7 +12382,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 16";
 		rLen = 0;
-		rLoc = 444;
+		rLoc = 384;
 		rType = 0;
 		vrLen = 1507;
 		vrLoc = 0;
@@ -12405,7 +12432,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 31";
 		rLen = 0;
-		rLoc = 679;
+		rLoc = 619;
 		rType = 0;
 		vrLen = 1553;
 		vrLoc = 0;
@@ -12475,7 +12502,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 48";
 		rLen = 0;
-		rLoc = 1568;
+		rLoc = 1508;
 		rType = 0;
 		vrLen = 1559;
 		vrLoc = 0;
@@ -12485,7 +12512,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 48";
 		rLen = 0;
-		rLoc = 1568;
+		rLoc = 1508;
 		rType = 0;
 		vrLen = 1559;
 		vrLoc = 0;
@@ -12512,7 +12539,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 48";
 		rLen = 0;
-		rLoc = 1568;
+		rLoc = 1508;
 		rType = 0;
 		vrLen = 1559;
 		vrLoc = 0;
@@ -12532,7 +12559,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 48";
 		rLen = 0;
-		rLoc = 1568;
+		rLoc = 1508;
 		rType = 0;
 		vrLen = 1559;
 		vrLoc = 0;
@@ -12732,7 +12759,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 22";
 		rLen = 0;
-		rLoc = 507;
+		rLoc = 447;
 		rType = 0;
 		vrLen = 1559;
 		vrLoc = 0;
@@ -12742,7 +12769,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 22";
 		rLen = 0;
-		rLoc = 507;
+		rLoc = 447;
 		rType = 0;
 		vrLen = 1559;
 		vrLoc = 0;
@@ -12812,7 +12839,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 22";
 		rLen = 0;
-		rLoc = 507;
+		rLoc = 447;
 		rType = 0;
 		vrLen = 1559;
 		vrLoc = 0;
@@ -12932,7 +12959,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 31";
 		rLen = 0;
-		rLoc = 679;
+		rLoc = 619;
 		rType = 0;
 		vrLen = 1617;
 		vrLoc = 0;
@@ -12992,7 +13019,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 31";
 		rLen = 0;
-		rLoc = 679;
+		rLoc = 619;
 		rType = 0;
 		vrLen = 1617;
 		vrLoc = 0;
@@ -13082,7 +13109,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1823;
 		vrLoc = 64;
@@ -13102,7 +13129,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 29";
 		rLen = 0;
-		rLoc = 546;
+		rLoc = 486;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -13191,7 +13218,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1823;
 		vrLoc = 64;
@@ -13201,7 +13228,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 341;
+		rLoc = 281;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -13221,7 +13248,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 341;
+		rLoc = 281;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -13241,7 +13268,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 24";
 		rLen = 0;
-		rLoc = 484;
+		rLoc = 424;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -13281,7 +13308,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 24";
 		rLen = 0;
-		rLoc = 484;
+		rLoc = 424;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -13321,7 +13348,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 29";
 		rLen = 0;
-		rLoc = 546;
+		rLoc = 486;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -15078,7 +15105,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 9";
 		rLen = 318;
-		rLoc = 129;
+		rLoc = 69;
 		rType = 0;
 		vrLen = 1617;
 		vrLoc = 0;
@@ -15098,7 +15125,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1848;
 		vrLoc = 39;
@@ -15158,7 +15185,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 40";
 		rLen = 0;
-		rLoc = 615;
+		rLoc = 595;
 		rType = 0;
 		vrLen = 1848;
 		vrLoc = 39;
@@ -15178,7 +15205,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 9";
 		rLen = 318;
-		rLoc = 129;
+		rLoc = 69;
 		rType = 0;
 		vrLen = 1617;
 		vrLoc = 0;
@@ -15198,7 +15225,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 52";
 		rLen = 0;
-		rLoc = 1602;
+		rLoc = 1582;
 		rType = 0;
 		vrLen = 1845;
 		vrLoc = 0;
@@ -15238,7 +15265,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 6";
 		rLen = 0;
-		rLoc = 59;
+		rLoc = 39;
 		rType = 0;
 		vrLen = 1777;
 		vrLoc = 0;
@@ -15258,7 +15285,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 55";
 		rLen = 0;
-		rLoc = 1796;
+		rLoc = 1776;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -15278,7 +15305,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15298,7 +15325,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15318,7 +15345,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15338,7 +15365,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15358,7 +15385,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15378,7 +15405,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15398,7 +15425,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15448,7 +15475,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15468,7 +15495,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 51";
 		rLen = 0;
-		rLoc = 1601;
+		rLoc = 1581;
 		rType = 0;
 		vrLen = 1797;
 		vrLoc = 0;
@@ -15528,7 +15555,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 6";
 		rLen = 0;
-		rLoc = 59;
+		rLoc = 39;
 		rType = 0;
 		vrLen = 1777;
 		vrLoc = 0;
@@ -15548,7 +15575,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 6";
 		rLen = 0;
-		rLoc = 59;
+		rLoc = 39;
 		rType = 0;
 		vrLen = 1777;
 		vrLoc = 0;
@@ -15815,7 +15842,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -15925,7 +15952,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 41";
 		rLen = 0;
-		rLoc = 1182;
+		rLoc = 1122;
 		rType = 0;
 		vrLen = 1632;
 		vrLoc = 0;
@@ -15975,7 +16002,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 16";
 		rLen = 0;
-		rLoc = 283;
+		rLoc = 223;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -16075,7 +16102,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 36";
 		rLen = 0;
-		rLoc = 725;
+		rLoc = 665;
 		rType = 0;
 		vrLen = 1617;
 		vrLoc = 0;
@@ -16085,7 +16112,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 35";
 		rLen = 0;
-		rLoc = 709;
+		rLoc = 689;
 		rType = 0;
 		vrLen = 1871;
 		vrLoc = 0;
@@ -16125,7 +16152,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16185,7 +16212,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 46";
 		rLen = 0;
-		rLoc = 1546;
+		rLoc = 1486;
 		rType = 0;
 		vrLen = 1614;
 		vrLoc = 0;
@@ -16205,7 +16232,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 41";
 		rLen = 0;
-		rLoc = 1182;
+		rLoc = 1122;
 		rType = 0;
 		vrLen = 1632;
 		vrLoc = 0;
@@ -16225,7 +16252,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 41";
 		rLen = 0;
-		rLoc = 1182;
+		rLoc = 1122;
 		rType = 0;
 		vrLen = 1632;
 		vrLoc = 0;
@@ -16245,7 +16272,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 41";
 		rLen = 0;
-		rLoc = 1182;
+		rLoc = 1122;
 		rType = 0;
 		vrLen = 1632;
 		vrLoc = 0;
@@ -16345,7 +16372,7 @@
 		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
 		name = "PLeaseMsg.h: 41";
 		rLen = 0;
-		rLoc = 1182;
+		rLoc = 1122;
 		rType = 0;
 		vrLen = 1632;
 		vrLoc = 0;
@@ -16405,7 +16432,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 16";
 		rLen = 0;
-		rLoc = 283;
+		rLoc = 223;
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
@@ -16515,7 +16542,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16555,7 +16582,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16575,7 +16602,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16605,7 +16632,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16625,7 +16652,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16685,7 +16712,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16725,7 +16752,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16755,7 +16782,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16775,7 +16802,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -16795,7 +16822,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 57";
 		rLen = 0;
-		rLoc = 1776;
+		rLoc = 1756;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -17961,7 +17988,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -17981,7 +18008,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -18091,7 +18118,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 29";
 		rLen = 0;
-		rLoc = 646;
+		rLoc = 626;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -18111,7 +18138,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 28";
 		rLen = 19;
-		rLoc = 627;
+		rLoc = 607;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -18151,7 +18178,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 28";
 		rLen = 19;
-		rLoc = 627;
+		rLoc = 607;
 		rType = 0;
 		vrLen = 1887;
 		vrLoc = 0;
@@ -18171,7 +18198,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 22";
 		rLen = 0;
-		rLoc = 505;
+		rLoc = 485;
 		rType = 0;
 		vrLen = 1863;
 		vrLoc = 0;
@@ -18201,7 +18228,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 28";
 		rLen = 0;
-		rLoc = 638;
+		rLoc = 618;
 		rType = 0;
 		vrLen = 1862;
 		vrLoc = 0;
@@ -18301,7 +18328,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 351;
+		rLoc = 291;
 		rType = 0;
 		vrLen = 599;
 		vrLoc = 0;
@@ -18471,7 +18498,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 25";
 		rLen = 0;
-		rLoc = 510;
+		rLoc = 450;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -18491,7 +18518,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -18531,7 +18558,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -18561,7 +18588,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -18711,7 +18738,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -18741,7 +18768,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -18771,7 +18798,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -18791,7 +18818,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -18901,7 +18928,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -18981,7 +19008,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -19191,7 +19218,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -19241,7 +19268,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -19311,7 +19338,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 19";
 		rLen = 0;
-		rLoc = 350;
+		rLoc = 290;
 		rType = 0;
 		vrLen = 587;
 		vrLoc = 0;
@@ -19331,7 +19358,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -19411,7 +19438,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -19491,7 +19518,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -19641,7 +19668,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -19661,7 +19688,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -20103,7 +20130,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -20143,7 +20170,7 @@
 		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
 		name = "PaxosMsg.h: 60";
 		rLen = 0;
-		rLoc = 1822;
+		rLoc = 1802;
 		rType = 0;
 		vrLen = 1883;
 		vrLoc = 0;
@@ -20278,7 +20305,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 8";
 		rLen = 0;
-		rLoc = 142;
+		rLoc = 82;
 		rType = 0;
 		vrLen = 546;
 		vrLoc = 0;
@@ -20428,7 +20455,7 @@
 		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
 		name = "ReplicatedLogMsg.h: 8";
 		rLen = 0;
-		rLoc = 142;
+		rLoc = 82;
 		rType = 0;
 		vrLen = 546;
 		vrLoc = 0;
@@ -20521,6 +20548,271 @@
 		rLoc = 198;
 		rType = 0;
 		vrLen = 1180;
+		vrLoc = 0;
+	};
+	545080240FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
+		name = "PaxosProposer.h: 38";
+		rLen = 0;
+		rLoc = 863;
+		rType = 0;
+		vrLen = 203;
+		vrLoc = 735;
+	};
+	545080250FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: PaxosConsts.h: No such file or directory";
+		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
+		rLen = 1;
+		rLoc = 3;
+		rType = 1;
+	};
+	545080260FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */;
+		name = "PaxosProposer.h: 38";
+		rLen = 0;
+		rLoc = 863;
+		rType = 0;
+		vrLen = 203;
+		vrLoc = 735;
+	};
+	545080270FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
+		name = "PaxosMsg.h: 4";
+		rLen = 0;
+		rLoc = 39;
+		rType = 0;
+		vrLen = 188;
+		vrLoc = 0;
+	};
+	545080280FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */;
+		name = "Socket.cpp: 10";
+		rLen = 6;
+		rLoc = 207;
+		rType = 0;
+		vrLen = 670;
+		vrLoc = 0;
+	};
+	545080290FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
+		name = "PaxosMsg.h: 4";
+		rLen = 0;
+		rLoc = 39;
+		rType = 0;
+		vrLen = 1476;
+		vrLoc = 0;
+	};
+	5450802A0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
+		name = "ReplicatedLogMsg.h: 4";
+		rLen = 0;
+		rLoc = 55;
+		rType = 0;
+		vrLen = 486;
+		vrLoc = 0;
+	};
+	5450802B0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481473D0F31B6B200F3D2B6 /* IOOperation.h */;
+		name = "IOOperation.h: 8";
+		rLen = 0;
+		rLoc = 99;
+		rType = 0;
+		vrLen = 636;
+		vrLoc = 0;
+	};
+	5450802C0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
+		name = "IOProcessor_Darwin.cpp: 9";
+		rLen = 0;
+		rLoc = 189;
+		rType = 0;
+		vrLen = 872;
+		vrLoc = 0;
+	};
+	5450802D0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
+		name = "PLeaseMsg.h: 4";
+		rLen = 0;
+		rLoc = 67;
+		rType = 0;
+		vrLen = 1334;
+		vrLoc = 0;
+	};
+	5450802E0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147470F31B6B200F3D2B6 /* Time.h */;
+		name = "Time.h: 6";
+		rLen = 59;
+		rLoc = 71;
+		rType = 0;
+		vrLen = 375;
+		vrLoc = 0;
+	};
+	5450802F0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
+		name = "TimeCheckMsg.h: 5";
+		rLen = 0;
+		rLoc = 74;
+		rType = 0;
+		vrLen = 566;
+		vrLoc = 0;
+	};
+	545080300FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D8170F91146B00F95C2F /* KeyspaceProto.c */;
+		rLen = 6;
+		rLoc = 123;
+		rType = 0;
+	};
+	545080310FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
+		name = "PaxosMsg.h: 4";
+		rLen = 0;
+		rLoc = 39;
+		rType = 0;
+		vrLen = 1476;
+		vrLoc = 0;
+	};
+	545080320FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
+		name = "ReplicatedLogMsg.h: 4";
+		rLen = 0;
+		rLoc = 55;
+		rType = 0;
+		vrLen = 546;
+		vrLoc = 0;
+	};
+	545080330FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147410F31B6B200F3D2B6 /* Socket.cpp */;
+		name = "Socket.cpp: 10";
+		rLen = 6;
+		rLoc = 207;
+		rType = 0;
+		vrLen = 670;
+		vrLoc = 0;
+	};
+	545080340FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147250F31B6B200F3D2B6 /* PaxosMsg.h */;
+		name = "PaxosMsg.h: 4";
+		rLen = 0;
+		rLoc = 39;
+		rType = 0;
+		vrLen = 1476;
+		vrLoc = 0;
+	};
+	545080350FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421E1040F68121B004BBDB4 /* ReplicatedLogMsg.h */;
+		name = "ReplicatedLogMsg.h: 4";
+		rLen = 0;
+		rLoc = 55;
+		rType = 0;
+		vrLen = 486;
+		vrLoc = 0;
+	};
+	545080360FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481473D0F31B6B200F3D2B6 /* IOOperation.h */;
+		name = "IOOperation.h: 8";
+		rLen = 0;
+		rLoc = 99;
+		rType = 0;
+		vrLen = 636;
+		vrLoc = 0;
+	};
+	545080370FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
+		name = "IOProcessor_Darwin.cpp: 9";
+		rLen = 0;
+		rLoc = 189;
+		rType = 0;
+		vrLen = 872;
+		vrLoc = 0;
+	};
+	545080380FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D3860F5EAD7F004BBDB4 /* PLeaseMsg.h */;
+		name = "PLeaseMsg.h: 4";
+		rLen = 0;
+		rLoc = 67;
+		rType = 0;
+		vrLen = 1334;
+		vrLoc = 0;
+	};
+	545080390FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 548147470F31B6B200F3D2B6 /* Time.h */;
+		name = "Time.h: 6";
+		rLen = 59;
+		rLoc = 71;
+		rType = 0;
+		vrLen = 375;
+		vrLoc = 0;
+	};
+	5450803A0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 541FBBCD0FA34BA800429B43 /* TimeCheckMsg.h */;
+		name = "TimeCheckMsg.h: 5";
+		rLen = 0;
+		rLoc = 74;
+		rType = 0;
+		vrLen = 566;
+		vrLoc = 0;
+	};
+	5450803B0FCD80A5009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5449D8170F91146B00F95C2F /* KeyspaceProto.c */;
+		name = "KeyspaceProto.c: 6";
+		rLen = 6;
+		rLoc = 123;
+		rType = 0;
+		vrLen = 825;
+		vrLoc = 0;
+	};
+	545080400FCD80B8009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D81C0F6424CE004BBDB4 /* PaxosLearner.cpp */;
+		name = "PaxosLearner.cpp: 8";
+		rLen = 0;
+		rLoc = 198;
+		rType = 0;
+		vrLen = 1180;
+		vrLoc = 0;
+	};
+	545080410FCD80B8009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D81C0F6424CE004BBDB4 /* PaxosLearner.cpp */;
+		name = "PaxosLearner.cpp: 8";
+		rLen = 0;
+		rLoc = 198;
+		rType = 0;
+		vrLen = 1180;
+		vrLoc = 0;
+	};
+	545080420FCD80B8009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5421D4360F617AF0004BBDB4 /* PLeaseConsts.h */;
+		name = "PLeaseConsts.h: 6";
+		rLen = 0;
+		rLoc = 75;
+		rType = 0;
+		vrLen = 190;
 		vrLoc = 0;
 	};
 	545C60330F7979B4006540BC /* KeyspaceService.h */ = {
@@ -20878,9 +21170,9 @@
 	};
 	548147250F31B6B200F3D2B6 /* PaxosMsg.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
+			sepNavIntBoundsRect = "{{0, 0}, {645, 992}}";
 			sepNavSelRange = "{39, 0}";
-			sepNavVisRange = "{0, 1858}";
+			sepNavVisRange = "{0, 188}";
 		};
 	};
 	548147260F31B6B200F3D2B6 /* PaxosState.h */ = {
@@ -21015,9 +21307,9 @@
 	};
 	5481473D0F31B6B200F3D2B6 /* IOOperation.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {880, 1728}}";
-			sepNavSelRange = "{507, 0}";
-			sepNavVisRange = "{0, 1004}";
+			sepNavIntBoundsRect = "{{0, 0}, {1325, 1744}}";
+			sepNavSelRange = "{99, 0}";
+			sepNavVisRange = "{0, 636}";
 		};
 	};
 	5481473E0F31B6B200F3D2B6 /* IOProcessor.h */ = {
@@ -21029,16 +21321,16 @@
 	};
 	5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {880, 6320}}";
-			sepNavSelRange = "{2990, 0}";
-			sepNavVisRange = "{2610, 1457}";
+			sepNavIntBoundsRect = "{{0, 0}, {1325, 6320}}";
+			sepNavSelRange = "{189, 0}";
+			sepNavVisRange = "{0, 872}";
 		};
 	};
 	548147410F31B6B200F3D2B6 /* Socket.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {884, 4879}}";
-			sepNavSelRange = "{1306, 4}";
-			sepNavVisRange = "{3249, 785}";
+			sepNavIntBoundsRect = "{{0, 0}, {1312, 4480}}";
+			sepNavSelRange = "{207, 6}";
+			sepNavVisRange = "{0, 670}";
 		};
 	};
 	548147420F31B6B200F3D2B6 /* Socket.h */ = {
@@ -21078,9 +21370,9 @@
 	};
 	548147470F31B6B200F3D2B6 /* Time.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {889, 1046}}";
-			sepNavSelRange = "{92, 0}";
-			sepNavVisRange = "{0, 334}";
+			sepNavIntBoundsRect = "{{0, 0}, {1325, 648}}";
+			sepNavSelRange = "{71, 59}";
+			sepNavVisRange = "{0, 375}";
 			sepNavWindowFrame = "{{19, -5}, {880, 1178}}";
 		};
 	};
@@ -21306,7 +21598,7 @@
 		fRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */;
 		name = "IOProcessor_Darwin.cpp: 165";
 		rLen = 0;
-		rLoc = 2990;
+		rLoc = 2970;
 		rType = 0;
 		vrLen = 1457;
 		vrLoc = 2610;

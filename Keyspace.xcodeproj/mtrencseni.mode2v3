@@ -204,7 +204,7 @@
 				<key>PBXProjectModuleGUID</key>
 				<string>54507D990FCD69E9009D9B99</string>
 				<key>PBXProjectModuleLabel</key>
-				<string>PaxosLearner.cpp</string>
+				<string>PLeaseConsts.h</string>
 				<key>PBXSplitModuleInNavigatorKey</key>
 				<dict>
 					<key>Split0</key>
@@ -212,11 +212,11 @@
 						<key>PBXProjectModuleGUID</key>
 						<string>54507D9C0FCD69EF009D9B99</string>
 						<key>PBXProjectModuleLabel</key>
-						<string>PaxosLearner.cpp</string>
+						<string>PLeaseConsts.h</string>
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>545080160FCD7FF0009D9B99</string>
+						<string>545080420FCD80B8009D9B99</string>
 						<key>history</key>
 						<array>
 							<string>54507DBF0FCD6B5A009D9B99</string>
@@ -251,7 +251,6 @@
 							<string>54507FFA0FCD7FF0009D9B99</string>
 							<string>54507FFB0FCD7FF0009D9B99</string>
 							<string>54507FFC0FCD7FF0009D9B99</string>
-							<string>54507FFD0FCD7FF0009D9B99</string>
 							<string>54507FFE0FCD7FF0009D9B99</string>
 							<string>54507FFF0FCD7FF0009D9B99</string>
 							<string>545080000FCD7FF0009D9B99</string>
@@ -261,7 +260,8 @@
 							<string>545080040FCD7FF0009D9B99</string>
 							<string>545080050FCD7FF0009D9B99</string>
 							<string>545080060FCD7FF0009D9B99</string>
-							<string>54507FF70FCD7FEB009D9B99</string>
+							<string>545080400FCD80B8009D9B99</string>
+							<string>54507FFD0FCD7FF0009D9B99</string>
 						</array>
 						<key>prevStack</key>
 						<array>
@@ -421,6 +421,7 @@
 							<string>545080130FCD7FF0009D9B99</string>
 							<string>545080140FCD7FF0009D9B99</string>
 							<string>545080150FCD7FF0009D9B99</string>
+							<string>545080410FCD80B8009D9B99</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -715,11 +716,11 @@
 	<array>
 		<string>54507F0F0FCD75F4009D9B99</string>
 		<string>54507F100FCD75F4009D9B99</string>
+		<string>1C530D57069F1CE1000CFCEE</string>
+		<string>1C530D54069F1CE1000CFCEE</string>
 		<string>1C530D5B069F1CE1000CFCEE</string>
 		<string>1C530D52069F1CE1000CFCEE</string>
-		<string>1C530D57069F1CE1000CFCEE</string>
 		<string>54507D990FCD69E9009D9B99</string>
-		<string>1C530D54069F1CE1000CFCEE</string>
 		<string>/Users/mtrencseni/Code/Keyspace/Keyspace.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -1096,25 +1097,25 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CDD528C0622207200134675</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>&lt;No Editor&gt;</string>
+										<string>ReplicatedLogMsg.h</string>
 										<key>StatusBarVisibility</key>
 										<true/>
 									</dict>
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{0, 0}, {1373, 742}}</string>
+										<string>{{0, 0}, {1386, 680}}</string>
 										<key>RubberWindowFrame</key>
-										<string>218 17 1373 1119 0 0 1920 1178 </string>
+										<string>312 12 1386 1057 0 0 1920 1178 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXNavigatorGroup</string>
 									<key>Proportion</key>
-									<string>1373pt</string>
+									<string>1386pt</string>
 								</dict>
 							</array>
 							<key>Proportion</key>
-							<string>742pt</string>
+							<string>680pt</string>
 						</dict>
 						<dict>
 							<key>BecomeActive</key>
@@ -1129,9 +1130,9 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 747}, {1373, 331}}</string>
+								<string>{{0, 685}, {1386, 331}}</string>
 								<key>RubberWindowFrame</key>
-								<string>218 17 1373 1119 0 0 1920 1178 </string>
+								<string>312 12 1386 1057 0 0 1920 1178 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXProjectFindModule</string>
@@ -1140,7 +1141,7 @@
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>1078pt</string>
+					<string>1016pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -1160,7 +1161,7 @@
 				<string>1CD0528E0623707200166675</string>
 			</array>
 			<key>WindowString</key>
-			<string>218 17 1373 1119 0 0 1920 1178 </string>
+			<string>312 12 1386 1057 0 0 1920 1178 </string>
 			<key>WindowToolGUID</key>
 			<string>1C530D57069F1CE1000CFCEE</string>
 			<key>WindowToolIsVisible</key>

@@ -1,10 +1,7 @@
 #ifndef PLEASEMSG_H
 #define PLEASEMSG_H
 
-#include <unistd.h>
-#include <string.h>
 #include "System/Buffer.h"
-#include <stdint.h>
 
 #define PLEASE_PREPARE_REQUEST				'1'
 #define PLEASE_PREPARE_REJECTED				'2'
