@@ -33,7 +33,7 @@ private:
 	void					StartProposing();
 
 	TransportWriter**		writers;
-	ByteString				wdata;
+	ByteBuffer				wdata;
 	PLeaseProposerState		state;
 	PLeaseMsg				msg;
 	MFunc<PLeaseProposer>	onAcquireLeaseTimeout;

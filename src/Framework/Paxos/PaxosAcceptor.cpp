@@ -60,6 +60,8 @@ bool PaxosAcceptor::ReadState()
 	
 	if (table == NULL)
 		return false;
+		
+	state.acceptedValue.Allocate(2*MB + 10*KB);
 
 	ret = true;
 	ret &= table->Get(NULL, "@@paxosID",			data[0]);
