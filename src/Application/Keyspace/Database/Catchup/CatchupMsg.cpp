@@ -1,6 +1,4 @@
 #include "CatchupMsg.h"
-#include <stdio.h>
-#include <inttypes.h>
 
 void CatchupMsg::Init(char type_)
 {
@@ -9,7 +7,7 @@ void CatchupMsg::Init(char type_)
 
 void CatchupMsg::KeyValue(ByteString& key_, ByteString& value_)
 {
-	Init(KEY_VALUE);
+	Init(CATCHUP_KEY_VALUE);
 	key.Set(key_);
 	value.Set(value_);
 }
@@ -21,79 +19,51 @@ void CatchupMsg::Commit(uint64_t paxosID_)
 	
 }
 
-bool CatchupMsg::Read(ByteString data)
+bool CatchupMsg::Read(const ByteString& data)
 {
-	char		type;
-	unsigned	nread;
-	char		*pos;
-	uint64_t	paxosID;
-	ByteString	key, value, dbCommand;
+	int read;
 	
-#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64(num)		(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
-								if (nread < 1) return false; pos += nread;
-#define ReadChar(c)			(c) = *pos; pos++;
-#define ReadSeparator()		if (*pos != ':') return false; pos++;
-#define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
-
-	pos = data.buffer;
-	CheckOverflow();
-	ReadChar(type);
+	if (data.length < 1)
+		return false;
 	
-	if (type == KEY_VALUE)
+	switch (data.buffer[0])
 	{
-		CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		ReadUint64(key.length); CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		
-		key.buffer = pos;
-		key.size = key.length;
-		
-		pos += key.length;
-		ReadSeparator(); CheckOverflow();
-		ReadUint64(value.length); CheckOverflow();
-		ReadSeparator();
-
-		value.buffer = pos;
-		value.size = value.length;
-
-		pos += value.length;
-		ValidateLength();
-		KeyValue(key, value);
-		return true;
+		case CATCHUP_KEY_VALUE:
+			read = snreadf(data.buffer, data.length, "%c:%M:%M",
+						   &type, &key, &value);
+			break;
+		case CATCHUP_COMMIT:
+			read = snreadf(data.buffer, data.length, "%c:%U",
+						   &type, &paxosID);
+			break;
+		default:
+			return false;
 	}
-	else if (type == CATCHUP_COMMIT)
-	{
-		CheckOverflow();
-		ReadSeparator(); CheckOverflow();
-		ReadUint64(paxosID);
-		
-		ValidateLength();
-		Commit(paxosID);
-		return true;
-	}
-	else
-		ASSERT_FAIL();
 	
-	return false;
+	return (read == (signed)data.length ? true : false);
 }
 	
 bool CatchupMsg::Write(ByteString& data)
 {
-	int required;
+	int req;
 	
-	if (type == KEY_VALUE)
-		required = snwritef(data.buffer, data.size, "%c:%M:%M", type,
-			key.length, key.buffer, value.length, value.buffer);
-	else if (type == CATCHUP_COMMIT)
-		required = snwritef(data.buffer, data.size, "%c:%U", type, paxosID);
-	else
-		return false;
+	switch (type)
+	{
+		case CATCHUP_KEY_VALUE:
+			req = snwritef(data.buffer, data.size, "%c:%M:%M",
+						   type, &key, &value);
+			break;
+		case CATCHUP_COMMIT:
+			req = snwritef(data.buffer, data.size, "%c:%U",
+						   type, paxosID);
+			break;
+		default:
+			return false;
+	}
 	
-	if (required < 0 || (unsigned)required > data.size)
+	if (req < 0 || (unsigned)req > data.size)
 		return false;
 		
-	data.length = required;
+	data.length = req;
 	return true;
 }

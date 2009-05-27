@@ -4,7 +4,7 @@
 #include "../KeyspaceConsts.h"
 #include "System/Buffer.h"
 
-#define KEY_VALUE			'k'
+#define CATCHUP_KEY_VALUE	'k'
 #define CATCHUP_COMMIT		'c'
 
 class CatchupMsg
@@ -19,7 +19,7 @@ public:
 	void							KeyValue(ByteString& key_, ByteString& value_);
 	void							Commit(uint64_t paxosID);
 
-	bool							Read(ByteString data);
+	bool							Read(const ByteString& data);
 	bool							Write(ByteString& data);
 };
 

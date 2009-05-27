@@ -69,7 +69,7 @@ void CatchupClient::ProcessMsg()
 {
 	Log_Trace();
 
-	if (msg.type == KEY_VALUE)
+	if (msg.type == CATCHUP_KEY_VALUE)
 		OnKeyValue();
 	else if (msg.type == CATCHUP_COMMIT)
 		OnCommit();
