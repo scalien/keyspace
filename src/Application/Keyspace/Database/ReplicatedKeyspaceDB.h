@@ -10,7 +10,7 @@
 #include "Framework/AsyncDatabase/MultiDatabaseOp.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Application/Keyspace/Catchup/CatchupServer.h"
-#include "Application/Keyspace/Catchup/CatchupClient.h"
+#include "Application/Keyspace/Catchup/CatchupReader.h"
 #include "KeyspaceMsg.h"
 #include "KeyspaceDB.h"
 
