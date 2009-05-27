@@ -47,31 +47,24 @@ public:
 		return Set(str, len);
 	}
 	
-	virtual bool Set(const void* str, unsigned len)
+	virtual bool Set(const void* buf, unsigned len)
 	{
-		if (buffer == NULL)
+		if (len > 0 && (buf == NULL || buffer == NULL))
 			ASSERT_FAIL();
-	
+		
 		if (len > size)
 			return false;
 		
-		memcpy(buffer, str, len);
+		memmove(buffer, buf, len);
 		
 		length = len;
 		
-		return true;		
+		return true;
 	}
 	
-	bool Set(const ByteString& other)
+	virtual bool Set(const ByteString& other)
 	{
-		if (other.length > size)
-			return false;
-		
-		memcpy(buffer, other.buffer, other.length);
-		
-		length = other.length;
-		
-		return true;
+		return Set(other.buffer, other.length);
 	}
 
 	bool operator==(const ByteString& other)
@@ -153,6 +146,27 @@ public:
 		length = 0;
 	}
 	
+	virtual bool Set(const char* str)
+	{
+		if (buffer == NULL)
+			ASSERT_FAIL();
+		
+		int len = strlen(str);
+		return Set(str, len);
+	}
+	
+	virtual bool Set(const void* buffer, unsigned len)
+	{
+		if (!Reallocate(len))
+			return false;
+		return ByteString::Set(buffer, len);
+	}
+	
+	virtual bool Set(const ByteString& other)
+	{
+		return Set(other.buffer, other.length);
+	}
+		
 	bool Allocate(int size_)
 	{
 		if (buffer != NULL)
@@ -255,7 +269,7 @@ public:
 		if (length + len > size)
 			Reallocate(length + len, true);
 
-		memcpy(buffer + length, buf, len);
+		memmove(buffer + length, buf, len);
 		length += len;
 		
 		return true;
@@ -279,26 +293,7 @@ public:
 		buffer = newbuffer;
 		size = newsize;
 	}
-/*	
-	virtual bool Printf(const char* fmt, ...)
-	{
-		va_list ap;
 
-		while (true)
-		{
-			va_start(ap, fmt);
-			length = vsnprintf(buffer, size, fmt, ap);
-			va_end(ap);
-			
-			if (length <= size)
-				return true;
-
-			Reallocate(length, false);
-		}
-		
-		return true;
-	}
-*/	
 	virtual bool Writef(const char* fmt, ...)
 	{
 		va_list ap;
