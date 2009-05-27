@@ -204,7 +204,7 @@
 				<key>PBXProjectModuleGUID</key>
 				<string>54507D990FCD69E9009D9B99</string>
 				<key>PBXProjectModuleLabel</key>
-				<string>CatchupClient.cpp</string>
+				<string>CatchupWriter.cpp</string>
 				<key>PBXSplitModuleInNavigatorKey</key>
 				<dict>
 					<key>Split0</key>
@@ -212,23 +212,21 @@
 						<key>PBXProjectModuleGUID</key>
 						<string>54507D9C0FCD69EF009D9B99</string>
 						<key>PBXProjectModuleLabel</key>
-						<string>CatchupClient.cpp</string>
+						<string>CatchupWriter.cpp</string>
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>54507DF60FCD6C11009D9B99</string>
+						<string>54507E190FCD6D5E009D9B99</string>
 						<key>history</key>
 						<array>
 							<string>54507DBF0FCD6B5A009D9B99</string>
 							<string>54507DC10FCD6B5A009D9B99</string>
 							<string>54507DD60FCD6BCD009D9B99</string>
-							<string>54507DD80FCD6BCD009D9B99</string>
-							<string>54507DD90FCD6BCD009D9B99</string>
-							<string>54507DEC0FCD6C11009D9B99</string>
-							<string>54507DED0FCD6C11009D9B99</string>
-							<string>54507DEE0FCD6C11009D9B99</string>
-							<string>54507DEF0FCD6C11009D9B99</string>
-							<string>54507DE90FCD6C08009D9B99</string>
+							<string>54507E050FCD6D22009D9B99</string>
+							<string>54507E0B0FCD6D2D009D9B99</string>
+							<string>54507E150FCD6D5E009D9B99</string>
+							<string>54507E160FCD6D5E009D9B99</string>
+							<string>54507E130FCD6D50009D9B99</string>
 						</array>
 						<key>prevStack</key>
 						<array>
@@ -236,15 +234,13 @@
 							<string>54507DC30FCD6B5A009D9B99</string>
 							<string>54507DC40FCD6B5A009D9B99</string>
 							<string>54507DDA0FCD6BCD009D9B99</string>
-							<string>54507DDB0FCD6BCD009D9B99</string>
-							<string>54507DDC0FCD6BCD009D9B99</string>
 							<string>54507DDD0FCD6BCD009D9B99</string>
 							<string>54507DF00FCD6C11009D9B99</string>
-							<string>54507DF10FCD6C11009D9B99</string>
-							<string>54507DF20FCD6C11009D9B99</string>
-							<string>54507DF30FCD6C11009D9B99</string>
-							<string>54507DF40FCD6C11009D9B99</string>
-							<string>54507DF50FCD6C11009D9B99</string>
+							<string>54507E060FCD6D22009D9B99</string>
+							<string>54507E070FCD6D22009D9B99</string>
+							<string>54507E0C0FCD6D2D009D9B99</string>
+							<string>54507E170FCD6D5E009D9B99</string>
+							<string>54507E180FCD6D5E009D9B99</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -333,7 +329,7 @@
 									<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 									<array>
 										<array>
-											<integer>15</integer>
+											<integer>13</integer>
 											<integer>9</integer>
 											<integer>8</integer>
 											<integer>4</integer>

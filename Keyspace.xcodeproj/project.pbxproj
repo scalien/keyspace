@@ -42,10 +42,10 @@
 		54507AB40FCC8351009D9B99 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A765F0F7680D6003084C9 /* Cursor.cpp */; };
 		54507BAD0FCD3D4D009D9B99 /* KeyspaceClientReq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507BAC0FCD3D4D009D9B99 /* KeyspaceClientReq.cpp */; };
 		54507BB70FCD3DB4009D9B99 /* KeyspaceClientResp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507BB60FCD3DB4009D9B99 /* KeyspaceClientResp.cpp */; };
-		54507DBA0FCD6B43009D9B99 /* CatchupClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DB20FCD6B43009D9B99 /* CatchupClient.cpp */; };
-		54507DBB0FCD6B43009D9B99 /* CatchupConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DB40FCD6B43009D9B99 /* CatchupConn.cpp */; };
 		54507DBC0FCD6B43009D9B99 /* CatchupMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DB60FCD6B43009D9B99 /* CatchupMsg.cpp */; };
 		54507DBD0FCD6B43009D9B99 /* CatchupServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */; };
+		54507DFD0FCD6CF7009D9B99 /* CatchupReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DFA0FCD6CF7009D9B99 /* CatchupReader.cpp */; };
+		54507DFE0FCD6CF7009D9B99 /* CatchupWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DFC0FCD6CF7009D9B99 /* CatchupWriter.cpp */; };
 		545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */; };
 		547A76600F7680D6003084C9 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A765F0F7680D6003084C9 /* Cursor.cpp */; };
 		5481474A0F31B6B200F3D2B6 /* TCPEchoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */; };
@@ -209,14 +209,14 @@
 		54507BAC0FCD3D4D009D9B99 /* KeyspaceClientReq.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientReq.cpp; sourceTree = "<group>"; };
 		54507BB50FCD3DB4009D9B99 /* KeyspaceClientResp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientResp.h; sourceTree = "<group>"; };
 		54507BB60FCD3DB4009D9B99 /* KeyspaceClientResp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientResp.cpp; sourceTree = "<group>"; };
-		54507DB20FCD6B43009D9B99 /* CatchupClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupClient.cpp; sourceTree = "<group>"; };
-		54507DB30FCD6B43009D9B99 /* CatchupClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupClient.h; sourceTree = "<group>"; };
-		54507DB40FCD6B43009D9B99 /* CatchupConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupConn.cpp; sourceTree = "<group>"; };
-		54507DB50FCD6B43009D9B99 /* CatchupConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupConn.h; sourceTree = "<group>"; };
 		54507DB60FCD6B43009D9B99 /* CatchupMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupMsg.cpp; sourceTree = "<group>"; };
 		54507DB70FCD6B43009D9B99 /* CatchupMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupMsg.h; sourceTree = "<group>"; };
 		54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupServer.cpp; sourceTree = "<group>"; };
 		54507DB90FCD6B43009D9B99 /* CatchupServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupServer.h; sourceTree = "<group>"; };
+		54507DF90FCD6CF7009D9B99 /* CatchupReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupReader.h; sourceTree = "<group>"; };
+		54507DFA0FCD6CF7009D9B99 /* CatchupReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupReader.cpp; sourceTree = "<group>"; };
+		54507DFB0FCD6CF7009D9B99 /* CatchupWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchupWriter.h; sourceTree = "<group>"; };
+		54507DFC0FCD6CF7009D9B99 /* CatchupWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatchupWriter.cpp; sourceTree = "<group>"; };
 		545C60330F7979B4006540BC /* KeyspaceService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceService.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
 		545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceMsg.cpp; sourceTree = "<group>"; };
@@ -560,10 +560,10 @@
 				54507DB60FCD6B43009D9B99 /* CatchupMsg.cpp */,
 				54507DB90FCD6B43009D9B99 /* CatchupServer.h */,
 				54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */,
-				54507DB30FCD6B43009D9B99 /* CatchupClient.h */,
-				54507DB20FCD6B43009D9B99 /* CatchupClient.cpp */,
-				54507DB50FCD6B43009D9B99 /* CatchupConn.h */,
-				54507DB40FCD6B43009D9B99 /* CatchupConn.cpp */,
+				54507DF90FCD6CF7009D9B99 /* CatchupReader.h */,
+				54507DFA0FCD6CF7009D9B99 /* CatchupReader.cpp */,
+				54507DFB0FCD6CF7009D9B99 /* CatchupWriter.h */,
+				54507DFC0FCD6CF7009D9B99 /* CatchupWriter.cpp */,
 			);
 			path = Catchup;
 			sourceTree = "<group>";
@@ -1102,10 +1102,10 @@
 				5430A67F0FC0581D00AA8EC9 /* ReplicatedConfig.cpp in Sources */,
 				54507BAD0FCD3D4D009D9B99 /* KeyspaceClientReq.cpp in Sources */,
 				54507BB70FCD3DB4009D9B99 /* KeyspaceClientResp.cpp in Sources */,
-				54507DBA0FCD6B43009D9B99 /* CatchupClient.cpp in Sources */,
-				54507DBB0FCD6B43009D9B99 /* CatchupConn.cpp in Sources */,
 				54507DBC0FCD6B43009D9B99 /* CatchupMsg.cpp in Sources */,
 				54507DBD0FCD6B43009D9B99 /* CatchupServer.cpp in Sources */,
+				54507DFD0FCD6CF7009D9B99 /* CatchupReader.cpp in Sources */,
+				54507DFE0FCD6CF7009D9B99 /* CatchupWriter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

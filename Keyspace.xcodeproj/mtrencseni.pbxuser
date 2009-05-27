@@ -1609,6 +1609,24 @@
 			54507DF40FCD6C11009D9B99 /* PBXTextBookmark */ = 54507DF40FCD6C11009D9B99 /* PBXTextBookmark */;
 			54507DF50FCD6C11009D9B99 /* PBXTextBookmark */ = 54507DF50FCD6C11009D9B99 /* PBXTextBookmark */;
 			54507DF60FCD6C11009D9B99 /* PBXTextBookmark */ = 54507DF60FCD6C11009D9B99 /* PBXTextBookmark */;
+			54507DF80FCD6CE4009D9B99 /* PBXTextBookmark */ = 54507DF80FCD6CE4009D9B99 /* PBXTextBookmark */;
+			54507E000FCD6D0C009D9B99 /* PBXTextBookmark */ = 54507E000FCD6D0C009D9B99 /* PBXTextBookmark */;
+			54507E030FCD6D1C009D9B99 /* PBXTextBookmark */ = 54507E030FCD6D1C009D9B99 /* PBXTextBookmark */;
+			54507E040FCD6D22009D9B99 /* PBXTextBookmark */ = 54507E040FCD6D22009D9B99 /* PBXTextBookmark */;
+			54507E050FCD6D22009D9B99 /* PBXTextBookmark */ = 54507E050FCD6D22009D9B99 /* PBXTextBookmark */;
+			54507E060FCD6D22009D9B99 /* PBXTextBookmark */ = 54507E060FCD6D22009D9B99 /* PBXTextBookmark */;
+			54507E070FCD6D22009D9B99 /* PBXTextBookmark */ = 54507E070FCD6D22009D9B99 /* PBXTextBookmark */;
+			54507E080FCD6D22009D9B99 /* PBXTextBookmark */ = 54507E080FCD6D22009D9B99 /* PBXTextBookmark */;
+			54507E0A0FCD6D2B009D9B99 /* PBXTextBookmark */ = 54507E0A0FCD6D2B009D9B99 /* PBXTextBookmark */;
+			54507E0B0FCD6D2D009D9B99 /* PBXTextBookmark */ = 54507E0B0FCD6D2D009D9B99 /* PBXTextBookmark */;
+			54507E0C0FCD6D2D009D9B99 /* PBXTextBookmark */ = 54507E0C0FCD6D2D009D9B99 /* PBXTextBookmark */;
+			54507E0D0FCD6D2D009D9B99 /* PBXTextBookmark */ = 54507E0D0FCD6D2D009D9B99 /* PBXTextBookmark */;
+			54507E130FCD6D50009D9B99 /* PBXTextBookmark */ = 54507E130FCD6D50009D9B99 /* PBXTextBookmark */;
+			54507E150FCD6D5E009D9B99 /* PBXTextBookmark */ = 54507E150FCD6D5E009D9B99 /* PBXTextBookmark */;
+			54507E160FCD6D5E009D9B99 /* PBXTextBookmark */ = 54507E160FCD6D5E009D9B99 /* PBXTextBookmark */;
+			54507E170FCD6D5E009D9B99 /* PBXTextBookmark */ = 54507E170FCD6D5E009D9B99 /* PBXTextBookmark */;
+			54507E180FCD6D5E009D9B99 /* PBXTextBookmark */ = 54507E180FCD6D5E009D9B99 /* PBXTextBookmark */;
+			54507E190FCD6D5E009D9B99 /* PBXTextBookmark */ = 54507E190FCD6D5E009D9B99 /* PBXTextBookmark */;
 			54E8E5E70FC4075A00EB673B = 54E8E5E70FC4075A00EB673B /* PBXTextBookmark */;
 			54E8E62C0FC40B0300EB673B = 54E8E62C0FC40B0300EB673B /* PBXTextBookmark */;
 			54E8E6400FC4398100EB673B = 54E8E6400FC4398100EB673B /* PBXTextBookmark */;
@@ -7393,7 +7411,7 @@
 	5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{1606, 0}";
+			sepNavSelRange = "{509, 0}";
 			sepNavVisRange = "{0, 1635}";
 			sepNavWindowFrame = "{{269, 0}, {942, 1178}}";
 		};
@@ -16873,13 +16891,25 @@
 		rType = 1;
 	};
 	54507DB20FCD6B43009D9B99 /* CatchupClient.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = CatchupClient.cpp;
+		path = /Users/mtrencseni/Code/Keyspace/src/Application/Keyspace/Catchup/CatchupClient.cpp;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1584}}";
 			sepNavSelRange = "{1053, 0}";
-			sepNavVisRange = "{752, 838}";
+			sepNavVisRange = "{728, 862}";
 		};
 	};
 	54507DB30FCD6B43009D9B99 /* CatchupClient.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = CatchupClient.h;
+		path = /Users/mtrencseni/Code/Keyspace/src/Application/Keyspace/Catchup/CatchupClient.h;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
 			sepNavSelRange = "{332, 13}";
@@ -16887,6 +16917,12 @@
 		};
 	};
 	54507DB40FCD6B43009D9B99 /* CatchupConn.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = CatchupConn.cpp;
+		path = /Users/mtrencseni/Code/Keyspace/src/Application/Keyspace/Catchup/CatchupConn.cpp;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1536}}";
 			sepNavSelRange = "{971, 0}";
@@ -16894,6 +16930,12 @@
 		};
 	};
 	54507DB50FCD6B43009D9B99 /* CatchupConn.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = CatchupConn.h;
+		path = /Users/mtrencseni/Code/Keyspace/src/Application/Keyspace/Catchup/CatchupConn.h;
+		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
 			sepNavSelRange = "{353, 0}";
@@ -16903,15 +16945,15 @@
 	54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{278, 0}";
-			sepNavVisRange = "{0, 379}";
+			sepNavSelRange = "{50, 0}";
+			sepNavVisRange = "{0, 381}";
 		};
 	};
 	54507DB90FCD6B43009D9B99 /* CatchupServer.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {877, 1050}}";
-			sepNavSelRange = "{422, 0}";
-			sepNavVisRange = "{0, 442}";
+			sepNavSelRange = "{245, 0}";
+			sepNavVisRange = "{0, 444}";
 		};
 	};
 	54507DBF0FCD6B5A009D9B99 /* PBXTextBookmark */ = {
@@ -17045,7 +17087,7 @@
 		fRef = 54507DB90FCD6B43009D9B99 /* CatchupServer.h */;
 		name = "CatchupServer.h: 16";
 		rLen = 0;
-		rLoc = 422;
+		rLoc = 424;
 		rType = 0;
 		vrLen = 442;
 		vrLoc = 0;
@@ -17085,7 +17127,7 @@
 		fRef = 54507DB90FCD6B43009D9B99 /* CatchupServer.h */;
 		name = "CatchupServer.h: 16";
 		rLen = 0;
-		rLoc = 422;
+		rLoc = 424;
 		rType = 0;
 		vrLen = 442;
 		vrLoc = 0;
@@ -17095,7 +17137,7 @@
 		fRef = 54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */;
 		name = "CatchupServer.cpp: 10";
 		rLen = 0;
-		rLoc = 278;
+		rLoc = 280;
 		rType = 0;
 		vrLen = 379;
 		vrLoc = 0;
@@ -17113,7 +17155,7 @@
 		fRef = 54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */;
 		name = "CatchupServer.cpp: 10";
 		rLen = 0;
-		rLoc = 278;
+		rLoc = 280;
 		rType = 0;
 		vrLen = 379;
 		vrLoc = 0;
@@ -17153,7 +17195,7 @@
 		fRef = 54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */;
 		name = "CatchupServer.cpp: 10";
 		rLen = 0;
-		rLoc = 278;
+		rLoc = 280;
 		rType = 0;
 		vrLen = 379;
 		vrLoc = 0;
@@ -17217,6 +17259,194 @@
 		rType = 0;
 		vrLen = 838;
 		vrLoc = 752;
+	};
+	54507DF80FCD6CE4009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 52";
+		rLen = 0;
+		rLoc = 1606;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 0;
+	};
+	54507DFA0FCD6CF7009D9B99 /* CatchupReader.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {877, 1536}}";
+			sepNavSelRange = "{23, 0}";
+			sepNavVisRange = "{0, 1124}";
+		};
+	};
+	54507DFC0FCD6CF7009D9B99 /* CatchupWriter.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {877, 1568}}";
+			sepNavSelRange = "{23, 0}";
+			sepNavVisRange = "{0, 1136}";
+		};
+	};
+	54507E000FCD6D0C009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 52";
+		rLen = 0;
+		rLoc = 1606;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 0;
+	};
+	54507E030FCD6D1C009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: CatchupConn.h: No such file or directory";
+		fRef = 54507DB90FCD6B43009D9B99 /* CatchupServer.h */;
+		rLen = 1;
+		rLoc = 7;
+		rType = 1;
+	};
+	54507E040FCD6D22009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 52";
+		rLen = 0;
+		rLoc = 1606;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 0;
+	};
+	54507E050FCD6D22009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DFA0FCD6CF7009D9B99 /* CatchupReader.cpp */;
+		name = "CatchupReader.cpp: 1";
+		rLen = 0;
+		rLoc = 23;
+		rType = 0;
+		vrLen = 1124;
+		vrLoc = 0;
+	};
+	54507E060FCD6D22009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 52";
+		rLen = 0;
+		rLoc = 1606;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 0;
+	};
+	54507E070FCD6D22009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DFA0FCD6CF7009D9B99 /* CatchupReader.cpp */;
+		name = "CatchupReader.cpp: 1";
+		rLen = 0;
+		rLoc = 23;
+		rType = 0;
+		vrLen = 1124;
+		vrLoc = 0;
+	};
+	54507E080FCD6D22009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DB90FCD6B43009D9B99 /* CatchupServer.h */;
+		name = "CatchupServer.h: 8";
+		rLen = 6;
+		rLoc = 239;
+		rType = 0;
+		vrLen = 442;
+		vrLoc = 0;
+	};
+	54507E0A0FCD6D2B009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: Application/Keyspace/Catchup/CatchupClient.h: No such file or directory";
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		rLen = 1;
+		rLoc = 12;
+		rType = 1;
+	};
+	54507E0B0FCD6D2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DB90FCD6B43009D9B99 /* CatchupServer.h */;
+		name = "CatchupServer.h: 8";
+		rLen = 0;
+		rLoc = 245;
+		rType = 0;
+		vrLen = 444;
+		vrLoc = 0;
+	};
+	54507E0C0FCD6D2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DB90FCD6B43009D9B99 /* CatchupServer.h */;
+		name = "CatchupServer.h: 8";
+		rLen = 0;
+		rLoc = 245;
+		rType = 0;
+		vrLen = 444;
+		vrLoc = 0;
+	};
+	54507E0D0FCD6D2D009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 13";
+		rLen = 56;
+		rLoc = 457;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 0;
+	};
+	54507E130FCD6D50009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: CatchupConn.h: No such file or directory";
+		fRef = 54507DFC0FCD6CF7009D9B99 /* CatchupWriter.cpp */;
+		rLen = 1;
+		rLoc = 0;
+		rType = 1;
+	};
+	54507E150FCD6D5E009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 13";
+		rLen = 0;
+		rLoc = 509;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 0;
+	};
+	54507E160FCD6D5E009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */;
+		name = "CatchupServer.cpp: 2";
+		rLen = 0;
+		rLoc = 50;
+		rType = 0;
+		vrLen = 381;
+		vrLoc = 0;
+	};
+	54507E170FCD6D5E009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5446122C0F53488D00EFBBDE /* ReplicatedKeyspaceDB.h */;
+		name = "ReplicatedKeyspaceDB.h: 13";
+		rLen = 0;
+		rLoc = 509;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 0;
+	};
+	54507E180FCD6D5E009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DB80FCD6B43009D9B99 /* CatchupServer.cpp */;
+		name = "CatchupServer.cpp: 2";
+		rLen = 0;
+		rLoc = 50;
+		rType = 0;
+		vrLen = 381;
+		vrLoc = 0;
+	};
+	54507E190FCD6D5E009D9B99 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 54507DFC0FCD6CF7009D9B99 /* CatchupWriter.cpp */;
+		name = "CatchupWriter.cpp: 1";
+		rLen = 0;
+		rLoc = 23;
+		rType = 0;
+		vrLen = 1136;
+		vrLoc = 0;
 	};
 	545C60330F7979B4006540BC /* KeyspaceService.h */ = {
 		uiCtxt = {
