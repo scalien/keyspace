@@ -107,17 +107,36 @@ void* Alloc(int num, int size)
 	return malloc(num * size);
 }
 
+/*
+ * snreadf/vsnreadf is a simple sscanf replacement for working with non-null terminated strings
+ *
+ * supported specifiers:
+ * %%							reads the '%' character
+ * %c (char)					reads a char
+ * %d (int)						reads a signed int
+ * %u (unsigned)				reads an unsigned int
+ * %I (int64_t)					reads a signed int64
+ * %U (uint64_t)				reads an unsigned int64
+ * %M (ByteString* bs)			reads a %u:<%u long buffer> into bs.length and copies the
+ *								buffer into bs.buffer taking into account bs.size
+ * %N (ByteString* bs)			same as %M but does not copy the contents, only sets bs.buffer
+ *								sets bs.length = bs.size to the prefix
+ * snwritef does not null-terminate ByteStrings, and exits with -1 if bs.size is not enough
+ * returns the number of bytes read from buffer, or -1 if the format string did not match
+ * the buffer
+ */
+
 
 int snreadf(char* buffer, unsigned length, const char* format, ...)
 {
-	int			required;
-	va_list		ap;	
+	int			read;
+	va_list		ap;
 	
 	va_start(ap, format);
-	required = vsnreadf(buffer, length, format, ap);
+	read = vsnreadf(buffer, length, format, ap);
 	va_end(ap);
 	
-	return required;
+	return read;
 }
 
 int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
@@ -128,14 +147,14 @@ int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
 	int64_t*	i64;
 	uint64_t*	u64;
 	ByteString*	bs;
-	unsigned	nread;
-	bool		ret;
+	unsigned	n;
+	int			read;
 
-#define ADVANCE(f, b)	{ format += f; buffer += b; length -= b; }
-#define EXIT()			{ ret = false; break; }
+#define ADVANCE(f, b)	{ format += f; buffer += b; length -= b; read += b; }
+#define EXIT()			{ return -1; }
 #define REQUIRE(r)		{ if (length < r) EXIT() }
 
-	ret = true;
+	read = 0;
 
 	while(format[0] != '\0')
 	{
@@ -158,40 +177,40 @@ int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
 			} else if (format[1] == 'd') // %d
 			{
 				d = va_arg(ap, int*);
-				*d = strntoint64(buffer, length, &nread);
-				if (nread < 1) EXIT();
-				ADVANCE(2, nread);
+				*d = strntoint64(buffer, length, &n);
+				if (n < 1) EXIT();
+				ADVANCE(2, n);
 			} else if (format[1] == 'u') // %u
 			{
 				u = va_arg(ap, unsigned*);
-				*u = strntouint64(buffer, length, &nread);
-				if (nread < 1) EXIT();
-				ADVANCE(2, nread);
+				*u = strntouint64(buffer, length, &n);
+				if (n < 1) EXIT();
+				ADVANCE(2, n);
 			} else if (format[1] == 'I') // %I
 			{
 				i64 = va_arg(ap, int64_t*);
-				*i64 = strntoint64(buffer, length, &nread);
-				if (nread < 1) EXIT();
-				ADVANCE(2, nread);
+				*i64 = strntoint64(buffer, length, &n);
+				if (n < 1) EXIT();
+				ADVANCE(2, n);
 			} else if (format[1] == 'U') // %U
 			{
 				u64 = va_arg(ap, uint64_t*);
-				*u64 = strntouint64(buffer, length, &nread);
-				if (nread < 1) EXIT();
-				ADVANCE(2, nread);
+				*u64 = strntouint64(buffer, length, &n);
+				if (n < 1) EXIT();
+				ADVANCE(2, n);
 			}
 			else if (format[1] == 'M') // %M
 			{
 				bs = va_arg(ap, ByteString*);
 				// read the length prefix
-				bs->length = strntouint64(buffer, length, &nread);
-				if (nread < 1) EXIT();
+				bs->length = strntouint64(buffer, length, &n);
+				if (n < 1) EXIT();
 				if (bs->length > bs->size)
 				{
 					bs->length = 0;
 					EXIT();
 				}
-				ADVANCE(0, nread);
+				ADVANCE(0, n);
 				// read the ':'
 				REQUIRE(1);
 				if (buffer[0] != ':') EXIT();
@@ -199,6 +218,23 @@ int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
 				// read the message body
 				REQUIRE(bs->length);
 				memcpy(bs->buffer, buffer, bs->length);
+				ADVANCE(2, bs->length);
+			}
+			else if (format[1] == 'N') // %N
+			{
+				bs = va_arg(ap, ByteString*);
+				// read the length prefix
+				bs->length = strntouint64(buffer, length, &n);
+				if (n < 1) EXIT();
+				ADVANCE(0, n);
+				// read the ':'
+				REQUIRE(1);
+				if (buffer[0] != ':') EXIT();
+				ADVANCE(0, 1);
+				// read the message body
+				REQUIRE(bs->length);
+				bs->buffer = buffer;
+				bs->size = bs->length;
 				ADVANCE(2, bs->length);
 			}
 			else
@@ -213,11 +249,11 @@ int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
 			ADVANCE(1, 1);
 		}
 	}
+
+	if (format[0] != '\0')
+		return -1;
 	
-	if (length != 0 || format[0] != '\0')
-		ret = false;
-	
-	return ret;
+	return read;
 
 #undef ADVANCE
 #undef EXIT
@@ -236,7 +272,7 @@ int vsnreadf(char* buffer, unsigned length, const char* format, va_list ap)
  * %U (uint64_t)				prints an unsigned int64
  * %s (char* p)					copies strlen(p) bytes from p to the output buffer
  * %B (int length, char* p)		copies length bytes from p to the output buffer, irrespective of \0 chars
- * %M (int length, char* p)		same as %u:%B with (length, length, char* p)
+ * %M (ByteString* bs)			same as %u:%B with (bs->length, bs->length, bs->buffer)
  *
  * snwritef does not null-terminate the resulting buffer!
  * returns the number of bytes required or written, or -1 on error
@@ -266,12 +302,13 @@ int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 	uint64_t	u64;
 	char*		p;
 	unsigned	length;
-	unsigned	required;
+	ByteString*	bs;
+	int			required;
 	char		local[64];
 	bool		ghost;
 
 #define ADVANCE(f, b)	{ format += f; buffer += b; size -= b; }
-#define EXIT()			{ required = -1; break; }
+#define EXIT()			{ return -1; }
 #define REQUIRE(r)		{ required += r; if (size < (unsigned)r) ghost = true; }
 
 	ghost = false;
@@ -349,17 +386,17 @@ int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 				ADVANCE(2, length);
 			} else if (format[1] == 'M') // %M to print a message
 			{
-				length = va_arg(ap, unsigned);
-				p = va_arg(ap, char*);
-				n = snprintf(local, sizeof(local), "%u:", length);
+				bs = va_arg(ap, ByteString*);
+				n = snprintf(local, sizeof(local), "%u:", bs->length);
 				if (n < 0) EXIT();
 				REQUIRE(n);
 				if (ghost) n = size;
 				memcpy(buffer, local, n);
 				ADVANCE(0, n);
-				REQUIRE(length);
+				REQUIRE(bs->length);
+				length = bs->length;
 				if (ghost) length = size;
-				memcpy(buffer, p, length);
+				memcpy(buffer, bs->buffer, length);
 				ADVANCE(2, length);
 			}
 			else
