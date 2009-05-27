@@ -16,7 +16,8 @@ PLeaseAcceptor::PLeaseAcceptor() :
 
 void PLeaseAcceptor::Init(TransportWriter** writers_)
 {
-	Log_Message("*** Waiting %d milliseconds... (this is normal) ***", MAX_LEASE_TIME);
+	Log_Message("*** Waiting %d milliseconds... (this is normal) ***",
+	MAX_LEASE_TIME);
 
 	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
 	
@@ -36,9 +37,9 @@ void PLeaseAcceptor::ProcessMsg(PLeaseMsg& msg_)
 {
 	msg = msg_;
 	
-	if (msg.type == PREPARE_REQUEST)
+	if (msg.type == PLEASE_PREPARE_REQUEST)
 		OnPrepareRequest();
-	else if (msg.type == PROPOSE_REQUEST)
+	else if (msg.type == PLEASE_PROPOSE_REQUEST)
 		OnProposeRequest();
 	else
 		ASSERT_FAIL();
@@ -48,8 +49,8 @@ void PLeaseAcceptor::OnPrepareRequest()
 {
 	Log_Trace();
 	
-	Log_Message("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "", msg.paxosID,
-		ReplicatedLog::Get()->GetPaxosID());
+	Log_Message("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "",
+	msg.paxosID, ReplicatedLog::Get()->GetPaxosID());
 
 	if (msg.paxosID < ReplicatedLog::Get()->GetPaxosID())
 		return; // only up-to-date nodes can become masters
@@ -65,16 +66,17 @@ void PLeaseAcceptor::OnPrepareRequest()
 	}
 	
 	if (msg.proposalID < state.promisedProposalID)
-		msg.PrepareResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PREPARE_REJECTED);
+		msg.PrepareRejected(ReplicatedConfig::Get()->nodeID, msg.proposalID);
 	else
 	{
 		state.promisedProposalID = msg.proposalID;
 
 		if (!state.accepted)
-			msg.PrepareResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PREPARE_CURRENTLY_OPEN);
+			msg.PrepareCurrentlyOpen(ReplicatedConfig::Get()->nodeID, msg.proposalID);
 		else
-			msg.PrepareResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED,
-				state.acceptedProposalID, state.acceptedLeaseOwner, state.acceptedExpireTime);
+			msg.PreparePreviouslyAccepted(ReplicatedConfig::Get()->nodeID,
+			msg.proposalID, state.acceptedProposalID,
+			state.acceptedLeaseOwner, state.acceptedExpireTime);
 	}
 	
 	SendReply(senderID);
@@ -103,7 +105,7 @@ void PLeaseAcceptor::OnProposeRequest()
 		STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
 
 	if (msg.proposalID < state.promisedProposalID)
-		msg.ProposeResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
+		msg.ProposeRejected(ReplicatedConfig::Get()->nodeID, msg.proposalID);
 	else
 	{
 		state.accepted = true;
@@ -114,7 +116,7 @@ void PLeaseAcceptor::OnProposeRequest()
 		leaseTimeout.Set(state.acceptedExpireTime);
 		EventLoop::Reset(&leaseTimeout);
 		
-		msg.ProposeResponse(ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
+		msg.ProposeAccepted(ReplicatedConfig::Get()->nodeID, msg.proposalID);
 	}
 	
 	SendReply(senderID);

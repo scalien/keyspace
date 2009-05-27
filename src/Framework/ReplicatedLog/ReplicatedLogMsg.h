@@ -18,11 +18,11 @@ public:
 	uint64_t					leaseEpoch;
 	ByteArray<PAXOS_BUF_SIZE>	value;
 	
-	bool						Init(unsigned nodeID_, uint64_t restartCounter_, uint64_t leaseEpoch_,
-									ByteString& value_);
+	bool	Init(unsigned nodeID_, uint64_t restartCounter_,
+			uint64_t leaseEpoch_, ByteString& value_);
 		
-	bool						Read(ByteString& data);
-	bool						Write(ByteString& data);
+	bool	Read(const ByteString& data);
+	bool	Write(ByteString& data);
 };
 
 #endif

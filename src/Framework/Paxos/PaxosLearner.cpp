@@ -34,7 +34,7 @@ bool PaxosLearner::SendChosen(unsigned nodeID, uint64_t paxosID, ByteString& val
 {
 	Log_Trace();
 	
-	msg.LearnChosen(paxosID, ReplicatedConfig::Get()->nodeID, LEARN_VALUE, value);
+	msg.LearnValue(paxosID, ReplicatedConfig::Get()->nodeID, value);
 	
 	msg.Write(wdata);
 

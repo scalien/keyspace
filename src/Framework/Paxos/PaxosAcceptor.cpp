@@ -23,7 +23,6 @@ void PaxosAcceptor::Init(TransportWriter** writers_)
 		ASSERT_FAIL();
 	transaction.Set(table);
 
-	// Paxos variables
 	paxosID = 0;
 	state.Init();
 
@@ -162,8 +161,8 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.PrepareResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID,
-			PREPARE_REJECTED, state.promisedProposalID);
+		msg.PrepareRejected(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID,
+			state.promisedProposalID);
 		
 		SendReply(senderID);
 		return;
@@ -172,11 +171,11 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	state.promisedProposalID = msg.proposalID;
 
 	if (!state.accepted)
-		msg.PrepareResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID,
-			msg.proposalID, PREPARE_CURRENTLY_OPEN);
+		msg.PrepareCurrentlyOpen(msg.paxosID, ReplicatedConfig::Get()->nodeID,
+			msg.proposalID);
 	else
-		msg.PrepareResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID,
-			msg.proposalID, PREPARE_PREVIOUSLY_ACCEPTED, state.acceptedProposalID, state.acceptedValue);
+		msg.PreparePreviouslyAccepted(msg.paxosID, ReplicatedConfig::Get()->nodeID,
+			msg.proposalID, state.acceptedProposalID, state.acceptedValue);
 	
 	WriteState();
 }
@@ -197,7 +196,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	
 	if (msg.proposalID < state.promisedProposalID)
 	{
-		msg.ProposeResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_REJECTED);
+		msg.ProposeRejected(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID);
 		
 		SendReply(senderID);
 		return;
@@ -207,7 +206,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	state.acceptedProposalID = msg.proposalID;
 	if (!state.acceptedValue.Set(msg.value))
 		ASSERT_FAIL();
-	msg.ProposeResponse(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID, PROPOSE_ACCEPTED);
+	msg.ProposeAccepted(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID);
 	
 	WriteState();
 }

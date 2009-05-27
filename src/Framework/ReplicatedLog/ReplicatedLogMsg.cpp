@@ -1,9 +1,7 @@
 #include "ReplicatedLogMsg.h"
-#include <stdio.h>
-#include <inttypes.h>
 
-bool ReplicatedLogMsg::Init(unsigned nodeID_, uint64_t restartCounter_, uint64_t leaseEpoch_,
-	ByteString& value_)
+bool ReplicatedLogMsg::Init(unsigned nodeID_, uint64_t restartCounter_,
+	uint64_t leaseEpoch_, ByteString& value_)
 {
 	nodeID = nodeID_;
 	restartCounter = restartCounter_;
@@ -14,47 +12,26 @@ bool ReplicatedLogMsg::Init(unsigned nodeID_, uint64_t restartCounter_, uint64_t
 	return true;
 }
 
-bool ReplicatedLogMsg::Read(ByteString& data)
+bool ReplicatedLogMsg::Read(const ByteString& data)
 {
-	unsigned	nread, length;
-	char		*pos;
+	int read;
 	
-#define CheckOverflow()		if ((pos - data.buffer) >= (int) data.length || pos < data.buffer) return false;
-#define ReadUint64(num)		(num) = strntouint64(pos, data.length - (pos - data.buffer), &nread); \
-								if (nread < 1) return false; pos += nread;
-#define ReadSeparator()		if (*pos != ':') return false; pos++;
-#define ValidateLength()	if ((pos - data.buffer) != (int) data.length) return false;
-
-	pos = data.buffer;
-	CheckOverflow();
-	ReadUint64(nodeID); CheckOverflow();
-	ReadSeparator(); CheckOverflow();
-	ReadUint64(restartCounter); CheckOverflow();
-	ReadSeparator(); CheckOverflow();
-	ReadUint64(leaseEpoch); CheckOverflow();
-	ReadSeparator(); CheckOverflow();
-	ReadUint64(length); CheckOverflow();
-	ReadSeparator();
-		
-	if (pos - data.buffer != (int) (data.length - length))
-		return false;
+	read = snreadf(data.buffer, data.size, "%u:%U:%U:%M",
+				   &nodeID, &restartCounter, &leaseEpoch, &value);
 	
-	value.Set(ByteString(data.size - (pos - data.buffer), length, pos));
-
-	return true;
+	return (read == (signed)data.length ? true : false);
 }
 
 bool ReplicatedLogMsg::Write(ByteString& data)
 {
-	int required;
+	int req;
 	
-	required = snwritef(data.buffer, data.size, "%d:%U:%U:%M",
-			nodeID, restartCounter, leaseEpoch,
-			value.length, value.buffer);
+	req = snwritef(data.buffer, data.size, "%u:%U:%U:%M",
+				   nodeID, restartCounter, leaseEpoch, &value);
 	
-	if (required < 0 || (unsigned)required > data.size)
+	if (req < 0 || (unsigned)req > data.size)
 		return false;
 	
-	data.length = required;
+	data.length = req;
 	return true;
 }

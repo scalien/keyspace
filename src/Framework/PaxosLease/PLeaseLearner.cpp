@@ -1,8 +1,5 @@
 #include "PLeaseLearner.h"
-#include <stdio.h>
 #include <inttypes.h>
-#include <math.h>
-#include <assert.h>
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/Paxos/PaxosConsts.h"
@@ -24,7 +21,7 @@ void PLeaseLearner::ProcessMsg(PLeaseMsg &msg_)
 {
 	msg = msg_;
 
-	if (msg.type == LEARN_CHOSEN)
+	if (msg.type == PLEASE_LEARN_CHOSEN)
 		OnLearnChosen();
 	else
 		ASSERT_FAIL();

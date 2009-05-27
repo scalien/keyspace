@@ -68,9 +68,9 @@ void PLeaseProposer::ProcessMsg(PLeaseMsg &msg_)
 {
 	msg = msg_;
 
-	if (msg.type == PREPARE_RESPONSE)
+	if (msg.IsPrepareResponse())
 		OnPrepareResponse();
-	else if (msg.type == PROPOSE_RESPONSE)
+	else if (msg.IsProposeResponse())
 		OnProposeResponse();
 	else
 		ASSERT_FAIL();
@@ -88,9 +88,9 @@ void PLeaseProposer::OnPrepareResponse()
 		
 	numReceived++;
 	
-	if (msg.response == PREPARE_REJECTED)
+	if (msg.type == PLEASE_PREPARE_REJECTED)
 		numRejected++;
-	else if (msg.response == PREPARE_PREVIOUSLY_ACCEPTED && 
+	else if (msg.type == PLEASE_PREPARE_PREVIOUSLY_ACCEPTED && 
 			 msg.acceptedProposalID >= state.highestReceivedProposalID &&
 			 msg.expireTime > Now())
 	{
@@ -121,7 +121,7 @@ void PLeaseProposer::OnProposeResponse()
 	
 	numReceived++;
 	
-	if (msg.response == PROPOSE_ACCEPTED)
+	if (msg.type == PLEASE_PROPOSE_ACCEPTED)
 		numAccepted++;
 
 	// see if we have enough positive replies to advance
@@ -129,7 +129,8 @@ void PLeaseProposer::OnProposeResponse()
 	{
 		// a majority have accepted our proposal, we have consensus
 		state.proposing = false;
-		msg.LearnChosen(ReplicatedConfig::Get()->nodeID, state.leaseOwner, state.expireTime);
+		msg.LearnChosen(ReplicatedConfig::Get()->nodeID,
+		state.leaseOwner, state.expireTime);
 		
 		EventLoop::Remove(&acquireLeaseTimeout);
 		
@@ -164,7 +165,8 @@ void PLeaseProposer::StartPreparing()
 	if (state.proposalID > highestProposalID)
 		highestProposalID = state.proposalID;
 	
-	msg.PrepareRequest(ReplicatedConfig::Get()->nodeID, state.proposalID, ReplicatedLog::Get()->GetPaxosID());
+	msg.PrepareRequest(ReplicatedConfig::Get()->nodeID,
+	state.proposalID, ReplicatedLog::Get()->GetPaxosID());
 	
 	BroadcastMessage();
 }
@@ -176,7 +178,8 @@ void PLeaseProposer::StartProposing()
 	state.preparing = false;
 
 	if (state.leaseOwner != ReplicatedConfig::Get()->nodeID)
-		return; // no point in getting someone else a lease, wait for OnAcquireLeaseTimeout
+		return; // no point in getting someone else a lease,
+				// wait for OnAcquireLeaseTimeout
 
 	state.proposing = true;
 

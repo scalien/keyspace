@@ -97,13 +97,13 @@ void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 		
 	numReceived++;
 	
-	if (msg.subtype == PREPARE_REJECTED)
+	if (msg.type == PAXOS_PREPARE_REJECTED)
 	{
 		if (msg.promisedProposalID > state.highestPromisedProposalID)
 			state.highestPromisedProposalID = msg.promisedProposalID;
 		numRejected++;
 	}
-	else if (msg.subtype == PREPARE_PREVIOUSLY_ACCEPTED &&
+	else if (msg.type == PAXOS_PREPARE_PREVIOUSLY_ACCEPTED &&
 			 msg.acceptedProposalID >= state.highestReceivedProposalID)
 	{
 		/* the >= could be replaced by > which would result in less copys
@@ -137,7 +137,7 @@ void PaxosProposer::OnProposeResponse(PaxosMsg& msg_)
 	
 	numReceived++;
 	
-	if (msg.subtype == PROPOSE_ACCEPTED)
+	if (msg.type == PAXOS_PROPOSE_ACCEPTED)
 		numAccepted++;
 
 	// see if we have enough positive replies to advance
@@ -145,7 +145,8 @@ void PaxosProposer::OnProposeResponse(PaxosMsg& msg_)
 	{
 		// a majority have accepted our proposal, we have consensus
 		StopProposing();
-		msg.LearnChosen(paxosID, ReplicatedConfig::Get()->nodeID, LEARN_PROPOSAL, state.proposalID);
+		msg.LearnProposal(paxosID, ReplicatedConfig::Get()->nodeID,
+		state.proposalID);
 		BroadcastMessage();
 	}
 	else if (numReceived == ReplicatedConfig::Get()->numNodes)
@@ -180,9 +181,10 @@ void PaxosProposer::StartPreparing()
 	state.proposalID = ReplicatedConfig::Get()->NextHighest(
 		max(state.proposalID, state.highestPromisedProposalID));
 	
-	state.highestReceivedProposalID = 0; // TODO: should be -1 ?
+	state.highestReceivedProposalID = 0;
 	
-	msg.PrepareRequest(paxosID, ReplicatedConfig::Get()->nodeID, state.proposalID);
+	msg.PrepareRequest(paxosID, ReplicatedConfig::Get()->nodeID,
+	state.proposalID);
 	
 	BroadcastMessage();
 	
@@ -197,7 +199,8 @@ void PaxosProposer::StartProposing()
 
 	state.proposing = true;
 
-	msg.ProposeRequest(paxosID, ReplicatedConfig::Get()->nodeID, state.proposalID, state.value);
+	msg.ProposeRequest(paxosID, ReplicatedConfig::Get()->nodeID,
+	state.proposalID, state.value);
 
 	BroadcastMessage();
 	

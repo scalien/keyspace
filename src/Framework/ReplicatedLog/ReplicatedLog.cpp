@@ -47,7 +47,7 @@ bool ReplicatedLog::Init()
 	masterLease.Init();
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	//if (ReplicatedConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
+	if (ReplicatedConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
 		masterLease.AcquireLease();
 	
 	safeDB = false;
@@ -201,17 +201,17 @@ void ReplicatedLog::ProcessMsg()
 	if (pmsg.paxosID > highestPaxosID)
 		highestPaxosID = pmsg.paxosID;
 	
-	if (pmsg.type == PREPARE_REQUEST)
+	if (pmsg.type == PAXOS_PREPARE_REQUEST)
 		OnPrepareRequest();
-	else if (pmsg.type == PREPARE_RESPONSE)
+	else if (pmsg.IsPrepareResponse())
 		OnPrepareResponse();
-	else if (pmsg.type == PROPOSE_REQUEST)
+	else if (pmsg.type == PAXOS_PROPOSE_REQUEST)
 		OnProposeRequest();
-	else if (pmsg.type == PROPOSE_RESPONSE)
+	else if (pmsg.IsProposeResponse())
 		OnProposeResponse();
-	else if (pmsg.type == LEARN_CHOSEN)
+	else if (pmsg.IsLearn())
 		OnLearnChosen();
-	else if (pmsg.type == REQUEST_CHOSEN)
+	else if (pmsg.type == PAXOS_REQUEST_CHOSEN)
 		OnRequestChosen();
 	else
 		ASSERT_FAIL();
@@ -265,11 +265,11 @@ void ReplicatedLog::OnLearnChosen()
 		if (catchupTimeout.IsActive())
 			EventLoop::Remove(&catchupTimeout);
 		
-		if (pmsg.subtype == LEARN_PROPOSAL && acceptor.state.accepted &&
+		if (pmsg.type == PAXOS_LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
-				pmsg.LearnChosen(pmsg.paxosID, GetNodeID(), LEARN_VALUE, acceptor.state.acceptedValue);
+				pmsg.LearnValue(pmsg.paxosID, GetNodeID(), acceptor.state.acceptedValue);
 		
-		if (pmsg.subtype == LEARN_VALUE)
+		if (pmsg.type == PAXOS_LEARN_VALUE)
 			learner.OnLearnChosen(pmsg);
 		else
 		{
