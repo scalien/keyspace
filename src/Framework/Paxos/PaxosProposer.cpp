@@ -7,7 +7,6 @@
 #include "Framework/Database/Transaction.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
-#include "PaxosConsts.h"
 
 PaxosProposer::PaxosProposer() :
 	onPrepareTimeout(this, &PaxosProposer::OnPrepareTimeout),

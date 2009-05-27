@@ -2,7 +2,6 @@
 #include <inttypes.h>
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
-#include "Framework/Paxos/PaxosConsts.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
 

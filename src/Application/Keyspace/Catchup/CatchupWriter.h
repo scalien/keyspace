@@ -2,7 +2,6 @@
 #define CATCHUPCONN_H
 
 #include "Framework/Transport/TCPConn.h"
-#include "Framework/Paxos/PaxosConsts.h"
 #include "Framework/Database/Transaction.h"
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "CatchupMsg.h"

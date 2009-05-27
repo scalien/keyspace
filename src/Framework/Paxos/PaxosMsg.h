@@ -1,7 +1,6 @@
 #ifndef PAXOSMSG_H
 #define PAXOSMSG_H
 
-#include "PaxosConsts.h"
 #include <unistd.h>
 #include "System/Buffer.h"
 

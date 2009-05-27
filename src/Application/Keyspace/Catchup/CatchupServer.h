@@ -4,7 +4,6 @@
 #include "Framework/Transport/TCPServer.h"
 #include "Framework/Database/Table.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
-#include "Framework/Paxos/PaxosConsts.h"
 #include "CatchupWriter.h"
 
 #define CONN_BACKLOG	2

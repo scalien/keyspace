@@ -26,7 +26,7 @@ private:
 	void					OnProposeRequest();
 
 	TransportWriter**		writers;
-	ByteArray<PLEASE_BUFSIZE>wdata;
+	ByteBuffer				wdata;
 	MFunc<PLeaseAcceptor>	onLeaseTimeout;
 	Timer					leaseTimeout;
 	PLeaseMsg				msg;

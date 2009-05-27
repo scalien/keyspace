@@ -1,7 +1,6 @@
 #include "ReplicatedLog.h"
 #include <string.h>
 #include "System/Events/EventLoop.h"
-#include "Framework/Paxos/PaxosConsts.h"
 #include "Framework/Transport/TransportTCPReader.h"
 #include "Framework/Transport/TransportTCPWriter.h"
 #include "Framework/Transport/TransportUDPReader.h"
