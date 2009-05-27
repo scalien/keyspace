@@ -7,6 +7,8 @@
 #include "PaxosMsg.h"
 #include "PaxosState.h"
 
+#define PAXOS_TIMEOUT	3000 // TODO: I increased this for testing
+
 class PaxosProposer
 {
 friend class ReplicatedLog;
