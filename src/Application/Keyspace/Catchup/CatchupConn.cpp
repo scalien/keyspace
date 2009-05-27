@@ -3,11 +3,11 @@
 #include "Framework/Transport/Transport.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 
-CatchupConn::CatchupConn()
+CatchupWriter::CatchupWriter()
 {
 }
 
-void CatchupConn::Init()
+void CatchupWriter::Init()
 {
 	TCPConn<PAXOS_BUF_SIZE>::Init(false);
 	
@@ -24,11 +24,11 @@ void CatchupConn::Init()
 	WriteNext();
 }
 
-void CatchupConn::OnRead()
+void CatchupWriter::OnRead()
 {
 }
 
-void CatchupConn::OnWrite()
+void CatchupWriter::OnWrite()
 {
 	Log_Trace();
 	
@@ -44,7 +44,7 @@ void CatchupConn::OnWrite()
 		WriteNext();
 }
 
-void CatchupConn::OnClose()
+void CatchupWriter::OnClose()
 {
 	Log_Trace();
 
@@ -55,7 +55,7 @@ void CatchupConn::OnClose()
 	delete this;
 }
 
-void CatchupConn::WriteNext()
+void CatchupWriter::WriteNext()
 {
 	Log_Trace();
 

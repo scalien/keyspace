@@ -2,7 +2,7 @@
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
 
-void CatchupClient::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
+void CatchupReader::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 {
 	keyspaceDB = keyspaceDB_;
 	table = table_;
@@ -10,7 +10,7 @@ void CatchupClient::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 	transaction.Set(table);
 }
 
-void CatchupClient::Start(unsigned nodeID)
+void CatchupReader::Start(unsigned nodeID)
 {
 	Log_Trace();
 
@@ -28,13 +28,13 @@ void CatchupClient::Start(unsigned nodeID)
 	Connect(endpoint, CATCHUP_CONNECT_TIMEOUT);
 }
 
-void CatchupClient::OnMessageRead(const ByteString& message)
+void CatchupReader::OnMessageRead(const ByteString& message)
 {
 	if (msg.Read(message))
 		ProcessMsg();
 }
 
-void CatchupClient::OnClose()
+void CatchupReader::OnClose()
 {
 	Log_Trace();
 
@@ -49,7 +49,7 @@ void CatchupClient::OnClose()
 	Close();
 }
 
-void CatchupClient::OnConnect()
+void CatchupReader::OnConnect()
 {
 	Log_Trace();
 
@@ -58,14 +58,14 @@ void CatchupClient::OnConnect()
 	AsyncRead();
 }
 
-void CatchupClient::OnConnectTimeout()
+void CatchupReader::OnConnectTimeout()
 {
 	Log_Trace();
 
 	OnClose();
 }
 
-void CatchupClient::ProcessMsg()
+void CatchupReader::ProcessMsg()
 {
 	Log_Trace();
 
@@ -77,14 +77,14 @@ void CatchupClient::ProcessMsg()
 		ASSERT_FAIL();
 }
 
-void CatchupClient::OnKeyValue()
+void CatchupReader::OnKeyValue()
 {
 	Log_Trace();
 
 	table->Set(&transaction, msg.key, msg.value);
 }
 
-void CatchupClient::OnCommit()
+void CatchupReader::OnCommit()
 {
 	Log_Trace();
 

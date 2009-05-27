@@ -1,5 +1,6 @@
 #include "KeyspaceClient.h"
-#include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.h"
+#include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientReq.h"
+#include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientResp.h"
 
 using namespace Keyspace;
 

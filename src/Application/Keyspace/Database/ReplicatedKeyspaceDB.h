@@ -9,8 +9,8 @@
 #include "Framework/ReplicatedLog/ReplicatedDB.h"
 #include "Framework/AsyncDatabase/MultiDatabaseOp.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
-#include "Catchup/CatchupServer.h"
-#include "Catchup/CatchupClient.h"
+#include "Application/Keyspace/Catchup/CatchupServer.h"
+#include "Application/Keyspace/Catchup/CatchupClient.h"
 #include "KeyspaceMsg.h"
 #include "KeyspaceDB.h"
 
@@ -49,7 +49,7 @@ private:
 	ByteArray<KEYSPACE_BUF_SIZE>pvalue;
 	ByteArray<KEYSPACE_VAL_SIZE>data;
 	CatchupServer			catchupServer;
-	CatchupClient			catchupClient;
+	CatchupReader			catchupClient;
 };
 
 #endif

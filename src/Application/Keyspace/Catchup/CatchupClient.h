@@ -11,7 +11,7 @@
 
 class ReplicatedKeyspaceDB;
 
-class CatchupClient : public MessageConn<>
+class CatchupReader : public MessageConn<>
 {
 public:
 	void						Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_);
