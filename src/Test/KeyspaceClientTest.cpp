@@ -30,7 +30,7 @@ int KeyspaceClientTest()
 	Log_SetTrace(true);
 	Log_SetTimestamping(true);
 	
-	status = client.Init(SIZE(nodes), nodes, 10000);
+	status = client.Init(SIZE(nodes), nodes, 3000);
 	if (status < 0)
 		return 1;
 
@@ -163,7 +163,18 @@ int KeyspaceClientTest()
 	Log_SetTrace(true);
 	Log_Trace("set/sec = %lf", num / (sw.elapsed / 1000.0));
 	
-	
+	// random GET test
+	client.DistributeDirty(true);
+	for (int i = 0; i < 100; i++)
+	{
+		key.Writef("test:%d", i);
+		status = client.DirtyGet(key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Trace("Submit() failed");
+			return 1;
+		}		
+	}
 	
 //	key.Writef("");
 //	status = client.List(key);

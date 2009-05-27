@@ -69,6 +69,7 @@ private:
 	Endpoint		endpoint;
 	bool			getMasterPending;
 	int				nodeID;
+	uint64_t		disconnectTime;
 };
 
 typedef List<Response*> ResponseList;
@@ -118,6 +119,7 @@ public:
 	// connection state related commands
 	int				GetMaster();
 	int				GetState(int node);
+	void			DistributeDirty(bool dd);
 	
 	// simple get commands with preallocated value
 	int				Get(const ByteString &key, ByteString &value, bool dirty = false);
@@ -152,6 +154,7 @@ private:
 	bool			IsDone();
 	uint64_t		GetNextID();
 	Command*		CreateCommand(char cmd, bool submit, int msgc, ByteString *msgv);
+	void			SendCommand(ClientConn* conn, CommandList& commands);
 	
 	
 	CommandList		safeCommands;
@@ -162,8 +165,10 @@ private:
 	int				numFinished;
 	int				master;
 	uint64_t		timeout;
+	uint64_t		reconnectTimeout;
 	uint64_t		cmdID;
 	Result			result;
+	bool			distributeDirty;
 };
 
 }; // namespace

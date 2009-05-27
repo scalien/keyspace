@@ -35,13 +35,7 @@ int keyspace_client_test()
 	status = keyspace_client_init(kc, sizeof(nodes) / sizeof(*nodes), nodes, 10000);
 	if (status < 0)
 		return 1;
-	
-	// all the operations we do below are safe (not dirty) or write operations
-	// so we connect to the master
-	status = keyspace_client_connect_master(kc);
-	if (status < 0)
-		return 1;
-	
+		
 	// set 100 keyvalues named user:
 	status = keyspace_client_begin(kc);
 	if (status == KEYSPACE_OK)

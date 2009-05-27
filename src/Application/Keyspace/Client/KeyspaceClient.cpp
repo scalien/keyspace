@@ -33,7 +33,7 @@ bool Response::Read(const ByteString& data_)
 	
 	id = cmdID;
 	
-	if (cmd == KEYSPACECLIENT_NOTMASTER)
+	if (cmd == KEYSPACECLIENT_NOT_MASTER)
 	{
 		status = KEYSPACE_NOTMASTER;
 		return ValidateLength();
@@ -45,7 +45,7 @@ bool Response::Read(const ByteString& data_)
 		return ValidateLength();
 	}
 	
-	if (cmd == KEYSPACECLIENT_LISTEND)
+	if (cmd == KEYSPACECLIENT_LIST_END)
 	{
 		status = KEYSPACE_OK;
 		return ValidateLength();
@@ -61,7 +61,7 @@ bool Response::Read(const ByteString& data_)
 		return ValidateLength();
 	}
 	
-	if (cmd == KEYSPACECLIENT_LISTITEM)
+	if (cmd == KEYSPACECLIENT_LIST_ITEM)
 	{
 		status = KEYSPACE_OK;
 		ret = ReadMessage(tmp);
@@ -71,7 +71,7 @@ bool Response::Read(const ByteString& data_)
 		return ret;
 	}
 	
-	if (cmd == KEYSPACECLIENT_LISTPITEM)
+	if (cmd == KEYSPACECLIENT_LISTP_ITEM)
 	{
 		status = KEYSPACE_OK;
 		ret = ReadMessage(tmp);
@@ -257,10 +257,12 @@ client(client),
 endpoint(endpoint_)
 {
 	nodeID = nodeID_;
+	disconnectTime = 0;
 }
 
 void ClientConn::Send(Command &cmd)
 {
+	Log_Trace("nodeID = %d", nodeID);
 	cmd.nodeID = nodeID;
 	
 	if (cmd.submit)
@@ -287,7 +289,7 @@ bool ClientConn::ProcessMessage(Response* resp)
 		{
 			cmd->status = resp->status;
 			
-			if (cmd->type == KEYSPACECLIENT_GETMASTER)
+			if (cmd->type == KEYSPACECLIENT_GET_MASTER)
 			{
 				getMasterPending = false;
 				if (resp->status == KEYSPACE_OK)
@@ -302,8 +304,8 @@ bool ClientConn::ProcessMessage(Response* resp)
 			
 			if (cmd->type == KEYSPACECLIENT_LIST ||
 				cmd->type == KEYSPACECLIENT_LISTP ||
-				cmd->type == KEYSPACECLIENT_DIRTYLIST ||
-				cmd->type == KEYSPACECLIENT_DIRTYLISTP)
+				cmd->type == KEYSPACECLIENT_DIRTY_LIST ||
+				cmd->type == KEYSPACECLIENT_DIRTY_LISTP)
 			{
 				if (resp->key.length == 0)
 				{
@@ -352,7 +354,7 @@ void ClientConn::GetMaster()
 {
 	Command* cmd;
 	
-	cmd = client.CreateCommand(KEYSPACECLIENT_GETMASTER, false, 0, NULL);
+	cmd = client.CreateCommand(KEYSPACECLIENT_GET_MASTER, false, 0, NULL);
 	client.sentCommands.Append(cmd);
 	Send(*cmd);
 	getMasterPending = true;
@@ -390,6 +392,7 @@ void ClientConn::OnClose()
 	Close();
 	client.StateFunc();
 	DeleteCommands();
+	disconnectTime = Now();
 }
 
 void ClientConn::OnConnect()
@@ -401,8 +404,7 @@ void ClientConn::OnConnect()
 
 void ClientConn::OnConnectTimeout()
 {
-	Close();
-	client.StateFunc();
+	OnClose();
 }
 
 //===================================================================
@@ -437,6 +439,7 @@ Client::~Client()
 int Client::Init(int nodec, char* nodev[], uint64_t timeout_)
 {
 	timeout = timeout_;
+	reconnectTimeout = timeout;
 	IOProcessor::Init(nodec + 64);
 	conns = new ClientConn*[nodec];
 	
@@ -450,6 +453,7 @@ int Client::Init(int nodec, char* nodev[], uint64_t timeout_)
 	numConns = nodec;
 	master = -1;
 	cmdID = 0;
+	distributeDirty = false;
 	
 	return KEYSPACECLIENT_OK;
 }
@@ -474,6 +478,11 @@ int Client::Get(const ByteString &key, ByteString &value, bool dirty)
 	return KEYSPACE_OK;
 }
 
+void Client::DistributeDirty(bool dd)
+{
+	distributeDirty = dd;
+}
+
 int	Client::DirtyGet(const ByteString &key, ByteString &value)
 {
 	return Get(key, value, true);
@@ -488,7 +497,7 @@ int Client::Get(const ByteString &key, bool dirty)
 
 	if (dirty)
 	{
-		cmd = CreateCommand(KEYSPACECLIENT_DIRTYGET, false, 1, args);
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_GET, false, 1, args);
 		dirtyCommands.Add(cmd);
 	}
 	else
@@ -505,7 +514,7 @@ int Client::Get(const ByteString &key, bool dirty)
 
 int Client::DirtyGet(const ByteString &key)
 {
-	return Get(key);
+	return Get(key, true);
 }
 
 int	Client::List(const ByteString &prefix, uint64_t count, bool dirty)
@@ -521,7 +530,7 @@ int	Client::List(const ByteString &prefix, uint64_t count, bool dirty)
 	
 	if (dirty)
 	{
-		cmd = CreateCommand(KEYSPACECLIENT_DIRTYLIST, false, 2, args);
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, false, 2, args);
 		dirtyCommands.Add(cmd);
 	}
 	else
@@ -554,7 +563,7 @@ int Client::ListP(const ByteString &prefix, uint64_t count, bool dirty)
 	
 	if (dirty)
 	{
-		cmd = CreateCommand(KEYSPACECLIENT_DIRTYLISTP, false, 2, args);
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LISTP, false, 2, args);
 		dirtyCommands.Add(cmd);
 	}
 	else
@@ -616,7 +625,7 @@ int Client::TestAndSet(const ByteString &key, const ByteString &test, const Byte
 	args[1] = test;
 	args[2] = value;
 	
-	cmd = CreateCommand(KEYSPACECLIENT_TESTANDSET, submit, 3, args);
+	cmd = CreateCommand(KEYSPACECLIENT_TEST_AND_SET, submit, 3, args);
 	safeCommands.Add(cmd);
 	
 	if (!submit)
@@ -734,8 +743,11 @@ void Client::StateFunc()
 {
 	for (int i = 0; i < numConns; i++)
 	{
-		if (conns[i]->GetState() == ClientConn::DISCONNECTED)
+		if (conns[i]->GetState() == ClientConn::DISCONNECTED &&
+			conns[i]->disconnectTime + reconnectTimeout <= Now())
+		{
 			conns[i]->Connect(conns[i]->GetEndpoint(), timeout);
+		}
 	}
 	
 	if (safeCommands.Length() > 0 && master == -1)
@@ -749,33 +761,45 @@ void Client::StateFunc()
 	
 	if (safeCommands.Length() > 0 && master != -1 && conns[master]->GetState() == ClientConn::CONNECTED)
 	{
-		Command** it;
-		
-		it = safeCommands.Head();
-		safeCommands.Remove(it);
-		sentCommands.Append(*it);
-			
-		conns[master]->Send(**it);
+		SendCommand(conns[master], safeCommands);
 	}
 	
 	
 	if (dirtyCommands.Length() > 0)
 	{
+		int numTries = 3;
+		while (distributeDirty && numTries > 0)
+		{
+			int i;
+			i = (random() / (float) RAND_MAX) * numConns;
+			if (conns[i]->GetState() == ClientConn::CONNECTED)
+			{
+				SendCommand(conns[i], dirtyCommands);
+				return;
+			}
+			numTries--;
+		}
+		
 		for (int i = 0; i < numConns; i++)
 		{
 			if (conns[i]->GetState() == ClientConn::CONNECTED)
 			{
-				Command** it;
-				
-				it = dirtyCommands.Head();
-				dirtyCommands.Remove(it);
-				sentCommands.Append(*it);
-				
-				conns[i]->Send(**it);
-				break;
+				SendCommand(conns[i], dirtyCommands);
+				return;
 			}
 		}
 	}
+}
+
+void Client::SendCommand(ClientConn* conn, CommandList& commands)
+{
+	Command**	it;
+	
+	it = commands.Head();
+	commands.Remove(it);
+	sentCommands.Append(*it);
+	
+	conn->Send(**it);
 }
 
 uint64_t Client::GetNextID()

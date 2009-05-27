@@ -121,16 +121,6 @@ int	keyspace_client_init(keyspace_client_t kc,
 		uint64_t timeout);
 
 /*
- * Connect to the master node.
- *
- * Parameters:
- *	kc:		client object
- *
- * Return value: the status of the operation
- */
-int	keyspace_client_connect_master(keyspace_client_t kc);
-
-/*
  * Get the master node.
  *
  * Parameters:
