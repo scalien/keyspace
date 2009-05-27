@@ -66,7 +66,7 @@ void MessageConn<bufferSize>::OnRead()
 	
 	if (pos > 0)
 	{
-		memcpy(tcpread.data.buffer, tcpread.data.buffer + pos, tcpread.data.length - pos);
+		memmove(tcpread.data.buffer, tcpread.data.buffer + pos, tcpread.data.length - pos);
 		tcpread.data.length -= pos;
 	}
 	
