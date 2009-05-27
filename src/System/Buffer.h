@@ -86,23 +86,6 @@ public:
 	
 	void Clear() { length = 0; }
 	
-	virtual bool Printf(const char* fmt, ...)
-	{
-		va_list ap;
-		
-		va_start(ap, fmt);
-		length = vsnprintf(buffer, size, fmt, ap);
-		va_end(ap);
-		
-		if (length > size)
-		{
-			length = size;
-			return false;
-		}
-		
-		return true;
-	}
-	
 	virtual bool Writef(const char* fmt, ...)
 	{
 		va_list ap;
@@ -165,6 +148,29 @@ public:
 	virtual bool Set(const ByteString& other)
 	{
 		return Set(other.buffer, other.length);
+	}
+	
+	virtual bool Writef(const char* fmt, ...)
+	{
+		va_list ap;
+		
+		va_start(ap, fmt);
+		length = vsnwritef(buffer, size, fmt, ap);
+		va_end(ap);
+		
+		if (length < 0)
+			return false;
+		if (length > size)
+		{
+			if (!Reallocate(length))
+				return false;
+		
+			va_start(ap, fmt);
+			length = vsnwritef(buffer, size, fmt, ap);
+			va_end(ap);
+		}
+		
+		return true;
 	}
 		
 	bool Allocate(int size_)

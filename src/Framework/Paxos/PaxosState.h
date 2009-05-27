@@ -14,7 +14,7 @@ public:
 	uint64_t				proposalID;
 	uint64_t				highestReceivedProposalID;
 	uint64_t				highestPromisedProposalID;
-	ByteArray<PAXOS_VAL_SIZE>value;
+	ByteBuffer				value;
 	
 	bool					leader;			// multi paxos
 	unsigned				numProposals;	// number of proposal runs in this Paxos round
@@ -40,7 +40,7 @@ public:
 	uint64_t				promisedProposalID;
 	bool					accepted;	
 	uint64_t				acceptedProposalID;
-	ByteArray<PAXOS_VAL_SIZE>acceptedValue;
+	ByteBuffer				acceptedValue;
 	
 	void Init()
 	{
@@ -55,7 +55,7 @@ class PaxosLearnerState
 {
 public:
 	bool					learned;
-	ByteArray<PAXOS_VAL_SIZE>value;
+	ByteBuffer				value;
 	
 	void Init()
 	{

@@ -9,7 +9,7 @@ CatchupWriter::CatchupWriter()
 
 void CatchupWriter::Init()
 {
-	TCPConn<PAXOS_BUF_SIZE>::Init(false);
+	TCPConn<>::Init(false);
 	
 	table = database.GetTable("keyspace");
 	transaction.Set(table);

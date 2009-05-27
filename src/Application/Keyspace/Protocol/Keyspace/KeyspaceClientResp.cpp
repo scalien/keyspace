@@ -58,24 +58,16 @@ void KeyspaceClientResp::ListEnd(uint64_t cmdID_)
 
 bool KeyspaceClientResp::Write(ByteString& data)
 {
-	int req;
-	
 	if (key.length > 0 && value.length > 0)
-		req = snwritef(data.buffer, data.size, "%c:%U:%M:%M",
-					   type, cmdID, &key, &value);
+		return data.Writef("%c:%U:%M:%M",
+					       type, cmdID, &key, &value);
 	else if (key.length > 0)
-		req = snwritef(data.buffer, data.size, "%c:%U:%M",
-					   type, cmdID, &key);
+		return data.Writef("%c:%U:%M",
+					       type, cmdID, &key);
 	else if (value.length > 0)
-		req = snwritef(data.buffer, data.size, "%c:%U:%M",
-					   type, cmdID, &value);
+		return data.Writef("%c:%U:%M",
+					       type, cmdID, &value);
 	else
-		req = snwritef(data.buffer, data.size, "%c:%U",
-					   type, cmdID);
-	
-	if (req < 0 || (unsigned)req > data.size)
-		return false;
-		
-	data.length = req;
-	return true;
+		return data.Writef("%c:%U",
+					       type, cmdID);
 }

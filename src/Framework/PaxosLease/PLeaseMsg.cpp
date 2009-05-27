@@ -158,50 +158,42 @@ bool PLeaseMsg::Read(const ByteString& data)
 
 bool PLeaseMsg::Write(ByteString& data)
 {
-	int req;
-	
 	switch (type)
 	{
 		case PLEASE_PREPARE_REQUEST:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U",
-						   type, nodeID, proposalID, paxosID);
+			return data.Writef("%c:%u:%U:%U",
+						       type, nodeID, proposalID, paxosID);
 			break;
 		case PLEASE_PREPARE_REJECTED:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U",
-						   type, nodeID, proposalID);
+			return data.Writef("%c:%u:%U",
+						       type, nodeID, proposalID);
 			break;
 		case PLEASE_PREPARE_PREVIOUSLY_ACCEPTED:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%u:%U",
-						   type, nodeID, proposalID, acceptedProposalID,
-						   leaseOwner, expireTime);
+			return data.Writef("%c:%u:%U:%U:%u:%U",
+						       type, nodeID, proposalID, acceptedProposalID,
+						       leaseOwner, expireTime);
 			break;
 		case PLEASE_PREPARE_CURRENTLY_OPEN:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U",
-						   type, nodeID, proposalID);
+			return data.Writef("%c:%u:%U",
+						       type, nodeID, proposalID);
 			break;
 		case PLEASE_PROPOSE_REQUEST:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U:%u:%U",
-						   type, nodeID, proposalID, leaseOwner, expireTime);
+			return data.Writef("%c:%u:%U:%u:%U",
+						       type, nodeID, proposalID, leaseOwner, expireTime);
 			break;
 		case PLEASE_PROPOSE_REJECTED:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U",
-						   type, nodeID, proposalID);
+			return data.Writef("%c:%u:%U",
+						       type, nodeID, proposalID);
 			break;
 		case PLEASE_PROPOSE_ACCEPTED:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U",
-						   type, nodeID, proposalID);
+			return data.Writef("%c:%u:%U",
+						       type, nodeID, proposalID);
 			break;
 		case PLEASE_LEARN_CHOSEN:
-			req = snwritef(data.buffer, data.size, "%c:%u:%u:%U",
-						   type, nodeID, leaseOwner, expireTime);
+			return data.Writef("%c:%u:%u:%U",
+						       type, nodeID, leaseOwner, expireTime);
 			break;
 		default:
 			return false;
 	}
-	
-	if (req < 0 || (unsigned)req > data.size)
-		return false;
-		
-	data.length = req;
-	return true;
 }

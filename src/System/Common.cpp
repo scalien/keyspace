@@ -307,7 +307,7 @@ int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 	char		local[64];
 	bool		ghost;
 
-#define ADVANCE(f, b)	{ format += f; buffer += b; size -= b; }
+#define ADVANCE(f, b)	{ format += f; if (!ghost) { buffer += b; size -= b; } }
 #define EXIT()			{ return -1; }
 #define REQUIRE(r)		{ required += r; if (size < (unsigned)r) ghost = true; }
 

@@ -35,8 +35,7 @@ uint64_t acceptedProposalID_, ByteString value_)
 	Init(paxosID_, PAXOS_PREPARE_PREVIOUSLY_ACCEPTED, nodeID_);
 	proposalID = proposalID_;
 	acceptedProposalID = acceptedProposalID_;
-	if (!value.Set(value_))
-		return false;
+	value = value_;
 	
 	return true;
 }
@@ -55,8 +54,7 @@ unsigned nodeID_, uint64_t proposalID_, ByteString value_)
 {
 	Init(paxosID_, PAXOS_PROPOSE_REQUEST, nodeID_);
 	proposalID = proposalID_;
-	if (!value.Set(value_))
-		return false;
+	value = value_;
 	
 	return true;
 }
@@ -83,8 +81,7 @@ bool PaxosMsg::LearnValue(uint64_t paxosID_,
 unsigned nodeID_, ByteString value_)
 {
 	Init(paxosID_, PAXOS_LEARN_VALUE, nodeID_);
-	if (!value.Set(value_))
-		return false;
+	value = value_;
 	
 	return true;
 }
@@ -154,7 +151,7 @@ bool PaxosMsg::Read(const ByteString& data)
 						   &proposalID, &promisedProposalID);
 			break;
 		case PAXOS_PREPARE_PREVIOUSLY_ACCEPTED:
-			read = snreadf(data.buffer, data.length, "%c:%U:%u:%U:%U:%M",
+			read = snreadf(data.buffer, data.length, "%c:%U:%u:%U:%U:%N",
 						   &type, &paxosID, &nodeID, &proposalID,
 						   &acceptedProposalID, &value);
 			break;
@@ -163,7 +160,7 @@ bool PaxosMsg::Read(const ByteString& data)
 						   &type, &paxosID, &nodeID, &proposalID);
 			break;
 		case PAXOS_PROPOSE_REQUEST:
-			read = snreadf(data.buffer, data.length, "%c:%U:%u:%U:%M",
+			read = snreadf(data.buffer, data.length, "%c:%U:%u:%U:%N",
 						   &type, &paxosID, &nodeID, &proposalID, &value);
 			break;
 		case PAXOS_PROPOSE_REJECTED:
@@ -179,7 +176,7 @@ bool PaxosMsg::Read(const ByteString& data)
 						   &type, &paxosID, &nodeID, &proposalID);
 			break;
 		case PAXOS_LEARN_VALUE:
-			read = snreadf(data.buffer, data.length, "%c:%U:%u:%M",
+			read = snreadf(data.buffer, data.length, "%c:%U:%u:%N",
 						   &type, &paxosID, &nodeID, &value);
 			break;
 		case PAXOS_REQUEST_CHOSEN:
@@ -196,59 +193,51 @@ bool PaxosMsg::Read(const ByteString& data)
 
 bool PaxosMsg::Write(ByteString& data)
 {
-	int req;
-	
 	switch (type)
 	{
 		case PAXOS_PREPARE_REQUEST:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U",
-						   type, paxosID, nodeID, proposalID);
+			return data.Writef("%c:%U:%u:%U",
+							   type, paxosID, nodeID, proposalID);
 			break;
 		case PAXOS_PREPARE_REJECTED:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U:%U",
-						   type, paxosID, nodeID,
-						   proposalID, promisedProposalID);
+			return data.Writef("%c:%U:%u:%U:%U",
+						       type, paxosID, nodeID,
+						       proposalID, promisedProposalID);
 			break;
 		case PAXOS_PREPARE_PREVIOUSLY_ACCEPTED:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U:%U:%M",
-						   type, paxosID, nodeID, proposalID,
-						   acceptedProposalID, &value);
+			return data.Writef("%c:%U:%u:%U:%U:%M",
+						       type, paxosID, nodeID, proposalID,
+						       acceptedProposalID, &value);
 			break;
 		case PAXOS_PREPARE_CURRENTLY_OPEN:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U",
-						   type, paxosID, nodeID, proposalID);
+			return data.Writef("%c:%U:%u:%U",
+						       type, paxosID, nodeID, proposalID);
 			break;
 		case PAXOS_PROPOSE_REQUEST:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U:%M",
-						   type, paxosID, nodeID, proposalID, &value);
+			return data.Writef("%c:%U:%u:%U:%M",
+						       type, paxosID, nodeID, proposalID, &value);
 			break;
 		case PAXOS_PROPOSE_REJECTED:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U",
-						   type, paxosID, nodeID, proposalID);
+			return data.Writef("%c:%U:%u:%U",
+						       type, paxosID, nodeID, proposalID);
 			break;
 		case PAXOS_PROPOSE_ACCEPTED:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U",
-						   type, paxosID, nodeID, proposalID);
+			return data.Writef("%c:%U:%u:%U",
+						       type, paxosID, nodeID, proposalID);
 			break;
 		case PAXOS_LEARN_PROPOSAL:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%U",
-						   type, paxosID, nodeID, proposalID);
+			return data.Writef("%c:%U:%u:%U",
+						       type, paxosID, nodeID, proposalID);
 			break;
 		case PAXOS_LEARN_VALUE:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u:%M",
-						   type, paxosID, nodeID, &value);
+			return data.Writef("%c:%U:%u:%M",
+							   type, paxosID, nodeID, &value);
 			break;
 		case PAXOS_REQUEST_CHOSEN:
-			req = snwritef(data.buffer, data.size, "%c:%U:%u",
-						   type, paxosID, nodeID);
+			return data.Writef("%c:%U:%u",
+							   type, paxosID, nodeID);
 			break;
 		default:
 			return false;
 	}
-	
-	if (req < 0 || (unsigned)req > data.size)
-		return false;
-		
-	data.length = req;
-	return true;
 }

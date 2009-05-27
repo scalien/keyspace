@@ -45,25 +45,17 @@ bool CatchupMsg::Read(const ByteString& data)
 	
 bool CatchupMsg::Write(ByteString& data)
 {
-	int req;
-	
 	switch (type)
 	{
 		case CATCHUP_KEY_VALUE:
-			req = snwritef(data.buffer, data.size, "%c:%M:%M",
-						   type, &key, &value);
+			return data.Writef("%c:%M:%M",
+							   type, &key, &value);
 			break;
 		case CATCHUP_COMMIT:
-			req = snwritef(data.buffer, data.size, "%c:%U",
-						   type, paxosID);
+			return data.Writef("%c:%U",
+							   type, paxosID);
 			break;
 		default:
 			return false;
 	}
-	
-	if (req < 0 || (unsigned)req > data.size)
-		return false;
-		
-	data.length = req;
-	return true;
 }

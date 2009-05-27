@@ -50,13 +50,13 @@ bool TimeCheckMsg::Write(ByteString& data)
 	switch (type)
 	{
 		case TIMECHECK_REQUEST:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U",
-						   type, nodeID, series, requestTimestamp);
+			return data.Writef("%c:%u:%U:%U",
+							   type, nodeID, series, requestTimestamp);
 			break;
 		case TIMECHECK_RESPONSE:
-			req = snwritef(data.buffer, data.size, "%c:%u:%U:%U:%U",
-						   type, nodeID, series,
-						   requestTimestamp, responseTimestamp);
+			return data.Writef("%c:%u:%U:%U:%U",
+							   type, nodeID, series,
+							   requestTimestamp, responseTimestamp);
 			break;
 		default:
 			return false;

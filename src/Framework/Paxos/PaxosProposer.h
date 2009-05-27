@@ -33,7 +33,7 @@ protected:
 	void					StartProposing();
 
 	TransportWriter**		writers;
-	ByteArray<PAXOS_BUF_SIZE>wdata;
+	ByteBuffer				wdata;
 	PaxosProposerState		state;
 	PaxosMsg				msg;
 	uint64_t				paxosID;

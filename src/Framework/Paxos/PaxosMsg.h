@@ -19,45 +19,45 @@
 class PaxosMsg
 {
 public:
-	uint64_t				paxosID;
-	unsigned				nodeID;
-	char					type;
-	uint64_t				proposalID;
-	uint64_t				acceptedProposalID;
-	uint64_t				promisedProposalID;
-	ByteArray<PAXOS_VAL_SIZE>value;
+	uint64_t	paxosID;
+	unsigned	nodeID;
+	char		type;
+	uint64_t	proposalID;
+	uint64_t	acceptedProposalID;
+	uint64_t	promisedProposalID;
+	ByteString	value;
 
-	void	Init(uint64_t paxosID_, char type_, unsigned nodeID_);
+	void		Init(uint64_t paxosID_, char type_, unsigned nodeID_);
 		
-	bool	PrepareRequest(uint64_t paxosID_,
-			unsigned nodeID_, uint64_t proposalID_);
-	bool	PrepareRejected(uint64_t paxosID_, unsigned nodeID_,
-			uint64_t proposalID_, uint64_t promisedProposalID_);
-	bool	PreparePreviouslyAccepted(uint64_t paxosID_,
-			unsigned nodeID_, uint64_t proposalID_,
-			uint64_t acceptedProposalID_, ByteString value_);
-	bool	PrepareCurrentlyOpen(uint64_t paxosID_,
-			unsigned nodeID_, uint64_t proposalID_);	
-	bool	ProposeRequest(uint64_t paxosID_, unsigned nodeID_, 
-			uint64_t proposalID_, ByteString value_);
-	bool	ProposeRejected(uint64_t paxosID_, unsigned nodeID_,
-			uint64_t proposalID_);
-	bool	ProposeAccepted(uint64_t paxosID_, unsigned nodeID_,
-			uint64_t proposalID_);
-	bool	LearnProposal(uint64_t paxosID_, unsigned nodeID_,
-			uint64_t proposalID_);
-	bool	LearnValue(uint64_t paxosID_, unsigned nodeID_,
-			ByteString value_);
-	bool	RequestChosen(uint64_t paxosID_, unsigned nodeID_);
+	bool		PrepareRequest(uint64_t paxosID_,
+				unsigned nodeID_, uint64_t proposalID_);
+	bool		PrepareRejected(uint64_t paxosID_, unsigned nodeID_,
+				uint64_t proposalID_, uint64_t promisedProposalID_);
+	bool		PreparePreviouslyAccepted(uint64_t paxosID_,
+				unsigned nodeID_, uint64_t proposalID_,
+				uint64_t acceptedProposalID_, ByteString value_);
+	bool		PrepareCurrentlyOpen(uint64_t paxosID_,
+				unsigned nodeID_, uint64_t proposalID_);	
+	bool		ProposeRequest(uint64_t paxosID_, unsigned nodeID_, 
+				uint64_t proposalID_, ByteString value_);
+	bool		ProposeRejected(uint64_t paxosID_, unsigned nodeID_,
+				uint64_t proposalID_);
+	bool		ProposeAccepted(uint64_t paxosID_, unsigned nodeID_,
+				uint64_t proposalID_);
+	bool		LearnProposal(uint64_t paxosID_, unsigned nodeID_,
+				uint64_t proposalID_);
+	bool		LearnValue(uint64_t paxosID_, unsigned nodeID_,
+				ByteString value_);
+	bool		RequestChosen(uint64_t paxosID_, unsigned nodeID_);
 
-	bool	IsRequest();
-	bool	IsPrepareResponse();
-	bool	IsProposeResponse();
-	bool	IsResponse();
-	bool	IsLearn();
+	bool		IsRequest();
+	bool		IsPrepareResponse();
+	bool		IsProposeResponse();
+	bool		IsResponse();
+	bool		IsLearn();
 
-	bool	Read(const ByteString& data);
-	bool	Write(ByteString& data);
+	bool		Read(const ByteString& data);
+	bool		Write(ByteString& data);
 };
 
 #endif

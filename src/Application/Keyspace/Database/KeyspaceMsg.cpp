@@ -88,39 +88,31 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 
 bool KeyspaceMsg::Write(ByteString& data)
 {
-	int req;
-	
 	switch (type)
 	{
 		case KEYSPACE_SET:
-			req = snwritef(data.buffer, data.size, "%c:%M:%M",
-						   type, &key, &value);
+			return data.Writef("%c:%M:%M",
+						       type, &key, &value);
 			break;
 		case KEYSPACE_TEST_AND_SET:
-			req = snwritef(data.buffer, data.size, "%c:%M:%M:%M",
-						   type, &key, &test, &value);
+			return data.Writef("%c:%M:%M:%M",
+						       type, &key, &test, &value);
 			break;
 		case KEYSPACE_ADD:
-			req = snwritef(data.buffer, data.size, "%c:%M:%I",
-						   type, &key, num);
+			return data.Writef("%c:%M:%I",
+						       type, &key, num);
 			break;
 		case KEYSPACE_DELETE:
-			req = snwritef(data.buffer, data.size, "%c:%M",
-						   type, &key);
+			return data.Writef("%c:%M",
+							   type, &key);
 			break;
 		case KEYSPACE_PRUNE:
-			req = snwritef(data.buffer, data.size, "%c:%M",
-						   type, &prefix);
+			return data.Writef("%c:%M",
+							   type, &prefix);
 			break;
 		default:
 			return false;
 	}
-		
-	if (req < 0 || (unsigned)req > data.size)
-		return false;
-		
-	data.length = req;
-	return true;
 }
 
 bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)

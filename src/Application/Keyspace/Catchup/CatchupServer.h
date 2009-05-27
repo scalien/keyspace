@@ -9,7 +9,7 @@
 
 #define CONN_BACKLOG	2
 
-class CatchupServer : public TCPServerT<CatchupServer, CatchupWriter, PAXOS_BUF_SIZE>
+class CatchupServer : public TCPServerT<CatchupServer, CatchupWriter>
 {
 public:
 	void			Init(int port);

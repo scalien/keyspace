@@ -47,7 +47,7 @@ bool ReplicatedLog::Init()
 	masterLease.Init();
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	if (ReplicatedConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
+	//if (ReplicatedConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
 		masterLease.AcquireLease();
 	
 	safeDB = false;
@@ -357,7 +357,7 @@ void ReplicatedLog::OnLearnChosen()
 
 void ReplicatedLog::OnRequestChosen()
 {
-	ByteString value;
+	ByteString value_;
 	
 	if (pmsg.paxosID == learner.paxosID)
 		return learner.OnRequestChosen(pmsg);
@@ -366,8 +366,8 @@ void ReplicatedLog::OnRequestChosen()
 	if (pmsg.paxosID < learner.paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		if (logCache.Get(pmsg.paxosID, value))
-			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value);
+		if (logCache.Get(pmsg.paxosID, value_))
+			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value_);
 	}
 }
 
@@ -375,13 +375,13 @@ void ReplicatedLog::OnRequest()
 {
 	Log_Trace();
 	
-	ByteString value;
+	ByteString value_;
 
 	if (pmsg.paxosID < acceptor.paxosID)
 	{
 		// the node is lagging and needs to catch-up
-		if (logCache.Get(pmsg.paxosID, value))
-			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value);
+		if (logCache.Get(pmsg.paxosID, value_))
+			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value_);
 	}
 	else // paxosID < msg.paxosID
 	{

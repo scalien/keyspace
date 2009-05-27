@@ -3,7 +3,7 @@
 
 void CatchupServer::Init(int port_)
 {
-	if (!TCPServerT<CatchupServer, CatchupWriter, PAXOS_BUF_SIZE>::Init(port_, CONN_BACKLOG))
+	if (!TCPServerT<CatchupServer, CatchupWriter>::Init(port_, CONN_BACKLOG))
 		STOP_FAIL("Cannot initialize CatchupServer", 1);
 }
 

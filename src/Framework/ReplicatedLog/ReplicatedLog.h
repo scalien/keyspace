@@ -67,7 +67,7 @@ private:
 	PaxosLease					masterLease;
 	PaxosMsg					pmsg;
 	ReplicatedLogMsg			rmsg;
-	ByteArray<PAXOS_BUF_SIZE>	value;
+	ByteBuffer					value;
 	uint64_t					highestPaxosID;
 	LogCache					logCache;
 	LogQueue					logQueue;

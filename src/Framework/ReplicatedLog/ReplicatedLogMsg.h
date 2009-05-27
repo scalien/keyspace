@@ -13,16 +13,16 @@
 class ReplicatedLogMsg
 {
 public:
-	unsigned					nodeID;
-	uint64_t					restartCounter;
-	uint64_t					leaseEpoch;
-	ByteArray<PAXOS_BUF_SIZE>	value;
+	unsigned	nodeID;
+	uint64_t	restartCounter;
+	uint64_t	leaseEpoch;
+	ByteString	value;
 	
-	bool	Init(unsigned nodeID_, uint64_t restartCounter_,
-			uint64_t leaseEpoch_, ByteString& value_);
+	bool		Init(unsigned nodeID_, uint64_t restartCounter_,
+				uint64_t leaseEpoch_, ByteString& value_);
 		
-	bool	Read(const ByteString& data);
-	bool	Write(ByteString& data);
+	bool		Read(const ByteString& data);
+	bool		Write(ByteString& data);
 };
 
 #endif

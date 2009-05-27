@@ -9,7 +9,7 @@
 
 class CatchupServer;
 
-class CatchupWriter : public TCPConn<PAXOS_BUF_SIZE>
+class CatchupWriter : public TCPConn<>
 {
 public:
 	CatchupWriter();
