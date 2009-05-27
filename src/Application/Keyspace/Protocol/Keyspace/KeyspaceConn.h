@@ -5,7 +5,8 @@
 #include "Framework/Transport/MessageConn.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Database/KeyspaceService.h"
-#include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientMsg.h"
+#include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientReq.h"
+#include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientResp.h"
 
 #define KEYSPACE_CONN_TIMEOUT 3000
 

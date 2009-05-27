@@ -117,6 +117,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 
 void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
+	req.Init();
 	if (req.Read(message))
 		ProcessMsg();
 	else
@@ -139,7 +140,7 @@ void KeyspaceConn::ProcessMsg()
 
 	static ByteArray<32> ba;
 	
-	if (req.type == KEYSPACECLIENT_GETMASTER)
+	if (req.type == KEYSPACECLIENT_GET_MASTER)
 	{
 		int master = kdb->GetMaster();
 		if (master < 0)
