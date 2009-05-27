@@ -289,6 +289,7 @@ bool ClientConn::ProcessMessage(Response* resp)
 		{
 			cmd->status = resp->status;
 			
+			// GET_MASTER is a special case, because it is only used internally
 			if (cmd->type == KEYSPACECLIENT_GET_MASTER)
 			{
 				getMasterPending = false;
@@ -302,11 +303,14 @@ bool ClientConn::ProcessMessage(Response* resp)
 				return false;
 			}
 			
+			// with LIST style commands there can be more than one response with
+			// the same id
 			if (cmd->type == KEYSPACECLIENT_LIST ||
 				cmd->type == KEYSPACECLIENT_LISTP ||
 				cmd->type == KEYSPACECLIENT_DIRTY_LIST ||
 				cmd->type == KEYSPACECLIENT_DIRTY_LISTP)
 			{
+				// key.length == 0 means end of the list response
 				if (resp->key.length == 0)
 				{
 					delete cmd;
@@ -754,12 +758,17 @@ void Client::StateFunc()
 	{
 		for (int i = 0; i < numConns; i++)
 		{
-			if (conns[i]->GetState() == ClientConn::CONNECTED && !conns[i]->getMasterPending)
+			if (conns[i]->GetState() == ClientConn::CONNECTED && 
+				!conns[i]->getMasterPending)
+			{
 				conns[i]->GetMaster();
+			}
 		}
 	}
 	
-	if (safeCommands.Length() > 0 && master != -1 && conns[master]->GetState() == ClientConn::CONNECTED)
+	if (safeCommands.Length() > 0 && 
+		master != -1 && 
+		conns[master]->GetState() == ClientConn::CONNECTED)
 	{
 		SendCommand(conns[master], safeCommands);
 	}
