@@ -88,7 +88,7 @@ void CatchupWriter::WriteNext()
 	
 	// prepend with the "length:" header
 	tcpwrite.data.length = snwritef(tcpwrite.data.buffer, tcpwrite.data.size, "%M",
-		&msgData.length);
+		&msgData);
 	tcpwrite.transferred = 0;
 
 	IOProcessor::Add(&tcpwrite);

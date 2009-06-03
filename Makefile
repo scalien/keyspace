@@ -212,7 +212,7 @@ deb: release
 	-mkdir -p $(DEB_DIR)/etc/init.d
 	-mkdir -p $(DEB_DIR)/usr/sbin
 	-cp -fr $(PACKAGE_DIR)/DEBIAN $(DEB_DIR)
-	-cp -fr $(SCRIPT_DIR)/keyspace.cfg $(DEB_DIR)/etc
+	-cp -fr $(SCRIPT_DIR)/keyspace.conf $(DEB_DIR)/etc
 	-cp -fr $(SCRIPT_DIR)/keyspace $(DEB_DIR)/etc/init.d
 	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(DEB_DIR)/usr/sbin
 	-cp -fr $(BASE_DIR)/keyspace $(DEB_DIR)/usr/sbin

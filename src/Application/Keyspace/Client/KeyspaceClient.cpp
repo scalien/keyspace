@@ -258,6 +258,8 @@ endpoint(endpoint_)
 {
 	nodeID = nodeID_;
 	disconnectTime = 0;
+	getMasterTime = 0;
+	getMasterPending = false;
 }
 
 void ClientConn::Send(Command &cmd)
@@ -294,7 +296,10 @@ bool ClientConn::ProcessMessage(Response* resp)
 			{
 				getMasterPending = false;
 				if (resp->status == KEYSPACE_OK)
-					client.master = (int) strntoint64(resp->value.buffer, resp->value.length, &nread);
+					client.SetMaster((int) strntoint64(resp->value.buffer, resp->value.length, &nread));
+				else
+					client.SetMaster(-1);
+					
 				if (nread != resp->value.length)
 					resp->status = KEYSPACE_ERROR;
 				
@@ -362,6 +367,7 @@ void ClientConn::GetMaster()
 	client.sentCommands.Append(cmd);
 	Send(*cmd);
 	getMasterPending = true;
+	getMasterTime = Now();
 }
 
 Endpoint& ClientConn::GetEndpoint()
@@ -456,6 +462,7 @@ int Client::Init(int nodec, char* nodev[], uint64_t timeout_)
 	}
 	numConns = nodec;
 	master = -1;
+	masterTime = 0;
 	cmdID = 0;
 	distributeDirty = false;
 	
@@ -756,13 +763,24 @@ void Client::StateFunc()
 	
 	if (safeCommands.Length() > 0 && master == -1)
 	{
+		if (masterTime && masterTime + timeout < Now())
+		{
+			DeleteCommands(safeCommands);
+			result.Close();
+			return;			
+		}
+		
 		for (int i = 0; i < numConns; i++)
 		{
-			if (conns[i]->GetState() == ClientConn::CONNECTED && 
+			if (conns[i]->GetState() == ClientConn::CONNECTED &&
 				!conns[i]->getMasterPending)
-			{
-				conns[i]->GetMaster();
-			}
+				{
+					if (!conns[i]->getMasterTime || 
+						conns[i]->getMasterTime + timeout < Now())
+					{
+						conns[i]->GetMaster();
+					}
+				}
 		}
 	}
 	
@@ -811,6 +829,17 @@ void Client::SendCommand(ClientConn* conn, CommandList& commands)
 	conn->Send(**it);
 }
 
+void Client::DeleteCommands(CommandList& commands)
+{
+	Command**	it;
+	
+	while (it = commands.Head())
+	{
+		delete *it;
+		commands.Remove(it);
+	}
+}
+
 uint64_t Client::GetNextID()
 {
 	return cmdID++;
@@ -852,3 +881,8 @@ Command* Client::CreateCommand(char type, bool submit, int msgc, ByteString *msg
 	return cmd;
 }
 
+void Client::SetMaster(int master_)
+{
+	master = master_;
+	masterTime = Now();
+}

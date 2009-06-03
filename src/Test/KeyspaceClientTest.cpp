@@ -1,6 +1,8 @@
 #include "Application/Keyspace/Client/KeyspaceClient.h"
 #include "System/Stopwatch.h"
+#include "System/Config.h"
 #include <signal.h>
+
 
 void IgnorePipeSignal()
 {
@@ -11,19 +13,205 @@ void IgnorePipeSignal()
 	sigprocmask(SIG_BLOCK, &sigset, NULL);
 }
 
-int KeyspaceClientTest()
+// TODO
+//
+// SET, GET (1, 20, 50, 100 clients)
+// key size: [10, 100]
+// value size: [10 .. 100000]
+// Dataset total 100MB (w/o keys)
+//
+//
+
+class TestConfig
 {
-	char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
-//	char			*nodes[] = {"127.0.0.1:7080"};
-	Keyspace::Client client;
-	int				master;
-	DynArray<128>	key;
-	DynArray<1024>	value;
-	DynArray<36>	reference;
-	int64_t			num;
-	int				status;
-	Keyspace::Result* result;
-	Stopwatch		sw;
+public:
+	enum Type
+	{
+		GET,
+		DIRTYGET,
+		SET
+	};
+	int					type;
+	const char*			typeString;
+	int					numClients;
+	int					keySize;
+	int					valueSize;
+	int					datasetTotal;
+	DynArray<128>		key;
+	DynArray<1024>		value;
+	DynArray<100>		padding;
+	
+	void SetType(const char* s)
+	{
+		typeString = s;
+		if (strcmp(s, "get") == 0)
+		{
+			type = GET;
+			return;
+		}
+		if (strcmp(s, "dirtyget") == 0)
+		{
+			type = DIRTYGET;
+			return;
+		}
+		if (strcmp(s, "set") == 0)
+		{
+			type = SET;
+			return;
+		}
+	}
+};
+
+int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
+{
+	int			status;
+	int			numTest;
+	Stopwatch	sw;
+
+	conf.value.Reallocate(conf.valueSize, false);
+	
+	Log_SetTrace(false);
+	sw.Reset();
+
+	numTest = conf.datasetTotal / conf.valueSize;
+	for (int i = 0; i < numTest; i++)
+	{
+		conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
+		sw.Start();
+
+		if (conf.type == TestConfig::GET)
+			status = client.Get(conf.key, conf.value);
+		else
+			status = client.DirtyGet(conf.key, conf.value);
+		
+		sw.Stop();
+
+		if (status != KEYSPACE_OK)
+		{
+			Log_SetTrace(true);
+			Log_Trace("Test failed (Set failed after %d)", i);
+			return 1;
+		}
+	}
+
+	Log_SetTrace(true);
+	Log_Trace("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
+	
+	return 0;
+}
+
+int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
+{
+	int			status;
+	int			numTest;
+	Stopwatch	sw;
+
+	// prepare value
+	conf.value.Clear();
+	for (int i = 0; i < conf.valueSize; i++)
+	{
+		char c = (char) (i % 10) + '0';
+		conf.value.Append(&c, 1);
+	}
+	
+	numTest = conf.datasetTotal / conf.valueSize;
+	for (int i = 0; i < numTest; i++)
+	{
+		conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
+		status = client.Set(conf.key, conf.value, false);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Trace("Test failed (Set failed after %d)", i);
+			return 1;
+		}
+	}
+
+	Log_SetTrace(false);
+	sw.Reset();
+	sw.Start();
+
+	status = client.Submit();
+	if (status != KEYSPACE_OK)
+	{
+		Log_SetTrace(true);
+		Log_Trace("Test failed (Submit failed)");
+		return 1;
+	}
+	
+	sw.Stop();
+	Log_SetTrace(true);
+	Log_Trace("Test succeeded, set/sec = %lf", numTest / (sw.elapsed / 1000.0));
+	
+	return 0;
+}
+
+int KeyspaceClientTest2(int , char **argv)
+{
+	char				**nodes;
+	int					nodec;
+	int					status;
+	Keyspace::Client	client;
+	int64_t				timeout;
+	TestConfig			testConf;
+
+	Config::Init("client.conf");
+	
+	IgnorePipeSignal();
+	Log_SetTrace(true);
+	Log_SetTimestamping(true);
+
+	testConf.SetType(argv[1]);
+	testConf.numClients = atoi(argv[2]);
+	testConf.keySize = atoi(argv[3]);
+	testConf.valueSize = atoi(argv[4]);
+
+	nodec = Config::GetListNum("paxos.endpoints");
+	if (nodec <= 0)
+	{
+		Log_Trace("Bad configuration");
+		return 1;
+	}
+
+	nodes = new char*[nodec];
+	for (int i = 0; i < nodec; i++)
+		nodes[i] = (char*) Config::GetListValue("paxos.endpoints", i, NULL);
+	
+	timeout = Config::GetIntValue("paxos.timeout", 10000);
+	testConf.datasetTotal = Config::GetIntValue("dataset.total", 100 * 1000000);
+	
+	status = client.Init(nodec, nodes, timeout);
+	if (status < 0)
+		return 1;
+
+	
+	for (int i = 0; i < testConf.keySize - 10; i++)
+	{
+		char c = (char) (i % 10) + '0';
+		testConf.padding.Append(&c, 1);
+	}
+	
+	Log_Trace("Test type = %s, numClients = %d, keySize = %d, valueSize = %d",
+			testConf.typeString, testConf.numClients, testConf.keySize, testConf.valueSize);
+		
+	if (testConf.type == TestConfig::SET)
+		return KeyspaceClientSetTest(client, testConf);
+	else
+		return KeyspaceClientGetTest(client, testConf);
+}
+
+
+int KeyspaceClientTest()
+{	
+	char				*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
+//	char				*nodes[] = {"127.0.0.1:7080"};
+	DynArray<128>		key;
+	DynArray<1024>		value;
+	DynArray<36>		reference;
+	int64_t				num;
+	int					status;
+	Keyspace::Client	client;
+	Keyspace::Result*	result;
+	Stopwatch			sw;
 	
 	IgnorePipeSignal();
 
@@ -135,11 +323,11 @@ int KeyspaceClientTest()
 		return 1;
 	}
 
-	num = 10000;
+	num = 100000;
 	value.Writef("0123456789012345678901234567890123456789");
 	for (int i = 0; i < num; i++)
 	{
-		key.Writef("test:%d", i);
+		key.Writef("test_:%d", i);
 		status = client.Set(key, value, false);
 		if (status != KEYSPACE_OK)
 		{

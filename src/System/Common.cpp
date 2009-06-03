@@ -396,7 +396,7 @@ int vsnwritef(char* buffer, unsigned size, const char* format, va_list ap)
 				REQUIRE(bs->length);
 				length = bs->length;
 				if (ghost) length = size;
-				memcpy(buffer, bs->buffer, length);
+				memmove(buffer, bs->buffer, length);
 				ADVANCE(2, length);
 			}
 			else

@@ -70,6 +70,7 @@ private:
 	bool			getMasterPending;
 	int				nodeID;
 	uint64_t		disconnectTime;
+	uint64_t		getMasterTime;
 };
 
 typedef List<Response*> ResponseList;
@@ -155,6 +156,8 @@ private:
 	uint64_t		GetNextID();
 	Command*		CreateCommand(char cmd, bool submit, int msgc, ByteString *msgv);
 	void			SendCommand(ClientConn* conn, CommandList& commands);
+	void			DeleteCommands(CommandList& commands);
+	void			SetMaster(int master);
 	
 	
 	CommandList		safeCommands;
@@ -166,6 +169,7 @@ private:
 	int				master;
 	uint64_t		timeout;
 	uint64_t		reconnectTimeout;
+	uint64_t		masterTime;
 	uint64_t		cmdID;
 	Result			result;
 	bool			distributeDirty;
