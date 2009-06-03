@@ -435,9 +435,10 @@ int KeyspaceClientTest()
 #ifndef TEST
 
 int
-main(int, char**)
+main(int argc, char** argv)
 {
-	KeyspaceClientTest();
+	//KeyspaceClientTest();
+	KeyspaceClientTest2(argc, argv);
 
 	return 0;
 }
