@@ -9,6 +9,8 @@ CatchupWriter::CatchupWriter()
 
 void CatchupWriter::Init()
 {
+	Log_Trace();
+
 	TCPConn<>::Init(false);
 	
 	table = database.GetTable("keyspace");
