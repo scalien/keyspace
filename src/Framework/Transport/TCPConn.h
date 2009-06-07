@@ -118,6 +118,39 @@ void TCPConn<bufferSize>::Init(bool startRead)
 }
 
 template<int bufferSize>
+void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
+{
+	Log_Trace("endpoint_ = %s", endpoint_.ToString());
+
+	bool ret;
+
+	if (state != DISCONNECTED)
+		return;
+		
+	Init(false);
+	state = CONNECTING;
+
+	socket.Create(TCP);
+	socket.SetNonblocking();
+	ret = socket.Connect(endpoint_);
+	
+	tcpwrite.fd = socket.fd;
+	tcpwrite.onComplete = &onConnect;
+	// zero indicates for IOProcessor that we are waiting for connect event
+	tcpwrite.data.length = 0;
+	
+	IOProcessor::Add(&tcpwrite);
+
+	if (timeout > 0)
+	{
+		Log_Trace("starting timeout with %d", timeout);
+		
+		connectTimeout.SetDelay(timeout);
+		EventLoop::Reset(&connectTimeout);
+	}
+}
+
+template<int bufferSize>
 void TCPConn<bufferSize>::OnWrite()
 {
 	Log_Trace("Written %d bytes", tcpwrite.data.length);
@@ -257,39 +290,6 @@ void TCPConn<bufferSize>::Close()
 	
 	// TODO ? if the last buffer size exceeds some limit, 
 	// reallocate it to a normal value
-}
-
-template<int bufferSize>
-void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
-{
-	Log_Message("endpoint_ = %s", endpoint_.ToString());
-
-	bool ret;
-
-	if (state != DISCONNECTED)
-		return;
-		
-	Init(false);
-	state = CONNECTING;
-
-	socket.Create(TCP);
-	socket.SetNonblocking();
-	ret = socket.Connect(endpoint_);
-	
-	tcpwrite.fd = socket.fd;
-	tcpwrite.onComplete = &onConnect;
-	// zero indicates for IOProcessor that we are waiting for connect event
-	tcpwrite.data.length = 0;
-	
-	IOProcessor::Add(&tcpwrite);
-
-	if (timeout > 0)
-	{
-		Log_Message("starting timeout with %d", timeout);
-		
-		connectTimeout.SetDelay(timeout);
-		EventLoop::Reset(&connectTimeout);
-	}
 }
 
 #endif
