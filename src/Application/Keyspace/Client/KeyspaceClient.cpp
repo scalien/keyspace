@@ -823,10 +823,10 @@ void Client::SendCommand(ClientConn* conn, CommandList& commands)
 	Command**	it;
 	
 	it = commands.Head();
-	commands.Remove(it);
 	sentCommands.Append(*it);
 	
 	conn->Send(**it);
+	commands.Remove(it);
 }
 
 void Client::DeleteCommands(CommandList& commands)
