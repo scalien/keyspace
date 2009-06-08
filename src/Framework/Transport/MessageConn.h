@@ -13,8 +13,9 @@ public:
 	virtual void	OnClose() = 0;
 	virtual void	OnRead();
 	
-	virtual void	Stop() { running = false; };
-	virtual void	Continue() { running = true; OnRead(); };
+	virtual void	Stop() { running = false; }
+	
+	virtual void	Continue() { running = true; OnRead(); }
 
 private:
 	bool			running;
@@ -30,7 +31,7 @@ void MessageConn<bufferSize>::OnRead()
 
 	pos = 0;
 
-	do
+	while(running)
 	{
 		msglength = strntouint64(tcpread.data.buffer + pos, tcpread.data.length - pos, &nread);
 		
@@ -70,7 +71,6 @@ void MessageConn<bufferSize>::OnRead()
 		if (tcpread.data.length == msgend)
 			break;
 	}
-	while (running);
 	
 	if (pos > 0)
 	{
@@ -78,7 +78,7 @@ void MessageConn<bufferSize>::OnRead()
 		tcpread.data.length -= pos;
 	}
 	
-	if (TCPConn<bufferSize>::state == TCPConn<bufferSize>::CONNECTED)
+	if (TCPConn<bufferSize>::state == TCPConn<bufferSize>::CONNECTED && running)
 		IOProcessor::Add(&tcpread);
 }
 

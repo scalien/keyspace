@@ -149,9 +149,9 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	ByteString		value;
 	Stopwatch		sw;
 
-	Log_Message("length: %d", value.length);
-	
 	value = valueBuffer;
+	Log_Trace("length: %d", value.length);
+	
 	numOps = 0;
 	if (ownAppend)
 		it = ops.Head();
