@@ -89,13 +89,13 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		if (status != KEYSPACE_OK)
 		{
 			Log_SetTrace(true);
-			Log_Trace("Test failed (%s failed after %d)", i, conf.typeString);
+			Log_Message("Test failed (%s failed after %d)", i, conf.typeString);
 			return 1;
 		}
 	}
 
 	Log_SetTrace(true);
-	Log_Trace("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
+	Log_Message("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
 	
 	return 0;
 }
@@ -121,7 +121,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		status = client.Set(conf.key, conf.value, false);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Trace("Test failed (%s failed after %d)", i, conf.typeString);
+			Log_Message("Test failed (%s failed after %d)", i, conf.typeString);
 			return 1;
 		}
 	}
@@ -133,14 +133,12 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	status = client.Submit();
 	if (status != KEYSPACE_OK)
 	{
-		Log_SetTrace(true);
-		Log_Trace("Test failed (Submit failed)");
+		Log_Message("Test failed (Submit failed)");
 		return 1;
 	}
 	
 	sw.Stop();
-	Log_SetTrace(true);
-	Log_Trace("Test succeeded, set/sec = %lf", numTest / (sw.elapsed / 1000.0));
+	Log_Message("Test succeeded, set/sec = %lf", numTest / (sw.elapsed / 1000.0));
 	
 	return 0;
 }
@@ -157,7 +155,7 @@ int KeyspaceClientTest2(int , char **argv)
 	Config::Init("client.conf");
 	
 	IgnorePipeSignal();
-	Log_SetTrace(true);
+	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(true);
 
 	testConf.SetType(argv[1]);
@@ -168,7 +166,7 @@ int KeyspaceClientTest2(int , char **argv)
 	nodec = Config::GetListNum("paxos.endpoints");
 	if (nodec <= 0)
 	{
-		Log_Trace("Bad configuration");
+		Log_Message("Bad configuration");
 		return 1;
 	}
 
@@ -190,7 +188,7 @@ int KeyspaceClientTest2(int , char **argv)
 		testConf.padding.Append(&c, 1);
 	}
 	
-	Log_Trace("Test type = %s, numClients = %d, keySize = %d, valueSize = %d",
+	Log_Message("Test type = %s, numClients = %d, keySize = %d, valueSize = %d",
 			testConf.typeString, testConf.numClients, testConf.keySize, testConf.valueSize);
 		
 	if (testConf.type == TestConfig::SET)
