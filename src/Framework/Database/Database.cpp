@@ -4,7 +4,7 @@
 #include "System/Events/EventLoop.h"
 #include "System/Time.h"
 #include "System/Log.h"
-
+#include "System/Stopwatch.h"
 #include "Database.h"
 #include "Table.h"
 
@@ -79,7 +79,11 @@ bool Database::Init(const DatabaseConfig& config_)
 		env.set_verbose(DB_VERB_WAITSFOR, 1);
 	}
 	
+	Stopwatch sw;
+	sw.Start();
 	ret = env.open(config.dir, flags, mode);
+	sw.Stop();
+	Log_Trace("env.open() took %ld", sw.elapsed);
 	if (ret != 0)
 		return false;
 
