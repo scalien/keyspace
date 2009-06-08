@@ -13,7 +13,12 @@
 // the global database
 Database database;
 
-void DatabaseTrace(const DbEnv*, const char* msg)
+static void DatabaseError(const DbEnv* /*dbenv*/, const char* /*errpfx*/, const char* msg)
+{
+	Log_Trace("%s", msg);
+}
+
+static void DatabaseTrace(const DbEnv* /*dbenv*/, const char* msg)
 {
 	Log_Trace("%s", msg);
 }
@@ -42,6 +47,9 @@ bool Database::Init(const DatabaseConfig& config_)
 	DB_INIT_TXN | DB_RECOVER_FATAL | DB_THREAD;
 	int mode = 0;
 	int ret;
+	
+	env.set_errcall(DatabaseError);
+	env.set_msgcall(DatabaseTrace);
 	
 	config = config_;
 	
