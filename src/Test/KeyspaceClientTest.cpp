@@ -106,6 +106,8 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	int			numTest;
 	Stopwatch	sw;
 
+	Log_Trace("Generating data...");
+
 	// prepare value
 	conf.value.Clear();
 	for (int i = 0; i < conf.valueSize; i++)
@@ -126,7 +128,8 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		}
 	}
 
-	Log_SetTrace(false);
+	Log_Trace("Sending Submit()");
+
 	sw.Reset();
 	sw.Start();
 
@@ -143,7 +146,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	return 0;
 }
 
-int KeyspaceClientTest2(int , char **argv)
+int KeyspaceClientTest2(int argc, char **argv)
 {
 	char				**nodes;
 	int					nodec;
@@ -157,6 +160,12 @@ int KeyspaceClientTest2(int , char **argv)
 	IgnorePipeSignal();
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(true);
+
+	if (argc < 5)
+	{
+		Log_Message("usage:\n\t%s <get|dirtyget|set> <numClients> <keySize> <valueSize>", argv[0]);
+		return 1;
+	}
 
 	testConf.SetType(argv[1]);
 	testConf.numClients = atoi(argv[2]);
