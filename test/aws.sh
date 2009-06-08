@@ -9,4 +9,6 @@ make clientlib
 g++ -Isrc -o bin/clienttest src/Test/KeyspaceClientTest.cpp bin/clientlib.a
 echo 1 > /proc/sys/xen/independent_wallclock
 ntpdate-debian
+cd keyspace
+
 
