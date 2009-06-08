@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
+#include "System/Config.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
@@ -101,8 +102,9 @@ void PLeaseAcceptor::OnProposeRequest()
 		return;
 	}
 	
-	if (msg.expireTime > Now() + MAX_LEASE_TIME + 2 * MAX_CLOCK_SKEW)
-		STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
+	if (Config::GetBoolValue("timecheck.active", true) &&
+		msg.expireTime > Now() + MAX_LEASE_TIME + 2 * MAX_CLOCK_SKEW)
+			STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
 
 	if (msg.proposalID < state.promisedProposalID)
 		msg.ProposeRejected(ReplicatedConfig::Get()->nodeID, msg.proposalID);
