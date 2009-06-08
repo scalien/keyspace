@@ -24,7 +24,6 @@ private:
 	ByteArray<MAX_UDP_MESSAGE_SIZE>		data;
 	MFunc<TransportUDPReader>			onRead;
 	Callable*							userCallback;
-	bool								stopped;
 };
 
 #endif

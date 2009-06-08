@@ -63,6 +63,7 @@ public:
 	uint64_t				cmdID;
 	int64_t					num;
 	uint64_t				count;
+	bool					status;
 	
 	KeyspaceService*		service;
 	

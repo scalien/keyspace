@@ -36,13 +36,14 @@ public:
 	void				Stop();
 	void				Continue();
 	void				OnConnect();
+	void				OnConnectionClose(TransportTCPConn* conn);
 
 private:
 	void				SetMessage(ByteString bs_);
 	
 	Callable*			onRead;
 	ByteString			bs;
-	bool				stopped;
+	List<TransportTCPConn*> conns;
 };
 
 #endif

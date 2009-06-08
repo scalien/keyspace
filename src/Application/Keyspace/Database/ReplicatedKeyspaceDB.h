@@ -36,9 +36,12 @@ public:
 	virtual void			OnMasterLeaseExpired();
 	virtual void			OnDoCatchup(unsigned nodeID);
 	
+	void					AsyncOnAppend();
+	void					OnAppendComplete();
+	
 private:
 	bool					AddWithoutReplicatedLog(KeyspaceOp* op);
-	void					Execute(Transaction* transaction, bool ownAppend);
+	bool					Execute(Transaction* transaction);
 	void					Append();
 	void					FailKeyspaceOps();
 	
@@ -50,6 +53,14 @@ private:
 	ByteArray<KEYSPACE_VAL_SIZE>data;
 	CatchupServer			catchupServer;
 	CatchupReader			catchupClient;
+	
+	Transaction*			transaction;
+	ByteBuffer				valueBuffer;
+	bool					ownAppend;
+	MFunc<ReplicatedKeyspaceDB> asyncOnAppend;
+	MFunc<ReplicatedKeyspaceDB> onAppendComplete;
+	ThreadPool				asyncAppender;
+	unsigned				numOps;
 };
 
 #endif

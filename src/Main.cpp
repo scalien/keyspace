@@ -11,6 +11,27 @@
 
 int main(int argc, char* argv[])
 {
+/*
+	char			c1, c2;
+	ByteArray<100>	src;
+	ByteArray<6>	ba;
+	int				d;
+
+	strcpy(src.buffer, "1234abc%xy%-6:qwerty");
+	src.length = strlen(src.buffer);
+	
+	bool ret = snreadf(src.buffer, src.length, "%dabc%%%c%c%%-%M", &d, &c1, &c2, &ba);
+	
+	if (!ret)
+	{
+		printf("snreadf() failed\n");
+	}
+	else
+	{
+		printf("%d %c %c %.*s\n", d, c1, c2, ba.length, ba.buffer);
+	}
+*/	
+
 	if (argc != 2)
 	{
 		fprintf(stderr, "usage: %s <config-file>\n", argv[0]);

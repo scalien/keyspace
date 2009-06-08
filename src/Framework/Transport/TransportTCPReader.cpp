@@ -8,13 +8,14 @@ void TransportTCPConn::OnMessageRead(const ByteString& message)
 {
 	reader->SetMessage(message);
 	
-	if (!reader->stopped)
-		Call(reader->onRead);
+	Call(reader->onRead);
 }
 	
 void TransportTCPConn::OnClose()
 {
 	Log_Trace();
+	
+	reader->OnConnectionClose(this);
 	
 	socket.Close();
 	delete this;
@@ -26,7 +27,6 @@ void TransportTCPConn::OnClose()
 bool TransportTCPReader::Init(int port)
 {
 	onRead = NULL;
-	stopped = false;
 	return TCPServer::Init(port);
 }
 
@@ -49,14 +49,25 @@ void TransportTCPReader::Stop()
 {
 	Log_Trace();
 	
-	stopped = true;
+	TransportTCPConn** it;
+		
+	IOProcessor::Remove(&tcpread);
+	
+	for (it = conns.Head(); it != NULL; it = conns.Next(it))
+		(*it)->Stop();
 }
 
 void TransportTCPReader::Continue()
 {
 	Log_Trace();
+
+	TransportTCPConn** it;
 	
-	stopped = false;
+	IOProcessor::Add(&tcpread);
+	
+	for (it = conns.Head(); it != NULL; it = conns.Next(it))
+		(*it)->Continue();
+
 }
 
 void TransportTCPReader::OnConnect()
@@ -74,6 +85,7 @@ void TransportTCPReader::OnConnect()
 		
 		conn->GetSocket().SetNonblocking();
 		conn->Init(true);
+		conns.Append(conn);
 	}
 	else
 	{
@@ -83,3 +95,9 @@ void TransportTCPReader::OnConnect()
 	
 	IOProcessor::Add(&tcpread);
 }
+
+void TransportTCPReader::OnConnectionClose(TransportTCPConn* conn)
+{
+	assert(conns.Remove(conn));
+}
+

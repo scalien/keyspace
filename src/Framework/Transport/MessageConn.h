@@ -7,9 +7,17 @@ template<int bufferSize = MAX_TCP_MESSAGE_SIZE>
 class MessageConn : public TCPConn<bufferSize>
 {
 public:
+	MessageConn() { running = true; }
+
 	virtual void	OnMessageRead(const ByteString& msg) = 0;
 	virtual void	OnClose() = 0;
-	virtual void	OnRead();	
+	virtual void	OnRead();
+	
+	virtual void	Stop() { running = false; };
+	virtual void	Continue() { running = true; OnRead(); };
+
+private:
+	bool			running;
 };
 
 template<int bufferSize>
@@ -62,7 +70,7 @@ void MessageConn<bufferSize>::OnRead()
 		if (tcpread.data.length == msgend)
 			break;
 	}
-	while (true);
+	while (running);
 	
 	if (pos > 0)
 	{
@@ -73,6 +81,5 @@ void MessageConn<bufferSize>::OnRead()
 	if (TCPConn<bufferSize>::state == TCPConn<bufferSize>::CONNECTED)
 		IOProcessor::Add(&tcpread);
 }
-
 
 #endif

@@ -160,4 +160,3 @@ test_names_parse(testfn_t *test_functions, char *test_names, int *names, int siz
 
 	return 0;
 }
-

@@ -16,6 +16,7 @@ public:
 	void			Stop();
 
 	void			Execute(Callable *callable);
+	int				NumActive() { return numActive; }
 	
 private:
 	pthread_t*		threads;

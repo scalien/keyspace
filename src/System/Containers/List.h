@@ -31,6 +31,11 @@ class List
 		
 		virtual ~List()
 		{
+			Clear();
+		}
+		
+		void Clear()
+		{
 			ListNode<T> *t, *n;
 			
 			t = head;

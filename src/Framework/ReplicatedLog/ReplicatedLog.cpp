@@ -328,7 +328,7 @@ void ReplicatedLog::OnLearnChosen()
 			}
 			replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value,
 				ownAppend && rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && IsMaster());
-			// client calls Append() here
+			// client will stop Paxos here
 		}
 		
 		if (!proposer.IsActive() && logQueue.Length() > 0)

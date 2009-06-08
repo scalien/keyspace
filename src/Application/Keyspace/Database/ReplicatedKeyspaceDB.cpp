@@ -9,6 +9,9 @@
 #include "System/Stopwatch.h"
 
 ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
+:	asyncOnAppend(this, &ReplicatedKeyspaceDB::AsyncOnAppend),
+	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete),
+	asyncAppender(1)
 {
 	catchingUp = false;
 }
@@ -23,6 +26,8 @@ bool ReplicatedKeyspaceDB::Init()
 	
 	catchupServer.Init(ReplicatedConfig::Get()->GetPort() + CATCHUP_PORT_OFFSET);
 	catchupClient.Init(this, table);
+
+	asyncAppender.Start();
 
 	return true;
 }
@@ -118,13 +123,83 @@ bool ReplicatedKeyspaceDB::Submit()
 	return true;
 }
 
-void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
+void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction_,
+uint64_t /*paxosID*/, ByteString value_, bool ownAppend_)
+{
+	Log_Trace();
+	
+	transaction = transaction_;
+	valueBuffer.Set(value_);
+	ownAppend = ownAppend_;
+	
+	assert(asyncAppender.NumActive() == 0);
+	
+	ReplicatedLog::Get()->StopPaxos();
+	asyncAppender.Execute(&asyncOnAppend);
+}
+
+void ReplicatedKeyspaceDB::AsyncOnAppend()
+{
+	Log_Trace();
+	
+	unsigned		nread;
+	bool			ret;
+	KeyspaceOp*		op;
+	KeyspaceOp**	it;
+	ByteString		value;
+	Stopwatch		sw;
+
+	Log_Message("length: %d", value.length);
+	
+	value = valueBuffer;
+	numOps = 0;
+	if (ownAppend)
+		it = ops.Head();
+	while (true)
+	{
+		if (msg.Read(value, nread))
+		{
+			sw.Start();
+			ret = Execute(transaction);
+			sw.Stop();
+			value.Advance(nread);
+			numOps++;
+			
+			if (ownAppend)
+			{
+				op = *it;
+				if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
+					ASSERT_FAIL();
+				if ((op->type == KeyspaceOp::ADD || op->type == KeyspaceOp::TEST_AND_SET) && ret)
+					op->value.Set(data);
+				op->status = ret;
+				it = ops.Next(it);
+			}
+			
+			if (value.length == 0)
+				break;
+		}
+		else
+		{
+			Log_Message("Failed parsing:");
+			Log_Message("%.*s", value.length, value.buffer);
+			ASSERT_FAIL();
+			break;
+		}
+	}
+	
+	Log_Message("time spent in Execute(): %ld", sw.elapsed);
+
+	Log_Message("numOps = %u", numOps);
+	
+	IOProcessor::Complete(&onAppendComplete);
+}
+
+bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 {
 	bool		ret;
 	int64_t		num;
 	unsigned	nread;
-	KeyspaceOp*	op;
-	KeyspaceOp**it;
 	
 	ret = true;
 	if (msg.type == KEYSPACE_SET)
@@ -163,62 +238,31 @@ void ReplicatedKeyspaceDB::Execute(Transaction* transaction, bool ownAppend)
 	else
 		ASSERT_FAIL();
 	
-	if (ownAppend)
-	{
-		it = ops.Head();
-		op = *it;
-		if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
-			ASSERT_FAIL();
-		if ((op->type == KeyspaceOp::ADD || op->type == KeyspaceOp::TEST_AND_SET) && ret)
-			op->value.Set(data);
-		ops.Remove(op);
-		op->service->OnComplete(op, ret);
-	}
+	return ret;
 }
 
-void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction, uint64_t paxosID, ByteString value, bool ownAppend)
+void ReplicatedKeyspaceDB::OnAppendComplete()
 {
-	unsigned numOps, nread;
-
-	Log_Message("length: %d", value.length);
+	Log_Trace();
 	
-	Stopwatch sw1, sw2;
+	unsigned		i;
+	KeyspaceOp*		op;
+	KeyspaceOp**	it;
 	
-	numOps = 0;
-	while (true)
+	if (ownAppend)
 	{
-		sw1.Start();
-		if (msg.Read(value, nread))
+		for (i = 0; i < numOps; i++)
 		{
-			sw1.Stop();
-			sw2.Start();
-			Execute(transaction, ownAppend);
-			sw2.Stop();
-			value.Advance(nread);
-			numOps++;
-			if (value.length == 0)
-				break;
-		}
-		else
-		{
-			Log_Message("Failed parsing:");
-			Log_Message("%.*s", value.length, value.buffer);
-			ASSERT_FAIL();
-			break;
+			it = ops.Head();
+			op = *it;
+			ops.Remove(op);
+			op->service->OnComplete(op, op->status);
 		}
 	}
-	
-	Log_Message("time spent in msg.Read(): %ld", sw1.elapsed);
-	Log_Message("time spent in Execute(): %ld", sw2.elapsed);
 
-	Log_Message("paxosID = %" PRIu64 ", numOps = %u", paxosID, numOps);
-	
-	Log_Message("ops.size() = %d", ops.Length());
-	
+	ReplicatedLog::Get()->ContinuePaxos();
 	if (ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
 		Append();
-		
-	Log_Message("ops.size() = %d", ops.Length());
 }
 
 void ReplicatedKeyspaceDB::Append()

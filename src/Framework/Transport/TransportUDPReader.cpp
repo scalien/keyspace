@@ -10,9 +10,7 @@ onRead(this, &TransportUDPReader::OnRead)
 bool TransportUDPReader::Init(int port)
 {
 	bool ret;
-	
-	stopped = false;
-	
+		
 	ret = true;
 	ret &= socket.Create(UDP);
 	ret &= socket.Bind(port);
@@ -40,12 +38,12 @@ void TransportUDPReader::GetMessage(ByteString& bs_)
 
 void TransportUDPReader::Stop()
 {
-	stopped = true;
+	IOProcessor::Remove(&udpread);
 }
 
 void TransportUDPReader::Continue()
 {
-	stopped = false;
+	IOProcessor::Add(&udpread);
 }
 
 void TransportUDPReader::OnRead()
@@ -53,8 +51,7 @@ void TransportUDPReader::OnRead()
 	Log_Trace("received %.*s from: %s", udpread.data.length, udpread.data.buffer,
 		udpread.endpoint.ToString());
 
-	if (!stopped)
-		Call(userCallback);
+	Call(userCallback);
 	
 	IOProcessor::Add(&udpread);
 }
