@@ -20,8 +20,8 @@ http.port = 8080
 memcached.port = 11110
 keyspace.port = 7080
 
-log.timestamping = false
-log.trace = false
+log.timestamping = true
+log.trace = true
 
 timecheck.active = false
 EOF

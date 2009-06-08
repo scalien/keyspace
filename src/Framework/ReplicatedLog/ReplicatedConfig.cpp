@@ -66,7 +66,7 @@ void ReplicatedConfig::InitRestartCounter()
 	table->Set(&tx, "@@restartCounter", baRestartCounter);
 	tx.Commit();
 	
-	Log_Message("Running with restartCounter = %" PRIu64 "", restartCounter);
+	Log_Trace("Running with restartCounter = %" PRIu64 "", restartCounter);
 }
 
 unsigned ReplicatedConfig::MinMajority()
