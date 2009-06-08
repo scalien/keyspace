@@ -178,7 +178,7 @@ $(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS) $(BIN_DIR)/clientlib
 #
 ##############################################################################
 
-clean: clean-debug clean-release
+clean: clean-debug clean-release clean-clientlib
 	-rm -r -f $(BUILD_ROOT)
 
 clean-debug:
@@ -193,6 +193,11 @@ clean-libs: clean-keyspace
 
 clean-keyspace:
 	cd $(KEYSPACE_DIR); $(MAKE) clean
+
+clean-clientlib:
+	-rm $(TEST_OBJECTS)
+	-rm $(BIN_DIR)/clienttest
+	-rm $(BIN_DIR)/clientlib.a
 
 distclean: clean distclean-libs
 
