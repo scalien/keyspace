@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <math.h>
+#include <errno.h>
 #include <fcntl.h>
 #include "System/IO/IOProcessor.h"
 #include "System/Common.h"

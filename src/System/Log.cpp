@@ -157,7 +157,26 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 	// in case of error print the errno message otherwise print our message
 	if (type == LOG_TYPE_ERRNO)
 	{
+		// This is a workaround for g++ on Debian Lenny
+		// see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=485135
+		// _GNU_SOURCE is unconditionally defined so always the GNU style
+		// sterror_r() is used, which is broken
+#ifdef _GNU_SOURCE
+		char* err = strerror_r(errno, p, remaining);
+		if (err)
+		{
+				ret = strlen(err);
+				if (err != p)
+				{
+						memcpy(p, err, ret);
+						p[ret] = 0;
+				}
+		}
+		else
+				ret = -1;
+#else
 		ret = strerror_r(errno, p, remaining);
+#endif
 		if (ret < 0)
 			ret = remaining;
 
