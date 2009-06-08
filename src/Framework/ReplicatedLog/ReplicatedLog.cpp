@@ -264,9 +264,6 @@ void ReplicatedLog::OnLearnChosen()
 		if (catchupTimeout.IsActive())
 			EventLoop::Remove(&catchupTimeout);
 
-		if (acceptor.transaction.IsActive())
-			return;
-		
 		if (pmsg.type == PAXOS_LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
 				pmsg.LearnValue(pmsg.paxosID, GetNodeID(), acceptor.state.acceptedValue);

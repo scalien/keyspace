@@ -6,6 +6,7 @@
 #include "System/Events/EventLoop.h"
 #include "Framework/Database/Transaction.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 
 PaxosAcceptor::PaxosAcceptor() :
 	onDBComplete(this, &PaxosAcceptor::OnDBComplete)
@@ -179,6 +180,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 			msg.proposalID, state.acceptedProposalID, state.acceptedValue);
 	
 	WriteState();
+	ReplicatedLog::Get()->StopPaxos();
 }
 
 void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
@@ -210,11 +212,14 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	msg.ProposeAccepted(msg.paxosID, ReplicatedConfig::Get()->nodeID, msg.proposalID);
 	
 	WriteState();
+	ReplicatedLog::Get()->StopPaxos();
 }
 
 void PaxosAcceptor::OnDBComplete()
 {
 	Log_Trace();
+
+	ReplicatedLog::Get()->ContinuePaxos();
 
 	if (writtenPaxosID == paxosID)
 		SendReply(senderID); // TODO: check that the transaction commited
