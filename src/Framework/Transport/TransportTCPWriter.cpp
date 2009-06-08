@@ -40,7 +40,7 @@ void TransportTCPWriter::OnConnect()
 {
 	TCPConn<>::OnConnect();
 	
-	Log_Message("endpoint = %s", endpoint.ToString());
+	Log_Trace("endpoint = %s", endpoint.ToString());
 	
 	AsyncRead();
 }
@@ -49,7 +49,7 @@ void TransportTCPWriter::OnConnectTimeout()
 {
 	TCPConn<>::OnConnectTimeout();
 	
-	Log_Message("endpoint = %s", endpoint.ToString());
+	Log_Trace("endpoint = %s", endpoint.ToString());
 	
 	Close();
 	Connect();
@@ -57,7 +57,7 @@ void TransportTCPWriter::OnConnectTimeout()
 
 void TransportTCPWriter::OnRead()
 {
-	Log_Message("endpoint = %s", endpoint.ToString());
+	Log_Trace("endpoint = %s", endpoint.ToString());
 	
 	// drop any data
 	readBuffer.Clear();
@@ -66,11 +66,11 @@ void TransportTCPWriter::OnRead()
 
 void TransportTCPWriter::OnClose()
 {
-	Log_Message("endpoint = %s", endpoint.ToString());
+	Log_Trace("endpoint = %s", endpoint.ToString());
 	
 	if (!connectTimeout.IsActive())
 	{
-		Log_Message("reset");
+		Log_Trace("reset");
 		EventLoop::Reset(&connectTimeout);
 	}
 }
