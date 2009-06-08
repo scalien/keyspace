@@ -81,7 +81,7 @@ void TransportTCPReader::OnConnect()
 		Endpoint endpoint;
 		conn->GetSocket().GetEndpoint(endpoint);
 		
-		Log_Message("%s connected, fd = %d", endpoint.ToString(), conn->GetSocket().fd);
+		Log_Trace("%s connected, fd = %d", endpoint.ToString(), conn->GetSocket().fd);
 		
 		conn->GetSocket().SetNonblocking();
 		conn->Init(true);
@@ -89,7 +89,7 @@ void TransportTCPReader::OnConnect()
 	}
 	else
 	{
-		Log_Message("Accept() failed");
+		Log_Trace("Accept() failed");
 		delete conn;
 	}
 	

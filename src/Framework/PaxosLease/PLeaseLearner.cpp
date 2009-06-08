@@ -41,7 +41,7 @@ void PLeaseLearner::OnLearnChosen()
 		state.leaseOwner = msg.leaseOwner;
 		state.expireTime = msg.expireTime;
 		
-		Log_Message("+++ Node %d has the lease for %" PRIu64 " msec +++",
+		Log_Trace("+++ Node %d has the lease for %" PRIu64 " msec +++",
 			state.leaseOwner, state.expireTime - Now());
 
 		leaseTimeout.Set(state.expireTime);

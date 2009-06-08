@@ -48,9 +48,7 @@ void PLeaseAcceptor::ProcessMsg(PLeaseMsg& msg_)
 
 void PLeaseAcceptor::OnPrepareRequest()
 {
-	Log_Trace();
-	
-	Log_Message("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "",
+	Log_Trace("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "",
 	msg.paxosID, ReplicatedLog::Get()->GetPaxosID());
 
 	if (msg.paxosID < ReplicatedLog::Get()->GetPaxosID())
@@ -97,7 +95,7 @@ void PLeaseAcceptor::OnProposeRequest()
 
 	if (msg.expireTime < Now())
 	{
-		Log_Message("Expired propose request received (msg.expireTime = %" PRIu64 " | Now = %" PRIu64 ")",
+		Log_Trace("Expired propose request received (msg.expireTime = %" PRIu64 " | Now = %" PRIu64 ")",
 			msg.expireTime, Now());
 		return;
 	}
