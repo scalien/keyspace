@@ -214,6 +214,9 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	struct epoll_event	ev;
 	EpollOp*			epollOp;
 	
+	if (!ioop-active)
+		return;
+	
 	if (epollfd < 0)
 	{
 		Log_Message("eventfd < 0");
