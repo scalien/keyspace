@@ -3,7 +3,6 @@
 #include "Table.h"
 #include "Database.h"
 #include "System/Buffer.h"
-#include "System/Stopwatch.h"
 #include "Transaction.h"
 
 Table::Table(Database* database, const char *name, int pageSize) :
@@ -20,11 +19,9 @@ database(database)
 	if (pageSize != 0)
 		db->set_pagesize(pageSize);
 		
-	Stopwatch sw;
-	sw.Start();
+	Log_Trace();
 	db->open(txnid, filename, dbname, type, flags, mode);
-	sw.Stop();
-	Log_Trace("db.open() took %ld", sw.elapsed);
+	Log_Trace();
 }
 
 Table::~Table()
