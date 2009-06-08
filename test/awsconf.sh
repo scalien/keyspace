@@ -25,5 +25,5 @@ log.trace = true
 log.targets = stdout, file
 log.file = test/$1/keyspace.log
 
-timecheck.active = false
+timecheck.active = true
 EOF
