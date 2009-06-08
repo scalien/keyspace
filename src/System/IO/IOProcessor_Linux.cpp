@@ -215,7 +215,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	EpollOp*			epollOp;
 	
 	if (!ioop->active)
-		return;
+		return false;
 	
 	if (epollfd < 0)
 	{
