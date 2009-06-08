@@ -1,10 +1,6 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <string.h>
-#include <errno.h>
-#include <stdio.h>
-
 #define LOG_TYPE_ERRNO		0
 #define LOG_TYPE_MSG		1
 #define LOG_TYPE_TRACE		2

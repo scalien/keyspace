@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <errno.h>
 
 bool Socket::Create(int type_)
 {

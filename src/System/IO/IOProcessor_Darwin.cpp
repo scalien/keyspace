@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <math.h>
+#include <errno.h>
 
 #include "IOProcessor.h"
 #include "System/Containers/List.h"
