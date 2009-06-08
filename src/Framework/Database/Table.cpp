@@ -210,8 +210,10 @@ bool Table::Truncate(Transaction* transaction)
 	
 	txn = transaction ? transaction->txn : NULL;
 	// TODO error handling
-	ret = db->truncate(txn, &count, flags);
-	
+	if ((ret = db->truncate(txn, &count, flags)) != 0)
+	{
+		Log_Message("truncate() failed");
+	}
 	return true;
 }
 
