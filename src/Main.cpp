@@ -11,27 +11,8 @@
 
 int main(int argc, char* argv[])
 {
-/*
-	char			c1, c2;
-	ByteArray<100>	src;
-	ByteArray<6>	ba;
-	int				d;
-
-	strcpy(src.buffer, "1234abc%xy%-6:qwerty");
-	src.length = strlen(src.buffer);
+	int		logTargets;
 	
-	bool ret = snreadf(src.buffer, src.length, "%dabc%%%c%c%%-%M", &d, &c1, &c2, &ba);
-	
-	if (!ret)
-	{
-		printf("snreadf() failed\n");
-	}
-	else
-	{
-		printf("%d %c %c %.*s\n", d, c1, c2, ba.length, ba.buffer);
-	}
-*/	
-
 	if (argc != 2)
 	{
 		fprintf(stderr, "usage: %s <config-file>\n", argv[0]);
@@ -41,6 +22,21 @@ int main(int argc, char* argv[])
 	if (!Config::Init(argv[1]))
 		STOP_FAIL("Cannot open config file", 1);
 
+	logTargets = 0;
+	for (int i = 0; i < Config::GetListNum("log.targets"); i++)
+	{
+		if (strcmp(Config::GetListValue("log.targets", i, ""), "file") == 0)
+		{
+			logTargets |= LOG_TARGET_FILE;
+			Log_SetOutputFile(Config::GetValue("log.file", NULL));
+		}
+		if (strcmp(Config::GetListValue("log.targets", i, NULL), "stdout") == 0)
+			logTargets |= LOG_TARGET_STDOUT;
+		if (strcmp(Config::GetListValue("log.targets", i, NULL), "stderr") == 0)
+			logTargets |= LOG_TARGET_STDERR;
+
+	}
+	Log_SetTarget(logTargets);
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
 	Log_Message("Keyspace v" VERSION_STRING " r%.*s started",

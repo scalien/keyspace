@@ -22,6 +22,8 @@ keyspace.port = 7080
 
 log.timestamping = true
 log.trace = true
+log.targets = stdout, file
+log.file = test/$1/keyspace.log
 
 timecheck.active = false
 EOF
