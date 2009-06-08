@@ -89,7 +89,7 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		if (status != KEYSPACE_OK)
 		{
 			Log_SetTrace(true);
-			Log_Trace("Test failed (Set failed after %d)", i);
+			Log_Trace("Test failed (%s failed after %d)", i, conf.typeString);
 			return 1;
 		}
 	}
@@ -121,7 +121,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		status = client.Set(conf.key, conf.value, false);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Trace("Test failed (Set failed after %d)", i);
+			Log_Trace("Test failed (%s failed after %d)", i, conf.typeString);
 			return 1;
 		}
 	}
