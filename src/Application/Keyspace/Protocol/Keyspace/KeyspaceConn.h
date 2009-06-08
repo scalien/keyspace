@@ -18,7 +18,7 @@ public:
 	KeyspaceConn();
 	
 	void				Init(KeyspaceDB* kdb_, KeyspaceServer* server_);
-	void				OnComplete(KeyspaceOp* op, bool status, bool final);
+	void				OnComplete(KeyspaceOp* op, bool final);
 	void				OnConnectionTimeout();
 	void				OnMessageRead(const ByteString& message);
 

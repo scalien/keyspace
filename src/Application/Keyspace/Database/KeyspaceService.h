@@ -10,7 +10,7 @@ class KeyspaceService
 {
 public:
 	virtual			~KeyspaceService() {}
-	virtual	void	OnComplete(KeyspaceOp* op, bool status, bool final = true) = 0;
+	virtual	void	OnComplete(KeyspaceOp* op, bool final = true) = 0;
 	
 	void Init(KeyspaceDB* kdb_)
 	{
@@ -70,6 +70,7 @@ public:
 	KeyspaceOp()
 	{
 		appended = false;
+		status = false;
 	}
 	
 	~KeyspaceOp()

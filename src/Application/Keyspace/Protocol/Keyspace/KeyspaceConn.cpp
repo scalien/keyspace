@@ -23,7 +23,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 //	EventLoop::Reset(&connectionTimeout);
 }
 
-void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
+void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 {
 //	Log_Trace();
 	
@@ -31,7 +31,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 	
 	if (state != DISCONNECTED)
 	{
-		if (!status && final && op->MasterOnly() && !kdb->IsMaster())
+		if (!op->status && final && op->MasterOnly() && !kdb->IsMaster())
 		{
 			resp.NotMaster(op->cmdID);
 			resp.Write(data);
@@ -42,7 +42,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 				op->type == KeyspaceOp::DIRTY_GET ||
 				op->type == KeyspaceOp::ADD)
 			{
-				if (status)
+				if (op->status)
 					resp.Ok(op->cmdID, op->value);
 				else
 					resp.Failed(op->cmdID);
@@ -52,7 +52,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			else if (op->type == KeyspaceOp::SET ||
 					 op->type == KeyspaceOp::TEST_AND_SET)
 			{
-				if (status)
+				if (op->status)
 					resp.Ok(op->cmdID);
 				else
 					resp.Failed(op->cmdID);
@@ -61,7 +61,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 			}
 			else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE)
 			{
-				if (status)
+				if (op->status)
 					resp.Ok(op->cmdID);
 				else
 					resp.Failed(op->cmdID);

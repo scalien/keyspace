@@ -15,7 +15,7 @@ public:
 	HttpConn();
 	
 	void			Init(KeyspaceDB* kdb_, HttpServer* server_);
-	void			OnComplete(KeyspaceOp* op, bool status, bool final);
+	void			OnComplete(KeyspaceOp* op, bool final);
 
 private:	
 	HttpServer*		server;

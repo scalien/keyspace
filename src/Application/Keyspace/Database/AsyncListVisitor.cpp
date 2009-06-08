@@ -53,6 +53,8 @@ bool AsyncVisitorCallback::AppendKeyValue(const ByteString &key, const ByteStrin
 
 void AsyncVisitorCallback::Execute()
 {
+	op->status = true;
+
 	for (int i = 0; i < numkey; i++)
 	{
 		// HACK in order to not copy the buffer we set the members of
@@ -68,7 +70,7 @@ void AsyncVisitorCallback::Execute()
 			op->value.length = values[i].length;
 		}
 		
-		op->service->OnComplete(op, true, false);
+		op->service->OnComplete(op, false);
 	}
 
 	op->key.buffer = NULL;
@@ -83,8 +85,8 @@ void AsyncVisitorCallback::Execute()
 	}
 
 	if (complete)
-		op->service->OnComplete(op, true, complete);
-
+		op->service->OnComplete(op, complete);
+	
 	delete this;
 }
 

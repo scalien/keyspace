@@ -32,7 +32,7 @@ void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 }
 
 
-void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
+void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 {
 	Log_Trace();
 		
@@ -41,21 +41,21 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool status, bool final)
 		op->type == KeyspaceOp::ADD ||
 		op->type == KeyspaceOp::TEST_AND_SET)
 	{
-		if (status)
+		if (op->status)
 			Response(200, op->value.buffer, op->value.length);
 		else
 			RESPONSE_NOTFOUND;
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
-		if (status)
+		if (op->status)
 			Response(200, "OK", strlen("OK"));
 		else
 			Response(200, "Failed", strlen("Failed"));
 	}
 	else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE)
 	{
-		if (status)
+		if (op->status)
 			Response(200, "OK", strlen("OK"));
 		else
 			RESPONSE_NOTFOUND;

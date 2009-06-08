@@ -54,7 +54,6 @@ bool ReplicatedKeyspaceDB::IsMaster()
 
 bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 {
-	bool ret;
 	Transaction* transaction;
 
 	// don't allow writes for @@ keys
@@ -77,9 +76,9 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 				transaction = NULL;
 		
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		ret = table->Get(transaction, op->key, op->value);
+		op->status = table->Get(transaction, op->key, op->value);
 
-		op->service->OnComplete(op, ret);
+		op->service->OnComplete(op);
 		return true;
 	}
 	
@@ -256,9 +255,12 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 			it = ops.Head();
 			op = *it;
 			ops.Remove(op);
-			op->service->OnComplete(op, op->status);
+			op->service->OnComplete(op);
 		}
 	}
+	
+	if (!ReplicatedLog::Get()->IsMaster())
+		FailKeyspaceOps();
 
 	ReplicatedLog::Get()->ContinuePaxos();
 	if (ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
@@ -318,7 +320,7 @@ void ReplicatedKeyspaceDB::FailKeyspaceOps()
 		op = *it;
 		
 		it = ops.Remove(it);
-		op->service->OnComplete(op, false);
+		op->service->OnComplete(op);
 	}
 	
 	if (ops.Length() > 0)
@@ -341,7 +343,7 @@ void ReplicatedKeyspaceDB::OnMasterLeaseExpired()
 
 	Log_Message("ops.size() = %d", ops.Length());
 	
-	if (!ReplicatedLog::Get()->IsMaster())
+	if (!ReplicatedLog::Get()->IsMaster() && asyncAppender.NumActive() == 0)
 		FailKeyspaceOps();
 		
 	Log_Message("ops.size() = %d", ops.Length());
