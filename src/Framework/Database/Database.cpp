@@ -43,7 +43,7 @@ Database::~Database()
 bool Database::Init(const DatabaseConfig& config_)
 {
 	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL |
-	DB_INIT_TXN | DB_RECOVER_FATAL | DB_THREAD;
+	DB_INIT_TXN | DB_RECOVER/*_FATAL*/ | DB_THREAD;
 	int mode = 0;
 	int ret;
 	

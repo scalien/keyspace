@@ -213,10 +213,12 @@ bool Table::Truncate(Transaction* transaction)
 	
 	txn = transaction ? transaction->txn : NULL;
 	// TODO error handling
+	Log_Trace();
 	if ((ret = db->truncate(txn, &count, flags)) != 0)
 	{
 		Log_Message("truncate() failed");
 	}
+	Log_Trace();
 	return true;
 }
 
