@@ -32,7 +32,7 @@ void CatchupWriter::OnRead()
 
 void CatchupWriter::OnWrite()
 {
-	Log_Trace();
+//	Log_Trace();
 	
 	if (msg.type == CATCHUP_COMMIT)
 	{
@@ -59,7 +59,7 @@ void CatchupWriter::OnClose()
 
 void CatchupWriter::WriteNext()
 {
-	Log_Trace();
+//	Log_Trace();
 
 	static ByteArray<32> prefix; // for the "length:" header
 	static ByteArray<MAX_TCP_MESSAGE_SIZE> msgData;

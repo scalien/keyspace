@@ -67,7 +67,7 @@ void CatchupReader::OnConnectTimeout()
 
 void CatchupReader::ProcessMsg()
 {
-	Log_Trace();
+//	Log_Trace();
 
 	if (msg.type == CATCHUP_KEY_VALUE)
 		OnKeyValue();
@@ -79,7 +79,7 @@ void CatchupReader::ProcessMsg()
 
 void CatchupReader::OnKeyValue()
 {
-	Log_Trace();
+//	Log_Trace();
 
 	table->Set(&transaction, msg.key, msg.value);
 }
