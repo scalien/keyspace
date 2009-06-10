@@ -117,7 +117,7 @@ void keyspace_client_destroy(keyspace_client_t kc);
  * Return value: the status of the operation
  */
 int	keyspace_client_init(keyspace_client_t kc,
-		int nodec, char* nodev[], 
+		int nodec, const char* nodev[], 
 		uint64_t timeout);
 
 /*
