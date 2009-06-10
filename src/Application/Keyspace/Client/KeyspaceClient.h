@@ -49,6 +49,7 @@ class ClientConn : public MessageConn<>
 public:
 	ClientConn(Client &client, int nodeID, const Endpoint &endpoint_);
 
+	// MessageConn interface
 	virtual void	OnMessageRead(const ByteString& msg);
 	virtual void	OnWrite();
 	virtual void	OnClose();
@@ -57,8 +58,8 @@ public:
 
 	Endpoint&		GetEndpoint();
 	void			Send(Command &cmd);
-	bool			ProcessMessage(Response* msg);
 	bool			ReadMessage(ByteString &msg);
+	bool			ProcessResponse(Response* msg);
 	void			GetMaster();
 	void			DeleteCommands();
 

@@ -278,7 +278,7 @@ void ClientConn::Send(Command &cmd)
 	}
 }
 
-bool ClientConn::ProcessMessage(Response* resp)
+bool ClientConn::ProcessResponse(Response* resp)
 {
 	Command**	it;
 	unsigned	nread;
@@ -291,6 +291,7 @@ bool ClientConn::ProcessMessage(Response* resp)
 		{
 			cmd->status = resp->status;
 			
+			Log_Trace("status = %c, id = %ld", cmd->status, (unsigned long) cmdID);
 			// GET_MASTER is a special case, because it is only used internally
 			if (cmd->type == KEYSPACECLIENT_GET_MASTER)
 			{
@@ -382,7 +383,7 @@ void ClientConn::OnMessageRead(const ByteString& msg)
 	resp = new Response;
 	if (resp->Read(msg))
 	{
-		if (!ProcessMessage(resp))
+		if (!ProcessResponse(resp))
 			delete resp;
 		client.StateFunc();
 	}
