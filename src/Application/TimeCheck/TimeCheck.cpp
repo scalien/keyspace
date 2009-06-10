@@ -62,7 +62,6 @@ void TimeCheck::NextSeries()
 	}
 
 	EventLoop::Reset(&sendTimeout);
-
 	EventLoop::Reset(&seriesTimeout);
 }
 
@@ -76,8 +75,8 @@ void TimeCheck::OnSeriesTimeout()
 		{
 			double skew = totalSkew[i] / numReplies[i];
 			
-//			Log_Message("%lf %d\n", totalSkew[i], numReplies[i]);
-//			Log_Message("skew for nodeID %d: %lf\n", i, skew);
+//			Log_Trace("%lf %d\n", totalSkew[i], numReplies[i]);
+//			Log_Trace("skew for nodeID %d: %lf\n", i, skew);
 			
 			if (skew > MAX_CLOCK_SKEW)
 				STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
@@ -134,7 +133,7 @@ void TimeCheck::OnRead()
 			totalSkew[msg.nodeID] += skew;
 			
 //			double skew = totalSkew[msg.nodeID] / numReplies[msg.nodeID];
-//			Log_Message("Running skew for nodeID %d after %d msgs: %lf\n",
+//			Log_Trace("Running skew for nodeID %d after %d msgs: %lf\n",
 //				msg.nodeID, numReplies[msg.nodeID], skew);
 		}
 	}

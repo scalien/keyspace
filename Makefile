@@ -103,6 +103,9 @@ clienttest:
 clientlib:
 	$(MAKE) clientlib_targets BUILD="release"
 
+timechecktest:
+	$(MAKE) timechecktest_targets BUILD="release"
+
 include Makefile.dirs
 	
 targets: $(BUILD_DIR) $(BIN_DIR)/keyspace
@@ -110,6 +113,8 @@ targets: $(BUILD_DIR) $(BIN_DIR)/keyspace
 test_targets: $(BUILD_DIR) $(BIN_DIR)/clienttest
 
 clientlib_targets: $(BUILD_DIR) $(BIN_DIR)/clientlib.a $(BIN_DIR)/clientlib.so
+
+timechecktest_targets: $(BUILD_DIR) $(BIN_DIR)/timechecktest
 
 ##############################################################################
 #
@@ -171,6 +176,11 @@ $(BIN_DIR)/clientlib.so: $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
 	
 $(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS) $(BIN_DIR)/clientlib.a
 	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS) $(BIN_DIR)/clientlib.a
+
+
+
+$(BIN_DIR)/timechecktest: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Test/TimeCheckTest.o
+	$(CXX) $(LDFLAGS) -o $@ $(ALL_OBJECTS) $(LIBS) $(BUILD_DIR)/Test/TimeCheckTest.o
 
 ##############################################################################
 #

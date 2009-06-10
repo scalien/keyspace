@@ -65,6 +65,7 @@
 		548147620F31B6B300F3D2B6 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
 		548147750F31B8BE00F3D2B6 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
+		549D467C0FDFB74C005B92D3 /* TimeCheckTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 549D467B0FDFB74C005B92D3 /* TimeCheckTest.cpp */; };
 		54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
 		54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */; };
 		54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */; };
@@ -265,6 +266,7 @@
 		548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
 		54814BFE0F35084500F3D2B6 /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
 		54814BFF0F35084500F3D2B6 /* Transaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Transaction.cpp; sourceTree = "<group>"; };
+		549D467B0FDFB74C005B92D3 /* TimeCheckTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeCheckTest.cpp; sourceTree = "<group>"; };
 		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
 		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
 		54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceConn.cpp; sourceTree = "<group>"; };
@@ -519,6 +521,7 @@
 				9AC698DB0F9797D8003C631E /* Tester.cpp */,
 				9AC69C520F9E3144003C631E /* KeyspaceClientTest.cpp */,
 				9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */,
+				549D467B0FDFB74C005B92D3 /* TimeCheckTest.cpp */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -767,14 +770,14 @@
 		54D96EB70F9B35CB005658C9 /* HTTP */ = {
 			isa = PBXGroup;
 			children = (
-				54D96EB80F9B35CB005658C9 /* HttpConn.cpp */,
 				54D96EB90F9B35CB005658C9 /* HttpConn.h */,
+				54D96EB80F9B35CB005658C9 /* HttpConn.cpp */,
 				54D96EBA0F9B35CB005658C9 /* HttpRequest.cpp */,
 				54D96EBB0F9B35CB005658C9 /* HttpRequest.h */,
-				54D96EBC0F9B35CB005658C9 /* HttpServer.cpp */,
 				54D96EBD0F9B35CB005658C9 /* HttpServer.h */,
-				54D96EBE0F9B35CB005658C9 /* IMF.cpp */,
+				54D96EBC0F9B35CB005658C9 /* HttpServer.cpp */,
 				54D96EBF0F9B35CB005658C9 /* IMF.h */,
+				54D96EBE0F9B35CB005658C9 /* IMF.cpp */,
 			);
 			path = HTTP;
 			sourceTree = "<group>";
@@ -1104,6 +1107,7 @@
 				54507DBD0FCD6B43009D9B99 /* CatchupServer.cpp in Sources */,
 				54507DFD0FCD6CF7009D9B99 /* CatchupReader.cpp in Sources */,
 				54507DFE0FCD6CF7009D9B99 /* CatchupWriter.cpp in Sources */,
+				549D467C0FDFB74C005B92D3 /* TimeCheckTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
