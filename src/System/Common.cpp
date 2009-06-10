@@ -87,6 +87,18 @@ uint64_t strntouint64(const char* buffer, int length, unsigned* nread)
 #undef ADVANCE
 }
 
+int randint(int min, int max)
+{
+	int		rnd;
+	int		interval;
+	
+	assert(min < max);
+
+	interval = max - min;
+	rnd = (int)(random() / (float) RAND_MAX * interval + 0.5);
+	return rnd + min;
+}
+
 const char* rprintf(const char* format, ...)
 {
 	static char buffer[8*1024];

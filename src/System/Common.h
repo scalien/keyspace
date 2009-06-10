@@ -29,6 +29,8 @@ inline int max(int a, int b) { if (a > b) return a; else return b; }
 
 inline uint64_t max(uint64_t a, uint64_t b) { if (a > b) return a; else return b; }
 
+int randint(int min, int max);
+
 int64_t strntoint64(const char* buffer, int length, unsigned* nread);
 
 uint64_t strntouint64(const char* buffer, int length, unsigned* nread);

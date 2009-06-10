@@ -1,5 +1,3 @@
-#!/bin/sh
-
 alias up='svn up; make clean debug clienttest'
 alias ntpsync='ntpdate-debian'
 apt-get update

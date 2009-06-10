@@ -31,6 +31,7 @@ public:
 		DIRTYGET,
 		SET
 	};
+	
 	int					type;
 	const char*			typeString;
 	int					numClients;
@@ -40,7 +41,13 @@ public:
 	DynArray<128>		key;
 	DynArray<1024>		value;
 	DynArray<100>		padding;
+	bool				rndkey;
 	
+	TestConfig()
+	{
+		rndkey = false;
+	}
+		
 	void SetType(const char* s)
 	{
 		typeString = s;
@@ -57,6 +64,12 @@ public:
 		if (strcmp(s, "set") == 0)
 		{
 			type = SET;
+			return;
+		}
+		if (strcmp(s, "rndset") == 0)
+		{
+			type = SET;
+			rndkey = true;
 			return;
 		}
 	}
@@ -100,6 +113,26 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 	return 0;
 }
 
+void GenRandomString(ByteString& bs, size_t length)
+{
+	const char set[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	const size_t setsize = sizeof(set) - 1;
+	unsigned int i;
+	uint64_t seed = Now();
+	uint64_t d = seed;
+
+	assert(bs.size >= length);
+
+	for (i = 0; i < length - 1; i++) {
+			// more about why these numbers were chosen:
+			// http://en.wikipedia.org/wiki/Linear_congruential_generator
+			d = (d * 1103515245UL + 12345UL) >> 16;
+			bs.buffer[i] = set[d % setsize];
+	}
+
+	bs.length = length;
+}
+
 int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 {
 	int			status;
@@ -119,7 +152,10 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	numTest = conf.datasetTotal / conf.valueSize;
 	for (int i = 0; i < numTest; i++)
 	{
-		conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
+		if (conf.rndkey)
+			GenRandomString(conf.key, conf.keySize);
+		else
+			conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
 		status = client.Set(conf.key, conf.value, false);
 		if (status != KEYSPACE_OK)
 		{
@@ -157,7 +193,7 @@ int KeyspaceClientTest2(int argc, char **argv)
 
 	if (argc < 6)
 	{
-		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set> <numClients> <keySize> <valueSize>", argv[0]);
+		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set|rndset> <numClients> <keySize> <valueSize>", argv[0]);
 		return 1;
 	}
 
