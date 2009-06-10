@@ -79,8 +79,8 @@ void TimeCheck::OnSeriesTimeout()
 
 			if (verbosity)
 			{
-				Log_Trace("%lf %d\n", totalSkew[i], numReplies[i]);
-				Log_Trace("skew for nodeID %d: %lf\n", i, skew);
+//				Log_Trace("%lf %d", totalSkew[i], numReplies[i]);
+				Log_Trace("skew for nodeID %d: %lf", i, skew);
 			}
 			
 			if (skew > MAX_CLOCK_SKEW && failOnSkew)
