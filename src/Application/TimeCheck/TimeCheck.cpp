@@ -79,12 +79,16 @@ void TimeCheck::OnSeriesTimeout()
 
 			if (verbosity)
 			{
-//				Log_Trace("%lf %d", totalSkew[i], numReplies[i]);
 				Log_Trace("skew for nodeID %d: %lf", i, skew);
 			}
 			
 			if (skew > MAX_CLOCK_SKEW && failOnSkew)
+			{
+				Log_Trace("skew for nodeID %d: %lf", i, skew);
+				Log_Trace("  totalSkew: %lf", totalSkew[i]);
+				Log_Trace("  numReplies: %d", numReplies[i]);
 				STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
+			}
 		}
 	}
 	
@@ -137,12 +141,12 @@ void TimeCheck::OnRead()
 			numReplies[msg.nodeID]++;
 			totalSkew[msg.nodeID] += skew;
 			
-			if (verbosity)
-			{
-				double skew = totalSkew[msg.nodeID] / numReplies[msg.nodeID];
+//			if (verbosity)
+//			{
+//				double skew = totalSkew[msg.nodeID] / numReplies[msg.nodeID];
 //				Log_Trace("Running skew for nodeID %d after %d msgs: %lf",
 //					msg.nodeID, numReplies[msg.nodeID], skew);
-			}
+//			}
 		}
 	}
 }
