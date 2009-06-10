@@ -16,7 +16,7 @@ class TimeCheck
 public:
 	TimeCheck();
 
-	void				Init();
+	void				Init(bool verbosity_ = false, bool failOnSkew_ = true);
 
 	void				OnRead();
 	void				OnSeriesTimeout();
@@ -41,6 +41,8 @@ private:
 	unsigned			sentInSeries;
 	int*				numReplies;
 	double*				totalSkew;
+	bool				verbosity;
+	bool				failOnSkew;
 };
 
 #endif

@@ -15,8 +15,10 @@ TimeCheck::TimeCheck() :
 {
 }
 
-void TimeCheck::Init()
+void TimeCheck::Init(bool verbosity_, bool failOnSkew_)
 {
+	verbosity = verbosity_;
+	failOnSkew = failOnSkew_;
 	numReplies = new int[ReplicatedConfig::Get()->numNodes];
 	totalSkew = new double[ReplicatedConfig::Get()->numNodes];
 	
@@ -74,11 +76,14 @@ void TimeCheck::OnSeriesTimeout()
 		if (numReplies[i] > 0)
 		{
 			double skew = totalSkew[i] / numReplies[i];
+
+			if (verbosity)
+			{
+				Log_Trace("%lf %d\n", totalSkew[i], numReplies[i]);
+				Log_Trace("skew for nodeID %d: %lf\n", i, skew);
+			}
 			
-//			Log_Trace("%lf %d\n", totalSkew[i], numReplies[i]);
-//			Log_Trace("skew for nodeID %d: %lf\n", i, skew);
-			
-			if (skew > MAX_CLOCK_SKEW)
+			if (skew > MAX_CLOCK_SKEW && failOnSkew)
 				STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
 		}
 	}
@@ -132,9 +137,12 @@ void TimeCheck::OnRead()
 			numReplies[msg.nodeID]++;
 			totalSkew[msg.nodeID] += skew;
 			
-//			double skew = totalSkew[msg.nodeID] / numReplies[msg.nodeID];
-//			Log_Trace("Running skew for nodeID %d after %d msgs: %lf\n",
-//				msg.nodeID, numReplies[msg.nodeID], skew);
+			if (verbosity)
+			{
+				double skew = totalSkew[msg.nodeID] / numReplies[msg.nodeID];
+				Log_Trace("Running skew for nodeID %d after %d msgs: %lf\n",
+					msg.nodeID, numReplies[msg.nodeID], skew);
+			}
 		}
 	}
 }
