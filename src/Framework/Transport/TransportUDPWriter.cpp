@@ -24,7 +24,7 @@ bool TransportUDPWriter::Init(Endpoint &endpoint_)
 
 void TransportUDPWriter::Write(ByteString &bs)
 {
-	Log_Trace("sending %.*s to %s", bs.length, bs.buffer, endpoint.ToString());
+//	Log_Trace("sending %.*s to %s", bs.length, bs.buffer, endpoint.ToString());
 
 	socket.SendTo(bs.buffer, bs.length, endpoint);
 }

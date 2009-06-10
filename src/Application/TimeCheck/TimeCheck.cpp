@@ -140,7 +140,7 @@ void TimeCheck::OnRead()
 			if (verbosity)
 			{
 				double skew = totalSkew[msg.nodeID] / numReplies[msg.nodeID];
-				Log_Trace("Running skew for nodeID %d after %d msgs: %lf\n",
+				Log_Trace("Running skew for nodeID %d after %d msgs: %lf",
 					msg.nodeID, numReplies[msg.nodeID], skew);
 			}
 		}
