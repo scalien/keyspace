@@ -148,7 +148,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 
 int KeyspaceClientTest2(int argc, char **argv)
 {
-	char				**nodes;
+	const char			**nodes;
 	int					nodec;
 	int					status;
 	Keyspace::Client	client;
@@ -179,9 +179,9 @@ int KeyspaceClientTest2(int argc, char **argv)
 		return 1;
 	}
 
-	nodes = new char*[nodec];
+	nodes = new const char*[nodec];
 	for (int i = 0; i < nodec; i++)
-		nodes[i] = (char*) Config::GetListValue("paxos.endpoints", i, NULL);
+		nodes[i] = Config::GetListValue("paxos.endpoints", i, NULL);
 	
 	timeout = Config::GetIntValue("paxos.timeout", 10000);
 	testConf.datasetTotal = Config::GetIntValue("dataset.total", 100 * 1000000);
