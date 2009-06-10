@@ -112,12 +112,14 @@ bool ReplicatedKeyspaceDB::Submit()
 	if (!ReplicatedLog::Get()->IsMaster())
 		return false;
 
-	Log_Message("ops.size() = %d", ops.Length());
-	
-	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster())
+	if (!ReplicatedLog::Get()->IsAppending() &&
+		ReplicatedLog::Get()->IsMaster() &&
+		asyncAppender.NumActive() == 0)
+	{
+		Log_Trace("ops.size() = %d", ops.Length());	
 		Append();
-
-	Log_Message("ops.size() = %d", ops.Length());
+		Log_Trace("ops.size() = %d", ops.Length());
+	}
 	
 	return true;
 }
