@@ -155,22 +155,22 @@ int KeyspaceClientTest2(int argc, char **argv)
 	int64_t				timeout;
 	TestConfig			testConf;
 
-	Config::Init("client.conf");
+	if (argc < 6)
+	{
+		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set> <numClients> <keySize> <valueSize>", argv[0]);
+		return 1;
+	}
+
+	testConf.SetType(argv[2]);
+	testConf.numClients = atoi(argv[3]);
+	testConf.keySize = atoi(argv[4]);
+	testConf.valueSize = atoi(argv[5]);
+
+	Config::Init(argv[1]);
 	
 	IgnorePipeSignal();
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(true);
-
-	if (argc < 5)
-	{
-		Log_Message("usage:\n\t%s <get|dirtyget|set> <numClients> <keySize> <valueSize>", argv[0]);
-		return 1;
-	}
-
-	testConf.SetType(argv[1]);
-	testConf.numClients = atoi(argv[2]);
-	testConf.keySize = atoi(argv[3]);
-	testConf.valueSize = atoi(argv[4]);
 
 	nodec = Config::GetListNum("paxos.endpoints");
 	if (nodec <= 0)
