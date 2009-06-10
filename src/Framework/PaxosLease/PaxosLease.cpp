@@ -122,7 +122,8 @@ void PaxosLease::OnLearnLease()
 	Log_Trace();
 	
 	Call(onLearnLeaseCallback);
-	proposer.StopAcquireLease();
+	if (!IsLeaseOwner())
+		proposer.StopAcquireLease();
 }
 
 void PaxosLease::OnLeaseTimeout()
