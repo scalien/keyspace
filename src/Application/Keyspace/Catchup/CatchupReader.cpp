@@ -16,19 +16,19 @@ void CatchupReader::Start(unsigned nodeID, uint64_t paxosID)
 
 	ReplicatedLog::Get()->StopPaxos();
 
-//	bool ret;
+	bool ret;
 	Endpoint endpoint;
-/*	
-	ret = true;
-	ret &= transaction.Begin();
-	ret &= table->Truncate(&transaction);
-	if (!ret)
-		ASSERT_FAIL();
-*/
+
 	// this is a workaround because BDB truncate is way too slow for any
 	// database bigger than 1Gb
 	if (paxosID != 0)
 		RESTART("exiting to truncate database");
+
+	ret = true;
+	ret &= transaction.Begin();
+//	ret &= table->Truncate(&transaction);
+	if (!ret)
+		ASSERT_FAIL();
 
 	endpoint = ReplicatedConfig::Get()->endpoints[nodeID];
 	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);
