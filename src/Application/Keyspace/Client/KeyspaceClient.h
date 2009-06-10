@@ -115,7 +115,7 @@ class Client
 public:
 	~Client();
 	
-	int				Init(int nodec, char* nodev[], uint64_t timeout);
+	int				Init(int nodec, const char* nodev[], uint64_t timeout);
 	
 	// connection state related commands
 	int				GetMaster();

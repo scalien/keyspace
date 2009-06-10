@@ -16,7 +16,7 @@ void CatchupReader::Start(unsigned nodeID, uint64_t paxosID)
 
 	ReplicatedLog::Get()->StopPaxos();
 
-	bool ret;
+//	bool ret;
 	Endpoint endpoint;
 /*	
 	ret = true;

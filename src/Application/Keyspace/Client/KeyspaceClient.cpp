@@ -446,7 +446,7 @@ Client::~Client()
 	IOProcessor::Shutdown();
 }
 
-int Client::Init(int nodec, char* nodev[], uint64_t timeout_)
+int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 {
 	timeout = timeout_;
 	reconnectTimeout = timeout;

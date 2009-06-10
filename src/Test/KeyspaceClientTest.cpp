@@ -209,7 +209,7 @@ int KeyspaceClientTest2(int argc, char **argv)
 
 int KeyspaceClientTest()
 {	
-	char				*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
+	const char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 //	char				*nodes[] = {"127.0.0.1:7080"};
 	DynArray<128>		key;
 	DynArray<1024>		value;
