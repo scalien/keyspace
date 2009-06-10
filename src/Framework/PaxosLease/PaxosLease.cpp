@@ -121,12 +121,16 @@ void PaxosLease::OnNewPaxosRound()
 
 void PaxosLease::OnLearnLease()
 {
+	Log_Trace();
+	
 	proposer.StopAcquireLease();
 	Call(onLearnLeaseCallback);
 }
 
 void PaxosLease::OnLeaseTimeout()
 {
+	Log_Trace();
+	
 	if (acquireLease)
 		proposer.StartAcquireLease();
 	Call(onLeaseTimeoutCallback);

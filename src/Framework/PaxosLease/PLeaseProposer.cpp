@@ -38,6 +38,8 @@ void PLeaseProposer::StartAcquireLease()
 
 void PLeaseProposer::StopAcquireLease()
 {
+	Log_Trace();
+	
 	state.preparing = false;
 	state.proposing = false;
 	EventLoop::Remove(&extendLeaseTimeout);
