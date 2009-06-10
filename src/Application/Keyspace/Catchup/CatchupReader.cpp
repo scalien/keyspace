@@ -2,6 +2,8 @@
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
 
+#define CATCHUP_TRUNCATE	2
+
 void CatchupReader::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 {
 	keyspaceDB = keyspaceDB_;
@@ -10,18 +12,23 @@ void CatchupReader::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 	transaction.Set(table);
 }
 
-void CatchupReader::Start(unsigned nodeID)
+void CatchupReader::Start(unsigned nodeID, uint64_t paxosID)
 {
 	Log_Trace();
 
 	bool ret;
 	Endpoint endpoint;
-	
+/*	
 	ret = true;
 	ret &= transaction.Begin();
 	ret &= table->Truncate(&transaction);
 	if (!ret)
 		ASSERT_FAIL();
+*/
+	// this is a workaround because BDB truncate is way too slow for any
+	// database bigger than 1Gb
+	if (paxosID != 0)
+		STOP_FAIL("exiting to truncate database", CATCHUP_TRUNCATE);
 
 	endpoint = ReplicatedConfig::Get()->endpoints[nodeID];
 	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);

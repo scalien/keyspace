@@ -358,7 +358,7 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 	ReplicatedLog::Get()->StopMasterLease();
 	if (ReplicatedLog::Get()->GetTransaction()->IsActive())
 		ReplicatedLog::Get()->GetTransaction()->Commit();
-	catchupClient.Start(nodeID);
+	catchupClient.Start(nodeID, ReplicatedLog::Get()->GetPaxosID());
 }
 
 void ReplicatedKeyspaceDB::OnCatchupComplete()
