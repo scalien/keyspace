@@ -86,7 +86,9 @@ void ReplicatedLog::InitTransport()
 
 void ReplicatedLog::StopPaxos()
 {
+	EventLoop::Remove(&catchupTimeout);
 	reader->Stop();
+	
 }
 
 void ReplicatedLog::StopMasterLease()
@@ -458,6 +460,7 @@ void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
 {
 	if (paxosID > learner.paxosID)
 	{
+		// I am lagging and need to catch-up
 		if (!catchupTimeout.IsActive())
 			EventLoop::Add(&catchupTimeout);
 			
