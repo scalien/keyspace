@@ -95,13 +95,11 @@ uint64_t PaxosLease::GetLeaseEpoch()
 void PaxosLease::SetOnLearnLease(Callable* onLearnLeaseCallback_)
 {
 	onLearnLeaseCallback = onLearnLeaseCallback_;
-	learner.SetOnLearnLease(onLearnLeaseCallback);
 }
 
 void PaxosLease::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_)
 {
 	onLeaseTimeoutCallback = onLeaseTimeoutCallback_;
-	learner.SetOnLeaseTimeout(onLeaseTimeoutCallback);
 }
 
 void PaxosLease::Stop()
