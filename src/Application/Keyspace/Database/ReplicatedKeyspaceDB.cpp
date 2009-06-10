@@ -263,7 +263,7 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 		FailKeyspaceOps();
 
 	ReplicatedLog::Get()->ContinuePaxos();
-	if (ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
+	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
 		Append();
 }
 
