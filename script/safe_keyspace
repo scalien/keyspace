@@ -9,6 +9,13 @@ safe_keyspace()
 		if [ "$EXITSTATUS" = "0" -o "$EXITSTATUS" = "1" -o "$EXITSTATUS" = "143" ]; then
 			exit 0
 		fi
+		if [ "$EXITSTATUS" = "2" ]; then
+			# delete database files
+			$KEYSPACE_DIR=`dirname $2`
+			rm $KEYSPACE_DIR/__*
+			rm $KEYSPACE_DIR/log*
+			rm $KEYSPACE_DIR/keyspace
+		fi
 	done
 }
 
