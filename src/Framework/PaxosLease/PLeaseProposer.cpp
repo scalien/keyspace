@@ -11,7 +11,7 @@
 
 PLeaseProposer::PLeaseProposer() :
 	onAcquireLeaseTimeout(this, &PLeaseProposer::OnAcquireLeaseTimeout),
-	acquireLeaseTimeout(MAX_LEASE_TIME, &onAcquireLeaseTimeout),
+	acquireLeaseTimeout(ACQUIRELEASE_TIMEOUT, &onAcquireLeaseTimeout),
 	onExtendLeaseTimeout(this, &PLeaseProposer::OnExtendLeaseTimeout),
 	extendLeaseTimeout(&onExtendLeaseTimeout)
 {
@@ -26,7 +26,7 @@ void PLeaseProposer::Init(TransportWriter** writers_)
 	state.Init();
 }
 
-void PLeaseProposer::AcquireLease()
+void PLeaseProposer::StartAcquireLease()
 {
 	Log_Trace();
 	
@@ -34,6 +34,14 @@ void PLeaseProposer::AcquireLease()
 	
 	if (!(state.preparing || state.proposing))
 		StartPreparing();
+}
+
+void PLeaseProposer::StopAcquireLease()
+{
+	state.preparing = false;
+	state.proposing = false;
+	EventLoop::Remove(&extendLeaseTimeout);
+	EventLoop::Remove(&acquireLeaseTimeout);
 }
 
 void PLeaseProposer::OnNewPaxosRound()
@@ -134,7 +142,7 @@ void PLeaseProposer::OnProposeResponse()
 		
 		EventLoop::Remove(&acquireLeaseTimeout);
 		
-		extendLeaseTimeout.Set(Now() + (state.expireTime - Now()) / 4);
+		extendLeaseTimeout.Set(Now() + (state.expireTime - Now()) / 5);
 		EventLoop::Reset(&extendLeaseTimeout);
 	
 		BroadcastMessage();

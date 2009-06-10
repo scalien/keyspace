@@ -21,7 +21,8 @@ public:
 	void					OnNewPaxosRound();
 	void					OnAcquireLeaseTimeout();
 	void					OnExtendLeaseTimeout();
-	void					AcquireLease();
+	void					StartAcquireLease();
+	void					StopAcquireLease();
 
 	uint64_t				highestProposalID;
 

@@ -29,13 +29,20 @@ public:
 	void				Stop();
 	void				Continue();
 	void				OnNewPaxosRound();
+	void				OnLearnLease();
+	void				OnLeaseTimeout();
 	
 private:
 	void				InitTransport();
 	
+	bool				acquireLease;
 	TransportReader*	reader;
 	TransportWriter**	writers;
 	MFunc<PaxosLease>	onRead;
+	MFunc<PaxosLease>	onLearnLease;
+	MFunc<PaxosLease>	onLeaseTimeout;
+	Callable*			onLearnLeaseCallback;
+	Callable*			onLeaseTimeoutCallback;
 	PLeaseMsg			msg;
  	PLeaseProposer		proposer;
 	PLeaseAcceptor		acceptor;

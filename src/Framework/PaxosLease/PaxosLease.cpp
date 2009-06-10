@@ -5,7 +5,9 @@
 #include "Framework/Transport/TransportUDPWriter.h"
 
 PaxosLease::PaxosLease()
-: onRead(this, &PaxosLease::OnRead)
+: onRead(this, &PaxosLease::OnRead),
+  onLearnLease(this, &PaxosLease::OnLearnLease),
+  onLeaseTimeout(this, &PaxosLease::OnLeaseTimeout)
 {
 }
 
@@ -16,6 +18,10 @@ void PaxosLease::Init()
 	proposer.Init(writers);
 	acceptor.Init(writers);
 	learner.Init();
+	learner.SetOnLearnLease(&onLearnLease);
+	learner.SetOnLeaseTimeout(&onLeaseTimeout);
+	
+	acquireLease = false;
 }
 
 void PaxosLease::InitTransport()
@@ -62,7 +68,8 @@ void PaxosLease::OnRead()
 
 void PaxosLease::AcquireLease()
 {
-	proposer.AcquireLease();
+	acquireLease = true;
+	proposer.StartAcquireLease();
 }
 
 bool PaxosLease::IsLeaseOwner()
@@ -85,13 +92,15 @@ uint64_t PaxosLease::GetLeaseEpoch()
 	return learner.LeaseEpoch();
 }
 
-void PaxosLease::SetOnLearnLease(Callable* onLearnLeaseCallback)
+void PaxosLease::SetOnLearnLease(Callable* onLearnLeaseCallback_)
 {
+	onLearnLeaseCallback = onLearnLeaseCallback_;
 	learner.SetOnLearnLease(onLearnLeaseCallback);
 }
 
-void PaxosLease::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback)
+void PaxosLease::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_)
 {
+	onLeaseTimeoutCallback = onLeaseTimeoutCallback_;
 	learner.SetOnLeaseTimeout(onLeaseTimeoutCallback);
 }
 
@@ -108,4 +117,17 @@ void PaxosLease::Continue()
 void PaxosLease::OnNewPaxosRound()
 {
 	proposer.OnNewPaxosRound();
+}
+
+void PaxosLease::OnLearnLease()
+{
+	proposer.StopAcquireLease();
+	Call(onLearnLeaseCallback);
+}
+
+void PaxosLease::OnLeaseTimeout()
+{
+	if (acquireLease)
+		proposer.StartAcquireLease();
+	Call(onLeaseTimeoutCallback);
 }

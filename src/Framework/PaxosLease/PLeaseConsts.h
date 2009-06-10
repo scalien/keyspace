@@ -3,6 +3,7 @@
 
 #include "System/Common.h"
 
+#define ACQUIRELEASE_TIMEOUT	1000	// msec
 #define MAX_LEASE_TIME			5000	// msec
 #define	MAX_CLOCK_SKEW			2000	// msec
 
