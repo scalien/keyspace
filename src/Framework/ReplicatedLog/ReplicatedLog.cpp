@@ -30,8 +30,6 @@ bool ReplicatedLog::Init()
 {
 	Log_Trace();
 	
-	ByteString	nop(MSG_NOP);
-	
 	replicatedDB = NULL;
 	
 	InitTransport();
