@@ -16,6 +16,8 @@ void CatchupReader::Start(unsigned nodeID, uint64_t paxosID)
 {
 	Log_Trace();
 
+	ReplicatedLog::Get()->StopPaxos();
+
 	bool ret;
 	Endpoint endpoint;
 /*	
@@ -54,6 +56,8 @@ void CatchupReader::OnClose()
 	keyspaceDB->OnCatchupFailed();
 	
 	Close();
+	
+	ReplicatedLog::Get()->ContinuePaxos();
 }
 
 void CatchupReader::OnConnect()
@@ -102,4 +106,6 @@ void CatchupReader::OnCommit()
 	keyspaceDB->OnCatchupComplete();
 	
 	Close();
+	
+	ReplicatedLog::Get()->ContinuePaxos();
 }
