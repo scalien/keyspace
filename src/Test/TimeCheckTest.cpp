@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 		STOP_FAIL("Cannot initialize paxos!", 1);
 
 	TimeCheck tc;
-	tc.Init();
+	tc.Init(true, false);
 	
 	EventLoop::Run();
 }
