@@ -19,6 +19,8 @@
 
 #define STOP_FAIL(msg, code) { Log_Message(msg); _exit(code); }
 
+#define RESTART(msg) { Log_Message(msg); _exit(2); }
+
 #define CS_INT_SIZE(int_type) ((size_t)(0.30103 * sizeof(int_type) * 8) + 2 + 1)
 
 inline int min(int a, int b) { if (a < b) return a; else return b; }

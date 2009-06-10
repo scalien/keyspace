@@ -833,7 +833,7 @@ void Client::DeleteCommands(CommandList& commands)
 {
 	Command**	it;
 	
-	while (it = commands.Head())
+	while ((it = commands.Head()) != NULL)
 	{
 		delete *it;
 		commands.Remove(it);
