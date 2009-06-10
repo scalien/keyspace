@@ -151,7 +151,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 {
 	Log_Trace();
 	
-	if (mdbop.active)
+	if (mdbop.IsActive())
 		return;
 	
 	msg = msg_;
@@ -187,7 +187,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 {
 	Log_Trace();
 	
-	if (mdbop.active)
+	if (mdbop.IsActive())
 		return;
 	
 	msg = msg_;

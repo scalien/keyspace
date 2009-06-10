@@ -17,6 +17,7 @@ public:
 	
 	void					Init(TransportWriter** writer_);
 	bool					Persist(Transaction* transaction);
+	bool					IsWriting() { return mdbop.IsActive(); }
 	
 protected:
 	bool					WriteState();

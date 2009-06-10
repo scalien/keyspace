@@ -459,10 +459,13 @@ void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
 	if (paxosID > learner.paxosID)
 	{
 		// I am lagging and need to catch-up
-		if (!catchupTimeout.IsActive())
-			EventLoop::Add(&catchupTimeout);
-			
-		learner.RequestChosen(nodeID);
+		
+		if (!acceptor.IsWriting())
+		{
+			if (!catchupTimeout.IsActive())
+				EventLoop::Add(&catchupTimeout);
+			learner.RequestChosen(nodeID);
+		}
 	}
 }
 

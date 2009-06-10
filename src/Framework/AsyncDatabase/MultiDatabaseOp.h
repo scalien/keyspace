@@ -9,6 +9,7 @@ class TableVisitor;
 class Transaction;
 class ByteString;
 class ThreadPool;
+class AsyncDatabase;
 
 class DatabaseOp
 {
@@ -29,6 +30,7 @@ public:
 
 class MultiDatabaseOp
 {
+friend class AsyncDatabase;
 public:
 	MultiDatabaseOp();
 	
@@ -49,10 +51,10 @@ public:
 	ByteString*				GetValue(int i);
 	bool					GetReturnValue(int i);
 	int						GetNumOp();
-
-	bool					active;
+	bool					IsActive() { return active; }
 	
 private:
+	bool					active;
 	DatabaseOp				ops[1024];
 	size_t					numop;
 	
