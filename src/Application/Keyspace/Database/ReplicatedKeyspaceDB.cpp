@@ -102,7 +102,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	ops.Append(op);
 
 	// hack for testing
-	Submit();
+	// Submit();
 	// hack for testing
 	
 	return true;

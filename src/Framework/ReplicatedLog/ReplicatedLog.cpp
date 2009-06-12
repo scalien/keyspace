@@ -455,7 +455,8 @@ void ReplicatedLog::OnLeaseTimeout()
 
 bool ReplicatedLog::IsAppending()
 {
-	return IsMaster() && proposer.state.numProposals > 0;
+	return proposer.IsActive();
+//	return IsMaster() && proposer.state.numProposals > 0;
 }
 
 Transaction* ReplicatedLog::GetTransaction()
