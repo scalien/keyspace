@@ -47,7 +47,7 @@ private:
 class ClientConn : public MessageConn<>
 {
 public:
-	ClientConn(Client &client, int nodeID, const Endpoint &endpoint_);
+	ClientConn(Client &client, int nodeID, const Endpoint &endpoint_, uint64_t timeout);
 
 	// MessageConn interface
 	virtual void	OnMessageRead(const ByteString& msg);
@@ -56,6 +56,7 @@ public:
 	virtual void	OnConnect();
 	virtual void	OnConnectTimeout();
 
+	void			OnReadTimeout();
 	Endpoint&		GetEndpoint();
 	void			Send(Command &cmd);
 	bool			ReadMessage(ByteString &msg);
@@ -72,6 +73,9 @@ private:
 	int				nodeID;
 	uint64_t		disconnectTime;
 	uint64_t		getMasterTime;
+	uint64_t		timeout;
+	MFunc<ClientConn> onReadTimeout;
+	CdownTimer		readTimeout;
 };
 
 typedef List<Response*> ResponseList;

@@ -252,14 +252,17 @@ void Result::AppendResponse(Response* resp_)
 // ClientConn
 //
 //===================================================================
-ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_) :
+ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_, uint64_t timeout_) :
 client(client),
-endpoint(endpoint_)
+endpoint(endpoint_),
+onReadTimeout(this, &ClientConn::OnReadTimeout),
+readTimeout(&onReadTimeout)
 {
 	nodeID = nodeID_;
 	disconnectTime = 0;
 	getMasterTime = 0;
 	getMasterPending = false;
+	timeout = timeout_;
 }
 
 void ClientConn::Send(Command &cmd)
@@ -276,6 +279,9 @@ void ClientConn::Send(Command &cmd)
 	{
 		Write(cmd.msg.buffer, cmd.msg.length);
 	}
+
+	if (!readTimeout.IsActive())
+		EventLoop::Add(&readTimeout);
 }
 
 bool ClientConn::ProcessResponse(Response* resp)
@@ -380,6 +386,8 @@ void ClientConn::OnMessageRead(const ByteString& msg)
 {
 	Response	*resp;
 	
+	EventLoop::Reset(&readTimeout);
+	
 	resp = new Response;
 	if (resp->Read(msg))
 	{
@@ -415,6 +423,12 @@ void ClientConn::OnConnect()
 
 void ClientConn::OnConnectTimeout()
 {
+	OnClose();
+}
+
+void ClientConn::OnReadTimeout()
+{
+	EventLoop::Remove(&readTimeout);
 	OnClose();
 }
 
@@ -459,7 +473,7 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 		Endpoint endpoint;
 		
 		endpoint.Set(nodev[i]);
-		conns[i] = new ClientConn(*this, i, endpoint);
+		conns[i] = new ClientConn(*this, i, endpoint, timeout);
 	}
 	numConns = nodec;
 	master = -1;

@@ -68,12 +68,12 @@ public:
 		delay = 0;
 	}
 	
-	CdownTimer(long delay_, Callable* callable_) : Timer(callable_)
+	CdownTimer(uint64_t delay_, Callable* callable_) : Timer(callable_)
 	{
 		delay = delay_;
 	}
 		
-	void SetDelay(unsigned delay_)
+	void SetDelay(uint64_t delay_)
 	{
 		delay = delay_;
 	}
@@ -84,7 +84,7 @@ public:
 	}
 	
 private:
-	unsigned delay;
+	uint64_t delay;
 };
 
 inline bool LessThan(Timer* a, Timer* b)

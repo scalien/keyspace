@@ -11,7 +11,7 @@ database.type = hash # or btree
 database.checkpointSize = 100000
 database.checkpointInterval = 60
 database.pageSize = 4096
-database.cacheSize = 4096K
+database.cacheSize = 200M
 database.logBufferSize = 1024K
 
 asyncDatabase.numReader = 6
