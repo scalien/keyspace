@@ -39,6 +39,8 @@ public:
 	void						StopMasterLease();
 	void						ContinuePaxos();
 	void						ContinueMasterLease();
+	bool						IsPaxosActive();
+	bool						IsMasterLeaseActive();
 	bool						IsAppending();
 	bool						IsSafeDB();
 	void						OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID);

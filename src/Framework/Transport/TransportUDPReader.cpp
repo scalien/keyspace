@@ -46,6 +46,11 @@ void TransportUDPReader::Continue()
 	IOProcessor::Add(&udpread);
 }
 
+bool TransportUDPReader::IsActive()
+{
+	return udpread.active;
+}
+
 void TransportUDPReader::OnRead()
 {
 //	Log_Trace("received %.*s from: %s", udpread.data.length, udpread.data.buffer,

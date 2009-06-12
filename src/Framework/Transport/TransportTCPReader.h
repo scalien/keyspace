@@ -35,6 +35,7 @@ public:
 	void				GetMessage(ByteString& bs_);
 	void				Stop();
 	void				Continue();
+	bool				IsActive();
 	void				OnConnect();
 	void				OnConnectionClose(TransportTCPConn* conn);
 

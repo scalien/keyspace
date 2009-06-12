@@ -28,6 +28,7 @@ public:
 	void				SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback);
 	void				Stop();
 	void				Continue();
+	bool				IsActive();
 	void				OnNewPaxosRound();
 	void				OnLearnLease();
 	void				OnLeaseTimeout();

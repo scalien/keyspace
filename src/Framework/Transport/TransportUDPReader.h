@@ -16,6 +16,7 @@ public:
 	void								GetMessage(ByteString& bs_);
 	void								Stop();
 	void								Continue();
+	bool								IsActive();
 	void								OnRead();
 	
 private:

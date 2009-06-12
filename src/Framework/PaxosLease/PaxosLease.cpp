@@ -112,6 +112,11 @@ void PaxosLease::Continue()
 	reader->Continue();
 }
 
+bool PaxosLease::IsActive()
+{
+	return reader->IsActive();
+}
+
 void PaxosLease::OnNewPaxosRound()
 {
 	proposer.OnNewPaxosRound();

@@ -57,6 +57,11 @@ void TransportTCPReader::Stop()
 		(*it)->Stop();
 }
 
+bool TransportTCPReader::IsActive()
+{
+	return tcpread.active;
+}
+
 void TransportTCPReader::Continue()
 {
 	Log_Trace();

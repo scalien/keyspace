@@ -16,6 +16,7 @@ public:
 	virtual void	GetMessage(ByteString& bs) = 0;
 	virtual void	Stop() = 0;
 	virtual void	Continue() = 0;
+	virtual bool	IsActive() = 0;
 };
 
 #endif
