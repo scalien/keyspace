@@ -164,7 +164,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		}
 	}
 
-	Log_Trace("Sending Submit()");
+	Log_Message("Sending Submit()");
 
 	sw.Reset();
 	sw.Start();
@@ -197,12 +197,6 @@ int KeyspaceClientTest2(int argc, char **argv)
 		return 1;
 	}
 	
-	Log_SetMaxLine(128);
-	Log_Errno();
-	char d[2048];
-	memset(d, '$', sizeof(d));
-	Log_Trace("%.*s", sizeof(d), d);
-
 	testConf.SetType(argv[2]);
 	testConf.numClients = atoi(argv[3]);
 	testConf.keySize = atoi(argv[4]);

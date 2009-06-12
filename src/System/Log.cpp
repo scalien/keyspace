@@ -147,11 +147,11 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 		
 		// print filename, number of line and function name
 		ret = snprintf(p, remaining, "%s:%d:%s()", file, line, func);
-		if (ret < 0)
-			ret = remaining + 1;
+		if (ret < 0 || ret > remaining)
+			ret = remaining;
 
-		p += ret;
-		remaining -= ret;
+		p += ret - 1;
+		remaining -= ret - 1;
 
 		if (fmt[0] != '\0' || type == LOG_TYPE_ERRNO)
 			Log_Append(p, remaining, ": ", 2);
