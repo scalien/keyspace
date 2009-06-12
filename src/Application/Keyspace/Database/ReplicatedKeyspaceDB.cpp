@@ -110,7 +110,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 
 bool ReplicatedKeyspaceDB::Submit()
 {
-	Log_Trace();
+//	Log_Trace();
 	
 	// only handle writes if I'm the master
 	if (!ReplicatedLog::Get()->IsMaster())
