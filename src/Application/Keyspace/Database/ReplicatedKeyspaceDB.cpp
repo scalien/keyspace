@@ -100,6 +100,10 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 		return false;
 	
 	ops.Append(op);
+
+	// hack for testing
+	Submit();
+	// hack for testing
 	
 	return true;
 }
@@ -203,10 +207,13 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 	unsigned	nread;
 	
 	ret = true;
-	if (msg.type == KEYSPACE_SET)
-		ret &= table->Set(transaction, msg.key, msg.value);
-	else if (msg.type == KEYSPACE_TEST_AND_SET)
+	switch (msg.type)
 	{
+	case KEYSPACE_SET:
+		ret &= table->Set(transaction, msg.key, msg.value);
+		break;
+
+	case KEYSPACE_TEST_AND_SET:
 		ret &= table->Get(transaction, msg.key, data);
 		if (data == msg.test)
 		{
@@ -214,30 +221,34 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 			if (ret)
 				data.Set(msg.value);
 		}
-	}
-	else if (msg.type == KEYSPACE_ADD)
-	{
+		break;
+
+	case KEYSPACE_ADD:
 		ret &= table->Get(transaction, msg.key, data); // read number
-		
-		if (ret)
+		if (!ret)
+			break;
+		num = strntoint64(data.buffer, data.length, &nread); // parse number
+		if (nread == (unsigned) data.length)
 		{
-			num = strntoint64(data.buffer, data.length, &nread); // parse number
-			if (nread == (unsigned) data.length)
-			{
-				num = num + msg.num;
-				data.length = snwritef(data.buffer, data.size, "%I", num); // print number
-				ret &= table->Set(transaction, msg.key, data); // write number
-			}
-			else
-				ret = false;
+			num = num + msg.num;
+			data.length = snwritef(data.buffer, data.size, "%I", num); // print number
+			ret &= table->Set(transaction, msg.key, data); // write number
 		}
-	}
-	else if (msg.type == KEYSPACE_DELETE)
+		else
+			ret = false;
+		break;
+
+	case KEYSPACE_DELETE:
 		ret &= table->Delete(transaction, msg.key);
-	else if (msg.type == KEYSPACE_PRUNE)
+		break;
+
+	case KEYSPACE_PRUNE:
 		ret &= table->Prune(transaction, msg.prefix);
-	else
+		break;
+
+	default:
 		ASSERT_FAIL();
+	}
 	
 	return ret;
 }
