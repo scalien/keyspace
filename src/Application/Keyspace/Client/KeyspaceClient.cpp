@@ -254,9 +254,9 @@ void Result::AppendResponse(Response* resp_)
 //===================================================================
 ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_, uint64_t timeout_) :
 client(client),
-endpoint(endpoint_),
-onReadTimeout(this, &ClientConn::OnReadTimeout),
-readTimeout(&onReadTimeout)
+endpoint(endpoint_)
+//onReadTimeout(this, &ClientConn::OnReadTimeout),
+//readTimeout(&onReadTimeout)
 {
 	nodeID = nodeID_;
 	disconnectTime = 0;
@@ -280,8 +280,8 @@ void ClientConn::Send(Command &cmd)
 		Write(cmd.msg.buffer, cmd.msg.length);
 	}
 
-	if (!readTimeout.IsActive())
-		EventLoop::Add(&readTimeout);
+//	if (!readTimeout.IsActive())
+//		EventLoop::Add(&readTimeout);
 }
 
 bool ClientConn::ProcessResponse(Response* resp)
@@ -386,7 +386,7 @@ void ClientConn::OnMessageRead(const ByteString& msg)
 {
 	Response	*resp;
 	
-	EventLoop::Reset(&readTimeout);
+//	EventLoop::Reset(&readTimeout);
 	
 	resp = new Response;
 	if (resp->Read(msg))
@@ -428,7 +428,7 @@ void ClientConn::OnConnectTimeout()
 
 void ClientConn::OnReadTimeout()
 {
-	EventLoop::Remove(&readTimeout);
+//	EventLoop::Remove(&readTimeout);
 	OnClose();
 }
 

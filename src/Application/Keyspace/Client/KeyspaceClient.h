@@ -74,8 +74,8 @@ private:
 	uint64_t		disconnectTime;
 	uint64_t		getMasterTime;
 	uint64_t		timeout;
-	MFunc<ClientConn> onReadTimeout;
-	CdownTimer		readTimeout;
+//	MFunc<ClientConn> onReadTimeout;
+//	CdownTimer		readTimeout;
 };
 
 typedef List<Response*> ResponseList;
