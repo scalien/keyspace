@@ -162,7 +162,7 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 		// _GNU_SOURCE is unconditionally defined so always the GNU style
 		// sterror_r() is used, which is broken
 #ifdef _GNU_SOURCE
-		char* err = strerror_r(errno, p, remaining);
+		char* err = strerror_r(errno, p, remaining - 1);
 		if (err)
 		{
 				ret = strlen(err);
@@ -175,13 +175,14 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 		else
 				ret = -1;
 #else
-		ret = strerror_r(errno, p, remaining);
+		ret = strerror_r(errno, p, remaining - 1);
 #endif
 		if (ret < 0)
 			ret = remaining;
 
 		p += ret;
 		remaining -= ret;
+		Log_Append(p, remaining, "\n", 2);
 	}
 	else
 	{
@@ -189,7 +190,7 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 			Log_Append(p, remaining, ": ", 2);
 
 		va_start(ap, fmt);
-		ret = vsnprintf(p, remaining, fmt, ap);
+		ret = vsnprintf(p, remaining - 1, fmt, ap);
 		va_end(ap);
 		if (ret < 0)
 		{
