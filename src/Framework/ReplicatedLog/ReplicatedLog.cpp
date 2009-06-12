@@ -84,6 +84,8 @@ void ReplicatedLog::InitTransport()
 
 void ReplicatedLog::StopPaxos()
 {
+	Log_Trace();
+	
 	EventLoop::Remove(&catchupTimeout);
 	reader->Stop();
 }
@@ -95,6 +97,8 @@ void ReplicatedLog::StopMasterLease()
 
 void ReplicatedLog::ContinuePaxos()
 {
+	Log_Trace();
+	
 	reader->Continue();
 }
 

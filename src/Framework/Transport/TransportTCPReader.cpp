@@ -15,9 +15,10 @@ void TransportTCPConn::OnClose()
 {
 	Log_Trace();
 	
-	reader->OnConnectionClose(this);
+	Close();
 	
-	socket.Close();
+	reader->OnConnectionClose(this);
+
 	delete this;
 }
 

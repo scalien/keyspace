@@ -13,9 +13,9 @@ public:
 	virtual void	OnClose() = 0;
 	virtual void	OnRead();
 	
-	virtual void	Stop() { running = false; }
+	virtual void	Stop() { Log_Trace(); running = false; }
 	
-	virtual void	Continue() { running = true; OnRead(); }
+	virtual void	Continue() { Log_Trace(); running = true; OnRead(); }
 
 private:
 	bool			running;
