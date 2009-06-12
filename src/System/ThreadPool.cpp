@@ -21,7 +21,7 @@ void ThreadPool::ThreadFunction()
 		numActive--;
 		
 	wait:
-		while (numCallable == 0 && running)
+		while (numPending == 0 && running)
 			pthread_cond_wait(&cond, &mutex);
 		
 		if (!running)
@@ -36,7 +36,7 @@ void ThreadPool::ThreadFunction()
 		
 		callable = *it;
 		callables.Remove(it);
-		numCallable--;
+		numPending--;
 		numActive++;
 		
 		pthread_mutex_unlock(&mutex);
@@ -49,7 +49,7 @@ void ThreadPool::ThreadFunction()
 ThreadPool::ThreadPool(int numThread) :
 numThread(numThread)
 {
-	numCallable = 0;
+	numPending = 0;
 	numActive = 0;
 	running = false;
 	
@@ -106,7 +106,7 @@ void ThreadPool::Execute(Callable* callable)
 	pthread_mutex_lock(&mutex);
 	
 	callables.Append(callable);
-	numCallable++;
+	numPending++;
 	
 	pthread_cond_signal(&cond);
 	
