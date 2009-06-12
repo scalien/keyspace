@@ -150,8 +150,8 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 		if (ret < 0 || ret > remaining)
 			ret = remaining;
 
-		p += ret - 1;
-		remaining -= ret - 1;
+		p += ret;
+		remaining -= ret;
 
 		if (fmt[0] != '\0' || type == LOG_TYPE_ERRNO)
 			Log_Append(p, remaining, ": ", 2);
