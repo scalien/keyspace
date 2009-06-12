@@ -146,7 +146,7 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 			file = sep + 1;
 		
 		// print filename, number of line and function name
-		ret = snprintf(p, remaining, "%s:%d:%s()", file, line, func);
+		ret = snprintf(p, remaining + 1, "%s:%d:%s()", file, line, func);
 		if (ret < 0 || ret > remaining)
 			ret = remaining;
 
@@ -190,13 +190,13 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 	else
 	{
 		va_start(ap, fmt);
-		ret = vsnprintf(p, remaining, fmt, ap);
+		ret = vsnprintf(p, remaining + 1, fmt, ap);
 		va_end(ap);
 		if (ret < 0 || ret > remaining)
 			ret = remaining;
 
-		p += ret - 1;
-		remaining -= ret - 1;
+		p += ret;
+		remaining -= ret;
 	}
 
 	Log_Append(p, remaining, "\n", 2);
