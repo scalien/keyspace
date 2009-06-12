@@ -1,7 +1,7 @@
 alias up='svn up; make clean debug clienttest'
 alias ntpsync='ntpdate-debian'
 apt-get update
-apt-get -y install subversion libdb4.6++-dev db4.6-util joe telnet unzip gdb ntpdate less
+apt-get -y install subversion libdb4.6++-dev db4.6-util joe telnet unzip gdb ntpdate less valgrind
 svn checkout http://svn.scalien.com/keyspace/trunk keyspace
 cd keyspace
 up

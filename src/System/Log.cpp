@@ -95,7 +95,7 @@ static void Log_Append(char*& p, int& remaining, const char* s, int len)
 	remaining -= len;
 }
 
-static void Log_Sync(const char* buf, int /*size*/)
+static void Log_Flush(const char* buf, int /*size*/)
 {
 	if ((target & LOG_TARGET_STDOUT) == LOG_TARGET_STDOUT)
 	{
@@ -138,25 +138,29 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 		remaining -= sizeof(log_timestamp_t) - 1;
 		Log_Append(p, remaining, ": ", 2);
 	}
-	
 
-//#ifdef LOG_ONLY_FILENAMES	
-	sep = strrchr(file, '/');
-	if (sep)
-		file = sep + 1;
-//#endif
-	
-	// print filename, number of line and function name
-	ret = snprintf(p, remaining, "%s:%d:%s()", file, line, func);
-	if (ret < 0)
-		ret = remaining + 1;
+	if (file && func)
+	{
+		sep = strrchr(file, '/');
+		if (sep)
+			file = sep + 1;
+		
+		// print filename, number of line and function name
+		ret = snprintf(p, remaining, "%s:%d:%s()", file, line, func);
+		if (ret < 0)
+			ret = remaining + 1;
 
-	p += ret;
-	remaining -= ret;
+		p += ret;
+		remaining -= ret;
+
+		if (fmt[0] != '\0')
+			Log_Append(p, remaining, ": ", 2);
+	}
 	
 	// in case of error print the errno message otherwise print our message
 	if (type == LOG_TYPE_ERRNO)
 	{
+
 		// This is a workaround for g++ on Debian Lenny
 		// see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=485135
 		// _GNU_SOURCE is unconditionally defined so always the GNU style
@@ -182,27 +186,19 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 
 		p += ret;
 		remaining -= ret;
-		Log_Append(p, remaining, "\n", 2);
 	}
 	else
 	{
-		if (fmt[0] != '\0')
-			Log_Append(p, remaining, ": ", 2);
-
 		va_start(ap, fmt);
-		ret = vsnprintf(p, remaining - 1, fmt, ap);
+		ret = vsnprintf(p, remaining, fmt, ap);
 		va_end(ap);
-		if (ret < 0)
-		{
-			buf[maxLine - 1] = 0;
+		if (ret < 0 || ret > remaining)
 			ret = remaining;
-		}
 
-		p += ret;
-		remaining -= ret;
-		
-		Log_Append(p, remaining, "\n", 2);
+		p += ret - 1;
+		remaining -= ret - 1;
 	}
 
-	Log_Sync(buf, maxLine - remaining);
+	Log_Append(p, remaining, "\n", 2);
+	Log_Flush(buf, maxLine - remaining);
 }

@@ -196,6 +196,11 @@ int KeyspaceClientTest2(int argc, char **argv)
 		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set|rndset> <numClients> <keySize> <valueSize>", argv[0]);
 		return 1;
 	}
+	
+	Log_SetMaxLine(128);
+	char d[2048];
+	memset(d, '$', sizeof(d));
+	Log_Trace("%.*s", sizeof(d), d);
 
 	testConf.SetType(argv[2]);
 	testConf.numClients = atoi(argv[3]);
