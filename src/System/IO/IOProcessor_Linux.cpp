@@ -26,6 +26,7 @@ public:
 	{
 		type = PIPEOP;
 		pipe[0] = pipe[1] = -1;
+		callback = NULL;
 	}
 	
 	~PipeOp()

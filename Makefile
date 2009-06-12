@@ -98,7 +98,7 @@ release:
 	$(MAKE) targets BUILD="release"
 
 clienttest:
-	$(MAKE) test_targets BUILD="release"
+	$(MAKE) test_targets BUILD="debug"
 
 clientlib:
 	$(MAKE) clientlib_targets BUILD="release"

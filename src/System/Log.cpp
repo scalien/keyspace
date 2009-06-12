@@ -153,7 +153,7 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 		p += ret;
 		remaining -= ret;
 
-		if (fmt[0] != '\0')
+		if (fmt[0] != '\0' || type == LOG_TYPE_ERRNO)
 			Log_Append(p, remaining, ": ", 2);
 	}
 	

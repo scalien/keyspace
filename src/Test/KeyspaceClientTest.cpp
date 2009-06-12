@@ -198,6 +198,7 @@ int KeyspaceClientTest2(int argc, char **argv)
 	}
 	
 	Log_SetMaxLine(128);
+	Log_Errno();
 	char d[2048];
 	memset(d, '$', sizeof(d));
 	Log_Trace("%.*s", sizeof(d), d);
