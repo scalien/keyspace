@@ -1,1 +1,1 @@
-wget http://svn.scalien.com/keyspace/trunk/test/aws.sh; chmod +x aws.sh; . aws.sh; rm aws.sh
+wget http://svn.scalien.com/keyspace/trunk/test/aws.sh; chmod +x aws.sh; . aws.sh

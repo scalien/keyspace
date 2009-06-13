@@ -123,7 +123,7 @@ void GenRandomString(ByteString& bs, size_t length)
 
 	assert(bs.size >= length);
 
-	for (i = 0; i < length - 1; i++) {
+	for (i = 0; i < length; i++) {
 			// more about why these numbers were chosen:
 			// http://en.wikipedia.org/wiki/Linear_congruential_generator
 			d = (d * 1103515245UL + 12345UL) >> 16;
