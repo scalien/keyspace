@@ -28,7 +28,7 @@ bool ReplicatedKeyspaceDB::Init()
 	catchupClient.Init(this, table);
 
 	asyncAppender.Start();
-
+	asyncAppenderActive = false;
 	return true;
 }
 
@@ -118,7 +118,7 @@ bool ReplicatedKeyspaceDB::Submit()
 
 	if (!ReplicatedLog::Get()->IsAppending() &&
 		ReplicatedLog::Get()->IsMaster() &&
-		asyncAppender.NumTotal() == 0)
+		!asyncAppenderActive)
 	{
 		Log_Trace("ops.size() = %d", ops.Length());	
 		Append();
@@ -137,9 +137,10 @@ uint64_t /*paxosID*/, ByteString value_, bool ownAppend_)
 	valueBuffer.Set(value_);
 	ownAppend = ownAppend_;
 	
-	assert(asyncAppender.NumTotal() == 0);
-	
 	ReplicatedLog::Get()->StopPaxos();
+
+	assert(asyncAppenderActive == false);
+	asyncAppenderActive = true;
 	asyncAppender.Execute(&asyncOnAppend);
 }
 
@@ -271,6 +272,8 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 			op->service->OnComplete(op);
 		}
 	}
+
+	asyncAppenderActive = false;
 	
 	if (!ReplicatedLog::Get()->IsMaster())
 		FailKeyspaceOps();
@@ -356,7 +359,7 @@ void ReplicatedKeyspaceDB::OnMasterLeaseExpired()
 
 	Log_Message("ops.size() = %d", ops.Length());
 	
-	if (!ReplicatedLog::Get()->IsMaster() && asyncAppender.NumTotal() == 0)
+	if (!ReplicatedLog::Get()->IsMaster() && !asyncAppenderActive)
 		FailKeyspaceOps();
 		
 	Log_Message("ops.size() = %d", ops.Length());

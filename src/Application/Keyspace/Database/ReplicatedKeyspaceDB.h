@@ -45,6 +45,7 @@ private:
 	void					Append();
 	void					FailKeyspaceOps();
 	
+	bool					asyncAppenderActive;
 	bool					catchingUp;
 	List<KeyspaceOp*>		ops;
 	Table*					table;
