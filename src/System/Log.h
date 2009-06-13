@@ -11,9 +11,15 @@
 #define LOG_TARGET_FILE		4
 #define LOG_TARGET_SYSLOG	8
 
+#ifdef NO_LOGGING
+#define Log_Errno()
+#define Log_Message(...)
+#define Log_Trace(...)
+#else
 #define Log_Errno() Log(__FILE__, __LINE__, __func__, LOG_TYPE_ERRNO, "")
 #define Log_Message(...) Log(__FILE__, __LINE__, __func__, LOG_TYPE_MSG, __VA_ARGS__)
 #define Log_Trace(...) Log(__FILE__, __LINE__, __func__, LOG_TYPE_TRACE, "" __VA_ARGS__)
+#endif
 
 #ifdef GCC
 #define ATTRIBUTE_FORMAT_PRINTF(fmt, ellipsis) __attribute__ ((format (printf, fmt, ellipsis)));

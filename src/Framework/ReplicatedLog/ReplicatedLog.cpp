@@ -304,7 +304,7 @@ void ReplicatedLog::OnLearnChosen()
 			return;
 		}
 
-		Log_Message("%d %d %" PRIu64 " %" PRIu64 "", rmsg.nodeID, GetNodeID(), rmsg.restartCounter,
+		Log_Trace("%d %d %" PRIu64 " %" PRIu64 "", rmsg.nodeID, GetNodeID(), rmsg.restartCounter,
 			ReplicatedConfig::Get()->restartCounter);
 		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter)
 			logQueue.Pop(); // we just appended this
