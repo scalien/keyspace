@@ -76,7 +76,7 @@ void ReplicatedLog::InitTransport()
 #else
 		writers[i] = new TransportUDPWriter;
 #endif
-		Log_Message("Connecting to %s", endpoint.ToString());
+		Log_Trace("Connecting to %s", endpoint.ToString());
 		if (!writers[i]->Init(endpoint))
 			STOP_FAIL("cannot bind PaxosLease port", 1);
 	}
@@ -313,12 +313,12 @@ void ReplicatedLog::OnLearnChosen()
 			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && masterLease.IsLeaseOwner())
 		{
 			proposer.state.leader = true;
-			Log_Message("Multi paxos enabled");
+			Log_Trace("Multi paxos enabled");
 		}
 		else
 		{
 			proposer.state.leader = false;
-			Log_Message("Multi paxos disabled");
+			Log_Trace("Multi paxos disabled");
 		}
 		
 		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter)
@@ -337,7 +337,7 @@ void ReplicatedLog::OnLearnChosen()
 		{
 			if (!acceptor.transaction.IsActive())
 			{
-				Log_Message("starting new transaction");
+				Log_Trace("starting new transaction");
 				acceptor.transaction.Begin();
 			}
 			replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value,
@@ -437,7 +437,7 @@ void ReplicatedLog::OnLearnLease()
 	{
 		ByteString	nop(MSG_NOP);
 		
-		Log_Message("appending NOP to assure safeDB");
+		Log_Trace("appending NOP to assure safeDB");
 		Append(nop);
 	}
 }

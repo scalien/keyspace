@@ -158,7 +158,7 @@ void KeyspaceConn::ProcessMsg()
 	{
 		kdb->Submit();
 		
-		Log_Message("numpending: %d", numpending);
+		Log_Trace("numpending: %d", numpending);
 		
 		return;
 	}
@@ -188,9 +188,7 @@ void KeyspaceConn::ProcessMsg()
 
 void KeyspaceConn::OnClose()
 {
-	Log_Trace();
-	
-	Log_Message("numpending: %d", numpending);
+	Log_Trace("numpending: %d", numpending);
 	
 //	if (connectionTimeout.IsActive())
 //		EventLoop::Remove(&connectionTimeout);
@@ -214,9 +212,7 @@ void KeyspaceConn::OnWrite()
 
 void KeyspaceConn::OnConnectionTimeout()
 {
-	Log_Trace();
-
-	Log_Message("numpending: %d", numpending);
+	Log_Trace("numpending: %d", numpending);
 	
 	OnClose();
 }

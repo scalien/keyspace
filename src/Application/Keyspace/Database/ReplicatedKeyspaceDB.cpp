@@ -187,16 +187,15 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 		}
 		else
 		{
-			Log_Message("Failed parsing:");
-			Log_Message("%.*s", value.length, value.buffer);
+			Log_Trace("Failed parsing:");
+			Log_Trace("%.*s", value.length, value.buffer);
 			ASSERT_FAIL();
 			break;
 		}
 	}
 	
-	Log_Message("time spent in Execute(): %ld", sw.elapsed);
-
-	Log_Message("numOps = %u", numOps);
+	Log_Trace("time spent in Execute(): %ld", sw.elapsed);
+	Log_Trace("numOps = %u", numOps);
 	
 	IOProcessor::Complete(&onAppendComplete);
 }
@@ -321,7 +320,7 @@ void ReplicatedKeyspaceDB::Append()
 	if (pvalue.length > 0)
 	{
 		ReplicatedLog::Get()->Append(pvalue);
-		Log_Message("appending %d ops (length: %d)", numAppended, pvalue.length);
+		Log_Trace("appending %d ops (length: %d)", numAppended, pvalue.length);
 	}
 }
 
@@ -345,24 +344,22 @@ void ReplicatedKeyspaceDB::FailKeyspaceOps()
 
 void ReplicatedKeyspaceDB::OnMasterLease(unsigned)
 {
-	Log_Message("ops.size() = %d", ops.Length());
+	Log_Trace("ops.size() = %d", ops.Length());
 
 	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
 		Append();
 
-	Log_Message("ops.size() = %d", ops.Length());
+	Log_Trace("ops.size() = %d", ops.Length());
 }
 
 void ReplicatedKeyspaceDB::OnMasterLeaseExpired()
 {
-	Log_Trace();
-
-	Log_Message("ops.size() = %d", ops.Length());
+	Log_Trace("ops.size() = %d", ops.Length());
 	
 	if (!ReplicatedLog::Get()->IsMaster() && !asyncAppenderActive)
 		FailKeyspaceOps();
 		
-	Log_Message("ops.size() = %d", ops.Length());
+	Log_Trace("ops.size() = %d", ops.Length());
 }
 
 void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)

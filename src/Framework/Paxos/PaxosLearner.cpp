@@ -51,7 +51,7 @@ void PaxosLearner::OnLearnChosen(PaxosMsg& msg_)
 	state.learned = true;
 	state.value.Set(msg.value);
 
-	Log_Message("+++ Consensus for paxosID = %" PRIu64 " is %.*s +++", paxosID,
+	Log_Trace("+++ Consensus for paxosID = %" PRIu64 " is %.*s +++", paxosID,
 		state.value.length, state.value.buffer);
 }
 
