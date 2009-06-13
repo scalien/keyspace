@@ -455,8 +455,11 @@ void ReplicatedLog::OnLeaseTimeout()
 
 bool ReplicatedLog::IsAppending()
 {
+#ifdef SUBMIT_HACK
+	return IsMaster() && proposer.state.numProposals > 0;
+#else
 	return proposer.IsActive();
-//	return IsMaster() && proposer.state.numProposals > 0;
+#endif
 }
 
 Transaction* ReplicatedLog::GetTransaction()
