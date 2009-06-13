@@ -2,17 +2,16 @@
 
 cat << EOF
 paxos.nodeID = $1
-paxos.endpoints = 10.226.111.194:10000, 10.226.50.132:10000, 10.226.63.130:10000
+paxos.endpoints = 10.226.111.191:10000, 10.226.43.144:10000, 10.226.54.195:10000
 
 io.maxfd = 4096
 
 database.dir = test/$1
-database.type = hash # or btree
 database.checkpointSize = 100000
 database.checkpointInterval = 60
 database.pageSize = 4096
 database.cacheSize = 200M
-database.logBufferSize = 1024K
+database.logBufferSize = 10M
 
 asyncDatabase.numReader = 6
 
