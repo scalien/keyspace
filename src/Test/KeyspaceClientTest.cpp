@@ -83,7 +83,6 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 
 	conf.value.Reallocate(conf.valueSize, false);
 	
-	Log_SetTrace(false);
 	sw.Reset();
 
 	numTest = conf.datasetTotal / conf.valueSize;
@@ -101,13 +100,11 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 
 		if (status != KEYSPACE_OK)
 		{
-			Log_SetTrace(true);
 			Log_Message("Test failed (%s failed after %d)", i, conf.typeString);
 			return 1;
 		}
 	}
 
-	Log_SetTrace(true);
 	Log_Message("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
 	
 	return 0;
