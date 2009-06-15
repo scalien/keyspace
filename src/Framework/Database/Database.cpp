@@ -116,8 +116,9 @@ void Database::Checkpoint()
 {
 	int ret;
 
-	Log_Trace();
+	Log_Trace("started");
 	ret = env.txn_checkpoint(100000, 0, 0);
 	if (ret < 0)
 		ASSERT_FAIL();
+	Log_Trace("finished");
 }

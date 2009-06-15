@@ -190,10 +190,10 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 	else
 	{
 		va_start(ap, fmt);
-		ret = vsnprintf(p, remaining + 1, fmt, ap);
+		ret = vsnprintf(p, remaining, fmt, ap);
 		va_end(ap);
-		if (ret < 0 || ret > remaining)
-			ret = remaining;
+		if (ret < 0 || ret >= remaining)
+			ret = remaining - 1;
 
 		p += ret;
 		remaining -= ret;

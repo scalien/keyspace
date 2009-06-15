@@ -1280,6 +1280,7 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"-DPLATFORM_DARWIN",
 					"-D__STDC_FORMAT_MACROS",
+					"-DSUBMIT_HACK",
 				);
 				PREBINDING = NO;
 				PRELINK_LIBS = db_cxx;
