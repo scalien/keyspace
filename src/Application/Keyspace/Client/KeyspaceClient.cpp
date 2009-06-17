@@ -181,8 +181,8 @@ void Result::Close()
 	
 	while ((it = responses.Head()) != NULL)
 	{
-		responses.Remove(it);
 		delete *it;
+		responses.Remove(it);
 	}
 }
 

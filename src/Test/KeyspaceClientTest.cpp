@@ -95,9 +95,9 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		//sw.Start();
 
 		if (conf.type == TestConfig::GET)
-			status = client.Get(conf.key, conf.value);
+			status = client.Get(conf.key, true, false);
 		else
-			status = client.DirtyGet(conf.key, conf.value);
+			status = client.DirtyGet(conf.key, false);
 		
 		//sw.Stop();
 
@@ -207,13 +207,7 @@ int KeyspaceClientTest2(int argc, char **argv)
 		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set|rndset> <numClients> <keySize> <valueSize>", argv[0]);
 		return 1;
 	}
-	
-	ByteArray<128> d;
-	memset(d.buffer, '$', d.size);
-	Log_SetMaxLine(d.size);
-	Log_SetTrace(true);
-	Log_Trace("%.*s", d.size, d.buffer);
-	
+		
 	testConf.SetType(argv[2]);
 	testConf.numClients = atoi(argv[3]);
 	testConf.keySize = atoi(argv[4]);
