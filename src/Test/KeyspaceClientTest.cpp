@@ -86,6 +86,8 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 	
 	sw.Reset();
 
+	client.Begin();
+
 	numTest = conf.datasetTotal / conf.valueSize;
 	for (int i = 0; i < numTest; i++)
 	{
@@ -101,10 +103,19 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("Test failed (%s failed after %d)", i, conf.typeString);
+			Log_Message("Test failed (%s failed after %d)", conf.typeString, i);
 			return 1;
 		}
 	}
+
+	sw.Start();
+	status = client.Submit();
+	if (status != KEYSPACE_OK)
+	{
+		Log_Message("Test failed (%s)",conf.typeString);
+		return 1;
+	}
+	sw.Stop();
 
 	Log_Message("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
 	

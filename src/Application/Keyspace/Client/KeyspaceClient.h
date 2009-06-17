@@ -132,8 +132,8 @@ public:
 	int				DirtyGet(const ByteString &key, ByteString &value);
 
 	// commands that return a Result
-	int				Get(const ByteString &key, bool dirty = false);
-	int				DirtyGet(const ByteString &key);
+	int				Get(const ByteString &key, bool dirty = false, bool submit = true);
+	int				DirtyGet(const ByteString &key, bool submit = true);
 	int				List(const ByteString &prefix, uint64_t count = 0, bool dirty = false);
 	int				DirtyList(const ByteString &prefix, uint64_t count = 0);
 	int				ListP(const ByteString &prefix, uint64_t count = 0, bool dirty = false);

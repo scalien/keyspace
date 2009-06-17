@@ -518,7 +518,7 @@ int	Client::DirtyGet(const ByteString &key, ByteString &value)
 	return Get(key, value, true);
 }
 
-int Client::Get(const ByteString &key, bool dirty)
+int Client::Get(const ByteString &key, bool dirty, bool submit)
 {
 	Command*	cmd;
 	ByteString	args[1];
@@ -536,15 +536,18 @@ int Client::Get(const ByteString &key, bool dirty)
 		safeCommands.Add(cmd);
 	}
 
+	if (!submit)
+		return KEYSPACE_OK;
+
 	result.Close();
 	
 	EventLoop();	
 	return result.Status();
 }
 
-int Client::DirtyGet(const ByteString &key)
+int Client::DirtyGet(const ByteString &key, bool submit)
 {
-	return Get(key, true);
+	return Get(key, true, submit);
 }
 
 int	Client::List(const ByteString &prefix, uint64_t count, bool dirty)
@@ -742,7 +745,11 @@ int Client::Submit()
 	if (it)
 		(*it)->submit = true;
 	else
-		return KEYSPACE_OK;
+	{
+		it = dirtyCommands.Tail();
+		if (!it)
+			return KEYSPACE_OK;
+	}
 	
 	EventLoop();
 	return result.Status();
