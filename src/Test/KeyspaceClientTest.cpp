@@ -92,14 +92,14 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 	for (int i = 0; i < numTest; i++)
 	{
 		conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
-		sw.Start();
+		//sw.Start();
 
 		if (conf.type == TestConfig::GET)
 			status = client.Get(conf.key, conf.value);
 		else
 			status = client.DirtyGet(conf.key, conf.value);
 		
-		sw.Stop();
+		//sw.Stop();
 
 		if (status != KEYSPACE_OK)
 		{
@@ -110,12 +110,13 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 
 	sw.Start();
 	status = client.Submit();
+	sw.Stop();
+
 	if (status != KEYSPACE_OK)
 	{
 		Log_Message("Test failed (%s)",conf.typeString);
 		return 1;
 	}
-	sw.Stop();
 
 	Log_Message("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
 	
