@@ -111,7 +111,6 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 	sw.Start();
 	status = client.Submit();
 	sw.Stop();
-	Log_Message("%ld", sw.elapsed);
 
 	if (status != KEYSPACE_OK)
 	{
