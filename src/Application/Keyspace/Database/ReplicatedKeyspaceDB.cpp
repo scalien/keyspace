@@ -161,6 +161,9 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	numOps = 0;
 	if (ownAppend)
 		it = ops.Head();
+	else
+		it = NULL;
+		
 	while (true)
 	{
 		if (msg.Read(value, nread))
