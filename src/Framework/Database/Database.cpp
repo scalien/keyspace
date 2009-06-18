@@ -70,12 +70,24 @@ bool Database::Init(const DatabaseConfig& config_)
 	if (config.verbose)
 	{
 		env.set_msgcall(DatabaseTrace);
+#ifdef DB_VERB_FILEOPS
 		env.set_verbose(DB_VERB_FILEOPS, 1);
+#endif
+#ifdef DB_VERB_FILEOPS_ALL
 		env.set_verbose(DB_VERB_FILEOPS_ALL, 1);
+#endif
+#ifdef DB_VERB_RECOVERY
 		env.set_verbose(DB_VERB_RECOVERY, 1);
+#endif
+#ifdef DB_VERB_REGISTER
 		env.set_verbose(DB_VERB_REGISTER, 1);
+#endif
+#ifdef DB_VERB_REPLICATION
 		env.set_verbose(DB_VERB_REPLICATION, 1);
+#endif
+#ifdef DB_VERB_WAITSFOR
 		env.set_verbose(DB_VERB_WAITSFOR, 1);
+#endif
 	}
 	
 	Log_Trace();
