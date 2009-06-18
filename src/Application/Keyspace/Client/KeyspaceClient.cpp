@@ -300,7 +300,7 @@ bool ClientConn::ProcessResponse(Response* resp)
 		{
 			cmd->status = resp->status;
 			
-			Log_Trace("status = %c, id = %ld", cmd->status, (unsigned long) cmd->cmdID);
+			Log_Trace("status = %d, id = %lu", (int) cmd->status, (unsigned long) cmd->cmdID);
 			// GET_MASTER is a special case, because it is only used internally
 			if (cmd->type == KEYSPACECLIENT_GET_MASTER)
 			{
