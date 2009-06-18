@@ -10,7 +10,7 @@ KeyspaceConn::KeyspaceConn()
 
 void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 {
-	Log_Trace();
+	Log_Trace("%s", GetEndpoint().ToString());
 	
 	TCPConn<>::Init();
 	KeyspaceService::Init(kdb_);

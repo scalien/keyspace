@@ -70,7 +70,7 @@ int Endpoint::GetPort()
 	return ntohs(sa.sin_port);
 }
 
-char* Endpoint::ToString()
+const char* Endpoint::ToString()
 {
 	snprintf(buffer, sizeof(buffer), "%s:%u", inet_ntoa(sa.sin_addr), ntohs(sa.sin_port));
 	return buffer;

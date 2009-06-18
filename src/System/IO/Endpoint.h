@@ -18,17 +18,14 @@ public:
 		sa.sin_addr.s_addr = 0; sa.sin_zero[0] = 0;
 	}
 	
-	bool	Set(struct sockaddr_in &sa_);
+	bool		Set(struct sockaddr_in &sa_);
+	bool		Set(const char* ip, int port);
+	bool		Set(const char* ip_port);
+
+	bool		SetPort(int port);
+	int			GetPort();
 	
-	bool	Set(const char* ip, int port);
-	
-	bool	Set(const char* ip_port);
-	
-	bool	SetPort(int port);
-		
-	int		GetPort();
-	
-	char*	ToString();
+	const char*	ToString();
 	
 private:
 	char			buffer[32];
