@@ -23,28 +23,16 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 						   &type, &cmdID);
 			break;
 		case KEYSPACECLIENT_GET:
-			read = snreadf(data.buffer, data.length, "%c:%U:%N",
-						   &type, &cmdID, &key);
-			break;
 		case KEYSPACECLIENT_DIRTY_GET:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N",
 						   &type, &cmdID, &key);
 			break;
 		case KEYSPACECLIENT_LIST:
-			read = snreadf(data.buffer, data.length, "%c:%U:%N:%u:%u",
-						   &type, &cmdID, &prefix, &count, &count);
-			break;
 		case KEYSPACECLIENT_DIRTY_LIST:
-			read = snreadf(data.buffer, data.length, "%c:%U:%N:%u:%u",
-						   &type, &cmdID, &prefix, &count, &count);
-			break;
 		case KEYSPACECLIENT_LISTP:
-			read = snreadf(data.buffer, data.length, "%c:%U:%N:%u:%u",
-						   &type, &cmdID, &prefix, &count, &count);
-			break;
 		case KEYSPACECLIENT_DIRTY_LISTP:
-			read = snreadf(data.buffer, data.length, "%c:%U:%N:%u:%u",
-						   &type, &cmdID, &prefix, &count, &count);
+			read = snreadf(data.buffer, data.length, "%c:%U:%N:%:N:%u:%u:%u:%u",
+						   &type, &cmdID, &prefix, &key, &count, &count, &offset, &offset);
 			break;
 		case KEYSPACECLIENT_SET:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N",

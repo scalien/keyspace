@@ -33,6 +33,7 @@ public:
 	ByteString		prefix;
 	uint64_t		cmdID;
 	uint64_t		count;
+	uint64_t		offset;
 	int64_t			num;
 	
 	void			Init();

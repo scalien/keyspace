@@ -616,6 +616,77 @@ int Client::DirtyListP(const ByteString &prefix, uint64_t count)
 	return ListP(prefix, count, true);
 }
 
+int	Client::ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty)
+{
+	return ListKeyValues(prefix, startKey, count, next, dirty, false);
+}
+
+int	Client::DirtyListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+{
+	return ListKeys(prefix, startKey, count, next);
+}
+
+int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty, bool values)
+{
+	Command*	cmd;
+	ByteString	args[4];
+	DynArray<32> countString;
+	DynArray<10> nextString;
+	ByteString	sk;
+	
+	countString.Writef("%U", count);
+	if (next)
+		nextString.Append("1", 1);
+	else
+		nextString.Append("0", 1);
+
+	if (prefix.length > 0 &&
+		memcmp(prefix.buffer, startKey.buffer, min(prefix.length, startKey.length)) == 0)
+	{
+		sk.buffer = startKey.buffer + prefix.length;
+		sk.length = startKey.length - prefix.length;
+		sk.size = startKey.size - prefix.length;
+	}
+	else
+		sk = startKey;
+
+	args[0] = prefix;
+	args[1] = sk;
+	args[2] = countString;
+	args[3] = nextString;
+	
+	if (dirty)
+	{
+		if (values)
+			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LISTP, false, SIZE(args), args);
+		else
+			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, false, SIZE(args), args);
+
+		dirtyCommands.Add(cmd);
+	}
+	else
+	{
+		if (values)
+			cmd = CreateCommand(KEYSPACECLIENT_LISTP, false, SIZE(args), args);
+		else
+			cmd = CreateCommand(KEYSPACECLIENT_LIST, false, SIZE(args), args);
+		
+		safeCommands.Add(cmd);
+	}
+	
+	result.Close();
+	
+	EventLoop();
+	return result.Status();	
+
+}
+
+int Client::DirtyListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+{
+	return ListKeyValues(prefix, startKey, count, next, true, true);
+}
+
+
 Result* Client::GetResult(int &status)
 {
 	status = result.Status();
@@ -706,20 +777,53 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	return status;
 }
 
-int Client::Delete(const ByteString &key, bool submit)
+int Client::Delete(const ByteString &key, bool submit, bool remove)
 {
+	int			status;
+	char		c;
 	Command*	cmd;
 	ByteString	args[1];
-	int			status;
 	
 	args[0] = key;
 	
-	cmd = CreateCommand(KEYSPACECLIENT_DELETE, submit, 1, args);
+	if (remove)
+		c = KEYSPACECLIENT_REMOVE;
+	else
+		c = KEYSPACECLIENT_DELETE;
+		
+	cmd = CreateCommand(c, submit, SIZE(args), args);
 	safeCommands.Add(cmd);
 	
 	if (!submit)
 		return KEYSPACE_OK;
 
+	result.Close();
+	EventLoop();
+	status = result.Status();
+	
+	return status;
+}
+
+int Client::Remove(const ByteString &key, bool submit)
+{
+	return Delete(key, submit, true);
+}
+
+int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
+{
+	int			status;
+	Command*	cmd;
+	ByteString	args[2];
+	
+	args[0] = from;
+	args[1] = to;
+	
+	cmd = CreateCommand(KEYSPACECLIENT_RENAME, submit, SIZE(args), args);
+	safeCommands.Add(cmd);
+	
+	if (!submit)
+		return KEYSPACE_OK;
+		
 	result.Close();
 	EventLoop();
 	status = result.Status();

@@ -252,9 +252,7 @@ bool Table::Visit(TableVisitor &tv)
 		flags = DB_NEXT;
 	}
 	
-	if (cursor)
-		cursor->close();
-	
+	cursor->close();	
 	tv.OnComplete();
 	
 	return ret;

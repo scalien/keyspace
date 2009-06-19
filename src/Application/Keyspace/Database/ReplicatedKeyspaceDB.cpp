@@ -88,7 +88,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
 			return false;
 
-		AsyncListVisitor *alv = new AsyncListVisitor(op->prefix, op, op->count);
+		AsyncListVisitor *alv = new AsyncListVisitor(op);
 		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
 		mdbop->Visit(table, *alv);
 		dbReader.Add(mdbop);

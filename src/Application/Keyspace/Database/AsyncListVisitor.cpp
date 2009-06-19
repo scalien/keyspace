@@ -90,11 +90,13 @@ void AsyncVisitorCallback::Execute()
 	delete this;
 }
 
-AsyncListVisitor::AsyncListVisitor(const ByteString &keyHint_, KeyspaceOp* op_, uint64_t count_) :
-keyHint(keyHint_)
+AsyncListVisitor::AsyncListVisitor(KeyspaceOp* op_) :
+prefix(op_->prefix),
+startKey(op_->key)
 {
 	op = op_;
-	count = count_;
+	count = op->count;
+	offset = op->offset;
 	num = 0;
 	Init();
 }
@@ -132,22 +134,28 @@ bool AsyncListVisitor::Accept(const ByteString &key, const ByteString &value)
 		return true;
 
 	if ((count == 0 || num < count) &&
-		strncmp(keyHint.buffer, key.buffer, min(keyHint.length, key.length)) == 0)
+		strncmp(prefix.buffer, key.buffer, min(prefix.length, key.length)) == 0)
 	{
-		if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
-			AppendKey(key);
-		if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
-			AppendKeyValue(key, value);
-		num++;
+		if (offset > 0)
+			offset--;
+		else
+		{
+			if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
+				AppendKey(key);
+			if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
+				AppendKeyValue(key, value);
+			num++;
+		}
 		return true;
 	}
 	else
 		return false;
+
 }
 
-const ByteString* AsyncListVisitor::GetKeyHint()
+const ByteString* AsyncListVisitor::GetStartKey()
 {
-	return &keyHint;
+	return &startKey;
 }
 
 void AsyncListVisitor::OnComplete()

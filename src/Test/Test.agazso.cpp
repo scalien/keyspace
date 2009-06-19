@@ -40,12 +40,12 @@ int
 main(int argc, char** argv)
 {
 	int ret;
-//	ret = KeyspaceClientTest();
+	ret = KeyspaceClientTest();
 //	ret = KeyspaceClientTest2(argc, argv);
 //	ret = keyspace_client_test();
 
-   Test t;
-   t.foo();
+//   Test t;
+//   t.foo();
 
 
 	return ret;

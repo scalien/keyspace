@@ -67,7 +67,7 @@ public:
 		return Set(other.buffer, other.length);
 	}
 
-	bool operator==(const ByteString& other)
+	bool operator==(const ByteString& other) const
 	{
 		return MEMCMP(buffer, length, other.buffer, other.length);
 	}

@@ -139,6 +139,11 @@ public:
 	int				ListP(const ByteString &prefix, uint64_t count = 0, bool dirty = false);
 	int				DirtyListP(const ByteString &prefix, uint64_t count = 0);
 
+	int				ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false, bool dirty = false);
+	int				DirtyListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
+	int				ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false, bool dirty = false, bool values = false);
+	int				DirtyListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
+
 	Result*			GetResult(int &status);
 
 	// write commands
@@ -146,7 +151,9 @@ public:
 	int				TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, 
 							   bool submit = true);
 	int				Add(const ByteString &key, int64_t num, int64_t &result, bool submit = true);
-	int				Delete(const ByteString &key, bool submit = true);
+	int				Delete(const ByteString &key, bool submit = true, bool remove = false);
+	int				Remove(const ByteString &key, bool submit = true);
+	int				Rename(const ByteString &from, const ByteString &to, bool submit = true);
 
 	// grouping write commands
 	int				Begin();

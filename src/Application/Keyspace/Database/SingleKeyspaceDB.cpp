@@ -68,7 +68,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->IsList())
 	{
-		AsyncListVisitor *alv = new AsyncListVisitor(op->prefix, op, op->count);
+		AsyncListVisitor *alv = new AsyncListVisitor(op);
 		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
 		mdbop->Visit(table, *alv);
 		dbReader.Add(mdbop);

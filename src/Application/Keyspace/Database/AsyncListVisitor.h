@@ -34,19 +34,21 @@ public:
 class AsyncListVisitor : public TableVisitor
 {
 public:
-	AsyncListVisitor(const ByteString &keyHint_, KeyspaceOp* op_, uint64_t count_);
+	AsyncListVisitor(KeyspaceOp* op_);
 	
 	void Init();
 	void AppendKey(const ByteString &key);
 	void AppendKeyValue(const ByteString &key, const ByteString &value);
 	virtual bool Accept(const ByteString &key, const ByteString &value);
-	virtual const ByteString* GetKeyHint();
+	virtual const ByteString* GetStartKey();
 	virtual void OnComplete();
 	
 private:
-	const ByteString		&keyHint;
 	KeyspaceOp*				op;
+	const ByteString		&prefix;
+	const ByteString		&startKey;
 	uint64_t				count;
+	uint64_t				offset;
 	uint64_t				num;
 	AsyncVisitorCallback*	avc;
 };

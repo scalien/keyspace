@@ -354,6 +354,38 @@ int KeyspaceClientTest()
 		return 1;
 	}
 	
+	// RENAME test
+	DynArray<128> newName;
+	newName.Writef("%s", "test:1");
+	status = client.Rename(key, newName);
+	if (status != KEYSPACE_OK)
+	{
+		Log_Trace("RENAME failed");
+		return 1;
+	}
+	
+	// REMOVE test
+	status = client.Remove(newName);
+	result = client.GetResult(status);
+	if (status != KEYSPACE_OK || !result)
+	{
+		Log_Trace("REMOVE failed");
+		return 1;
+	}
+	if (!(result->Value() == reference))
+	{
+		Log_Trace("REMOVE failed");
+		return 1;
+	}
+	
+	// SET test (again)
+	status = client.Set(key, reference);
+	if (status != KEYSPACE_OK)
+	{
+		Log_Trace("SET failed");
+		return 1;
+	}	
+	
 	// LISTP test
 	status = client.ListP(key);
 	if (status != KEYSPACE_OK)

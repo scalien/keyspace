@@ -57,14 +57,15 @@ public:
 	bool					appended;
 	
 	Type					type;
+	uint64_t				cmdID;
 	ByteBuffer				key;
 	ByteBuffer				newKey; // for rename
 	ByteBuffer				value;
 	ByteBuffer				test;
 	ByteBuffer				prefix;
-	uint64_t				cmdID;
 	int64_t					num;
 	uint64_t				count;
+	uint64_t				offset;
 	bool					status;
 	
 	KeyspaceService*		service;
