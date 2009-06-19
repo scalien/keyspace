@@ -9,7 +9,7 @@
 #define MSG_NOT_FOUND		"Not found"
 #define RESPONSE_FAIL		Response(500, MSG_FAIL, sizeof(MSG_FAIL) - 1)
 #define RESPONSE_NOTFOUND	Response(404, MSG_NOT_FOUND, sizeof(MSG_NOT_FOUND) - 1)
-
+#define PARAMSEP			','
 
 HttpConn::HttpConn()
 {
@@ -160,496 +160,262 @@ int HttpConn::Parse(char* buf, int len)
 
 int HttpConn::ProcessGetRequest()
 {
+#define PREFIXFUNC(prefix, func) \
+if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
+{ \
+	params += strlen(prefix); \
+	ret = func; \
+}
+
 	KeyspaceOp* op;
-	const char* key;
-	const char* newKey;
-	const char* value;
-	const char* test;
-	const char* prefix;
-	const char* count;
-	int keylen;
-	int newKeylen;
-	int valuelen;
-	int testlen;
-	int prefixlen;
-	int countlen;
-	unsigned nread;
-	// http://localhost:8080/get/key
-	// http://localhost:8080/set/key/value
-	
 	op = new KeyspaceOp;
 	op->service = this;
 	
-	if (strncmp(request.line.uri, "/get/", strlen("/get/")) == 0)
+	char* params;
+	
+	params = (char*) request.line.uri;
+	bool ret;
+		
+	PREFIXFUNC("/get?",			ProcessGet(params, op)) else
+	PREFIXFUNC("/dirtyget?",	ProcessGet(params, op, true)) else
+	PREFIXFUNC("/set?",			ProcessSet(params, op)) else
+	PREFIXFUNC("/testandset?",	ProcessTestAndSet(params, op)) else
+	PREFIXFUNC("/add?",			ProcessAdd(params, op)) else
+	PREFIXFUNC("/rename?",		ProcessRename(params, op)) else
+	PREFIXFUNC("/delete?",		ProcessDelete(params, op)) else
+	PREFIXFUNC("/remove?",		ProcessRemove(params, op)) else
+	PREFIXFUNC("/prune?",		ProcessPrune(params, op)) else
+	PREFIXFUNC("/list?",		ProcessList(params, op, false)) else
+	PREFIXFUNC("/dirtylist?",	ProcessList(params, op, false, true)) else
+	PREFIXFUNC("/listp?",		ProcessList(params, op, true)) else
+	PREFIXFUNC("/dirtylistp?",	ProcessList(params, op, true, true)) else
+	PREFIXFUNC("/latency?",		ProcessLatency())
+	else
 	{
-		key = request.line.uri + strlen("/get/");
-		keylen = strlen(key);
-		
-		if (keylen > KEYSPACE_KEY_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::GET;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
+		RESPONSE_NOTFOUND;
+		ret = false;
 	}
-	else if (strncmp(request.line.uri, "/dirtyget/", strlen("/dirtyget/")) == 0)
+	
+	if (ret && !Add(op))
 	{
-		key = request.line.uri + strlen("/dirtyget/");
-		keylen = strlen(key);
-		
-		if (keylen > KEYSPACE_KEY_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::DIRTY_GET;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
+		RESPONSE_FAIL;
+		ret = false;
 	}
-	else if (strncmp(request.line.uri, "/set/", strlen("/set/")) == 0)
-	{
-		key = request.line.uri + strlen("/set/");
-		value = strchr(key, '/');
-		if (!value)
-		{
-			delete op;
-			return -1;
-		}
-		
-		keylen = value - key;
-		value++;
-		valuelen = strlen(value);
-		
-		if (keylen > KEYSPACE_KEY_SIZE || valuelen > KEYSPACE_VAL_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::SET;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!op->value.Allocate(valuelen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->value.Set((char*) value, valuelen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
-	}
-	else if (strncmp(request.line.uri, "/testandset/", strlen("testandset")) == 0)
-	{
-		key = request.line.uri + strlen("/testandset/");
-		test = strchr(key, '/');
-		if (!test)
-		{
-			delete op;
-			return -1;
-		}
-		
-		keylen = test - key;
-		test++;
-		
-		value = strchr(test, '/');
-		if (!value)
-		{
-			delete op;
-			return -1;
-		}
-		
-		testlen = value - test;
-		value++;
-		
-		valuelen = strlen(value);
-		
-		if (keylen > KEYSPACE_KEY_SIZE || testlen > KEYSPACE_VAL_SIZE || valuelen > KEYSPACE_VAL_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::TEST_AND_SET;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!op->test.Allocate(testlen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->test.Set((char*) test, testlen);
-		
-		if (!op->value.Allocate(valuelen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->value.Set((char*) value, valuelen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
-	}
-	else if (strncmp(request.line.uri, "/add/", strlen("/add/")) == 0)
-	{
-		key = request.line.uri + strlen("/add/");
-		value = strchr(key, '/');
-		if (!value)
-		{
-			delete op;
-			return -1;
-		}
-		
-		keylen = value - key;
-		value++;
-		valuelen = strlen(value);
-		
-		if (keylen > KEYSPACE_KEY_SIZE || valuelen > KEYSPACE_VAL_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		if (valuelen < 1)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return -1;
-		}
-		
-		op->num = strntoint64(value, valuelen, &nread);
-		if (nread != (unsigned) valuelen)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return -1;
-		}
-		
-		op->type = KeyspaceOp::ADD;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
-	}
-	else if (strncmp(request.line.uri, "/rename/", strlen("/rename/")) == 0)
-	{
-		key = request.line.uri + strlen("/rename/");
-		newKey = strchr(key, '/');
-		if (!newKey)
-		{
-			delete op;
-			return -1;
-		}
-		
-		keylen = newKey - key;
-		newKey++;
-		newKeylen = strlen(newKey);
-		
-		if (keylen > KEYSPACE_KEY_SIZE || newKeylen > KEYSPACE_KEY_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::RENAME;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!op->newKey.Allocate(newKeylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->newKey.Set((char*) newKey, newKeylen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
-	}
-	else if (strncmp(request.line.uri, "/delete/", strlen("/delete/")) == 0)
-	{
-		key = request.line.uri + strlen("/delete/");
-		keylen = strlen(key);
-		
-		if (keylen > KEYSPACE_KEY_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::DELETE;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
-	}
-	else if (strncmp(request.line.uri, "/remove/", strlen("/remove/")) == 0)
-	{
-		key = request.line.uri + strlen("/remove/");
-		keylen = strlen(key);
-		
-		if (keylen > KEYSPACE_KEY_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::REMOVE;
-		
-		if (!op->key.Allocate(keylen))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->key.Set((char*) key, keylen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
-	}	else if (strncmp(request.line.uri, "/prune/", strlen("/prune/")) == 0)
-	{
-		prefix = request.line.uri + strlen("/prune/");
-		prefixlen = strlen(prefix);
-		
-		if (prefixlen > KEYSPACE_KEY_SIZE)
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		
-		op->type = KeyspaceOp::PRUNE;
-		
-		if (prefixlen > 0)
-		{
-			if (!op->prefix.Allocate(prefixlen))
-			{
-				delete op;
-				RESPONSE_FAIL;
-				return 0;
-			}
-			op->prefix.Set((char*) prefix, prefixlen);
-		}
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-		
-		return 0;
-	}
-	else if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0 ||
-			 strncmp(request.line.uri, "/dirtylist/", strlen("/dirtylist/")) == 0 ||
-			 strncmp(request.line.uri, "/listp/", strlen("/listp/")) == 0 ||
-			 strncmp(request.line.uri, "/dirtylistp/", strlen("/dirtylistp/")) == 0)
-	{
-		prefix = "";
-		if (strncmp(request.line.uri, "/list/", strlen("/list/")) == 0)
-		{
-			prefix = request.line.uri + strlen("/list/");
-			op->type = KeyspaceOp::LIST;
-		}
-		else if (strncmp(request.line.uri, "/dirtylist/", strlen("/dirtylist/")) == 0)
-		{
-			prefix = request.line.uri + strlen("/dirtylist/");
-			op->type = KeyspaceOp::DIRTY_LIST;
-		}
-		else if (strncmp(request.line.uri, "/listp/", strlen("/listp/")) == 0)
-		{
-			prefix = request.line.uri + strlen("/listp/");
-			op->type = KeyspaceOp::LISTP;
-		}
-		else if (strncmp(request.line.uri, "/dirtylistp/", strlen("/dirtylistp/")) == 0)
-		{
-			prefix = request.line.uri + strlen("/dirtylistp/");
-			op->type = KeyspaceOp::DIRTY_LISTP;
-		}
-		
-		count = strchr(prefix, '/');
-		if (count == NULL)
-		{
-			prefixlen = strlen(prefix);
-			op->count = 0;
-		}
-		else
-		{
-			prefixlen = count - prefix;
-			
-			if (prefixlen > KEYSPACE_KEY_SIZE)
-			{
-				delete op;
-				RESPONSE_FAIL;
-				return 0;
-			}
-			
-			count++;
-			countlen = strlen(count);
-			
-			if (countlen < 1)
-			{
-				op->count = 0;
-			}
-			else
-			{
-				op->count = strntouint64(count, countlen, &nread);
-				if (nread != (unsigned) countlen)
-				{
-					delete op;
-					RESPONSE_FAIL;
-					return 0;
-				}
-			}
-		}
-				
-		// HACK +1 is to handle empty string (solution is to use DynBuffer)
-		if (!op->prefix.Allocate(prefixlen + 1))
-		{
-			delete op;
-			RESPONSE_FAIL;
-			return 0;
-		}
-		op->prefix.Set((char*) prefix, prefixlen);
-		
-		if (!Add(op))
-		{
-			delete op;
-			RESPONSE_FAIL;
-		}
-		kdb->Submit();
-			
-		return 0;
-	}
-	else if (strcmp(request.line.uri, "/latency") == 0)
+
+	if (ret)
+		ret = kdb->Submit();
+	
+	if (!ret)
 	{
 		delete op;
-		Response(200, "OK", 2);
-		return 0;
+		return -1;
+	}
+	
+	return 0;
+}
+
+bool ParseParams(const char* s, unsigned num, ...)
+{
+	unsigned	length;
+	ByteString* bs;
+	va_list		ap;	
+	
+	va_start(ap, num);
+
+	while (*s != '\0')
+	{
+		bs = va_arg(ap, ByteString*);
+		bs->buffer = (char*) s;
+		length = 0;
+		while(*s != '\0' && *s != PARAMSEP)
+		{
+			length++;
+			s++;
+		}
+		bs->length = length;
+		bs->size = length;
+		if (*s == PARAMSEP)
+			s++;
+		num--;
+	}
+
+	va_end(ap);
+	
+	if (num == 0)
+		return true;
+	else
+		return false;
+}
+
+#define VALIDATE_KEYLEN(bs) if (bs.length > KEYSPACE_KEY_SIZE) { RESPONSE_FAIL; return false; }
+#define VALIDATE_VALLEN(bs) if (bs.length > KEYSPACE_VAL_SIZE) { RESPONSE_FAIL; return false; }
+	
+bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op, bool dirty)
+{
+	if (dirty)
+		op->type = KeyspaceOp::DIRTY_GET;
+	else
+		op->type = KeyspaceOp::GET;
+	
+	op->key.Set((char*) params, strlen(params));
+	return true;
+}
+
+bool HttpConn::ProcessList(const char* params, KeyspaceOp* op, bool p, bool dirty)
+{
+	ByteString prefix, key, count, offset;
+	unsigned nread;
+
+	if (!p)
+	{
+		if (!dirty)
+			op->type = KeyspaceOp::LIST;
+		else
+			op->type = KeyspaceOp::DIRTY_LIST;
 	}
 	else
 	{
-		delete op;
-		RESPONSE_NOTFOUND;
-		return 0;
+		if (!dirty)
+			op->type = KeyspaceOp::LISTP;
+		else
+			op->type = KeyspaceOp::DIRTY_LISTP;
 	}
 	
-	return -1;
+	ParseParams(params, 4, &prefix, &key, &count, &offset);
+	
+	VALIDATE_KEYLEN(prefix);
+	VALIDATE_KEYLEN(key);
+	
+	op->prefix.Set(prefix);
+	op->key.Set(key);
+	op->count = strntoint64(count.buffer, count.length, &nread);
+	if (nread != (unsigned) count.length)
+	{
+		RESPONSE_FAIL;
+		return false;
+	}
+	op->offset = strntoint64(offset.buffer, offset.length, &nread);
+	if (nread != (unsigned) offset.length)
+	{
+		RESPONSE_FAIL;
+		return false;
+	}
+	return true;
+}
+
+bool HttpConn::ProcessSet(const char* params, KeyspaceOp* op)
+{
+	ByteString key, value;
+
+	ParseParams(params, 2, &key, &value);
+	
+	VALIDATE_KEYLEN(key);
+	VALIDATE_VALLEN(value);
+	
+	op->type = KeyspaceOp::SET;
+	op->key.Set(key);
+	op->value.Set(value);	
+	return true;
+}
+
+bool HttpConn::ProcessTestAndSet(const char* params, KeyspaceOp* op)
+{
+	ByteString key, test, value;
+
+	ParseParams(params, 3, &key, &test, &value);
+	
+	VALIDATE_KEYLEN(key);
+	VALIDATE_VALLEN(test);
+	VALIDATE_VALLEN(value);
+	
+	op->type = KeyspaceOp::TEST_AND_SET;
+	
+	op->key.Set(key);
+	op->test.Set(test);
+	op->value.Set(value);
+	return true;
+}
+
+bool HttpConn::ProcessAdd(const char* params, KeyspaceOp* op)
+{
+	ByteString key, value;
+	unsigned nread;
+
+	ParseParams(params, 2, &key, &value);
+	
+	VALIDATE_KEYLEN(key);
+	VALIDATE_VALLEN(value);
+	
+	op->type = KeyspaceOp::ADD;
+	
+	op->key.Set(key);
+	op->num	= strntoint64(value.buffer, value.length, &nread);
+	if (nread != (unsigned) value.length)
+	{
+		RESPONSE_FAIL;
+		return false;
+	}
+	return true;
+}
+
+bool HttpConn::ProcessRename(const char* params, KeyspaceOp* op)
+{
+	ByteString key, newKey;
+
+	ParseParams(params, 2, &key, &newKey);
+	
+	VALIDATE_KEYLEN(key);
+	VALIDATE_KEYLEN(newKey);
+	
+	op->type = KeyspaceOp::RENAME;
+	op->key.Set(key);
+	op->newKey.Set(newKey);
+	return true;
+}
+
+bool HttpConn::ProcessDelete(const char* params, KeyspaceOp* op)
+{
+	ByteString key;
+
+	ParseParams(params, 1, &key);
+	
+	VALIDATE_KEYLEN(key);
+	
+	op->type = KeyspaceOp::DELETE;
+	op->key.Set(key);
+	return true;
+}
+
+bool HttpConn::ProcessRemove(const char* params, KeyspaceOp* op)
+{
+	ByteString key;
+
+	ParseParams(params, 1, &key);
+	
+	VALIDATE_KEYLEN(key);
+	
+	op->type = KeyspaceOp::REMOVE;
+	op->key.Set(key);
+	return true;
+}
+
+bool HttpConn::ProcessPrune(const char* params, KeyspaceOp* op)
+{
+	ByteString prefix;
+
+	ParseParams(params, 1, &prefix);
+	
+	VALIDATE_KEYLEN(prefix);
+	
+	op->type = KeyspaceOp::PRUNE;
+	op->prefix.Set(prefix);
+	return true;
+}
+
+bool HttpConn::ProcessLatency()
+{
+	Response(200, "OK", 2);
+	return true;
 }
 
 const char* HttpConn::Status(int code)

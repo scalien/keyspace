@@ -4,6 +4,7 @@
 void KeyspaceClientReq::Init()
 {
 	key.length = 0;
+	newKey.length = 0;
 	test.length = 0;
 	value.length = 0;
 	prefix.length = 0;
@@ -127,6 +128,15 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 
 	op->cmdID = cmdID;
 
+#define VALIDATE_KEYLEN(bs) if (bs.length > KEYSPACE_KEY_SIZE) { return false; }
+#define VALIDATE_VALLEN(bs) if (bs.length > KEYSPACE_VAL_SIZE) { return false; }
+
+	VALIDATE_KEYLEN(key);
+	VALIDATE_KEYLEN(newKey);
+	VALIDATE_KEYLEN(prefix);
+	VALIDATE_VALLEN(test);
+	VALIDATE_VALLEN(value);
+	
 	if (!op->key.Set(key)) return false;
 	if (!op->newKey.Set(newKey)) return false;
 	if (!op->test.Set(test)) return false;

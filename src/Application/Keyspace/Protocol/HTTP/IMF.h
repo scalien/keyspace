@@ -40,7 +40,7 @@ public:
 	};
 	
 public:	
-	enum { KEYVAL_BUFFER_SIZE = 16};
+	enum { KEYVAL_BUFFER_SIZE = 16 };
 	int				numKeyval;
 	int				capKeyval;
 	KeyValue*		keyvalues;
