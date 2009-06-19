@@ -16,6 +16,8 @@
 #define KEYSPACECLIENT_DELETE		'd'
 #define KEYSPACECLIENT_PRUNE		'z'
 #define KEYSPACECLIENT_ADD			'a'
+#define KEYSPACECLIENT_REMOVE		'r'
+#define KEYSPACECLIENT_RENAME		'e'
 #define KEYSPACECLIENT_SUBMIT		'*'
 
 class KeyspaceOp;
