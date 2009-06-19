@@ -560,14 +560,24 @@ int Client::DirtyGet(const ByteString &key, bool submit)
 	return Get(key, true, submit);
 }
 
-int	Client::ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty)
+int	Client::ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
 {
-	return ListKeyValues(prefix, startKey, count, next, dirty, false);
+	return ListKeyValues(prefix, startKey, count, next, false, false);
 }
 
 int	Client::DirtyListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
 {
-	return ListKeys(prefix, startKey, count, next);
+	return ListKeyValues(prefix, startKey, count, next, true, false);
+}
+
+int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+{
+	return ListKeyValues(prefix, startKey, count, next, false, true);
+}
+
+int Client::DirtyListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+{
+	return ListKeyValues(prefix, startKey, count, next, true, true);
 }
 
 int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty, bool values)
@@ -624,11 +634,6 @@ int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, 
 	EventLoop();
 	return result.Status();	
 
-}
-
-int Client::DirtyListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
-{
-	return ListKeyValues(prefix, startKey, count, next, true, true);
 }
 
 

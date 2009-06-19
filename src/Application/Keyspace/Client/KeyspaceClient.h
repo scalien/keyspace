@@ -136,9 +136,9 @@ public:
 	int				Get(const ByteString &key, bool dirty = false, bool submit = true);
 	int				DirtyGet(const ByteString &key, bool submit = true);
 
-	int				ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false, bool dirty = false);
+	int				ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
 	int				DirtyListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
-	int				ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false, bool dirty = false, bool values = false);
+	int				ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
 	int				DirtyListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
 
 	Result*			GetResult(int &status);
@@ -167,7 +167,8 @@ private:
 	void			SendCommand(ClientConn* conn, CommandList& commands);
 	void			DeleteCommands(CommandList& commands);
 	void			SetMaster(int master);
-	
+	int				ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty, bool values);
+
 	
 	CommandList		safeCommands;
 	CommandList		dirtyCommands;
