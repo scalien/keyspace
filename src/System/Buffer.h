@@ -290,6 +290,9 @@ public:
 	{
 		char *newbuffer;
 		
+		if (newsize <= size)
+			return;
+		
 		newsize = newsize + GRAN - 1;
 		newsize -= newsize % GRAN;
 		
@@ -320,6 +323,14 @@ public:
 
 			Reallocate(length, false);
 		}
+		
+		return true;
+	}
+
+	bool Fill(int c, unsigned len)
+	{
+		Reallocate(len, false);
+		memset(buffer, c, len);
 		
 		return true;
 	}

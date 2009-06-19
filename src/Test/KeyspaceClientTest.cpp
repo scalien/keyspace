@@ -1,8 +1,12 @@
 #include "Application/Keyspace/Client/KeyspaceClient.h"
+#include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "System/Stopwatch.h"
 #include "System/Config.h"
 #include <signal.h>
 
+using namespace Keyspace;
+
+int KeyspaceClientTestSuite();
 
 void IgnorePipeSignal()
 {
@@ -29,7 +33,9 @@ public:
 	{
 		GET,
 		DIRTYGET,
-		SET
+		SET,
+		LIST,
+		LISTP
 	};
 	
 	int					type;
@@ -72,8 +78,56 @@ public:
 			rndkey = true;
 			return;
 		}
+		if (strcmp(s, "list") == 0)
+		{
+			type = LIST;
+			return;
+		}
+		if (strcmp(s, "listp") == 0)
+		{
+			type = LISTP;
+			return;
+		}
 	}
 };
+
+int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
+{
+	int				status;
+	Stopwatch		sw;
+	DynArray<1>		startKey;
+	int				num;
+	Result			*result;
+
+	conf.key.Writef("key%B", conf.padding.length, conf.padding.buffer);
+
+	sw.Reset();	
+	sw.Start();
+
+	if (conf.type == TestConfig::LIST)
+		status = client.ListKeys(conf.key, startKey);
+	else
+		status = client.ListKeyValues(conf.key, startKey);
+
+	sw.Stop();
+	
+	result = client.GetResult(status);
+	if (status != KEYSPACE_OK || !result)
+	{
+		Log_Message("Test failed (%s failed after %lu)", conf.type, (unsigned long) sw.elapsed);
+		return 1;
+	}
+	
+	num = 0;
+	while (result)
+	{
+		num++;
+		result = result->Next(status);
+	}
+	
+	Log_Message("Test succeeded (%s %d, elapsed %lu)", conf.type, num, (unsigned long) sw.elapsed);
+	return 0;
+}
 
 int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 {
@@ -201,9 +255,14 @@ int KeyspaceClientTest2(int argc, char **argv)
 	int64_t				timeout;
 	TestConfig			testConf;
 
+	if (argc >= 2 && strcmp(argv[1], "suite") == 0)
+	{
+		return KeyspaceClientTestSuite();
+	}
+	
 	if (argc < 6)
 	{
-		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set|rndset> <numClients> <keySize> <valueSize>", argv[0]);
+		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set|rndset|list> <numClients> <keySize> <valueSize>", argv[0]);
 		return 1;
 	}
 		
@@ -248,8 +307,12 @@ int KeyspaceClientTest2(int argc, char **argv)
 		
 	if (testConf.type == TestConfig::SET)
 		return KeyspaceClientSetTest(client, testConf);
+	if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)
+		return KeyspaceClientListTest(client, testConf);
 	else
 		return KeyspaceClientGetTest(client, testConf);
+		
+	return 1;
 }
 
 
@@ -272,11 +335,13 @@ int KeyspaceClientTestSuite()
 	Log_SetTrace(false);
 	Log_SetTimestamping(true);
 	
-	status = client.Init(SIZE(nodes), nodes, 100000);
+	status = client.Init(SIZE(nodes), nodes, 10000);
 	if (status < 0)
 		return 1;
 
 	reference.Writef("1234567890");
+
+	//goto limitset;
 
 	// basic SET test
 	{
@@ -323,7 +388,7 @@ int KeyspaceClientTestSuite()
 		result = client.GetResult(status);
 		while (result)
 		{
-			Log_Message("LIST: %.*s", result->Key().length, result->Key().buffer);
+			Log_Trace("LIST: %.*s", result->Key().length, result->Key().buffer);
 			result = result->Next(status);		
 		}
 		
@@ -450,7 +515,7 @@ int KeyspaceClientTestSuite()
 		result = client.GetResult(status);
 		while (result)
 		{
-			Log_Message("LISTP: %.*s, %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
+			Log_Trace("LISTP: %.*s, %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
 			result = result->Next(status);		
 		}
 		
@@ -498,11 +563,14 @@ int KeyspaceClientTestSuite()
 	
 	// random GET test
 	{
+		sw.Reset();
 		client.DistributeDirty(true);
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
+			sw.Start();
 			status = client.DirtyGet(key);
+			sw.Stop();
 			if (status != KEYSPACE_OK)
 			{
 				Log_Message("GET/random failed");
@@ -510,7 +578,75 @@ int KeyspaceClientTestSuite()
 			}		
 		}
 		
-		Log_Message("GET/random succeeded");
+		Log_Message("GET/random succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));
+	}
+	
+	// batched GET test
+	{
+		sw.Reset();
+		client.Begin();
+		
+		for (int i = 0; i < num; i++)
+		{
+			key.Writef("test:%d", i);
+			status = client.DirtyGet(key, false);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("GET/batched failed");
+				return 1;
+			}		
+		}
+		
+		sw.Start();
+		status = client.Submit();
+		sw.Stop();
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("GET/batched failed");
+			return 1;
+		}
+		
+		Log_Message("GET/batched succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));		
+	}
+
+limitset:	
+	// limit SET test
+	{
+		int d = 1;
+		uint64_t timeout = client.SetTimeout(3000);
+		
+		key.Fill('k', KEYSPACE_KEY_SIZE + d);
+		value.Fill('v', KEYSPACE_VAL_SIZE + d);
+
+		for (int i = -d; i <= d; i++)
+		{
+			for (int j = -d; j <= d; j++)
+			{
+				key.length = KEYSPACE_KEY_SIZE + i;
+				value.length = KEYSPACE_VAL_SIZE + j;
+
+				status = client.Set(key, value);
+				if (status != KEYSPACE_OK)
+				{
+					if (key.length <= KEYSPACE_KEY_SIZE && value.length <= KEYSPACE_VAL_SIZE)
+					{
+						Log_Message("SET/limit failed, keySize = %d, valSize = %d", key.length, value.length);
+						return 1;
+					}
+				}
+				else
+				{
+					if (key.length > KEYSPACE_KEY_SIZE && value.length > KEYSPACE_VAL_SIZE)
+					{
+						Log_Message("SET/limit failed, keySize = %d, valSize = %d", key.length, value.length);
+						return 1;
+					}
+				}
+			}
+		}
+		
+		client.SetTimeout(timeout);
+		Log_Message("SET/limit succeeded");
 	}
 		
 	return 0;
@@ -521,8 +657,8 @@ int KeyspaceClientTestSuite()
 int
 main(int argc, char** argv)
 {
-	KeyspaceClientTestSuite();
-	//KeyspaceClientTest2(argc, argv);
+	//KeyspaceClientTestSuite();
+	KeyspaceClientTest2(argc, argv);
 
 	return 0;
 }

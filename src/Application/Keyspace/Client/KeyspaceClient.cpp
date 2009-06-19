@@ -488,6 +488,16 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 	return KEYSPACECLIENT_OK;
 }
 
+uint64_t Client::SetTimeout(uint64_t timeout_)
+{
+	uint64_t	prev;
+	
+	prev = timeout;
+	timeout = timeout_;
+	
+	return prev;
+}
+
 int Client::GetMaster()
 {
 	return master;
