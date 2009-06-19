@@ -126,6 +126,14 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		op->status &= table->Delete(&transaction, op->key);
 		op->service->OnComplete(op);
 	}
+	else if (op->type == KeyspaceOp::REMOVE)
+	{
+		op->value.Allocate(KEYSPACE_VAL_SIZE);
+		op->status &= table->Get(&transaction, op->key, op->value);
+		op->status &= table->Delete(&transaction, op->key);
+		op->service->OnComplete(op);
+	}
+
 	else if (op->type == KeyspaceOp::PRUNE)
 	{
 		op->status &= table->Prune(&transaction, op->prefix);

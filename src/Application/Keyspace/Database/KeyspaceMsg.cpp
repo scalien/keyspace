@@ -9,7 +9,6 @@ void KeyspaceMsg::Init(char type_)
 void KeyspaceMsg::Set(ByteString key_, ByteString value_)
 {
 	Init(KEYSPACE_SET);
-	
 	key.Set(key_);
 	value.Set(value_);
 }
@@ -17,7 +16,6 @@ void KeyspaceMsg::Set(ByteString key_, ByteString value_)
 void KeyspaceMsg::TestAndSet(ByteString key_, ByteString test_, ByteString value_)
 {
 	Init(KEYSPACE_TEST_AND_SET);
-	
 	key.Set(key_);
 	test.Set(test_);
 	value.Set(value_);
@@ -26,7 +24,6 @@ void KeyspaceMsg::TestAndSet(ByteString key_, ByteString test_, ByteString value
 void KeyspaceMsg::Add(ByteString key_, int64_t num_)
 {
 	Init(KEYSPACE_ADD);
-	
 	key.Set(key_);
 	num = num_;
 }
@@ -38,18 +35,21 @@ void KeyspaceMsg::Rename(ByteString key_, ByteString newKey_)
 	newKey.Set(newKey_);
 }
 
-
 void KeyspaceMsg::Delete(ByteString key_)
 {
-	Init(KEYSPACE_DELETE);
-	
+	Init(KEYSPACE_DELETE);	
+	key.Set(key_);
+}
+
+void KeyspaceMsg::Remove(ByteString key_)
+{
+	Init(KEYSPACE_REMOVE);	
 	key.Set(key_);
 }
 
 void KeyspaceMsg::Prune(ByteString prefix_)
 {
 	Init(KEYSPACE_PRUNE);
-	
 	prefix.Set(prefix_);
 }
 	
@@ -79,6 +79,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 						   &type, &key, &newKey);
 			break;
 		case KEYSPACE_DELETE:
+		case KEYSPACE_REMOVE:
 			read = snreadf(data.buffer, data.length, "%c:%M",
 						   &type, &key);
 			break;
@@ -119,6 +120,7 @@ bool KeyspaceMsg::Write(ByteString& data)
 							   type, &key, &newKey);
 			break;
 		case KEYSPACE_DELETE:
+		case KEYSPACE_REMOVE:
 			return data.Writef("%c:%M",
 							   type, &key);
 			break;
@@ -145,6 +147,8 @@ bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
 		Init(KEYSPACE_RENAME);
 	else if (op->type == KeyspaceOp::DELETE)
 		Init(KEYSPACE_DELETE);
+	else if (op->type == KeyspaceOp::REMOVE)
+		Init(KEYSPACE_REMOVE);
 	else if (op->type == KeyspaceOp::PRUNE)
 		Init(KEYSPACE_PRUNE);
 	else

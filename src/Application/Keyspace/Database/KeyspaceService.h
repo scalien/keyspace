@@ -51,6 +51,7 @@ public:
 		ADD,
 		RENAME,
 		DELETE,
+		REMOVE,
 		PRUNE
 	};
 	
@@ -92,8 +93,9 @@ public:
 	bool IsWrite()
 	{
 		return (type == KeyspaceOp::SET || type == KeyspaceOp::TEST_AND_SET ||
-			type == KeyspaceOp::DELETE || type == KeyspaceOp::ADD ||
-			type == KeyspaceOp::RENAME || type == KeyspaceOp::PRUNE);
+			type == KeyspaceOp::DELETE || type == KeyspaceOp::REMOVE ||
+			type == KeyspaceOp::ADD || type == KeyspaceOp::RENAME ||
+			type == KeyspaceOp::PRUNE);
 	}
 
 	bool IsRead()

@@ -43,6 +43,7 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 						   &type, &cmdID, &key, &test, &value);
 			break;
 		case KEYSPACECLIENT_DELETE:
+		case KEYSPACECLIENT_REMOVE:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N",
 						   &type, &cmdID, &key);
 			break;
@@ -102,6 +103,9 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			break;
 		case KEYSPACECLIENT_DELETE:
 			op->type = KeyspaceOp::DELETE;
+			break;
+		case KEYSPACECLIENT_REMOVE:
+			op->type = KeyspaceOp::REMOVE;
 			break;
 		case KEYSPACECLIENT_PRUNE:
 			op->type = KeyspaceOp::PRUNE;

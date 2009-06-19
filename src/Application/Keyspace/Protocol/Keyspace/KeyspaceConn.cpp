@@ -41,7 +41,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 			if (op->type == KeyspaceOp::GET ||
 				op->type == KeyspaceOp::DIRTY_GET ||
 				op->type == KeyspaceOp::ADD ||
-				op->type == KeyspaceOp::RENAME)
+				op->type == KeyspaceOp::REMOVE)
 			{
 				if (op->status)
 					resp.Ok(op->cmdID, op->value);
@@ -60,7 +60,9 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 
 				resp.Write(data);
 			}
-			else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE)
+			else if (op->type == KeyspaceOp::RENAME ||
+					 op->type == KeyspaceOp::DELETE ||
+					 op->type == KeyspaceOp::PRUNE)
 			{
 				if (op->status)
 					resp.Ok(op->cmdID);

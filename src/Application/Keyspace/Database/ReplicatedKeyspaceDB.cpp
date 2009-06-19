@@ -179,7 +179,9 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 				op = *it;
 				if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
 					ASSERT_FAIL();
-				if ((op->type == KeyspaceOp::ADD || op->type == KeyspaceOp::TEST_AND_SET) && ret)
+				if ((op->type == KeyspaceOp::ADD ||
+					 op->type == KeyspaceOp::TEST_AND_SET ||
+					 op->type == KeyspaceOp::REMOVE) && ret)
 					op->value.Set(data);
 				op->status = ret;
 				it = ops.Next(it);
@@ -250,6 +252,11 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 		break;
 
 	case KEYSPACE_DELETE:
+		ret &= table->Delete(transaction, msg.key);
+		break;
+		
+	case KEYSPACE_REMOVE:
+		ret &= table->Get(transaction, msg.key, data);
 		ret &= table->Delete(transaction, msg.key);
 		break;
 

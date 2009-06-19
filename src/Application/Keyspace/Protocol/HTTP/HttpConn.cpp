@@ -39,7 +39,8 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
 		op->type == KeyspaceOp::ADD ||
-		op->type == KeyspaceOp::TEST_AND_SET)
+		op->type == KeyspaceOp::TEST_AND_SET ||
+		op->type == KeyspaceOp::REMOVE)
 	{
 		if (op->status)
 			Response(200, op->value.buffer, op->value.length);
@@ -490,7 +491,37 @@ int HttpConn::ProcessGetRequest()
 		
 		return 0;
 	}
-	else if (strncmp(request.line.uri, "/prune/", strlen("/prune/")) == 0)
+	else if (strncmp(request.line.uri, "/remove/", strlen("/remove/")) == 0)
+	{
+		key = request.line.uri + strlen("/remove/");
+		keylen = strlen(key);
+		
+		if (keylen > KEYSPACE_KEY_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		
+		op->type = KeyspaceOp::REMOVE;
+		
+		if (!op->key.Allocate(keylen))
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op->key.Set((char*) key, keylen);
+		
+		if (!Add(op))
+		{
+			delete op;
+			RESPONSE_FAIL;
+		}
+		kdb->Submit();
+		
+		return 0;
+	}	else if (strncmp(request.line.uri, "/prune/", strlen("/prune/")) == 0)
 	{
 		prefix = request.line.uri + strlen("/prune/");
 		prefixlen = strlen(prefix);
