@@ -164,7 +164,7 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	
 	if (epollfd < 0)
 	{
-		Log_Message("epollfd < 0");
+		Log_Trace("epollfd < 0");
 		return false;
 	}
 
@@ -193,7 +193,7 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	{
 		if (errno == EEXIST)
 		{
-			//Log_Message("AddEvent: fd = %d exists", fd);
+			//Log_Trace("AddEvent: fd = %d exists", fd);
 			nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &ev);
 		}
 
@@ -221,7 +221,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	
 	if (epollfd < 0)
 	{
-		Log_Message("eventfd < 0");
+		Log_Trace("eventfd < 0");
 		return false;
 	}
 	
@@ -546,7 +546,7 @@ void ProcessUDPWrite(UDPWrite* udpwrite)
 		} else
 		{
 			udpwrite->offset += nwrite;
-			Log_Message("sendto() datagram fragmentation");
+			Log_Trace("sendto() datagram fragmentation");
 			IOProcessor::Add(udpwrite); // try again
 		}
 	}

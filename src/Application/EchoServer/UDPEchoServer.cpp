@@ -16,7 +16,7 @@ bool UDPEchoServer::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	socket.Create(UDP);
 	socket.Bind(UDPECHOSERVER_PORT);
 	socket.SetNonblocking();
-	Log_Message("Bound to socket %d", socket.fd);
+	Log_Trace("Bound to socket %d", socket.fd);
 	
 	udpread.fd = socket.fd;
 	udpread.data = data;

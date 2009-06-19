@@ -40,7 +40,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 		{
 			if (op->type == KeyspaceOp::GET ||
 				op->type == KeyspaceOp::DIRTY_GET ||
-				op->type == KeyspaceOp::ADD)
+				op->type == KeyspaceOp::ADD ||
+				op->type == KeyspaceOp::RENAME)
 			{
 				if (op->status)
 					resp.Ok(op->cmdID, op->value);
@@ -89,7 +90,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 			
 			if (data.length > 0)
 			{
-				//Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
+				//Log_Trace("=== Sending to client: %.*s ===", data.length, data.buffer);
 				Write(data);
 			}
 			
@@ -99,7 +100,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 			{
 				resp.ListEnd(op->cmdID);
 				resp.Write(data);
-				//Log_Message("=== Sending to client: %.*s ===", data.length, data.buffer);
+				//Log_Trace("=== Sending to client: %.*s ===", data.length, data.buffer);
 				Write(data);
 			}
 		}

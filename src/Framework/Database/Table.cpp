@@ -204,7 +204,7 @@ bool Table::Prune(Transaction* transaction, const ByteString &prefix)
 	return true;
 }
 
-bool Table::Truncate(Transaction* transaction)
+/*bool Table::Truncate(Transaction* transaction)
 {
 	u_int32_t count;
 	u_int32_t flags = 0;
@@ -216,11 +216,11 @@ bool Table::Truncate(Transaction* transaction)
 	Log_Trace();
 	if ((ret = db->truncate(txn, &count, flags)) != 0)
 	{
-		Log_Message("truncate() failed");
+		Log_Trace("truncate() failed");
 	}
 	Log_Trace();
 	return true;
-}
+}*/
 
 bool Table::Visit(TableVisitor &tv)
 {

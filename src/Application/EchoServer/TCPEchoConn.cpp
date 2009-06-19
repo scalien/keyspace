@@ -11,8 +11,6 @@ onCloseWrite(this, &TCPEchoConn::OnCloseWrite)
 
 bool TCPEchoConn::Init(IOProcessor* ioproc_)
 {
-	Log_Message("Bound socket %d", socket.fd);
-
 	ioproc = ioproc_;
 	
 	tcpwrite.fd = socket.fd;

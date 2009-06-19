@@ -60,7 +60,7 @@ void MemcacheConn::OnRead()
 		{
 			if (tcpread.data.length == tcpread.data.size)
 			{
-				Log_Message("message is bigger than buffer size, closing connection");
+				Log_Trace("message is bigger than buffer size, closing connection");
 				Close();
 				return;
 			}
@@ -198,7 +198,7 @@ const char* MemcacheConn::Process(const char* data, int size)
 	if (numtoken == MAX_TOKENS + 1)
 		return NULL;
 
-	Log_Message("command = %.*s", tokens[TOKEN_COMMAND].len, tokens[TOKEN_COMMAND].value);
+	Log_Trace("command = %.*s", tokens[TOKEN_COMMAND].len, tokens[TOKEN_COMMAND].value);
 	
 	if (numtoken >= 2 && 
 		strncmp(tokens[TOKEN_COMMAND].value, "get", tokens[TOKEN_COMMAND].len) == 0 && 

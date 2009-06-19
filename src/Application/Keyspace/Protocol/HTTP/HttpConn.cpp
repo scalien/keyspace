@@ -53,7 +53,8 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 		else
 			Response(200, "Failed", strlen("Failed"));
 	}
-	else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE)
+	else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE
+			|| op->type == KeyspaceOp::RENAME)
 	{
 		if (op->status)
 			Response(200, "OK", strlen("OK"));
@@ -160,11 +161,13 @@ int HttpConn::ProcessGetRequest()
 {
 	KeyspaceOp* op;
 	const char* key;
+	const char* newKey;
 	const char* value;
 	const char* test;
 	const char* prefix;
 	const char* count;
 	int keylen;
+	int newKeylen;
 	int valuelen;
 	int testlen;
 	int prefixlen;
@@ -398,6 +401,54 @@ int HttpConn::ProcessGetRequest()
 			return 0;
 		}
 		op->key.Set((char*) key, keylen);
+		
+		if (!Add(op))
+		{
+			delete op;
+			RESPONSE_FAIL;
+		}
+		kdb->Submit();
+		
+		return 0;
+	}
+	else if (strncmp(request.line.uri, "/rename/", strlen("/rename/")) == 0)
+	{
+		key = request.line.uri + strlen("/rename/");
+		newKey = strchr(key, '/');
+		if (!newKey)
+		{
+			delete op;
+			return -1;
+		}
+		
+		keylen = newKey - key;
+		newKey++;
+		newKeylen = strlen(newKey);
+		
+		if (keylen > KEYSPACE_KEY_SIZE || newKeylen > KEYSPACE_KEY_SIZE)
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		
+		op->type = KeyspaceOp::RENAME;
+		
+		if (!op->key.Allocate(keylen))
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op->key.Set((char*) key, keylen);
+		
+		if (!op->newKey.Allocate(newKeylen))
+		{
+			delete op;
+			RESPONSE_FAIL;
+			return 0;
+		}
+		op->newKey.Set((char*) newKey, newKeylen);
 		
 		if (!Add(op))
 		{

@@ -91,7 +91,7 @@ protected:
 		}
 		else
 		{
-			Log_Message("Accept() failed");
+			Log_Trace("Accept() failed");
 			pT->DeleteConn(conn);
 		}
 		

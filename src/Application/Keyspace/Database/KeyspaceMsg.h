@@ -9,6 +9,8 @@
 #define KEYSPACE_ADD			'a'
 #define KEYSPACE_DELETE			'd'
 #define KEYSPACE_PRUNE			'p'
+#define KEYSPACE_RENAME			'e'
+#define KEYSPACE_REMOVE			'r'
 
 class KeyspaceOp;
 
@@ -17,6 +19,7 @@ class KeyspaceMsg
 public:
 	char							type;
 	ByteArray<KEYSPACE_KEY_SIZE>	key;
+	ByteArray<KEYSPACE_KEY_SIZE>	newKey;
 	ByteArray<KEYSPACE_VAL_SIZE>	value;
 	ByteArray<KEYSPACE_VAL_SIZE>	test;
 	ByteArray<KEYSPACE_VAL_SIZE>	prefix;
@@ -27,7 +30,9 @@ public:
 	void							Set(ByteString key_, ByteString value_);
 	void							TestAndSet(ByteString key_, ByteString test_, ByteString value_);
 	void							Add(ByteString key_, int64_t num_);
+	void							Rename(ByteString key_, ByteString newKey_);
 	void							Delete(ByteString key_);
+	void							Remove(ByteString key_);
 	void							Prune(ByteString prefix_);
 
 	bool							Read(ByteString& data, unsigned &nread);

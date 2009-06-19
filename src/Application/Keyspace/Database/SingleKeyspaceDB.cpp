@@ -110,6 +110,17 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		}
 		op->service->OnComplete(op);
 	}
+	else if (op->type == KeyspaceOp::RENAME)
+	{
+		op->status &= table->Get(&transaction, op->key, data);
+		if (op->status)
+		{
+			op->status &= table->Set(&transaction, op->newKey, data);
+			if (op->status)
+				op->status &= table->Delete(&transaction, op->key);
+		}
+		op->service->OnComplete(op);
+	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
 		op->status &= table->Delete(&transaction, op->key);

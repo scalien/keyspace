@@ -91,7 +91,7 @@ bool AddKq(int ident, short filter, IOOperation* ioop)
 	
 	if (kq < 0)
 	{
-		Log_Message("kq < 0");
+		Log_Trace("kq < 0");
 		return false;
 	}
 	
@@ -123,7 +123,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	
 	if (kq < 0)
 	{
-		Log_Message("kq < 0");
+		Log_Trace("kq < 0");
 		return false;
 	}
 
@@ -170,7 +170,7 @@ bool IOProcessor::Poll(int sleep)
 	for (i = 0; i < nevents; i++)
 	{
 		if (events[i].flags & EV_ERROR)
-			Log_Message(strerror(events[i].data));
+			Log_Trace("%s", strerror(events[i].data));
 		
 		if (events[i].udata == NULL)
 		{
@@ -375,7 +375,7 @@ void ProcessUDPWrite(struct kevent* ev)
 				Call(udpwrite->onComplete);
 			} else
 			{
-				Log_Message("sendto() datagram fragmentation");
+				Log_Trace("sendto() datagram fragmentation");
 				IOProcessor::Add(udpwrite); // try again
 			}
 		}

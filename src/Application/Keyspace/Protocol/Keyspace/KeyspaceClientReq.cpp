@@ -66,6 +66,10 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 			read = snreadf(data.buffer, data.length, "%c:%U:%N:%I:%I",
 						   &type, &cmdID, &key, &num, &num);
 			break;
+		case KEYSPACECLIENT_RENAME:
+			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N",
+						   &type, &cmdID, &key, &newKey);
+			break;
 		case KEYSPACECLIENT_SUBMIT:
 			read = snreadf(data.buffer, data.length, "%c", &type);
 			break;
@@ -118,6 +122,9 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			op->type = KeyspaceOp::ADD;
 			op->num = num;
 			break;
+		case KEYSPACECLIENT_RENAME:
+			op->type = KeyspaceOp::RENAME;
+			break;
 		default:
 			return false;
 	}
@@ -125,6 +132,7 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 	op->cmdID = cmdID;
 
 	if (!op->key.Set(key)) return false;
+	if (!op->newKey.Set(newKey)) return false;
 	if (!op->test.Set(test)) return false;
 	if (!op->value.Set(value)) return false;
 	if (!op->prefix.Set(prefix)) return false;

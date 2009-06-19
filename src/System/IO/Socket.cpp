@@ -14,7 +14,7 @@ bool Socket::Create(int type_)
 {
 	if (fd >= 0)
 	{
-		Log_Message("Called Create() on existing socket");
+		Log_Trace("Called Create() on existing socket");
 		return false;
 	}
 	
@@ -37,7 +37,7 @@ bool Socket::SetNonblocking()
 	
 	if (fd < 0)
 	{
-		Log_Message("SetNonblocking on invalid file descriptor");
+		Log_Trace("SetNonblocking on invalid file descriptor");
 		return false;
 	}
 	

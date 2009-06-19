@@ -139,7 +139,7 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 		Log_Append(p, remaining, ": ", 2);
 	}
 
-	if (file && func)
+	if (type != LOG_TYPE_MSG && file && func)
 	{
 		sep = strrchr(file, '/');
 		if (sep)

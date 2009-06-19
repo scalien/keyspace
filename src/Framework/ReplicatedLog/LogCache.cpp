@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "LogCache.h"
+#include "System/Config.h"
 
 #define INDEX(n) (((n) + size) % size)
 
@@ -7,7 +8,10 @@ LogCache::LogCache()
 {
 	count = 0;
 	next = 0;
-	size = SIZE(logItems);
+	size = Config::GetIntValue("logCache.size", DEFAULT_CACHE_SIZE);
+	logItems = new ByteBuffer[size];
+	
+	maxmem = Config::GetIntValue("logCache.maxMem", DEFAULT_MAX_MEM_USE);
 	allocated = 0;
 }
 
@@ -15,6 +19,7 @@ LogCache::~LogCache()
 {
 	for (int i = 0; i < size; i++)
 		logItems[i].Free();
+	free(logItems);
 }
 
 bool LogCache::Push(uint64_t paxosID_, ByteString value)
@@ -24,7 +29,7 @@ bool LogCache::Push(uint64_t paxosID_, ByteString value)
 	tail = INDEX(next - count);
 	head = INDEX(next - 1);
 
-	if (allocated - logItems[next].size + value.length > MAX_MEM_USE)
+	if (allocated - logItems[next].size + value.length > maxmem)
 	{
 		// start freeing up at the tail
 		for (i = tail; i <= head; i = INDEX(i+1))
@@ -32,7 +37,7 @@ bool LogCache::Push(uint64_t paxosID_, ByteString value)
 			allocated -= logItems[i].size;
 			logItems[i].Free();
 			count--;
-			if (allocated + value.length <= MAX_MEM_USE)
+			if (allocated + value.length <= maxmem)
 				break;
 		}
 	}

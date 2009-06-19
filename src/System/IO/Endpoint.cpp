@@ -16,7 +16,7 @@ bool Endpoint::Set(const char* ip, int port)
 	sa.sin_port = htons((uint16_t)port);
 	if (inet_aton(ip, &sa.sin_addr) == 0)
 	{
-		Log_Message("inet_aton() failed");
+		Log_Trace("inet_aton() failed");
 		return false;
 	}
 	return true;
@@ -38,7 +38,7 @@ bool Endpoint::Set(const char* ip_port)
 	
 	if (*p == '\0')
 	{
-		Log_Message("No ':' in host specification");
+		Log_Trace("No ':' in host specification");
 		return false;
 	}
 	
@@ -50,7 +50,7 @@ bool Endpoint::Set(const char* ip_port)
 	port = atoi(p);
 	if (port < 1 || port > 65535)
 	{
-		Log_Message("atoi() failed to produce a sensible value");
+		Log_Trace("atoi() failed to produce a sensible value");
 		return false;
 	}
 

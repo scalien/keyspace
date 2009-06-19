@@ -27,6 +27,7 @@ class KeyspaceClientReq
 public:
 	char			type;
 	ByteString		key;
+	ByteString		newKey;
 	ByteString		value;
 	ByteString		test;
 	ByteString		prefix;

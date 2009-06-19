@@ -49,6 +49,7 @@ public:
 		SET,
 		TEST_AND_SET,
 		ADD,
+		RENAME,
 		DELETE,
 		PRUNE
 	};
@@ -57,6 +58,7 @@ public:
 	
 	Type					type;
 	ByteBuffer				key;
+	ByteBuffer				newKey; // for rename
 	ByteBuffer				value;
 	ByteBuffer				test;
 	ByteBuffer				prefix;
@@ -90,7 +92,7 @@ public:
 	{
 		return (type == KeyspaceOp::SET || type == KeyspaceOp::TEST_AND_SET ||
 			type == KeyspaceOp::DELETE || type == KeyspaceOp::ADD ||
-			type == KeyspaceOp::PRUNE);
+			type == KeyspaceOp::RENAME || type == KeyspaceOp::PRUNE);
 	}
 
 	bool IsRead()

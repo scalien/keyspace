@@ -240,6 +240,14 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 		else
 			ret = false;
 		break;
+		
+	case KEYSPACE_RENAME:
+		ret &= table->Get(transaction, msg.key, data);
+		if (!ret) break;
+		ret &= table->Set(transaction, msg.newKey, data);
+		if (!ret) break;
+		ret &= table->Delete(transaction, msg.key);
+		break;
 
 	case KEYSPACE_DELETE:
 		ret &= table->Delete(transaction, msg.key);
