@@ -550,72 +550,6 @@ int Client::DirtyGet(const ByteString &key, bool submit)
 	return Get(key, true, submit);
 }
 
-int	Client::List(const ByteString &prefix, uint64_t count, bool dirty)
-{
-	Command*	cmd;
-	ByteString	args[2];
-	DynArray<32> countString;
-	
-	countString.Writef("%U", count);
-	
-	args[0] = prefix;
-	args[1] = countString;
-	
-	if (dirty)
-	{
-		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, false, 2, args);
-		dirtyCommands.Add(cmd);
-	}
-	else
-	{
-		cmd = CreateCommand(KEYSPACECLIENT_LIST, false, 2, args);
-		safeCommands.Add(cmd);
-	}
-	
-	result.Close();
-	
-	EventLoop();
-	return result.Status();
-}
-
-int	Client::DirtyList(const ByteString &prefix, uint64_t count)
-{
-	return List(prefix, count, true);
-}
-
-int Client::ListP(const ByteString &prefix, uint64_t count, bool dirty)
-{
-	Command*	cmd;
-	ByteString	args[2];
-	DynArray<32> countString;
-	
-	countString.Writef("%U", count);
-	
-	args[0] = prefix;
-	args[1] = countString;
-	
-	if (dirty)
-	{
-		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LISTP, false, 2, args);
-		dirtyCommands.Add(cmd);
-	}
-	else
-	{
-		cmd = CreateCommand(KEYSPACECLIENT_LISTP, false, 2, args);
-		safeCommands.Add(cmd);
-	}
-	
-	result.Close();
-	
-	EventLoop();
-	return result.Status();	
-}
-
-int Client::DirtyListP(const ByteString &prefix, uint64_t count)
-{
-	return ListP(prefix, count, true);
-}
-
 int	Client::ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty)
 {
 	return ListKeyValues(prefix, startKey, count, next, dirty, false);
@@ -641,6 +575,7 @@ int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, 
 		nextString.Append("0", 1);
 
 	if (prefix.length > 0 &&
+		startKey.length >= prefix.length &&
 		memcmp(prefix.buffer, startKey.buffer, min(prefix.length, startKey.length)) == 0)
 	{
 		sk.buffer = startKey.buffer + prefix.length;

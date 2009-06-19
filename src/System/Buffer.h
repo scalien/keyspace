@@ -270,6 +270,11 @@ public:
 		length = 0;
 	}
 	
+	bool Append(const ByteString &bs)
+	{
+		return Append(bs.buffer, bs.length);
+	}
+	
 	bool Append(const void *buf, unsigned len)
 	{
 		if (length + len > size)

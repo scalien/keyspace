@@ -253,13 +253,14 @@ int KeyspaceClientTest2(int argc, char **argv)
 }
 
 
-int KeyspaceClientTest()
+int KeyspaceClientTestSuite()
 {	
 	const char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 //	char				*nodes[] = {"127.0.0.1:7080"};
 	DynArray<128>		key;
 	DynArray<1024>		value;
 	DynArray<36>		reference;
+	DynArray<128>		newName;
 	int64_t				num;
 	int					status;
 	Keyspace::Client	client;
@@ -268,252 +269,250 @@ int KeyspaceClientTest()
 	
 	IgnorePipeSignal();
 
-	Log_SetTrace(true);
+	Log_SetTrace(false);
 	Log_SetTimestamping(true);
 	
-	status = client.Init(SIZE(nodes), nodes, 3000);
+	status = client.Init(SIZE(nodes), nodes, 100000);
 	if (status < 0)
 		return 1;
 
 	reference.Writef("1234567890");
 
-	key.Writef("%s", "test:0");
-	value.Set(reference);
-	status = client.Set(key, value);
-	if (status != KEYSPACE_OK)
+	// basic SET test
 	{
-		Log_Trace("SET failed");
-		return 1;
+		key.Writef("%s", "test:0");
+		value.Set(reference);
+		status = client.Set(key, value);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("SET failed");
+			return 1;
+		}
+		Log_Message("SET succeeded");
 	}
 	
-	value.Clear();
-	status = client.Get(key, value);
-	if (status != KEYSPACE_OK)
+	// basic GET test
 	{
-		Log_Trace("GET failed");
-		return 1;
+		value.Clear();
+		status = client.Get(key, value);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("GET failed");
+			return 1;
+		}
+		if (!(value == reference))
+		{
+			Log_Message("GET failed, value != reference");
+			return 1;
+		}
+		Log_Message("GET succeeded");
 	}
-	if (!(value == reference))
-	{
-		Log_Trace("GET failed, value != reference");
-		return 1;
-	}
+
 
 	// LIST test
-	status = client.List(key);
-	if (status != KEYSPACE_OK)
 	{
-		Log_Trace("LIST failed");
-		return 1;
-	}
+		DynArray<128>	startKey;
+		
+		status = client.ListKeys(key, startKey);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("LIST failed");
+			return 1;
+		}
 
-	result = client.GetResult(status);
-	while (result)
-	{
-		Log_Trace("%.*s", result->Key().length, result->Key().buffer);
-		result = result->Next(status);		
+		result = client.GetResult(status);
+		while (result)
+		{
+			Log_Message("LIST: %.*s", result->Key().length, result->Key().buffer);
+			result = result->Next(status);		
+		}
+		
+		Log_Message("LIST succeeded");
 	}
 	
 	// ADD test
-	status = client.Add(key, 1, num);
-	if (status != KEYSPACE_OK || num != 1234567891UL)
 	{
-		Log_Trace("ADD failed");
-		return 1;
+		status = client.Add(key, 1, num);
+		if (status != KEYSPACE_OK || num != 1234567891UL)
+		{
+			Log_Message("ADD failed");
+			return 1;
+		}
+
+		Log_Message("ADD succeeded");
 	}
 	
 	// DELETE test
-	status = client.Delete(key);
-	if (status != KEYSPACE_OK)
 	{
-		Log_Trace("DELETE failed");
-		return 1;
+		status = client.Delete(key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("DELETE failed");
+			return 1;
+		}
+		
+		Log_Message("DELETE succeeded");
 	}
 	
 	// TESTANDSET test
-	value.Writef("%U", num);
-	status = client.TestAndSet(key, reference, value);
-	if (status == KEYSPACE_OK)
 	{
-		Log_Trace("TESTANDSET failed");
-		return 1;
+		value.Writef("%U", num);
+		status = client.TestAndSet(key, reference, value);
+		if (status == KEYSPACE_OK)
+		{
+			Log_Message("TESTANDSET failed");
+			return 1;
+		}
+
+		Log_Message("TESTANDSET succeeded");
 	}
 	
 	// SET test (again)
-	status = client.Set(key, reference);
-	if (status != KEYSPACE_OK)
 	{
-		Log_Trace("SET failed");
-		return 1;
-	}
+		status = client.Set(key, reference);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("SET/TESTANDSET failed");
+			return 1;
+		}
 
-	status = client.TestAndSet(key, reference, value);
-	if (status != KEYSPACE_OK)
-	{
-		Log_Trace("TESTANDSET failed");
-		return 1;
+		status = client.TestAndSet(key, reference, value);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("SET/TESTANDSET failed");
+			return 1;
+		}
+		
+		status = client.Set(key, reference);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("SET/TESTANDSET failed");
+			return 1;
+		}
+		
+		Log_Message("SET/TESTANDSET succeeded");
 	}
 	
 	// RENAME test
-	DynArray<128> newName;
-	newName.Writef("%s", "test:1");
-	status = client.Rename(key, newName);
-	if (status != KEYSPACE_OK)
 	{
-		Log_Trace("RENAME failed");
-		return 1;
+		newName.Writef("%s", "test:1");
+		status = client.Rename(key, newName);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("RENAME failed");
+			return 1;
+		}
+		
+		Log_Message("RENAME succeeded");
 	}
 	
 	// REMOVE test
-	status = client.Remove(newName);
-	result = client.GetResult(status);
-	if (status != KEYSPACE_OK || !result)
 	{
-		Log_Trace("REMOVE failed");
-		return 1;
-	}
-	if (!(result->Value() == reference))
-	{
-		Log_Trace("REMOVE failed");
-		return 1;
+		status = client.Remove(newName);
+		result = client.GetResult(status);
+		if (status != KEYSPACE_OK || !result)
+		{
+			Log_Message("REMOVE failed");
+			return 1;
+		}
+		if (!(result->Value() == reference))
+		{
+			Log_Message("REMOVE failed");
+			return 1;
+		}
+		
+		Log_Message("REMOVE succeeded");
 	}
 	
 	// SET test (again)
-	status = client.Set(key, reference);
-	if (status != KEYSPACE_OK)
 	{
-		Log_Trace("SET failed");
-		return 1;
-	}	
+		status = client.Set(key, reference);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("SET/2 failed");
+			return 1;
+		}
+		
+		Log_Message("SET/2 succeeded");
+	}
 	
+
 	// LISTP test
-	status = client.ListP(key);
-	if (status != KEYSPACE_OK)
 	{
-		Log_Trace("LISTP failed");
-		return 1;
+		DynArray<128> startKey;
+		status = client.ListKeyValues(key, startKey);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("LISTP failed");
+			return 1;
+		}
+
+		result = client.GetResult(status);
+		while (result)
+		{
+			Log_Message("LISTP: %.*s, %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
+			result = result->Next(status);		
+		}
+		
+		Log_Message("LISTP succeeded");
 	}
 
-	result = client.GetResult(status);
-	while (result)
-	{
-		Log_Trace("%.*s: %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
-		result = result->Next(status);		
-	}
 
 	status = client.Begin();
 	if (status != KEYSPACE_OK)
 	{
-		Log_Trace("Begin() failed");
+		Log_Message("Begin() failed");
 		return 1;
 	}
 
-	num = 100000;
-	value.Writef("0123456789012345678901234567890123456789");
-	for (int i = 0; i < num; i++)
+	// batched SET test
 	{
-		key.Writef("test_:%d", i);
-		status = client.Set(key, value, false);
+		num = 1000;
+		value.Writef("0123456789012345678901234567890123456789");
+		for (int i = 0; i < num; i++)
+		{
+			key.Writef("test:%d", i);
+			status = client.Set(key, value, false);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("SET/batched failed");
+				return 1;
+			}
+		}
+		
+		bool trace = Log_SetTrace(false);
+		sw.Reset();
+		sw.Start();
+
+		status = client.Submit();
 		if (status != KEYSPACE_OK)
 		{
-			Log_Trace("Set(submit=false) failed");
+			Log_Message("SET/batched Submit() failed");
 			return 1;
 		}
+		
+		sw.Stop();
+		Log_SetTrace(trace);
+		Log_Message("SET/batched succeeded, set/sec = %lf", num / (sw.elapsed / 1000.0));
 	}
-	
-	Log_SetTrace(false);
-	sw.Reset();
-	sw.Start();
-
-	status = client.Submit();
-	if (status != KEYSPACE_OK)
-	{
-		Log_Trace("Submit() failed");
-		return 1;
-	}
-	
-	sw.Stop();
-	Log_SetTrace(true);
-	Log_Trace("set/sec = %lf", num / (sw.elapsed / 1000.0));
 	
 	// random GET test
-	client.DistributeDirty(true);
-	for (int i = 0; i < 100; i++)
 	{
-		key.Writef("test:%d", i);
-		status = client.DirtyGet(key);
-		if (status != KEYSPACE_OK)
+		client.DistributeDirty(true);
+		for (int i = 0; i < num; i++)
 		{
-			Log_Trace("Submit() failed");
-			return 1;
-		}		
+			key.Writef("test:%d", i);
+			status = client.DirtyGet(key);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("GET/random failed");
+				return 1;
+			}		
+		}
+		
+		Log_Message("GET/random succeeded");
 	}
-	
-//	key.Writef("");
-//	status = client.List(key);
-//	result = client.GetResult(status);
-//	while (result)
-//	{
-//		Log_Trace("%.*s", result->Key().length, result->Key().buffer);
-//		result = result->Next(status);
-//	}
-
-//	key.Writef("");
-//	status = client.ListP(key);
-//	result = client.GetResult(status);
-//	while (result)
-//	{
-//		Log_Trace("%.*s: %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
-//		result = result->Next(status);
-//	}
-	
-
-//	sw.Start();
-//	num = 100000;
-//	for (int i = 0; i < num; i++)
-//	{
-//		key.Printf("user:%d", i);
-//		value.Clear();
-//		client.DirtyGet(key, value);
-//	}
-//	sw.Stop();
-//	Log_SetTrace(true);
-//	Log_Trace("read/sec = %lf", num / (sw.elapsed / 1000.0));
-	
-	return 0;
-
-	// get a key named "counter"
-	key.Writef("counter");
-	client.Get(key);
-	result = client.GetResult(status);
-	if (status == KEYSPACE_OK && result)
-	{
-		Log_Trace("Get result: key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
-				  result->Value().length, result->Value().buffer);
-		result->Close();
-	}
-
-	key.Writef("user:");		
-
-	// list all keys starting with "user:"
-	client.List(key);
-	result = client.GetResult(status);
-	while (status == KEYSPACE_OK && result)
-	{
-		Log_Trace("List result: key = %.*s", result->Key().length, result->Key().buffer);
-		result = result->Next(status);
-	}
-	
-	// list all keys and values starting with "user:" (List Key-Value Pairs)
-	client.ListP(key);
-	result = client.GetResult(status);
-	while (status == KEYSPACE_OK && result)
-	{
-		Log_Trace("ListP result: key = %.*s, value = %.*s", result->Key().length, result->Key().buffer,
-				  result->Value().length, result->Value().buffer);		
-		result = result->Next(status);
-	}
-	
+		
 	return 0;
 }
 
@@ -522,8 +521,8 @@ int KeyspaceClientTest()
 int
 main(int argc, char** argv)
 {
-	//KeyspaceClientTest();
-	KeyspaceClientTest2(argc, argv);
+	KeyspaceClientTestSuite();
+	//KeyspaceClientTest2(argc, argv);
 
 	return 0;
 }

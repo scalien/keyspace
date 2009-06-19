@@ -51,9 +51,12 @@ void Log_SetTimestamping(bool ts)
 	timestamping = ts;
 }
 
-void Log_SetTrace(bool trace_)
+bool Log_SetTrace(bool trace_)
 {
+	bool prev = trace;
+	
 	trace = trace_;
+	return prev;
 }
 
 void Log_SetMaxLine(int maxLine_)

@@ -233,10 +233,10 @@ bool Table::Visit(TableVisitor &tv)
 		return false;
 	
 	Dbt key, value;
-	if (tv.GetKeyHint() && tv.GetKeyHint()->length > 0)
+	if (tv.GetStartKey() && tv.GetStartKey()->length > 0)
 	{
-		key.set_data(tv.GetKeyHint()->buffer);
-		key.set_size(tv.GetKeyHint()->length);
+		key.set_data(tv.GetStartKey()->buffer);
+		key.set_size(tv.GetStartKey()->length);
 		flags = DB_SET_RANGE;		
 	}
 	

@@ -91,12 +91,13 @@ void AsyncVisitorCallback::Execute()
 }
 
 AsyncListVisitor::AsyncListVisitor(KeyspaceOp* op_) :
-prefix(op_->prefix),
-startKey(op_->key)
+prefix(op_->prefix)
 {
 	op = op_;
 	count = op->count;
 	offset = op->offset;
+	startKey.Append(prefix);
+	startKey.Append(op->key);
 	num = 0;
 	Init();
 }

@@ -46,7 +46,7 @@ public:
 private:
 	KeyspaceOp*				op;
 	const ByteString		&prefix;
-	const ByteString		&startKey;
+	DynArray<128>			startKey;
 	uint64_t				count;
 	uint64_t				offset;
 	uint64_t				num;
