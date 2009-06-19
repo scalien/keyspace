@@ -128,8 +128,8 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 
 	op->cmdID = cmdID;
 
-#define VALIDATE_KEYLEN(bs) if (bs.length > KEYSPACE_KEY_SIZE) { return false; }
-#define VALIDATE_VALLEN(bs) if (bs.length > KEYSPACE_VAL_SIZE) { return false; }
+#define VALIDATE_KEYLEN(bs) { if (bs.length > KEYSPACE_KEY_SIZE) return false; }
+#define VALIDATE_VALLEN(bs) { if (bs.length > KEYSPACE_VAL_SIZE) return false; }
 
 	VALIDATE_KEYLEN(key);
 	VALIDATE_KEYLEN(newKey);

@@ -176,20 +176,20 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	params = (char*) request.line.uri;
 	bool ret;
 		
-	PREFIXFUNC("/get?",			ProcessGet(params, op)) else
-	PREFIXFUNC("/dirtyget?",	ProcessGet(params, op, true)) else
-	PREFIXFUNC("/set?",			ProcessSet(params, op)) else
-	PREFIXFUNC("/testandset?",	ProcessTestAndSet(params, op)) else
-	PREFIXFUNC("/add?",			ProcessAdd(params, op)) else
-	PREFIXFUNC("/rename?",		ProcessRename(params, op)) else
-	PREFIXFUNC("/delete?",		ProcessDelete(params, op)) else
-	PREFIXFUNC("/remove?",		ProcessRemove(params, op)) else
-	PREFIXFUNC("/prune?",		ProcessPrune(params, op)) else
-	PREFIXFUNC("/list?",		ProcessList(params, op, false)) else
-	PREFIXFUNC("/dirtylist?",	ProcessList(params, op, false, true)) else
-	PREFIXFUNC("/listp?",		ProcessList(params, op, true)) else
-	PREFIXFUNC("/dirtylistp?",	ProcessList(params, op, true, true)) else
-	PREFIXFUNC("/latency?",		ProcessLatency())
+	PREFIXFUNC("/get?",					ProcessGet(params, op)) else
+	PREFIXFUNC("/dirtyget?",			ProcessGet(params, op, true)) else
+	PREFIXFUNC("/set?",					ProcessSet(params, op)) else
+	PREFIXFUNC("/testandset?",			ProcessTestAndSet(params, op)) else
+	PREFIXFUNC("/add?",					ProcessAdd(params, op)) else
+	PREFIXFUNC("/rename?",				ProcessRename(params, op)) else
+	PREFIXFUNC("/delete?",				ProcessDelete(params, op)) else
+	PREFIXFUNC("/remove?",				ProcessRemove(params, op)) else
+	PREFIXFUNC("/prune?",				ProcessPrune(params, op)) else
+	PREFIXFUNC("/listkeys?",			ProcessList(params, op, false)) else
+	PREFIXFUNC("/dirtylistkeys?",		ProcessList(params, op, false, true)) else
+	PREFIXFUNC("/listkeyvalues?",		ProcessList(params, op, true)) else
+	PREFIXFUNC("/dirtylistkeyvalues?",	ProcessList(params, op, true, true)) else
+	PREFIXFUNC("/latency?",				ProcessLatency())
 	else
 	{
 		RESPONSE_NOTFOUND;
