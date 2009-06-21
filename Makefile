@@ -52,6 +52,8 @@ endif
 export PLATFORM
 PLATFORM_UCASE=$(shell echo $(PLATFORM) | tr [a-z] [A-Z])
 
+export PLATFORM_UCASE
+
 include Makefile.$(PLATFORM)
 
 
@@ -69,6 +71,9 @@ DEBUG_CFLAGS = -g #-pg
 DEBUG_LDFLAGS = #-pg -lc_p
 
 RELEASE_CFLAGS = -O3 #-g
+
+LIBNAME = keyspaceclient
+SONAME = lib$(LIBNAME).$(SOEXT)
 
 ifneq ($(BUILD), release)
 BUILD_DIR = $(BUILD_DEBUG_DIR)
@@ -101,7 +106,7 @@ clienttest:
 	$(MAKE) test_targets BUILD="debug"
 
 clientlib:
-	$(MAKE) clientlib_targets BUILD="release"
+	$(MAKE) clientlib_targets BUILD="debug"
 
 timechecktest:
 	$(MAKE) timechecktest_targets BUILD="release"
@@ -112,7 +117,7 @@ targets: $(BUILD_DIR) $(BIN_DIR)/keyspace clientlib_targets
 
 test_targets: $(BUILD_DIR) $(BIN_DIR)/clienttest
 
-clientlib_targets: $(BUILD_DIR) $(BIN_DIR)/clientlib.a $(BIN_DIR)/clientlib.so
+clientlib_targets: $(BUILD_DIR) $(BIN_DIR)/clientlib.a $(BIN_DIR)/$(SONAME)
 
 timechecktest_targets: $(BUILD_DIR) $(BIN_DIR)/timechecktest
 
@@ -171,12 +176,11 @@ $(BIN_DIR)/clientlib.a: $(BUILD_DIR) $(LIBS) $(CLIENTLIB_OBJECTS)
 	$(AR) -r $@ $(CLIENTLIB_OBJECTS)
 	$(RANLIB) $@
 
-$(BIN_DIR)/clientlib.so: $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
-	$(CC) $(SOLINK) -o $@ $(CLIENTLIB_OBJECTS)
+$(BIN_DIR)/$(SONAME): $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
+	$(CC) $(SOLINK) -Wl,-soname,$(SONAME) -o $@ $(CLIENTLIB_OBJECTS)
 	
 $(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS) $(BIN_DIR)/clientlib.a
 	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS) $(BIN_DIR)/clientlib.a
-
 
 
 $(BIN_DIR)/timechecktest: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Test/TimeCheckTest.o

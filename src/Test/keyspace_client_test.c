@@ -16,13 +16,13 @@ void ignore_pipe_signal()
 
 int keyspace_client_test()
 {
-	char *				nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
+	const char *		nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 //	char				*nodes[] = {"127.0.0.1:7080"};
 	keyspace_client_t	kc;
-	const char *		pkey;
+	const void *		pkey;
 	char				key[128];
 	unsigned			keylen;
-	const char *		pval;
+	const void *		pval;
 	char				val[128];
 	unsigned			vallen;
 	int					status;
