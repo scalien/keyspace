@@ -337,7 +337,7 @@ bool ClientConn::ProcessResponse(Response* resp)
 				{
 					delete cmd;
 					client.sentCommands.Remove(it);
-					client.result.SetStatus(KEYSPACE_OK);
+					client.result.SetStatus(resp->status);
 				}
 				else
 					client.result.AppendResponse(resp);

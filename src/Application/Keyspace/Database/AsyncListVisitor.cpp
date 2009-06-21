@@ -135,7 +135,8 @@ bool AsyncListVisitor::Accept(const ByteString &key, const ByteString &value)
 		return true;
 
 	if ((count == 0 || num < count) &&
-		strncmp(prefix.buffer, key.buffer, min(prefix.length, key.length)) == 0)
+		(prefix.length == 0 ||
+		strncmp(prefix.buffer, key.buffer, min(prefix.length, key.length)) == 0))
 	{
 		if (offset > 0)
 			offset--;

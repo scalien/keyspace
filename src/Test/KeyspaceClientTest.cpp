@@ -561,7 +561,7 @@ int KeyspaceClientTestSuite()
 		Log_Message("SET/batched succeeded, set/sec = %lf", num / (sw.elapsed / 1000.0));
 	}
 	
-	// random GET test
+	// discrete GET test
 	{
 		sw.Reset();
 		client.DistributeDirty(true);
@@ -573,12 +573,12 @@ int KeyspaceClientTestSuite()
 			sw.Stop();
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("GET/random failed");
+				Log_Message("GET/discrete failed");
 				return 1;
 			}		
 		}
 		
-		Log_Message("GET/random succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));
+		Log_Message("GET/discrete succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));
 	}
 	
 	// batched GET test
@@ -675,6 +675,64 @@ int KeyspaceClientTestSuite()
 		Log_Message("LISTKEYS/paginated succeeded");
 	}
 	
+	// paginated LISTKEYS test #2
+	{
+		num = 1000; // TODO make a constant of the value from batched SET test
+		bool found[num];
+		DynArray<128> prefix;
+		DynArray<128> startKey;
+		bool skip = false;
+		int i;
+		
+		i = 0;
+		prefix.Writef("test:");
+		while (true)
+		{
+			int j = 10;
+			status = client.ListKeys(prefix, startKey, j, skip);
+
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d)", i, num);
+				return 1;
+			}
+			
+			result = client.GetResult(status);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d)", i, num);
+				return 1;
+			}
+			
+			if (!result)
+				break;
+			
+			while (result)
+			{
+				i++;
+				if (i > num)
+					break;
+				j--;
+				startKey.Set(result->Key());
+				Log_Message("LISTKEYS/paginated2: %.*s", startKey.length, startKey.buffer);
+				result = result->Next(status);
+			}
+			
+			if (j != 0)
+				break;
+			
+			skip = true;
+		}
+		
+		if (i != num)
+		{
+			Log_Message("LISTKEYS/paginated2 failed (returned %d of %d)", i, num);
+			return 1;			
+		}
+		
+		Log_Message("LISTKEYS/paginated2 succeeded");
+	}
+	
 	// PRUNE test
 	{
 		DynArray<128> prefix;
@@ -688,6 +746,58 @@ int KeyspaceClientTestSuite()
 		}
 		
 		Log_Message("PRUNE succeeded");
+	}
+	
+	// LIST test for empty result
+	{
+		DynArray<128> prefix;
+		DynArray<128> startKey;
+		
+		prefix.Writef("test:");
+		status = client.ListKeys(prefix, startKey, 0, false);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("LISTKEYS/empty failed");
+			return -1;
+		}
+		result = client.GetResult(status);
+		if (status != KEYSPACE_OK || result != NULL)
+		{
+			Log_Message("LISTKEYS/empty failed");
+			return -1;
+		}
+		
+		Log_Message("LISTKEYS/emtpy succeeded");
+	}
+
+	// LIST test for empty result #2
+	{
+		DynArray<128> prefix;
+		DynArray<128> startKey;
+		
+		key.Writef("test:0");
+		status = client.Set(key, key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("LISTKEYS/empty2 Set() failed");
+			return -1;
+		}
+		
+		prefix.Writef("test:");
+		status = client.ListKeys(prefix, startKey, 0, true);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("LISTKEYS/empty2 status failed");
+			return -1;
+		}
+		result = client.GetResult(status);
+		if (status != KEYSPACE_OK || result != NULL)
+		{
+			Log_Message("LISTKEYS/empty2 result failed");
+			return -1;
+		}
+		
+		Log_Message("LISTKEYS/emtpy2 succeeded");
 	}
 		
 	// limit SET test
