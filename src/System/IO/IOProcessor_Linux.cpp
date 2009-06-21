@@ -358,14 +358,23 @@ void ProcessIOOperation(IOOperation* ioop)
 {
 	ioop->active = false;
 	
-	if (ioop && ioop->type == TCP_READ)
+	if (!ioop)
+		return;
+	
+	switch (ioop->type)
+	case TCP_READ:
 		ProcessTCPRead((TCPRead*) ioop);
-	else if (ioop && ioop->type == TCP_WRITE)
+		break;
+	case TCP_WRITE:
 		ProcessTCPWrite((TCPWrite*) ioop);
-	else if (ioop && ioop->type == UDP_READ)
+		break;
+	case UDP_READ:
 		ProcessUDPRead((UDPRead*) ioop);
-	else if (ioop && ioop->type == UDP_WRITE)
+		break;
+	case UDP_WRITE:
 		ProcessUDPWrite((UDPWrite*) ioop);
+		break;
+	}
 }
 
 #define MAX_CALLABLE 256	
