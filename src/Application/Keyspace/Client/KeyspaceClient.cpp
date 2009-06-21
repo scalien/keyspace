@@ -468,6 +468,7 @@ Client::~Client()
 	for (int i = 0; i < numConns; i++)
 	{
 		delete conns[i];
+		conns[i] = NULL;
 	}
 	delete[] conns;
 	IOProcessor::Shutdown();
