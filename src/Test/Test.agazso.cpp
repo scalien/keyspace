@@ -42,9 +42,9 @@ main(int argc, char** argv)
 	int ret;
 	(void) argc;
 	(void) argv;
-//	ret = KeyspaceClientTestSuite();
+	ret = KeyspaceClientTestSuite();
 //	ret = KeyspaceClientTest2(argc, argv);
-	ret = keyspace_client_test();
+//	ret = keyspace_client_test();
 
 //   Test t;
 //   t.foo();

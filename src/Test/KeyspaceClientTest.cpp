@@ -615,7 +615,7 @@ int KeyspaceClientTestSuite()
 		DynArray<128> prefix;
 		DynArray<128> startKey;
 
-		Log_SetTrace(true);
+		//Log_SetTrace(true);
 
 		num = 10;
 		prefix.Writef("test:");
