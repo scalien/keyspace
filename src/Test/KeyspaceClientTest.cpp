@@ -374,25 +374,25 @@ int KeyspaceClientTestSuite()
 	}
 
 
-	// LIST test
+	// LISTKEYS test
 	{
 		DynArray<128>	startKey;
 		
 		status = client.ListKeys(key, startKey);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("LIST failed");
+			Log_Message("LISTKEYS failed");
 			return 1;
 		}
 
 		result = client.GetResult(status);
 		while (result)
 		{
-			Log_Trace("LIST: %.*s", result->Key().length, result->Key().buffer);
+			Log_Trace("LISTKEYS: %.*s", result->Key().length, result->Key().buffer);
 			result = result->Next(status);		
 		}
 		
-		Log_Message("LIST succeeded");
+		Log_Message("LISTKEYS succeeded");
 	}
 	
 	// ADD test
@@ -502,24 +502,24 @@ int KeyspaceClientTestSuite()
 	}
 	
 
-	// LISTP test
+	// LISTKEYVALUES test
 	{
 		DynArray<128> startKey;
 		status = client.ListKeyValues(key, startKey);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("LISTP failed");
+			Log_Message("LISTKEYVALUES failed");
 			return 1;
 		}
 
 		result = client.GetResult(status);
 		while (result)
 		{
-			Log_Trace("LISTP: %.*s, %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
+			Log_Trace("LISTKEYVALUES: %.*s, %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
 			result = result->Next(status);		
 		}
 		
-		Log_Message("LISTP succeeded");
+		Log_Message("LISTKEYVALUES succeeded");
 	}
 
 
@@ -609,7 +609,7 @@ int KeyspaceClientTestSuite()
 		Log_Message("GET/batched succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));		
 	}
 
-	// paginated LIST
+	// paginated LISTKEYS
 	{
 		int i;
 		DynArray<128> prefix;
@@ -623,7 +623,7 @@ int KeyspaceClientTestSuite()
 		result = client.GetResult(status);
 		if (status != KEYSPACE_OK || !result)
 		{
-			Log_Message("LIST/paginated failed");
+			Log_Message("LISTKEYS/paginated failed");
 			return 1;
 		}
 		
@@ -641,7 +641,7 @@ int KeyspaceClientTestSuite()
 		
 		if (i != num)
 		{
-			Log_Message("LIST_/paginated failed (returned %d of %d)", i, num);
+			Log_Message("LISTKEYS/paginated failed (returned %d of %d)", i, num);
 			return 1;
 		}
 		
@@ -650,7 +650,7 @@ int KeyspaceClientTestSuite()
 		result = client.GetResult(status);
 		if (status != KEYSPACE_OK || !result)
 		{
-			Log_Message("LIST/paginated failed");
+			Log_Message("LISTKEYS/paginated failed");
 			return 1;
 		}
 		
@@ -668,11 +668,11 @@ int KeyspaceClientTestSuite()
 		
 		if (i != num)
 		{
-			Log_Message("LIST/paginated failed (returned %d of %d)", i, num);
+			Log_Message("LISTKEYS/paginated failed (returned %d of %d)", i, num);
 			return 1;
 		}
 		
-		Log_Message("LIST/paginated succeeded");
+		Log_Message("LISTKEYS/paginated succeeded");
 	}
 	
 	// PRUNE test

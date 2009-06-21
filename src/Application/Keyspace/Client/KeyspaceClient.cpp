@@ -463,6 +463,12 @@ Command::Command()
 // Client
 //
 //===================================================================
+Client::Client()
+{
+	numConns = 0;
+	conns = NULL;
+}
+
 Client::~Client()
 {
 	for (int i = 0; i < numConns; i++)

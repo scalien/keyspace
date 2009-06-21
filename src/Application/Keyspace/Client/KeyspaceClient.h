@@ -120,6 +120,7 @@ typedef List<Command*> CommandList;
 class Client
 {
 public:
+	Client();
 	~Client();
 	
 	int				Init(int nodec, const char* nodev[], uint64_t timeout);
