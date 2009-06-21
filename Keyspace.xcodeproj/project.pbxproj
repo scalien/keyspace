@@ -125,6 +125,8 @@
 		9ADC9A590F7E78ED0025A7AB /* TransportUDPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */; };
 		9ADC9AD30F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
+		9AE7CC4A0FEE3697000B8774 /* keyspace_client_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */; };
+		9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
 		9AF5010A0F83953500F7F49E /* kdbfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501090F83953500F7F49E /* kdbfs.c */; };
 		9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
@@ -1150,6 +1152,8 @@
 				9A8B4DE30FC8571A003EA36E /* KeyspaceClient.cpp in Sources */,
 				9A8B4DEC0FC8589E003EA36E /* AsyncListVisitor.cpp in Sources */,
 				9A8B4DEE0FC858B4003EA36E /* ReplicatedConfig.cpp in Sources */,
+				9AE7CC4A0FEE3697000B8774 /* keyspace_client_test.c in Sources */,
+				9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

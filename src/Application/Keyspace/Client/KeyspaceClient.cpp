@@ -179,6 +179,8 @@ void Result::Close()
 {
 	Response**	it;
 	
+	status = KEYSPACE_ERROR;
+	
 	while ((it = responses.Head()) != NULL)
 	{
 		delete *it;
@@ -239,7 +241,12 @@ int Result::Status()
 	if (it)
 		return (*it)->status;
 		
-	return KEYSPACE_ERROR;
+	return status;
+}
+
+void Result::SetStatus(int status_)
+{
+	status = status_;
 }
 
 void Result::AppendResponse(Response* resp_)
@@ -330,6 +337,7 @@ bool ClientConn::ProcessResponse(Response* resp)
 				{
 					delete cmd;
 					client.sentCommands.Remove(it);
+					client.result.SetStatus(KEYSPACE_OK);
 				}
 				else
 					client.result.AppendResponse(resp);
@@ -774,6 +782,27 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	if (!submit)
 		return KEYSPACE_OK;
 		
+	result.Close();
+	EventLoop();
+	status = result.Status();
+	
+	return status;
+}
+
+int Client::Prune(const ByteString &prefix, bool submit)
+{
+	int			status;
+	Command*	cmd;
+	ByteString	args[1];
+	
+	args[0] = prefix;
+	
+	cmd = CreateCommand(KEYSPACECLIENT_PRUNE, submit, SIZE(args), args);
+	safeCommands.Add(cmd);
+	
+	if (!submit)
+		return KEYSPACE_OK;
+	
 	result.Close();
 	EventLoop();
 	status = result.Status();

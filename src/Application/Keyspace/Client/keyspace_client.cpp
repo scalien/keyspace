@@ -111,27 +111,40 @@ keyspace_client_get(keyspace_client_t kc,
 }
 
 int
-keyspace_client_list(keyspace_client_t kc, 
+keyspace_client_list_keys(keyspace_client_t kc, 
 		const void *key_, unsigned keylen,
+		const void *start_key, unsigned sklen,
 		uint64_t count,
+		int skip,
 		int dirty)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
+	const ByteString sk(sklen, sklen, start_key);
 	
-	return client->List(key, count, dirty ? true : false);
+	if (dirty)
+		return client->DirtyListKeys(key, sk, count, skip ? true : false);
+	else
+		return client->ListKeys(key, sk, count, skip ? true : false);
+
 }
 
 int
-keyspace_client_listp(keyspace_client_t kc, 
+keyspace_client_list_keyvalues(keyspace_client_t kc, 
 		const void *key_, unsigned keylen,
+		const void *start_key, unsigned sklen,
 		uint64_t count,
+		int skip,
 		int dirty)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
+	const ByteString sk(sklen, sklen, start_key);
 	
-	return client->ListP(key, count, dirty ? true : false);
+	if (dirty)
+		return client->DirtyListKeyValues(key, sk, count, skip ? true : false);
+	else
+		return client->ListKeyValues(key, sk, count, skip ? true : false);
 }
 
 int
@@ -184,6 +197,41 @@ keyspace_client_delete(keyspace_client_t kc,
 	const ByteString key(keylen, keylen, key_);
 
 	return client->Delete(key, submit ? true : false);
+}
+
+int
+keyspace_client_remove(keyspace_client_t kc,
+		const void *key_, unsigned keylen,
+		int submit)
+{
+	Client *client = (Client *) kc;
+	const ByteString key(keylen, keylen, key_);
+	
+	return client->Remove(key, submit ? true : false);
+}
+
+int
+keyspace_client_rename(keyspace_client_t kc,
+		const void *from_, unsigned fromlen,
+		const void *to_, unsigned tolen,
+		int submit)
+{
+	Client *client = (Client *) kc;
+	const ByteString from(fromlen, fromlen, from_);
+	const ByteString to(tolen, tolen, to_);
+	
+	return client->Rename(from, to, submit ? true : false);
+}
+
+int
+keyspace_client_prune(keyspace_client_t kc,
+		const void *prefix_, unsigned prefixlen,
+		int submit)
+{
+	Client *client = (Client *) kc;
+	const ByteString prefix(prefixlen, prefixlen, prefix_);
+	
+	return client->Prune(prefix, submit ? true : false);
 }
 
 int

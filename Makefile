@@ -108,7 +108,7 @@ timechecktest:
 
 include Makefile.dirs
 	
-targets: $(BUILD_DIR) $(BIN_DIR)/keyspace
+targets: $(BUILD_DIR) $(BIN_DIR)/keyspace clientlib_targets
 
 test_targets: $(BUILD_DIR) $(BIN_DIR)/clienttest
 

@@ -96,7 +96,9 @@ private:
 	
 	ResponseList		responses;
 	ByteString			empty;
+	int					status;
 	
+	void				SetStatus(int status);
 	void				AppendResponse(Response* resp);
 };
 
@@ -151,6 +153,7 @@ public:
 	int				Delete(const ByteString &key, bool submit = true, bool remove = false);
 	int				Remove(const ByteString &key, bool submit = true);
 	int				Rename(const ByteString &from, const ByteString &to, bool submit = true);
+	int				Prune(const ByteString &prefix, bool submit = true);
 
 	// grouping write commands
 	int				Begin();

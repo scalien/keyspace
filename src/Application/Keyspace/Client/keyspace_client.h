@@ -171,7 +171,7 @@ int	keyspace_client_get(keyspace_client_t kc,
 		int dirty);
 
 /*
- * LIST operation.
+ * LISTKEYS operation.
  *
  * Return at most count 'keys' starting with 'prefix'.
  * You get the result with keyspace_client_result().
@@ -180,19 +180,24 @@ int	keyspace_client_get(keyspace_client_t kc,
  *	kc:			client object
  *	prefix:		buffer to the prefix data
  *	prefixlen:	length of the prefix
+ *  start_key:	buffer to the starting key
+ *  sklen:		length of the starting key
  *  count:		limit the number of results to this value
+ *  skip:		skip that much items in the result
  *	dirty:		nonzero value denotes dirty operation
  *
  * Return value: the status of the operation
  */
-int	keyspace_client_list(keyspace_client_t kc, 
+int	keyspace_client_list_keys(keyspace_client_t kc, 
 		const void *prefix, unsigned prefixlen,
+		const void *start_key, unsigned sklen,
 		uint64_t count,
+		int skip,
 		int dirty);
 
 
 /*
- * LISTP operation.
+ * LISTKEYVALUES operation.
  *
  * Return at most 'count' keys and their values starting with 'prefix'.
  * You get the result with keyspace_client_result().
@@ -201,14 +206,19 @@ int	keyspace_client_list(keyspace_client_t kc,
  *	kc:			client object
  *	prefix:		buffer to the prefix data
  *	prefixlen:	length of the prefix
+ *  start_key:	buffer to the starting key
+ *  sklen:		length of the starting key
  *  count:		limit the number of results to this value
+ *  skip:		skip that much items in the result
  *	dirty:		nonzero value denotes dirty operation
  *
  * Return value: the status of the operation
  */
-int keyspace_client_listp(keyspace_client_t kc, 
-		const void *key, unsigned keylen,
+int keyspace_client_list_keyvalues(keyspace_client_t kc, 
+		const void *prefix, unsigned prefixlen,
+		const void *start_key, unsigned sklen,
 		uint64_t count,
+		int skip,
 		int dirty);
 
 /*
@@ -293,6 +303,61 @@ int	keyspace_client_add(keyspace_client_t kc,
  */
 int	keyspace_client_delete(keyspace_client_t kc,
 		const void *key, unsigned keylen,
+		int submit);
+
+/*
+ * REMOVE operation.
+ *
+ * Delete 'key' and its value from the database, and return the value.
+ * 
+ * Parameters:
+ *	kc:			client object
+ *	key:		buffer to the key data
+ *	keylen:		length of the key
+ *	submit:		nonzero value submits the operation automatically
+ *
+ * Return value: the status of the operation
+ */
+int keyspace_client_remove(keyspace_client_t kc,
+		const void *key, unsigned keylen,
+		int submit);
+
+/*
+ * RENAME operation.
+ *
+ * Rename key named 'from' to key named 'to'.
+ * 
+ * Parameters:
+ *	kc:			client object
+ *	from:		buffer to the name
+ *	keylen:		length of the from
+ *  to:			buffer to the name
+ *  tolen:		length of the to
+ *	submit:		nonzero value submits the operation automatically
+ *
+ * Return value: the status of the operation
+ */
+int keyspace_client_rename(keyspace_client_t kc,
+		const void *from, unsigned fromlen,
+		const void *to, unsigned tolen,
+		int submit);
+
+
+/*
+ * PRUNE operation
+ *
+ * Delete all key starting with 'prefix' from the database.
+ *
+ * Parameters:
+ *  kc:			client object
+ *  prefix:		buffer to the prefix
+ *  prefixlen:	length of the prefix
+ *	submit:		nonzero value submits the operation automatically
+ *
+ * Return value: the status of the operation
+ */
+int keyspace_client_prune(keyspace_client_t kc,
+		const void *prefix, unsigned prefixlen,
 		int submit);
 
 /*

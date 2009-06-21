@@ -270,6 +270,12 @@ public:
 		length = 0;
 	}
 	
+	bool Set(const ByteString &bs)
+	{
+		Clear();
+		return Append(bs);
+	}
+	
 	bool Append(const ByteString &bs)
 	{
 		return Append(bs.buffer, bs.length);

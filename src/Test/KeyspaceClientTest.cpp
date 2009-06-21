@@ -523,15 +523,15 @@ int KeyspaceClientTestSuite()
 	}
 
 
-	status = client.Begin();
-	if (status != KEYSPACE_OK)
-	{
-		Log_Message("Begin() failed");
-		return 1;
-	}
-
 	// batched SET test
 	{
+		status = client.Begin();
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("SET/batched Begin() failed");
+			return 1;
+		}
+
 		num = 1000;
 		value.Writef("0123456789012345678901234567890123456789");
 		for (int i = 0; i < num; i++)
@@ -540,7 +540,7 @@ int KeyspaceClientTestSuite()
 			status = client.Set(key, value, false);
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("SET/batched failed");
+				Log_Message("SET/batched failed after %d", i);
 				return 1;
 			}
 		}
@@ -609,7 +609,87 @@ int KeyspaceClientTestSuite()
 		Log_Message("GET/batched succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));		
 	}
 
-limitset:	
+	// paginated LIST
+	{
+		int i;
+		DynArray<128> prefix;
+		DynArray<128> startKey;
+
+		Log_SetTrace(true);
+
+		num = 10;
+		prefix.Writef("test:");
+		status = client.ListKeys(prefix, startKey, num, false);
+		result = client.GetResult(status);
+		if (status != KEYSPACE_OK || !result)
+		{
+			Log_Message("LIST/paginated failed");
+			return 1;
+		}
+		
+		i = 0;
+		while (result)
+		{
+			i++;
+			if (i > num)
+				break;
+
+			startKey.Set(result->Key());
+			Log_Trace("%s", startKey.buffer);
+			result = result->Next(status);
+		}
+		
+		if (i != num)
+		{
+			Log_Message("LIST_/paginated failed (returned %d of %d)", i, num);
+			return 1;
+		}
+		
+		// list the next num items
+		status = client.ListKeys(prefix, startKey, num, true);
+		result = client.GetResult(status);
+		if (status != KEYSPACE_OK || !result)
+		{
+			Log_Message("LIST/paginated failed");
+			return 1;
+		}
+		
+		i = 0;
+		while (result)
+		{
+			i++;
+			if (i > num)
+				break;
+
+			startKey.Set(result->Key());
+			Log_Trace("%s", startKey.buffer);
+			result = result->Next(status);
+		}
+		
+		if (i != num)
+		{
+			Log_Message("LIST/paginated failed (returned %d of %d)", i, num);
+			return 1;
+		}
+		
+		Log_Message("LIST/paginated succeeded");
+	}
+	
+	// PRUNE test
+	{
+		DynArray<128> prefix;
+		
+		prefix.Writef("test:");
+		status = client.Prune(prefix);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("PRUNE failed");
+			return 1;
+		}
+		
+		Log_Message("PRUNE succeeded");
+	}
+		
 	// limit SET test
 	{
 		int d = 1;
@@ -648,7 +728,7 @@ limitset:
 		client.SetTimeout(timeout);
 		Log_Message("SET/limit succeeded");
 	}
-		
+
 	return 0;
 }
 
