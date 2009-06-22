@@ -17,7 +17,7 @@ operation(this, &MultiDatabaseOp::Operation)
 void MultiDatabaseOp::Init()
 {
 	numop = 0;
-	//userCallback = NULL;
+	userCallback = NULL;
 	tx = NULL;
 }
 
