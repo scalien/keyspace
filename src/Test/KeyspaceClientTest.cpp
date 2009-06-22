@@ -845,6 +845,29 @@ int KeyspaceClientTestSuite()
 		Log_Message("LISTKEYS/paginated3 succeeded");
 	}
 	
+	// timeout test
+	{
+		key.Writef("test:0");
+		status = client.Get(key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("TimeoutTest failed");
+			return 1;
+		}
+
+		Log_Message("TimeoutTest: waiting for %d secs", timeout + 1000);
+		Sleep(timeout + 1000);
+		
+		status = client.Get(key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("TimeoutTest failed");
+			return 1;
+		}
+		
+		Log_Message("TimeoutTest succeeded");
+	}
+	
 	// PRUNE test
 	{
 		DynArray<128> prefix;

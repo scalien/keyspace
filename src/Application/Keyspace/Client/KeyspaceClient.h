@@ -63,6 +63,7 @@ public:
 	bool			ProcessResponse(Response* msg);
 	void			GetMaster();
 	void			DeleteCommands();
+	void			RemoveReadTimeout();
 
 private:
 	friend class Client;
@@ -172,7 +173,7 @@ private:
 	void			DeleteCommands(CommandList& commands);
 	void			SetMaster(int master);
 	int				ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty, bool values);
-
+	void			StopConnTimeout();
 	
 	CommandList		safeCommands;
 	CommandList		dirtyCommands;

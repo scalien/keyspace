@@ -440,8 +440,14 @@ void ClientConn::OnConnectTimeout()
 
 void ClientConn::OnReadTimeout()
 {
-	EventLoop::Remove(&readTimeout);
+	RemoveReadTimeout();
 	OnClose();
+}
+
+void ClientConn::RemoveReadTimeout()
+{
+	if (readTimeout.IsActive())
+		EventLoop::Remove(&readTimeout);
 }
 
 //===================================================================
@@ -852,6 +858,8 @@ void Client::EventLoop()
 		StateFunc();
 		EventLoop::RunOnce();
 	}
+
+	StopConnTimeout();
 }
 
 bool Client::IsDone()
@@ -1000,4 +1008,10 @@ void Client::SetMaster(int master_)
 {
 	master = master_;
 	masterTime = Now();
+}
+
+void Client::StopConnTimeout()
+{
+	for (int i = 0; i < numConns; i++)
+		conns[i]->RemoveReadTimeout();
 }
