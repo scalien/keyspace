@@ -722,6 +722,7 @@ int KeyspaceClientTestSuite()
 				break;
 			
 			skip = true;
+			Log_Message("LISTKEYS/paginated2: next startKey %.*s", startKey.length, startKey.buffer);
 		}
 		
 		if (i != num)

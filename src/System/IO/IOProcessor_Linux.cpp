@@ -362,6 +362,7 @@ void ProcessIOOperation(IOOperation* ioop)
 		return;
 	
 	switch (ioop->type)
+	{
 	case TCP_READ:
 		ProcessTCPRead((TCPRead*) ioop);
 		break;
