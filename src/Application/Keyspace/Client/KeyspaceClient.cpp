@@ -574,12 +574,12 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 	if (dirty)
 	{
 		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_GET, false, 1, args);
-		dirtyCommands.Add(cmd);
+		dirtyCommands.Append(cmd);
 	}
 	else
 	{
 		cmd = CreateCommand(KEYSPACECLIENT_GET, false, 1, args);
-		safeCommands.Add(cmd);
+		safeCommands.Append(cmd);
 	}
 
 	if (!submit)
@@ -653,7 +653,7 @@ int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, 
 		else
 			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, false, SIZE(args), args);
 
-		dirtyCommands.Add(cmd);
+		dirtyCommands.Append(cmd);
 	}
 	else
 	{
@@ -662,7 +662,7 @@ int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, 
 		else
 			cmd = CreateCommand(KEYSPACECLIENT_LIST, false, SIZE(args), args);
 		
-		safeCommands.Add(cmd);
+		safeCommands.Append(cmd);
 	}
 	
 	result.Close();
@@ -693,7 +693,7 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	args[1] = value;
 	
 	cmd = CreateCommand(KEYSPACECLIENT_SET, submit, 2, args);
-	safeCommands.Add(cmd);
+	safeCommands.Append(cmd);
 	
 	if (!submit)
 		return KEYSPACE_OK;
@@ -716,7 +716,7 @@ int Client::TestAndSet(const ByteString &key, const ByteString &test, const Byte
 	args[2] = value;
 	
 	cmd = CreateCommand(KEYSPACECLIENT_TEST_AND_SET, submit, 3, args);
-	safeCommands.Add(cmd);
+	safeCommands.Append(cmd);
 	
 	if (!submit)
 		return KEYSPACE_OK;
@@ -742,7 +742,7 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	args[1] = numString;
 	
 	cmd = CreateCommand(KEYSPACECLIENT_ADD, submit, 2, args);
-	safeCommands.Add(cmd);
+	safeCommands.Append(cmd);
 	
 	if (!submit)
 		return KEYSPACE_OK;
@@ -778,7 +778,7 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 		c = KEYSPACECLIENT_DELETE;
 		
 	cmd = CreateCommand(c, submit, SIZE(args), args);
-	safeCommands.Add(cmd);
+	safeCommands.Append(cmd);
 	
 	if (!submit)
 		return KEYSPACE_OK;
@@ -805,7 +805,7 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	args[1] = to;
 	
 	cmd = CreateCommand(KEYSPACECLIENT_RENAME, submit, SIZE(args), args);
-	safeCommands.Add(cmd);
+	safeCommands.Append(cmd);
 	
 	if (!submit)
 		return KEYSPACE_OK;
@@ -826,7 +826,7 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	args[0] = prefix;
 	
 	cmd = CreateCommand(KEYSPACECLIENT_PRUNE, submit, SIZE(args), args);
-	safeCommands.Add(cmd);
+	safeCommands.Append(cmd);
 	
 	if (!submit)
 		return KEYSPACE_OK;
