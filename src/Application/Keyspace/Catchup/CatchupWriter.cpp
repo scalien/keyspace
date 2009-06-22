@@ -30,6 +30,7 @@ void CatchupWriter::Init(CatchupServer* server_)
 
 void CatchupWriter::OnRead()
 {
+	AsyncRead();
 }
 
 void CatchupWriter::OnWrite()
