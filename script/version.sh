@@ -1,8 +1,15 @@
 #!/bin/sh
 
-VERSION_MAJOR=`sed -n 's/.*VERSION_MAJOR[[:space:]]*\"\([[:digit:]]*\)\"/\1/p' $1`
-VERSION_MINOR=`sed -n 's/.*VERSION_MINOR[[:space:]]*\"\([[:digit:]]*\)\"/\1/p' $1`
-VERSION_RELEASE=`sed -n 's/.*VERSION_RELEASE[[:space:]]*\"\([[:digit:]]*\)\"/\1/p' $1`
+VERSION=
+if [ $1 -gt 0 ]; then
+	VERSION=`sed -n 's/.*VERSION_MAJOR[[:space:]]*\"\([[:digit:]]*\)\"/\1/p' $2`
+fi
+if [ $1 -gt 1 ]; then
+	VERSION=$VERSION.`sed -n 's/.*VERSION_MINOR[[:space:]]*\"\([[:digit:]]*\)\"/\1/p' $2`
+fi
+if [ $1 -gt 2 ]; then
+	VERSION=$VERSION.`sed -n 's/.*VERSION_RELEASE[[:space:]]*\"\([[:digit:]]*\)\"/\1/p' $2`
+fi
 
-echo $VERSION_MAJOR.$VERSION_MINOR.$VERSION_RELEASE
+echo $VERSION
 

@@ -11,7 +11,10 @@ safe_keyspace()
 		fi
 		if [ "$EXITSTATUS" = "2" ]; then
 			# delete database files
-			$KEYSPACE_DIR=`dirname $2`
+			KEYSPACE_DIR=`dirname $2`
+			if [ "$KEYSPACE_DIR" = "" ]; then
+				KEYSPACE_DIR=`dirname $1`
+			fi
 			rm $KEYSPACE_DIR/__*
 			rm $KEYSPACE_DIR/log*
 			rm $KEYSPACE_DIR/keyspace
@@ -19,4 +22,5 @@ safe_keyspace()
 	done
 }
 
-safe_keyspace $1 $2 &
+KEYSPACE_BIN=`dirname $0`/keyspace
+safe_keyspace $KEYSPACE_BIN $1 &

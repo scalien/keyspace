@@ -4,6 +4,7 @@
 #
 ##############################################################################
 
+all: release
 
 ##############################################################################
 #
@@ -15,9 +16,11 @@ BASE_DIR = .
 KEYSPACE_DIR = .
 BIN_DIR = $(BASE_DIR)/bin
 
-SCRIPT_DIR = $(BASE_DIR)/scripts
+SCRIPT_DIR = $(BASE_DIR)/script
 DIST_DIR = $(BASE_DIR)/dist
-VERSION = `$(BASE_DIR)/script/version.sh $(SRC_DIR)/Version.h`
+VERSION = `$(BASE_DIR)/script/version.sh 3 $(SRC_DIR)/Version.h`
+VERSION_MAJOR = `$(BASE_DIR)/script/version.sh 1 $(SRC_DIR)/Version.h`
+VERSION_MAJMIN = `$(BASE_DIR)/script/version.sh 3 $(SRC_DIR)/Version.h`
 PACKAGE_DIR = $(BASE_DIR)/packages
 PACKAGE_FILE = keyspace-$(VERSION).deb
 PACKAGE_REPOSITORY = /
@@ -28,6 +31,10 @@ DEB_DIR = $(BUILD_ROOT)/deb
 
 BUILD_DEBUG_DIR = $(BUILD_ROOT)/debug
 BUILD_RELEASE_DIR = $(BUILD_ROOT)/release
+
+INSTALL_BIN_DIR = /usr/local/bin
+INSTALL_LIB_DIR = /usr/local/lib
+INSTALL_INCLUDE_DIR = /usr/local/include/
 
 
 ##############################################################################
@@ -53,7 +60,6 @@ export PLATFORM
 PLATFORM_UCASE=$(shell echo $(PLATFORM) | tr [a-z] [A-Z])
 
 export PLATFORM_UCASE
-
 include Makefile.$(PLATFORM)
 
 
@@ -70,10 +76,12 @@ RANLIB = ranlib
 DEBUG_CFLAGS = -g #-pg
 DEBUG_LDFLAGS = #-pg -lc_p
 
-RELEASE_CFLAGS = -O3 #-g
+RELEASE_CFLAGS = -O2 #-g
 
-LIBNAME = keyspaceclient
-SONAME = lib$(LIBNAME).$(SOEXT)
+LIBNAME = libkeyspaceclient
+SONAME = $(LIBNAME).$(SOEXT).$(VERSION_MAJOR)
+SOLIB = $(LIBNAME).$(SOEXT)
+ALIB = $(LIBNAME).a
 
 ifneq ($(BUILD), release)
 BUILD_DIR = $(BUILD_DEBUG_DIR)
@@ -87,46 +95,13 @@ CXXFLAGS = $(BASE_CXXFLAGS) $(RELEASE_CFLAGS)
 LDFLAGS = $(BASE_LDFLAGS) $(RELEASE_LDFLAGS)
 endif
 
-
-##############################################################################
-#
-# Targets
-#
-##############################################################################
-
-all: release
-
-debug:
-	$(MAKE) targets BUILD="debug"
-
-release:
-	$(MAKE) targets BUILD="release"
-
-clienttest:
-	$(MAKE) test_targets BUILD="debug"
-
-clientlib:
-	$(MAKE) clientlib_targets BUILD="debug"
-
-timechecktest:
-	$(MAKE) timechecktest_targets BUILD="release"
-
-include Makefile.dirs
-	
-targets: $(BUILD_DIR) $(BIN_DIR)/keyspace clientlib_targets
-
-test_targets: $(BUILD_DIR) $(BIN_DIR)/clienttest
-
-clientlib_targets: $(BUILD_DIR) $(BIN_DIR)/clientlib.a $(BIN_DIR)/$(SONAME)
-
-timechecktest_targets: $(BUILD_DIR) $(BIN_DIR)/timechecktest
-
 ##############################################################################
 #
 # Build rules
 #
 ##############################################################################
 
+include Makefile.dirs
 include Makefile.objects
 include Makefile.clientlib
 
@@ -150,14 +125,15 @@ OBJECTS = \
 TEST_OBJECTS = \
 	$(BUILD_DIR)/Test/KeyspaceClientTest.o
 
-LIBS = \
-	$(KEYSPACE_LIBS)
+CLIENTLIBS = \
+	$(BIN_DIR)/$(ALIB) \
+	$(BIN_DIR)/$(SOLIB)
 
-$(KEYSPACE_LIBS):
-	cd $(KEYSPACE_DIR); $(MAKE) targets BUILD=$(BUILD)
+EXECUTABLES = \
+	$(BIN_DIR)/keyspace \
+	$(BIN_DIR)/clienttest \
+	$(BIN_DIR)/timechecktest
 	
-
-
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
@@ -167,24 +143,69 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 $(BIN_DIR)/%.so: $(BIN_DIR)/%.a
 	$(CC) $(SOLINK) -o $@ $< $(SOLIBS)
 
-$(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
-
-
-$(BIN_DIR)/clientlib.a: $(BUILD_DIR) $(LIBS) $(CLIENTLIB_OBJECTS)
+# libraries
+$(BIN_DIR)/$(ALIB): $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
 	$(AR) -r $@ $(CLIENTLIB_OBJECTS)
 	$(RANLIB) $@
 
-$(BIN_DIR)/$(SONAME): $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
-	$(CC) $(SOLINK) -Wl,-soname,$(SONAME) -o $@ $(CLIENTLIB_OBJECTS)
-	
-$(BIN_DIR)/clienttest: $(BUILD_DIR) $(LIBS) $(TEST_OBJECTS) $(BIN_DIR)/clientlib.a
-	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS) $(BIN_DIR)/clientlib.a
+$(BIN_DIR)/$(SOLIB): $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
+	$(CC) $(SOLINK) -Wl,-soname,$(SONAME) -o $@ $(CLIENTLIB_OBJECTS) $(LDFLAGS)
 
+# executables	
+$(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+
+$(BIN_DIR)/clienttest: $(BUILD_DIR) $(TEST_OBJECTS) $(BIN_DIR)/$(ALIB)
+	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS) $(BIN_DIR)/$(ALIB)
 
 $(BIN_DIR)/timechecktest: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Test/TimeCheckTest.o
 	$(CXX) $(LDFLAGS) -o $@ $(ALL_OBJECTS) $(LIBS) $(BUILD_DIR)/Test/TimeCheckTest.o
+
+
+##############################################################################
+#
+# Targets
+#
+##############################################################################
+
+debug:
+	$(MAKE) targets BUILD="debug"
+
+release:
+	$(MAKE) targets BUILD="release"
+
+clienttest:
+	$(MAKE) test_targets BUILD="debug"
+
+clientlib:
+	$(MAKE) clientlib_targets BUILD="debug"
+
+timechecktest:
+	$(MAKE) timechecktest_targets BUILD="release"
+	
+targets: $(BUILD_DIR) executables clientlibs
+
+clientlibs: $(BUILD_DIR) $(CLIENTLIBS)
+
+executables: $(BUILD_DIR) $(EXECUTABLES)
+
+install: release
+	-cp -fr $(BIN_DIR)/$(ALIB) $(INSTALL_LIB_DIR)
+	-cp -fr $(BIN_DIR)/$(SOLIB) $(INSTALL_LIB_DIR)/$(SOLIB).$(VERSION)
+	-ln -sf $(INSTALL_LIB_DIR)/$(SOLIB).$(VERSION) $(INSTALL_LIB_DIR)/$(LIBNAME).$(SOEXT).$(VERSION_MAJOR)
+	-ln -sf $(INSTALL_LIB_DIR)/$(SOLIB).$(VERSION) $(INSTALL_LIB_DIR)/$(LIBNAME).$(SOEXT)
+	-cp -fr $(SRC_DIR)/Application/Keyspace/Client/keyspace_client.h $(INSTALL_INCLUDE_DIR)
+	-cp -fr $(BIN_DIR)/keyspace $(INSTALL_BIN_DIR)
+	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(INSTALL_BIN_DIR)
+
+uninstall:
+	-rm $(INSTALL_LIB_DIR)/$(ALIB)
+	-rm $(INSTALL_LIB_DIR)/$(SOLIB).$(VERSION)
+	-rm $(INSTALL_LIB_DIR)/$(SOLIB)
+	-rm $(INSTALL_INCLUDE_DIR)/Application/Keyspace/Client/keyspace_client.h
+	-rm $(INSTALL_BIN_DIR)/keyspace
+	-rm $(INSTALL_BIN_DIR)/safe_keyspace
 
 ##############################################################################
 #
@@ -192,8 +213,9 @@ $(BIN_DIR)/timechecktest: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Test/
 #
 ##############################################################################
 
-clean: clean-debug clean-release clean-clientlib
-	-rm -r -f $(BUILD_ROOT)
+clean: clean-debug clean-release clean-libs clean-executables
+	-rm -rf $(BUILD_ROOT)
+	-rm -rf $(DEB_DIR)
 
 clean-debug:
 	-rm -f $(BASE_DIR)/keyspace
@@ -203,10 +225,11 @@ clean-release:
 	-rm -f $(BASE_DIR)/keyspace
 	-rm -r -f $(BUILD_RELEASE_DIR)
 	
-clean-libs: clean-keyspace
+clean-libs:
+	-rm $(CLIENTLIBS)
 
-clean-keyspace:
-	cd $(KEYSPACE_DIR); $(MAKE) clean
+clean-executables:
+	-rm $(EXECUTABLES)
 
 clean-clientlib:
 	-rm $(TEST_OBJECTS)
@@ -229,12 +252,12 @@ distclean-keyspace:
 
 deb: release
 	-mkdir -p $(DEB_DIR)/etc/init.d
-	-mkdir -p $(DEB_DIR)/usr/sbin
+	-mkdir -p $(DEB_DIR)/usr/bin
 	-cp -fr $(PACKAGE_DIR)/DEBIAN $(DEB_DIR)
 	-cp -fr $(SCRIPT_DIR)/keyspace.conf $(DEB_DIR)/etc
 	-cp -fr $(SCRIPT_DIR)/keyspace $(DEB_DIR)/etc/init.d
-	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(DEB_DIR)/usr/sbin
-	-cp -fr $(BASE_DIR)/keyspace $(DEB_DIR)/usr/sbin
+	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(DEB_DIR)/usr/bin
+	-cp -fr $(BIN_DIR)/keyspace $(DEB_DIR)/usr/bin
 	-rm -f $(BUILD_ROOT)/.*
 	-mkdir -p $(DIST_DIR)
 	-rm -f $(DIST_DIR)/$(PACKAGE_FILE)
