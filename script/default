@@ -1,0 +1,6 @@
+DEFAULT_CONFIG=/etc/keyspace.conf
+NAME=keyspace
+BIN_DIR=/usr/bin
+DAEMON=$BIN_DIR/$NAME
+SAFE_DAEMON=$BIN_DIR/safe_$NAME
+START_KEYSPACE=NO

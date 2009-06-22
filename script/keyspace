@@ -1,0 +1,56 @@
+#! /bin/sh
+#
+# keyspace: Scalien Keyspace replicated key-value database
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="Keyspace"
+RUNSAFE="yes"
+DEFAULT=/etc/default/keyspace
+
+if [ `id -u` != "0" ]
+then
+  echo "You must be root to start this appication."
+  exit 1
+fi
+
+test -f $DEFAULT || exit 0
+. $DEFAULT
+
+test -x $DAEMON || exit 0
+
+status() {
+        plist=`ps auxw | grep "$DAEMON" | grep -v grep | awk '{print $2}' | tr '\012' ' '`
+        if [ "$plist" = "" ]; then
+                return 1
+        else
+                return 0
+        fi
+}
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+
+	$SAFE_DAEMON		
+	
+	if [ $? -eq 0 ]; then
+		echo "$NAME."
+	fi
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	echo -n "$NAME"
+	echo "."
+	;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

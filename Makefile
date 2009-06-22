@@ -56,6 +56,7 @@ endif
 endif
 endif
 
+ARCH=$(shell arch)
 export PLATFORM
 PLATFORM_UCASE=$(shell echo $(PLATFORM) | tr [a-z] [A-Z])
 
@@ -251,9 +252,10 @@ distclean-keyspace:
 ##############################################################################
 
 deb: release
+	-$(SCRIPT_DIR)/mkcontrol.sh $(SCRIPT_DIR)/DEBIAN/control $(PACKAGE_NAME) $(VERSION) $(ARCH)
 	-mkdir -p $(DEB_DIR)/etc/init.d
 	-mkdir -p $(DEB_DIR)/usr/bin
-	-cp -fr $(PACKAGE_DIR)/DEBIAN $(DEB_DIR)
+	-cp -fr $(SCRIPT_DIR)/DEBIAN $(DEB_DIR)
 	-cp -fr $(SCRIPT_DIR)/keyspace.conf $(DEB_DIR)/etc
 	-cp -fr $(SCRIPT_DIR)/keyspace $(DEB_DIR)/etc/init.d
 	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(DEB_DIR)/usr/bin
