@@ -33,7 +33,7 @@ void ReplicatedConfig::InitRestartCounter()
 	Log_Trace();
 	
 	bool			ret;
-	unsigned		nread;
+	unsigned		nread = 0;
 	ByteArray<32>	baRestartCounter;
 	Table*			table;
 	

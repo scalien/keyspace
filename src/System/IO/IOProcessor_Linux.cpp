@@ -180,7 +180,9 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 		event |= EPOLLIN;
 	if (epollOp->write)
 		event |= EPOLLOUT;
-
+	
+	// this is here to initalize the whole structure
+	ev.data.u64 = 0;
 	ev.events = event;
 	ev.data.ptr = epollOp;
 	

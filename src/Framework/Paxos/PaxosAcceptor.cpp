@@ -57,7 +57,7 @@ bool PaxosAcceptor::ReadState()
 	Log_Trace();
 	
 	bool ret;
-	unsigned nread;
+	unsigned nread = 0;
 	
 	if (table == NULL)
 		return false;
