@@ -5,8 +5,7 @@
 #include <signal.h>
 
 using namespace Keyspace;
-
-int KeyspaceClientTestSuite();
+int KeyspaceClientTestSuite(Keyspace::Client& client);
 
 void IgnorePipeSignal()
 {
@@ -254,39 +253,33 @@ int KeyspaceClientTest2(int argc, char **argv)
 	Keyspace::Client	client;
 	int64_t				timeout;
 	TestConfig			testConf;
+	const char			*LOCAL_NODES[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 
-	if (argc >= 2 && strcmp(argv[1], "suite") == 0)
-	{
-		return KeyspaceClientTestSuite();
-	}
-	
-	if (argc < 6)
+
+	if (!(argc >= 3 && strcmp(argv[2], "suite") == 0) &&
+		argc < 6)
 	{
 		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set|rndset|list> <numClients> <keySize> <valueSize>", argv[0]);
 		return 1;
 	}
-		
-	testConf.SetType(argv[2]);
-	testConf.numClients = atoi(argv[3]);
-	testConf.keySize = atoi(argv[4]);
-	testConf.valueSize = atoi(argv[5]);
 
-	Config::Init(argv[1]);
-	
 	IgnorePipeSignal();
+	Config::Init(argv[1]);
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(true);
 
 	nodec = Config::GetListNum("paxos.endpoints");
 	if (nodec <= 0)
 	{
-		Log_Message("Bad configuration");
-		return 1;
+		nodec = SIZE(LOCAL_NODES);
+		nodes = LOCAL_NODES;
 	}
-
-	nodes = new const char*[nodec];
-	for (int i = 0; i < nodec; i++)
-		nodes[i] = Config::GetListValue("paxos.endpoints", i, NULL);
+	else
+	{
+		nodes = new const char*[nodec];
+		for (int i = 0; i < nodec; i++)
+			nodes[i] = Config::GetListValue("paxos.endpoints", i, NULL);
+	}
 	
 	timeout = Config::GetIntValue("paxos.timeout", 10000);
 	testConf.datasetTotal = Config::GetIntValue("dataset.total", 100 * 1000000);
@@ -294,6 +287,18 @@ int KeyspaceClientTest2(int argc, char **argv)
 	status = client.Init(nodec, nodes, timeout);
 	if (status < 0)
 		return 1;
+
+	if (strcmp(argv[2], "suite") == 0)
+	{
+		return KeyspaceClientTestSuite(client);
+	} 
+		
+	testConf.SetType(argv[2]);
+	testConf.numClients = atoi(argv[3]);
+	testConf.keySize = atoi(argv[4]);
+	testConf.valueSize = atoi(argv[5]);
+	
+
 
 	
 	for (int i = 0; i < testConf.keySize - 10; i++)
@@ -316,9 +321,8 @@ int KeyspaceClientTest2(int argc, char **argv)
 }
 
 
-int KeyspaceClientTestSuite()
+int KeyspaceClientTestSuite(Keyspace::Client& client)
 {	
-	const char			*nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 //	char				*nodes[] = {"127.0.0.1:7080"};
 	DynArray<128>		key;
 	DynArray<1024>		value;
@@ -326,22 +330,11 @@ int KeyspaceClientTestSuite()
 	DynArray<128>		newName;
 	int64_t				num;
 	int					status;
-	Keyspace::Client	client;
 	Keyspace::Result*	result;
 	Stopwatch			sw;
 	uint64_t			timeout;
 	const int			NUM_TEST_KEYS = 1000;
 	
-	IgnorePipeSignal();
-
-	Log_SetTrace(false);
-	Log_SetTimestamping(true);
-	
-	timeout = 10000;
-	status = client.Init(SIZE(nodes), nodes, timeout);
-	if (status < 0)
-		return 1;
-
 	reference.Writef("1234567890");
 
 	//goto limitset;
