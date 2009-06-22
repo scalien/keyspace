@@ -96,8 +96,12 @@ bool Database::Init(const DatabaseConfig& config_)
 	if (ret != 0)
 		return false;
 
+#ifdef DB_LOG_AUTOREMOVE
 	env.set_flags(DB_LOG_AUTOREMOVE, 1);
-	
+#else
+	env.log_set_config(DB_LOG_AUTO_REMOVE, 1);
+#endif
+
 	keyspace = new Table(this, "keyspace", config.pageSize);
 
 	Checkpoint();
