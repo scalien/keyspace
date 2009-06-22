@@ -11,6 +11,7 @@ void CatchupServer::InitConn(CatchupWriter* conn)
 {
 	if (numActive > 1)
 	{
+		Log_Trace("@@@ have an active catchup connection, closing this @@@");
 		conn->Close();
 		DeleteConn(conn);
 		return;
