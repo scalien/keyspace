@@ -93,7 +93,7 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 	
 	fcntl(pipeop.pipe[0], F_SETFD, FD_CLOEXEC);
 	fcntl(pipeop.pipe[0], F_SETFL, O_NONBLOCK);
-	fcntl(pipeop.pipe[1], F_SETFL, O_NONBLOCK);
+	//fcntl(pipeop.pipe[1], F_SETFL, O_NONBLOCK);
 
 	if (!AddEvent(pipeop.pipe[0], EPOLLIN, &pipeop))
 		return false;
