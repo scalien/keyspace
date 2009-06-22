@@ -440,6 +440,7 @@ void ClientConn::OnConnectTimeout()
 
 void ClientConn::OnReadTimeout()
 {
+	Log_Trace();
 	RemoveReadTimeout();
 	OnClose();
 }
@@ -448,6 +449,12 @@ void ClientConn::RemoveReadTimeout()
 {
 	if (readTimeout.IsActive())
 		EventLoop::Remove(&readTimeout);
+}
+
+void ClientConn::SetTimeout(uint64_t timeout_)
+{
+	timeout = timeout_;
+	readTimeout.SetDelay(timeout);
 }
 
 //===================================================================
@@ -515,6 +522,9 @@ uint64_t Client::SetTimeout(uint64_t timeout_)
 	
 	prev = timeout;
 	timeout = timeout_;
+	
+	for (int i = 0; i < numConns; i++)
+		conns[i]->SetTimeout(timeout);	
 	
 	return prev;
 }

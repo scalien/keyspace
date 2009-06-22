@@ -64,6 +64,7 @@ public:
 	void			GetMaster();
 	void			DeleteCommands();
 	void			RemoveReadTimeout();
+	void			SetTimeout(uint64_t timeout);
 
 private:
 	friend class Client;

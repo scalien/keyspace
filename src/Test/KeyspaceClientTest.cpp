@@ -130,7 +130,7 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 	result = client.GetResult(status);
 	if (status != KEYSPACE_OK || !result)
 	{
-		Log_Message("Test failed, status = %s (%s failed after %lu)", Status(status), conf.typeString, (unsigned long) sw.elapsed);
+		Log_Message("Test failed, status = %s (%s failed after %lu msec)", Status(status), conf.typeString, (unsigned long) sw.elapsed);
 		return 1;
 	}
 	
