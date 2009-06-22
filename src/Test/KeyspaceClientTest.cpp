@@ -816,7 +816,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 					break;
 				j--;
 				startKey.Set(result->Key());
-				Log_Message("LISTKEYS/paginated3: %.*s", startKey.length, startKey.buffer);
+				//Log_Message("LISTKEYS/paginated3: %.*s", startKey.length, startKey.buffer);
 				result = result->Next(status);
 			}
 			
@@ -824,8 +824,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 				break;
 			
 			skip = true;
-			Log_Message("LISTKEYS/paginated3: next startKey %.*s", startKey.length, startKey.buffer);
-			
+			//Log_Message("LISTKEYS/paginated3: next startKey %.*s", startKey.length, startKey.buffer);
 		}
 
 		if (i != num)
