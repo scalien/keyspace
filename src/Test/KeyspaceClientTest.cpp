@@ -90,6 +90,23 @@ public:
 	}
 };
 
+static const char *Status(int status)
+{
+	switch (status)
+	{
+	case KEYSPACE_OK:
+		return "OK";
+	case KEYSPACE_FAILED:
+		return "FAILED";
+	case KEYSPACE_NOTMASTER:
+		return "NOTMASTER";
+	case KEYSPACE_ERROR:
+		return "ERROR";
+	default:
+		return "<UNKNOWN>";
+	}
+}
+
 int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 {
 	int				status;
@@ -113,7 +130,7 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 	result = client.GetResult(status);
 	if (status != KEYSPACE_OK || !result)
 	{
-		Log_Message("Test failed (%s failed after %lu)", conf.typeString, (unsigned long) sw.elapsed);
+		Log_Message("Test failed, status = %s (%s failed after %lu)", Status(status), conf.typeString, (unsigned long) sw.elapsed);
 		return 1;
 	}
 	
@@ -156,7 +173,7 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("Test failed (%s failed after %d)", conf.typeString, i);
+			Log_Message("Test failed, status = %s (%s failed after %d)", Status(status), conf.typeString, i);
 			return 1;
 		}
 	}
@@ -167,7 +184,7 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 
 	if (status != KEYSPACE_OK)
 	{
-		Log_Message("Test failed (%s)",conf.typeString);
+		Log_Message("Test failed, status = %s (%s)", Status(status), conf.typeString);
 		return 1;
 	}
 
@@ -222,7 +239,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		status = client.Set(conf.key, conf.value, false);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("Test failed (%s failed after %d)", conf.typeString, i);
+			Log_Message("Test failed, status = %s (%s failed after %d)", Status(status), conf.typeString, i);
 			return 1;
 		}
 	}
@@ -235,7 +252,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	status = client.Submit();
 	if (status != KEYSPACE_OK)
 	{
-		Log_Message("Test failed (Submit failed)");
+		Log_Message("Test failed, status = %s (Submit failed)", Status(status));
 		return 1;
 	}
 	
@@ -345,7 +362,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Set(key, value);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("SET failed");
+			Log_Message("SET failed, status = %s", Status(status));
 			return 1;
 		}
 		Log_Message("SET succeeded");
@@ -357,7 +374,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Get(key, value);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("GET failed");
+			Log_Message("GET failed, status = %s", Status(status));
 			return 1;
 		}
 		if (!(value == reference))
@@ -376,7 +393,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.ListKeys(key, startKey);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("LISTKEYS failed");
+			Log_Message("LISTKEYS failed, status = %s", Status(status));
 			return 1;
 		}
 
@@ -395,7 +412,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Add(key, 1, num);
 		if (status != KEYSPACE_OK || num != 1234567891UL)
 		{
-			Log_Message("ADD failed");
+			Log_Message("ADD failed, status = %s", Status(status));
 			return 1;
 		}
 
@@ -407,7 +424,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Delete(key);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("DELETE failed");
+			Log_Message("DELETE failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -420,7 +437,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.TestAndSet(key, reference, value);
 		if (status == KEYSPACE_OK)
 		{
-			Log_Message("TESTANDSET failed");
+			Log_Message("TESTANDSET failed, status = %s", Status(status));
 			return 1;
 		}
 
@@ -432,21 +449,21 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Set(key, reference);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("SET/TESTANDSET failed");
+			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
 			return 1;
 		}
 
 		status = client.TestAndSet(key, reference, value);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("SET/TESTANDSET failed");
+			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
 			return 1;
 		}
 		
 		status = client.Set(key, reference);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("SET/TESTANDSET failed");
+			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -459,7 +476,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Rename(key, newName);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("RENAME failed");
+			Log_Message("RENAME failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -472,7 +489,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		result = client.GetResult(status);
 		if (status != KEYSPACE_OK || !result)
 		{
-			Log_Message("REMOVE failed");
+			Log_Message("REMOVE failed, status = %s", Status(status));
 			return 1;
 		}
 		if (!(result->Value() == reference))
@@ -489,7 +506,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Set(key, reference);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("SET/2 failed");
+			Log_Message("SET/2 failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -503,7 +520,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.ListKeyValues(key, startKey);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("LISTKEYVALUES failed");
+			Log_Message("LISTKEYVALUES failed, status = %s", Status(status));
 			return 1;
 		}
 
@@ -523,7 +540,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Begin();
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("SET/batched Begin() failed");
+			Log_Message("SET/batched Begin() failed, status = %s", Status(status));
 			return 1;
 		}
 
@@ -535,7 +552,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			status = client.Set(key, value, false);
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("SET/batched failed after %d", i);
+				Log_Message("SET/batched failed after %d, status = %s", i, Status(status));
 				return 1;
 			}
 		}
@@ -547,7 +564,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Submit();
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("SET/batched Submit() failed");
+			Log_Message("SET/batched Submit() failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -568,7 +585,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			sw.Stop();
 			if (status != KEYSPACE_OK && status != KEYSPACE_FAILED)
 			{
-				Log_Message("DIRTYGET/discrete failed");
+				Log_Message("DIRTYGET/discrete failed, status = %s", Status(status));
 				return 1;
 			}		
 		}
@@ -587,7 +604,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			status = client.DirtyGet(key, false);
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("GET/batched failed");
+				Log_Message("GET/batched failed, status = %s", Status(status));
 				return 1;
 			}		
 		}
@@ -597,7 +614,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		sw.Stop();
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("GET/batched failed");
+			Log_Message("GET/batched failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -618,7 +635,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		result = client.GetResult(status);
 		if (status != KEYSPACE_OK || !result)
 		{
-			Log_Message("LISTKEYS/paginated failed");
+			Log_Message("LISTKEYS/paginated failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -645,7 +662,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		result = client.GetResult(status);
 		if (status != KEYSPACE_OK || !result)
 		{
-			Log_Message("LISTKEYS/paginated failed");
+			Log_Message("LISTKEYS/paginated failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -687,14 +704,14 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d)", i, num);
+				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
 			
 			result = client.GetResult(status);
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d)", i, num);
+				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
 			
@@ -781,7 +798,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			status = client.Set(key, key);
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("LISTKEYS/paginated3 Set() failed");
+				Log_Message("LISTKEYS/paginated3 Set() failed, status = %s", Status(status));
 				return 1;
 			}			
 		}
@@ -795,14 +812,14 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d)", i, num);
+				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
 			
 			result = client.GetResult(status);
 			if (status != KEYSPACE_OK)
 			{
-				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d)", i, num);
+				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
 			
@@ -842,7 +859,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Get(key);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("TimeoutTest failed");
+			Log_Message("TimeoutTest failed, status = %s", Status(status));
 			return 1;
 		}
 
@@ -852,7 +869,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Get(key);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("TimeoutTest failed");
+			Log_Message("TimeoutTest failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -867,7 +884,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Prune(prefix);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("PRUNE failed");
+			Log_Message("PRUNE failed, status = %s", Status(status));
 			return 1;
 		}
 		
@@ -883,13 +900,13 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.ListKeys(prefix, startKey, 0, false);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("LISTKEYS/empty failed");
+			Log_Message("LISTKEYS/empty failed, status = %s", Status(status));
 			return -1;
 		}
 		result = client.GetResult(status);
 		if (status != KEYSPACE_OK || result != NULL)
 		{
-			Log_Message("LISTKEYS/empty failed");
+			Log_Message("LISTKEYS/empty failed, status = %s", Status(status));
 			return -1;
 		}
 		
@@ -905,7 +922,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Set(key, key);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("LISTKEYS/empty2 Set() failed");
+			Log_Message("LISTKEYS/empty2 Set() failed, status = %s", Status(status));
 			return -1;
 		}
 		
@@ -913,13 +930,13 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.ListKeys(prefix, startKey, 0, true);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("LISTKEYS/empty2 status failed");
+			Log_Message("LISTKEYS/empty2 status failed, status = %s", Status(status));
 			return -1;
 		}
 		result = client.GetResult(status);
 		if (status != KEYSPACE_OK || result != NULL)
 		{
-			Log_Message("LISTKEYS/empty2 result failed");
+			Log_Message("LISTKEYS/empty2 result failed, status = %s", Status(status));
 			return -1;
 		}
 		
