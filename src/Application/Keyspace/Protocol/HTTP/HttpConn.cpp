@@ -260,7 +260,7 @@ bool HttpConn::ProcessGetMaster()
 		ba.Writef("%d\n\nI'm a slave", kdb->GetMaster());
 	
 	Response(200, ba.buffer, ba.length);
-	return true;
+	return false;
 }
 
 bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op, bool dirty)
