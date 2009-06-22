@@ -38,6 +38,8 @@ bool ReplicatedLog::Init()
 	acceptor.Init(writers);
 	learner.Init(writers);
 	
+	highestPaxosID = 0;
+	
 	proposer.paxosID = acceptor.paxosID;
 	learner.paxosID = acceptor.paxosID;
 	

@@ -22,7 +22,6 @@ protected:
 	bool					SendChosen(unsigned nodeID, uint64_t paxosID, ByteString& value);	
 	bool					Learned();
 	ByteString				Value();
-	void					SetPaxosID(uint64_t paxosID_);
 
 protected:
 	void					OnLearnChosen(PaxosMsg& msg_);

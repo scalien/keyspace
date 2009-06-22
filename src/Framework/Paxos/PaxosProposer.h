@@ -20,7 +20,6 @@ public:
 		
 	void					OnPrepareTimeout();
 	void					OnProposeTimeout();
-	void					SetPaxosID(uint64_t paxosID_);
 	bool					IsActive();	
 	bool					Propose(ByteString& value);
 	void					Stop();

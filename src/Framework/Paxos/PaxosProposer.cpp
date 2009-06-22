@@ -25,11 +25,6 @@ void PaxosProposer::Init(TransportWriter** writers_)
 	state.Init();
 }
 
-void PaxosProposer::SetPaxosID(uint64_t paxosID_)
-{
-	paxosID = paxosID_;
-}
-
 bool PaxosProposer::Propose(ByteString& value)
 {
 	Log_Trace();
