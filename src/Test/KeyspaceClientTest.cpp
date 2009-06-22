@@ -330,6 +330,7 @@ int KeyspaceClientTestSuite()
 	Keyspace::Result*	result;
 	Stopwatch			sw;
 	uint64_t			timeout;
+	const int			NUM_TEST_KEYS = 1000;
 	
 	IgnorePipeSignal();
 
@@ -534,7 +535,7 @@ int KeyspaceClientTestSuite()
 			return 1;
 		}
 
-		num = 1000;
+		num = NUM_TEST_KEYS;
 		value.Writef("0123456789012345678901234567890123456789");
 		for (int i = 0; i < num; i++)
 		{
@@ -679,8 +680,7 @@ int KeyspaceClientTestSuite()
 	
 	// paginated LISTKEYS test #2
 	{
-		num = 1000; // TODO make a constant of the value from batched SET test
-		bool found[num];
+		num = NUM_TEST_KEYS;
 		DynArray<128> prefix;
 		DynArray<128> startKey;
 		bool skip = false;
@@ -716,7 +716,7 @@ int KeyspaceClientTestSuite()
 					break;
 				j--;
 				startKey.Set(result->Key());
-				Log_Message("LISTKEYS/paginated2: %.*s", startKey.length, startKey.buffer);
+				//Log_Message("LISTKEYS/paginated2: %.*s", startKey.length, startKey.buffer);
 				result = result->Next(status);
 			}
 			
@@ -724,7 +724,7 @@ int KeyspaceClientTestSuite()
 				break;
 			
 			skip = true;
-			Log_Message("LISTKEYS/paginated2: next startKey %.*s", startKey.length, startKey.buffer);
+			//Log_Message("LISTKEYS/paginated2: next startKey %.*s", startKey.length, startKey.buffer);
 		}
 		
 		if (i != num)
@@ -734,6 +734,115 @@ int KeyspaceClientTestSuite()
 		}
 		
 		Log_Message("LISTKEYS/paginated2 succeeded");
+	}
+	
+	// paginated LIST test #3
+	{
+		const char *MCULE_KEYS[] = {
+			"AIWFTJJFRLPIRD-MRSUPTMICU",
+			"APOHQRLKHMYCPF-QVUQFMIFCJ",
+			"AXVOOBOVMQRASC-SREBMQDQCV",
+			"AYZALFCBEKQGRT-UHFFFAOYAR",
+			"BDCSBXZUWVUZCA-QVUQFMIFCJ",
+			"BKWFEMTXXPTGLA-YDZHTSKRBJ",
+			"BTEKPINUMIFNBM-VJSLDGLSCH",
+			"BUVPXRLLVYZSRD-UYBDAZJACK",
+			"BWRYEMXLQWFRBY-HPHMPNDVCT",
+			"BZXAOUVLGYOFEG-FHGMOFAHCB",
+			"CDABDEPCTYYMKV-CSKMVECVCL",
+			"CMVXYUTUJOYOAR-PKSOQXRJCA",
+			"CSIIRWICTOESQE-UFFVCSGVBO",
+			"CZDLUSFSLSUPJN-PECIQRARCQ",
+			"DGGYASFKJKXFGZ-LNNLXFCOCT",
+			"DIQREXVGAWIWBR-UHFFFAOYAL",
+			"DKQMKVKLJKRMSW-ZYMSVLFVCP",
+			"DNDOHRFCVODJQJ-HPHMPNDVCW",
+			"DTKHUBUAGGQZTK-LELJVTLKCB",
+			"DYOPHMVJTYDODD-HPHMPNDVCL",
+			"FDAFLYIGAPIPTG-CSKMVECVCQ",
+			"FEXQYNVUMVIVGE-HXTKINSTCI",
+			"FHETWNQRNKXWAN-MRSUPTMICC",
+			"FMLTTXTUNXGTBH-QWOVJGMICA",
+			"FPTBBFJJSPCSLZ-CSKMVECVCG",
+			"FXUZDUAQIFWDOB-UHFFFAOYAW",
+			"GGTKSBGQTCSOOX-PECIQRARCI",
+			"GJESMWQDRWZUKC-MRSUPTMICW",
+			"GKWVVVFFRZMMSC-QVUQFMIFCP",
+			"GLGPSEIQGWMHBJ-KZFATGLACW",
+			"HEHSZSBMWMFSPW-SDRQFZCRCW",
+			"HFAXUZPFXVOFRG-JLGFQASFCJ",
+			"HHHRZHVCTJGJMM-LQFNOIFHCO",
+			"HHKCKALQPRFHMV-QWOVJGMICX",
+			"HNOGSSUZDLBROJ-MDVJYLRGCM",
+			"HYQGHDMXUYVPHG-KEBDBYFIBT",
+		};
+		DynArray<128> prefix;
+		DynArray<128> startKey;
+		bool skip = false;
+		int num = SIZE(MCULE_KEYS);
+		int i;
+		
+		prefix.Writef("mcule:");
+		for (i = 0; i < num; i++)
+		{
+			key.Writef("%B%s", prefix.length, prefix.buffer, MCULE_KEYS[i]);
+			status = client.Set(key, key);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("LISTKEYS/paginated3 Set() failed");
+				return 1;
+			}			
+		}
+		
+		num = SIZE(MCULE_KEYS);
+		i = 0;
+		while (true)
+		{
+			int j = 10;
+			status = client.ListKeys(prefix, startKey, j, skip);
+
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d)", i, num);
+				return 1;
+			}
+			
+			result = client.GetResult(status);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d)", i, num);
+				return 1;
+			}
+			
+			if (!result)
+				break;
+			
+			while (result)
+			{
+				i++;
+				if (i > num)
+					break;
+				j--;
+				startKey.Set(result->Key());
+				Log_Message("LISTKEYS/paginated3: %.*s", startKey.length, startKey.buffer);
+				result = result->Next(status);
+			}
+			
+			if (j != 0)
+				break;
+			
+			skip = true;
+			Log_Message("LISTKEYS/paginated3: next startKey %.*s", startKey.length, startKey.buffer);
+			
+		}
+
+		if (i != num)
+		{
+			Log_Message("LISTKEYS/paginated3 failed (returned %d of %d)", i, num);
+			return 1;			
+		}
+
+		Log_Message("LISTKEYS/paginated3 succeeded");
 	}
 	
 	// PRUNE test
