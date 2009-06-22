@@ -55,7 +55,11 @@ void TransportTCPReader::Stop()
 	IOProcessor::Remove(&tcpread);
 	
 	for (it = conns.Head(); it != NULL; it = conns.Next(it))
+	{
 		(*it)->Stop();
+		if (tcpread.active)
+			break; // user called Continue(), stop looping
+	}
 }
 
 bool TransportTCPReader::IsActive()
@@ -72,8 +76,11 @@ void TransportTCPReader::Continue()
 	IOProcessor::Add(&tcpread);
 	
 	for (it = conns.Head(); it != NULL; it = conns.Next(it))
+	{
 		(*it)->Continue();
-
+		if (!tcpread.active)
+			break; // user called Stop(), stop looping
+	}
 }
 
 void TransportTCPReader::OnConnect()
