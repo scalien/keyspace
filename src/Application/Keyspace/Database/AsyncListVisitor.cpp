@@ -53,7 +53,6 @@ bool AsyncVisitorCallback::AppendKeyValue(const ByteString &key, const ByteStrin
 void AsyncVisitorCallback::Execute()
 {
 	op->status = true;
-	ByteString value;
 	
 	for (int i = 0; i < numkey; i++)
 	{
@@ -87,7 +86,10 @@ void AsyncVisitorCallback::Execute()
 	}
 
 	if (complete)
+	{
+		Log_Trace("calling with complete==true");
 		op->service->OnComplete(op, complete);
+	}
 	
 	delete this;
 }

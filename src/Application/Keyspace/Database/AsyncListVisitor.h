@@ -16,7 +16,6 @@ public:
 	typedef DynArray<100 * VISITOR_LIMIT>	ValueBuffer;
 	
 	ByteString		keys[VISITOR_LIMIT];
-	//ByteString		values[VISITOR_LIMIT];
 	unsigned long	valuepos[VISITOR_LIMIT];
 	unsigned int	valuelen[VISITOR_LIMIT];
 	KeyBuffer		keybuf;
