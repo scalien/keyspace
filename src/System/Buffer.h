@@ -71,6 +71,11 @@ public:
 	{
 		return MEMCMP(buffer, length, other.buffer, other.length);
 	}
+
+	bool operator!=(const ByteString& other) const
+	{
+		return !(operator==(other));
+	}
 	
 	bool Advance(unsigned n)
 	{
