@@ -13,16 +13,26 @@ int main(int argc, char* argv[])
 {
 	int		logTargets;
 	
-	if (argc != 2)
+	if (argc == 1)
+	{
+		fprintf(stderr, "You did not specify a config file!\n");
+		fprintf(stderr, "Starting in single mode with defaults...\n");
+		fprintf(stderr, "Using database.dir = '%s'\n", DATABASE_CONFIG_DIR);
+	}
+	else if (argc == 2)	
+	{
+	if (!Config::Init(argv[1]))
+		STOP_FAIL("Cannot open config file", 1);
+	}
+	else
 	{
 		fprintf(stderr, "usage: %s <config-file>\n", argv[0]);
 		STOP_FAIL("invalid arguments", 1);
 	}
 	
-	if (!Config::Init(argv[1]))
-		STOP_FAIL("Cannot open config file", 1);
-
 	logTargets = 0;
+	if (Config::GetListNum("log.targets") == 0)
+		logTargets = LOG_TARGET_STDOUT;
 	for (int i = 0; i < Config::GetListNum("log.targets"); i++)
 	{
 		if (strcmp(Config::GetListValue("log.targets", i, ""), "file") == 0)
@@ -34,7 +44,6 @@ int main(int argc, char* argv[])
 			logTargets |= LOG_TARGET_STDOUT;
 		if (strcmp(Config::GetListValue("log.targets", i, NULL), "stderr") == 0)
 			logTargets |= LOG_TARGET_STDERR;
-
 	}
 	Log_SetTarget(logTargets);
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));

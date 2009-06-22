@@ -16,10 +16,18 @@ bool ReplicatedConfig::Init()
 
 	nodeID = Config::GetIntValue("paxos.nodeID", 0);
 	numNodes = Config::GetListNum("paxos.endpoints");
-	for (unsigned i = 0; i < numNodes; i++)
+	if (numNodes == 0)
 	{
-		endpoint.Set(Config::GetListValue("paxos.endpoints", i, NULL));
-		endpoints[i] = endpoint;
+		endpoint.Set("0.0.0.0:10000");
+		endpoints[0] = endpoint;
+	}
+	else
+	{
+		for (unsigned i = 0; i < numNodes; i++)
+		{
+			endpoint.Set(Config::GetListValue("paxos.endpoints", i, NULL));
+			endpoints[i] = endpoint;
+		}
 	}
 	
 	if (numNodes > 1)

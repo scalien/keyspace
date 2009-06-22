@@ -96,6 +96,10 @@ E.g.
 
 	$ script/safe_keyspace bin/keyspace test/0/keyspace.conf
 
+If you do not specify a conf file, Keyspace will start in single
+mode with default configuration. This is a convenience feature
+for new users to get started quickly.
+
 See the next section 'Configuration options' for more information
 on the keyspace.conf file.
 
