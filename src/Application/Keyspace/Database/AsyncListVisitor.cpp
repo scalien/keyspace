@@ -15,10 +15,10 @@ bool AsyncVisitorCallback::AppendKey(const ByteString &key)
 {
 	if (key.length + keybuf.length <= keybuf.size && numkey < VISITOR_LIMIT - 1)
 	{
-		keys[numkey].length = key.length;
-		keys[numkey].size = key.size;
-		keys[numkey].buffer = keybuf.buffer + keybuf.length;
-		memcpy(keybuf.buffer + keybuf.length, key.buffer, key.length);
+		keys[numkey].length = 0;//key.length;
+		keys[numkey].size = 0;//key.size;
+		keys[numkey].buffer = NULL;//keybuf.buffer + keybuf.length;
+		//memcpy(keybuf.buffer + keybuf.length, key.buffer, key.length);
 		keybuf.length += key.length;
 		
 		numkey++;
