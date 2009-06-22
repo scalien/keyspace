@@ -12,7 +12,7 @@ void CatchupWriter::Init(CatchupServer* server_)
 {
 	Log_Trace();
 
-	TCPConn<>::Init(false);
+	TCPConn<>::Init(true);
 	
 	server = server_;
 	table = database.GetTable("keyspace");
