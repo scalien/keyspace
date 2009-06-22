@@ -203,7 +203,8 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 		ret = false;
 	}
 
-	if (ret)
+
+	if (op->IsWrite() && ret)
 		ret = kdb->Submit();
 	
 	if (!ret)
