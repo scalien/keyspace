@@ -270,6 +270,7 @@ readTimeout(&onReadTimeout)
 	getMasterTime = 0;
 	getMasterPending = false;
 	timeout = timeout_;
+	sent = 0;
 }
 
 void ClientConn::Send(Command &cmd)
@@ -287,11 +288,20 @@ void ClientConn::Send(Command &cmd)
 		Write(cmd.msg.buffer, cmd.msg.length);
 	}
 
+	sent++;
+
 	if (timeout && !readTimeout.IsActive())
 	{
 		readTimeout.SetDelay(timeout);
 		EventLoop::Add(&readTimeout);
 	}
+}
+
+void ClientConn::RemoveSentCommand(Command** it)
+{
+	client.sentCommands.Remove(it);
+	if (--sent == 0)
+		RemoveReadTimeout();
 }
 
 bool ClientConn::ProcessResponse(Response* resp)
@@ -321,7 +331,7 @@ bool ClientConn::ProcessResponse(Response* resp)
 					resp->status = KEYSPACE_ERROR;
 				
 				delete cmd;
-				client.sentCommands.Remove(it);
+				RemoveSentCommand(it);
 				return false;
 			}
 			
@@ -336,7 +346,7 @@ bool ClientConn::ProcessResponse(Response* resp)
 				if (resp->key.length == 0)
 				{
 					delete cmd;
-					client.sentCommands.Remove(it);
+					RemoveSentCommand(it);
 					client.result.SetStatus(resp->status);
 				}
 				else
@@ -345,7 +355,7 @@ bool ClientConn::ProcessResponse(Response* resp)
 			else
 			{
 				delete cmd;
-				client.sentCommands.Remove(it);
+				RemoveSentCommand(it);
 				client.result.AppendResponse(resp);
 			}
 			

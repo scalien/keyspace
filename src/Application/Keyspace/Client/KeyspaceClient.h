@@ -59,6 +59,7 @@ public:
 	void			OnReadTimeout();
 	Endpoint&		GetEndpoint();
 	void			Send(Command &cmd);
+	void			RemoveSentCommand(Command** cmdit);
 	bool			ReadMessage(ByteString &msg);
 	bool			ProcessResponse(Response* msg);
 	void			GetMaster();
@@ -78,6 +79,7 @@ private:
 	uint64_t		timeout;
 	MFunc<ClientConn> onReadTimeout;
 	CdownTimer		readTimeout;
+	int				sent;
 };
 
 typedef List<Response*> ResponseList;
