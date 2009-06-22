@@ -169,6 +169,7 @@ const ByteString* AsyncListVisitor::GetStartKey()
 
 void AsyncListVisitor::OnComplete()
 {
+	Log_Trace("setting complete=true");
 	avc->complete = true;
 	IOProcessor::Complete(avc);
 	delete this;
