@@ -40,9 +40,8 @@ bool AsyncVisitorCallback::AppendKeyValue(const ByteString &key, const ByteStrin
 		numvalue = numkey;
 		AppendKey(key);
 
-		values[numvalue].length = value.length;
-		values[numvalue].size = value.size;
-		values[numvalue].buffer = valuebuf.buffer + valuebuf.length;
+		valuepos[numvalue] = valuebuf.length;
+		valuelen[numvalue] = value.length;
 		valuebuf.Append(value.buffer, value.length);
 		
 		return true;
@@ -54,7 +53,8 @@ bool AsyncVisitorCallback::AppendKeyValue(const ByteString &key, const ByteStrin
 void AsyncVisitorCallback::Execute()
 {
 	op->status = true;
-
+	ByteString value;
+	
 	for (int i = 0; i < numkey; i++)
 	{
 		// HACK in order to not copy the buffer we set the members of
@@ -65,9 +65,11 @@ void AsyncVisitorCallback::Execute()
 		
 		if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
 		{
-			op->value.buffer = values[i].buffer;
-			op->value.size = values[i].size;
-			op->value.length = values[i].length;
+			// this is a huge hack, since op->value is a ByteBuffer!
+			// if it were allocated, this would result in memleak
+			op->value.buffer = valuebuf.buffer + valuepos[i];
+			op->value.size = valuelen[i];
+			op->value.length = valuelen[i];
 		}
 		
 		op->service->OnComplete(op, false);
