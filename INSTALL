@@ -1,9 +1,20 @@
 
+Contact
+=======
+
+If you are experiencing difficulties please visit our Google Groups page:
+
+- group home page:		http://groups.google.com/group/keyspace
+- group email address:	keyspace@googlegroups.com
+
+The official Keyspace homepage is at http://scalien.com
+
+
 Preliminaries (IMPORTANT, READ THIS!)
 =====================================
 
 Keyspace nodes need to have their system clocks synchronized to
-within 1 second. This is fairly easy to accomplish using the
+within 2 seconds. This can be accomplished using the
 Network Time Protocol, more specifically the NTP daemon,
 which comes standard with most UNIX-like distributions.
 See 'man ntpd'.
@@ -12,8 +23,12 @@ See 'man ntpd'.
 Building Keyspace
 =================
 
-In order to build Keyspace, you will need a working GNU C++ compiler,
-GNU make and BerkeleyDB C++ library.
+In order to build Keyspace, you will need
+1. gcc, the GNU C++ compiler,
+2. GNU make and 
+3. the BerkeleyDB C++ library.
+
+To install these, issue the following command:
 
 - Debian 4.0 
 	
@@ -29,7 +44,7 @@ GNU make and BerkeleyDB C++ library.
 
 - Mac OS X 10.4 & 10.5
 
-	Install the Developer Tools from installation DVD.
+	Install the Developer Tools from the MacOS DVD.
 	Use a port system such as MacPorts or Fink to install Berkeley DB.
 
 	$ sudo port install db46
@@ -45,46 +60,70 @@ GNU make and BerkeleyDB C++ library.
 	
 	Select from the interactive menu.
 
-On Linux/BSD systems edit Makefile.Linux/Makefile.Darwin accordingly; 
+- Other systems
+
+Edit Makefile.Linux (or Makefile.Darwin) accordingly; 
 modify INCLUDE and LDPATH according to the location of Berkeley DB in 
 your system.
 
-To build Keyspace, type 'make' (or on FreeBSD and OpenBSD use the 
-'gmake' command). 
+After you have set up the neccessary components, you can proceed to
+build Keyspace:
+
+- Linux, Mac OS:
+
+	$ make
+
+- BSD:
+
+	$ gmake
 
 This will create the Keyspace binary 'keyspace' in the 'bin' folder.
 
-If something went wrong, type 'make clean' before recompiling.
+If something went wrong, try 'make clean' before recompiling.
 
 
 Running Keyspace
 ================
 
-To launch the Keyspace, start it with the included safe script
-which can be found at script/safe_keyspace.
+To launch Keyspace, start it with the included safe script
+located at script/safe_keyspace.
 
 Usage:
 
-	script/safe_keyspace [binary-file] [config-file]
+	$ script/safe_keyspace [binary-file] [config-file]
 
 E.g.
 
-	script/safe_keyspace bin/keyspace test/0/keyspace.conf
+	$ script/safe_keyspace bin/keyspace test/0/keyspace.conf
 
+See the next section 'Configuration options' for more information
+on the keyspace.conf file.
 
-If you want to run more than one instances:
+If you want to run more than one instances on the same computer:
 
-	script/safe_keyspace bin/keyspace test/1/keyspace.conf
-	script/safe_keyspace bin/keyspace test/2/keyspace.conf
+	$ script/safe_keyspace bin/keyspace test/1/keyspace.conf
+	$ script/safe_keyspace bin/keyspace test/2/keyspace.conf
 	
 
 Configuration options
 =====================
 
+This is a list of possible options in keyspace.conf. You *have* to
+specify 'paxos.endpoints' and 'paxos.nodeID', the rest is optional.
+We recommend you start out with the default configuration files and
+modify them to suit your setup.
+
+For numeric values you may use the K, M, G suffices that mean 1024, 
+1024^2, 1024^3 respectively.
+
 - paxos.endpoints
 
-	This value must be the same on all nodes. These values define a 
-	Paxos ring.
+	List of host:port pairs. REQUIRED.
+	This value must be the same on all nodes and define the
+	Keyspace nodes forming the replicated system. If you only list
+	one node, you are running in single-mode, without replication.
+	
+	Example: 192.168.0.1:10000, 192.168.0.2:10000, 192.168.0.3:10000 
 
 	The nodes use 4 consecutive port numbers for Paxos related 
 	protocols, starting with the values defined here. (These are 
@@ -93,77 +132,123 @@ Configuration options
 
 - paxos.nodeID
 	
-	This must be different on all nodes. The first node's ID is 0, the
-	seconds' is 1 and so on.
+	Number. REQUIRED.
+	This must be different on all nodes. The first node's ID is 0,
+	the second's is 1 and so on. If you are running in single-mode, put 0 here.
+
+- timecheck.active
+
+	Boolean. OPTIONAL. Default is true.
+	Turns on (or off) system time synchronity check. This is accomplished by nodes
+	exchanging timestamped UDP messages. If the timecheck module finds
+	that two nodes' clock skew is greater than 2 seconds, it will halt
+	the node to avoid inconsistency in master election.
 
 - io.maxfd
 
-	Roughly equals to the maximum number of connections the server can
-	handle.
+	Number. OPTIONAL. Default is 1024.
+	Roughly equals to the maximum number of connections the server can handle.
 	
 - database.dir
 
-	The directory where the BerkeleyDB files are stored. If you run 
-	multiple instances on the same host, this must be different for
-	all nodes.
+	Path. OPTIONAL. Default is '.'. BDB related.
+	The directory where the BerkeleyDB files are stored. If you run  multiple
+	instances on the same host, this must be different for all nodes.
+	
+	Example: /var/lib/keyspace
 
 - database.pageSize
 
-	Set the page size (in bytes) in the backend database. The default 
-	value is 4096 that offer a good trade-off between speed and disk 
-	space used. It cannot be bigger than 65536.
+	Number < 65536. OPTIONAL. Default is 4096. BDB related.
+	Set the page size (in bytes) in the backend database. Leave this alone
+	unless you know what you're doing.
 
 - database.cacheSize
 
-	Set cache size in backend database.
+	Number. OPTIONAL. Default is 100M.
+	Set the cache size in backend database. This is related to how much
+	memory Keyspace uses for caching.
+	
+	Example: 100M
 
-- asyncDatabase.numReader
+- database.logBufferSize
 
-	Set the number of parallel threads that is used for servicing
-	read-type operations. A good value is about the number of cores
-	in your machine.
+	Number. OPTIONAL. Default is 2M. BDB related.
+	Sets the buffer size for transaction logs.
 
-- http.port
+- database.checkpointTimeout
 
-	The port of the Keyspace HTTP server.  If you run  multiple instances 
-	on the same host, this must be different for all nodes.
+	Number [msec]. OPTIONAL. Default is 60000 msec. BDB related.
+	Database checkpointing occurs this often.  
+
+- database.verbose
+	Boolean. OPTIONAL. Default is false. BDB related.
+	Turns on BDB verbosity for debugging.
 
 - keyspace.port
 
-	The port of the Keyspace protocol. If you run  multiple instances 
-	on the same host, this must be different for all nodes.
+	Number. OPTIONAL. Default is 7080.
+	The port of the Keyspace client protocol. If you run multiple instances
+	on the same host, this must be different for all instances.
+
+- http.port
+
+	Number. OPTIONAL. Default is 8080.
+	The port of the Keyspace HTTP server.  If you run multiple instances on
+	the same host, this must be different for all instances.
 
 - logCache.size
 
+	Number. OPTIONAL. Default is 10000.
 	The number of Paxos rounds cached.
 
 - logCache.maxMem
 
+	Number. OPTIONAL. Default is 100M.
 	Maximum memory allocated for Paxos log cache.
 
-For numeric values you may use the K, M, G suffices that mean 1024, 
-1024^2, 1024^3 respectively.
+- log.trace
+
+	Boolean. OPTIONAL. Default is false.
+	Whether to print out debug traces.
+
+- log.targets
+
+	List of strings. OPTIONAL. Default is stdout. Options are stdout, file and syslog.
+	More than one can be given, seperated with commas.
+	
+	Example: stdout, file, syslog
+	
+- log.file
+
+	Path. OPTIONAL. Default is none.
+	The path of the log file to use if log.targets = file is given.
+	
+- log.timestamping
+
+	Boolean. OPTIONAL. Default is false.
+	Whether to put a timestamp in front of log messages.
 
 
 Firewall & ports info
 =====================
 
 Keyspace uses several ports to communicate with other nodes. These are
-the following, with relative offset to Paxos port (see Configuration
-options, paxos.endpoints regarding configuration of Paxos port).
+the following, with relative offset to the Paxos port (see 'Configuration
+options', paxos.endpoints regarding configuration of the Paxos port).
 
-0	Paxos (tcp)
-1	PaxosLease (udp)
-2	Catchup (tcp)
-3	TimeCheck (udp)
+port offset     name
+----------------------------------
+0               Paxos (tcp)
+1               PaxosLease (udp)
+2               Catchup (tcp)
+3               TimeCheck (udp)
 
-So for example you have nodes with Paxos port on 10000/tcp, you need
+Eg. if you have nodes with Paxos port on 10000/tcp, you need
 to open the following ports on your firewall: 
 
 10000/tcp, 10001/udp, 10002/tcp, 10003/udp
 
 In addition the server ports, you need to open the client protocol
-ports too (see Configuration options: http.port, keyspace.port).
-
-
+ports too (see 'Configuration options': http.port, keyspace.port).
 
