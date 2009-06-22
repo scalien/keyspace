@@ -113,7 +113,7 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 	result = client.GetResult(status);
 	if (status != KEYSPACE_OK || !result)
 	{
-		Log_Message("Test failed (%s failed after %lu)", conf.type, (unsigned long) sw.elapsed);
+		Log_Message("Test failed (%s failed after %lu)", conf.typeString, (unsigned long) sw.elapsed);
 		return 1;
 	}
 	
@@ -124,7 +124,7 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 		result = result->Next(status);
 	}
 	
-	Log_Message("Test succeeded (%s %d, elapsed %lu)", conf.type, num, (unsigned long) sw.elapsed);
+	Log_Message("Test succeeded (%s %d, elapsed %lu)", conf.typeString, num, (unsigned long) sw.elapsed);
 	return 0;
 }
 
@@ -222,7 +222,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		status = client.Set(conf.key, conf.value, false);
 		if (status != KEYSPACE_OK)
 		{
-			Log_Message("Test failed (%s failed after %d)", i, conf.typeString);
+			Log_Message("Test failed (%s failed after %d)", conf.typeString, i);
 			return 1;
 		}
 	}
@@ -566,14 +566,14 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			sw.Start();
 			status = client.DirtyGet(key);
 			sw.Stop();
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_OK && status != KEYSPACE_FAILED)
 			{
-				Log_Message("GET/discrete failed");
+				Log_Message("DIRTYGET/discrete failed");
 				return 1;
 			}		
 		}
 		
-		Log_Message("GET/discrete succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));
+		Log_Message("DIRTYGET/discrete succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));
 	}
 	
 	// batched GET test
