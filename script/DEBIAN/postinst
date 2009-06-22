@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. /etc/default/keyspace
+
+make_database_dir() {
+	mkdir -p $KEYSPACE_DATABASE_DIR
+}
+
+start_if_needed() {
+	if [ $START_KEYSPACE = "YES" ];
+	then
+		/etc/init.d/keyspace start
+	fi
+}
+
+echo "making database directory..."
+
+make_database_dir
+start_if_needed
+
+echo done
