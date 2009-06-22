@@ -3,6 +3,8 @@
 
 AsyncVisitorCallback::AsyncVisitorCallback()
 {
+	Log_Trace();
+
 	numkey = 0;
 	op = NULL;
 }
@@ -13,12 +15,14 @@ AsyncVisitorCallback::~AsyncVisitorCallback()
 
 bool AsyncVisitorCallback::AppendKey(const ByteString &key)
 {
+	Log_Trace();
+	
 	if (key.length + keybuf.length <= keybuf.size && numkey < VISITOR_LIMIT - 1)
 	{
-		keys[numkey].length = 0;//key.length;
-		keys[numkey].size = 0;//key.size;
-		keys[numkey].buffer = NULL;//keybuf.buffer + keybuf.length;
-		//memcpy(keybuf.buffer + keybuf.length, key.buffer, key.length);
+		keys[numkey].length = key.length;
+		keys[numkey].size = key.size;
+		keys[numkey].buffer = keybuf.buffer + keybuf.length;
+		memcpy(keybuf.buffer + keybuf.length, key.buffer, key.length);
 		keybuf.length += key.length;
 		
 		numkey++;
@@ -52,6 +56,8 @@ bool AsyncVisitorCallback::AppendKeyValue(const ByteString &key, const ByteStrin
 
 void AsyncVisitorCallback::Execute()
 {
+	Log_Trace();
+
 	op->status = true;
 	
 	for (int i = 0; i < numkey; i++)
@@ -114,6 +120,8 @@ void AsyncListVisitor::Init()
 
 void AsyncListVisitor::AppendKey(const ByteString &key)
 {
+	Log_Trace();
+
 	if (!avc->AppendKey(key))
 	{
 		IOProcessor::Complete(avc);
@@ -134,6 +142,8 @@ void AsyncListVisitor::AppendKeyValue(const ByteString &key, const ByteString &v
 
 bool AsyncListVisitor::Accept(const ByteString &key, const ByteString &value)
 {
+	Log_Trace();
+
 	// don't list system keys
 	if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
 		return true;
@@ -169,6 +179,8 @@ const ByteString* AsyncListVisitor::GetStartKey()
 
 void AsyncListVisitor::OnComplete()
 {
+	Log_Trace();
+
 	Log_Trace("setting complete=true");
 	avc->complete = true;
 	IOProcessor::Complete(avc);
