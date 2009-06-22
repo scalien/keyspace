@@ -251,8 +251,8 @@ int KeyspaceClientTest2(int argc, char **argv)
 	int					nodec;
 	int					status;
 	Keyspace::Client	client;
-	int64_t				timeout;
 	TestConfig			testConf;
+	uint64_t			timeout;
 	const char			*LOCAL_NODES[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 
 
@@ -332,7 +332,6 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	int					status;
 	Keyspace::Result*	result;
 	Stopwatch			sw;
-	uint64_t			timeout;
 	const int			NUM_TEST_KEYS = 1000;
 	
 	reference.Writef("1234567890");
@@ -848,8 +847,8 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			return 1;
 		}
 
-		Log_Message("TimeoutTest: waiting for %d secs", timeout + 1000);
-		Sleep(timeout + 1000);
+		Log_Message("TimeoutTest: waiting for %d secs", client.GetTimeout() + 1000);
+		Sleep(client.GetTimeout() + 1000);
 		
 		status = client.Get(key);
 		if (status != KEYSPACE_OK)

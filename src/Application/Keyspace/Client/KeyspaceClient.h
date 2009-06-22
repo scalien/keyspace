@@ -126,6 +126,7 @@ public:
 	
 	int				Init(int nodec, const char* nodev[], uint64_t timeout);
 	uint64_t		SetTimeout(uint64_t timeout);
+	uint64_t		GetTimeout();
 	
 	// connection state related commands
 	int				GetMaster();

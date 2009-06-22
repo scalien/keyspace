@@ -519,6 +519,11 @@ uint64_t Client::SetTimeout(uint64_t timeout_)
 	return prev;
 }
 
+uint64_t Client::GetTimeout()
+{
+	return timeout;
+}
+
 int Client::GetMaster()
 {
 	return master;
