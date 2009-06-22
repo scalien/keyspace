@@ -31,7 +31,7 @@ case "$1" in
   start)
 	echo -n "Starting $DESC: "
 
-	$SAFE_DAEMON		
+	$SAFE_DAEMON $DEFAULT_CONFIG
 	
 	if [ $? -eq 0 ]; then
 		echo "$NAME."

@@ -3,11 +3,11 @@
 . /etc/default/keyspace
 
 make_database_dir() {
-	mkdir -p $KEYSPACE_DATABASE_DIR
+	mkdir -p $DATABASE_DIR
 }
 
 start_if_needed() {
-	if [ $START_KEYSPACE = "YES" ];
+	if [ "$START_KEYSPACE" = "YES" ];
 	then
 		/etc/init.d/keyspace start
 	fi

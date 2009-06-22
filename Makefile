@@ -21,6 +21,7 @@ DIST_DIR = $(BASE_DIR)/dist
 VERSION = `$(BASE_DIR)/script/version.sh 3 $(SRC_DIR)/Version.h`
 VERSION_MAJOR = `$(BASE_DIR)/script/version.sh 1 $(SRC_DIR)/Version.h`
 VERSION_MAJMIN = `$(BASE_DIR)/script/version.sh 3 $(SRC_DIR)/Version.h`
+PACKAGE_NAME = keyspace
 PACKAGE_DIR = $(BASE_DIR)/packages
 PACKAGE_FILE = keyspace-$(VERSION).deb
 PACKAGE_REPOSITORY = /
@@ -251,13 +252,16 @@ distclean-keyspace:
 #
 ##############################################################################
 
+
 deb: release
-	-$(SCRIPT_DIR)/mkcontrol.sh $(SCRIPT_DIR)/DEBIAN/control $(PACKAGE_NAME) $(VERSION) $(ARCH)
+	-$(SCRIPT_DIR)/mkcontrol.sh $(SCRIPT_DIR)/DEBIAN/control $(PACKAGE_NAME) $(VERSION) $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 	-mkdir -p $(DEB_DIR)/etc/init.d
+	-mkdir -p $(DEB_DIR)/etc/default
 	-mkdir -p $(DEB_DIR)/usr/bin
 	-cp -fr $(SCRIPT_DIR)/DEBIAN $(DEB_DIR)
 	-cp -fr $(SCRIPT_DIR)/keyspace.conf $(DEB_DIR)/etc
 	-cp -fr $(SCRIPT_DIR)/keyspace $(DEB_DIR)/etc/init.d
+	-cp -fr $(SCRIPT_DIR)/default $(DEB_DIR)/etc/default/keyspace
 	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(DEB_DIR)/usr/bin
 	-cp -fr $(BIN_DIR)/keyspace $(DEB_DIR)/usr/bin
 	-rm -f $(BUILD_ROOT)/.*
