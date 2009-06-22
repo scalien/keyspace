@@ -14,6 +14,7 @@ public:
 
 	Endpoint() 
 	{
+		bzero(&sa, sizeof(sa));
 		sa.sin_family = 0; sa.sin_port = 0; 
 		sa.sin_addr.s_addr = 0; sa.sin_zero[0] = 0;
 	}
@@ -28,7 +29,7 @@ public:
 	const char*	ToString();
 	
 private:
-	char			buffer[32];
+	char		buffer[32];
 
 };
 
