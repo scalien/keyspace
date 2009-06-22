@@ -329,13 +329,15 @@ int KeyspaceClientTestSuite()
 	Keyspace::Client	client;
 	Keyspace::Result*	result;
 	Stopwatch			sw;
+	uint64_t			timeout;
 	
 	IgnorePipeSignal();
 
 	Log_SetTrace(false);
 	Log_SetTimestamping(true);
 	
-	status = client.Init(SIZE(nodes), nodes, 10000);
+	timeout = 10000;
+	status = client.Init(SIZE(nodes), nodes, timeout);
 	if (status < 0)
 		return 1;
 
@@ -800,7 +802,7 @@ int KeyspaceClientTestSuite()
 		
 		Log_Message("LISTKEYS/emtpy2 succeeded");
 	}
-		
+	
 	// limit SET test
 	{
 		int d = 1;
