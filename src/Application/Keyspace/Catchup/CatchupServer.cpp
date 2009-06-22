@@ -16,5 +16,5 @@ void CatchupServer::InitConn(CatchupWriter* conn)
 		return;
 	}
 
-	conn->Init();
+	conn->Init(this);
 }

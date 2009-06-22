@@ -34,6 +34,7 @@ private:
 	void			Response(int code, const char* buf, int len, bool close = true, const char* header = NULL);
 	void			ResponseHeader(int code, bool close = true, const char* header = NULL);
 	
+	bool			ProcessGetMaster();
 	bool			ProcessGet(const char* params, KeyspaceOp* op, bool dirty = false);
 	bool			ProcessList(const char* params, KeyspaceOp* op, bool p, bool dirty = false);
 	bool			ProcessSet(const char* params, KeyspaceOp* op);

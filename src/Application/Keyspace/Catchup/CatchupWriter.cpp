@@ -1,5 +1,6 @@
 #include "CatchupWriter.h"
 #include <math.h>
+#include "CatchupServer.h"
 #include "Framework/Transport/Transport.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 
@@ -7,12 +8,13 @@ CatchupWriter::CatchupWriter()
 {
 }
 
-void CatchupWriter::Init()
+void CatchupWriter::Init(CatchupServer* server_)
 {
 	Log_Trace();
 
 	TCPConn<>::Init(false);
 	
+	server = server_;
 	table = database.GetTable("keyspace");
 	transaction.Set(table);
 	transaction.Begin();
@@ -40,7 +42,7 @@ void CatchupWriter::OnWrite()
 		if (transaction.IsActive())
 			transaction.Rollback();
 		Close();
-		delete this;
+		server->DeleteConn(this);
 	}
 	else
 		WriteNext();
@@ -54,7 +56,7 @@ void CatchupWriter::OnClose()
 	if (transaction.IsActive())
 		transaction.Rollback();
 	Close();
-	delete this;
+	server->DeleteConn(this);
 }
 
 void CatchupWriter::WriteNext()

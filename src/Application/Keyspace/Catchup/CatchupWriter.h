@@ -13,7 +13,7 @@ class CatchupWriter : public TCPConn<>
 public:
 	CatchupWriter();
 
-	void							Init();
+	void							Init(CatchupServer* server);
 	
 	void							OnRead();
 	void							OnWrite();	
@@ -29,6 +29,7 @@ private:
 	uint64_t						paxosID;
 	ByteArray<KEYSPACE_KEY_SIZE>	key;
 	ByteArray<KEYSPACE_VAL_SIZE>	value;
+	CatchupServer*					server;
 };
 
 #endif
