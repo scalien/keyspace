@@ -34,8 +34,6 @@ void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 
 void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 {
-	Log_Trace();
-		
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
 		op->type == KeyspaceOp::ADD ||
