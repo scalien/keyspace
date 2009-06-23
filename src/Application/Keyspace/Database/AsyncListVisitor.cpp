@@ -16,8 +16,6 @@ AsyncVisitorCallback::~AsyncVisitorCallback()
 
 bool AsyncVisitorCallback::AppendKey(const ByteString &key)
 {
-	Log_Trace();
-	
 	if (key.length + keybuf.length <= keybuf.size && numkey < VISITOR_LIMIT - 1)
 	{
 		keys[numkey].length = key.length;
@@ -121,8 +119,6 @@ void AsyncListVisitor::Init()
 
 void AsyncListVisitor::AppendKey(const ByteString &key)
 {
-	Log_Trace();
-
 	if (!avc->AppendKey(key))
 	{
 		IOProcessor::Complete(avc);
