@@ -107,7 +107,7 @@ Keyspace supports the following client commands (note the dirty-read operations 
 \item \texttt{LIST-KEYVALUES(prefix, startKey, count, next)}: same as \texttt{LIST-KEYS}, but returns keys \textit{and values}.
 \item \texttt{DIRTY-GET(key)}: returns the value of \texttt{key}, if it exists in the database, without making any consistency guarantees about reflecting previous write operations.
 \item \texttt{DIRTY-LIST-KEYS(prefix, startKey, count, next)}: same as \texttt{LIST-KEYS}, but without making any consistency guarantees about reflecting previous write operations.
-\item \texttt{DIRTY-LIST-KEYVALUES(prefix, n)}: same as \texttt{LIST-KEY-VALUES}, but without making any consistency guarantees about reflecting previous write operations.
+\item \texttt{DIRTY-LIST-KEYVALUES(prefix, startKey, count, next)}: same as \newline \texttt{LIST-KEY-VALUES}, but without making any consistency guarantees about reflecting previous write operations.
 \end{itemize}
 
 \section{ Master leases }
