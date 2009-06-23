@@ -81,7 +81,7 @@ void AsyncVisitorCallback::Execute()
 		op->service->OnComplete(op, false);
 	}
 
-	/*op->key.buffer = NULL;
+	op->key.buffer = NULL;
 	op->key.size = 0;
 	op->key.length = 0;
 	
@@ -90,7 +90,7 @@ void AsyncVisitorCallback::Execute()
 		op->value.buffer = NULL;
 		op->value.size = 0;
 		op->value.length = 0;
-	}*/
+	}
 
 	if (complete)
 	{
