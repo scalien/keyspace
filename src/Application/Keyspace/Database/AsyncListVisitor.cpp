@@ -64,23 +64,23 @@ void AsyncVisitorCallback::Execute()
 	{
 		// HACK in order to not copy the buffer we set the members of
 		// the key and value manually and set it back before deleting 
-		op->key.buffer = keys[i].buffer;
+		/*op->key.buffer = keys[i].buffer;
 		op->key.size = keys[i].size;
-		op->key.length = keys[i].length;
+		op->key.length = keys[i].length;*/
 		
 		if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
 		{
 			// this is a huge hack, since op->value is a ByteBuffer!
 			// if it were allocated, this would result in memleak
-			op->value.buffer = valuebuf.buffer + valuepos[i];
+			/*op->value.buffer = valuebuf.buffer + valuepos[i];
 			op->value.size = valuelen[i];
-			op->value.length = valuelen[i];
+			op->value.length = valuelen[i];*/
 		}
 		
 		op->service->OnComplete(op, false);
 	}
 
-	op->key.buffer = NULL;
+	/*op->key.buffer = NULL;
 	op->key.size = 0;
 	op->key.length = 0;
 	
@@ -89,7 +89,7 @@ void AsyncVisitorCallback::Execute()
 		op->value.buffer = NULL;
 		op->value.size = 0;
 		op->value.length = 0;
-	}
+	}*/
 
 	if (complete)
 	{
