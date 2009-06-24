@@ -21,6 +21,7 @@ private:
 	virtual void		OnRead();
 	virtual void		OnWrite();
 
+	void				WritePrompt();
 };
 
 class ConsoleCommand

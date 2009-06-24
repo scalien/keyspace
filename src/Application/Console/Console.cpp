@@ -9,6 +9,8 @@ void ConsoleConn::Init(Console *console_)
 	TCPConn<CONSOLE_SIZE>::Init();
 	socket.GetEndpoint(endpoint);
 	
+	WritePrompt();
+	
 	Log_Message("[%s] Console: client connected", endpoint.ToString());
 }
 
@@ -43,10 +45,13 @@ void ConsoleConn::OnRead()
 			while (args && *args == ' ')
 				args++;
 			console->Execute(readBuffer.buffer, args, this);
+			
+			WritePrompt();
 		}
 		
 		readBuffer.Remove(0, end - readBuffer.buffer);
 		pos += end - readBuffer.buffer;
+		
 	}
 	
 	tcpread.data.length -= pos;
@@ -60,6 +65,11 @@ void ConsoleConn::OnWrite()
 	TCPConn<CONSOLE_SIZE>::OnWrite();
 }
 
+void ConsoleConn::WritePrompt()
+{
+	Write("> ", 2);
+}
+
 void Console::Init(int port_, const char* interface_)
 {
 	if (!TCPServerT<Console, ConsoleConn, CONSOLE_SIZE>::Init(port_, CONN_BACKLOG, interface_))
@@ -69,9 +79,6 @@ void Console::Init(int port_, const char* interface_)
 void Console::Execute(const char* cmd, const char* args, ConsoleConn* conn)
 {
 	ConsoleCommand *cc;
-	
-	conn->Write(cmd, strlen(cmd), false);
-	conn->Write("\n", 1);
 	
 	for (cc = commands.Head(); cc; cc = cc->nextConsoleCommand)
 		cc->Execute(cmd, args, conn);

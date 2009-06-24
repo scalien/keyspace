@@ -10,17 +10,19 @@
 #include "Application/TimeCheck/TimeCheck.h"
 #include "Application/Console/Console.h"
 
+#define MATCHCMD(cmd, cstr) (strncmp(cmd, "" cstr, sizeof(cstr) - 1) == 0)
+
 class DebugCommand : public ConsoleCommand
 {
 public:
 	virtual void	Execute(const char* cmd, const char *args, ConsoleConn* conn)
 	{
-		if (strncmp(cmd, "crash", sizeof("crash") - 1) == 0)
+		if (MATCHCMD(cmd, "crash"))
 		{
 			char *p = NULL;
 			p[0] = 0;
 		}
-		else if (strncmp(cmd, "exit", sizeof("exit") - 1) == 0)
+		else if (MATCHCMD(cmd, "exit"))
 		{
 			int code = 0;
 			
@@ -28,19 +30,23 @@ public:
 				code = atoi(args);
 			_exit(code);
 		}
-		else if (strncmp(cmd, "log-reload", sizeof("log-reload") - 1) == 0)
+		else if (MATCHCMD(cmd, "log-reload"))
 		{
 			const char LOG_RELOAD_MSG[] = "Log file reloaded\n";
 			Log_SetOutputFile(Config::GetValue("log.file", NULL));
 			conn->Write(LOG_RELOAD_MSG, sizeof(LOG_RELOAD_MSG));
 			Log_Message(LOG_RELOAD_MSG);
 		}
-		else if (strncmp(cmd, "trace", sizeof("trace") - 1) == 0)
+		else if (MATCHCMD(cmd, "trace"))
 		{
 			if (args && atoi(args))
 				Log_SetTrace(true);
 			else
 				Log_SetTrace(false);
+		}
+		else if (MATCHCMD(cmd, "quit"))
+		{
+			conn->Close();
 		}
 	}
 };
