@@ -20,6 +20,7 @@ public:
 private:	
 	HttpServer*		server;
 	HttpRequest		request;
+	Endpoint		endpoint;
 	bool			headerSent;
 	bool			closeAfterSend;
 

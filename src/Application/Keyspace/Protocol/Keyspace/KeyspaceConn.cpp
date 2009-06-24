@@ -17,6 +17,9 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	
 	server = server_;
 	closeAfterSend = false;
+	socket.GetEndpoint(endpoint);
+	
+	Log_Message("[%s] Keyspace client connected", endpoint.ToString());
 	
 	AsyncRead();
 	
@@ -196,6 +199,8 @@ void KeyspaceConn::OnClose()
 //	if (connectionTimeout.IsActive())
 //		EventLoop::Remove(&connectionTimeout);
 	
+	Log_Message("[%s] Keyspace client disconnected", endpoint.ToString());
+
 	Close();
 	if (numpending == 0)
 		server->DeleteConn(this);

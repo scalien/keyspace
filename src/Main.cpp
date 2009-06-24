@@ -21,8 +21,8 @@ int main(int argc, char* argv[])
 	}
 	else if (argc == 2)	
 	{
-	if (!Config::Init(argv[1]))
-		STOP_FAIL("Cannot open config file", 1);
+		if (!Config::Init(argv[1]))
+			STOP_FAIL("Cannot open config file", 1);
 	}
 	else
 	{
@@ -48,8 +48,14 @@ int main(int argc, char* argv[])
 	Log_SetTarget(logTargets);
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
+
+#ifdef DEBUG
+	Log_Message("Keyspace v" VERSION_STRING " r%.*s started (DEBUG build date %s %s)",
+		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER, __DATE__, __TIME__);
+#else
 	Log_Message("Keyspace v" VERSION_STRING " r%.*s started",
 		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+#endif
 
 	if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
 		STOP_FAIL("Cannot initalize IOProcessor!", 1);

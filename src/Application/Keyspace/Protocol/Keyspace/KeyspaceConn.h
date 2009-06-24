@@ -38,6 +38,7 @@ private:
 	KeyspaceClientReq	req;
 	KeyspaceClientResp	resp;
 	bool				closeAfterSend;
+	Endpoint			endpoint;
 };
 
 #endif

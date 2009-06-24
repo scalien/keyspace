@@ -7,18 +7,17 @@
 #include <arpa/inet.h>
 #include "System/Log.h"
 
+#define ENDPOINT_STRING_SIZE	18
+
 class Endpoint
 {
 public:
-	struct sockaddr_in	sa;
+	sockaddr_in	sa;
 
-	Endpoint() 
-	{
-		bzero(&sa, sizeof(sa));
-		sa.sin_family = 0; sa.sin_port = 0; 
-		sa.sin_addr.s_addr = 0; sa.sin_zero[0] = 0;
-	}
+	Endpoint();
 	
+	bool		operator==(const Endpoint &other) const;
+
 	bool		Set(struct sockaddr_in &sa_);
 	bool		Set(const char* ip, int port);
 	bool		Set(const char* ip_port);
@@ -27,17 +26,15 @@ public:
 	int			GetPort();
 	
 	const char*	ToString();
-	
 private:
-	char		buffer[32];
-
+	char		buffer[ENDPOINT_STRING_SIZE];
 };
 
-inline bool operator==(Endpoint &a, Endpoint &b)
+/*
+inline bool operator==(const Endpoint &a, const Endpoint &b)
 {
-	return	a.sa.sin_family == b.sa.sin_family &&
-			a.sa.sin_port == b.sa.sin_port &&
-			a.sa.sin_addr.s_addr == b.sa.sin_addr.s_addr;
+	return a.operator==(b);
 }
+*/
 
 #endif

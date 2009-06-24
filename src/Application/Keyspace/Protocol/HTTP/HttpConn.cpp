@@ -25,6 +25,7 @@ void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 	server = server_;
 	
 	request.Init();
+	socket.GetEndpoint(endpoint);
 	
 	// HACK
 	headerSent = false;
@@ -119,6 +120,7 @@ void HttpConn::OnRead()
 void HttpConn::OnClose()
 {
 	Log_Trace();
+	
 	Close();
 	request.Free();
 	if (numpending == 0)
@@ -445,6 +447,8 @@ void HttpConn::Response(int code, const char* data, int len, bool close, const c
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
 
+	Log_Message("[%s] HTTP %s %s %d %d", endpoint.ToString(), request.line.method, request.line.uri, code, len);
+
 	do {
 		size = snwritef(httpHeader.buffer, httpHeader.size,
 					"%s %d %s" CS_CRLF
@@ -474,6 +478,8 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 {
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
+
+	Log_Message("[%s] HTTP %s %s %d ?", endpoint.ToString(), request.line.method, request.line.uri, code);
 
 	do {
 		size = snwritef(httpHeader.buffer, httpHeader.size,

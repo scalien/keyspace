@@ -3,6 +3,21 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 
+Endpoint::Endpoint()
+{
+	bzero(&sa, sizeof(sa));
+	sa.sin_family = 0; sa.sin_port = 0; 
+	sa.sin_addr.s_addr = 0; sa.sin_zero[0] = 0;
+	buffer[0] = 0;
+}
+
+bool Endpoint::operator==(const Endpoint &other) const
+{
+	return	sa.sin_family == other.sa.sin_family &&
+			sa.sin_port == other.sa.sin_port &&
+			sa.sin_addr.s_addr == other.sa.sin_addr.s_addr;
+}
+
 bool Endpoint::Set(struct sockaddr_in &sa_)
 {
 	sa = sa_;
