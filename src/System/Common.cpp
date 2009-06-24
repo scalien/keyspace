@@ -89,8 +89,13 @@ uint64_t strntouint64(const char* buffer, int length, unsigned* nread)
 
 char* strnchr(const char* s, int c, size_t len)
 {
-	for (size_t i = 0; i < len && s[i]; s++)
+	size_t	i;
+	
+	for (i = 0; i < len && s[i]; s++)
 		if (s[i] == c) return (char*) (s + i);
+	
+	if (c == 0 && i < len && s[i] == 0)
+		return (char*) (s + i);
 	
 	return NULL;
 }

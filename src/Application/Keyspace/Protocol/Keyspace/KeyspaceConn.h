@@ -38,7 +38,7 @@ private:
 	KeyspaceClientReq	req;
 	KeyspaceClientResp	resp;
 	bool				closeAfterSend;
-	Endpoint			endpoint;
+	char				endpointString[ENDPOINT_STRING_SIZE];
 };
 
 #endif

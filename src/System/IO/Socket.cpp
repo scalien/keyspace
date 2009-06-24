@@ -213,6 +213,16 @@ bool Socket::GetEndpoint(Endpoint &endpoint)
 	return true;
 }
 
+const char* Socket::ToString(char s[ENDPOINT_STRING_SIZE])
+{
+	Endpoint	endpoint;
+	
+	if (!GetEndpoint(endpoint))
+		return "";
+	
+	return endpoint.ToString(s);
+}
+
 bool Socket::SendTo(void *data, int count, const Endpoint &endpoint)
 {
 	int ret;

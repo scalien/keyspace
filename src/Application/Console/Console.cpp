@@ -7,16 +7,17 @@ void ConsoleConn::Init(Console *console_)
 {
 	console = console_;
 	TCPConn<CONSOLE_SIZE>::Init();
-	socket.GetEndpoint(endpoint);
+	socket.ToString(endpointString);
 	
+	console->Execute("version", NULL, this);
 	WritePrompt();
 	
-	Log_Message("[%s] Console: client connected", endpoint.ToString());
+	Log_Message("[%s] Console: client connected", endpointString);
 }
 
 void ConsoleConn::OnClose()
 {
-	Log_Message("[%s] Console: client disconnected", endpoint.ToString());
+	Log_Message("[%s] Console: client disconnected", endpointString);
 
 	Close();
 	console->DeleteConn(this);
@@ -33,13 +34,14 @@ void ConsoleConn::OnRead()
 	
 	while (
 		(end = strnchr(readBuffer.buffer, '\r', readBuffer.length)) != NULL ||
-		(end = strnchr(readBuffer.buffer, '\n', readBuffer.length)) != NULL)
+		(end = strnchr(readBuffer.buffer, '\n', readBuffer.length)) != NULL ||
+		(end = strnchr(readBuffer.buffer, '\0', readBuffer.length)) != NULL)
 	{
 		// terminate the string in case of newline
 		*end++ = '\0';
 		if (end - readBuffer.buffer > 1)
 		{
-			Log_Message("[%s] Console: %s", endpoint.ToString(), readBuffer.buffer);
+			Log_Message("[%s] Console: %s", endpointString, readBuffer.buffer);
 			
 			args = strchr(readBuffer.buffer, ' ');
 			while (args && *args == ' ')

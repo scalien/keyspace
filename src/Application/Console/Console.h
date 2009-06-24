@@ -14,7 +14,7 @@ public:
 	
 private:
 	Console*			console;
-	Endpoint			endpoint;
+	char				endpointString[ENDPOINT_STRING_SIZE];
 	
 	// TCPConn interface
 	virtual void		OnClose();

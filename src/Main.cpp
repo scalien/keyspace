@@ -10,6 +10,12 @@
 #include "Application/TimeCheck/TimeCheck.h"
 #include "Application/Console/Console.h"
 
+#ifdef DEBUG
+#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s started (DEBUG build date " __DATE__ " " __TIME__ ")"
+#else
+#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s"
+#endif
+
 #define MATCHCMD(cmd, cstr) (strncmp(cmd, "" cstr, sizeof(cstr) - 1) == 0)
 
 class DebugCommand : public ConsoleCommand
@@ -43,6 +49,16 @@ public:
 				Log_SetTrace(true);
 			else
 				Log_SetTrace(false);
+		}
+		else if (MATCHCMD(cmd, "version"))
+		{
+			char version[128];
+			int ret;
+			ret = snprintf(version, sizeof(version), VERSION_FMT_STRING "\n", 
+				(int) VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+			if (ret > (int) sizeof(version))
+				ret = sizeof(version);
+			conn->Write(version, ret);
 		}
 		else if (MATCHCMD(cmd, "quit"))
 		{
@@ -91,13 +107,8 @@ int main(int argc, char* argv[])
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
 
-#ifdef DEBUG
-	Log_Message("Keyspace v" VERSION_STRING " r%.*s started (DEBUG build date %s %s)",
-		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER, __DATE__, __TIME__);
-#else
-	Log_Message("Keyspace v" VERSION_STRING " r%.*s started",
+	Log_Message(VERSION_FMT_STRING " started",
 		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
-#endif
 
 	if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
 		STOP_FAIL("Cannot initalize IOProcessor!", 1);

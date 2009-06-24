@@ -26,15 +26,10 @@ public:
 	int			GetPort();
 	
 	const char*	ToString();
+	const char* ToString(char s[ENDPOINT_STRING_SIZE]);
 private:
 	char		buffer[ENDPOINT_STRING_SIZE];
 };
 
-/*
-inline bool operator==(const Endpoint &a, const Endpoint &b)
-{
-	return a.operator==(b);
-}
-*/
 
 #endif
