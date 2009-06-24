@@ -1,14 +1,68 @@
 #include "Socket.h"
 #include "System/Log.h"
-//#ifdef PLATFORM_DARWIN
-//#include <machine/types.h>
-//#endif
+#include "System/Common.h"
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+
+#ifndef INADDR_NONE
+#define INADDR_NONE 0xffffffff
+#endif
+
+unsigned long iftonl(const char* interface)
+{
+	int pos;
+	int len;
+	unsigned long a;
+	unsigned long b;
+	unsigned long c;
+	unsigned long d;
+	unsigned long addr;
+	unsigned nread;
+	
+	nread = 0;
+	pos = 0;
+	len = strlen(interface);
+	
+	a = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || a > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos++] != '.')
+		return INADDR_NONE;
+	
+	b = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || b > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos++] != '.')
+		return INADDR_NONE;
+
+	c = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || c > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos++] != '.')
+		return INADDR_NONE;
+
+	d = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || d > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos] != '\0' &&
+		interface[pos] != ':')
+		return INADDR_NONE;
+	
+	addr = (d & 0xff) << 24 | (c & 0xff) << 16 | (b & 0xff) << 8 | (a & 0xff);
+	return addr;
+}
 
 bool Socket::Create(int type_)
 {
@@ -58,7 +112,7 @@ bool Socket::SetNonblocking()
 	return true;
 }
 
-bool Socket::Bind(int port)
+bool Socket::Bind(int port, const char* interface)
 {
 	int					ret;
 	struct sockaddr_in	sa;
@@ -75,7 +129,10 @@ bool Socket::Bind(int port)
 	
 	memset(&sa, 0, sizeof(sa));
 	sa.sin_port = htons((uint16_t)port);
-	sa.sin_addr.s_addr = htonl(INADDR_ANY);
+	if (!interface)
+		sa.sin_addr.s_addr = htonl(INADDR_ANY);
+	else
+		sa.sin_addr.s_addr = iftonl(interface);
 	
 	ret = bind(fd, (struct sockaddr *)&sa, sizeof(struct sockaddr_in));
 	if (ret < 0)
@@ -88,11 +145,11 @@ bool Socket::Bind(int port)
 	return true;
 }
 
-bool Socket::Listen(int port, int backlog)
+bool Socket::Listen(int port, int backlog, const char* interface)
 {
 	int	ret;
 	
-	if (!Bind(port))
+	if (!Bind(port, interface))
 		return false;
 	
 	ret = listen(fd, backlog);

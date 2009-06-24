@@ -1,7 +1,6 @@
 #ifndef KEYSPACESERVER_H
 #define KEYSPACESERVER_H
 
-#include "System/Containers/LinkedList.h"
 #include "Framework/Transport/TCPServer.h"
 #include "KeyspaceConn.h"
 

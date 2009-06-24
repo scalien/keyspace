@@ -35,6 +35,8 @@ int64_t strntoint64(const char* buffer, int length, unsigned* nread);
 
 uint64_t strntouint64(const char* buffer, int length, unsigned* nread);
 
+char* strnchr(const char* s, int c, size_t len);
+
 const char* rprintf(const char* format, ...);
 
 void* Alloc(int num, int size = 1);

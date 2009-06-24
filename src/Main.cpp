@@ -8,6 +8,42 @@
 #include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 #include "Application/TimeCheck/TimeCheck.h"
+#include "Application/Console/Console.h"
+
+class DebugCommand : public ConsoleCommand
+{
+public:
+	virtual void	Execute(const char* cmd, const char *args, ConsoleConn* conn)
+	{
+		if (strncmp(cmd, "crash", sizeof("crash") - 1) == 0)
+		{
+			char *p = NULL;
+			p[0] = 0;
+		}
+		else if (strncmp(cmd, "exit", sizeof("exit") - 1) == 0)
+		{
+			int code = 0;
+			
+			if (args)
+				code = atoi(args);
+			_exit(code);
+		}
+		else if (strncmp(cmd, "log-reload", sizeof("log-reload") - 1) == 0)
+		{
+			const char LOG_RELOAD_MSG[] = "Log file reloaded\n";
+			Log_SetOutputFile(Config::GetValue("log.file", NULL));
+			conn->Write(LOG_RELOAD_MSG, sizeof(LOG_RELOAD_MSG));
+			Log_Message(LOG_RELOAD_MSG);
+		}
+		else if (strncmp(cmd, "trace", sizeof("trace") - 1) == 0)
+		{
+			if (args && atoi(args))
+				Log_SetTrace(true);
+			else
+				Log_SetTrace(false);
+		}
+	}
+};
 
 int main(int argc, char* argv[])
 {
@@ -98,6 +134,14 @@ int main(int argc, char* argv[])
 
 	KeyspaceServer protoKeyspace;
 	protoKeyspace.Init(kdb, Config::GetIntValue("keyspace.port", 7080));
+
+	Console console;
+	if (Config::GetIntValue("console.port", 22222) != 0)
+		console.Init(Config::GetIntValue("console.port", 22222), 
+					 Config::GetValue("console.interface", "127.0.0.1"));
+
+	DebugCommand debug;
+	console.RegisterCommand(&debug);
 
 	EventLoop::Run();
 }

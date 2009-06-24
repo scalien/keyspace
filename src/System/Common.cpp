@@ -87,6 +87,14 @@ uint64_t strntouint64(const char* buffer, int length, unsigned* nread)
 #undef ADVANCE
 }
 
+char* strnchr(const char* s, int c, size_t len)
+{
+	for (size_t i = 0; i < len && s[i]; s++)
+		if (s[i] == c) return (char*) (s + i);
+	
+	return NULL;
+}
+
 int randint(int min, int max)
 {
 	int		rnd;

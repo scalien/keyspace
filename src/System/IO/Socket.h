@@ -21,8 +21,8 @@ public:
 
 	bool SetNonblocking();
 
-	bool Bind(int port);
-	bool Listen(int port, int backlog = 1024);
+	bool Bind(int port, const char* interface = NULL);
+	bool Listen(int port, int backlog = 1024, const char* interface = NULL);
 	bool Accept(Socket* newSocket);
 	bool Connect(Endpoint &endpoint);
 

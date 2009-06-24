@@ -44,6 +44,9 @@ public:
 
 	Socket&			GetSocket() { return socket; }
 	const State		GetState() { return state; }
+
+	void			AsyncRead(bool start = true);
+	void			Write(const char* data, int count, bool flush = true);
 	
 protected:
 	typedef DynArray<bufferSize>			Buffer;
@@ -70,9 +73,7 @@ protected:
 	virtual void	OnConnect();
 	virtual void	OnConnectTimeout();
 	
-	void			AsyncRead(bool start = true);
 	void			Append(const char* data, int count);
-	void			Write(const char* data, int count, bool flush = true);
 	void			WritePending();
 };
 
