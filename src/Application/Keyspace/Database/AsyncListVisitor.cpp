@@ -144,7 +144,10 @@ bool AsyncListVisitor::Accept(const ByteString &key, const ByteString &value)
 		return true;
 	
 	if (num == 0 && startKey != key && offset > 0)
+	{
 		offset--;
+		return true;
+	}
 
 	if ((count == 0 || num < count) &&
 		(prefix.length == 0 ||
