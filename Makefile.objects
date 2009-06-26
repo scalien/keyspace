@@ -1,4 +1,5 @@
 ALL_OBJECTS = \
+	$(BUILD_DIR)/Application/Keyspace/Console/Console.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupReader.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupServer.o \
