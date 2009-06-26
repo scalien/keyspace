@@ -11,7 +11,6 @@
 PaxosAcceptor::PaxosAcceptor() :
 	onDBComplete(this, &PaxosAcceptor::OnDBComplete)
 {
-	mdbop.SetCallback(&onDBComplete);
 }
 
 void PaxosAcceptor::Init(TransportWriter** writers_)
@@ -126,6 +125,7 @@ bool PaxosAcceptor::WriteState()
 	data[3].Set(rprintf("%" PRIu64 "",	state.acceptedProposalID));
 	
 	mdbop.Init();
+	mdbop.SetCallback(&onDBComplete);
 	
 	ret = true;
 	ret &= mdbop.Set(table, "@@paxosID",			data[0]);
