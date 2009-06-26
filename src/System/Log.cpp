@@ -113,7 +113,7 @@ static void Log_Flush(const char* buf, int /*size*/)
 		fputs(buf, stderr);
 		fflush(stderr);
 	}
-	if ((target & LOG_TARGET_FILE) == LOG_TARGET_FILE)
+	if ((target & LOG_TARGET_FILE) == LOG_TARGET_FILE && logfile)
 	{
 		fputs(buf, logfile);
 		fflush(logfile);
