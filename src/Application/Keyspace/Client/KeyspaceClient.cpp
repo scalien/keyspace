@@ -947,13 +947,11 @@ void Client::StateFunc()
 		int numTries = 3;
 		while (distributeDirty && numTries > 0)
 		{
-			//int i = (int)(random() / (float) RAND_MAX * numConns);
-			if (currentConn >= numConns)
+			if (++currentConn >= numConns)
 				currentConn = 0;
 			if (conns[currentConn]->GetState() == ClientConn::CONNECTED)
 			{
 				SendCommand(conns[currentConn], dirtyCommands);
-				currentConn++;
 				return;
 			}
 			numTries--;
