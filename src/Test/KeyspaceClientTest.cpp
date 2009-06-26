@@ -165,7 +165,7 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		//sw.Start();
 
 		if (conf.type == TestConfig::GET)
-			status = client.Get(conf.key, true, false);
+			status = client.Get(conf.key, false, false);
 		else
 			status = client.DirtyGet(conf.key, false);
 		
