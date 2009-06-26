@@ -67,9 +67,9 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	if (op->IsGet())
 	{
 		// only handle GETs if I'm the master and it's safe to do so (I have NOPed)
-		if (op->type == KeyspaceOp::GET &&
-		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
-			return false;
+//		if (op->type == KeyspaceOp::GET &&
+//		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
+//			return false;
 		
 		if ((transaction = ReplicatedLog::Get()->GetTransaction()) != NULL)
 			if (!transaction->IsActive())
