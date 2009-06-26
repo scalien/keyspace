@@ -522,6 +522,7 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 	masterTime = 0;
 	cmdID = 0;
 	distributeDirty = false;
+	currentConn = 0;
 	
 	return KEYSPACECLIENT_OK;
 }
@@ -946,12 +947,15 @@ void Client::StateFunc()
 		int numTries = 3;
 		while (distributeDirty && numTries > 0)
 		{
-			int i = (int)(random() / (float) RAND_MAX * numConns);
-			if (conns[i]->GetState() == ClientConn::CONNECTED)
+			//int i = (int)(random() / (float) RAND_MAX * numConns);
+			if (conns[currentConn]->GetState() == ClientConn::CONNECTED)
 			{
-				SendCommand(conns[i], dirtyCommands);
+				SendCommand(conns[currentConn], dirtyCommands);
 				return;
 			}
+			currentConn++;
+			if (currentConn > numConns)
+				currentConn = 0;
 			numTries--;
 		}
 		

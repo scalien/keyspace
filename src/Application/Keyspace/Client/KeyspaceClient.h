@@ -192,6 +192,7 @@ private:
 	uint64_t		cmdID;
 	Result			result;
 	bool			distributeDirty;
+	int				currentConn;
 };
 
 }; // namespace
