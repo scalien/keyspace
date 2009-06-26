@@ -253,7 +253,7 @@ distclean-keyspace:
 ##############################################################################
 
 
-deb: release
+deb: clean release
 	-$(SCRIPT_DIR)/mkcontrol.sh $(SCRIPT_DIR)/DEBIAN/control $(PACKAGE_NAME) $(VERSION) $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 	-mkdir -p $(DEB_DIR)/etc/init.d
 	-mkdir -p $(DEB_DIR)/etc/default

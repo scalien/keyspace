@@ -61,6 +61,7 @@ int bdbdump(int argc, char* argv[], bool dumpFormat)
 	Table*			table;
 	TablePrinter	tp(dumpFormat);
 	bool			ret;
+	DatabaseConfig	dbConfig;
 
 	if (argc < 2)
 	{
@@ -68,11 +69,11 @@ int bdbdump(int argc, char* argv[], bool dumpFormat)
 		exit(1);
 	}
 	
-	dirname = ".";
+	dbConfig.dir = ".";
 	filename = argv[1];
 	if ((slash = strrchr(filename, '/')) != NULL)
 	{
-		dirname = argv[1];
+		dbConfig.dir = argv[1];
 		*slash = '\0';
 		filename = slash + 1;
 		if (chdir(dirname) < 0)
@@ -83,7 +84,7 @@ int bdbdump(int argc, char* argv[], bool dumpFormat)
 		dirname = ".";
 	}
 	
-	ret = database.Init(dirname);
+	ret = database.Init(dbConfig);
 	if (!ret)
 	{
 		printf("cannot initialise database!\n");

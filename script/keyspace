@@ -31,7 +31,7 @@ case "$1" in
   start)
 	echo -n "Starting $DESC: "
 
-	$SAFE_DAEMON $DEFAULT_CONFIG
+	$SAFE_DAEMON $DEFAULT_CONFIG $DATABASE_DIR
 	
 	if [ $? -eq 0 ]; then
 		echo "$NAME."
@@ -39,7 +39,11 @@ case "$1" in
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	echo -n "$NAME"
+    plist=`ps auxw | grep "$DAEMON" | grep -v grep | awk '{print $2}' | tr '\012' ' '`
+    if [ "$plist" != "" ]; then
+    	kill $plist
+		echo -n "$NAME"
+    fi
 	echo "."
 	;;
   restart|force-reload)
