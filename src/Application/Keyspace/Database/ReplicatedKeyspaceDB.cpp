@@ -71,13 +71,12 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 //		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
 //			return false;
 		
-		if ((transaction = ReplicatedLog::Get()->GetTransaction()) != NULL)
-			if (!transaction->IsActive())
-				transaction = NULL;
+//		if ((transaction = ReplicatedLog::Get()->GetTransaction()) != NULL)
+//			if (!transaction->IsActive())
+//				transaction = NULL;
 		
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		op->status = table->Get(NULL, op->key, op->value);
-
 		op->service->OnComplete(op);
 		return true;
 	}
