@@ -62,7 +62,7 @@ public:
 		}
 		else if (MATCHCMD(cmd, "quit"))
 		{
-			conn->Close();
+			conn->Disconnect();
 		}
 	}
 };

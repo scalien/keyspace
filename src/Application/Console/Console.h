@@ -11,6 +11,7 @@ class ConsoleConn : public TCPConn<CONSOLE_SIZE>
 {
 public:
 	void				Init(Console* console);
+	void				Disconnect();
 	
 private:
 	Console*			console;

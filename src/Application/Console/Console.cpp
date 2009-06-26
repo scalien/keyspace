@@ -15,6 +15,11 @@ void ConsoleConn::Init(Console *console_)
 	Log_Message("[%s] Console: client connected", endpointString);
 }
 
+void ConsoleConn::Disconnect()
+{
+	OnClose();
+}
+
 void ConsoleConn::OnClose()
 {
 	Log_Message("[%s] Console: client disconnected", endpointString);
