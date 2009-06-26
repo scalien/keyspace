@@ -57,28 +57,25 @@ numThread(numThread)
 	pthread_cond_init(&cond, NULL);
 	
 	threads = new pthread_t[numThread];
-	for (int i = 0; i < numThread; i++)
-		threads[i] = NULL;
 }
 
 ThreadPool::~ThreadPool()
 {
 	int i;
 	
-	running = false;
-	for (i = 0; i < numThread; i++)
+	if (running)
 	{
-		pthread_mutex_lock(&mutex);
-		pthread_cond_broadcast(&cond);
-		pthread_mutex_unlock(&mutex);
-	}
-	
-	for (i = 0; i < numThread; i++)
-	{
-		if (threads[i])
+		running = false;
+		for (i = 0; i < numThread; i++)
+		{
+			pthread_mutex_lock(&mutex);
+			pthread_cond_broadcast(&cond);
+			pthread_mutex_unlock(&mutex);
+		}
+		
+		for (i = 0; i < numThread; i++)
 		{
 			pthread_join(threads[i], NULL);
-			threads[i] = NULL;
 		}
 	}
 	
