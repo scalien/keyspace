@@ -17,10 +17,12 @@ PLeaseAcceptor::PLeaseAcceptor() :
 
 void PLeaseAcceptor::Init(TransportWriter** writers_)
 {
-	Log_Message("*** Waiting %d milliseconds... (this is normal) ***",
+	Log_Message("*** Sleeping %d milliseconds... (this is normal) ***",
 	MAX_LEASE_TIME + MAX_CLOCK_SKEW);
 
 	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
+
+	Log_Message("*** Done sleeping ***");
 	
 	writers = writers_;
 	
