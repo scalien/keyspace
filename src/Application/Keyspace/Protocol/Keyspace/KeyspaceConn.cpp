@@ -37,7 +37,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 	
 	if (state != DISCONNECTED)
 	{
-		if (!op->status && final && op->MasterOnly() && !kdb->IsMaster())
+		if (!op->status && final && op->MasterOnly()/* && !kdb->IsMaster()*/)
 		{
 			resp.NotMaster(op->cmdID);
 			resp.Write(data);
