@@ -80,7 +80,10 @@ bool Log_SetOutputFile(const char* filename)
 
 	logfile = fopen(filename, "a");
 	if (!logfile)
+	{
+		target &= ~LOG_TARGET_FILE;
 		return false;
+	}
 	
 	logfilename = strdup(filename);
 	return true;
