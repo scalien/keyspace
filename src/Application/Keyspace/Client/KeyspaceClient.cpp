@@ -275,7 +275,7 @@ readTimeout(&onReadTimeout)
 
 void ClientConn::Send(Command &cmd)
 {
-	Log_Trace("nodeID = %d, cmd = %.*s", nodeID, min(cmd.msg.length, 20), cmd.msg.buffer);
+	Log_Trace("nodeID = %d, cmd = %.*s", nodeID, min(cmd.msg.length, 30), cmd.msg.buffer);
 	cmd.nodeID = nodeID;
 	
 	if (cmd.submit)
