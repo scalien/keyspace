@@ -601,7 +601,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
-			status = client.DirtyGet(key, false);
+			status = client.Get(key, true, false);
 			if (status != KEYSPACE_OK)
 			{
 				Log_Message("GET/batched failed, status = %s", Status(status));
@@ -619,6 +619,64 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		Log_Message("GET/batched succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));		
+	}
+
+	// batched DIRTYGET test
+	{
+		client.DistributeDirty(true);
+		sw.Reset();
+		client.Begin();
+		
+		for (int i = 0; i < num; i++)
+		{
+			key.Writef("test:%d", i);
+			status = client.DirtyGet(key, false);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("DIRTYGET/batched failed, status = %s", Status(status));
+				return 1;
+			}		
+		}
+		
+		sw.Start();
+		status = client.Submit();
+		sw.Stop();
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("DIRTYGET/batched failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		Log_Message("DIRTYGET/batched succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));		
+	}
+
+	// batched DIRTYGET test #2 without distributing dirty reads between clients
+	{
+		client.DistributeDirty(false);
+		sw.Reset();
+		client.Begin();
+		
+		for (int i = 0; i < num; i++)
+		{
+			key.Writef("test:%d", i);
+			status = client.DirtyGet(key, false);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("DIRTYGET/batched2 failed, status = %s", Status(status));
+				return 1;
+			}		
+		}
+		
+		sw.Start();
+		status = client.Submit();
+		sw.Stop();
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("DIRTYGET/batched2 failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		Log_Message("DIRTYGET/batched2 succeeded, get/sec = %lf", num / (sw.elapsed / 1000.0));		
 	}
 
 	// paginated LISTKEYS
