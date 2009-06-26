@@ -954,7 +954,7 @@ void Client::StateFunc()
 				return;
 			}
 			currentConn++;
-			if (currentConn > numConns)
+			if (currentConn >= numConns)
 				currentConn = 0;
 			numTries--;
 		}
