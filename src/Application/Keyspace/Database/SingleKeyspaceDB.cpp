@@ -39,7 +39,7 @@ bool SingleKeyspaceDB::IsMaster()
 
 bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 {
-	Log_Trace();
+//	Log_Trace();
 	
 	bool			isWrite;
 	int64_t			num;
@@ -75,9 +75,9 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
-		Log_Trace();
+//		Log_Trace();
 		op->status &= table->Set(&transaction, op->key, op->value);
-		Log_Trace();
+//		Log_Trace();
 		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
