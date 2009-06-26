@@ -35,7 +35,7 @@ public:
 		numActive = 0;
 	}
 	
-	bool Init(int port_, int backlog_, const char* interface = NULL)
+	bool Init(int port_, int backlog_, const char* interface_ = NULL)
 	{
 		bool ret;
 		
@@ -44,7 +44,7 @@ public:
 	
 		ret = true;
 		ret &= listener.Create(TCP);
-		ret &= listener.Listen(port_, backlog_, interface);
+		ret &= listener.Listen(port_, backlog_, interface_);
 		ret &= listener.SetNonblocking();
 		if (!ret)
 			return false;
