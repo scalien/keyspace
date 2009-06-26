@@ -57,6 +57,8 @@ numThread(numThread)
 	pthread_cond_init(&cond, NULL);
 	
 	threads = new pthread_t[numThread];
+	for (int i = 0; i < numThread; i++)
+		threads[i] = NULL;
 }
 
 ThreadPool::~ThreadPool()
@@ -73,7 +75,11 @@ ThreadPool::~ThreadPool()
 	
 	for (i = 0; i < numThread; i++)
 	{
-		pthread_join(threads[i], NULL);
+		if (threads[i])
+		{
+			pthread_join(threads[i], NULL);
+			threads[i] = NULL;
+		}
 	}
 	
 	delete[] threads;
