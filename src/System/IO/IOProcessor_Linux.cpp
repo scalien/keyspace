@@ -290,12 +290,10 @@ IOOperation* GetIOOp(struct epoll_event* ev)
 bool IOProcessor::Poll(int sleep)
 {
 	
-	int							i, nevents, nev;
+	int							i, nevents;
 	static struct epoll_event	events[MAX_EVENTS];
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
-	int							newev, currentev;
-	int							newfd = -1;
 	
 	nevents = epoll_wait(epollfd, events, SIZE(events), sleep);
 	
@@ -326,7 +324,7 @@ bool IOProcessor::Poll(int sleep)
 			continue;
 		}
 		
-		epollOp = GetEpollOp(&nevents[i]);
+		epollOp = GetEpollOp(&events[i]);
 		if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 			epollOp->read = NULL;
 		else
