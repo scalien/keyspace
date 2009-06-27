@@ -335,7 +335,7 @@ bool IOProcessor::Poll(int sleep)
 				(epollOp->write->type == TCP_WRITE || epollOp->write->type == UDP_WRITE)))
 					newev.events |= EPOLLONESHOT;
 
-			ret = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, newev);
+			ret = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, &newev);
 			if (ret < 0)
 			{
 				Log_Errno();
