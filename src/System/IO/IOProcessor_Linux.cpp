@@ -310,7 +310,7 @@ bool IOProcessor::Poll(int sleep)
 	for (i = 0; i < nevents; i++)
 	{
 		currentev = events[i].events;
-		if (currentev != EPOLLIN && currentev != EPOLLOUT)
+		if (!(currentev & EPOLLIN) && !(currentev & EPOLLOUT))
 			continue;		
 		epollOp = (EpollOp*) events[i].data.ptr;
 		
@@ -345,20 +345,20 @@ bool IOProcessor::Poll(int sleep)
 			}
 		}
 	
-		if (currentev & EPOLLIN)
+		if ((currentev & EPOLLIN) && epollOp->read)
 			epollOp->read->pending = true;
-		if (currentev & EPOLLOUT)
+		if ((currentev & EPOLLOUT) && epollOp->write)
 			epollOp->write->pending = true;
 	}
 	
 	for (i = 0; i < nevents; i++)
 	{
 		currentev = events[i].events;
-		if (currentev != EPOLLIN && currentev != EPOLLOUT)
+		if (!(currentev & EPOLLIN) && !(currentev & EPOLLOUT))
 			continue;
 		epollOp = (EpollOp*) events[i].data.ptr;
 	
-		if (currentev & EPOLLIN)
+		if ((currentev & EPOLLIN) && epollOp->read)
 		{
 			ioop = epollOp->read;
 			epollOp->read = NULL;
@@ -373,7 +373,7 @@ bool IOProcessor::Poll(int sleep)
 				ProcessIOOperation(ioop);
 		}
 
-		if (currentev & EPOLLOUT)
+		if ((currentev & EPOLLOUT) && epollOp->write)
 		{
 			ioop = epollOp->write;
 			epollOp->write = NULL;
