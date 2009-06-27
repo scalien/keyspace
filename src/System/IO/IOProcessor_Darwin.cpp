@@ -80,12 +80,8 @@ bool IOProcessor::Add(IOOperation* ioop)
 	if (ioop->active)
 		return true;
 	
-	if (!ioop->pending)
-	{
-		ioop->pending = true;
+	if (ioop->pending)
 		return true;
-	}
-
 	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 		filter = EVFILT_READ;
@@ -134,7 +130,10 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		return true;
 		
 	if (ioop->pending)
-		ioop->pending = false;
+	{
+		ioop->active = false;
+		return true;
+	}
 	
 	if (kq < 0)
 	{
@@ -205,9 +204,9 @@ bool IOProcessor::Poll(int sleep)
 		}
 
 		ioop = (IOOperation*) events[i].udata;
-		if (!ioop->pending)
-			continue; // ioop was removed, just skip it			
 		ioop->pending = false;
+		if (!ioop->active)
+			continue; // ioop was removed, just skip it			
 		ioop->active = false;
 		
 		if (ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))

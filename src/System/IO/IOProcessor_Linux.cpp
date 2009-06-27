@@ -148,12 +148,9 @@ bool IOProcessor::Add(IOOperation* ioop)
 	
 	if (ioop->active)
 		return true;
-		
-	if (!ioop->pending)
-	{
-		ioop->pending = true;
+	
+	if (ioop->pending)
 		return true;
-	}
 	
 	filter = EPOLLONESHOT;
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
@@ -228,11 +225,11 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	EpollOp*			epollOp;
 	
 	if (!ioop->active)
-		return false;
-	
+		return true;
+		
 	if (ioop->pending)
 	{
-		ioop->pending = false;
+		ioop->active = false;
 		return true;
 	}
 	
@@ -321,9 +318,9 @@ bool IOProcessor::Poll(int sleep)
 		ioop = GetIOOp(&events[i]);		
 		if (ioop == NULL)
 			continue;
-		if (!ioop->pending)
-			continue; // ioop was removed, just skip it
 		ioop->pending = false;
+		if (!ioop->active)
+			continue; // ioop was removed, just skip it
 		
 		if (ioop->type == PIPEOP)
 		{
