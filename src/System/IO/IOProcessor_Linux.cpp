@@ -148,6 +148,12 @@ bool IOProcessor::Add(IOOperation* ioop)
 	
 	if (ioop->active)
 		return true;
+		
+	if (!ioop->pending)
+	{
+		ioop->pending = true;
+		return true;
+	}
 	
 	filter = EPOLLONESHOT;
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)

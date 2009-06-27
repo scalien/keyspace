@@ -18,7 +18,7 @@
 
 // see http://wiki.netbsd.se/index.php/kqueue_tutorial
 
-#define	MAX_KEVENTS 1024
+#define	MAX_KEVENTS 1
 
 static int				kq;			// the kqueue
 static int				asyncOpPipe[2];
@@ -79,6 +79,13 @@ bool IOProcessor::Add(IOOperation* ioop)
 	
 	if (ioop->active)
 		return true;
+	
+	if (!ioop->pending)
+	{
+		ioop->pending = true;
+		return true;
+	}
+
 	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 		filter = EVFILT_READ;
