@@ -272,23 +272,6 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	return true;
 }
 
-EpollOp* GetEpollOp(struct epoll_event* ev)
-{
-	return (EpollOp*) ev->data.ptr;
-}
-
-IOOperation* GetIOOp(struct epoll_event* ev)
-{
-	int currentev = ev->events;
-	EpollOp* epollOp = (EpollOp*) ev->data.ptr;
-	if (currentev & EPOLLIN)
-		return epollOp->read;
-	else if (currentev & EPOLLOUT)
-		return epollOp->write;
-	else
-		return NULL;
-}
-
 bool IOProcessor::Poll(int sleep)
 {
 	
@@ -365,6 +348,7 @@ bool IOProcessor::Poll(int sleep)
 			ioop->pending = false;
 			if (ioop->active && ioop->type == PIPEOP)
 			{
+				// we never set pipeOps' read to NULL, they're special
 				PipeOp* pipeop = (PipeOp*) ioop;
 				pipeop->callback();
 			}
