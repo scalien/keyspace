@@ -53,7 +53,7 @@ class List
 			return length;
 		}
 		
-		T* Head()
+		T* Head() const
 		{
 			if (head == NULL)
 				return NULL;
@@ -61,7 +61,7 @@ class List
 				return &head->data;
 		}
 		
-		T* Tail()
+		T* Tail() const
 		{
 			if (tail == NULL)
 				return NULL;

@@ -1,3 +1,5 @@
+#include <limits>
+
 #include "KeyspaceClient.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientReq.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientResp.h"
@@ -181,6 +183,11 @@ void Result::Close()
 	
 	status = KEYSPACE_ERROR;
 	
+	numLatency = 0;
+	avgLatency = 0.0;
+	minLatency = std::numeric_limits<double>::max();
+	maxLatency = std::numeric_limits<double>::min();
+	
 	while ((it = responses.Head()) != NULL)
 	{
 		delete *it;
@@ -211,7 +218,7 @@ Result* Result::Next(int &status)
 	return this;
 }
 
-const ByteString& Result::Key()
+const ByteString& Result::Key() const
 {
 	Response**	it;
 	
@@ -222,7 +229,7 @@ const ByteString& Result::Key()
 	return empty;
 }
 
-const ByteString& Result::Value()
+const ByteString& Result::Value() const
 {
 	Response**	it;
 	
@@ -233,7 +240,7 @@ const ByteString& Result::Value()
 	return empty;
 }
 
-int Result::Status()
+int Result::Status() const
 {
 	Response**	it;
 	
@@ -242,6 +249,35 @@ int Result::Status()
 		return (*it)->status;
 		
 	return status;
+}
+
+double Result::GetLatency(int type)
+{
+	if (numLatency = 0)
+		return 0.0;
+
+	switch (type)
+	{
+	case AVERAGE:
+		return avgLatency;
+	case MIN:
+		return minLatency;
+	case MAX:
+		return maxLatency;
+	default:
+		return 0.0;
+	}
+}
+
+void Result::UpdateLatency(uint64_t latency)
+{
+	if (latency < minLatency)
+		minLatency = latency;
+	if (latency > maxLatency)
+		maxLatency = latency;
+	
+	avgLatency = ((avgLatency * numLatency) + latency) / (numLatency + 1);
+	numLatency++;
 }
 
 void Result::SetStatus(int status_)
@@ -277,6 +313,7 @@ void ClientConn::Send(Command &cmd)
 {
 	Log_Trace("nodeID = %d, cmd = %.*s", nodeID, min(cmd.msg.length, 30), cmd.msg.buffer);
 	cmd.nodeID = nodeID;
+	cmd.sendTime = EventLoop::Now();
 	
 	if (cmd.submit)
 	{
@@ -299,6 +336,13 @@ void ClientConn::Send(Command &cmd)
 
 void ClientConn::RemoveSentCommand(Command** it)
 {
+	Command*	cmd;
+	uint64_t	latency;
+	
+	cmd = *it;
+	latency = EventLoop::Now() - cmd->sendTime;
+	client.result.UpdateLatency(latency);
+	
 	client.sentCommands.Remove(it);
 	if (--sent == 0)
 		RemoveReadTimeout();
@@ -568,6 +612,11 @@ int Client::Get(const ByteString &key, ByteString &value, bool dirty)
 void Client::DistributeDirty(bool dd)
 {
 	distributeDirty = dd;
+}
+
+double Client::GetLatency()
+{
+	return result.GetLatency(Result::AVERAGE);
 }
 
 int	Client::DirtyGet(const ByteString &key, ByteString &value)

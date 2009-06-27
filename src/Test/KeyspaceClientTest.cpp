@@ -3,6 +3,7 @@
 #include "System/Stopwatch.h"
 #include "System/Config.h"
 #include <signal.h>
+#include <float.h>
 
 using namespace Keyspace;
 int KeyspaceClientTestSuite(Keyspace::Client& client);
@@ -34,7 +35,10 @@ public:
 		DIRTYGET,
 		SET,
 		LIST,
-		LISTP
+		LISTP,
+		GETLATENCY,
+		DIRTYGETLATENCY,
+		SETLATENCY
 	};
 	
 	int					type;
@@ -85,6 +89,21 @@ public:
 		if (strcmp(s, "listp") == 0)
 		{
 			type = LISTP;
+			return;
+		}
+		if (strcmp(s, "getlatency") == 0)
+		{
+			type = GETLATENCY;
+			return;
+		}
+		if (strcmp(s, "dirtygetlatency") == 0)
+		{
+			type = DIRTYGETLATENCY;
+			return;
+		}
+		if (strcmp(s, "setlatency") == 0)
+		{
+			type = SETLATENCY;
 			return;
 		}
 	}
@@ -257,10 +276,68 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	}
 	
 	sw.Stop();
-	Log_Message("Test succeeded, set/sec = %lf", numTest / (sw.elapsed / 1000.0));
+	Log_Message("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
 	
 	return 0;
 }
+
+int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
+{
+	int			status;
+	int			numTest;
+	Stopwatch	sw;
+	double		minLatency = DBL_MAX;
+	double		maxLatency = DBL_MIN;
+	double		avgLatency = 0.0;
+	double		latency;
+
+	Log_Trace("Generating data...");
+
+	// prepare value
+	conf.value.Clear();
+	for (int i = 0; i < conf.valueSize; i++)
+	{
+		char c = (char) (i % 10) + '0';
+		conf.value.Append(&c, 1);
+	}
+	
+	numTest = 1000;
+	for (int i = 0; i < numTest; i++)
+	{
+		if (conf.rndkey)
+			GenRandomString(conf.key, conf.keySize);
+		else
+			conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
+
+		if (conf.type == TestConfig::GETLATENCY)
+			status = client.Get(conf.key);
+		else if (conf.type == TestConfig::DIRTYGETLATENCY)
+			status = client.DirtyGet(conf.key);
+		else if (conf.type == TestConfig::SETLATENCY)
+			status = client.Set(conf.key, conf.value);
+			
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("Test failed, status = %s (%s failed after %d)", Status(status), conf.typeString, i);
+			return 1;
+		}
+		
+		latency = client.GetLatency();
+		if (i > 0)
+			avgLatency = (avgLatency * (i - 1)) / i + latency / i;
+		else
+			avgLatency = latency;
+		if (latency < minLatency)
+			minLatency = latency;
+		if (latency > maxLatency)
+			maxLatency = latency;
+	}
+
+	Log_Message("Test succeeded, %s: avg = %lf, min = %lf, max = %lf", conf.typeString, avgLatency, minLatency, maxLatency);
+	
+	return 0;
+}
+
 
 int KeyspaceClientTest2(int argc, char **argv)
 {
@@ -276,7 +353,8 @@ int KeyspaceClientTest2(int argc, char **argv)
 	if (!(argc >= 3 && strcmp(argv[2], "suite") == 0) &&
 		argc < 6)
 	{
-		Log_Message("usage:\n\t%s <configFile> <get|dirtyget|set|rndset|list> <numClients> <keySize> <valueSize>", argv[0]);
+		Log_Message("usage:\n\t%s <configFile> <command> <keySize> <valueSize>", argv[0]);
+		Log_Message("\n\t\tcommand can be any of get, dirtyget, set, rndset, list, listp, getlatency, dirtygetlatency, setlatency, suite\n");
 		return 1;
 	}
 
@@ -311,12 +389,8 @@ int KeyspaceClientTest2(int argc, char **argv)
 	} 
 		
 	testConf.SetType(argv[2]);
-	testConf.numClients = atoi(argv[3]);
 	testConf.keySize = atoi(argv[4]);
 	testConf.valueSize = atoi(argv[5]);
-	
-
-
 	
 	for (int i = 0; i < testConf.keySize - 10; i++)
 	{
@@ -331,6 +405,8 @@ int KeyspaceClientTest2(int argc, char **argv)
 		return KeyspaceClientSetTest(client, testConf);
 	if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)
 		return KeyspaceClientListTest(client, testConf);
+	if (testConf.type == TestConfig::GETLATENCY || testConf.type == TestConfig::DIRTYGETLATENCY || testConf.type == TestConfig::SETLATENCY)
+		return KeyspaceClientLatencyTest(client, testConf);
 	else
 		return KeyspaceClientGetTest(client, testConf);
 		

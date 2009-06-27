@@ -87,12 +87,21 @@ typedef List<Response*> ResponseList;
 class Result
 {
 public:
+	enum Latency
+	{
+		AVERAGE = 0,
+		MIN = 1,
+		MAX = 2
+	};
+	
 	void				Close();
 	Result*				Next(int &status);
 
-	const ByteString&	Key();
-	const ByteString&	Value();
-	int					Status();
+	const ByteString&	Key() const;
+	const ByteString&	Value() const;
+	int					Status() const;
+
+	double				GetLatency(int type = AVERAGE);
 
 private:
 	friend class ClientConn;
@@ -101,7 +110,12 @@ private:
 	ResponseList		responses;
 	ByteString			empty;
 	int					status;
+	int					numLatency;
+	double				minLatency;
+	double				maxLatency;
+	double				avgLatency;
 	
+	void				UpdateLatency(uint64_t latency);
 	void				SetStatus(int status);
 	void				AppendResponse(Response* resp);
 };
@@ -117,6 +131,7 @@ public:
 	int					status;
 	uint64_t			cmdID;
 	bool				submit;
+	uint64_t			sendTime;
 };
 
 typedef List<Command*> CommandList;
@@ -136,6 +151,8 @@ public:
 	int				GetState(int node);
 	void			DistributeDirty(bool dd);
 	
+	double			GetLatency();
+				
 	// simple get commands with preallocated value
 	int				Get(const ByteString &key, ByteString &value, bool dirty = false);
 	int				DirtyGet(const ByteString &key, ByteString &value);
