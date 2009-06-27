@@ -283,7 +283,7 @@ IOOperation* GetIOOp(struct epoll_event* ev)
 	else if (currentev & EPOLLOUT)
 		return epollOp->write;
 	else
-		ASSERT_FAIL();
+		return NULL;
 }
 
 bool IOProcessor::Poll(int sleep)
@@ -305,13 +305,16 @@ bool IOProcessor::Poll(int sleep)
 	for (i = 0; i < nevents; i++)
 	{
 		ioop = GetIOOp(&events[i]);
-		assert(ioop != NULL);
+		if (ioop == NULL)
+			continue;
 		ioop->pending = true;
 	}
 	
 	for (i = 0; i < nevents; i++)
 	{
 		ioop = GetIOOp(&events[i]);		
+		if (ioop == NULL)
+			continue;
 		if (!ioop->pending)
 			continue; // ioop was removed, just skip it
 		ioop->pending = false;
