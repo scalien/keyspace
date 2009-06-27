@@ -224,7 +224,7 @@ bool ParseParams(const char* s, unsigned num, ...)
 	
 	va_start(ap, num);
 
-	while (*s != '\0')
+	while (*s != '\0' && num > 0)
 	{
 		bs = va_arg(ap, ByteString*);
 		bs->buffer = (char*) s;
@@ -243,7 +243,7 @@ bool ParseParams(const char* s, unsigned num, ...)
 
 	va_end(ap);
 	
-	if (num == 0)
+	if (num == 0 && *s == '\0')
 		return true;
 	else
 		return false;
