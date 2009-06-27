@@ -319,28 +319,26 @@ bool IOProcessor::Poll(int sleep)
 		if (ioop == NULL)
 			continue;
 		ioop->pending = false;
-		if (!ioop->active)
-		{
-			epollOp = GetEpollOp(&events[i]);
-			if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-				epollOp->read = NULL;
-			else
-				epollOp->write = NULL;
-			continue; // ioop was removed, just skip it
-		}
-		
-		if (ioop->type == PIPEOP)
+
+		if (ioop->active && ioop->type == PIPEOP)
 		{
 			PipeOp* pipeop = (PipeOp*) ioop;
 			pipeop->callback();
 			continue;
 		}
 		
-		epollOp = GetEpollOp(&events[i]);
-		if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-			epollOp->read = NULL;
-		else
-			epollOp->write = NULL;
+		if (ioop->type != PIPEOP)
+		{
+			epollOp = GetEpollOp(&events[i]);
+			if (ioop->type == TCP_READ || ioop->type == UDP_READ)
+				epollOp->read = NULL;
+			else
+				epollOp->write = NULL;
+		}
+		
+		if (!ioop->active)
+			continue; // ioop was removed, just skip it
+				
 		ProcessIOOperation(ioop);
 	}
 	
