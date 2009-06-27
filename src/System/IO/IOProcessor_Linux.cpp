@@ -376,7 +376,7 @@ bool IOProcessor::Poll(int sleep)
 		if (currentev & EPOLLOUT)
 		{
 			ioop = epollOp->write;
-			epollOp->read = NULL;
+			epollOp->write = NULL;
 			assert(ioop != NULL);
 			ioop->pending = false;
 			if (ioop->active && ioop->type == PIPEOP)
