@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
 	TimeCheck *tc;
 	if (ReplicatedConfig::Get()->numNodes > 1)
 	{
-		ReplicatedLog::Get()->Init();
+		ReplicatedLog::Get()->Init(Config::GetBoolValue("paxos.useSoftClock", true));
 		
 		tc = new TimeCheck;
 		if (Config::GetBoolValue("timecheck.active", true))
