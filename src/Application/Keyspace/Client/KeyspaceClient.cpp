@@ -253,7 +253,7 @@ int Result::Status() const
 
 double Result::GetLatency(int type)
 {
-	if (numLatency = 0)
+	if (numLatency == 0)
 		return 0.0;
 
 	switch (type)
