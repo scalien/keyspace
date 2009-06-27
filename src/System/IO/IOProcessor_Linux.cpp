@@ -361,7 +361,6 @@ bool IOProcessor::Poll(int sleep)
 		if ((currentev & EPOLLIN) && epollOp->read)
 		{
 			ioop = epollOp->read;
-			epollOp->read = NULL;
 			assert(ioop != NULL);
 			ioop->pending = false;
 			if (ioop->active && ioop->type == PIPEOP)
@@ -370,7 +369,10 @@ bool IOProcessor::Poll(int sleep)
 				pipeop->callback();
 			}
 			else if (ioop->active)
+			{
+				epollOp->read = NULL;
 				ProcessIOOperation(ioop);
+			}
 		}
 
 		if ((currentev & EPOLLOUT) && epollOp->write)
@@ -379,12 +381,8 @@ bool IOProcessor::Poll(int sleep)
 			epollOp->write = NULL;
 			assert(ioop != NULL);
 			ioop->pending = false;
-			if (ioop->active && ioop->type == PIPEOP)
-			{
-				PipeOp* pipeop = (PipeOp*) ioop;
-				pipeop->callback();
-			}
-			else if (ioop->active)
+			// we don't care about write notifications for pipeOps
+			if (ioop->active)
 				ProcessIOOperation(ioop);
 		}		
 	}
