@@ -18,7 +18,7 @@
 
 // see http://wiki.netbsd.se/index.php/kqueue_tutorial
 
-#define	MAX_KEVENTS 1
+#define	MAX_KEVENTS 1024
 
 static int				kq;			// the kqueue
 static int				asyncOpPipe[2];
