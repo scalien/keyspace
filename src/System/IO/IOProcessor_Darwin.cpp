@@ -18,6 +18,8 @@
 
 // see http://wiki.netbsd.se/index.php/kqueue_tutorial
 
+#define	MAX_KEVENTS 1024
+
 static int				kq;			// the kqueue
 static int				asyncOpPipe[2];
 
@@ -75,6 +77,9 @@ bool IOProcessor::Add(IOOperation* ioop)
 {
 	short	filter;
 	
+	if (ioop->active)
+		return true;
+	
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 		filter = EVFILT_READ;
 	else
@@ -120,6 +125,9 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	
 	if (!ioop->active)
 		return true;
+		
+	if (ioop->pending)
+		ioop->pending = false;
 	
 	if (kq < 0)
 	{
@@ -149,8 +157,6 @@ bool IOProcessor::Remove(IOOperation* ioop)
 
 bool IOProcessor::Poll(int sleep)
 {
-#define	MAX_KEVENTS 1
-	
 	int						i, nevents;
 	static struct kevent	events[MAX_KEVENTS];
 	struct timespec			timeout;
@@ -171,29 +177,39 @@ bool IOProcessor::Poll(int sleep)
 	{
 		if (events[i].flags & EV_ERROR)
 			Log_Trace("%s", strerror(events[i].data));
+		if (events[i].udata == NULL)
+			continue;
+		ioop = (IOOperation*) events[i].udata;
+		ioop->pending = true;
+	}
+	
+	for (i = 0; i < nevents; i++)
+	{
+		if (events[i].flags & EV_ERROR)
+			continue;
 		
 		if (events[i].udata == NULL)
 		{
 			ProcessAsyncOp();
-
 			// re-register for notification
 			if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
 				return false;
-			
 			continue;
 		}
-		
+
 		ioop = (IOOperation*) events[i].udata;
-		
+		if (!ioop->pending)
+			continue; // ioop was removed, just skip it			
+		ioop->pending = false;
 		ioop->active = false;
 		
-		if (ioop && ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))
+		if (ioop->type == TCP_READ && (events[i].filter & EVFILT_READ))
 			ProcessTCPRead(&events[i]);
-		else if (ioop && ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
+		else if (ioop->type == TCP_WRITE && (events[i].filter & EVFILT_WRITE))
 			ProcessTCPWrite(&events[i]);
-		else if (ioop && ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
+		else if (ioop->type == UDP_READ && (events[i].filter & EVFILT_READ))
 			ProcessUDPRead(&events[i]);
-		else if (ioop && ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
+		else if (ioop->type == UDP_WRITE && (events[i].filter & EVFILT_WRITE))
 			ProcessUDPWrite(&events[i]);
 	}
 	

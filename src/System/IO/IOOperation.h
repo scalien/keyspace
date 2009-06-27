@@ -32,6 +32,7 @@ public:
 	{
 		fd = -1;
 		active = false;
+		pending = false;
 		offset = 0;
 		next = NULL;
 		onComplete = NULL; 
@@ -45,6 +46,7 @@ public:
 	int				offset;
 	
 	bool			active;
+	bool			pending;
 	IOOperation*	next;
 
 	Callable*		onComplete;
