@@ -320,7 +320,14 @@ bool IOProcessor::Poll(int sleep)
 			continue;
 		ioop->pending = false;
 		if (!ioop->active)
+		{
+			epollOp = GetEpollOp(&events[i]);
+			if (ioop->type == TCP_READ || ioop->type == UDP_READ)
+				epollOp->read = NULL;
+			else
+				epollOp->write = NULL;
 			continue; // ioop was removed, just skip it
+		}
 		
 		if (ioop->type == PIPEOP)
 		{
