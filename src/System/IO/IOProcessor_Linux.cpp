@@ -333,7 +333,7 @@ bool IOProcessor::Poll(int sleep)
 				(epollOp->read->type == TCP_READ || epollOp->read->type == UDP_READ)) ||
 				(epollOp->write &&
 				(epollOp->write->type == TCP_WRITE || epollOp->write->type == UDP_WRITE)))
-					newev |= EPOLLONESHOT;
+					newev.events |= EPOLLONESHOT;
 
 			ret = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, newev);
 			if (ret < 0)
