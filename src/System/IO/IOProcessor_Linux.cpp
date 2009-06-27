@@ -259,7 +259,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	if (epollOp->read || epollOp->write)
 		nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, ioop->fd, &ev);
 	else
-		nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev /* this paramter is ignored */);
+		nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev /* this parameter is ignored */);
 
 	if (nev < 0)
 	{
@@ -293,10 +293,12 @@ bool IOProcessor::Poll(int sleep)
 {
 	
 	int							i, nevents;
+	int							ret, currentev, newfd = -1;
 	static struct epoll_event	events[MAX_EVENTS];
+	static struct epoll_event	newev;
 	IOOperation*				ioop;
 	EpollOp*					epollOp;
-	
+		
 	nevents = epoll_wait(epollfd, events, SIZE(events), sleep);
 	
 	if (nevents < 0)
@@ -307,39 +309,80 @@ bool IOProcessor::Poll(int sleep)
 	
 	for (i = 0; i < nevents; i++)
 	{
-		ioop = GetIOOp(&events[i]);
-		if (ioop == NULL)
-			continue;
-		ioop->pending = true;
+		currentev = events[i].events;
+		epollOp = (EpollOp*) events[i].data.ptr;
+		
+		newev.events = 0;
+		newfd = -1;
+		if (!(events[i].events & EPOLLIN) && epollOp->read)
+		{
+			newev.events |= EPOLLIN;
+			newev.data.ptr = epollOp->read;
+			newfd = epollOp->read->fd;
+		}
+		else if (!(events[i].events & EPOLLOUT) && epollOp->write)
+		{
+			newev.events |= EPOLLOUT;
+			newev.data.ptr = epollOp->write;
+			newfd = epollOp->write->fd;
+		}
+		
+		if (newev.events)
+		{
+			if ((epollOp->read &&
+				(epollOp->read->type == TCP_READ || epollOp->read->type == UDP_READ)) ||
+				(epollOp->write &&
+				(epollOp->write->type == TCP_WRITE || epollOp->write->type == UDP_WRITE)))
+					newev |= EPOLLONESHOT;
+
+			ret = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, newev);
+			if (ret < 0)
+			{
+				Log_Errno();
+				return false;
+			}
+		}
+	
+		if (currentev & EPOLLIN)
+			epollOp->read->pending = true;
+		if (currentev & EPOLLOUT)
+			epollOp->write->pending = true;
 	}
 	
 	for (i = 0; i < nevents; i++)
 	{
-		ioop = GetIOOp(&events[i]);		
-		if (ioop == NULL)
-			continue;
-		ioop->pending = false;
+		currentev = events[i].events;
+		epollOp = (EpollOp*) events[i].data.ptr;
+	
+		if (currentev & EPOLLIN)
+		{
+			ioop = epollOp->read;
+			epollOp->read = NULL;
+			assert(ioop != NULL);
+			ioop->pending = false;
+			if (ioop->active && ioop->type == PIPEOP)
+			{
+				PipeOp* pipeop = (PipeOp*) ioop;
+				pipeop->callback();
+			}
+			else if (ioop->active)
+				ProcessIOOperation(ioop);
+		}
 
-		if (ioop->active && ioop->type == PIPEOP)
+		if (currentev & EPOLLOUT)
 		{
-			PipeOp* pipeop = (PipeOp*) ioop;
-			pipeop->callback();
-			continue;
-		}
-		
-		if (ioop->type != PIPEOP)
-		{
-			epollOp = GetEpollOp(&events[i]);
-			if (ioop->type == TCP_READ || ioop->type == UDP_READ)
-				epollOp->read = NULL;
-			else
-				epollOp->write = NULL;
-		}
-		
-		if (!ioop->active)
-			continue; // ioop was removed, just skip it
-				
-		ProcessIOOperation(ioop);
+			ioop = epollOp->write;
+			epollOp->read = NULL;
+			assert(ioop != NULL);
+			ioop->pending = false;
+			if (ioop->active && ioop->type == PIPEOP)
+			{
+				PipeOp* pipeop = (PipeOp*) ioop;
+				pipeop->callback();
+			}
+			else if (ioop->active)
+				ProcessIOOperation(ioop);
+		}		
 	}
 	
 	return true;
