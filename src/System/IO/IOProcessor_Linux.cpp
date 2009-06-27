@@ -319,13 +319,13 @@ bool IOProcessor::Poll(int sleep)
 		if (!(currentev & EPOLLIN) && epollOp->read)
 		{
 			newev.events |= EPOLLIN;
-			newev.data.ptr = epollOp->read;
+			newev.data.ptr = epollOp;
 			newfd = epollOp->read->fd;
 		}
 		else if (!(currentev & EPOLLOUT) && epollOp->write)
 		{
 			newev.events |= EPOLLOUT;
-			newev.data.ptr = epollOp->write;
+			newev.data.ptr = epollOp;
 			newfd = epollOp->write->fd;
 		}
 		
