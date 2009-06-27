@@ -1,17 +1,15 @@
 #include "EventLoop.h"
 
-EventLoop eventLoop;
+static uint64_t now;
 
 long EventLoop::RunTimers()
 {
 	Timer** it;
 	Timer* timer;
-	uint64_t now;
 	
 	for (it = timers.Head(); it != NULL; it = timers.Head())
 	{
 		timer = *it;
-		now = Now();
 		
 		if (timer->When() <= now)
 		{
@@ -35,10 +33,13 @@ void EventLoop::RunOnce()
 		sleep = SLEEP_MSEC;
 	
 	IOProcessor::Poll(sleep);
+	now = ::Now();
 }
 
 void EventLoop::Run()
 {
+	if (!now)
+		now = ::Now();
 	while(true)
 		RunOnce();
 }
@@ -46,4 +47,9 @@ void EventLoop::Run()
 void EventLoop::Shutdown()
 {
 	Scheduler::Shutdown();
+}
+
+uint64_t EventLoop::Now()
+{
+	return now;
 }

@@ -433,7 +433,7 @@ void ClientConn::OnClose()
 	Close();
 	client.StateFunc();
 	DeleteCommands();
-	disconnectTime = Now();
+	disconnectTime = EventLoop::Now();
 }
 
 void ClientConn::OnConnect()
@@ -905,7 +905,7 @@ void Client::StateFunc()
 	for (int i = 0; i < numConns; i++)
 	{
 		if (conns[i]->GetState() == ClientConn::DISCONNECTED &&
-			conns[i]->disconnectTime + reconnectTimeout <= Now())
+			conns[i]->disconnectTime + reconnectTimeout <= EventLoop::Now())
 		{
 			conns[i]->Connect(conns[i]->GetEndpoint(), timeout);
 		}
@@ -913,7 +913,7 @@ void Client::StateFunc()
 	
 	if (safeCommands.Length() > 0 && master == -1)
 	{
-		if (masterTime && masterTime + timeout < Now())
+		if (masterTime && masterTime + timeout < EventLoop::Now())
 		{
 			DeleteCommands(safeCommands);
 			result.Close();
@@ -926,7 +926,7 @@ void Client::StateFunc()
 				!conns[i]->getMasterPending)
 				{
 					if (!conns[i]->getMasterTime || 
-						conns[i]->getMasterTime + timeout < Now())
+						conns[i]->getMasterTime + timeout < EventLoop::Now())
 					{
 						conns[i]->GetMaster();
 					}
@@ -1034,7 +1034,7 @@ Command* Client::CreateCommand(char type, bool submit, int msgc, ByteString *msg
 void Client::SetMaster(int master_)
 {
 	master = master_;
-	masterTime = Now();
+	masterTime = EventLoop::Now();
 }
 
 void Client::StopConnTimeout()
