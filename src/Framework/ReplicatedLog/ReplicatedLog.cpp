@@ -26,7 +26,7 @@ ReplicatedLog::ReplicatedLog()
 {
 }
 
-bool ReplicatedLog::Init()
+bool ReplicatedLog::Init(bool useSoftClock)
 {
 	Log_Trace();
 	
@@ -43,7 +43,7 @@ bool ReplicatedLog::Init()
 	proposer.paxosID = acceptor.paxosID;
 	learner.paxosID = acceptor.paxosID;
 	
-	masterLease.Init();
+	masterLease.Init(useSoftClock);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
 	//if (ReplicatedConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING

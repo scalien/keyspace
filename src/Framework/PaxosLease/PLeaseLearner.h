@@ -12,14 +12,14 @@ class PLeaseLearner
 public:
 	PLeaseLearner();
 	
-	void					Init();
+	void					Init(bool useSoftClock_);
 
 	void					ProcessMsg(PLeaseMsg &msg);
 	void					OnLeaseTimeout();
 	bool					IsLeaseOwner();
-	bool					LeaseKnown();
-	int						LeaseOwner();
-	uint64_t				LeaseEpoch();
+	bool					IsLeaseKnown();
+	int						GetLeaseOwner();
+	uint64_t				GetLeaseEpoch();
 	void					SetOnLearnLease(Callable* onLearnLeaseCallback_);
 	void					SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_);
 
@@ -33,6 +33,7 @@ private:
 	PLeaseLearnerState		state;	
 	Callable*				onLearnLeaseCallback;
 	Callable*				onLeaseTimeoutCallback;
+	bool					useSoftClock;
 };
 
 #endif

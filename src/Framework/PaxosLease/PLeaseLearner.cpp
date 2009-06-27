@@ -11,9 +11,10 @@ PLeaseLearner::PLeaseLearner() :
 {
 }
 
-void PLeaseLearner::Init()
+void PLeaseLearner::Init(bool useSoftClock_)
 {
 	state.Init();
+	useSoftClock = useSoftClock_;
 }
 
 void PLeaseLearner::ProcessMsg(PLeaseMsg &msg_)
@@ -30,7 +31,8 @@ void PLeaseLearner::OnLearnChosen()
 {
 	Log_Trace();
 	
-	CheckLease();
+	if (state.learned && state.expireTime < Now())
+		OnLeaseTimeout();
 	
 	if (state.learned && state.leaseOwner != msg.leaseOwner)
 		STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
@@ -60,37 +62,50 @@ void PLeaseLearner::OnLeaseTimeout()
 	Call(onLeaseTimeoutCallback);
 }
 
+void PLeaseLearner::CheckLease()
+{
+	uint64_t now;
+	
+	if (useSoftClock)
+		now = EventLoop::Now();
+	else
+		now = Now();
+	
+	if (state.learned && state.expireTime < now)
+		OnLeaseTimeout();
+}
+
 bool PLeaseLearner::IsLeaseOwner()
 {
 	CheckLease();
 	
-	if (state.learned && state.leaseOwner == ReplicatedConfig::Get()->nodeID && Now() < state.expireTime)
+	if (state.learned && state.leaseOwner == ReplicatedConfig::Get()->nodeID)
 		return true;
 	else
 		return false;		
 }
 
-bool PLeaseLearner::LeaseKnown()
+bool PLeaseLearner::IsLeaseKnown()
 {
 	CheckLease();
 	
-	if (state.learned && Now() < state.expireTime)
+	if (state.learned)
 		return true;
 	else
 		return false;	
 }
 
-int PLeaseLearner::LeaseOwner()
+int PLeaseLearner::GetLeaseOwner()
 {
 	CheckLease();
 	
-	if (state.learned && Now() < state.expireTime)
+	if (state.learned)
 		return state.leaseOwner;
 	else
 		return -1;
 }
 
-uint64_t PLeaseLearner::LeaseEpoch()
+uint64_t PLeaseLearner::GetLeaseEpoch()
 {
 	CheckLease();
 	
@@ -105,10 +120,4 @@ void PLeaseLearner::SetOnLearnLease(Callable* onLearnLeaseCallback_)
 void PLeaseLearner::SetOnLeaseTimeout(Callable* onLeaseTimeoutCallback_)
 {
 	onLeaseTimeoutCallback = onLeaseTimeoutCallback_;
-}
-
-void PLeaseLearner::CheckLease()
-{
-	if (state.learned && state.expireTime < Now())
-		OnLeaseTimeout();
 }

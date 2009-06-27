@@ -24,7 +24,7 @@ public:
 	ReplicatedLog();
 
 	static ReplicatedLog*		Get();
-	bool						Init();
+	bool						Init(bool useSoftClock);
 	void						OnRead();
 	bool						Append(ByteString &value);
 	void						SetReplicatedDB(ReplicatedDB* replicatedDB_);

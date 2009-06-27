@@ -17,7 +17,7 @@ class PaxosLease
 public:
 	PaxosLease();
 
-	void				Init();
+	void				Init(bool useSoftClock);
 	void				OnRead();
 	void				AcquireLease();
 	bool				IsLeaseOwner();

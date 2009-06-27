@@ -11,6 +11,7 @@ long EventLoop::RunTimers()
 	{
 		timer = *it;
 		
+		now = ::Now();
 		if (timer->When() <= now)
 		{
 			Remove(timer);

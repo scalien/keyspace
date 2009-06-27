@@ -11,13 +11,13 @@ PaxosLease::PaxosLease()
 {
 }
 
-void PaxosLease::Init()
+void PaxosLease::Init(bool useSoftClock)
 {
 	InitTransport();
 	
 	proposer.Init(writers);
 	acceptor.Init(writers);
-	learner.Init();
+	learner.Init(useSoftClock);
 	learner.SetOnLearnLease(&onLearnLease);
 	learner.SetOnLeaseTimeout(&onLeaseTimeout);
 	
@@ -79,17 +79,17 @@ bool PaxosLease::IsLeaseOwner()
 
 bool PaxosLease::IsLeaseKnown()
 {
-	return learner.LeaseKnown();
+	return learner.IsLeaseKnown();
 }
 
 unsigned PaxosLease::GetLeaseOwner()
 {
-	return learner.LeaseOwner();
+	return learner.GetLeaseOwner();
 }
 
 uint64_t PaxosLease::GetLeaseEpoch()
 {
-	return learner.LeaseEpoch();
+	return learner.GetLeaseEpoch();
 }
 
 void PaxosLease::SetOnLearnLease(Callable* onLearnLeaseCallback_)
