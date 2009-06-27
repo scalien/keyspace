@@ -52,5 +52,8 @@ void EventLoop::Shutdown()
 
 uint64_t EventLoop::Now()
 {
+	if (now == 0)
+		now = ::Now();
+	
 	return now;
 }
