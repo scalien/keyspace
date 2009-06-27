@@ -271,7 +271,6 @@ bool IOProcessor::Remove(IOOperation* ioop)
 
 EpollOp* GetEpollOp(struct epoll_event* ev)
 {
-	int currentev = ev->events;
 	return (EpollOp*) ev->data.ptr;
 }
 
