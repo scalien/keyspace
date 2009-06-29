@@ -7,24 +7,27 @@
 
 class TransportUDPReader : public TransportReader
 {
+typedef ByteArray<MAX_UDP_MESSAGE_SIZE> Buffer;
+typedef MFunc<TransportUDPReader> Func;
 public:
 	TransportUDPReader();
 	
-	bool								Init(int port);
+	bool			Init(int port);
 
-	void								SetOnRead(Callable* onRead);
-	void								GetMessage(ByteString& bs_);
-	void								Stop();
-	void								Continue();
-	bool								IsActive();
-	void								OnRead();
+	void			SetOnRead(Callable* onRead);
+	void			GetMessage(ByteString& bs_);
+	void			GetEndpoint(Endpoint& endpoint);
+	void			Stop();
+	void			Continue();
+	bool			IsActive();
+	void			OnRead();
 	
 private:
-	Socket								socket;
-	UDPRead								udpread;
-	ByteArray<MAX_UDP_MESSAGE_SIZE>		data;
-	MFunc<TransportUDPReader>			onRead;
-	Callable*							userCallback;
+	Socket			socket;
+	UDPRead			udpread;
+	Buffer			data;
+	Func			onRead;
+	Callable*		userCallback;
 };
 
 #endif

@@ -36,6 +36,11 @@ void TransportUDPReader::GetMessage(ByteString& bs_)
 	bs_ = udpread.data;
 }
 
+void TransportUDPReader::GetEndpoint(Endpoint& endpoint)
+{
+	endpoint = udpread.endpoint;
+}
+
 void TransportUDPReader::Stop()
 {
 	IOProcessor::Remove(&udpread);
@@ -53,9 +58,6 @@ bool TransportUDPReader::IsActive()
 
 void TransportUDPReader::OnRead()
 {
-//	Log_Trace("received %.*s from: %s", udpread.data.length, udpread.data.buffer,
-//		udpread.endpoint.ToString());
-
 	Call(userCallback);
 	
 	IOProcessor::Add(&udpread);

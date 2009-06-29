@@ -29,21 +29,21 @@ class TransportTCPReader : public TransportReader, public TCPServer
 friend class TransportTCPConn;
 
 public:
-	bool				Init(int port);
+	bool			Init(int port);
 
-	void				SetOnRead(Callable* onRead);
-	void				GetMessage(ByteString& bs_);
-	void				Stop();
-	void				Continue();
-	bool				IsActive();
-	void				OnConnect();
-	void				OnConnectionClose(TransportTCPConn* conn);
+	void			SetOnRead(Callable* onRead);
+	void			GetMessage(ByteString& bs_);
+	void			Stop();
+	void			Continue();
+	bool			IsActive();
+	void			OnConnect();
+	void			OnConnectionClose(TransportTCPConn* conn);
 
 private:
-	void				SetMessage(ByteString bs_);
+	void			SetMessage(ByteString bs_);
 	
-	Callable*			onRead;
-	ByteString			bs;
+	Callable*		onRead;
+	ByteString		bs;
 	List<TransportTCPConn*> conns;
 };
 
