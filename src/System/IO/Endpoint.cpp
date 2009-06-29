@@ -90,6 +90,11 @@ int Endpoint::GetPort()
 	return ntohs(sa.sin_port);
 }
 
+uint32_t Endpoint::GetAddress()
+{
+	return sa.sin_addr.s_addr;
+}
+
 const char* Endpoint::ToString()
 {
 	return ToString(buffer);

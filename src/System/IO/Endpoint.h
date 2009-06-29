@@ -26,6 +26,8 @@ public:
 	bool		SetPort(int port);
 	int			GetPort();
 	
+	uint32_t	GetAddress();
+	
 	const char*	ToString();
 	const char* ToString(char s[ENDPOINT_STRING_SIZE]);
 private:
