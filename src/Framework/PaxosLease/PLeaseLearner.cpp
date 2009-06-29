@@ -39,6 +39,9 @@ void PLeaseLearner::OnLearnChosen()
 				
 	if (msg.expireTime > Now())
 	{
+		if (!state.learned)
+			Log_Message("PaxosLease: Node %d is the master", state.leaseOwner);
+	
 		state.learned = true;
 		state.leaseOwner = msg.leaseOwner;
 		state.expireTime = msg.expireTime;
@@ -55,6 +58,9 @@ void PLeaseLearner::OnLearnChosen()
 
 void PLeaseLearner::OnLeaseTimeout()
 {
+	if (state.learned)
+		Log_Message("PaxosLease: Node %d lost its mastership", state.leaseOwner);
+
 	EventLoop::Remove(&leaseTimeout);
 
 	state.OnLeaseTimeout();
