@@ -132,9 +132,10 @@ CLIENTLIBS = \
 	$(BIN_DIR)/$(SOLIB)
 
 EXECUTABLES = \
-	$(BIN_DIR)/keyspace \
+	$(BIN_DIR)/keyspaced \
 	$(BIN_DIR)/clienttest \
-	$(BIN_DIR)/timechecktest
+	$(BIN_DIR)/timechecktest \
+	$(BIN_DIR)/bdbtool \
 	
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -155,7 +156,7 @@ $(BIN_DIR)/$(SOLIB): $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
 	$(CC) $(SOLINK) -o $@ $(CLIENTLIB_OBJECTS) $(LDFLAGS)
 
 # executables	
-$(BIN_DIR)/keyspace: $(BUILD_DIR) $(LIBS) $(OBJECTS)
+$(BIN_DIR)/keyspaced: $(BUILD_DIR) $(LIBS) $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 $(BIN_DIR)/clienttest: $(BUILD_DIR) $(TEST_OBJECTS) $(BIN_DIR)/$(ALIB)
@@ -164,6 +165,8 @@ $(BIN_DIR)/clienttest: $(BUILD_DIR) $(TEST_OBJECTS) $(BIN_DIR)/$(ALIB)
 $(BIN_DIR)/timechecktest: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Test/TimeCheckTest.o
 	$(CXX) $(LDFLAGS) -o $@ $(ALL_OBJECTS) $(LIBS) $(BUILD_DIR)/Test/TimeCheckTest.o
 
+$(BIN_DIR)/bdbtool: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Application/Tools/BDBTool/BDBTool.o
+	$(CXX) $(LDFLAGS) -o $@ $(ALL_OBJECTS) $(LIBS) $(BUILD_DIR)/Application/Tools/BDBTool/BDBTool.o
 
 ##############################################################################
 #

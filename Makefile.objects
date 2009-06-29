@@ -18,6 +18,7 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceConn.o \
 	$(BUILD_DIR)/Application/TimeCheck/TimeCheckMsg.o \
 	$(BUILD_DIR)/Application/TimeCheck/TimeCheck.o \
+	$(BUILD_DIR)/Application/Tools/BDBTool/BDBTool.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedConfig.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/ReplicatedLog.o \
 	$(BUILD_DIR)/Framework/ReplicatedLog/LogQueue.o \
