@@ -80,7 +80,7 @@ void ReplicatedLog::InitTransport()
 #endif
 		Log_Trace("Connecting to %s", endpoint.ToString());
 		if (!writers[i]->Init(endpoint))
-			STOP_FAIL("cannot bind PaxosLease port", 1);
+			STOP_FAIL("cannot bind Paxos port", 1);
 	}
 }
 
