@@ -15,7 +15,7 @@ $(BUILD_DIR):
 		$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace \
 		$(BUILD_DIR)/Application/Keyspace/Protocol/Memcache \
 		$(BUILD_DIR)/Application/TimeCheck \
-		$(BUILD_DIR)/Application/Tools/BDBTool/BDBTool.o \
+		$(BUILD_DIR)/Application/Tools/BDBTool \
 		$(BUILD_DIR)/Framework/ReplicatedLog/ \
 		$(BUILD_DIR)/Framework/Transport/ \
 		$(BUILD_DIR)/Framework/MasterLease/ \

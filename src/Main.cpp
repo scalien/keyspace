@@ -1,3 +1,6 @@
+#include <sys/types.h>
+#include <pwd.h>
+
 #include "Version.h"
 #include "System/Config.h"
 #include "System/Events/EventLoop.h"

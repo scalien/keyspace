@@ -21,9 +21,9 @@ DIST_DIR = $(BASE_DIR)/dist
 VERSION = `$(BASE_DIR)/script/version.sh 3 $(SRC_DIR)/Version.h`
 VERSION_MAJOR = `$(BASE_DIR)/script/version.sh 1 $(SRC_DIR)/Version.h`
 VERSION_MAJMIN = `$(BASE_DIR)/script/version.sh 3 $(SRC_DIR)/Version.h`
-PACKAGE_NAME = keyspace
+PACKAGE_NAME = keyspace-server
 PACKAGE_DIR = $(BASE_DIR)/packages
-PACKAGE_FILE = keyspace-$(VERSION).deb
+PACKAGE_FILE = $(PACKAGE_NAME)-$(VERSION).deb
 PACKAGE_REPOSITORY = /
 
 BUILD_ROOT = $(BASE_DIR)/build
@@ -201,16 +201,16 @@ install: release
 	-ln -sf $(INSTALL_LIB_DIR)/$(SOLIB).$(VERSION) $(INSTALL_LIB_DIR)/$(LIBNAME).$(SOEXT).$(VERSION_MAJOR)
 	-ln -sf $(INSTALL_LIB_DIR)/$(SOLIB).$(VERSION) $(INSTALL_LIB_DIR)/$(LIBNAME).$(SOEXT)
 	-cp -fr $(SRC_DIR)/Application/Keyspace/Client/keyspace_client.h $(INSTALL_INCLUDE_DIR)
-	-cp -fr $(BIN_DIR)/keyspace $(INSTALL_BIN_DIR)
-	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(INSTALL_BIN_DIR)
+	-cp -fr $(BIN_DIR)/keyspaced $(INSTALL_BIN_DIR)
+	-cp -fr $(SCRIPT_DIR)/safe_keyspaced $(INSTALL_BIN_DIR)
 
 uninstall:
 	-rm $(INSTALL_LIB_DIR)/$(ALIB)
 	-rm $(INSTALL_LIB_DIR)/$(SOLIB).$(VERSION)
 	-rm $(INSTALL_LIB_DIR)/$(SOLIB)
 	-rm $(INSTALL_INCLUDE_DIR)/Application/Keyspace/Client/keyspace_client.h
-	-rm $(INSTALL_BIN_DIR)/keyspace
-	-rm $(INSTALL_BIN_DIR)/safe_keyspace
+	-rm $(INSTALL_BIN_DIR)/keyspaced
+	-rm $(INSTALL_BIN_DIR)/safe_keyspaced
 
 ##############################################################################
 #
@@ -265,8 +265,8 @@ deb: clean release
 	-cp -fr $(SCRIPT_DIR)/keyspace.conf $(DEB_DIR)/etc
 	-cp -fr $(SCRIPT_DIR)/keyspace $(DEB_DIR)/etc/init.d
 	-cp -fr $(SCRIPT_DIR)/default $(DEB_DIR)/etc/default/keyspace
-	-cp -fr $(SCRIPT_DIR)/safe_keyspace $(DEB_DIR)/usr/bin
-	-cp -fr $(BIN_DIR)/keyspace $(DEB_DIR)/usr/bin
+	-cp -fr $(SCRIPT_DIR)/safe_keyspaced $(DEB_DIR)/usr/bin
+	-cp -fr $(BIN_DIR)/keyspaced $(DEB_DIR)/usr/bin
 	-rm -f $(BUILD_ROOT)/.*
 	-mkdir -p $(DIST_DIR)
 	-rm -f $(DIST_DIR)/$(PACKAGE_FILE)

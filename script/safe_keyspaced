@@ -22,5 +22,5 @@ safe_keyspace()
 	done
 }
 
-KEYSPACE_BIN=`dirname $0`/keyspace
+KEYSPACE_BIN=`dirname $0`/keyspaced
 safe_keyspace $KEYSPACE_BIN $1 $2 &

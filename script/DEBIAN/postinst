@@ -4,6 +4,12 @@
 
 make_database_dir() {
 	mkdir -p $DATABASE_DIR
+	chown $KEYSPACE_USER $DATABASE_DIR
+}
+
+create_logfile() {
+	touch $KEYSPACE_LOG
+	chown $KEYSPACE_USER $KEYSPACE_LOG
 }
 
 start_if_needed() {
@@ -14,8 +20,11 @@ start_if_needed() {
 }
 
 echo "making database directory..."
-
 make_database_dir
+
+echo "creating log file..."
+create_logfile
+
 start_if_needed
 
 echo done
