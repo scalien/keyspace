@@ -57,7 +57,36 @@ public:
 	{
 		rndkey = false;
 	}
-		
+	
+	void SetKeySize(int keySize_)
+	{
+		keySize = keySize_;
+
+		for (int i = 0; i < keySize - 10; i++)
+		{
+			char c = (char) (i % 10) + '0';
+			padding.Append(&c, 1);
+		}
+	}
+	
+	void SetValueSize(int valueSize_, bool fill = true)
+	{
+		valueSize = valueSize_;
+
+		if (fill)
+		{
+			// prepare value
+			value.Clear();
+			for (int i = 0; i < valueSize; i++)
+			{
+				char c = (char) (i % 10) + '0';
+				value.Append(&c, 1);
+			}
+		}
+		else
+			value.Reallocate(valueSize, false);
+	}
+	
 	void SetType(const char* s)
 	{
 		typeString = s;
@@ -189,14 +218,13 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		return -1;
 	}
 
-	conf.keySize = atoi(conf.argv[3]);
-	conf.valueSize = atoi(conf.argv[4]);
+	conf.SetKeySize(atoi(conf.argv[3]));
+	conf.SetValueSize(atoi(conf.argv[4]), false);
 
 	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
 			conf.typeString, conf.keySize, conf.valueSize);
 
 	client.DistributeDirty(true);
-	conf.value.Reallocate(conf.valueSize, false);
 	
 	sw.Reset();
 
@@ -269,20 +297,11 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		return -1;
 	}
 	
-	conf.keySize = atoi(conf.argv[3]);
-	conf.valueSize = atoi(conf.argv[4]);
+	conf.SetKeySize(atoi(conf.argv[3]));
+	conf.SetValueSize(atoi(conf.argv[4]));
 
 	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
 			conf.typeString, conf.keySize, conf.valueSize);
-	Log_Trace("Generating data...");
-
-	// prepare value
-	conf.value.Clear();
-	for (int i = 0; i < conf.valueSize; i++)
-	{
-		char c = (char) (i % 10) + '0';
-		conf.value.Append(&c, 1);
-	}
 	
 	numTest = conf.datasetTotal / conf.valueSize;
 	for (int i = 0; i < numTest; i++)
@@ -334,20 +353,11 @@ int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
 		return -1;
 	}
 	
-	conf.keySize = atoi(conf.argv[3]);
-	conf.valueSize = atoi(conf.argv[4]);
+	conf.SetKeySize(atoi(conf.argv[3]));
+	conf.SetValueSize(atoi(conf.argv[4]));
 
 	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
 			conf.typeString, conf.keySize, conf.valueSize);
-	Log_Trace("Generating data...");
-
-	// prepare value
-	conf.value.Clear();
-	for (int i = 0; i < conf.valueSize; i++)
-	{
-		char c = (char) (i % 10) + '0';
-		conf.value.Append(&c, 1);
-	}
 	
 	numTest = 1000;
 	for (int i = 0; i < numTest; i++)
@@ -438,13 +448,7 @@ int KeyspaceClientTest(int argc, char **argv)
 	testConf.argc = argc;
 	testConf.argv = argv;
 	testConf.SetType(argv[2]);
-	
-	for (int i = 0; i < testConf.keySize - 10; i++)
-	{
-		char c = (char) (i % 10) + '0';
-		testConf.padding.Append(&c, 1);
-	}
-	
+		
 	if (testConf.type == TestConfig::SET)
 		return KeyspaceClientSetTest(client, testConf);
 	if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)
