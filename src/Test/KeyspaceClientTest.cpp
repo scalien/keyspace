@@ -455,8 +455,10 @@ int KeyspaceClientTest(int argc, char **argv)
 		return KeyspaceClientListTest(client, testConf);
 	if (testConf.type == TestConfig::GETLATENCY || testConf.type == TestConfig::DIRTYGETLATENCY || testConf.type == TestConfig::SETLATENCY)
 		return KeyspaceClientLatencyTest(client, testConf);
-	else
+	if (testConf.type == TestConfig::GET)
 		return KeyspaceClientGetTest(client, testConf);
+
+	Log_Message("no such test: %s", testConf.typeString);
 		
 	return 1;
 }
