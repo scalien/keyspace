@@ -7,20 +7,22 @@
 
 class SingleKeyspaceDB : public KeyspaceDB
 {
+typedef ByteArray<KEYSPACE_VAL_SIZE> Buffer;
 public:
-	bool			Init();
-	bool			Add(KeyspaceOp* op) ;
-	bool			Submit();
-	unsigned		GetNodeID() ;
-	bool			IsMasterKnown();
-	int				GetMaster();
-	bool			IsMaster();
+	bool				Init();
+	bool				Add(KeyspaceOp* op) ;
+	bool				Submit();
+	unsigned			GetNodeID() ;
+	bool				IsMasterKnown();
+	int					GetMaster();
+	bool				IsMaster();
 
 private:
-	bool			writePaxosID;
-	ByteArray<KEYSPACE_VAL_SIZE>data;
-	Table*			table;
-	Transaction		transaction;
+	bool				writePaxosID;
+	Buffer				data;
+	Table*				table;
+	Transaction			transaction;
+	List<KeyspaceOp*>	ops;
 };
 
 #endif

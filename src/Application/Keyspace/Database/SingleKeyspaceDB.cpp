@@ -75,10 +75,8 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
-//		Log_Trace();
 		op->status &= table->Set(&transaction, op->key, op->value);
-//		Log_Trace();
-		op->service->OnComplete(op);
+		ops.Append(op);
 	}
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 	{
@@ -86,9 +84,8 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		if (data == op->test)
 			op->status &= table->Set(&transaction, op->key, op->value);
 		else
-			op->value.Set(data);
-		
-		op->service->OnComplete(op);
+			op->value.Set(data);		
+		ops.Append(op);
 	}
 	else if (op->type == KeyspaceOp::ADD)
 	{
@@ -108,7 +105,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 			else
 				op->status = false;
 		}
-		op->service->OnComplete(op);
+		ops.Append(op);
 	}
 	else if (op->type == KeyspaceOp::RENAME)
 	{
@@ -119,25 +116,25 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 			if (op->status)
 				op->status &= table->Delete(&transaction, op->key);
 		}
-		op->service->OnComplete(op);
+		ops.Append(op);
 	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
 		op->status &= table->Delete(&transaction, op->key);
-		op->service->OnComplete(op);
+		ops.Append(op);
 	}
 	else if (op->type == KeyspaceOp::REMOVE)
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		op->status &= table->Get(&transaction, op->key, op->value);
 		op->status &= table->Delete(&transaction, op->key);
-		op->service->OnComplete(op);
+		ops.Append(op);
 	}
 
 	else if (op->type == KeyspaceOp::PRUNE)
 	{
 		op->status &= table->Prune(&transaction, op->prefix);
-		op->service->OnComplete(op);
+		ops.Append(op);
 	}
 	else
 		ASSERT_FAIL();
@@ -148,9 +145,22 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 bool SingleKeyspaceDB::Submit()
 {
 	Log_Trace();
+
+	int i, numOps;
+	KeyspaceOp* op;
+	KeyspaceOp** it;
 	
 	if (transaction.IsActive())
 		transaction.Commit();
+
+	numOps = ops.Length();
+	for (i = 0; i < numOps; i++)
+	{
+		it = ops.Head();
+		op = *it;
+		ops.Remove(op);
+		op->service->OnComplete(op);
+	}
 		
 	return true;
 }
