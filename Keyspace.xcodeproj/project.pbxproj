@@ -855,8 +855,7 @@
 			children = (
 				9AF501F10F88226400F7F49E /* BDBTool.cpp */,
 			);
-			name = BDBTool;
-			path = BDBDump;
+			path = BDBTool;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {

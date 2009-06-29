@@ -332,7 +332,8 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		return 1;
 	}
 	
-	Log_Message("Test succeeded, %s/sec = %lf (num = %d, elapsed = %ld)", conf.typeString, numTest / (sw.elapsed / 1000.0), numTest, sw.elapsed);
+	double mbps = (conf.valueSize + conf.keySize) * numTest / (sw.elapsed / 1000.0) / 1000000;
+	Log_Message("Test succeeded, %s/sec = %lf (num = %d, elapsed = %ld, thruput = %lf MB/s)", conf.typeString, numTest / (sw.elapsed / 1000.0), numTest, sw.elapsed, mbps);
 	
 	return 0;
 }
