@@ -374,6 +374,8 @@ int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
 			status = client.DirtyGet(conf.key);
 		else if (conf.type == TestConfig::SETLATENCY)
 			status = client.Set(conf.key, conf.value);
+		else
+			return 1;
 			
 		if (status != KEYSPACE_OK)
 		{
