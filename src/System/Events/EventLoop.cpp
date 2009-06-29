@@ -11,7 +11,7 @@ long EventLoop::RunTimers()
 	{
 		timer = *it;
 		
-		now = ::Now();
+		UpdateTime();
 		if (timer->When() <= now)
 		{
 			Remove(timer);
@@ -34,7 +34,7 @@ void EventLoop::RunOnce()
 		sleep = SLEEP_MSEC;
 	
 	IOProcessor::Poll(sleep);
-	now = ::Now();
+	UpdateTime();
 }
 
 void EventLoop::Run()
@@ -51,7 +51,12 @@ void EventLoop::Shutdown()
 uint64_t EventLoop::Now()
 {
 	if (now == 0)
-		now = ::Now();
+		UpdateTime();
 	
 	return now;
+}
+
+void EventLoop::UpdateTime()
+{
+	now = ::Now();
 }

@@ -14,6 +14,7 @@
 #include "System/Common.h"
 #include "System/Log.h"
 #include "System/Time.h"
+#include "System/Events/EventLoop.h"
 
 #define	MAX_EVENTS			1024
 #define PIPEOP				'p'
@@ -336,6 +337,7 @@ bool IOProcessor::Poll(int sleep)
 	
 	for (i = 0; i < nevents; i++)
 	{
+		EventLoop::UpdateTime();
 		currentev = events[i].events;
 		if (!(currentev & EPOLLIN) && !(currentev & EPOLLOUT))
 			continue;

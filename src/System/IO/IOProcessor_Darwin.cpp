@@ -15,6 +15,7 @@
 #include "System/Common.h"
 #include "System/Log.h"
 #include "System/Time.h"
+#include "System/Events/EventLoop.h"
 
 // see http://wiki.netbsd.se/index.php/kqueue_tutorial
 
@@ -191,6 +192,7 @@ bool IOProcessor::Poll(int sleep)
 	
 	for (i = 0; i < nevents; i++)
 	{
+		EventLoop::UpdateTime();
 		if (events[i].flags & EV_ERROR)
 			continue;
 		

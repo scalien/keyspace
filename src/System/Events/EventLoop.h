@@ -14,6 +14,7 @@ public:
 	static void			Run();
 	static void			Shutdown();
 	static uint64_t		Now();
+	static void			UpdateTime();
 };
 
 
