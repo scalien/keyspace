@@ -147,11 +147,7 @@ void PaxosLease::CheckNodeIdentity()
 	reader->GetEndpoint(a);
 	
 	b = ReplicatedConfig::Get()->endpoints[msg.nodeID];
-	b.SetPort(b.GetPort() + PLEASE_PORT_OFFSET);
 	
-	Log_Message(a.ToString());
-	Log_Message(b.ToString());
-	
-	if (a != b)
+	if (a.GetAddress() != b.GetAddress())
 		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
 }
