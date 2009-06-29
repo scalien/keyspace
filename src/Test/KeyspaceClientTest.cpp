@@ -270,15 +270,14 @@ void GenRandomString(ByteString& bs, size_t length)
 	const char set[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	const size_t setsize = sizeof(set) - 1;
 	unsigned int i;
-	uint64_t seed = Now();
-	uint64_t d = seed;
+	static uint64_t d = Now();
 
 	assert(bs.size >= length);
 
 	for (i = 0; i < length; i++) {
 			// more about why these numbers were chosen:
 			// http://en.wikipedia.org/wiki/Linear_congruential_generator
-			d = (d * 1103515245UL + 12345UL) >> 16;
+			d = (d * 1103515245UL + 12345UL) >> 2;
 			bs.buffer[i] = set[d % setsize];
 	}
 
@@ -310,6 +309,9 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 			GenRandomString(conf.key, conf.keySize);
 		else
 			conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
+		
+		Log_Message("%.*s", conf.key.length, conf.key.buffer);
+		
 		status = client.Set(conf.key, conf.value, false);
 		if (status != KEYSPACE_OK)
 		{
