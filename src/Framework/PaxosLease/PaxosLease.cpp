@@ -148,6 +148,6 @@ void PaxosLease::CheckNodeIdentity()
 	
 	b = ReplicatedConfig::Get()->endpoints[msg.nodeID];
 	
-	if (a.GetAddress() != b.GetAddress())
+	if (b.GetAddress() != INADDR_ANY && a.GetAddress() != b.GetAddress())
 		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
 }

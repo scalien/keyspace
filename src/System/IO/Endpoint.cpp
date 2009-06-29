@@ -92,7 +92,7 @@ int Endpoint::GetPort()
 
 uint32_t Endpoint::GetAddress()
 {
-	return sa.sin_addr.s_addr;
+	return ntohl(sa.sin_addr.s_addr);
 }
 
 const char* Endpoint::ToString()
