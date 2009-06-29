@@ -18,6 +18,11 @@ bool Endpoint::operator==(const Endpoint &other) const
 			sa.sin_addr.s_addr == other.sa.sin_addr.s_addr;
 }
 
+bool Endpoint::operator!=(const Endpoint &other) const
+{
+	return !operator==(other);
+}
+
 bool Endpoint::Set(struct sockaddr_in &sa_)
 {
 	sa = sa_;

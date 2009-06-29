@@ -17,7 +17,8 @@ public:
 	Endpoint();
 	
 	bool		operator==(const Endpoint &other) const;
-
+	bool		operator!=(const Endpoint &other) const;
+	
 	bool		Set(struct sockaddr_in &sa_);
 	bool		Set(const char* ip, int port);
 	bool		Set(const char* ip_port);
