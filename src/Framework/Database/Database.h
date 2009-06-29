@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include <db_cxx.h>
+#include "System/Common.h"
 #include "System/ThreadPool.h"
 #include "System/Events/Timer.h"
 #include "System/Events/Callable.h"
@@ -11,8 +12,8 @@ class Transaction;
 
 #define DATABASE_CONFIG_DIR					"."
 #define DATABASE_CONFIG_PAGE_SIZE			4096
-#define DATABASE_CONFIG_CACHE_SIZE			0
-#define DATABASE_CONFIG_LOG_BUFFER_SIZE		2000
+#define DATABASE_CONFIG_CACHE_SIZE			100*MB
+#define DATABASE_CONFIG_LOG_BUFFER_SIZE		2*MB
 #define DATABASE_CONFIG_LOG_MAX_FILE		0
 #define DATABASE_CONFIG_CHECKPOINT_TIMEOUT	60000
 #define DATABASE_CONFIG_VERBOSE				false
