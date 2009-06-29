@@ -102,6 +102,9 @@ bool Database::Init(const DatabaseConfig& config_)
 	env.log_set_config(DB_LOG_AUTO_REMOVE, 1);
 #endif
 
+	env.set_flags(DB_DIRECT_DB, 1);
+	env.set_flags(DB_DIRECT_LOG, 1);
+	
 	keyspace = new Table(this, "keyspace", config.pageSize);
 
 	Checkpoint();
