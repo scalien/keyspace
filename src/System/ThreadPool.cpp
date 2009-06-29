@@ -1,4 +1,5 @@
 #include "ThreadPool.h"
+#include "System/Log.h"
 #include "System/Events/Callable.h"
 
 void* ThreadPool::thread_function(void* param)
@@ -17,23 +18,31 @@ void ThreadPool::ThreadFunction()
 	
 	while (running)
 	{
+		Log_Trace("1");
 		pthread_mutex_lock(&mutex);
+		Log_Trace("2");
 		numActive--;
 		
 	wait:
 		while (numPending == 0 && running)
+		{
+			Log_Trace("3");		
 			pthread_cond_wait(&cond, &mutex);
+			Log_Trace("4");
+		}
 		
 		if (!running)
 		{
+			Log_Trace("5");
 			pthread_mutex_unlock(&mutex);
+			Log_Trace("6");
 			break;
 		}
-		
+		Log_Trace("7");
 		it = callables.Head();
 		if (!it)
 			goto wait;
-		
+		Log_Trace("8");
 		callable = *it;
 		callables.Remove(it);
 		numPending--;
@@ -42,8 +51,7 @@ void ThreadPool::ThreadFunction()
 		pthread_mutex_unlock(&mutex);
 		
 		Call(callable);
-	}
-	
+	}	
 }
 
 ThreadPool::ThreadPool(int numThread) :
