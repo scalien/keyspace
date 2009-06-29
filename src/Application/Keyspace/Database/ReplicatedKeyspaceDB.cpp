@@ -162,9 +162,11 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 		it = ops.Head();
 	else
 		it = NULL;
-		
+	
+	unsigned int i = 0;
 	while (true)
 	{
+		i++;
 		if (msg.Read(value, nread))
 		{
 			sw.Start();
@@ -198,6 +200,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 		}
 	}
 	
+	Log_Trace("%d", i);
 	Log_Trace("time spent in Execute(): %ld", sw.elapsed);
 	Log_Trace("numOps = %u", numOps);
 	
