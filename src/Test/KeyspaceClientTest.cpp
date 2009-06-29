@@ -460,7 +460,6 @@ int KeyspaceClientTest(int argc, char **argv)
 
 int KeyspaceClientTestSuite(Keyspace::Client& client)
 {	
-//	char				*nodes[] = {"127.0.0.1:7080"};
 	DynArray<128>		key;
 	DynArray<1024>		value;
 	DynArray<36>		reference;

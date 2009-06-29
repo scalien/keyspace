@@ -314,8 +314,10 @@ void ClientConn::Send(Command &cmd)
 {
 	Log_Trace("nodeID = %d, cmd = %.*s", nodeID, min(cmd.msg.length, 30), cmd.msg.buffer);
 	cmd.nodeID = nodeID;
-	//cmd.sendTime = NowMicro();
+#ifdef CLIENT_LATENCY
+	cmd.sendTime = NowMicro();
 	//Log_Message("sending command, sendTime = %" PRIu64, cmd.sendTime);
+#endif
 	
 	if (cmd.submit)
 	{
@@ -339,12 +341,14 @@ void ClientConn::Send(Command &cmd)
 void ClientConn::RemoveSentCommand(Command** it)
 {
 	Command*	cmd;
-	uint64_t	latency;
 	
 	cmd = *it;
-	//latency = NowMicro() - cmd->sendTime;
+#ifdef CLIENT_LATENCY
+	uint64_t	latency;
+	latency = NowMicro() - cmd->sendTime;
 	//Log_Message("latency = %" PRIu64 " usec", latency);
-	//client.result.UpdateLatency(latency);
+	client.result.UpdateLatency(latency);
+#endif
 	
 	client.sentCommands.Remove(it);
 	if (--sent == 0)
