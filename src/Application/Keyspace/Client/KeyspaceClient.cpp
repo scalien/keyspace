@@ -1,4 +1,5 @@
 #include <limits>
+#include <inttypes.h>
 
 #include "KeyspaceClient.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientReq.h"
@@ -313,7 +314,9 @@ void ClientConn::Send(Command &cmd)
 {
 	Log_Trace("nodeID = %d, cmd = %.*s", nodeID, min(cmd.msg.length, 30), cmd.msg.buffer);
 	cmd.nodeID = nodeID;
-	cmd.sendTime = EventLoop::Now();
+	cmd.sendTime = Now();
+	
+	Log_Message("sending command, sendTime = %" PRIu64, cmd.sendTime);
 	
 	if (cmd.submit)
 	{
@@ -340,7 +343,8 @@ void ClientConn::RemoveSentCommand(Command** it)
 	uint64_t	latency;
 	
 	cmd = *it;
-	latency = EventLoop::Now() - cmd->sendTime;
+	latency = Now() - cmd->sendTime;
+	Log_Message("latency = %" PRIu64, latency);
 	client.result.UpdateLatency(latency);
 	
 	client.sentCommands.Remove(it);
@@ -928,7 +932,7 @@ int Client::Submit()
 
 void Client::EventLoop()
 {
-	while(!IsDone())
+	while (!IsDone())
 	{
 		StateFunc();
 		EventLoop::RunOnce();

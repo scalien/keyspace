@@ -43,7 +43,6 @@ public:
 	
 	int					type;
 	const char*			typeString;
-	int					numClients;
 	int					keySize;
 	int					valueSize;
 	int					datasetTotal;
@@ -51,6 +50,8 @@ public:
 	DynArray<1024>		value;
 	DynArray<100>		padding;
 	bool				rndkey;
+	int					argc;
+	char**				argv;
 	
 	TestConfig()
 	{
@@ -134,6 +135,18 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 	int				num;
 	Result			*result;
 
+	if (conf.argc < 5)
+	{
+		Log_Message("\n\tusage: %s <keySize> <valueSize>", conf.typeString);
+		return -1;
+	}
+
+	conf.keySize = atoi(conf.argv[3]);
+	conf.valueSize = atoi(conf.argv[4]);
+
+	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
+			conf.typeString, conf.keySize, conf.valueSize);
+
 	conf.key.Writef("key%B", conf.padding.length, conf.padding.buffer);
 
 	sw.Reset();	
@@ -169,6 +182,18 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 	int			status;
 	int			numTest;
 	Stopwatch	sw;
+
+	if (conf.argc < 5)
+	{
+		Log_Message("\n\tusage: %s <keySize> <valueSize>", conf.typeString);
+		return -1;
+	}
+
+	conf.keySize = atoi(conf.argv[3]);
+	conf.valueSize = atoi(conf.argv[4]);
+
+	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
+			conf.typeString, conf.keySize, conf.valueSize);
 
 	client.DistributeDirty(true);
 	conf.value.Reallocate(conf.valueSize, false);
@@ -207,7 +232,7 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		return 1;
 	}
 
-	Log_Message("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
+	Log_Message("Test succeeded, %s/sec = %lf (num = %d, elapsed = %ld)", conf.typeString, numTest / (sw.elapsed / 1000.0), numTest, sw.elapsed);
 	
 	return 0;
 }
@@ -238,6 +263,17 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	int			numTest;
 	Stopwatch	sw;
 
+	if (conf.argc < 5)
+	{
+		Log_Message("\n\tusage: %s <keySize> <valueSize>", conf.typeString);
+		return -1;
+	}
+	
+	conf.keySize = atoi(conf.argv[3]);
+	conf.valueSize = atoi(conf.argv[4]);
+
+	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
+			conf.typeString, conf.keySize, conf.valueSize);
 	Log_Trace("Generating data...");
 
 	// prepare value
@@ -269,14 +305,15 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	sw.Start();
 
 	status = client.Submit();
+
+	sw.Stop();
 	if (status != KEYSPACE_OK)
 	{
 		Log_Message("Test failed, status = %s (Submit failed)", Status(status));
 		return 1;
 	}
 	
-	sw.Stop();
-	Log_Message("Test succeeded, %s/sec = %lf", conf.typeString, numTest / (sw.elapsed / 1000.0));
+	Log_Message("Test succeeded, %s/sec = %lf (num = %d, elapsed = %ld)", conf.typeString, numTest / (sw.elapsed / 1000.0), numTest, sw.elapsed);
 	
 	return 0;
 }
@@ -291,6 +328,17 @@ int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
 	double		avgLatency = 0.0;
 	double		latency;
 
+	if (conf.argc < 5)
+	{
+		Log_Message("\n\tusage: %s <keySize> <valueSize>", conf.typeString);
+		return -1;
+	}
+	
+	conf.keySize = atoi(conf.argv[3]);
+	conf.valueSize = atoi(conf.argv[4]);
+
+	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
+			conf.typeString, conf.keySize, conf.valueSize);
 	Log_Trace("Generating data...");
 
 	// prepare value
@@ -339,7 +387,7 @@ int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
 }
 
 
-int KeyspaceClientTest2(int argc, char **argv)
+int KeyspaceClientTest(int argc, char **argv)
 {
 	const char			**nodes;
 	int					nodec;
@@ -350,10 +398,9 @@ int KeyspaceClientTest2(int argc, char **argv)
 	const char			*LOCAL_NODES[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 
 
-	if (!(argc >= 3 && strcmp(argv[2], "suite") == 0) &&
-		argc < 6)
+	if (argc < 3)
 	{
-		Log_Message("usage:\n\t%s <configFile> <command> <keySize> <valueSize>", argv[0]);
+		Log_Message("usage:\n\t%s <configFile> <command>", argv[0]);
 		Log_Message("\n\t\tcommand can be any of get, dirtyget, set, rndset, list, listp, getlatency, dirtygetlatency, setlatency, suite\n");
 		return 1;
 	}
@@ -387,10 +434,10 @@ int KeyspaceClientTest2(int argc, char **argv)
 	{
 		return KeyspaceClientTestSuite(client);
 	} 
-		
+	
+	testConf.argc = argc;
+	testConf.argv = argv;
 	testConf.SetType(argv[2]);
-	testConf.keySize = atoi(argv[4]);
-	testConf.valueSize = atoi(argv[5]);
 	
 	for (int i = 0; i < testConf.keySize - 10; i++)
 	{
@@ -398,9 +445,6 @@ int KeyspaceClientTest2(int argc, char **argv)
 		testConf.padding.Append(&c, 1);
 	}
 	
-	Log_Message("Test type = %s, numClients = %d, keySize = %d, valueSize = %d",
-			testConf.typeString, testConf.numClients, testConf.keySize, testConf.valueSize);
-		
 	if (testConf.type == TestConfig::SET)
 		return KeyspaceClientSetTest(client, testConf);
 	if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)

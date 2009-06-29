@@ -39,8 +39,6 @@ void EventLoop::RunOnce()
 
 void EventLoop::Run()
 {
-	if (!now)
-		now = ::Now();
 	while(true)
 		RunOnce();
 }
