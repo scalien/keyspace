@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "usage: %s <config-file>\n", argv[0]);
 		STOP_FAIL("invalid arguments", 1);
 	}
-	
+	 	
 	logTargets = 0;
 	if (Config::GetListNum("log.targets") == 0)
 		logTargets = LOG_TARGET_STDOUT;
@@ -112,6 +112,16 @@ int main(int argc, char* argv[])
 
 	if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
 		STOP_FAIL("Cannot initalize IOProcessor!", 1);
+
+	// after io is initialized, drop root rights
+	if (getuid() == 0 || geteuid() == 0) 
+	{
+		struct passwd *pw = getpwnam("daemon");
+		if (!pw)
+			STOP_FAIL("Cannot setuid to daemon", 1);
+		
+		setuid(pw->pw_uid);
+	}
 	
 	DatabaseConfig dbConfig;
 	dbConfig.dir = Config::GetValue("database.dir", DATABASE_CONFIG_DIR);

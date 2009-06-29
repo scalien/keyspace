@@ -348,19 +348,19 @@ int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
 	double		avgLatency = 0.0;
 	double		latency;
 
-	if (conf.argc < 5)
+	if (conf.argc < 6)
 	{
-		Log_Message("\n\tusage: %s <keySize> <valueSize>", conf.typeString);
+		Log_Message("\n\tusage: %s <keySize> <valueSize> <numTest>", conf.typeString);
 		return -1;
 	}
 	
 	conf.SetKeySize(atoi(conf.argv[3]));
 	conf.SetValueSize(atoi(conf.argv[4]));
+	numTest = atoi(conf.argv[5]);
 
-	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
-			conf.typeString, conf.keySize, conf.valueSize);
+	Log_Message("Test type = %s, keySize = %d, valueSize = %d, numTest = %d",
+			conf.typeString, conf.keySize, conf.valueSize, numTest);
 	
-	numTest = 1000;
 	for (int i = 0; i < numTest; i++)
 	{
 		if (conf.rndkey)
