@@ -57,7 +57,6 @@ int bdbdump(int argc, char* argv[], bool dumpFormat)
 {
 	char*			slash;
 	char*			filename;
-	char*			dirname;
 	Table*			table;
 	TablePrinter	tp(dumpFormat);
 	bool			ret;
@@ -76,7 +75,7 @@ int bdbdump(int argc, char* argv[], bool dumpFormat)
 		dbConfig.dir = argv[1];
 		*slash = '\0';
 		filename = slash + 1;
-		if (chdir(dirname) < 0)
+		if (chdir(dbConfig.dir) < 0)
 		{
 			printf("cannot find database directory!\n");
 			exit(1);
