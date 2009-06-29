@@ -1,4 +1,4 @@
-alias up='svn up; make clean debug clienttest'
+alias up='svn up; make clean debug deb'
 alias ntpsync='ntpdate-debian'
 alias conf='for i in `seq 0 2`; do test/awsconf.sh $i > test/$i/keyspace.conf; done'
 apt-get update
