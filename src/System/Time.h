@@ -21,6 +21,20 @@ inline uint64_t Now()
 	return now;
 }
 
+inline uint64_t NowMicro()
+{
+	uint64_t now;
+	struct timeval tv;
+	
+    gettimeofday(&tv, NULL);
+	
+	now = tv.tv_sec;
+	now *= 1000000;
+	now += tv.tv_usec;
+    
+	return now;
+}
+
 inline void Sleep(unsigned long msec)
 {
 	usleep(msec * 1000);
