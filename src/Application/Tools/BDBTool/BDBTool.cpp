@@ -107,6 +107,8 @@ int main(int argc, char* argv[])
 {
 	char*	filename;
 
+	Log_SetTrace(false);
+
 	filename = filepart(argv[0]);
 
 	if (strcmp(filename, "bdbdump") == 0)
