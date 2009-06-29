@@ -80,7 +80,7 @@ int bdbdump(int argc, char* argv[], bool dumpFormat)
 			printf("cannot find database directory!\n");
 			exit(1);
 		}
-		dirname = ".";
+		dbConfig.dir = ".";
 	}
 	
 	ret = database.Init(dbConfig);
