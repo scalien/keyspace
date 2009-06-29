@@ -34,7 +34,7 @@ void PaxosLease::InitTransport()
 		STOP_FAIL("cannot bind PaxosLease port", 1);
 	reader->SetOnRead(&onRead);
 	
-	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * ReplicatedConfig::Get()->numNodes);
+	writers = (TransportUDPWriter**) Alloc(sizeof(TransportUDPWriter*) * ReplicatedConfig::Get()->numNodes);
 	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
 	{
 		endpoint = ReplicatedConfig::Get()->endpoints[i];
@@ -50,7 +50,8 @@ void PaxosLease::OnRead()
 	ByteString bs;
 	reader->GetMessage(bs);
 	if (!msg.Read(bs))
-		return;
+		return;	
+	CheckNodeIdentity();
 	
 	if ((msg.IsRequest()) &&
 		msg.proposalID > proposer.highestProposalID)
@@ -138,4 +139,16 @@ void PaxosLease::OnLeaseTimeout()
 	Call(onLeaseTimeoutCallback);
 	if (acquireLease)
 		proposer.StartAcquireLease();
+}
+
+void PaxosLease::CheckNodeIdentity()
+{
+	Endpoint a, b;
+	reader->GetEndpoint(a);
+	
+	b = ReplicatedConfig::Get()->endpoints[msg.nodeID];
+	b.SetPort(b.GetPort() + PLEASE_PORT_OFFSET);
+	
+	if (a != b)
+		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
 }

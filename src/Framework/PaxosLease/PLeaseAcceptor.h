@@ -3,7 +3,7 @@
 
 #include "System/Common.h"
 #include "System/Events/Timer.h"
-#include "Framework/Transport/TransportWriter.h"
+#include "Framework/Transport/TransportUDPWriter.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
@@ -15,7 +15,7 @@ class PLeaseAcceptor
 public:
 	PLeaseAcceptor();
 	
-	void					Init(TransportWriter** writers_);
+	void					Init(TransportUDPWriter** writers_);
 	void					ProcessMsg(PLeaseMsg &msg_);
 	void					OnLeaseTimeout();
 
@@ -25,7 +25,7 @@ private:
 	void					OnPrepareRequest();
 	void					OnProposeRequest();
 
-	TransportWriter**		writers;
+	TransportUDPWriter**	writers;
 	ByteBuffer				wdata;
 	MFunc<PLeaseAcceptor>	onLeaseTimeout;
 	Timer					leaseTimeout;

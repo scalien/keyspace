@@ -1,8 +1,8 @@
 #ifndef PAXOSLEASE_H
 #define PAXOSLEASE_H
 
-#include "Framework/Transport/TransportReader.h"
-#include "Framework/Transport/TransportWriter.h"
+#include "Framework/Transport/TransportUDPReader.h"
+#include "Framework/Transport/TransportUDPWriter.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
@@ -32,13 +32,14 @@ public:
 	void				OnNewPaxosRound();
 	void				OnLearnLease();
 	void				OnLeaseTimeout();
+	void				CheckNodeIdentity();
 	
 private:
 	void				InitTransport();
 	
 	bool				acquireLease;
-	TransportReader*	reader;
-	TransportWriter**	writers;
+	TransportUDPReader*	reader;
+	TransportUDPWriter**writers;
 	MFunc<PaxosLease>	onRead;
 	MFunc<PaxosLease>	onLearnLease;
 	MFunc<PaxosLease>	onLeaseTimeout;

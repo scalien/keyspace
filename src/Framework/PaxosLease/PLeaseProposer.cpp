@@ -17,7 +17,7 @@ PLeaseProposer::PLeaseProposer() :
 {
 }
 
-void PLeaseProposer::Init(TransportWriter** writers_)
+void PLeaseProposer::Init(TransportUDPWriter** writers_)
 {
 	writers = writers_;
 	

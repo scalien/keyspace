@@ -3,7 +3,7 @@
 
 #include "System/Common.h"
 #include "System/Events/Timer.h"
-#include "Framework/Transport/TransportWriter.h"
+#include "Framework/Transport/TransportUDPWriter.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
@@ -15,7 +15,7 @@ class PLeaseProposer
 public:
 	PLeaseProposer();
 
-	void					Init(TransportWriter** writers_);
+	void					Init(TransportUDPWriter** writers_);
 	
 	void					ProcessMsg(PLeaseMsg &msg_);
 	void					OnNewPaxosRound();
@@ -33,7 +33,7 @@ private:
 	void					StartPreparing();
 	void					StartProposing();
 
-	TransportWriter**		writers;
+	TransportUDPWriter**	writers;
 	ByteBuffer				wdata;
 	PLeaseProposerState		state;
 	PLeaseMsg				msg;

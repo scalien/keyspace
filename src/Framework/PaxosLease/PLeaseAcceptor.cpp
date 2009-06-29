@@ -15,7 +15,7 @@ PLeaseAcceptor::PLeaseAcceptor() :
 {
 }
 
-void PLeaseAcceptor::Init(TransportWriter** writers_)
+void PLeaseAcceptor::Init(TransportUDPWriter** writers_)
 {
 	Log_Message("*** Sleeping %d milliseconds... (this is normal) ***",
 	MAX_LEASE_TIME + MAX_CLOCK_SKEW);
