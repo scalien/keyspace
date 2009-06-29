@@ -143,6 +143,8 @@ uint64_t /*paxosID*/, ByteString value_, bool ownAppend_)
 	asyncAppender.Execute(&asyncOnAppend);
 }
 
+Stopwatch setw;
+
 void ReplicatedKeyspaceDB::AsyncOnAppend()
 {
 	Log_Trace();
@@ -163,10 +165,9 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	else
 		it = NULL;
 	
-	unsigned int i = 0;
+	setw.Reset();
 	while (true)
 	{
-		i++;
 		if (msg.Read(value, nread))
 		{
 			sw.Start();
@@ -200,7 +201,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 		}
 	}
 	
-	Log_Trace("%d", i);
+	Log_Trace("time spent in Set(): %ld", setw.elapsed);
 	Log_Trace("time spent in Execute(): %ld", sw.elapsed);
 	Log_Trace("numOps = %u", numOps);
 	
@@ -217,7 +218,9 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 	switch (msg.type)
 	{
 	case KEYSPACE_SET:
+		setw.Start();
 		ret &= table->Set(transaction, msg.key, msg.value);
+		setw.Stop();
 		break;
 
 	case KEYSPACE_TEST_AND_SET:
