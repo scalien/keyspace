@@ -310,8 +310,6 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		else
 			conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
 		
-		Log_Message("%.*s", conf.key.length, conf.key.buffer);
-		
 		status = client.Set(conf.key, conf.value, false);
 		if (status != KEYSPACE_OK)
 		{
