@@ -2,8 +2,8 @@
 #define TIMECHECK_H
 
 #include "System/Events/Timer.h"
-#include "Framework/Transport/TransportReader.h"
-#include "Framework/Transport/TransportWriter.h"
+#include "Framework/Transport/TransportUDPReader.h"
+#include "Framework/Transport/TransportUDPWriter.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "TimeCheckMsg.h"
 
@@ -22,12 +22,13 @@ public:
 	void				OnSeriesTimeout();
 	void				OnSendTimeout();
 	void				NextSeries();
+	void				CheckNodeIdentity();
 	
 private:
 	void				InitTransport();
 	
-	TransportReader*	reader;
-	TransportWriter**	writers;
+	TransportUDPReader*	reader;
+	TransportUDPWriter**writers;
 	MFunc<TimeCheck>	onRead;
 	TimeCheckMsg		msg;
 	

@@ -39,7 +39,7 @@ void TimeCheck::InitTransport()
 		STOP_FAIL("Cannot initialize TimeCheck", 1);
 	reader->SetOnRead(&onRead);
 	
-	writers = (TransportWriter**) Alloc(sizeof(TransportWriter*) * ReplicatedConfig::Get()->numNodes);
+	writers = (TransportUDPWriter**) Alloc(sizeof(TransportUDPWriter*) * ReplicatedConfig::Get()->numNodes);
 	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
 	{
 		endpoint = ReplicatedConfig::Get()->endpoints[i];
@@ -121,6 +121,7 @@ void TimeCheck::OnRead()
 
 	if (msg.type == TIMECHECK_REQUEST)
 	{
+		CheckNodeIdentity();
 		unsigned senderID = msg.nodeID;
 		msg.Response(ReplicatedConfig::Get()->nodeID, msg.series, msg.requestTimestamp, Now());
 		msg.Write(data);
@@ -149,4 +150,15 @@ void TimeCheck::OnRead()
 //			}
 		}
 	}
+}
+
+void TimeCheck::CheckNodeIdentity()
+{
+	Endpoint a, b;
+	reader->GetEndpoint(a);
+	
+	b = ReplicatedConfig::Get()->endpoints[msg.nodeID];
+	
+	if (a.GetAddress() != b.GetAddress())
+		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
 }
