@@ -117,6 +117,8 @@ int main(int argc, char* argv[])
 		return bdbdump(argc, argv, false);
 	else if (strcmp(filename, "bdbrestore") == 0)
 		return bdbrestore(argc, argv);
+	else
+		fprintf(stderr, "\n\tusage: bdbdump|bdblist|bdbrestore <bdb-file>\n");
 	
 	return 1;
 }
