@@ -1167,8 +1167,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 int
 main(int argc, char** argv)
 {
-	//KeyspaceClientTestSuite();
-	KeyspaceClientTest2(argc, argv);
+	KeyspaceClientTest(argc, argv);
 
 	return 0;
 }
