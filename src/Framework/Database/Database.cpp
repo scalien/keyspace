@@ -43,7 +43,7 @@ Database::~Database()
 bool Database::Init(const DatabaseConfig& config_)
 {
 	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL |
-	DB_INIT_TXN | DB_RECOVER | DB_THREAD;
+	DB_INIT_TXN | DB_RECOVER | DB_THREAD | DB_PRIVATE;
 	int mode = 0;
 	int ret;
 	
@@ -98,10 +98,8 @@ bool Database::Init(const DatabaseConfig& config_)
 
 #ifdef DB_LOG_AUTOREMOVE
 	env.set_flags(DB_LOG_AUTOREMOVE, 1);
-	env.set_flags(DB_DIRECT_LOG, 1);
 #else
 	env.log_set_config(DB_LOG_AUTO_REMOVE, 1);
-	env.log_set_config(DB_LOG_DIRECT, 1);
 #endif
 
 	env.set_flags(DB_DIRECT_DB, 1);
