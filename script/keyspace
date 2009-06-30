@@ -18,13 +18,8 @@ test -f $DEFAULT || exit 0
 
 test -x $DAEMON || exit 0
 
-status() {
-        plist=`ps auxw | grep "$DAEMON" | grep -v grep | awk '{print $2}' | tr '\012' ' '`
-        if [ "$plist" = "" ]; then
-                return 1
-        else
-                return 0
-        fi
+pidof_daemon() {
+        pid=`ps auxw | grep "$DAEMON" | grep -v grep | awk '{print $2}'`
 }
 
 case "$1" in
@@ -39,12 +34,23 @@ case "$1" in
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-    plist=`ps auxw | grep "$DAEMON" | grep -v grep | awk '{print $2}' | tr '\012' ' '`
-    if [ "$plist" != "" ]; then
-    	kill $plist
-		echo -n "$NAME"
+	pidof_daemon
+    if [ "$pid" != "" ]; then
+    	kill $pid
+		pidof_daemon
+		if [ "$pid" != "" ]; then
+			sleep 1
+			kill -9 $pid
+			pidof_daemon
+			if [ "$pid" != "" ]; then
+				echo "$NAME ($pid) could not be stopped!"
+				exit 1
+			fi
+		fi
+		echo "$NAME."
+	else
+		echo "$NAME is not running."
     fi
-	echo "."
 	;;
   restart|force-reload)
 	$0 stop

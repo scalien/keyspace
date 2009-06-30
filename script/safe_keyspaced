@@ -5,7 +5,6 @@ safe_keyspace()
 	while (:); do
 		$1 $2 &> /dev/null
 		EXITSTATUS=$?
-		#echo "keyspace exited with $EXITSTATUS"
 		if [ "$EXITSTATUS" = "0" -o "$EXITSTATUS" = "1" -o "$EXITSTATUS" = "143" ]; then
 			exit 0
 		fi
@@ -23,4 +22,4 @@ safe_keyspace()
 }
 
 KEYSPACE_BIN=`dirname $0`/keyspaced
-safe_keyspace $KEYSPACE_BIN $1 $2 &
+safe_keyspace $KEYSPACE_BIN $1 $2 &> /dev/null &
