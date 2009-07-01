@@ -34,7 +34,6 @@ void EventLoop::RunOnce()
 		sleep = SLEEP_MSEC;
 	
 	IOProcessor::Poll(sleep);
-	UpdateTime();
 }
 
 void EventLoop::Run()

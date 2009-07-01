@@ -173,7 +173,8 @@ bool IOProcessor::Poll(int sleep)
 	timeout.tv_nsec = (sleep - 1000 * timeout.tv_sec) * 1000000;
 	
 	nevents = kevent(kq, NULL, 0, events, SIZE(events), &timeout);
-	
+	EventLoop::UpdateTime();
+
 	if (nevents < 0)
 	{
 		Log_Errno();
@@ -192,7 +193,6 @@ bool IOProcessor::Poll(int sleep)
 	
 	for (i = 0; i < nevents; i++)
 	{
-		EventLoop::UpdateTime();
 		if (events[i].flags & EV_ERROR)
 			continue;
 		

@@ -284,6 +284,7 @@ bool IOProcessor::Poll(int sleep)
 	EpollOp*					epollOp;
 		
 	nevents = epoll_wait(epollfd, events, SIZE(events), sleep);
+	EventLoop::UpdateTime();
 	
 	if (nevents < 0)
 	{
@@ -337,7 +338,6 @@ bool IOProcessor::Poll(int sleep)
 	
 	for (i = 0; i < nevents; i++)
 	{
-		EventLoop::UpdateTime();
 		currentev = events[i].events;
 		if (!(currentev & EPOLLIN) && !(currentev & EPOLLOUT))
 			continue;
