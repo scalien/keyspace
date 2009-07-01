@@ -933,6 +933,19 @@ int Client::Submit()
 	return result.Status();
 }
 
+int Client::Cancel()
+{
+	if (sentCommands.Length() != 0)
+		return KEYSPACE_ERROR;
+	
+	DeleteCommands(safeCommands);
+	DeleteCommands(dirtyCommands);
+	
+	result.Close();
+	
+	return KEYSPACE_OK;
+}
+
 void Client::EventLoop()
 {
 	while (!IsDone())

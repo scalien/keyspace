@@ -181,6 +181,7 @@ public:
 	// grouping write commands
 	int				Begin();
 	int				Submit();
+	int				Cancel();
 
 private:
 	friend class ClientConn;
