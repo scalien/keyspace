@@ -2,11 +2,13 @@
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "System/Stopwatch.h"
 #include "System/Config.h"
+#include "TestConfig.h"
 #include <signal.h>
 #include <float.h>
 
 using namespace Keyspace;
 int KeyspaceClientTestSuite(Keyspace::Client& client);
+int DatabaseSetTest(TestConfig& conf);
 
 void IgnorePipeSignal()
 {
@@ -17,127 +19,6 @@ void IgnorePipeSignal()
 	sigprocmask(SIG_BLOCK, &sigset, NULL);
 }
 
-// TODO
-//
-// SET, GET (1, 20, 50, 100 clients)
-// key size: [10, 100]
-// value size: [10 .. 100000]
-// Dataset total 100MB (w/o keys)
-//
-//
-
-class TestConfig
-{
-public:
-	enum Type
-	{
-		GET,
-		DIRTYGET,
-		SET,
-		LIST,
-		LISTP,
-		GETLATENCY,
-		DIRTYGETLATENCY,
-		SETLATENCY
-	};
-	
-	int					type;
-	const char*			typeString;
-	int					keySize;
-	int					valueSize;
-	int					datasetTotal;
-	DynArray<128>		key;
-	DynArray<1024>		value;
-	DynArray<100>		padding;
-	bool				rndkey;
-	int					argc;
-	char**				argv;
-	
-	TestConfig()
-	{
-		rndkey = false;
-	}
-	
-	void SetKeySize(int keySize_)
-	{
-		keySize = keySize_;
-
-		for (int i = 0; i < keySize - 10; i++)
-		{
-			char c = (char) (i % 10) + '0';
-			padding.Append(&c, 1);
-		}
-	}
-	
-	void SetValueSize(int valueSize_, bool fill = true)
-	{
-		valueSize = valueSize_;
-
-		if (fill)
-		{
-			// prepare value
-			value.Clear();
-			for (int i = 0; i < valueSize; i++)
-			{
-				char c = (char) (i % 10) + '0';
-				value.Append(&c, 1);
-			}
-		}
-		else
-			value.Reallocate(valueSize, false);
-	}
-	
-	void SetType(const char* s)
-	{
-		typeString = s;
-		if (strcmp(s, "get") == 0)
-		{
-			type = GET;
-			return;
-		}
-		if (strcmp(s, "dirtyget") == 0)
-		{
-			type = DIRTYGET;
-			return;
-		}
-		if (strcmp(s, "set") == 0)
-		{
-			type = SET;
-			return;
-		}
-		if (strcmp(s, "rndset") == 0)
-		{
-			type = SET;
-			rndkey = true;
-			return;
-		}
-		if (strcmp(s, "list") == 0)
-		{
-			type = LIST;
-			return;
-		}
-		if (strcmp(s, "listp") == 0)
-		{
-			type = LISTP;
-			return;
-		}
-		if (strcmp(s, "getlatency") == 0)
-		{
-			type = GETLATENCY;
-			return;
-		}
-		if (strcmp(s, "dirtygetlatency") == 0)
-		{
-			type = DIRTYGETLATENCY;
-			return;
-		}
-		if (strcmp(s, "setlatency") == 0)
-		{
-			type = SETLATENCY;
-			return;
-		}
-	}
-};
 
 static const char *Status(int status)
 {
@@ -289,6 +170,9 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	int			status;
 	int			numTest;
 	Stopwatch	sw;
+
+	return DatabaseSetTest(conf);
+
 
 	if (conf.argc < 5)
 	{
@@ -1038,30 +922,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 		Log_Message("LISTKEYS/paginated3 succeeded");
 	}
-	
-	// timeout test
-	{
-		key.Writef("test:0");
-		status = client.Get(key);
-		if (status != KEYSPACE_OK)
-		{
-			Log_Message("TimeoutTest failed, status = %s", Status(status));
-			return 1;
-		}
-
-		Log_Message("TimeoutTest: waiting for %d secs", client.GetTimeout() + 1000);
-		Sleep(client.GetTimeout() + 1000);
 		
-		status = client.Get(key);
-		if (status != KEYSPACE_OK)
-		{
-			Log_Message("TimeoutTest failed, status = %s", Status(status));
-			return 1;
-		}
-		
-		Log_Message("TimeoutTest succeeded");
-	}
-	
 	// PRUNE test
 	{
 		DynArray<128> prefix;
@@ -1127,6 +988,66 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		Log_Message("LISTKEYS/emtpy2 succeeded");
+	}
+
+	// cancel test
+	{
+		status = client.Begin();
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("CancelTest Begin failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		for (int i = 0; i < num; i++)
+		{
+			key.Writef("test:%d", i);
+			status = client.Get(key, true, false);
+			if (status != KEYSPACE_OK)
+			{
+				Log_Message("CancelTest Get failed, status = %s", Status(status));
+				return 1;
+			}		
+		}
+		
+		status = client.Cancel();
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("CancelTest Cancel failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		Log_Message("CancelTest succeeded");
+	}
+
+	// timeout test
+	{
+		key.Writef("test:0");
+		status = client.Set(key, key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("TimeoutTest Set failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		status = client.Get(key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("TimeoutTest failed, status = %s", Status(status));
+			return 1;
+		}
+
+		Log_Message("TimeoutTest: waiting for %d secs", client.GetTimeout() + 1000);
+		Sleep(client.GetTimeout() + 1000);
+		
+		status = client.Get(key);
+		if (status != KEYSPACE_OK)
+		{
+			Log_Message("TimeoutTest failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		Log_Message("TimeoutTest succeeded");
 	}
 	
 	// limit SET test

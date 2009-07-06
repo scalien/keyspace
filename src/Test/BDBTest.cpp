@@ -163,28 +163,36 @@ bdb_test(Db *db)
 	db->close(0);
 }
 
+Db*
+bdb_open()
+{
+	return new Db(NULL, 0);
+}
+
 void
 bdb_simple_test()
 {
-	Db db(NULL, 0);
+	bdb_test(bdb_open());
+}
+
+Db*
+bdb_txn_open()
+{
+	DbEnv *env(0);
+	u_int32_t flags = DB_INIT_TXN | DB_RECOVER_FATAL | DB_CREATE | DB_INIT_MPOOL | DB_INIT_LOG | DB_INIT_LOCK;
+//	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL;
+	int mode = 0;
 	
-	bdb_test(&db);
+	env = new DbEnv(0);
+	env->open(".", flags, mode);
+	
+	return new Db(env, 0);
 }
 
 void
 bdb_txn_test()
 {
-	DbEnv env(0);
-	u_int32_t flags = DB_INIT_TXN | DB_RECOVER_FATAL | DB_CREATE | DB_INIT_MPOOL | DB_INIT_LOG | DB_INIT_LOCK;
-//	u_int32_t flags = DB_CREATE | DB_INIT_MPOOL;
-	int mode = 0;
-	
-	env.open(".", flags, mode);
-	
-	Db *db = new Db(&env, 0);
-	bdb_test(db);
-	
-	env.close(0);
+	bdb_test(bdb_txn_open());
 }
 
 int

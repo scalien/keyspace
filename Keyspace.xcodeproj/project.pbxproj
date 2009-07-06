@@ -105,6 +105,7 @@
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
+		9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */; };
 		9A89F5880F3F444C0041D4A1 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */; };
 		9A8B44C30FA8C17F003EA36E /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
 		9A8B44C80FA8C1E9003EA36E /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
@@ -313,6 +314,8 @@
 		9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportTCPWriter.cpp; sourceTree = "<group>"; };
 		9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportUDPWriter.h; sourceTree = "<group>"; };
 		9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportUDPWriter.cpp; sourceTree = "<group>"; };
+		9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabaseStressTest.cpp; sourceTree = "<group>"; };
+		9A81C2E10FFBB2BD00116662 /* TestConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestConfig.h; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
 		9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyspace_client.h; sourceTree = "<group>"; };
@@ -526,6 +529,8 @@
 				9AC69C520F9E3144003C631E /* KeyspaceClientTest.cpp */,
 				9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */,
 				549D467B0FDFB74C005B92D3 /* TimeCheckTest.cpp */,
+				9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */,
+				9A81C2E10FFBB2BD00116662 /* TestConfig.h */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -630,6 +635,7 @@
 		548147150F31B6B200F3D2B6 /* Database */ = {
 			isa = PBXGroup;
 			children = (
+				9AA0DA751002321900934EFA /* BDB */,
 				548147190F31B6B200F3D2B6 /* Table.h */,
 				548147180F31B6B200F3D2B6 /* Table.cpp */,
 				54814BFE0F35084500F3D2B6 /* Transaction.h */,
@@ -816,6 +822,13 @@
 				9A6204DE0F6C09B0009576A1 /* Main.cpp */,
 			);
 			name = HubSim;
+			sourceTree = "<group>";
+		};
+		9AA0DA751002321900934EFA /* BDB */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = BDB;
 			sourceTree = "<group>";
 		};
 		9AC69B0D0F9D213D003C631E /* Client */ = {
@@ -1167,6 +1180,7 @@
 				9A8B4DEE0FC858B4003EA36E /* ReplicatedConfig.cpp in Sources */,
 				9AE7CC4A0FEE3697000B8774 /* keyspace_client_test.c in Sources */,
 				9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */,
+				9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

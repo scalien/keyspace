@@ -12,7 +12,7 @@ database(database)
 	const char *filename = name;
 	const char *dbname = NULL;
 	DBTYPE type = DB_BTREE;
-	u_int32_t flags = DB_CREATE | DB_AUTO_COMMIT;
+	u_int32_t flags = DB_CREATE /*| DB_AUTO_COMMIT*/;
 	int mode = 0;
 	
 	db = new Db(&database->env, 0);
@@ -20,7 +20,11 @@ database(database)
 		db->set_pagesize(pageSize);
 		
 	Log_Trace();
-	db->open(txnid, filename, dbname, type, flags, mode);
+	if (db->open(txnid, filename, dbname, type, flags, mode) != 0)
+	{
+		db->close(0);
+		STOP_FAIL("could not open database", 1);
+	}
 	Log_Trace();
 }
 
@@ -112,7 +116,7 @@ bool Table::Set(Transaction* transaction, const ByteString &key, const ByteStrin
 		txn = transaction->txn;
 	
 	ret = db->put(txn, &dbtKey, &dbtValue, 0);
-	if (ret < 0)
+	if (ret != 0)
 		return false;
 	
 	return true;
