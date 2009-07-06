@@ -1,5 +1,5 @@
-#ifndef CURSOR_HPP
-#define CURSOR_HPP
+#ifndef BDBCURSOR_HPP
+#define BDBCURSOR_HPP
 
 #include "System/Buffer.h"
 #include <db_cxx.h>
@@ -11,11 +11,11 @@ class Cursor
 friend class Table;
 
 public:
-	bool		Next(ByteString &key, ByteString &value);
-	bool		Close();
+	virtual bool	Next(ByteString &key, ByteString &value);
+	virtual bool	Close();
 
 private:
-	Dbc*		cursor;
+	Dbc*			cursor;
 };
 
 #endif

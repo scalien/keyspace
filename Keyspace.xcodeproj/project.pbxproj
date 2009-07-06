@@ -101,16 +101,14 @@
 		9A8B4DE30FC8571A003EA36E /* KeyspaceClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B4A8A0FC080DC003EA36E /* KeyspaceClient.cpp */; };
 		9A8B4DEC0FC8589E003EA36E /* AsyncListVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */; };
 		9A8B4DEE0FC858B4003EA36E /* ReplicatedConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */; };
-		9AA0DAB51002355400934EFA /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAD1002355400934EFA /* Cursor.cpp */; };
-		9AA0DAB61002355400934EFA /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAF1002355400934EFA /* Database.cpp */; };
-		9AA0DAB71002355400934EFA /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB11002355400934EFA /* Table.cpp */; };
-		9AA0DAB81002355400934EFA /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB31002355400934EFA /* Transaction.cpp */; };
-		9AA0DAB91002355400934EFA /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAD1002355400934EFA /* Cursor.cpp */; };
-		9AA0DABA1002355400934EFA /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAF1002355400934EFA /* Database.cpp */; };
-		9AA0DABB1002355400934EFA /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB11002355400934EFA /* Table.cpp */; };
-		9AA0DABC1002355400934EFA /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB31002355400934EFA /* Transaction.cpp */; };
-		9AA0DACE10023A4700934EFA /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DACD10023A4700934EFA /* Table.cpp */; };
-		9AA0DACF10023A4700934EFA /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DACD10023A4700934EFA /* Table.cpp */; };
+		9AA0DAB51002355400934EFA /* BDBCursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAD1002355400934EFA /* BDBCursor.cpp */; };
+		9AA0DAB61002355400934EFA /* BDBDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAF1002355400934EFA /* BDBDatabase.cpp */; };
+		9AA0DAB71002355400934EFA /* BDBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB11002355400934EFA /* BDBTable.cpp */; };
+		9AA0DAB81002355400934EFA /* BDBTransaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB31002355400934EFA /* BDBTransaction.cpp */; };
+		9AA0DAB91002355400934EFA /* BDBCursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAD1002355400934EFA /* BDBCursor.cpp */; };
+		9AA0DABA1002355400934EFA /* BDBDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAAF1002355400934EFA /* BDBDatabase.cpp */; };
+		9AA0DABB1002355400934EFA /* BDBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB11002355400934EFA /* BDBTable.cpp */; };
+		9AA0DABC1002355400934EFA /* BDBTransaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0DAB31002355400934EFA /* BDBTransaction.cpp */; };
 		9AC698E50F97982D003C631E /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		9AC698E60F979836003C631E /* BDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC698D40F979720003C631E /* BDBTest.cpp */; };
 		9AC698E70F9798A7003C631E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
@@ -316,15 +314,14 @@
 		9A8B47420FAF54EB003EA36E /* IOProcessor_Linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Linux.cpp; sourceTree = "<group>"; };
 		9A8B4A890FC080DC003EA36E /* KeyspaceClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClient.h; sourceTree = "<group>"; };
 		9A8B4A8A0FC080DC003EA36E /* KeyspaceClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClient.cpp; sourceTree = "<group>"; };
-		9AA0DAAD1002355400934EFA /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cursor.cpp; path = BDB/Cursor.cpp; sourceTree = "<group>"; };
-		9AA0DAAE1002355400934EFA /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cursor.h; path = BDB/Cursor.h; sourceTree = "<group>"; };
-		9AA0DAAF1002355400934EFA /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Database.cpp; path = BDB/Database.cpp; sourceTree = "<group>"; };
-		9AA0DAB01002355400934EFA /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Database.h; path = BDB/Database.h; sourceTree = "<group>"; };
-		9AA0DAB11002355400934EFA /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Table.cpp; path = BDB/Table.cpp; sourceTree = "<group>"; };
-		9AA0DAB21002355400934EFA /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Table.h; path = BDB/Table.h; sourceTree = "<group>"; };
-		9AA0DAB31002355400934EFA /* Transaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Transaction.cpp; path = BDB/Transaction.cpp; sourceTree = "<group>"; };
-		9AA0DAB41002355400934EFA /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transaction.h; path = BDB/Transaction.h; sourceTree = "<group>"; };
-		9AA0DACD10023A4700934EFA /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Table.cpp; sourceTree = "<group>"; };
+		9AA0DAAD1002355400934EFA /* BDBCursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BDBCursor.cpp; path = BDB/BDBCursor.cpp; sourceTree = "<group>"; };
+		9AA0DAAE1002355400934EFA /* BDBCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BDBCursor.h; path = BDB/BDBCursor.h; sourceTree = "<group>"; };
+		9AA0DAAF1002355400934EFA /* BDBDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BDBDatabase.cpp; path = BDB/BDBDatabase.cpp; sourceTree = "<group>"; };
+		9AA0DAB01002355400934EFA /* BDBDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BDBDatabase.h; path = BDB/BDBDatabase.h; sourceTree = "<group>"; };
+		9AA0DAB11002355400934EFA /* BDBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BDBTable.cpp; path = BDB/BDBTable.cpp; sourceTree = "<group>"; };
+		9AA0DAB21002355400934EFA /* BDBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BDBTable.h; path = BDB/BDBTable.h; sourceTree = "<group>"; };
+		9AA0DAB31002355400934EFA /* BDBTransaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BDBTransaction.cpp; path = BDB/BDBTransaction.cpp; sourceTree = "<group>"; };
+		9AA0DAB41002355400934EFA /* BDBTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BDBTransaction.h; path = BDB/BDBTransaction.h; sourceTree = "<group>"; };
 		9AC698D40F979720003C631E /* BDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBTest.cpp; sourceTree = "<group>"; };
 		9AC698DB0F9797D8003C631E /* Tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tester.cpp; sourceTree = "<group>"; };
 		9AC698E00F979809003C631E /* Tester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Tester; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -639,7 +636,6 @@
 				547A765E0F7680D6003084C9 /* Cursor.h */,
 				548147170F31B6B200F3D2B6 /* Database.h */,
 				548147190F31B6B200F3D2B6 /* Table.h */,
-				9AA0DACD10023A4700934EFA /* Table.cpp */,
 				54814BFE0F35084500F3D2B6 /* Transaction.h */,
 			);
 			path = Database;
@@ -824,14 +820,14 @@
 		9AA0DA751002321900934EFA /* BDB */ = {
 			isa = PBXGroup;
 			children = (
-				9AA0DAAD1002355400934EFA /* Cursor.cpp */,
-				9AA0DAAE1002355400934EFA /* Cursor.h */,
-				9AA0DAAF1002355400934EFA /* Database.cpp */,
-				9AA0DAB01002355400934EFA /* Database.h */,
-				9AA0DAB11002355400934EFA /* Table.cpp */,
-				9AA0DAB21002355400934EFA /* Table.h */,
-				9AA0DAB31002355400934EFA /* Transaction.cpp */,
-				9AA0DAB41002355400934EFA /* Transaction.h */,
+				9AA0DAAD1002355400934EFA /* BDBCursor.cpp */,
+				9AA0DAAE1002355400934EFA /* BDBCursor.h */,
+				9AA0DAAF1002355400934EFA /* BDBDatabase.cpp */,
+				9AA0DAB01002355400934EFA /* BDBDatabase.h */,
+				9AA0DAB11002355400934EFA /* BDBTable.cpp */,
+				9AA0DAB21002355400934EFA /* BDBTable.h */,
+				9AA0DAB31002355400934EFA /* BDBTransaction.cpp */,
+				9AA0DAB41002355400934EFA /* BDBTransaction.h */,
 			);
 			name = BDB;
 			sourceTree = "<group>";
@@ -1132,11 +1128,10 @@
 				54507DFD0FCD6CF7009D9B99 /* CatchupReader.cpp in Sources */,
 				54507DFE0FCD6CF7009D9B99 /* CatchupWriter.cpp in Sources */,
 				9A4894350FF24AC100A586FB /* Console.cpp in Sources */,
-				9AA0DAB91002355400934EFA /* Cursor.cpp in Sources */,
-				9AA0DABA1002355400934EFA /* Database.cpp in Sources */,
-				9AA0DABB1002355400934EFA /* Table.cpp in Sources */,
-				9AA0DABC1002355400934EFA /* Transaction.cpp in Sources */,
-				9AA0DACE10023A4700934EFA /* Table.cpp in Sources */,
+				9AA0DAB91002355400934EFA /* BDBCursor.cpp in Sources */,
+				9AA0DABA1002355400934EFA /* BDBDatabase.cpp in Sources */,
+				9AA0DABB1002355400934EFA /* BDBTable.cpp in Sources */,
+				9AA0DABC1002355400934EFA /* BDBTransaction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1178,11 +1173,10 @@
 				9AE7CC4A0FEE3697000B8774 /* keyspace_client_test.c in Sources */,
 				9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */,
 				9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */,
-				9AA0DAB51002355400934EFA /* Cursor.cpp in Sources */,
-				9AA0DAB61002355400934EFA /* Database.cpp in Sources */,
-				9AA0DAB71002355400934EFA /* Table.cpp in Sources */,
-				9AA0DAB81002355400934EFA /* Transaction.cpp in Sources */,
-				9AA0DACF10023A4700934EFA /* Table.cpp in Sources */,
+				9AA0DAB51002355400934EFA /* BDBCursor.cpp in Sources */,
+				9AA0DAB61002355400934EFA /* BDBDatabase.cpp in Sources */,
+				9AA0DAB71002355400934EFA /* BDBTable.cpp in Sources */,
+				9AA0DAB81002355400934EFA /* BDBTransaction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1261,6 +1255,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib/db46,
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DPLATFORM_DARWIN",
+					"-D__STDC_FORMAT_MACROS",
+					"-DSUBMIT_HACK",
+					"-DDATABASE_BDB",
 				);
 				PRODUCT_NAME = Keyspace;
 				ZERO_LINK = YES;

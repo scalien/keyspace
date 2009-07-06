@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
+#include "Framework/Database/Database.h"
 #include "Framework/Database/Transaction.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
@@ -20,7 +21,6 @@ void PaxosAcceptor::Init(TransportWriter** writers_)
 	table = database.GetTable("keyspace");
 	if (table == NULL)
 		ASSERT_FAIL();
-	transaction.Set(table);
 
 	paxosID = 0;
 	state.Init();

@@ -5,9 +5,7 @@
 void CatchupReader::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 {
 	keyspaceDB = keyspaceDB_;
-	table = table_;
-	
-	transaction.Set(table);
+	table = table_;	
 }
 
 void CatchupReader::Start(unsigned nodeID, uint64_t paxosID)

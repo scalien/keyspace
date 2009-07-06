@@ -1,14 +1,11 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef BDBDATABASE_H
+#define BDBDATABASE_H
 
 #include <db_cxx.h>
 #include "System/Common.h"
 #include "System/ThreadPool.h"
 #include "System/Events/Timer.h"
 #include "System/Events/Callable.h"
-
-class Table;
-class Transaction;
 
 #define DATABASE_CONFIG_DIR					"."
 #define DATABASE_CONFIG_PAGE_SIZE			4096
@@ -41,20 +38,23 @@ public:
 	bool		verbose;
 };
 
+class Table;
+class Transaction;
+
 class Database
 {
 	friend class Table;
 	friend class Transaction;
 public:
 	Database();
-	~Database();
+	virtual ~Database();
 	
-	bool Init(const DatabaseConfig& config);
+	virtual bool	Init(const DatabaseConfig& config);
 	
-	Table*	GetTable(const char* name);
+	virtual Table*	GetTable(const char* name);
 	
-	void	OnCheckpointTimeout();
-	void	Checkpoint();
+	virtual void	OnCheckpointTimeout();
+	virtual void	Checkpoint();
 
 	
 private:
@@ -70,5 +70,6 @@ private:
 
 // the global database object
 extern Database database;
+
 
 #endif

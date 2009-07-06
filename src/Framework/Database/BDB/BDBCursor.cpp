@@ -1,4 +1,4 @@
-#include "Cursor.h"
+#include "BDBCursor.h"
 
 bool Cursor::Next(ByteString &key, ByteString &value)
 {

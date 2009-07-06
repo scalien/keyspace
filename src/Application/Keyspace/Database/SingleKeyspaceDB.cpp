@@ -49,7 +49,6 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	
 	if (isWrite && !transaction.IsActive())
 	{
-		transaction.Set(table);
 		transaction.Begin();
 	}
 	

@@ -1,5 +1,6 @@
 #include "ReplicatedConfig.h"
 #include "System/Config.h"
+#include "Framework/Database/Database.h"
 #include "Framework/Database/Table.h"
 #include "Framework/Database/Transaction.h"
 
@@ -56,7 +57,7 @@ void ReplicatedConfig::InitRestartCounter()
 		return;
 	}
 	
-	Transaction tx(table);
+	Transaction tx;
 	tx.Begin();
 	
 	ret = table->Get(&tx, "@@restartCounter", baRestartCounter);

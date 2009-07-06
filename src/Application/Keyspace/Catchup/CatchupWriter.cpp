@@ -1,6 +1,7 @@
 #include "CatchupWriter.h"
 #include <math.h>
 #include "CatchupServer.h"
+#include "Framework/Database/Database.h"
 #include "Framework/Transport/Transport.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 
@@ -16,7 +17,6 @@ void CatchupWriter::Init(CatchupServer* server_)
 	
 	server = server_;
 	table = database.GetTable("keyspace");
-	transaction.Set(table);
 	transaction.Begin();
 	table->Iterate(&transaction, cursor);
 	tcpwrite.data = writeBuffer;

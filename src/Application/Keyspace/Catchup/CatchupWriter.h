@@ -2,6 +2,7 @@
 #define CATCHUPCONN_H
 
 #include "Framework/Transport/TCPConn.h"
+#include "Framework/Database/Cursor.h"
 #include "Framework/Database/Transaction.h"
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "CatchupMsg.h"

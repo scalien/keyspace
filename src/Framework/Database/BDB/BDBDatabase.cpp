@@ -4,8 +4,8 @@
 #include "System/Events/EventLoop.h"
 #include "System/Time.h"
 #include "System/Log.h"
-#include "Database.h"
-#include "Table.h"
+#include "BDBDatabase.h"
+#include "BDBTable.h"
 
 #define DATABASE_DEFAULT_CACHESIZE	(256*1024)
 
@@ -104,7 +104,7 @@ bool Database::Init(const DatabaseConfig& config_)
 
 	env.set_flags(DB_DIRECT_DB, 1);
 	
-	keyspace = new Table(this, "keyspace", config.pageSize);
+	keyspace = new Table("keyspace", config.pageSize);
 
 	Checkpoint();
 	
@@ -132,11 +132,11 @@ void Database::OnCheckpointTimeout()
 
 void Database::Checkpoint()
 {
-/*	int ret;
+	int ret;
 
 	Log_Trace("started");
 	ret = env.txn_checkpoint(100000, 0, 0);
 	if (ret < 0)
 		ASSERT_FAIL();
-	Log_Trace("finished");*/
+	Log_Trace("finished");
 }

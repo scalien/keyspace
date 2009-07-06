@@ -1,12 +1,12 @@
 #include <db_cxx.h>
 
-#include "Table.h"
-#include "Database.h"
 #include "System/Buffer.h"
-#include "Transaction.h"
+#include "BDBCursor.h"
+#include "BDBDatabase.h"
+#include "BDBTable.h"
+#include "BDBTransaction.h"
 
-Table::Table(Database* database, const char *name, int pageSize) :
-database(database)
+Table::Table(const char *name, int pageSize)
 {
 	DbTxn *txnid = NULL;
 	const char *filename = name;
@@ -15,7 +15,7 @@ database(database)
 	u_int32_t flags = DB_CREATE /*| DB_AUTO_COMMIT*/;
 	int mode = 0;
 	
-	db = new Db(&database->env, 0);
+	db = new Db(&database.env, 0);
 	if (pageSize != 0)
 		db->set_pagesize(pageSize);
 		
