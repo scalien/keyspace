@@ -5,6 +5,8 @@
 #include "Cursor.h"
 #include "System/Buffer.h"
 
+class Transaction;
+
 class TableVisitor
 {
 public:
@@ -16,30 +18,24 @@ public:
 
 class Table
 {
-	friend class Transaction;
 public:
-	Table(Database* database, const char *name, int pageSize = 0);
-	~Table();
+	virtual		~Table() {}
 	
-	bool		Iterate(Transaction* transaction, Cursor& cursor);
+	virtual bool	Iterate(Transaction* transaction, Cursor& cursor) = 0;
 	
-	bool		Get(Transaction* transaction, const ByteString &key, ByteString &value);
-	bool		Get(Transaction* transaction, const char* key, ByteString &value);
-	bool		Get(Transaction* transaction, const char* key, uint64_t &value);
+	virtual bool	Get(Transaction* transaction, const ByteString &key, ByteString &value) = 0;
+	bool			Get(Transaction* transaction, const char* key, ByteString &value);
+	bool			Get(Transaction* transaction, const char* key, uint64_t &value);
 	
-	bool		Set(Transaction* transaction, const ByteString &key, const ByteString &value);
-	bool		Set(Transaction* transaction, const char* key, const ByteString &value);
-	bool		Set(Transaction* transaction, const char* key, const char* value);
+	virtual bool	Set(Transaction* transaction, const ByteString &key, const ByteString &value) = 0;
+	bool			Set(Transaction* transaction, const char* key, const ByteString &value);
+	bool			Set(Transaction* transaction, const char* key, const char* value);
 	
-	bool		Delete(Transaction* transaction, const ByteString &key);
-	bool		Prune(Transaction* transaction, const ByteString &prefix);
-	bool		Truncate(Transaction* transaction = NULL);
+	virtual bool	Delete(Transaction* transaction, const ByteString &key) = 0;
+	virtual bool	Prune(Transaction* transaction, const ByteString &prefix) = 0;
+	virtual bool	Truncate(Transaction* transaction = NULL) = 0;
 	
-	bool		Visit(TableVisitor &tv);
-	
-private:
-	Database*	database;
-	Db*			db;
+	virtual bool	Visit(TableVisitor &tv) = 0;
 };
 
 

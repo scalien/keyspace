@@ -8,21 +8,15 @@ class Transaction
 {
 	friend class Table;
 public:
-	Transaction();
-	Transaction(Database* database);
-	Transaction(Table* table);
-	
-	void Set(Database* database);	
-	void Set(Table* table);
-	bool IsActive();
-	bool Begin();
-	bool Commit();
-	bool Rollback();
-	
-private:
-	Database*	database;
-	DbTxn*		txn;
-	bool		active;
+
+	virtual ~Transaction() {}
+
+	virtual void	Set(Database* database) = 0;
+	virtual void	Set(Table* table) = 0;
+	virtual bool	IsActive() = 0;
+	virtual bool	Begin() = 0;
+	virtual bool	Commit() = 0;
+	virtual bool	Rollback() = 0;
 };
 
 #endif

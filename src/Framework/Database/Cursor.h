@@ -2,20 +2,14 @@
 #define CURSOR_HPP
 
 #include "System/Buffer.h"
-#include <db_cxx.h>
-
-class Table; // forward
 
 class Cursor
 {
-friend class Table;
-
 public:
-	bool		Next(ByteString &key, ByteString &value);
-	bool		Close();
-
-private:
-	Dbc*		cursor;
+	virtual ~Cursor() {}
+	
+	virtual bool	Next(ByteString &key, ByteString &value) = 0;
+	virtual bool	Close() = 0;
 };
 
 #endif
