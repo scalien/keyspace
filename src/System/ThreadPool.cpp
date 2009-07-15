@@ -1,4 +1,5 @@
 #include "ThreadPool.h"
+#include "System/Common.h"
 #include "System/Log.h"
 #include "System/Events/Callable.h"
 
@@ -6,6 +7,7 @@ void* ThreadPool::thread_function(void* param)
 {
 	ThreadPool* tp = (ThreadPool*) param;
 	
+	BlockSignals();
 	tp->ThreadFunction();
 	
 	return NULL;
@@ -33,6 +35,7 @@ void ThreadPool::ThreadFunction()
 		it = callables.Head();
 		if (!it)
 			goto wait;
+			
 		callable = *it;
 		callables.Remove(it);
 		numPending--;
@@ -59,30 +62,16 @@ numThread(numThread)
 
 ThreadPool::~ThreadPool()
 {
-	int i;
-	
-	if (running)
-	{
-		running = false;
-		for (i = 0; i < numThread; i++)
-		{
-			pthread_mutex_lock(&mutex);
-			pthread_cond_broadcast(&cond);
-			pthread_mutex_unlock(&mutex);
-		}
-		
-		for (i = 0; i < numThread; i++)
-		{
-			pthread_join(threads[i], NULL);
-		}
-	}
-	
+	Stop();
 	delete[] threads;
 }
 
 void ThreadPool::Start()
 {
 	int i;
+	
+	if (running)
+		return;
 	
 	running = true;
 	numActive = numThread;
@@ -95,11 +84,21 @@ void ThreadPool::Start()
 
 void ThreadPool::Stop()
 {
+	int i;
+	
+	if (!running)
+		return;
+
 	running = false;
 	
 	pthread_mutex_lock(&mutex);
 	pthread_cond_broadcast(&cond);
 	pthread_mutex_unlock(&mutex);
+
+	for (i = 0; i < numThread; i++)
+		pthread_join(threads[i], NULL);
+	
+	numActive = 0;
 }
 
 void ThreadPool::Execute(Callable* callable)

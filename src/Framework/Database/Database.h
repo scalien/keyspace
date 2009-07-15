@@ -49,7 +49,8 @@ public:
 	Database();
 	~Database();
 	
-	bool Init(const DatabaseConfig& config);
+	bool	Init(const DatabaseConfig& config);
+	void	Shutdown();
 	
 	Table*	GetTable(const char* name);
 	

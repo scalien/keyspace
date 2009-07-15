@@ -1,8 +1,8 @@
 #ifndef REPLICATEDKEYSPACEDB_H
 #define REPLICATEDKEYSPACEDB_H
 
-#include "System/Containers/List.h"
 #include "System/Buffer.h"
+#include "System/Containers/List.h"
 #include "System/Events/Callable.h"
 #include "Framework/Database/Database.h"
 #include "Framework/Database/Transaction.h"
@@ -20,6 +20,7 @@ public:
 	ReplicatedKeyspaceDB();
 	
 	bool					Init();
+	void					Shutdown();
 	bool					Add(KeyspaceOp* op);
 	bool					Submit();
 	unsigned				GetNodeID();

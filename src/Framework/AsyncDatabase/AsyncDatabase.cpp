@@ -13,6 +13,11 @@ threadPool(numThread)
 	threadPool.Start();
 }
 
+void AsyncDatabase::Shutdown()
+{
+	threadPool.Stop();
+}
+
 void AsyncDatabase::Add(MultiDatabaseOp* dbop)
 {
 	dbop->active = true;

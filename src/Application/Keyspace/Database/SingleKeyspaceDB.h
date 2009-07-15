@@ -10,6 +10,7 @@ class SingleKeyspaceDB : public KeyspaceDB
 typedef ByteArray<KEYSPACE_VAL_SIZE> Buffer;
 public:
 	bool				Init();
+	void				Shutdown();
 	bool				Add(KeyspaceOp* op) ;
 	bool				Submit();
 	unsigned			GetNodeID() ;

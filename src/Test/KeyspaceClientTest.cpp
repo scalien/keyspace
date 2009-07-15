@@ -171,7 +171,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	int			numTest;
 	Stopwatch	sw;
 
-	return DatabaseSetTest(conf);
+	//return DatabaseSetTest(conf);
 
 
 	if (conf.argc < 5)

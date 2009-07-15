@@ -3,6 +3,7 @@
 #include <string>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <signal.h>
 #include "Buffer.h"
 
 int64_t strntoint64(const char* buffer, int length, unsigned* nread)
@@ -130,6 +131,15 @@ void* Alloc(int num, int size)
 		return NULL;
 		
 	return malloc(num * size);
+}
+
+void BlockSignals()
+{
+	sigset_t	sigmask;
+	
+	// block all signals
+	sigfillset(&sigmask);
+	pthread_sigmask(SIG_SETMASK, &sigmask, NULL);
 }
 
 /*

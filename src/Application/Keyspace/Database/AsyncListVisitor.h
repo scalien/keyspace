@@ -27,9 +27,9 @@ public:
 	AsyncVisitorCallback();
 	~AsyncVisitorCallback();
 
-	bool AppendKey(const ByteString &key);
-	bool AppendKeyValue(const ByteString &key, const ByteString &value);
-	void Execute();
+	bool			AppendKey(const ByteString &key);
+	bool			AppendKeyValue(const ByteString &key, const ByteString &value);
+	void			Execute();
 };
 
 class AsyncListVisitor : public TableVisitor
@@ -37,21 +37,21 @@ class AsyncListVisitor : public TableVisitor
 public:
 	AsyncListVisitor(KeyspaceOp* op_);
 	
-	void Init();
-	void AppendKey(const ByteString &key);
-	void AppendKeyValue(const ByteString &key, const ByteString &value);
-	virtual bool Accept(const ByteString &key, const ByteString &value);
-	virtual const ByteString* GetStartKey();
-	virtual void OnComplete();
+	void						Init();
+	void						AppendKey(const ByteString &key);
+	void						AppendKeyValue(const ByteString &key, const ByteString &value);
+	virtual bool				Accept(const ByteString &key, const ByteString &value);
+	virtual const ByteString*	GetStartKey();
+	virtual void				OnComplete();
 	
 private:
-	KeyspaceOp*				op;
-	const ByteString		&prefix;
-	DynArray<128>			startKey;
-	uint64_t				count;
-	uint64_t				offset;
-	uint64_t				num;
-	AsyncVisitorCallback*	avc;
+	KeyspaceOp*					op;
+	const ByteString			&prefix;
+	DynArray<128>				startKey;
+	uint64_t					count;
+	uint64_t					offset;
+	uint64_t					num;
+	AsyncVisitorCallback*		avc;
 };
 
 class AsyncMultiDatabaseOp : public Callable, public MultiDatabaseOp

@@ -33,11 +33,7 @@ onCheckpointTimeout(this, &Database::OnCheckpointTimeout)
 
 Database::~Database()
 {
-	running = false;
-	cpThread.Stop();
-	delete keyspace;
-
-	env.close(0);
+	Shutdown();
 }
 
 bool Database::Init(const DatabaseConfig& config_)
@@ -101,8 +97,6 @@ bool Database::Init(const DatabaseConfig& config_)
 #else
 	env.log_set_config(DB_LOG_AUTO_REMOVE, 1);
 #endif
-
-	env.set_flags(DB_DIRECT_DB, 1);
 	
 	keyspace = new Table(this, "keyspace", config.pageSize);
 
@@ -114,6 +108,17 @@ bool Database::Init(const DatabaseConfig& config_)
 	cpThread.Start();
 		
 	return true;
+}
+
+void Database::Shutdown()
+{
+	if (!running)
+		return;
+
+	running = false;
+	cpThread.Stop();
+	delete keyspace;	
+	env.close(0);
 }
 
 Table* Database::GetTable(const char* name)

@@ -186,6 +186,8 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 				ret = -1;
 #else
 		ret = strerror_r(errno, p, remaining - 1);
+		if (ret >= 0)
+			ret = strlen(p);
 #endif
 		if (ret < 0)
 			ret = remaining;

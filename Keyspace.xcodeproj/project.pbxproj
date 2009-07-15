@@ -263,7 +263,6 @@
 		548147420F31B6B200F3D2B6 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		548147430F31B6B200F3D2B6 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
 		548147440F31B6B200F3D2B6 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
-		548147450F31B6B200F3D2B6 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
 		548147460F31B6B200F3D2B6 /* Stopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stopwatch.h; sourceTree = "<group>"; };
 		548147470F31B6B200F3D2B6 /* Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Time.h; sourceTree = "<group>"; };
 		548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdb_cxx.dylib; path = /opt/local/lib/db46/libdb_cxx.dylib; sourceTree = "<absolute>"; };
@@ -696,7 +695,6 @@
 				9A89F5870F3F444C0041D4A1 /* ThreadPool.cpp */,
 				548147440F31B6B200F3D2B6 /* Log.h */,
 				548147430F31B6B200F3D2B6 /* Log.cpp */,
-				548147450F31B6B200F3D2B6 /* Platform.h */,
 				548147460F31B6B200F3D2B6 /* Stopwatch.h */,
 				548147470F31B6B200F3D2B6 /* Time.h */,
 			);

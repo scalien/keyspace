@@ -69,6 +69,7 @@ static int			epollfd;
 static int			maxfd;
 static PipeOp		asyncPipeOp;
 static EpollOp*		epollOps;
+static volatile bool terminated;
 
 static bool			AddEvent(int fd, uint32_t filter, IOOperation* ioop);
 
@@ -101,6 +102,41 @@ bool /*IOProcessor::*/InitPipe(PipeOp &pipeop, CFunc::Callback callback)
 	pipeop.callback = callback;
 
 	return true;
+}
+
+void SignalHandler(int )
+{
+	terminated = true;
+}
+
+void SetupSignals()
+{
+	struct sigaction	sa;
+	sigset_t			mask;
+	
+	sigfillset(&mask);
+	pthread_sigmask(SIG_SETMASK, &mask, NULL);
+
+	memset(&sa, 0, sizeof(sa));
+	sigfillset(&sa.sa_mask);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGHUP, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGPIPE, &sa, NULL);
+	
+	sa.sa_handler = SignalHandler;
+	sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGBUS, &sa, NULL);
+	sigaction(SIGFPE, &sa, NULL);
+	sigaction(SIGILL, &sa, NULL);
+	sigaction(SIGSEGV, &sa, NULL);
+	sigaction(SIGSYS, &sa, NULL);
+	sigaction(SIGXCPU, &sa, NULL);
+	sigaction(SIGXFSZ, &sa, NULL);
+
+	sigemptyset(&mask);
+	pthread_sigmask(SIG_SETMASK, &mask, NULL);
 }
 
 bool IOProcessor::Init(int maxfd_)
@@ -285,7 +321,7 @@ bool IOProcessor::Poll(int sleep)
 	nevents = epoll_wait(epollfd, events, SIZE(events), sleep);
 	EventLoop::UpdateTime();
 	
-	if (nevents < 0)
+	if (nevents < 0 || terminated)
 	{
 		Log_Errno();
 		return false;

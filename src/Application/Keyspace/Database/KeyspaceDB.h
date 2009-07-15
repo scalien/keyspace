@@ -11,6 +11,7 @@ public:
 	virtual ~KeyspaceDB() {}
 	
 	virtual bool		Init() = 0;
+	virtual void		Shutdown() = 0;
 	virtual bool		Add(KeyspaceOp* op) = 0;
 	virtual bool		Submit() = 0;
 	virtual unsigned	GetNodeID() = 0;

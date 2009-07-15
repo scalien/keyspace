@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <math.h>
 #include <errno.h>
+#include <signal.h>
 
 #include "IOProcessor.h"
 #include "System/Containers/List.h"
@@ -22,6 +23,7 @@
 
 static int				kq;			// the kqueue
 static int				asyncOpPipe[2];
+static volatile bool	terminated;
 
 static bool AddKq(int ident, short filter, IOOperation* ioop);
 
@@ -31,9 +33,48 @@ static void ProcessTCPWrite(struct kevent* ev);
 static void ProcessUDPRead(struct kevent* ev);
 static void ProcessUDPWrite(struct kevent* ev);
 
+void SignalHandler(int )
+{
+	terminated = true;
+}
+
+void SetupSignals()
+{
+	struct sigaction	sa;
+	sigset_t			mask;
+	
+	sigfillset(&mask);
+	pthread_sigmask(SIG_SETMASK, &mask, NULL);
+
+	memset(&sa, 0, sizeof(sa));
+	sigfillset(&sa.sa_mask);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGHUP, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGPIPE, &sa, NULL);
+	
+	sa.sa_handler = SignalHandler;
+	sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGBUS, &sa, NULL);
+	sigaction(SIGFPE, &sa, NULL);
+	sigaction(SIGILL, &sa, NULL);
+	sigaction(SIGSEGV, &sa, NULL);
+	sigaction(SIGSYS, &sa, NULL);
+	sigaction(SIGXCPU, &sa, NULL);
+	sigaction(SIGXFSZ, &sa, NULL);
+
+	sigemptyset(&mask);
+	pthread_sigmask(SIG_SETMASK, &mask, NULL);
+}
+
 bool IOProcessor::Init(int maxfd_)
 {
 	rlimit rl;
+	struct kevent ev;
+
+	terminated = false;
+	SetupSignals();	
 	
 	kq = kqueue();
 	if (kq < 0)
@@ -174,8 +215,9 @@ bool IOProcessor::Poll(int sleep)
 	nevents = kevent(kq, NULL, 0, events, SIZE(events), &timeout);
 	EventLoop::UpdateTime();
 
-	if (nevents < 0)
+	if (nevents < 0 || terminated)
 	{
+		Log_Trace("terminated = %s", terminated ? "true" : "false");
 		Log_Errno();
 		return false;
 	}
@@ -192,6 +234,9 @@ bool IOProcessor::Poll(int sleep)
 	
 	for (i = 0; i < nevents; i++)
 	{
+		if (events[i].filter == EVFILT_SIGNAL)
+			return false;
+
 		if (events[i].flags & EV_ERROR)
 			continue;
 		

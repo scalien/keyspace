@@ -5,6 +5,8 @@
 #include "System/Config.h"
 #include "System/Events/EventLoop.h"
 #include "System/IO/IOProcessor.h"
+#include "Framework/Database/Database.h"
+#include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Application/Keyspace/Database/SingleKeyspaceDB.h"
 #include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
@@ -174,4 +176,10 @@ int main(int argc, char* argv[])
 	console.RegisterCommand(&debug);
 
 	EventLoop::Run();
+	
+	Log_Message("Keyspace shutting down.");
+	kdb->Shutdown();
+	dbReader.Shutdown();
+	dbWriter.Shutdown();
+	database.Shutdown();
 }

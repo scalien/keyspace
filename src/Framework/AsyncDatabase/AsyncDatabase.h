@@ -15,6 +15,8 @@ class AsyncDatabase
 public:
 	AsyncDatabase(int numThread);
 	
+	void		Shutdown();
+
 	void		Add(MultiDatabaseOp* dbop);
 
 private:

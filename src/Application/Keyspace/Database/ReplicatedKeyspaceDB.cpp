@@ -32,6 +32,11 @@ bool ReplicatedKeyspaceDB::Init()
 	return true;
 }
 
+void ReplicatedKeyspaceDB::Shutdown()
+{
+	asyncAppender.Stop();
+}
+
 unsigned ReplicatedKeyspaceDB::GetNodeID()
 {
 	return ReplicatedLog::Get()->GetNodeID();

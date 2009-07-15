@@ -8,7 +8,6 @@ class Table;
 class TableVisitor;
 class Transaction;
 class ByteString;
-class ThreadPool;
 class AsyncDatabase;
 
 class DatabaseOp

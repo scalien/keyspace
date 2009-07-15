@@ -17,6 +17,10 @@ bool SingleKeyspaceDB::Init()
 	return true;
 }
 
+void SingleKeyspaceDB::Shutdown()
+{
+}
+
 unsigned SingleKeyspaceDB::GetNodeID()
 {
 	return 0;

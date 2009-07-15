@@ -31,7 +31,7 @@ int DatabaseSetTest(TestConfig& conf)
 	Table*		table;
 	Transaction* tx;
 	bool		ret;
-	int			limit = 100*KB;
+	int			limit = 16*KB;
 	int			sum;
 
 	if (conf.argc < 5)
@@ -39,6 +39,8 @@ int DatabaseSetTest(TestConfig& conf)
 		Log_Message("\n\tusage: %s <keySize> <valueSize>", conf.typeString);
 		return 1;
 	}
+	
+	Log_SetTrace(true);
 	
 	if (DatabaseSetup())
 	{
@@ -60,10 +62,10 @@ int DatabaseSetTest(TestConfig& conf)
 			conf.typeString, conf.keySize, conf.valueSize);
 	
 	tx = NULL;
-//	tx = new Transaction(table);
-//	sw.Start();
-//	tx->Begin();
-//	sw.Stop();
+	tx = new Transaction(table);
+	sw.Start();
+	tx->Begin();
+	sw.Stop();
 	
 	sum = 0;
 	numTest = conf.datasetTotal / conf.valueSize;
@@ -86,24 +88,24 @@ int DatabaseSetTest(TestConfig& conf)
 		sum += conf.keySize + conf.valueSize;
 		if (sum > limit)
 		{			
-//			sw.Start();
-//			tx->Commit();
-//			sw.Stop();
-//			
+			sw.Start();
+			tx->Commit();
+			sw.Stop();
+			
 			double mbps = sum / (sw.elapsed / 1000.0) / 1000000;
 			Log_Message("num = %d, elapsed = %ld, thruput = %lf MB/s", i, sw.elapsed, mbps);
 			sw.Reset();
-//			
-//			sw.Start();
-//			tx->Begin();
-//			sw.Stop();
-//
+			
+			sw.Start();
+			tx->Begin();
+			sw.Stop();
+
 			sum = 0;
 		}
 	}
 
-//	sw.Start();
-//	tx->Commit();
+	sw.Start();
+	tx->Commit();
 	sw.Stop();
 
 	double mbps = (conf.valueSize + conf.keySize) * numTest / (sw.elapsed / 1000.0) / 1000000;
