@@ -220,7 +220,7 @@ public:
 	}
 	
 private:
-	ByteString& operator=(const ByteString&) { return *this; } // we would loose our pointer
+	ByteString& operator=(const ByteString&) { return *this; }
 };
 
 template<int n>

@@ -11,26 +11,32 @@ public:
     void Add(T t)
     {
 		if (!Add(t, true))
-			ASSERT_FAIL(); // TODO: application-specific, that's how we use SortedList<>
+			ASSERT_FAIL(); // TODO: application-specific,
+						   // that's how we use SortedList<>
     }
 		
 private:
-	// true  => t was added
-	// false => t was already in the list
     bool Add(T t, bool unique)
 	{
         ListNode<T>*  node;
         ListNode<T>** curr = &this->head;
 
-		while(true) {
+		while(true)
+		{
         	if (*curr == NULL || LessThan(t, (*curr)->data)) {
 	            node = new ListNode<T>;
 				node->data = t;
 				node->next = *curr;
 				if (curr != &this->head)
-					node->prev = (ListNode<T>*) ((char*)curr - offsetof(ListNode<T>, next));
+				{
+					node->prev =
+								(ListNode<T>*)
+								((char*)curr - offsetof(ListNode<T>, next));
+				}
 				else
+				{
 					node->prev = NULL;
+				}
 				if (*curr != NULL)
 					(*curr)->prev = node;
 				if (*curr == NULL)
@@ -38,11 +44,11 @@ private:
 				*curr = node;
 				this->length++;		
 				return true;
-	        } else {
-	            if (unique) {
-					if ((*curr)->data == t) // unique-check
-	                	return false;
-				}
+	        } 
+			else
+			{
+	            if (unique && (*curr)->data == t)
+					return false;
 	            curr = &(*curr)->next;
 	        }
 		}

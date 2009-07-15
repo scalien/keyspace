@@ -102,7 +102,9 @@ const char* Endpoint::ToString()
 
 const char* Endpoint::ToString(char s[ENDPOINT_STRING_SIZE])
 {
-	snprintf(s, ENDPOINT_STRING_SIZE, "%s:%u", inet_ntoa(sa.sin_addr), ntohs(sa.sin_port));
+	snprintf(s, ENDPOINT_STRING_SIZE, "%s:%u",
+		inet_ntoa(sa.sin_addr), ntohs(sa.sin_port));
+	
 	return s;
 }
 

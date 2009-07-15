@@ -1,4 +1,3 @@
-#include "System/Platform.h"
 #ifdef PLATFORM_LINUX
 
 #include <sys/epoll.h>
@@ -260,7 +259,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	if (epollOp->read || epollOp->write)
 		nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, ioop->fd, &ev);
 	else
-		nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev /* this parameter is ignored */);
+		nev = epoll_ctl(epollfd, EPOLL_CTL_DEL, ioop->fd, &ev /* ignored */);
 
 	if (nev < 0)
 	{
@@ -316,10 +315,8 @@ bool IOProcessor::Poll(int sleep)
 		
 		if (newev.events)
 		{
-			if ((epollOp->read &&
-				(epollOp->read->type == TCP_READ || epollOp->read->type == UDP_READ)) ||
-				(epollOp->write &&
-				(epollOp->write->type == TCP_WRITE || epollOp->write->type == UDP_WRITE)))
+			if ((epollOp->read && epollOp->read->type != PIPEOP) ||
+				(epollOp->write && epollOp->write->type != PIPEOP))
 					newev.events |= EPOLLONESHOT;
 
 			ret = epoll_ctl(epollfd, EPOLL_CTL_MOD, newfd, &newev);
@@ -441,7 +438,7 @@ void ProcessAsyncOp()
 
 void ProcessTCPRead(TCPRead* tcpread)
 {
-	int			readlen, nread;
+	int readlen, nread;
 
 	if (tcpread->listening)
 	{
@@ -457,11 +454,16 @@ void ProcessTCPRead(TCPRead* tcpread)
 	if (readlen <= 0)
 		return;
 
-	nread = read(tcpread->fd, tcpread->data.buffer + tcpread->data.length, readlen);
+	nread = read(tcpread->fd,
+				 tcpread->data.buffer + tcpread->data.length,
+				 readlen);
+	
 	if (nread < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
+		{
 			IOProcessor::Add(tcpread);
+		}
 		else
 		{
 			Log_Errno();
@@ -485,7 +487,7 @@ void ProcessTCPRead(TCPRead* tcpread)
 
 void ProcessTCPWrite(TCPWrite* tcpwrite)
 {
-	int			writelen, nwrite;
+	int writelen, nwrite;
 
 	// this indicates check for connect() readyness
 	if (tcpwrite->data.length == 0)
@@ -508,11 +510,16 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 		ASSERT_FAIL();
 	}
 	
-	nwrite = write(tcpwrite->fd, tcpwrite->data.buffer + tcpwrite->transferred, writelen);
+	nwrite = write(tcpwrite->fd,
+				   tcpwrite->data.buffer + tcpwrite->transferred,
+				   writelen);
+				   
 	if (nwrite < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
+		{
 			IOProcessor::Add(tcpwrite);
+		}
 		else
 		{
 			Log_Errno();
@@ -535,18 +542,25 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 
 void ProcessUDPRead(UDPRead* udpread)
 {
-	int			salen, nread;
+	int salen, nread;
 	
 	salen = sizeof(udpread->endpoint.sa);
 
-	do {
-		nread = recvfrom(udpread->fd, udpread->data.buffer, udpread->data.size, 0,
-				(sockaddr*)&udpread->endpoint.sa, (socklen_t*)&salen);
+	do
+	{
+		nread = recvfrom(udpread->fd,
+						 udpread->data.buffer,
+						 udpread->data.size,
+						 0,
+						 (sockaddr*)&udpread->endpoint.sa,
+						 (socklen_t*)&salen);
 	
 		if (nread < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
+			{
 				IOProcessor::Add(udpread); // try again
+			}
 			else
 			{
 				Log_Errno();
@@ -569,13 +583,19 @@ void ProcessUDPWrite(UDPWrite* udpwrite)
 {
 	int			nwrite;
 
-	nwrite = sendto(udpwrite->fd, udpwrite->data.buffer + udpwrite->offset, udpwrite->data.length - udpwrite->offset, 0,
-				(const sockaddr*)&udpwrite->endpoint.sa, sizeof(udpwrite->endpoint.sa));
+	nwrite = sendto(udpwrite->fd,
+					udpwrite->data.buffer + udpwrite->offset,
+					udpwrite->data.length - udpwrite->offset,
+					0,
+					(const sockaddr*)&udpwrite->endpoint.sa,
+					sizeof(udpwrite->endpoint.sa));
 
 	if (nwrite < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
+		{
 			IOProcessor::Add(udpwrite); // try again
+		}
 		else
 		{
 			Log_Errno();
@@ -591,7 +611,8 @@ void ProcessUDPWrite(UDPWrite* udpwrite)
 		if (nwrite == (int)udpwrite->data.length - udpwrite->offset)
 		{
 			Call(udpwrite->onComplete);
-		} else
+		}
+		else
 		{
 			udpwrite->offset += nwrite;
 			Log_Trace("sendto() datagram fragmentation");

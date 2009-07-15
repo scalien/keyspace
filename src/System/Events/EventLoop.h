@@ -9,12 +9,12 @@
 class EventLoop : public Scheduler
 {
 public:	
-	static long			RunTimers();	
-	static void			RunOnce();
-	static void			Run();
-	static void			Shutdown();
-	static uint64_t		Now();
-	static void			UpdateTime();
+	static long		RunTimers();	
+	static void		RunOnce();
+	static void		Run();
+	static void		Shutdown();
+	static uint64_t	Now();
+	static void		UpdateTime();
 };
 
 

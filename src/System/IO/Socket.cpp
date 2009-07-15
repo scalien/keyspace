@@ -12,56 +12,12 @@
 #define INADDR_NONE 0xffffffff
 #endif
 
-unsigned long iftonl(const char* interface)
+unsigned long iftonl(const char* interface);
+
+Socket::Socket()
 {
-	int pos;
-	int len;
-	unsigned long a;
-	unsigned long b;
-	unsigned long c;
-	unsigned long d;
-	unsigned long addr;
-	unsigned nread;
-	
-	nread = 0;
-	pos = 0;
-	len = strlen(interface);
-	
-	a = strntouint64(interface + pos, len - pos, &nread);
-	if (nread < 0 || a > 255)
-		return INADDR_NONE;
-	
-	pos += nread;
-	if (interface[pos++] != '.')
-		return INADDR_NONE;
-	
-	b = strntouint64(interface + pos, len - pos, &nread);
-	if (nread < 0 || b > 255)
-		return INADDR_NONE;
-	
-	pos += nread;
-	if (interface[pos++] != '.')
-		return INADDR_NONE;
-
-	c = strntouint64(interface + pos, len - pos, &nread);
-	if (nread < 0 || c > 255)
-		return INADDR_NONE;
-	
-	pos += nread;
-	if (interface[pos++] != '.')
-		return INADDR_NONE;
-
-	d = strntouint64(interface + pos, len - pos, &nread);
-	if (nread < 0 || d > 255)
-		return INADDR_NONE;
-	
-	pos += nread;
-	if (interface[pos] != '\0' &&
-		interface[pos] != ':')
-		return INADDR_NONE;
-	
-	addr = (d & 0xff) << 24 | (c & 0xff) << 16 | (b & 0xff) << 8 | (a & 0xff);
-	return addr;
+	fd = -1;
+	listening = false;
 }
 
 bool Socket::Create(int type_)
@@ -345,3 +301,56 @@ void Socket::Close()
 		fd = -1;
 	}
 }
+
+unsigned long iftonl(const char* interface)
+{
+	int pos;
+	int len;
+	unsigned long a;
+	unsigned long b;
+	unsigned long c;
+	unsigned long d;
+	unsigned long addr;
+	unsigned nread;
+	
+	nread = 0;
+	pos = 0;
+	len = strlen(interface);
+	
+	a = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || a > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos++] != '.')
+		return INADDR_NONE;
+	
+	b = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || b > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos++] != '.')
+		return INADDR_NONE;
+
+	c = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || c > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos++] != '.')
+		return INADDR_NONE;
+
+	d = strntouint64(interface + pos, len - pos, &nread);
+	if (nread < 0 || d > 255)
+		return INADDR_NONE;
+	
+	pos += nread;
+	if (interface[pos] != '\0' &&
+		interface[pos] != ':')
+		return INADDR_NONE;
+	
+	addr = (d & 0xff) << 24 | (c & 0xff) << 16 | (b & 0xff) << 8 | (a & 0xff);
+	return addr;
+}
+

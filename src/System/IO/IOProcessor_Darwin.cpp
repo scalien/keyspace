@@ -1,4 +1,3 @@
-#include "System/Platform.h"
 #ifdef PLATFORM_DARWIN
 
 #include <sys/types.h>
@@ -272,7 +271,8 @@ void ProcessTCPRead(struct kevent* ev)
 	if (tcpread->listening)
 	{
 		Call(tcpread->onComplete);
-	} else
+	}
+	else
 	{
 		if (tcpread->requested == IO_READ_ANY)
 			readlen = tcpread->data.size - tcpread->data.length;
@@ -281,17 +281,22 @@ void ProcessTCPRead(struct kevent* ev)
 		readlen = min(ev->data, readlen);
 		if (readlen > 0)
 		{
-			nread = read(tcpread->fd, tcpread->data.buffer + tcpread->data.length, readlen);
+			nread = read(tcpread->fd,
+						 tcpread->data.buffer + tcpread->data.length,
+						 readlen);
+			
 			if (nread < 0)
 			{
 				if (errno == EWOULDBLOCK || errno == EAGAIN)
 					IOProcessor::Add(tcpread);
 				else if (!(ev->flags & EV_EOF))
 					Log_Errno();
-			} else
+			}
+			else
 			{
 				tcpread->data.length += nread;
-				if (tcpread->requested == IO_READ_ANY || (int) tcpread->data.length == tcpread->requested)
+				if (tcpread->requested == IO_READ_ANY ||
+				(int) tcpread->data.length == tcpread->requested)
 					Call(tcpread->onComplete);
 				else
 					IOProcessor::Add(tcpread);
@@ -331,14 +336,18 @@ void ProcessTCPWrite(struct kevent* ev)
 	
 	if (writelen > 0)
 	{
-		nwrite = write(tcpwrite->fd, tcpwrite->data.buffer + tcpwrite->transferred, writelen);
+		nwrite = write(tcpwrite->fd,
+					   tcpwrite->data.buffer + tcpwrite->transferred,
+					   writelen);
+		
 		if (nwrite < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				IOProcessor::Add(tcpwrite);
 			else if (!(ev->flags & EV_EOF))
 				Log_Errno();
-		} else
+		}
+		else
 		{
 			tcpwrite->transferred += nwrite;
 			if (tcpwrite->transferred == tcpwrite->data.length)
@@ -357,15 +366,21 @@ void ProcessUDPRead(struct kevent* ev)
 	udpread = (UDPRead*) ev->udata;
 	
 	salen = sizeof(udpread->endpoint.sa);
-	nread = recvfrom(udpread->fd, udpread->data.buffer, udpread->data.size, 0,
-				(sockaddr*)&udpread->endpoint.sa, (socklen_t*)&salen);
+	nread = recvfrom(udpread->fd,
+					 udpread->data.buffer,
+					 udpread->data.size,
+					 0,
+					 (sockaddr*)&udpread->endpoint.sa,
+					 (socklen_t*)&salen);
+	
 	if (nread < 0)
 	{
 		if (errno == EWOULDBLOCK || errno == EAGAIN)
 			IOProcessor::Add(udpread); // try again
 		else
 			Log_Errno();
-	} else
+	}
+	else
 	{
 		udpread->data.length = nread;
 		Call(udpread->onComplete);
@@ -384,20 +399,27 @@ void ProcessUDPWrite(struct kevent* ev)
 
 	if (ev->data >= (int) udpwrite->data.length)
 	{
-		nwrite = sendto(udpwrite->fd, udpwrite->data.buffer, udpwrite->data.length, 0,
-					(const sockaddr*)&udpwrite->endpoint.sa, sizeof(udpwrite->endpoint.sa));
+		nwrite = sendto(udpwrite->fd,
+						udpwrite->data.buffer,
+						udpwrite->data.length,
+						0,
+						(const sockaddr*)&udpwrite->endpoint.sa,
+						sizeof(udpwrite->endpoint.sa));
+		
 		if (nwrite < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				IOProcessor::Add(udpwrite); // try again
 			else
 				Log_Errno();
-		} else
+		}
+		else
 		{
 			if (nwrite == (int) udpwrite->data.length)
 			{
 				Call(udpwrite->onComplete);
-			} else
+			}
+			else
 			{
 				Log_Trace("sendto() datagram fragmentation");
 				IOProcessor::Add(udpwrite); // try again

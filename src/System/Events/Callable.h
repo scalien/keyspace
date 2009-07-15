@@ -17,9 +17,16 @@ public:
 	T*			object;
 	Callback	callback;
 	
-	MFunc(T* object_, Callback callback_) { object = object_; callback = callback_; }
+	MFunc(T* object_, Callback callback_)
+	{
+		object = object_;
+		callback = callback_;
+	}
 	
-	void Execute() { (object->*callback)(); }
+	void Execute()
+	{
+		(object->*callback)();
+	}
 };
 
 template<class T, class P>
@@ -32,9 +39,16 @@ public:
 	Callback	callback;
 	P			param;
 	
-	MFuncParam(T* object_, Callback callback_) { object = object_; callback = callback_; }
+	MFuncParam(T* object_, Callback callback_)
+	{
+		object = object_;
+		callback = callback_;
+	}
 	
-	void Execute() { (object->*callback)(param); }
+	void Execute()
+	{
+		(object->*callback)(param);
+	}
 };
 
 class CFunc : public Callable
@@ -44,13 +58,27 @@ public:
 	
 	Callback	callback;
 	
-	CFunc(Callback callback_) { callback = callback_; }
+	CFunc(Callback callback_)
+	{
+		callback = callback_;
+	}
 	
-	CFunc() { callback = 0; }
+	CFunc()
+	{
+		callback = 0;
+	}
 	
-	void Execute() { if (callback) (*callback)(); }
+	void Execute()
+	{
+		if (callback)
+			(*callback)();
+	}
 };
 
-inline void Call(Callable* callable) { if (callable) callable->Execute(); }
+inline void Call(Callable* callable)
+{
+	if (callable)
+		callable->Execute();
+}
 
 #endif

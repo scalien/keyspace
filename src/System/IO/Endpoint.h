@@ -34,5 +34,4 @@ private:
 	char		buffer[ENDPOINT_STRING_SIZE];
 };
 
-
 #endif

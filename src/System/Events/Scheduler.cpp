@@ -20,3 +20,7 @@ void Scheduler::Reset(Timer* timer)
 	Remove(timer);
 	Add(timer);
 }
+
+void Scheduler::Shutdown()
+{
+}

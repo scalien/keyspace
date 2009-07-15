@@ -7,16 +7,13 @@
 class Scheduler
 {
 public:
-	
-	static SortedList<Timer*>	timers;
-		
 	static void Add(Timer* timer);
-	
 	static void Remove(Timer* timer);
-	
 	static void Reset(Timer* timer);
-	
-	static void Shutdown()					{ /* todo: deallocate timers? */ }
+	static void Shutdown();
+
+protected:
+	static SortedList<Timer*> timers;
 };
 
 #endif

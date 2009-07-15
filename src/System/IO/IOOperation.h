@@ -39,6 +39,7 @@ public:
 		onClose = NULL; 
 	}
 
+public:
 	ByteString		data;
 	
 	char			type;
@@ -56,40 +57,65 @@ public:
 class UDPWrite : public IOOperation
 {
 public:
-	UDPWrite() : IOOperation() { type = UDP_WRITE; }
-	
+	UDPWrite()
+	: IOOperation()
+	{
+		type = UDP_WRITE;
+	}
+
+public:
 	Endpoint		endpoint;
 };
 
 class UDPRead : public IOOperation
 {
 public:
-	UDPRead() : IOOperation() { type = UDP_READ; }
-	
+	UDPRead()
+	: IOOperation()
+	{
+		type = UDP_READ;
+	}
+
+public:
 	Endpoint		endpoint;
 };
 
 class TCPWrite : public IOOperation
 {
 public:
-	TCPWrite() : IOOperation() { type = TCP_WRITE; transferred = 0; }
-	
-	unsigned	transferred;		/*	the IO subsystem has given the first 'transferred'
-										    bytes to the kernel */
+	TCPWrite()
+	: IOOperation()
+	{
+		type = TCP_WRITE;
+		transferred = 0;
+	}
+
+public:
+	unsigned	transferred;		/*	the IO subsystem has given the first
+										'transferred' bytes to the kernel */
 };
 
 class TCPRead : public IOOperation
 {
 public:
-	TCPRead() : IOOperation() { type = TCP_READ; listening = false; requested = 0; }
-	
+	TCPRead()
+	: IOOperation()
+	{
+		type = TCP_READ;
+		listening = false;
+		requested = 0;
+	}
+
+public:
 	bool			listening;		/*	it's a listener */
-	int				requested;		/*	application is requesting the buffer to be filled
-										exactly with a total of 'requested' bytes; if the
-										application has no idea how much to expect, it sets
-										'requested' to IO_READ_ANY; 'callback' is called when
-										request bytes have been read into the buffer;
-										useful for cases when header includes length */
+	int				requested;		/*	application is requesting the buffer
+										to be filled exactly with a total of
+										'requested' bytes; if the application
+										has no idea how much to expect, it sets
+										'requested' to IO_READ_ANY; 'callback'
+										is called when request bytes have been
+										read into the buffer; useful for cases
+										when header includes length */
 };
 
 #endif
