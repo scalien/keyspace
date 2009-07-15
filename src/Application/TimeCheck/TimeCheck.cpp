@@ -19,8 +19,8 @@ void TimeCheck::Init(bool verbosity_, bool failOnSkew_)
 {
 	verbosity = verbosity_;
 	failOnSkew = failOnSkew_;
-	numReplies = new int[ReplicatedConfig::Get()->numNodes];
-	totalSkew = new double[ReplicatedConfig::Get()->numNodes];
+	numReplies = new int[RCONF->GetNumNodes()];
+	totalSkew = new double[RCONF->GetNumNodes()];
 	
 	InitTransport();
 	
@@ -35,14 +35,14 @@ void TimeCheck::InitTransport()
 	Endpoint	endpoint;
 	
 	reader = new TransportUDPReader;
-	if (!reader->Init(ReplicatedConfig::Get()->GetPort() + TIMECHECK_PORT_OFFSET))
+	if (!reader->Init(RCONF->GetPort() + TIMECHECK_PORT_OFFSET))
 		STOP_FAIL("Cannot initialize TimeCheck", 1);
 	reader->SetOnRead(&onRead);
 	
-	writers = (TransportUDPWriter**) Alloc(sizeof(TransportUDPWriter*) * ReplicatedConfig::Get()->numNodes);
-	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
+	writers = (TransportUDPWriter**) Alloc(sizeof(TransportUDPWriter*) * RCONF->GetNumNodes());
+	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
-		endpoint = ReplicatedConfig::Get()->endpoints[i];
+		endpoint = RCONF->GetEndpoint(i);
 		endpoint.SetPort(endpoint.GetPort() + TIMECHECK_PORT_OFFSET);
 		writers[i] = new TransportUDPWriter;
 		if (!writers[i]->Init(endpoint))
@@ -57,7 +57,7 @@ void TimeCheck::NextSeries()
 	series++;
 	sentInSeries = 0;
 	
-	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
+	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
 		numReplies[i] = 0;
 		totalSkew[i] = 0.0;
@@ -71,7 +71,7 @@ void TimeCheck::OnSeriesTimeout()
 {
 	unsigned i;
 	
-	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
+	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
 		if (numReplies[i] > 0)
 		{
@@ -99,9 +99,9 @@ void TimeCheck::OnSendTimeout()
 {
 	unsigned i;
 	
-	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
+	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
-		msg.Request(ReplicatedConfig::Get()->nodeID, series, Now());
+		msg.Request(RCONF->GetNodeID(), series, Now());
 		msg.Write(data);
 		writers[i]->Write(data);
 	}
@@ -123,7 +123,7 @@ void TimeCheck::OnRead()
 	{
 		CheckNodeIdentity();
 		unsigned senderID = msg.nodeID;
-		msg.Response(ReplicatedConfig::Get()->nodeID, msg.series, msg.requestTimestamp, Now());
+		msg.Response(RCONF->GetNodeID(), msg.series, msg.requestTimestamp, Now());
 		msg.Write(data);
 		writers[senderID]->Write(data);
 	}
@@ -137,7 +137,7 @@ void TimeCheck::OnRead()
 		uint64_t elapsed = now - msg.requestTimestamp;
 		double middle = msg.requestTimestamp + elapsed/2.0;
 		double skew = msg.responseTimestamp - middle;
-		if (msg.nodeID < ReplicatedConfig::Get()->numNodes)
+		if (msg.nodeID < RCONF->GetNumNodes())
 		{
 			numReplies[msg.nodeID]++;
 			totalSkew[msg.nodeID] += skew;
@@ -157,7 +157,7 @@ void TimeCheck::CheckNodeIdentity()
 	Endpoint a, b;
 	reader->GetEndpoint(a);
 	
-	b = ReplicatedConfig::Get()->endpoints[msg.nodeID];
+	b = RCONF->GetEndpoint(msg.nodeID);
 	
 	if (b.GetAddress() != INADDR_ANY && a.GetAddress() != b.GetAddress())
 		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
