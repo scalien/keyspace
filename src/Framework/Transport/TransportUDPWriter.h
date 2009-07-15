@@ -8,7 +8,7 @@ class TransportUDPWriter
 {
 public:
 	TransportUDPWriter();
-	~TransportUDPWriter();
+	virtual ~TransportUDPWriter();
 	
 	virtual bool	Init(Endpoint &endpoint);
 	virtual	void	Write(ByteString &bs);
