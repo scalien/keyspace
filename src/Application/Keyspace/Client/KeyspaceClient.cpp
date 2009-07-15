@@ -1010,7 +1010,6 @@ void Client::StateFunc()
 		SendCommand(conns[master], safeCommands);
 	}
 	
-	
 	if (dirtyCommands.Length() > 0)
 	{
 		int numTries = 3;
