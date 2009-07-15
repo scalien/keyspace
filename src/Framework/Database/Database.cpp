@@ -108,7 +108,7 @@ bool Database::Init(const DatabaseConfig& config_)
 	checkpointTimeout.SetDelay(config.checkpointTimeout);
 	EventLoop::Add(&checkpointTimeout);
 	cpThread.Start();
-		
+	
 	return true;
 }
 

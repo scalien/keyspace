@@ -18,6 +18,7 @@ public:
 	PaxosAcceptor();
 	
 	void			Init(Writers writer_);
+	void			Shutdown();
 	bool			Persist(Transaction* transaction);
 	bool			IsWriting() { return mdbop.IsActive(); }
 	

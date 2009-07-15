@@ -80,6 +80,11 @@ void ReplicatedLog::InitTransport()
 	}
 }
 
+void ReplicatedLog::Shutdown()
+{
+	acceptor.Shutdown();
+}
+
 void ReplicatedLog::StopPaxos()
 {
 	Log_Trace();

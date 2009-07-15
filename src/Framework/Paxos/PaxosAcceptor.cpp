@@ -30,6 +30,12 @@ void PaxosAcceptor::Init(Writers writers_)
 					"Starting from scratch... *** ");
 }
 
+void PaxosAcceptor::Shutdown()
+{
+	if (transaction.IsActive())
+		transaction.Rollback();
+}
+
 bool PaxosAcceptor::Persist(Transaction* transaction)
 {
 	Log_Trace();

@@ -14,8 +14,6 @@ void CatchupReader::Start(unsigned nodeID)
 {
 	Log_Trace();
 
-	RLOG->StopPaxos();
-
 	bool ret;
 	Endpoint endpoint;
 
@@ -49,8 +47,6 @@ void CatchupReader::OnClose()
 	keyspaceDB->OnCatchupFailed();
 	
 	Close();
-	
-	RLOG->ContinuePaxos();
 }
 
 void CatchupReader::OnConnect()
@@ -99,6 +95,4 @@ void CatchupReader::OnCommit()
 	keyspaceDB->OnCatchupComplete();
 	
 	Close();
-	
-	RLOG->ContinuePaxos();
 }
