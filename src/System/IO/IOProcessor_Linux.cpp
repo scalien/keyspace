@@ -121,11 +121,11 @@ void SetupSignals()
 	sigfillset(&sa.sa_mask);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGHUP, &sa, NULL);
-	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 	sigaction(SIGPIPE, &sa, NULL);
 	
 	sa.sa_handler = SignalHandler;
+	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
 	sigaction(SIGBUS, &sa, NULL);
 	sigaction(SIGFPE, &sa, NULL);
