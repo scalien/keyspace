@@ -87,14 +87,14 @@ int main(int argc, char* argv[])
 	if (!database.Init(dbConfig))
 		STOP_FAIL("Cannot initialize database!", 1);
 	
-	if (!ReplicatedConfig::Get()->Init())
+	if (!RCONF->Init())
 		STOP_FAIL("Cannot initialize paxos!", 1);
 
 	KeyspaceDB* kdb;
 	TimeCheck *tc;
-	if (ReplicatedConfig::Get()->numNodes > 1)
+	if (RCONF->GetNumNodes() > 1)
 	{
-		ReplicatedLog::Get()->Init(Config::GetBoolValue("paxos.useSoftClock", true));
+		RLOG->Init(Config::GetBoolValue("paxos.useSoftClock", true));
 		
 		tc = new TimeCheck;
 		if (Config::GetBoolValue("timecheck.active", true))
