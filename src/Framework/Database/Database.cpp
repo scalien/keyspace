@@ -12,7 +12,9 @@
 // the global database
 Database database;
 
-static void DatabaseError(const DbEnv* /*dbenv*/, const char* /*errpfx*/, const char* msg)
+static void DatabaseError(const DbEnv* /*dbenv*/,
+						  const char* /*errpfx*/,
+						  const char* msg)
 {
 	Log_Trace("%s", msg);
 }
@@ -137,11 +139,11 @@ void Database::OnCheckpointTimeout()
 
 void Database::Checkpoint()
 {
-/*	int ret;
+	int ret;
 
 	Log_Trace("started");
-	ret = env.txn_checkpoint(100000, 0, 0);
+	ret = env.txn_checkpoint(100*1000 /* in kilobytes */, 0, 0);
 	if (ret < 0)
 		ASSERT_FAIL();
-	Log_Trace("finished");*/
+	Log_Trace("finished");
 }

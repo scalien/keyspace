@@ -17,23 +17,24 @@ public:
 class Table
 {
 	friend class Transaction;
+	
 public:
 	Table(Database* database, const char *name, int pageSize = 0);
 	~Table();
 	
-	bool		Iterate(Transaction* transaction, Cursor& cursor);
+	bool		Iterate(Transaction* tx, Cursor& cursor);
 	
-	bool		Get(Transaction* transaction, const ByteString &key, ByteString &value);
-	bool		Get(Transaction* transaction, const char* key, ByteString &value);
-	bool		Get(Transaction* transaction, const char* key, uint64_t &value);
+	bool		Get(Transaction* tx, const ByteString &key, ByteString &value);
+	bool		Get(Transaction* tx, const char* key, ByteString &value);
+	bool		Get(Transaction* tx, const char* key, uint64_t &value);
 	
-	bool		Set(Transaction* transaction, const ByteString &key, const ByteString &value);
-	bool		Set(Transaction* transaction, const char* key, const ByteString &value);
-	bool		Set(Transaction* transaction, const char* key, const char* value);
+	bool		Set(Transaction* tx, const ByteString &key, const ByteString &value);
+	bool		Set(Transaction* tx, const char* key, const ByteString &value);
+	bool		Set(Transaction* tx, const char* key, const char* value);
 	
-	bool		Delete(Transaction* transaction, const ByteString &key);
-	bool		Prune(Transaction* transaction, const ByteString &prefix);
-	bool		Truncate(Transaction* transaction = NULL);
+	bool		Delete(Transaction* tx, const ByteString &key);
+	bool		Prune(Transaction* tx, const ByteString &prefix);
+	bool		Truncate(Transaction* tx = NULL);
 	
 	bool		Visit(TableVisitor &tv);
 	

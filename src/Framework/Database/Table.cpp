@@ -26,6 +26,7 @@ database(database)
 		STOP_FAIL("could not open database", 1);
 	}
 	Log_Trace();
+	db->set_flags(0);
 }
 
 Table::~Table()
@@ -34,12 +35,12 @@ Table::~Table()
 	delete db;
 }
 
-bool Table::Iterate(Transaction* transaction, Cursor& cursor)
+bool Table::Iterate(Transaction* tx, Cursor& cursor)
 {
 	DbTxn* txn = NULL;
 	
-	if (transaction)
-		txn = transaction->txn;
+	if (tx)
+		txn = tx->txn;
 	
 	if (db->cursor(txn, &cursor.cursor, 0) == 0)
 		return true;
@@ -47,15 +48,17 @@ bool Table::Iterate(Transaction* transaction, Cursor& cursor)
 		return false;
 }
 
-bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &value)
+bool Table::Get(Transaction* tx,
+				const ByteString &key,
+				ByteString &value)
 {
 	Dbt dbtKey;
 	Dbt dbtValue;
 	DbTxn* txn = NULL;
 	int ret;
 	
-	if (transaction)
-		txn = transaction->txn;
+	if (tx)
+		txn = tx->txn;
 
 	dbtKey.set_flags(DB_DBT_USERMEM);
 	dbtKey.set_data(key.buffer);
@@ -78,7 +81,7 @@ bool Table::Get(Transaction* transaction, const ByteString &key, ByteString &val
 	return true;
 }
 
-bool Table::Get(Transaction* transaction, const char* key, ByteString &value)
+bool Table::Get(Transaction* tx, const char* key, ByteString &value)
 {
 	int len;
 	
@@ -86,15 +89,15 @@ bool Table::Get(Transaction* transaction, const char* key, ByteString &value)
 	
 	ByteString bsKey(len, len, (char*) key);
 	
-	return Table::Get(transaction, bsKey, value);
+	return Table::Get(tx, bsKey, value);
 }
 
-bool Table::Get(Transaction* transaction, const char* key, uint64_t& value)
+bool Table::Get(Transaction* tx, const char* key, uint64_t& value)
 {
 	ByteArray<32> ba;
 	unsigned nread;
 	
-	if (!Get(transaction, key, ba))
+	if (!Get(tx, key, ba))
 		return false;
 	
 	value = strntouint64(ba.buffer, ba.length, &nread);
@@ -105,15 +108,17 @@ bool Table::Get(Transaction* transaction, const char* key, uint64_t& value)
 	return true;
 }
 
-bool Table::Set(Transaction* transaction, const ByteString &key, const ByteString &value)
+bool Table::Set(Transaction* tx,
+				const ByteString &key,
+				const ByteString &value)
 {
 	Dbt dbtKey(key.buffer, key.length);
 	Dbt dbtValue(value.buffer, value.length);
 	DbTxn* txn = NULL;
 	int ret;
 
-	if (transaction)
-		txn = transaction->txn;
+	if (tx)
+		txn = tx->txn;
 	
 	ret = db->put(txn, &dbtKey, &dbtValue, 0);
 	if (ret != 0)
@@ -122,7 +127,9 @@ bool Table::Set(Transaction* transaction, const ByteString &key, const ByteStrin
 	return true;
 }
 
-bool Table::Set(Transaction* transaction, const char* key, const ByteString &value)
+bool Table::Set(Transaction* tx,
+				const char* key,
+				const ByteString &value)
 {
 	int len;
 	
@@ -130,10 +137,12 @@ bool Table::Set(Transaction* transaction, const char* key, const ByteString &val
 	
 	ByteString bsKey(len, len, (char*) key);
 	
-	return Table::Set(transaction, bsKey, value);
+	return Table::Set(tx, bsKey, value);
 }
 
-bool Table::Set(Transaction* transaction, const char* key, const char* value)
+bool Table::Set(Transaction* tx,
+				const char* key,
+				const char* value)
 {
 	int len;
 	
@@ -143,17 +152,17 @@ bool Table::Set(Transaction* transaction, const char* key, const char* value)
 	len = strlen(value);
 	ByteString bsValue(len, len, (char*) value);
 	
-	return Table::Set(transaction, bsKey, bsValue);
+	return Table::Set(tx, bsKey, bsValue);
 }
 
-bool Table::Delete(Transaction* transaction, const ByteString &key)
+bool Table::Delete(Transaction* tx, const ByteString &key)
 {
 	Dbt dbtKey(key.buffer, key.length);
 	DbTxn* txn = NULL;
 	int ret;
 
-	if (transaction)
-		txn = transaction->txn;
+	if (tx)
+		txn = tx->txn;
 	
 	ret = db->del(txn, &dbtKey, 0);
 	if (ret < 0)
@@ -162,17 +171,17 @@ bool Table::Delete(Transaction* transaction, const ByteString &key)
 	return true;
 }
 
-bool Table::Prune(Transaction* transaction, const ByteString &prefix)
+bool Table::Prune(Transaction* tx, const ByteString &prefix)
 {
 	Dbc* cursor = NULL;
 	u_int32_t flags = DB_NEXT;
 
 	DbTxn* txn;
 	
-	if (transaction == NULL)
+	if (tx == NULL)
 		txn = NULL;
 	else
-		txn = transaction->txn;
+		txn = tx->txn;
 
 	if (db->cursor(txn, &cursor, 0) != 0)
 		return false;
@@ -208,26 +217,25 @@ bool Table::Prune(Transaction* transaction, const ByteString &prefix)
 	return true;
 }
 
-/*bool Table::Truncate(Transaction* transaction)
+bool Table::Truncate(Transaction* tx)
 {
+	Log_Trace();
+
 	u_int32_t count;
 	u_int32_t flags = 0;
 	int ret;
 	DbTxn* txn;
 	
-	txn = transaction ? transaction->txn : NULL;
+	txn = tx ? tx->txn : NULL;
 	// TODO error handling
-	Log_Trace();
 	if ((ret = db->truncate(txn, &count, flags)) != 0)
-	{
 		Log_Trace("truncate() failed");
-	}
-	Log_Trace();
 	return true;
-}*/
+}
 
 bool Table::Visit(TableVisitor &tv)
 {
+	ByteString bsKey, bsValue;
 	Dbc* cursor = NULL;
 	bool ret = true;
 	u_int32_t flags = DB_NEXT;
@@ -246,8 +254,13 @@ bool Table::Visit(TableVisitor &tv)
 	
 	while (cursor->get(&key, &value, flags) == 0)
 	{
-		ByteString bsKey(key.get_size(), key.get_size(), (char*) key.get_data());
-		ByteString bsValue(value.get_size(), value.get_size(), (char*) value.get_data());
+		bsKey = ByteString(key.get_size(),
+						   key.get_size(),
+						   (char*) key.get_data());
+		
+		bsValue = ByteString(value.get_size(),
+							 value.get_size(),
+							 (char*) value.get_data());
 
 		ret = tv.Accept(bsKey, bsValue);
 		if (!ret)
