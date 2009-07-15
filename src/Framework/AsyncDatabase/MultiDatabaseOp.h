@@ -30,41 +30,42 @@ public:
 class MultiDatabaseOp
 {
 friend class AsyncDatabase;
+typedef MFunc<MultiDatabaseOp> Func;
+
 public:
 	MultiDatabaseOp();
 	
-	void					Init();
+	void			Init();
 
-	bool					Get(Table* table, const ByteString& key, ByteString& value);
-	bool					Set(Table* table, const ByteString& key, ByteString& value);
-	bool					Set(Table* table, const char* key, ByteString &value);
-	bool					Set(Table* table, const char* key, const char* value);
-	bool					Visit(Table* table, TableVisitor &tv);
-	bool					Add(DatabaseOp& op);
+	bool			Get(Table* table, const ByteString& key, ByteString& value);
+	bool			Set(Table* table, const ByteString& key, ByteString& value);
+	bool			Set(Table* table, const char* key, ByteString &value);
+	bool			Set(Table* table, const char* key, const char* value);
+	bool			Visit(Table* table, TableVisitor &tv);
+	bool			Add(DatabaseOp& op);
 
-	void					SetTransaction(Transaction* tx = 0);
+	void			SetTransaction(Transaction* tx = 0);
 
-	void					SetCallback(Callable* userCallback);
-	Callable*				GetOperation();
-	const ByteString*		GetKey(int i);
-	ByteString*				GetValue(int i);
-	bool					GetReturnValue(int i);
-	int						GetNumOp();
-	bool					IsActive() { return active; }
+	void			SetCallback(Callable* userCallback);
+	Callable*		GetOperation();
+	ByteString*		GetValue(int i);
+	bool			GetReturnValue(int i);
+	int				GetNumOp();
+	bool			IsActive() { return active; }
 	
 private:
-	bool					active;
-	DatabaseOp				ops[1024];
-	size_t					numop;
+	bool			active;
+	DatabaseOp		ops[1024];
+	size_t			numop;
 	
-	Callable*				userCallback;
-	Transaction*			tx;
+	Callable*		userCallback;
+	Transaction*	tx;
 	
-	void					OnComplete();
-	MFunc<MultiDatabaseOp>	onComplete;
+	void			OnComplete();
+	Func			onComplete;
 	
-	void					Operation();
-	MFunc<MultiDatabaseOp>	operation;
+	void			Operation();
+	Func			operation;
 };
 										
 

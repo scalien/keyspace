@@ -2,7 +2,7 @@
 #include "MultiDatabaseOp.h"
 
 
-// the global database writer
+// globals
 AsyncDatabase dbWriter(NUM_DB_WRITERS);
 AsyncDatabase dbReader(NUM_DB_READERS);
 

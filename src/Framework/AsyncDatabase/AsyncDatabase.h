@@ -24,7 +24,7 @@ private:
 };
 
 
-// the global database writer and reader
+// globals
 extern AsyncDatabase dbWriter;
 extern AsyncDatabase dbReader;
 

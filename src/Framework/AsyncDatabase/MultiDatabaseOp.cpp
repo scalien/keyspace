@@ -12,14 +12,12 @@ operation(this, &MultiDatabaseOp::Operation)
 	Init();
 }
 
-
 void MultiDatabaseOp::Init()
 {
 	numop = 0;
 	userCallback = NULL;
 	tx = NULL;
 }
-
 
 bool MultiDatabaseOp::Get(Table* table, const ByteString &key, ByteString& value)
 {
@@ -38,7 +36,6 @@ bool MultiDatabaseOp::Get(Table* table, const ByteString &key, ByteString& value
 	
 	return true;
 }
-
 
 bool MultiDatabaseOp::Set(Table* table, const ByteString& key, ByteString& value)
 {
@@ -124,29 +121,20 @@ Callable* MultiDatabaseOp::GetOperation()
 	return &operation;
 }
 
-const ByteString* MultiDatabaseOp::GetKey(int i)
-{
-	return &ops[i].key;
-}
-
-
 ByteString*	MultiDatabaseOp::GetValue(int i)
 {
 	return &ops[i].value;
 }
-
 
 bool MultiDatabaseOp::GetReturnValue(int i)
 {
 	return ops[i].ret;
 }
 
-
 int MultiDatabaseOp::GetNumOp()
 {
 	return numop;
 }
-
 
 void MultiDatabaseOp::Operation()
 {
