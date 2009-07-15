@@ -20,11 +20,11 @@ bool ReplicatedKeyspaceDB::Init()
 {
 	Log_Trace();
 	
-	ReplicatedLog::Get()->SetReplicatedDB(this);
+	RLOG->SetReplicatedDB(this);
 	
 	table = database.GetTable("keyspace");
 	
-	catchupServer.Init(ReplicatedConfig::Get()->GetPort() + CATCHUP_PORT_OFFSET);
+	catchupServer.Init(RCONF->GetPort() + CATCHUP_PORT_OFFSET);
 	catchupClient.Init(this, table);
 
 	asyncAppender.Start();
@@ -39,22 +39,22 @@ void ReplicatedKeyspaceDB::Shutdown()
 
 unsigned ReplicatedKeyspaceDB::GetNodeID()
 {
-	return ReplicatedLog::Get()->GetNodeID();
+	return RLOG->GetNodeID();
 }
 
 bool ReplicatedKeyspaceDB::IsMasterKnown()
 {
-	return ReplicatedLog::Get()->GetMaster();
+	return RLOG->GetMaster();
 }
 
 int ReplicatedKeyspaceDB::GetMaster()
 {
-	return ReplicatedLog::Get()->GetMaster();
+	return RLOG->GetMaster();
 }
 
 bool ReplicatedKeyspaceDB::IsMaster()
 {
-	return ReplicatedLog::Get()->IsMaster();
+	return RLOG->IsMaster();
 }
 
 bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
@@ -73,10 +73,10 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	{
 		// only handle GETs if I'm the master and it's safe to do so (I have NOPed)
 		if (op->type == KeyspaceOp::GET &&
-		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
+		   (!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
 		
-		if ((transaction = ReplicatedLog::Get()->GetTransaction()) != NULL)
+		if ((transaction = RLOG->GetTransaction()) != NULL)
 			if (!transaction->IsActive())
 				transaction = NULL;
 		
@@ -89,7 +89,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	if (op->IsList())
 	{
 		if ((op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::LISTP) &&
-		   (!ReplicatedLog::Get()->IsMaster() || !ReplicatedLog::Get()->IsSafeDB()))
+		   (!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
 
 		AsyncListVisitor *alv = new AsyncListVisitor(op);
@@ -100,7 +100,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	
 	// only handle writes if I'm the master
-	if (!ReplicatedLog::Get()->IsMaster())
+	if (!RLOG->IsMaster())
 		return false;
 	
 	ops.Append(op);
@@ -117,11 +117,11 @@ bool ReplicatedKeyspaceDB::Submit()
 //	Log_Trace();
 	
 	// only handle writes if I'm the master
-	if (!ReplicatedLog::Get()->IsMaster())
+	if (!RLOG->IsMaster())
 		return false;
 
-	if (!ReplicatedLog::Get()->IsAppending() &&
-		ReplicatedLog::Get()->IsMaster() &&
+	if (!RLOG->IsAppending() &&
+		RLOG->IsMaster() &&
 		!asyncAppenderActive)
 	{
 		Log_Trace("ops.size() = %d", ops.Length());	
@@ -141,14 +141,13 @@ uint64_t /*paxosID*/, ByteString value_, bool ownAppend_)
 	valueBuffer.Set(value_);
 	ownAppend = ownAppend_;
 	
-	ReplicatedLog::Get()->StopPaxos();
+	RLOG->StopPaxos();
+	RLOG->StopReplicatedDB();
 
 	assert(asyncAppenderActive == false);
 	asyncAppenderActive = true;
 	asyncAppender.Execute(&asyncOnAppend);
 }
-
-Stopwatch setw;
 
 void ReplicatedKeyspaceDB::AsyncOnAppend()
 {
@@ -170,7 +169,6 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	else
 		it = NULL;
 	
-	setw.Reset();
 	while (true)
 	{
 		if (msg.Read(value, nread))
@@ -206,10 +204,10 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 		}
 	}
 	
-	Log_Trace("time spent in Set(): %ld", setw.elapsed);
 	Log_Trace("time spent in Execute(): %ld", sw.elapsed);
 	Log_Trace("numOps = %u", numOps);
-	
+	Log_Trace("ops/sec = %f", (double)1000*numOps/sw.elapsed);
+
 	IOProcessor::Complete(&onAppendComplete);
 }
 
@@ -223,9 +221,7 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 	switch (msg.type)
 	{
 	case KEYSPACE_SET:
-		setw.Start();
 		ret &= table->Set(transaction, msg.key, msg.value);
-		setw.Stop();
 		break;
 
 	case KEYSPACE_TEST_AND_SET:
@@ -302,11 +298,12 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 
 	asyncAppenderActive = false;
 	
-	if (!ReplicatedLog::Get()->IsMaster())
+	if (!RLOG->IsMaster())
 		FailKeyspaceOps();
 
-	ReplicatedLog::Get()->ContinuePaxos();
-	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
+	RLOG->ContinuePaxos();
+	RLOG->ContinueReplicatedDB();
+	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
 		Append();
 }
 
@@ -347,7 +344,7 @@ void ReplicatedKeyspaceDB::Append()
 	
 	if (pvalue.length > 0)
 	{
-		ReplicatedLog::Get()->Append(pvalue);
+		RLOG->Append(pvalue);
 		Log_Trace("appending %d ops (length: %d)", numAppended, pvalue.length);
 	}
 }
@@ -374,7 +371,7 @@ void ReplicatedKeyspaceDB::OnMasterLease(unsigned)
 {
 	Log_Trace("ops.size() = %d", ops.Length());
 
-	if (!ReplicatedLog::Get()->IsAppending() && ReplicatedLog::Get()->IsMaster() && ops.Length() > 0)
+	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
 		Append();
 
 	Log_Trace("ops.size() = %d", ops.Length());
@@ -384,7 +381,7 @@ void ReplicatedKeyspaceDB::OnMasterLeaseExpired()
 {
 	Log_Trace("ops.size() = %d", ops.Length());
 	
-	if (!ReplicatedLog::Get()->IsMaster() && !asyncAppenderActive)
+	if (!RLOG->IsMaster() && !asyncAppenderActive)
 		FailKeyspaceOps();
 		
 	Log_Trace("ops.size() = %d", ops.Length());
@@ -394,10 +391,15 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 {
 	Log_Trace();
 
+	// this is a workaround because BDB truncate is way too slow for any
+	// database bigger than 1Gb
+	if (RLOG->GetPaxosID() != 0)
+		RESTART("exiting to truncate database");
+
 	catchingUp = true;
-	ReplicatedLog::Get()->StopPaxos();
-	ReplicatedLog::Get()->StopMasterLease();
-	catchupClient.Start(nodeID, ReplicatedLog::Get()->GetPaxosID());
+	RLOG->StopPaxos();
+	RLOG->StopMasterLease();
+	catchupClient.Start(nodeID);
 }
 
 void ReplicatedKeyspaceDB::OnCatchupComplete()
@@ -405,8 +407,8 @@ void ReplicatedKeyspaceDB::OnCatchupComplete()
 	Log_Trace();
 	
 	catchingUp = false;
-	ReplicatedLog::Get()->ContinuePaxos();
-	ReplicatedLog::Get()->ContinueMasterLease();
+	RLOG->ContinuePaxos();
+	RLOG->ContinueMasterLease();
 }
 
 void ReplicatedKeyspaceDB::OnCatchupFailed()
@@ -414,6 +416,35 @@ void ReplicatedKeyspaceDB::OnCatchupFailed()
 	Log_Trace();
 
 	catchingUp = false;
-	ReplicatedLog::Get()->ContinuePaxos();
-	ReplicatedLog::Get()->ContinueMasterLease();
+	RLOG->ContinuePaxos();
+	RLOG->ContinueMasterLease();
+}
+
+void ReplicatedKeyspaceDB::SetProtocolServer(ProtocolServer* pserver)
+{
+	pservers.Append(pserver);
+}
+
+void ReplicatedKeyspaceDB::Stop()
+{
+	ProtocolServer** it;
+	ProtocolServer*	 pserver;
+	
+	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
+	{
+		pserver = *it;
+		pserver->Stop();
+	}
+}
+
+void ReplicatedKeyspaceDB::Continue()
+{
+	ProtocolServer** it;
+	ProtocolServer*	 pserver;
+	
+	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
+	{
+		pserver = *it;
+		pserver->Continue();
+	}
 }

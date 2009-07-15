@@ -17,6 +17,9 @@ public:
 	bool				IsMasterKnown();
 	int					GetMaster();
 	bool				IsMaster();
+	void				SetProtocolServer(ProtocolServer*) {}
+	void				Stop() {}
+	void				Continue() {}
 
 private:
 	bool				writePaxosID;

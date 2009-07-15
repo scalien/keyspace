@@ -27,6 +27,8 @@ public:
 	bool					IsMasterKnown();
 	int						GetMaster();
 	bool					IsMaster();
+	void					SetProtocolServer(ProtocolServer* pserver);
+	
 	void					OnCatchupComplete();	// called by CatchupClient
 	void					OnCatchupFailed();		// called by CatchupClient
 	
@@ -36,6 +38,8 @@ public:
 	virtual void			OnMasterLease(unsigned nodeID);
 	virtual void			OnMasterLeaseExpired();
 	virtual void			OnDoCatchup(unsigned nodeID);
+	virtual void			Stop();
+	virtual void			Continue();
 	
 	void					AsyncOnAppend();
 	void					OnAppendComplete();
@@ -63,6 +67,7 @@ private:
 	MFunc<ReplicatedKeyspaceDB> onAppendComplete;
 	ThreadPool				asyncAppender;
 	unsigned				numOps;
+	List<ProtocolServer*>	pservers;
 };
 
 #endif
