@@ -75,7 +75,7 @@ CC = gcc
 CXX = g++
 RANLIB = ranlib
 
-DEBUG_CFLAGS = -g #-pg
+DEBUG_CFLAGS = -g -DDEBUG #-pg
 DEBUG_LDFLAGS = #-pg -lc_p
 
 RELEASE_CFLAGS = -O2 #-g

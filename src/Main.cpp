@@ -13,64 +13,12 @@
 #include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 #include "Application/TimeCheck/TimeCheck.h"
-#include "Application/Console/Console.h"
 
 #ifdef DEBUG
 #define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s started (DEBUG build date " __DATE__ " " __TIME__ ")"
 #else
 #define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s"
 #endif
-
-#define MATCHCMD(cmd, cstr) (strncmp(cmd, "" cstr, sizeof(cstr) - 1) == 0)
-
-class DebugCommand : public ConsoleCommand
-{
-public:
-	virtual void	Execute(const char* cmd, const char *args, ConsoleConn* conn)
-	{
-		if (MATCHCMD(cmd, "crash"))
-		{
-			char *p = NULL;
-			p[0] = 0;
-		}
-		else if (MATCHCMD(cmd, "exit"))
-		{
-			int code = 0;
-			
-			if (args)
-				code = atoi(args);
-			_exit(code);
-		}
-		else if (MATCHCMD(cmd, "log-reload"))
-		{
-			const char LOG_RELOAD_MSG[] = "Log file reloaded\n";
-			Log_SetOutputFile(Config::GetValue("log.file", NULL));
-			conn->Write(LOG_RELOAD_MSG, sizeof(LOG_RELOAD_MSG));
-			Log_Message(LOG_RELOAD_MSG);
-		}
-		else if (MATCHCMD(cmd, "trace"))
-		{
-			if (args && atoi(args))
-				Log_SetTrace(true);
-			else
-				Log_SetTrace(false);
-		}
-		else if (MATCHCMD(cmd, "version"))
-		{
-			char version[128];
-			int ret;
-			ret = snprintf(version, sizeof(version), VERSION_FMT_STRING "\n", 
-				(int) VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
-			if (ret > (int) sizeof(version))
-				ret = sizeof(version);
-			conn->Write(version, ret);
-		}
-		else if (MATCHCMD(cmd, "quit"))
-		{
-			conn->Disconnect();
-		}
-	}
-};
 
 int main(int argc, char* argv[])
 {
@@ -166,14 +114,6 @@ int main(int argc, char* argv[])
 
 	KeyspaceServer protoKeyspace;
 	protoKeyspace.Init(kdb, Config::GetIntValue("keyspace.port", 7080));
-
-	Console console;
-	if (Config::GetIntValue("console.port", 22222) != 0)
-		console.Init(Config::GetIntValue("console.port", 22222), 
-					 Config::GetValue("console.interface", "127.0.0.1"));
-
-	DebugCommand debug;
-	console.RegisterCommand(&debug);
 
 	EventLoop::Run();
 	
