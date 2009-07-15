@@ -71,7 +71,6 @@ void SetupSignals()
 bool IOProcessor::Init(int maxfd_)
 {
 	rlimit rl;
-	struct kevent ev;
 
 	terminated = false;
 	SetupSignals();	
