@@ -22,6 +22,19 @@ pidof_daemon() {
         pid=`ps auxw | grep "$DAEMON" | grep -v grep | awk '{print $2}'`
 }
 
+wait_stop() {
+	i = 0
+	while [ i -lt $1 ]; do
+		pidof_daemon
+		if [ "$pid" == "" ]; then
+			return
+		fi
+		sleep 1
+		i=`expr $i + 1`
+	done
+	kill -9 $pid
+}
+
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
@@ -39,8 +52,7 @@ case "$1" in
     	kill $pid
 		pidof_daemon
 		if [ "$pid" != "" ]; then
-			sleep 1
-			kill -9 $pid
+			wait_stop 10
 			pidof_daemon
 			if [ "$pid" != "" ]; then
 				echo "$NAME ($pid) could not be stopped!"
