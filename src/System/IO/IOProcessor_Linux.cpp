@@ -532,9 +532,11 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 		socklen_t	socklen;
 		
 		nwrite = getpeername(tcpwrite->fd, (sockaddr*) &sa, &socklen);
-		Log_Trace("nwrite = %d", nwrite);
 		if (nwrite < 0)
+		{
+			Log_Errno();
 			Call(tcpwrite->onClose);
+		}
 		else
 			Call(tcpwrite->onComplete);
 	
