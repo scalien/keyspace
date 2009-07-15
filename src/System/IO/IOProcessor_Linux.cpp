@@ -143,6 +143,8 @@ bool IOProcessor::Init(int maxfd_)
 {
 	int i;
 	rlimit rl;
+
+	SetupSignals();
 	
 	maxfd = maxfd_;
 	rl.rlim_cur = maxfd;
