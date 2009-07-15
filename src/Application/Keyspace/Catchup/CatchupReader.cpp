@@ -10,19 +10,14 @@ void CatchupReader::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 	transaction.Set(table);
 }
 
-void CatchupReader::Start(unsigned nodeID, uint64_t paxosID)
+void CatchupReader::Start(unsigned nodeID)
 {
 	Log_Trace();
 
-	ReplicatedLog::Get()->StopPaxos();
+	RLOG->StopPaxos();
 
 	bool ret;
 	Endpoint endpoint;
-
-	// this is a workaround because BDB truncate is way too slow for any
-	// database bigger than 1Gb
-	if (paxosID != 0)
-		RESTART("exiting to truncate database");
 
 	ret = true;
 	ret &= transaction.Begin();
@@ -30,7 +25,7 @@ void CatchupReader::Start(unsigned nodeID, uint64_t paxosID)
 	if (!ret)
 		ASSERT_FAIL();
 
-	endpoint = ReplicatedConfig::Get()->endpoints[nodeID];
+	endpoint = RCONF->GetEndpoint(nodeID);
 	endpoint.SetPort(endpoint.GetPort() + CATCHUP_PORT_OFFSET);
 	Connect(endpoint, CATCHUP_CONNECT_TIMEOUT);
 }
@@ -55,7 +50,7 @@ void CatchupReader::OnClose()
 	
 	Close();
 	
-	ReplicatedLog::Get()->ContinuePaxos();
+	RLOG->ContinuePaxos();
 }
 
 void CatchupReader::OnConnect()
@@ -97,7 +92,7 @@ void CatchupReader::OnCommit()
 {
 	Log_Trace();
 
-	ReplicatedLog::Get()->SetPaxosID(&transaction, msg.paxosID);
+	RLOG->SetPaxosID(&transaction, msg.paxosID);
 	
 	transaction.Commit();
 	
@@ -105,5 +100,5 @@ void CatchupReader::OnCommit()
 	
 	Close();
 	
-	ReplicatedLog::Get()->ContinuePaxos();
+	RLOG->ContinuePaxos();
 }

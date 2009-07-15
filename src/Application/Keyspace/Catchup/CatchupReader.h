@@ -16,7 +16,7 @@ class CatchupReader : public MessageConn<>
 public:
 	void						Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_);
 
-	void						Start(unsigned nodeID, uint64_t paxosID);
+	void						Start(unsigned nodeID);
 	void						OnMessageRead(const ByteString& message);
 	void						OnClose();
 	virtual void				OnConnect();
