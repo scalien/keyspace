@@ -951,7 +951,8 @@ void Client::EventLoop()
 	while (!IsDone())
 	{
 		StateFunc();
-		EventLoop::RunOnce();
+		if (!EventLoop::RunOnce())
+			break;
 	}
 
 	StopConnTimeout();
