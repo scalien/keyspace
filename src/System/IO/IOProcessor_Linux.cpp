@@ -529,7 +529,7 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 	if (tcpwrite->data.length == 0)
 	{
 		sockaddr_in sa;
-		socklen_t	socklen;
+		socklen_t	socklen = sizeof(sa);
 		
 		nwrite = getpeername(tcpwrite->fd, (sockaddr*) &sa, &socklen);
 		if (nwrite < 0)
