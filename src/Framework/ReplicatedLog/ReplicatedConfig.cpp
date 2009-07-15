@@ -18,8 +18,8 @@ bool ReplicatedConfig::Init()
 	numNodes = Config::GetListNum("paxos.endpoints");
 
 	if (nodeID < 0 || nodeID >= numNodes)
-		STOP_FAIL("Configuration error, \
-				   check your paxos.nodeID and paxos.endpoints entry" ,0);
+		STOP_FAIL("Configuration error, "
+				   "check your paxos.nodeID and paxos.endpoints entry" ,0);
 
 	if (numNodes == 0)
 	{

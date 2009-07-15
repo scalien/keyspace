@@ -98,9 +98,9 @@ void PLeaseAcceptor::OnProposeRequest()
 
 	if (msg.expireTime < Now())
 	{
-		Log_Trace("Expired propose request received \
-		(msg.expireTime = %" PRIu64 " | Now = %" PRIu64 ")",
-		msg.expireTime, Now());
+		Log_Trace("Expired propose request received "
+				  "(msg.expireTime = %" PRIu64 " | Now = %" PRIu64 ")",
+				  msg.expireTime, Now());
 		
 		return;
 	}

@@ -26,8 +26,8 @@ void PaxosAcceptor::Init(Writers writers_)
 	state.Init();
 
 	if (!ReadState())
-		Log_Message("*** No Keyspace buffersbase found. \
-					Starting from scratch... *** ");
+		Log_Message("*** No Keyspace database found. "
+					"Starting from scratch... *** ");
 }
 
 bool PaxosAcceptor::Persist(Transaction* transaction)
@@ -192,8 +192,8 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	senderID = msg.nodeID;
 	
-	Log_Trace("state.promisedProposasID: %" PRIu64 " ; \
-			   msg.proposalID: %" PRIu64 "",
+	Log_Trace("state.promisedProposasID: %" PRIu64 ""
+			   "msg.proposalID: %" PRIu64 "",
 			   state.promisedProposalID, msg.proposalID);
 	
 	if (msg.proposalID < state.promisedProposalID)
@@ -236,8 +236,8 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	
 	senderID = msg.nodeID;
 
-	Log_Trace("state.promisedProposasID: %" PRIu64 "; \
-				msg.proposalID: %" PRIu64 "",
+	Log_Trace("state.promisedProposasID: %" PRIu64 ""
+				"msg.proposalID: %" PRIu64 "",
 				state.promisedProposalID, msg.proposalID);
 	
 	if (msg.proposalID < state.promisedProposalID)
