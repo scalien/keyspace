@@ -2,7 +2,7 @@
 
 \documentclass[12pt]{article}
 \usepackage{graphicx}
-\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+\usepackage{geometry}
 \geometry{a4paper} % or letter
 \geometry{margin=1in}
 
@@ -71,9 +71,9 @@ Paxos, in the context of Keyspace is used to replicate database write commands. 
 Keyspace guarantees consistency under all failure conditions occuring in real world computing networks such as data centers or the Internet. These failure conditions are:
 
 \begin{enumerate}
-\item Nodes stop and restart: the computers running the Keyspace program may stop and restart, loosing in-memory state but not loosing data written to disk.
+\item Nodes stop and restart: the computers running the Keyspace program may stop and restart, losing in-memory state but not losing data written to disk.
 \item Network splits: switches and other networking equipment may fail, causing the nodes to split into disjoint networks.
-\item Message loss, duplication and reordering: operating system network stacks and routers may loose or reorder messages. Network protocols such as TCP guarantee reliable delivery in sent order, while UDP does not. Keyspace can run over both TCP and UDP-like protocols.
+\item Message loss, duplication and reordering: operating system network stacks and routers may lose or reorder messages. Network protocols such as TCP guarantee reliable delivery in sent order, while UDP does not. Keyspace can run over both TCP and UDP-like protocols.
 \item In-transit message delays: on busy networks and WAN environments such as the Internet, messages may take several seconds to arrive at the recipient.
 \end{enumerate}
 
@@ -179,8 +179,38 @@ Keyspace contains a number of optimizations which reduce the number of network r
 \item Commit chaining. Once a Paxos round is over, messages are passed up to the KeyspaceDB by the ReplicatedLog. KeyspaceDB then executes these commands on its local database. To avoid having to sync to disk (commit the transaction) at this point, these transactions are chained with the next Paxos round's and are only commited during the next Paxos round. Additional logic, outside the scope of this paper, ensures that this does not violate the strong consistency guarantees of Keyspace.
 \end{enumerate}
 
-%\section{ Performance }
+\section{ Performance }
 %%%%%%%%%%%%%%%%%%%%%%%
+
+Keyspace was built from the ground-up as a high-performance network database and can service up to $\sim 100.000$ operations per second. Actual performance depends on data shape and access pattern, cache sizes, network speed and host hardware configuration such as CPU speed, main memory, and disk speed.
+
+Figures 3 and 4 show Keyspace performance as seen by a single client performing reads and writes. The nodes are 2 x 2.4Ghz dual-core 64-bit AMD machines with 8GB of RAM and enterprise-class Western Digital SCSI hard disks (model WD4001ABYS), running 64-bit Debian GNU/Linux 5.0 with \texttt{reiserfs}. The tests were performed with the default Keyspace configuration, the relevant parameters being:
+
+\begin{verbatim}
+database.pageSize = 4096
+database.cacheSize = 200M
+database.logBufferSize = 10M
+\end{verbatim}
+
+Note that Keyspace uses master-slave replication where only the master serves safe reads --- but it can do so without contacting other nodes, since it is guaranteed that all prior write requests went through it. Hence there is no difference in \texttt{GET} throughput for single-server and replicated setups.
+
+The difference between single-server and replicated \texttt{SET} thoughput is due to additional network roundtrips between nodes and dominated by individual disk sync times. Note that replicated write throughput levels off at $\sim$ 12MB/sec. Other thoughput values would drop off for value sizes (or key sizes) larger than $\sim$ 1000 bytes --- this is related to BerkeleyDB's page size and overflow logic. In general, for a database working with value sizes of $x$ bytes, \texttt{database.pageSize} should be set to $4x$.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{perf_ops1.eps}
+\caption{Keyspace bulk throughput performance showing operations per second with key size = 30 bytes.}
+%\label{default}
+\end{center}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{perf_mbs1.eps}
+\caption{Keyspace bulk throughput performance showing megabytes per second with key size = 30 bytes.}
+%\label{default}
+\end{center}
+\end{figure}
 
 \section{ License }
 %%%%%%%%%%%%%%%%%%%
