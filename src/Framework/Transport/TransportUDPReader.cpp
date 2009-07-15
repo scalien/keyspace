@@ -31,9 +31,9 @@ void TransportUDPReader::SetOnRead(Callable* onRead_)
 	userCallback = onRead_;
 }
 
-void TransportUDPReader::GetMessage(ByteString& bs_)
+void TransportUDPReader::GetMessage(ByteString& bs)
 {
-	bs_ = udpread.data;
+	bs = udpread.data;
 }
 
 void TransportUDPReader::GetEndpoint(Endpoint& endpoint)

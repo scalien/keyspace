@@ -2,7 +2,6 @@
 #define	TRANSPORTTCPREADER_H
 
 #include "Transport.h"
-#include "TransportReader.h"
 #include "TCPServer.h"
 #include "MessageConn.h"
 
@@ -16,35 +15,36 @@ public:
 		reader = reader_;
 	}
 	
-	void				OnMessageRead(const ByteString& message);
-	void				OnClose();
+	void		OnMessageRead(const ByteString& message);
+	void		OnClose();
 
 private:
 	TransportTCPReader* reader;
 };
 
 
-class TransportTCPReader : public TransportReader, public TCPServer
+class TransportTCPReader : public TCPServer
 {
 friend class TransportTCPConn;
+typedef List<TransportTCPConn*> ConnsList;
 
 public:
-	bool			Init(int port);
+	bool		Init(int port);
 
-	void			SetOnRead(Callable* onRead);
-	void			GetMessage(ByteString& bs_);
-	void			Stop();
-	void			Continue();
-	bool			IsActive();
-	void			OnConnect();
-	void			OnConnectionClose(TransportTCPConn* conn);
+	void		SetOnRead(Callable* onRead);
+	void		GetMessage(ByteString& msg_);
+	void		Stop();
+	void		Continue();
+	bool		IsActive();
+	void		OnConnect();
+	void		OnConnectionClose(TransportTCPConn* conn);
 
 private:
-	void			SetMessage(ByteString bs_);
+	void		SetMessage(ByteString msg_);
 	
-	Callable*		onRead;
-	ByteString		bs;
-	List<TransportTCPConn*> conns;
+	Callable*	onRead;
+	ByteString	msg;
+	ConnsList	conns;
 };
 
 #endif

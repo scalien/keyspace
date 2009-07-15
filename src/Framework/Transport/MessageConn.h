@@ -3,29 +3,32 @@
 
 #include "TCPConn.h"
 
-template<int bufferSize = MAX_TCP_MESSAGE_SIZE>
-class MessageConn : public TCPConn<bufferSize>
+template<int bufSize = MAX_TCP_MESSAGE_SIZE>
+class MessageConn : public TCPConn<bufSize>
 {
 public:
-	MessageConn() { running = true; }
-
+	MessageConn()
+	{
+		running = true;
+	}
+	
 	virtual void	OnMessageRead(const ByteString& msg) = 0;
 	virtual void	OnClose() = 0;
 	virtual void	OnRead();
 	
-	virtual void	Stop() { Log_Trace(); running = false; }
-	
-	virtual void	Continue() { Log_Trace(); running = true; OnRead(); }
+	virtual void	Stop();
+	virtual void	Continue();
 
 private:
 	bool			running;
 };
 
-template<int bufferSize>
-void MessageConn<bufferSize>::OnRead()
+template<int bufSize>
+void MessageConn<bufSize>::OnRead()
 {
-	TCPRead& tcpread = TCPConn<bufferSize>::tcpread;
+	TCPRead& tcpread = TCPConn<bufSize>::tcpread;
 	unsigned pos, msglength, nread, msgbegin, msgend;
+	ByteString msg;
 			
 	tcpread.requested = IO_READ_ANY;
 
@@ -33,7 +36,9 @@ void MessageConn<bufferSize>::OnRead()
 
 	while(running)
 	{
-		msglength = strntouint64(tcpread.data.buffer + pos, tcpread.data.length - pos, &nread);
+		msglength = strntouint64(tcpread.data.buffer + pos,
+								 tcpread.data.length - pos,
+								 &nread);
 		
 		if (msglength > tcpread.data.size - NumLen(msglength) - 1)
 		{
@@ -60,12 +65,13 @@ void MessageConn<bufferSize>::OnRead()
 			break;
 		}
 
-		OnMessageRead(ByteString(msglength, msglength, tcpread.data.buffer + msgbegin));
+		msg = ByteString(msglength, msglength, tcpread.data.buffer + msgbegin);
+		OnMessageRead(msg);
 		
 		pos = msgend;
 		
 		// if the user called Close() in OnMessageRead()
-		if (TCPConn<bufferSize>::state != TCPConn<bufferSize>::CONNECTED)
+		if (TCPConn<bufSize>::state != TCPConn<bufSize>::CONNECTED)
 			return;
 		
 		if (tcpread.data.length == msgend)
@@ -74,12 +80,30 @@ void MessageConn<bufferSize>::OnRead()
 	
 	if (pos > 0)
 	{
-		memmove(tcpread.data.buffer, tcpread.data.buffer + pos, tcpread.data.length - pos);
+		memmove(tcpread.data.buffer,
+				tcpread.data.buffer + pos,
+				tcpread.data.length - pos);
+		
 		tcpread.data.length -= pos;
 	}
 	
-	if (TCPConn<bufferSize>::state == TCPConn<bufferSize>::CONNECTED && running)
+	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED && running)
 		IOProcessor::Add(&tcpread);
+}
+
+template<int bufSize>
+void MessageConn<bufSize>::Stop()
+{
+	Log_Trace();
+	running = false;
+}
+
+template<int bufSize>
+void MessageConn<bufSize>::Continue()
+{
+	Log_Trace();
+	running = true;
+	OnRead();
 }
 
 #endif

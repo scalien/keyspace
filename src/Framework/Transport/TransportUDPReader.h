@@ -2,32 +2,35 @@
 #define TRANSPORTUDPREADER_H
 
 #include "System/IO/Socket.h"
+#include "System/Buffer.h"
+#include "System/Events/Callable.h"
+#include "System/IO/IOOperation.h"
 #include "Transport.h"
-#include "TransportReader.h"
 
-class TransportUDPReader : public TransportReader
+class TransportUDPReader
 {
 typedef ByteArray<MAX_UDP_MESSAGE_SIZE> Buffer;
 typedef MFunc<TransportUDPReader> Func;
+
 public:
 	TransportUDPReader();
 	
-	bool			Init(int port);
+	bool		Init(int port);
 
-	void			SetOnRead(Callable* onRead);
-	void			GetMessage(ByteString& bs_);
-	void			GetEndpoint(Endpoint& endpoint);
-	void			Stop();
-	void			Continue();
-	bool			IsActive();
-	void			OnRead();
+	void		SetOnRead(Callable* onRead);
+	void		GetMessage(ByteString& bs);
+	void		GetEndpoint(Endpoint& endpoint);
+	void		Stop();
+	void		Continue();
+	bool		IsActive();
+	void		OnRead();
 	
 private:
-	Socket			socket;
-	UDPRead			udpread;
-	Buffer			data;
-	Func			onRead;
-	Callable*		userCallback;
+	Socket		socket;
+	UDPRead		udpread;
+	Buffer		data;
+	Func		onRead;
+	Callable*	userCallback;
 };
 
 #endif

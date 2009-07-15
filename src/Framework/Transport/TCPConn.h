@@ -22,7 +22,7 @@
 
 #define TCP_CONNECT_TIMEOUT 3000
 
-template<int bufferSize = MAX_TCP_MESSAGE_SIZE>
+template<int bufSize = MAX_TCP_MESSAGE_SIZE>
 class TCPConn
 {
 public:
@@ -49,8 +49,8 @@ public:
 	void			Write(const char* data, int count, bool flush = true);
 	
 protected:
-	typedef DynArray<bufferSize>			Buffer;
-	typedef Queue<Buffer, &Buffer::next>	BufferQueue;
+	typedef DynArray<bufSize> Buffer;
+	typedef Queue<Buffer, &Buffer::next> BufferQueue;
 
 	
 	State			state;
@@ -78,8 +78,8 @@ protected:
 };
 
 
-template<int bufferSize>
-TCPConn<bufferSize>::TCPConn() :
+template<int bufSize>
+TCPConn<bufSize>::TCPConn() :
 connectTimeout(&onConnectTimeout),
 onRead(this, &TCPConn::OnRead),
 onWrite(this, &TCPConn::OnWrite),
@@ -91,8 +91,8 @@ onConnectTimeout(this, &TCPConn::OnConnectTimeout)
 }
 
 
-template<int bufferSize>
-TCPConn<bufferSize>::~TCPConn()
+template<int bufSize>
+TCPConn<bufSize>::~TCPConn()
 {
 	Buffer* buf;
 
@@ -103,8 +103,8 @@ TCPConn<bufferSize>::~TCPConn()
 }
 
 
-template<int bufferSize>
-void TCPConn<bufferSize>::Init(bool startRead)
+template<int bufSize>
+void TCPConn<bufSize>::Init(bool startRead)
 {
 	Log_Trace();
 	
@@ -118,8 +118,8 @@ void TCPConn<bufferSize>::Init(bool startRead)
 	tcpwrite.onClose = &onClose;
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
+template<int bufSize>
+void TCPConn<bufSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 {
 	Log_Trace("endpoint_ = %s", endpoint_.ToString());
 
@@ -151,8 +151,8 @@ void TCPConn<bufferSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 	}
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::OnWrite()
+template<int bufSize>
+void TCPConn<bufSize>::OnWrite()
 {
 	Log_Trace("Written %d bytes", tcpwrite.data.length);
 
@@ -171,8 +171,8 @@ void TCPConn<bufferSize>::OnWrite()
 	}
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::OnConnect()
+template<int bufSize>
+void TCPConn<bufSize>::OnConnect()
 {
 	Log_Trace();
 	
@@ -183,14 +183,14 @@ void TCPConn<bufferSize>::OnConnect()
 	WritePending();
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::OnConnectTimeout()
+template<int bufSize>
+void TCPConn<bufSize>::OnConnectTimeout()
 {
 	Log_Trace();
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::AsyncRead(bool start)
+template<int bufSize>
+void TCPConn<bufSize>::AsyncRead(bool start)
 {
 	Log_Trace();
 	
@@ -203,8 +203,8 @@ void TCPConn<bufferSize>::AsyncRead(bool start)
 		IOProcessor::Add(&tcpread);
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
+template<int bufSize>
+void TCPConn<bufSize>::Write(const char *data, int count, bool flush)
 {
 	//Log_Trace();
 	
@@ -232,8 +232,8 @@ void TCPConn<bufferSize>::Write(const char *data, int count, bool flush)
 		WritePending();
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::WritePending()
+template<int bufSize>
+void TCPConn<bufSize>::WritePending()
 {
 //	Log_Trace();
 	
@@ -257,8 +257,8 @@ void TCPConn<bufferSize>::WritePending()
 	}	
 }
 
-template<int bufferSize>
-void TCPConn<bufferSize>::Close()
+template<int bufSize>
+void TCPConn<bufSize>::Close()
 {
 	Log_Trace();
 

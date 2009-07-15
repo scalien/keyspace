@@ -4,16 +4,12 @@
 #include "System/Events/Timer.h"
 #include "System/IO/IOProcessor.h"
 #include "Transport.h"
-#include "TransportWriter.h"
 #include "TCPConn.h"
 
-class TransportTCPWriter : 
-	public TransportWriter,
-	public TCPConn<MAX_TCP_MESSAGE_SIZE>
+class TransportTCPWriter : public TCPConn<MAX_TCP_MESSAGE_SIZE>
 {
 public:
 	
-	// TransportWriter interface
 	virtual bool	Init(Endpoint &endpoint_);
 	virtual void	Write(ByteString &bs);
 

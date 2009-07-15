@@ -25,12 +25,12 @@ protected:
 };
 
 
-template<class T, class Conn, int bufferSize = MAX_TCP_MESSAGE_SIZE>
+template<class T, class Conn, int bufSize = MAX_TCP_MESSAGE_SIZE>
 class TCPServerT
 {
 public:
 	TCPServerT() :
-	onConnect(this, &TCPServerT<T, Conn, bufferSize>::OnConnect)
+	onConnect(this, &TCPServerT<T, Conn, bufSize>::OnConnect)
 	{
 		numActive = 0;
 	}
@@ -70,7 +70,7 @@ public:
 	}
 
 protected:
-	typedef Queue<TCPConn<bufferSize>, &TCPConn<bufferSize>::next> ConnList;
+	typedef Queue<TCPConn<bufSize>, &TCPConn<bufSize>::next> ConnList;
 	
 	TCPRead				tcpread;
 	Socket				listener;

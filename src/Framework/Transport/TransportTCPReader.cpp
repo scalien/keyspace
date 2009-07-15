@@ -36,14 +36,19 @@ void TransportTCPReader::SetOnRead(Callable* onRead_)
 	onRead = onRead_;
 }
 
-void TransportTCPReader::SetMessage(ByteString bs_)
+void TransportTCPReader::SetMessage(ByteString msg_)
 {
-	bs = bs_;
+	msg = msg_;
 }
 
-void TransportTCPReader::GetMessage(ByteString& bs_)
+void TransportTCPReader::GetMessage(ByteString& msg_)
 {
-	bs_ = bs;
+	msg_ = msg;
+}
+
+bool TransportTCPReader::IsActive()
+{
+	return tcpread.active;
 }
 
 void TransportTCPReader::Stop()
@@ -60,11 +65,6 @@ void TransportTCPReader::Stop()
 		if (tcpread.active)
 			break; // user called Continue(), stop looping
 	}
-}
-
-bool TransportTCPReader::IsActive()
-{
-	return tcpread.active;
 }
 
 void TransportTCPReader::Continue()
@@ -94,7 +94,8 @@ void TransportTCPReader::OnConnect()
 		Endpoint endpoint;
 		conn->GetSocket().GetEndpoint(endpoint);
 		
-		Log_Trace("%s connected, fd = %d", endpoint.ToString(), conn->GetSocket().fd);
+		Log_Trace("%s connected, fd = %d",
+				  endpoint.ToString(), conn->GetSocket().fd);
 		
 		conn->GetSocket().SetNonblocking();
 		conn->Init(true);
