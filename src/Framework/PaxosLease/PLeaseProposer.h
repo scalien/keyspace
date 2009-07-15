@@ -12,39 +12,43 @@ class ReplicatedLog;
 
 class PLeaseProposer
 {
+	typedef TransportUDPWriter**	Writers;
+	typedef MFunc<PLeaseProposer>	Func;
+	typedef PLeaseProposerState		State;
+	
 public:
 	PLeaseProposer();
 
-	void					Init(TransportUDPWriter** writers_);
+	void		Init(Writers writers_);
 	
-	void					ProcessMsg(PLeaseMsg &msg_);
-	void					OnNewPaxosRound();
-	void					OnAcquireLeaseTimeout();
-	void					OnExtendLeaseTimeout();
-	void					StartAcquireLease();
-	void					StopAcquireLease();
+	void		ProcessMsg(PLeaseMsg &msg_);
+	void		OnNewPaxosRound();
+	void		OnAcquireLeaseTimeout();
+	void		OnExtendLeaseTimeout();
+	void		StartAcquireLease();
+	void		StopAcquireLease();
 
-	uint64_t				highestProposalID;
+	uint64_t	highestProposalID;
 
 private:
-	void					BroadcastMessage();
-	void					OnPrepareResponse();
-	void					OnProposeResponse();
-	void					StartPreparing();
-	void					StartProposing();
+	void		BroadcastMessage();
+	void		OnPrepareResponse();
+	void		OnProposeResponse();
+	void		StartPreparing();
+	void		StartProposing();
 
-	TransportUDPWriter**	writers;
-	ByteBuffer				wdata;
-	PLeaseProposerState		state;
-	PLeaseMsg				msg;
-	MFunc<PLeaseProposer>	onAcquireLeaseTimeout;
-	CdownTimer				acquireLeaseTimeout;
-	MFunc<PLeaseProposer>	onExtendLeaseTimeout;
-	Timer					extendLeaseTimeout;
+	Writers		writers;
+	ByteBuffer	wdata;
+	State		state;
+	PLeaseMsg	msg;
+	Func		onAcquireLeaseTimeout;
+	CdownTimer	acquireLeaseTimeout;
+	Func		onExtendLeaseTimeout;
+	Timer		extendLeaseTimeout;
 // keeping track of messages during prepare and propose phases
-	unsigned				numReceived;
-	unsigned				numAccepted;
-	unsigned				numRejected;
+	unsigned	numReceived;
+	unsigned	numAccepted;
+	unsigned	numRejected;
 };
 
 #endif

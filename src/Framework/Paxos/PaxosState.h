@@ -7,61 +7,66 @@
 
 class PaxosProposerState
 {
-public:
-	bool		preparing;
-	bool		proposing;
-	
-	uint64_t	proposalID;
-	uint64_t	highestReceivedProposalID;
-	uint64_t	highestPromisedProposalID;
-	ByteBuffer	value;
-	
-	bool		leader;			// multi paxos
-	unsigned	numProposals;	// number of proposal runs in this Paxos round
-	
-	bool Active() { return (preparing || proposing); }
+public:	
+	bool Active()
+	{
+		return (preparing || proposing);
+	}
 	
 	void Init()
 	{
-		preparing =					false;
-		proposing =					false;
-		proposalID =				0;
+		preparing =	false;
+		proposing =	false;
+		proposalID = 0;
 		highestReceivedProposalID =	0;
 		highestPromisedProposalID = 0;
 		value.Clear();
 		leader = false;
 		numProposals = 0;
-	}	
+	}
+
+public:
+	bool		preparing;
+	bool		proposing;
+	uint64_t	proposalID;
+	uint64_t	highestReceivedProposalID;
+	uint64_t	highestPromisedProposalID;
+	ByteBuffer	value;
+	bool		leader;		  // multi paxos
+	unsigned	numProposals; // number of proposal runs in this Paxos round
 };
 
 class PaxosAcceptorState
 {
+public:	
+	void Init()
+	{
+		promisedProposalID = 0;
+		accepted = false;
+		acceptedProposalID = 0;
+		acceptedValue.Clear();
+	}
+
 public:
 	uint64_t	promisedProposalID;
 	bool		accepted;	
 	uint64_t	acceptedProposalID;
 	ByteBuffer	acceptedValue;
-	
-	void Init()
-	{
-		promisedProposalID =	0;
-		accepted =				false;
-		acceptedProposalID =	0;
-		acceptedValue.Clear();
-	}
+
 };
 
 class PaxosLearnerState
 {
+public:	
+	void Init()
+	{
+		learned = 0;
+		value.Clear();
+	}
+
 public:
 	bool		learned;
 	ByteBuffer	value;
-	
-	void Init()
-	{
-		learned =		0;
-		value.Clear();
-	}
 };
 
 #endif

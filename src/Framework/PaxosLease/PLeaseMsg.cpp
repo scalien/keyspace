@@ -179,7 +179,8 @@ bool PLeaseMsg::Write(ByteString& data)
 			break;
 		case PLEASE_PROPOSE_REQUEST:
 			return data.Writef("%c:%u:%U:%u:%U",
-						       type, nodeID, proposalID, leaseOwner, expireTime);
+						       type, nodeID, proposalID,
+							   leaseOwner, expireTime);
 			break;
 		case PLEASE_PROPOSE_REJECTED:
 			return data.Writef("%c:%u:%U",

@@ -12,25 +12,29 @@ class ReplicatedLog;
 
 class PLeaseAcceptor
 {
+	typedef TransportUDPWriter**	Writers;
+	typedef MFunc<PLeaseAcceptor>	Func;
+	typedef PLeaseAcceptorState		State;
+	
 public:
 	PLeaseAcceptor();
 	
-	void					Init(TransportUDPWriter** writers_);
-	void					ProcessMsg(PLeaseMsg &msg_);
-	void					OnLeaseTimeout();
+	void		Init(Writers writers_);
+	void		ProcessMsg(PLeaseMsg &msg_);
+	void		OnLeaseTimeout();
 
 private:
-	void					SendReply(unsigned nodeID);
+	void		SendReply(unsigned nodeID);
 
-	void					OnPrepareRequest();
-	void					OnProposeRequest();
+	void		OnPrepareRequest();
+	void		OnProposeRequest();
 
-	TransportUDPWriter**	writers;
-	ByteBuffer				wdata;
-	MFunc<PLeaseAcceptor>	onLeaseTimeout;
-	Timer					leaseTimeout;
-	PLeaseMsg				msg;
-	PLeaseAcceptorState		state;
+	Writers		writers;
+	ByteBuffer	wdata;
+	Func		onLeaseTimeout;
+	Timer		leaseTimeout;
+	PLeaseMsg	msg;
+	State		state;
 };
 
 #endif

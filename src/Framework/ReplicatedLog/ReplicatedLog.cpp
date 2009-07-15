@@ -46,7 +46,7 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	masterLease.Init(useSoftClock);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	//if (ReplicatedConfig::Get()->nodeID == 0) // TODO: FOR DEBUGGING
+	//if (RCONF->GetNodeID() == 0) // TODO: FOR DEBUGGING
 		masterLease.AcquireLease();
 	
 	safeDB = false;
@@ -59,25 +59,21 @@ void ReplicatedLog::InitTransport()
 	unsigned	i;
 	Endpoint	endpoint;
 
-#if USE_TCP == 1
 	reader = new TransportTCPReader;
-#else
-	reader = new TransportUDPReader;
-#endif
-	if (!reader->Init(ReplicatedConfig::Get()->GetPort()))
+
+	if (!reader->Init(RCONF->GetPort()))
 		STOP_FAIL("cannot bind Paxos port", 1);
 	reader->SetOnRead(&onRead);
 
-	writers = (TransportWriter**) malloc(sizeof(TransportWriter*) * ReplicatedConfig::Get()->numNodes);
-	for (i = 0; i < ReplicatedConfig::Get()->numNodes; i++)
+	writers =
+			(TransportTCPWriter**)
+			Alloc(sizeof(TransportTCPWriter*) * RCONF->GetNumNodes());
+	
+	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
-		endpoint = ReplicatedConfig::Get()->endpoints[i];
+		endpoint = RCONF->GetEndpoint(i);
 		endpoint.SetPort(endpoint.GetPort());
-#if USE_TCP == 1
 		writers[i] = new TransportTCPWriter;
-#else
-		writers[i] = new TransportUDPWriter;
-#endif
 		Log_Trace("Connecting to %s", endpoint.ToString());
 		if (!writers[i]->Init(endpoint))
 			STOP_FAIL("cannot bind Paxos port", 1);
@@ -97,6 +93,12 @@ void ReplicatedLog::StopMasterLease()
 	masterLease.Stop();
 }
 
+void ReplicatedLog::StopReplicatedDB()
+{
+	if (replicatedDB)
+		replicatedDB->Stop();
+}
+
 void ReplicatedLog::ContinuePaxos()
 {
 	Log_Trace();
@@ -107,6 +109,12 @@ void ReplicatedLog::ContinuePaxos()
 void ReplicatedLog::ContinueMasterLease()
 {
 	masterLease.Continue();
+}
+
+void ReplicatedLog::ContinueReplicatedDB()
+{
+	if (replicatedDB)
+		replicatedDB->Continue();
 }
 
 bool ReplicatedLog::IsPaxosActive()
@@ -132,7 +140,8 @@ bool ReplicatedLog::Append(ByteString &value_)
 	
 	if (!proposer.IsActive())
 	{
-		if (!rmsg.Init(ReplicatedConfig::Get()->nodeID, ReplicatedConfig::Get()->restartCounter,
+		if (!rmsg.Init(RCONF->GetNodeID(),
+					   RCONF->GetRestartCounter(),
 					   masterLease.GetLeaseEpoch(), value_))
 		{	
 			ASSERT_FAIL();
@@ -195,7 +204,7 @@ int ReplicatedLog::GetMaster()
 
 unsigned ReplicatedLog::GetNodeID()
 {
-	return ReplicatedConfig::Get()->nodeID;
+	return RCONF->GetNodeID();
 }
 
 void ReplicatedLog::OnRead()
@@ -273,7 +282,7 @@ void ReplicatedLog::OnLearnChosen()
 	Log_Trace();
 
 	uint64_t paxosID;
-	bool	ownAppend;
+	bool	ownAppend, clientAppend;
 
 	if (pmsg.paxosID == learner.paxosID)
 	{
@@ -282,7 +291,9 @@ void ReplicatedLog::OnLearnChosen()
 
 		if (pmsg.type == PAXOS_LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
-				pmsg.LearnValue(pmsg.paxosID, GetNodeID(), acceptor.state.acceptedValue);
+				pmsg.LearnValue(pmsg.paxosID,
+				GetNodeID(),
+				acceptor.state.acceptedValue);
 		
 		if (pmsg.type == PAXOS_LEARN_VALUE)
 			learner.OnLearnChosen(pmsg);
@@ -296,9 +307,11 @@ void ReplicatedLog::OnLearnChosen()
 		logCache.Push(learner.paxosID, learner.state.value);
 		
 		rmsg.Read(learner.state.value);	// rmsg.value holds the 'user value'
-		paxosID = learner.paxosID;		// this is the value we pass to the ReplicatedDB
+		paxosID = learner.paxosID;		// this is the value we
+										// pass to the ReplicatedDB
 		
-		NewPaxosRound(); // increments paxosID, clears proposer, acceptor, learner
+		NewPaxosRound();
+		// increments paxosID, clears proposer, acceptor, learner
 		
 		if (highestPaxosID > paxosID)
 		{
@@ -306,13 +319,20 @@ void ReplicatedLog::OnLearnChosen()
 			return;
 		}
 
-		Log_Trace("%d %d %" PRIu64 " %" PRIu64 "", rmsg.nodeID, GetNodeID(), rmsg.restartCounter,
-			ReplicatedConfig::Get()->restartCounter);
-		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter)
+		Log_Trace("%d %d %" PRIu64 " %" PRIu64 "",
+			rmsg.nodeID, GetNodeID(),
+			rmsg.restartCounter, RCONF->GetRestartCounter());
+		
+		if (rmsg.nodeID == GetNodeID() &&
+			rmsg.restartCounter == RCONF->GetRestartCounter())
+		{
 			logQueue.Pop(); // we just appended this
+		}
 
-		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter &&
-			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && masterLease.IsLeaseOwner())
+		if (rmsg.nodeID == GetNodeID() &&
+			rmsg.restartCounter == RCONF->GetRestartCounter() &&
+			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() &&
+			masterLease.IsLeaseOwner())
 		{
 			proposer.state.leader = true;
 			Log_Trace("Multi paxos enabled");
@@ -323,10 +343,15 @@ void ReplicatedLog::OnLearnChosen()
 			Log_Trace("Multi paxos disabled");
 		}
 		
-		if (rmsg.nodeID == GetNodeID() && rmsg.restartCounter == ReplicatedConfig::Get()->restartCounter)
+		if (rmsg.nodeID == GetNodeID() &&
+		rmsg.restartCounter == RCONF->GetRestartCounter())
+		{
 			ownAppend = true;
+		}
 		else
+		{
 			ownAppend = false;
+		}
 		
 		// commit chaining
 		if (ownAppend && rmsg.value == BS_MSG_NOP)
@@ -335,21 +360,29 @@ void ReplicatedLog::OnLearnChosen()
 			if (replicatedDB != NULL && IsMaster())
 				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
 		}
-		else if (replicatedDB != NULL && rmsg.value.length > 0 && !(rmsg.value == BS_MSG_NOP))
+		else if (replicatedDB != NULL &&
+				 rmsg.value.length > 0 &&
+				 !(rmsg.value == BS_MSG_NOP))
 		{
 			if (!acceptor.transaction.IsActive())
 			{
 				Log_Trace("starting new transaction");
 				acceptor.transaction.Begin();
 			}
-			replicatedDB->OnAppend(&acceptor.transaction, paxosID, rmsg.value,
-				ownAppend && rmsg.leaseEpoch == masterLease.GetLeaseEpoch() && IsMaster());
+			clientAppend = ownAppend &&
+						   rmsg.leaseEpoch == masterLease.GetLeaseEpoch() &&
+						   IsMaster();
+			
+			replicatedDB->OnAppend(&acceptor.transaction,
+				paxosID,
+				rmsg.value,
+				clientAppend);
 			// client will stop Paxos here
 		}
 		
 		if (!proposer.IsActive() && logQueue.Length() > 0)
 		{
-			if (!rmsg.Init(ReplicatedConfig::Get()->nodeID, ReplicatedConfig::Get()->restartCounter,
+			if (!rmsg.Init(RCONF->GetNodeID(), RCONF->GetRestartCounter(),
 						   masterLease.GetLeaseEpoch(), *(logQueue.Next())))
 				ASSERT_FAIL();
 			
@@ -435,9 +468,12 @@ void ReplicatedLog::OnCatchupTimeout()
 
 void ReplicatedLog::OnLearnLease()
 {
-	if (masterLease.IsLeaseOwner() && !safeDB && !(proposer.IsActive() && rmsg.value == BS_MSG_NOP))
+	if (masterLease.IsLeaseOwner() &&
+		!safeDB &&
+		!(proposer.IsActive() &&
+		rmsg.value == BS_MSG_NOP))
 	{
-		ByteString	nop(MSG_NOP);
+		ByteString	nop = BS_MSG_NOP;
 		
 		Log_Trace("appending NOP to assure safeDB");
 		Append(nop);

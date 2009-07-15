@@ -1,11 +1,4 @@
 #include "PaxosProposer.h"
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include "System/Log.h"
-#include "System/Events/EventLoop.h"
-#include "Framework/Database/Transaction.h"
-#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 
 PaxosProposer::PaxosProposer() :
@@ -16,7 +9,7 @@ PaxosProposer::PaxosProposer() :
 {
 }
 
-void PaxosProposer::Init(TransportWriter** writers_)
+void PaxosProposer::Init(Writers writers_)
 {
 	writers = writers_;
 	
@@ -76,7 +69,7 @@ void PaxosProposer::BroadcastMessage()
 	
 	msg.Write(wdata);
 	
-	for (unsigned nodeID = 0; nodeID < ReplicatedConfig::Get()->numNodes; nodeID++)
+	for (unsigned nodeID = 0; nodeID < RCONF->GetNumNodes(); nodeID++)
 		writers[nodeID]->Write(wdata);
 }
 
@@ -111,11 +104,11 @@ void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 			ASSERT_FAIL();
 	}
 	
-	if (numRejected >= ceil((double)(ReplicatedConfig::Get()->numNodes) / 2))
+	if (numRejected >= ceil((double)(RCONF->GetNumNodes()) / 2))
 		StartPreparing();
-	else if ((numReceived - numRejected) >= ReplicatedConfig::Get()->MinMajority())
+	else if ((numReceived - numRejected) >= RCONF->MinMajority())
 		StartProposing();
-	else if (numReceived == ReplicatedConfig::Get()->numNodes)
+	else if (numReceived == RCONF->GetNumNodes())
 		StartPreparing();
 }
 
@@ -135,15 +128,15 @@ void PaxosProposer::OnProposeResponse(PaxosMsg& msg_)
 		numAccepted++;
 
 	// see if we have enough positive replies to advance
-	if (numAccepted >= ReplicatedConfig::Get()->MinMajority())
+	if (numAccepted >= RCONF->MinMajority())
 	{
 		// a majority have accepted our proposal, we have consensus
 		StopProposing();
-		msg.LearnProposal(paxosID, ReplicatedConfig::Get()->nodeID,
+		msg.LearnProposal(paxosID, RCONF->GetNodeID(),
 		state.proposalID);
 		BroadcastMessage();
 	}
-	else if (numReceived == ReplicatedConfig::Get()->numNodes)
+	else if (numReceived == RCONF->GetNumNodes())
 		StartPreparing();
 }
 
@@ -172,12 +165,12 @@ void PaxosProposer::StartPreparing()
 	
 	state.numProposals++;
 	
-	state.proposalID = ReplicatedConfig::Get()->NextHighest(
+	state.proposalID = RCONF->NextHighest(
 		max(state.proposalID, state.highestPromisedProposalID));
 	
 	state.highestReceivedProposalID = 0;
 	
-	msg.PrepareRequest(paxosID, ReplicatedConfig::Get()->nodeID,
+	msg.PrepareRequest(paxosID, RCONF->GetNodeID(),
 	state.proposalID);
 	
 	BroadcastMessage();
@@ -193,7 +186,7 @@ void PaxosProposer::StartProposing()
 
 	state.proposing = true;
 
-	msg.ProposeRequest(paxosID, ReplicatedConfig::Get()->nodeID,
+	msg.ProposeRequest(paxosID, RCONF->GetNodeID(),
 	state.proposalID, state.value);
 
 	BroadcastMessage();

@@ -18,7 +18,8 @@ bool ReplicatedConfig::Init()
 	numNodes = Config::GetListNum("paxos.endpoints");
 
 	if (nodeID < 0 || nodeID >= numNodes)
-		STOP_FAIL("Configuration error, check your paxos.nodeID and paxos.endpoints entry" ,0);
+		STOP_FAIL("Configuration error, \
+				   check your paxos.nodeID and paxos.endpoints entry" ,0);
 
 	if (numNodes == 0)
 	{
@@ -46,7 +47,7 @@ void ReplicatedConfig::InitRestartCounter()
 	
 	bool			ret;
 	unsigned		nread = 0;
-	ByteArray<32>	baRestartCounter;
+	ByteArray<32>	buf;
 	Table*			table;
 	
 	table = database.GetTable("keyspace");
@@ -59,12 +60,12 @@ void ReplicatedConfig::InitRestartCounter()
 	Transaction tx(table);
 	tx.Begin();
 	
-	ret = table->Get(&tx, "@@restartCounter", baRestartCounter);
+	ret = table->Get(&tx, "@@restartCounter", buf);
 
 	if (ret)
 	{
-		restartCounter = strntouint64(baRestartCounter.buffer, baRestartCounter.length, &nread);
-		if (nread != (unsigned) baRestartCounter.length)
+		restartCounter = strntouint64(buf.buffer, buf.length, &nread);
+		if (nread != (unsigned) buf.length)
 			restartCounter = 0;
 	}
 	else
@@ -72,10 +73,10 @@ void ReplicatedConfig::InitRestartCounter()
 	
 	restartCounter++;
 	
-	baRestartCounter.length =
-		snwritef(baRestartCounter.buffer, baRestartCounter.size, "%U", restartCounter);
+	buf.length =
+		snwritef(buf.buffer, buf.size, "%U", restartCounter);
 	
-	table->Set(&tx, "@@restartCounter", baRestartCounter);
+	table->Set(&tx, "@@restartCounter", buf);
 	tx.Commit();
 	
 	Log_Trace("Running with restartCounter = %" PRIu64 "", restartCounter);
@@ -110,4 +111,27 @@ uint64_t ReplicatedConfig::NextHighest(uint64_t proposalID)
 unsigned ReplicatedConfig::GetPort()
 {
 	return endpoints[nodeID].GetPort();
+}
+
+unsigned ReplicatedConfig::GetNodeID()
+{
+	return nodeID;
+}
+
+unsigned ReplicatedConfig::GetNumNodes()
+{
+	return numNodes;
+}
+
+uint64_t ReplicatedConfig::GetRestartCounter()
+{
+	return restartCounter;
+}
+
+const Endpoint ReplicatedConfig::GetEndpoint(unsigned i)
+{
+	if (i < 0 || i >= numNodes)
+		ASSERT_FAIL();
+	
+	return endpoints[i];
 }

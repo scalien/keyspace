@@ -59,7 +59,7 @@ void PLeaseLearner::OnLearnChosen()
 void PLeaseLearner::OnLeaseTimeout()
 {
 	if (state.learned)
-		Log_Message("PaxosLease: Node %d lost its mastership", state.leaseOwner);
+		Log_Message("+++ Node %d lost its mastership +++", state.leaseOwner);
 
 	EventLoop::Remove(&leaseTimeout);
 
@@ -85,7 +85,7 @@ bool PLeaseLearner::IsLeaseOwner()
 {
 	CheckLease();
 	
-	if (state.learned && state.leaseOwner == ReplicatedConfig::Get()->nodeID)
+	if (state.learned && state.leaseOwner == RCONF->GetNodeID())
 		return true;
 	else
 		return false;		

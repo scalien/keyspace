@@ -3,8 +3,7 @@
 
 #include "System/Buffer.h"
 
-#define MSG_NOP		"NOP"
-#define BS_MSG_NOP	ByteString(strlen(MSG_NOP), strlen(MSG_NOP), MSG_NOP)
+#define BS_MSG_NOP	ByteString(strlen("NOP"), strlen("NOP"), "NOP")
 
 class ReplicatedLogMsg
 {

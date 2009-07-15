@@ -10,7 +10,7 @@ PaxosLearner::PaxosLearner()
 {
 }
 
-void PaxosLearner::Init(TransportWriter** writers_)
+void PaxosLearner::Init(Writers writers_)
 {
 	writers = writers_;	
 	state.Init();
@@ -20,7 +20,7 @@ bool PaxosLearner::RequestChosen(unsigned nodeID)
 {
 	Log_Trace();
 	
-	msg.RequestChosen(paxosID, ReplicatedConfig::Get()->nodeID);
+	msg.RequestChosen(paxosID, RCONF->GetNodeID());
 	
 	msg.Write(wdata);
 
@@ -29,11 +29,13 @@ bool PaxosLearner::RequestChosen(unsigned nodeID)
 	return true;
 }
 
-bool PaxosLearner::SendChosen(unsigned nodeID, uint64_t paxosID, ByteString& value)
+bool PaxosLearner::SendChosen(unsigned nodeID,
+							  uint64_t paxosID,
+							  ByteString& value)
 {
 	Log_Trace();
 	
-	msg.LearnValue(paxosID, ReplicatedConfig::Get()->nodeID, value);
+	msg.LearnValue(paxosID, RCONF->GetNodeID(), value);
 	
 	msg.Write(wdata);
 

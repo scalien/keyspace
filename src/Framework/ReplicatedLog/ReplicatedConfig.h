@@ -8,6 +8,8 @@
 #define WIDTH_NODEID				8
 #define WIDTH_RESTART_COUNTER		16
 
+#define RCONF (ReplicatedConfig::Get())
+
 
 class ReplicatedConfig
 {
@@ -19,7 +21,12 @@ public:
 	unsigned		MinMajority();
 	uint64_t		NextHighest(uint64_t proposalID);
 	unsigned		GetPort();
+	unsigned		GetNodeID();
+	unsigned		GetNumNodes();
+	uint64_t		GetRestartCounter();
+	const Endpoint	GetEndpoint(unsigned i);
 
+private:
 	unsigned		nodeID;
 	unsigned		numNodes; // same as endpoints.size
 	uint64_t		restartCounter;	

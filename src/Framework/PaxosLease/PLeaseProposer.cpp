@@ -17,7 +17,7 @@ PLeaseProposer::PLeaseProposer() :
 {
 }
 
-void PLeaseProposer::Init(TransportUDPWriter** writers_)
+void PLeaseProposer::Init(Writers writers_)
 {
 	writers = writers_;
 	
@@ -56,7 +56,7 @@ void PLeaseProposer::OnNewPaxosRound()
 	
 	Log_Trace();
 	
-	if (acquireLeaseTimeout.IsActive() && ReplicatedLog::Get()->IsMaster())
+	if (acquireLeaseTimeout.IsActive() && RLOG->IsMaster())
 		StartPreparing();
 }
 
@@ -64,13 +64,15 @@ void PLeaseProposer::BroadcastMessage()
 {
 	Log_Trace();
 	
+	unsigned nodeID;
+	
 	numReceived = 0;
 	numAccepted = 0;
 	numRejected = 0;
 	
 	msg.Write(wdata);
 	
-	for (unsigned nodeID = 0; nodeID < ReplicatedConfig::Get()->numNodes; nodeID++)
+	for (nodeID = 0; nodeID < RCONF->GetNumNodes(); nodeID++)
 		writers[nodeID]->Write(wdata);
 }
 
@@ -108,14 +110,14 @@ void PLeaseProposer::OnPrepareResponse()
 		state.leaseOwner = msg.leaseOwner;
 	}
 
-	if (numRejected >= ceil((double)(ReplicatedConfig::Get()->numNodes) / 2))
+	if (numRejected >= ceil((double)(RCONF->GetNumNodes()) / 2))
 	{
 		StartPreparing();
 		return;
 	}
 	
 	// see if we have enough positive replies to advance	
-	if ((numReceived - numRejected) >= ReplicatedConfig::Get()->MinMajority())
+	if ((numReceived - numRejected) >= RCONF->MinMajority())
 		StartProposing();	
 }
 
@@ -135,11 +137,11 @@ void PLeaseProposer::OnProposeResponse()
 		numAccepted++;
 
 	// see if we have enough positive replies to advance
-	if (numAccepted >= ReplicatedConfig::Get()->MinMajority())
+	if (numAccepted >= RCONF->MinMajority())
 	{
 		// a majority have accepted our proposal, we have consensus
 		state.proposing = false;
-		msg.LearnChosen(ReplicatedConfig::Get()->nodeID,
+		msg.LearnChosen(RCONF->GetNodeID(),
 		state.leaseOwner, state.expireTime);
 		
 		EventLoop::Remove(&acquireLeaseTimeout);
@@ -151,7 +153,7 @@ void PLeaseProposer::OnProposeResponse()
 		return;
 	}
 	
-	if (numReceived == ReplicatedConfig::Get()->numNodes)
+	if (numReceived == RCONF->GetNumNodes())
 		StartPreparing();
 }
 
@@ -165,18 +167,18 @@ void PLeaseProposer::StartPreparing()
 
 	state.preparing = true;
 	
-	state.leaseOwner = ReplicatedConfig::Get()->nodeID;
+	state.leaseOwner = RCONF->GetNodeID();
 	state.expireTime = Now() + MAX_LEASE_TIME;
 	
 	state.highestReceivedProposalID = 0;
 
-	state.proposalID = ReplicatedConfig::Get()->NextHighest(highestProposalID);
+	state.proposalID = RCONF->NextHighest(highestProposalID);
 		
 	if (state.proposalID > highestProposalID)
 		highestProposalID = state.proposalID;
 	
-	msg.PrepareRequest(ReplicatedConfig::Get()->nodeID,
-	state.proposalID, ReplicatedLog::Get()->GetPaxosID());
+	msg.PrepareRequest(RCONF->GetNodeID(),
+	state.proposalID, RLOG->GetPaxosID());
 	
 	BroadcastMessage();
 }
@@ -187,14 +189,14 @@ void PLeaseProposer::StartProposing()
 	
 	state.preparing = false;
 
-	if (state.leaseOwner != ReplicatedConfig::Get()->nodeID)
+	if (state.leaseOwner != RCONF->GetNodeID())
 		return; // no point in getting someone else a lease,
 				// wait for OnAcquireLeaseTimeout
 
 	state.proposing = true;
 
 	// acceptors get (t_e + S)
-	msg.ProposeRequest(ReplicatedConfig::Get()->nodeID, state.proposalID,
+	msg.ProposeRequest(RCONF->GetNodeID(), state.proposalID,
 		state.leaseOwner, state.expireTime + MAX_CLOCK_SKEW);
 
 	BroadcastMessage();

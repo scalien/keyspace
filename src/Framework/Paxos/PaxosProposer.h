@@ -3,7 +3,7 @@
 
 #include "System/Common.h"
 #include "System/Events/Timer.h"
-#include "Framework/Transport/TransportWriter.h"
+#include "Framework/Transport/TransportTCPWriter.h"
 #include "PaxosMsg.h"
 #include "PaxosState.h"
 
@@ -11,41 +11,43 @@
 
 class PaxosProposer
 {
-friend class ReplicatedLog;
-
+	friend class ReplicatedLog;
+	typedef TransportTCPWriter**	Writers;
+	typedef MFunc<PaxosProposer>	Func;
+	typedef PaxosProposerState		State;
 public:
 	PaxosProposer();
 
-	void					Init(TransportWriter** writers_);
+	void		Init(TransportTCPWriter** writers_);
 		
-	void					OnPrepareTimeout();
-	void					OnProposeTimeout();
-	bool					IsActive();	
-	bool					Propose(ByteString& value);
-	void					Stop();
+	void		OnPrepareTimeout();
+	void		OnProposeTimeout();
+	bool		IsActive();	
+	bool		Propose(ByteString& value);
+	void		Stop();
 
 protected:
-	void					BroadcastMessage();
-	void					OnPrepareResponse(PaxosMsg& msg_);
-	void					OnProposeResponse(PaxosMsg& msg_);
-	void					StopPreparing();
-	void					StopProposing();
-	void					StartPreparing();
-	void					StartProposing();
+	void		BroadcastMessage();
+	void		OnPrepareResponse(PaxosMsg& msg_);
+	void		OnProposeResponse(PaxosMsg& msg_);
+	void		StopPreparing();
+	void		StopProposing();
+	void		StartPreparing();
+	void		StartProposing();
 
-	TransportWriter**		writers;
-	ByteBuffer				wdata;
-	PaxosProposerState		state;
-	PaxosMsg				msg;
-	uint64_t				paxosID;
-	MFunc<PaxosProposer>	onPrepareTimeout;
-	MFunc<PaxosProposer>	onProposeTimeout;
-	CdownTimer				prepareTimeout;
-	CdownTimer				proposeTimeout;
+	Writers		writers;
+	ByteBuffer	wdata;
+	State		state;
+	PaxosMsg	msg;
+	uint64_t	paxosID;
+	Func		onPrepareTimeout;
+	Func		onProposeTimeout;
+	CdownTimer	prepareTimeout;
+	CdownTimer	proposeTimeout;
 // keeping track of messages during prepare and propose phases
-	unsigned				numReceived;
-	unsigned				numAccepted;
-	unsigned				numRejected;
+	unsigned	numReceived;
+	unsigned	numAccepted;
+	unsigned	numRejected;
 };
 
 #endif

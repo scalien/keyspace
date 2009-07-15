@@ -10,20 +10,20 @@
 class LogCache
 {
 public:
-						LogCache();
-						~LogCache();
+	LogCache();
+	~LogCache();
 
-	bool				Push(uint64_t paxosID, ByteString value);
-	bool				Get(uint64_t paxosID, ByteString& value);
+	bool			Push(uint64_t paxosID, ByteString value);
+	bool			Get(uint64_t paxosID, ByteString& value);
 
 private:
-	ByteBuffer*			logItems;
-	int					count;
-	int					next;
-	int					size;
-	unsigned long		maxmem;
-	unsigned long		allocated;
-	uint64_t			paxosID;
+	ByteBuffer*		logItems;
+	int				count;
+	int				next;
+	int				size;
+	unsigned long	maxmem;
+	unsigned long	allocated;
+	uint64_t		paxosID;
 };
 
 #endif

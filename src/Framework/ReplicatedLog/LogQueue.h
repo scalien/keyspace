@@ -6,13 +6,13 @@
 class LogQueue
 {
 public:
-	bool					Push(ByteString value);
-	ByteString*				Next();
-	ByteString*				Pop();
-	int						Length();
+	bool				Push(ByteString value);
+	ByteString*			Next();
+	ByteString*			Pop();
+	int					Length();
 	
 private:
-	List<ByteString*>		queue;
+	List<ByteString*>	queue;
 };
 
 #endif
