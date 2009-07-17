@@ -1,0 +1,9 @@
+DEFAULT_CONFIG=/etc/keyspace.conf
+NAME=keyspaced
+BIN_DIR=/usr/bin
+DAEMON=$BIN_DIR/$NAME
+SAFE_DAEMON=$BIN_DIR/safe_$NAME
+START_KEYSPACE=NO
+DATABASE_DIR=/var/lib/keyspace
+KEYSPACE_LOG=/var/log/keyspace.log
+KEYSPACE_USER=daemon
