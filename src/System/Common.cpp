@@ -3,6 +3,7 @@
 #include <string>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <sys/stat.h>
 #include <signal.h>
 #include "Buffer.h"
 
@@ -140,6 +141,16 @@ void BlockSignals()
 	// block all signals
 	sigfillset(&sigmask);
 	pthread_sigmask(SIG_SETMASK, &sigmask, NULL);
+}
+
+bool IsFolder(const char* path)
+{
+	struct stat s;
+	if (stat(path, &s) != 0)
+		return false;
+	if (s.st_mode & S_IFDIR)
+		return true;
+	return false;
 }
 
 /*

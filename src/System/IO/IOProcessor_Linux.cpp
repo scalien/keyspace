@@ -15,7 +15,7 @@
 #include "System/Time.h"
 #include "System/Events/EventLoop.h"
 
-#define	MAX_EVENTS			1
+#define	MAX_EVENTS			1024
 #define PIPEOP				'p'
 
 

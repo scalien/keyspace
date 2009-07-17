@@ -1,0 +1,10 @@
+Keyspace changelog
+
+1.0.1
+=====
+
+- Keyspace would not start without a config file in default mode. Resolution: fixed.
+
+- Keyspace printed a non-informative error message when a directory 'keyspace' was present and it tried to create the database file 'keyspace'. Resolution: More informative error message.
+
+- Some Linux optimizations were accidentally removed in the 1.0 release. Resolution: added to 1.0.1

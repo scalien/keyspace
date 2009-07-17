@@ -23,7 +23,14 @@ database(database)
 	if (db->open(txnid, filename, dbname, type, flags, mode) != 0)
 	{
 		db->close(0);
-		STOP_FAIL("could not open database", 1);
+		if (IsFolder(filename))
+		{
+			STOP_FAIL(rprintf(
+					  "Could not create database file '%s' "
+					  "because a folder '%s' exists",
+					  filename, filename), 1);
+		}
+		STOP_FAIL("Could not open database", 1);
 	}
 	Log_Trace();
 	db->set_flags(0);

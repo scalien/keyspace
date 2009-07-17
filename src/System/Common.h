@@ -17,7 +17,7 @@
 
 #define ASSERT_FAIL() assert(false)
 
-#define STOP_FAIL(msg, code) { Log_Message(msg); _exit(code); }
+#define STOP_FAIL(msg, code) { Log_SetTarget(LOG_TARGET_STDERR|LOG_TARGET_FILE); Log_Message(msg); _exit(code); }
 
 #define RESTART(msg) { Log_Message(msg); _exit(2); }
 
@@ -48,6 +48,8 @@ inline bool Xor(bool a, bool b) { return Xor(a, b, false); }
 inline unsigned NumLen(int n) { return n == 0 ? 1 : (unsigned) floor(log10(n) + 1); }
 
 void BlockSignals();
+
+bool IsFolder(const char* path);
 
 int snreadf(char* buffer, unsigned size, const char* format, ...);
 int vsnreadf(char* buffer, unsigned size, const char* format, va_list ap);
