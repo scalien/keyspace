@@ -1,4 +1,5 @@
 #include "HttpConn.h"
+#include "Version.h"
 #include "HttpServer.h"
 
 #define MAX_MESSAGE_SIZE	4096
@@ -190,7 +191,12 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	PREFIXFUNC("/dirtylistkeys?",		ProcessList(params, op, false, true)) else
 	PREFIXFUNC("/listkeyvalues?",		ProcessList(params, op, true)) else
 	PREFIXFUNC("/dirtylistkeyvalues?",	ProcessList(params, op, true, true)) else
-	PREFIXFUNC("/latency?",				ProcessLatency())
+	PREFIXFUNC("/latency?",				ProcessLatency()) else
+	if (request.line.uri[0] == 0 ||
+		(request.line.uri[0] == '/' && request.line.uri[1] == 0))
+	{
+		ret = PrintHello();
+	}
 	else
 	{
 		RESPONSE_NOTFOUND;
@@ -429,6 +435,18 @@ bool HttpConn::ProcessPrune(const char* params, KeyspaceOp* op)
 bool HttpConn::ProcessLatency()
 {
 	Response(200, "OK", 2);
+	return true;
+}
+
+bool HttpConn::PrintHello()
+{
+	ByteArray<128> text;
+
+	text.length = snprintf(text.buffer, text.size,
+		"Keyspace v" VERSION_STRING " r%.*s running",
+		(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+
+	Response(200, text.buffer, text.length);
 	return true;
 }
 
