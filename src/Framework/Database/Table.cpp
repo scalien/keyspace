@@ -25,8 +25,10 @@ database(database)
 		db->close(0);
 		if (IsFolder(filename))
 		{
-			STOP_FAIL("Could not create database file 'keyspace' "
-					  "because a folder 'keyspace' exists", 1);
+			STOP_FAIL(rprintf(
+					  "Could not create database file '%s' "
+					  "because a folder '%s' exists",
+					  filename, filename), 1);
 		}
 		STOP_FAIL("Could not open database", 1);
 	}
