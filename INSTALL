@@ -156,6 +156,11 @@ For numeric values you may use the K, M, G suffices that mean 1024,
 
 	Number. OPTIONAL. Default is 1024.
 	Roughly equals to the maximum number of connections the server can handle.
+
+- daemon.user
+
+	String. OPTIONAL. Default is empty.
+	Keyspace is running with this user if started as root for security reasons.
 	
 - database.dir
 

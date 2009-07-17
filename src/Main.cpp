@@ -22,7 +22,8 @@
 
 int main(int argc, char* argv[])
 {
-	int		logTargets;
+	int			logTargets;
+	const char*	user;
 	
 	if (argc == 1)
 	{
@@ -67,11 +68,12 @@ int main(int argc, char* argv[])
 		STOP_FAIL("Cannot initalize IOProcessor!", 1);
 
 	// after io is initialized, drop root rights
-	if (getuid() == 0 || geteuid() == 0) 
+	user = Config::GetValue("daemon.user", NULL);
+	if (user != NULL && *user && (getuid() == 0 || geteuid() == 0)) 
 	{
-		struct passwd *pw = getpwnam("daemon");
+		struct passwd *pw = getpwnam(user);
 		if (!pw)
-			STOP_FAIL("Cannot setuid to daemon", 1);
+			STOP_FAIL(rprintf("Cannot setuid to %s", user), 1);
 		
 		setuid(pw->pw_uid);
 	}
