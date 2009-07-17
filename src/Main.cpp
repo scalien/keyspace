@@ -15,7 +15,7 @@
 #include "Application/TimeCheck/TimeCheck.h"
 
 #ifdef DEBUG
-#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s started (DEBUG build date " __DATE__ " " __TIME__ ")"
+#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s (DEBUG build date " __DATE__ " " __TIME__ ")"
 #else
 #define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s"
 #endif
