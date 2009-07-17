@@ -21,5 +21,4 @@ safe_keyspace()
 	done
 }
 
-KEYSPACE_BIN=`dirname $0`/keyspaced
-safe_keyspace $KEYSPACE_BIN $1 $2 &> /dev/null &
+safe_keyspace $1 $2 $3 &> /dev/null &

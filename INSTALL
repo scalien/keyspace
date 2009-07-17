@@ -4,8 +4,8 @@ Contact
 
 If you are experiencing difficulties please visit our Google Groups page:
 
-- group home page:		http://groups.google.com/group/keyspace
-- group email address:	keyspace@googlegroups.com
+- group home page:      http://groups.google.com/group/keyspace
+- group email address:  keyspace@googlegroups.com
 
 The official Keyspace homepage is at http://scalien.com
 
@@ -86,15 +86,15 @@ Running Keyspace
 ================
 
 To launch Keyspace, start it with the included safe script
-located at script/safe_keyspace.
+located at script/safe_keyspaced.
 
 Usage:
 
-	$ script/safe_keyspace [binary-file] [config-file]
+	$ script/safe_keyspaced [binary-file] [config-file] [database-dir]
 
 E.g.
 
-	$ script/safe_keyspace bin/keyspace test/0/keyspace.conf
+	$ script/safe_keyspaced bin/keyspaced test/0/keyspace.conf test/0
 
 If you do not specify a conf file, Keyspace will start in single
 mode with default configuration. This is a convenience feature
@@ -105,9 +105,13 @@ on the keyspace.conf file.
 
 If you want to run more than one instances on the same computer:
 
-	$ script/safe_keyspace bin/keyspace test/1/keyspace.conf
-	$ script/safe_keyspace bin/keyspace test/2/keyspace.conf
-	
+	$ script/safe_keyspaced bin/keyspaced test/1/keyspace.conf test/1
+	$ script/safe_keyspaced bin/keyspaced test/2/keyspace.conf test/2
+
+The safe script relaunches Keyspace when a crash occurs or something bad
+happens. If you want to stop Keyspace, kill the keyspaced process and
+the safe script will terminate too.
+
 
 Configuration options
 =====================

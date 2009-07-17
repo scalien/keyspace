@@ -23,8 +23,8 @@ pidof_daemon() {
 }
 
 wait_stop() {
-	i = 0
-	while [ i -lt $1 ]; do
+	i=0
+	while [ $i -lt $1 ]; do
 		pidof_daemon
 		if [ "$pid" == "" ]; then
 			return
@@ -39,7 +39,7 @@ case "$1" in
   start)
 	echo -n "Starting $DESC: "
 
-	$SAFE_DAEMON $DEFAULT_CONFIG $DATABASE_DIR
+	$SAFE_DAEMON $DAEMON $DEFAULT_CONFIG $DATABASE_DIR
 	
 	if [ $? -eq 0 ]; then
 		echo "$NAME."

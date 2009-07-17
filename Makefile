@@ -24,7 +24,7 @@ VERSION_MAJMIN = `$(BASE_DIR)/script/version.sh 3 $(SRC_DIR)/Version.h`
 PACKAGE_NAME = keyspace-server
 PACKAGE_DIR = $(BASE_DIR)/packages
 PACKAGE_FILE = $(PACKAGE_NAME)-$(VERSION).deb
-PACKAGE_REPOSITORY = /var/www/www.scalien.com/debian
+PACKAGE_REPOSITORY = /var/www/debian.scalien.com/
 
 BUILD_ROOT = $(BASE_DIR)/build
 SRC_DIR = $(BASE_DIR)/src
