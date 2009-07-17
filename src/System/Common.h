@@ -49,6 +49,8 @@ inline unsigned NumLen(int n) { return n == 0 ? 1 : (unsigned) floor(log10(n) + 
 
 void BlockSignals();
 
+bool IsFolder(const char* path);
+
 int snreadf(char* buffer, unsigned size, const char* format, ...);
 int vsnreadf(char* buffer, unsigned size, const char* format, va_list ap);
 

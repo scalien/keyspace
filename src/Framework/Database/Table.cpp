@@ -23,7 +23,12 @@ database(database)
 	if (db->open(txnid, filename, dbname, type, flags, mode) != 0)
 	{
 		db->close(0);
-		STOP_FAIL("could not open database", 1);
+		if (IsFolder(filename))
+		{
+			STOP_FAIL("Could not create database file 'keyspace' "
+					  "because a folder 'keyspace' exists", 1);
+		}
+		STOP_FAIL("Could not open database", 1);
 	}
 	Log_Trace();
 	db->set_flags(0);
