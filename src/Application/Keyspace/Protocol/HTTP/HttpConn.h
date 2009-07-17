@@ -46,6 +46,7 @@ private:
 	bool			ProcessRemove(const char* params, KeyspaceOp* op);
 	bool			ProcessPrune(const char* params, KeyspaceOp* op);
 	bool			ProcessLatency();
+	bool			PrintHello();
 };
 
 #endif
