@@ -33,7 +33,8 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 		case KEYSPACECLIENT_LISTP:
 		case KEYSPACECLIENT_DIRTY_LISTP:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N:%u:%u:%u:%u",
-						   &type, &cmdID, &prefix, &key, &count, &count, &offset, &offset);
+						   &type, &cmdID, &prefix, &key,
+						   &count, &count, &offset, &offset);
 			break;
 		case KEYSPACECLIENT_SET:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N",

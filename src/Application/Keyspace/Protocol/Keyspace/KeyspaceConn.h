@@ -14,6 +14,8 @@ class KeyspaceServer;
 
 class KeyspaceConn : public MessageConn<>, public KeyspaceService
 {
+typedef MFunc<KeyspaceConn> Func;
+typedef ByteArray<KEYSPACE_BUF_SIZE> Buffer;
 public:
 	KeyspaceConn();
 	
@@ -31,9 +33,9 @@ private:
 	void				ProcessMsg();
 	void				AppendOps();
 
-	MFunc<KeyspaceConn>	onConnectionTimeout;
+	Func				onConnectionTimeout;
 	CdownTimer			connectionTimeout;
-	ByteArray<KEYSPACE_BUF_SIZE> data;
+	Buffer				data;
 	KeyspaceServer*		server;
 	KeyspaceClientReq	req;
 	KeyspaceClientResp	resp;

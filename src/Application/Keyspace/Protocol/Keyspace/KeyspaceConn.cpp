@@ -77,7 +77,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 
 				resp.Write(data);
 			}
-			else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
+			else if (op->type == KeyspaceOp::LIST ||
+			op->type == KeyspaceOp::DIRTY_LIST)
 			{
 				if (op->key.length > 0)
 				{
@@ -85,7 +86,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 					resp.Write(data);
 				}
 			}
-			else if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
+			else if (op->type == KeyspaceOp::LISTP ||
+			op->type == KeyspaceOp::DIRTY_LISTP)
 			{
 				if (op->key.length > 0)
 				{
@@ -98,17 +100,16 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 			
 			if (data.length > 0)
 			{
-				//Log_Trace("=== Sending to client: %.*s ===", data.length, data.buffer);
 				Write(data);
 			}
 			
-			if (final && 
-				(op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST ||
-				 op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP))
+			if (final && (op->type == KeyspaceOp::LIST ||
+			op->type == KeyspaceOp::DIRTY_LIST ||
+			op->type == KeyspaceOp::LISTP ||
+			op->type == KeyspaceOp::DIRTY_LISTP))
 			{
 				resp.ListEnd(op->cmdID);
 				resp.Write(data);
-				//Log_Trace("=== Sending to client: %.*s ===", data.length, data.buffer);
 				Write(data);
 			}
 		}

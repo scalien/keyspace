@@ -196,6 +196,7 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 		(request.line.uri[0] == '/' && request.line.uri[1] == 0))
 	{
 		ret = PrintHello();
+		ret = false;
 	}
 	else
 	{
