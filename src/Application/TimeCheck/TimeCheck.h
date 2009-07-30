@@ -13,6 +13,11 @@
 
 class TimeCheck
 {
+	typedef TransportUDPReader*		Reader;
+	typedef TransportUDPWriter**	Writers;
+	typedef MFunc<TimeCheck>		Func;
+	typedef ByteArray<1024>			Buffer;
+
 public:
 	TimeCheck();
 

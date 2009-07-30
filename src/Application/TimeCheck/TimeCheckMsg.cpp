@@ -1,6 +1,7 @@
 #include "TimeCheckMsg.h"
 
-void TimeCheckMsg::Request(unsigned nodeID_, uint64_t series_, uint64_t requestTimestamp_)
+void TimeCheckMsg::Request(unsigned nodeID_, uint64_t series_,
+uint64_t requestTimestamp_)
 {
 	type = TIMECHECK_REQUEST;
 	nodeID = nodeID_;
@@ -9,7 +10,7 @@ void TimeCheckMsg::Request(unsigned nodeID_, uint64_t series_, uint64_t requestT
 }
 
 void TimeCheckMsg::Response(unsigned nodeID_, uint64_t series_,
-							uint64_t requestTimestamp_, uint64_t responseTimestamp_)
+uint64_t requestTimestamp_, uint64_t responseTimestamp_)
 {
 	type = TIMECHECK_RESPONSE;
 	nodeID = nodeID_;
