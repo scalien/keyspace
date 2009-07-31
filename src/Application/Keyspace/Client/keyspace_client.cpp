@@ -71,7 +71,8 @@ keyspace_client_destroy(keyspace_client_t kc)
 }
 
 int
-keyspace_client_init(keyspace_client_t kc, int nodec, const char* nodev[], uint64_t timeout)
+keyspace_client_init(keyspace_client_t kc, int nodec,
+const char* nodev[], uint64_t timeout)
 {
 	Client *client = (Client *) kc;
 	
