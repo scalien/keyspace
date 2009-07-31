@@ -79,8 +79,10 @@ void ConsoleConn::WritePrompt()
 
 void Console::Init(int port_, const char* interface_)
 {
-	if (!TCPServerT<Console, ConsoleConn, CONSOLE_SIZE>::Init(port_, CONN_BACKLOG, interface_))
-		Log_Message("Console: initialization failed, interface = %s, port = %d", interface_, port_);
+	if (!TCPServerT<Console, ConsoleConn,
+		CONSOLE_SIZE>::Init(port_, CONN_BACKLOG, interface_))
+		Log_Message("Console: init failed, interface = %s, port = %d",
+					 interface_, port_);
 }
 
 void Console::Execute(const char* cmd, const char* args, ConsoleConn* conn)
