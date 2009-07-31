@@ -14,24 +14,24 @@ class ReplicatedKeyspaceDB;
 class CatchupReader : public MessageConn<>
 {
 public:
-	void						Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_);
+	void			Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_);
 
-	void						Start(unsigned nodeID);
-	void						OnMessageRead(const ByteString& message);
-	void						OnClose();
-	virtual void				OnConnect();
-	virtual void				OnConnectTimeout();
+	void			Start(unsigned nodeID);
+	void			OnMessageRead(const ByteString& message);
+	void			OnClose();
+	virtual void	OnConnect();
+	virtual void	OnConnectTimeout();
 
 private:
-	void						ProcessMsg();
-	void						OnKeyValue();
-	void						OnCommit();
+	void			ProcessMsg();
+	void			OnKeyValue();
+	void			OnCommit();
 
-	Table*						table;
-	CatchupMsg					msg;
-	uint64_t					paxosID;
-	Transaction					transaction;
-	ReplicatedKeyspaceDB*		keyspaceDB;
+	Table*			table;
+	CatchupMsg		msg;
+	uint64_t		paxosID;
+	Transaction		transaction;
+	ReplicatedKeyspaceDB*	keyspaceDB;
 };
 
 #endif

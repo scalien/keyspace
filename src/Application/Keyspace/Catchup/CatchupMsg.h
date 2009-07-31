@@ -9,18 +9,20 @@
 
 class CatchupMsg
 {
+typedef ByteArray<KEYSPACE_KEY_SIZE> KeyBuffer; 
+typedef ByteArray<KEYSPACE_VAL_SIZE> ValBuffer; 
 public:
-	char type;
-	ByteArray<KEYSPACE_KEY_SIZE>	key;
-	ByteArray<KEYSPACE_VAL_SIZE>	value;
-	uint64_t						paxosID;
+	char		type;
+	KeyBuffer	key;
+	ValBuffer	value;
+	uint64_t	paxosID;
 	
-	void							Init(char type_);
-	void							KeyValue(ByteString& key_, ByteString& value_);
-	void							Commit(uint64_t paxosID);
+	void		Init(char type_);
+	void		KeyValue(ByteString& key_, ByteString& value_);
+	void		Commit(uint64_t paxosID);
 
-	bool							Read(const ByteString& data);
-	bool							Write(ByteString& data);
+	bool		Read(const ByteString& data);
+	bool		Write(ByteString& data);
 };
 
 #endif

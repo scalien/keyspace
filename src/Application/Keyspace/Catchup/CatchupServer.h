@@ -11,8 +11,8 @@
 class CatchupServer : public TCPServerT<CatchupServer, CatchupWriter>
 {
 public:
-	void			Init(int port);
-	void			InitConn(CatchupWriter* conn);
+	void	Init(int port);
+	void	InitConn(CatchupWriter* conn);
 };
 
 #endif
