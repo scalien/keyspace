@@ -7,6 +7,7 @@
 
 class TCPEchoConn
 {
+friend class TCPEchoServer;
 typedef ByteArray<1024>		Buffer;
 typedef MFunc<TCPEchoConn>	Func;
 
