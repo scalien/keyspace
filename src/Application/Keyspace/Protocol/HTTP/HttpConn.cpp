@@ -303,13 +303,14 @@ KeyspaceOp* op, bool p, bool dirty)
 	
 	VALIDATE_KEYLEN(prefix);
 	VALIDATE_KEYLEN(key);
-	if (direction.length != 1)
-		return false;
 	
 	op->prefix.Set(prefix);
 	op->key.Set(key);
 	op->count = strntoint64(count.buffer, count.length, &nread);
-	op->forward = (direction.buffer[0] == 'f');
+	if (direction.length != 1)
+		op->forward = true;
+	else
+		op->forward = (direction.buffer[0] == 'f');
 	if (nread != (unsigned) count.length)
 	{
 		RESPONSE_FAIL;
