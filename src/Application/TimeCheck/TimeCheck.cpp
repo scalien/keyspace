@@ -39,7 +39,8 @@ void TimeCheck::InitTransport()
 		STOP_FAIL("Cannot initialize TimeCheck", 1);
 	reader->SetOnRead(&onRead);
 	
-	writers = (TransportUDPWriter**) Alloc(sizeof(TransportUDPWriter*) * RCONF->GetNumNodes());
+	writers = (TransportUDPWriter**)
+			  Alloc(sizeof(TransportUDPWriter*) * RCONF->GetNumNodes());
 	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
 		endpoint = RCONF->GetEndpoint(i);
@@ -73,22 +74,19 @@ void TimeCheck::OnSeriesTimeout()
 	
 	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
-		if (numReplies[i] > 0)
-		{
-			double skew = totalSkew[i] / numReplies[i];
+		if (numReplies[i] < 1)
+			continue;
+		double skew = totalSkew[i] / numReplies[i];
 
-			if (verbosity)
-			{
-				Log_Trace("skew for nodeID %d: %lf", i, skew);
-			}
-			
-			if (skew > MAX_CLOCK_SKEW && failOnSkew)
-			{
-				Log_Trace("skew for nodeID %d: %lf", i, skew);
-				Log_Trace("  totalSkew: %lf", totalSkew[i]);
-				Log_Trace("  numReplies: %d", numReplies[i]);
-				STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
-			}
+		if (verbosity)
+			Log_Trace("skew for nodeID %d: %lf", i, skew);
+		
+		if (skew > MAX_CLOCK_SKEW && failOnSkew)
+		{
+			Log_Trace("skew for nodeID %d: %lf", i, skew);
+			Log_Trace("  totalSkew: %lf", totalSkew[i]);
+			Log_Trace("  numReplies: %d", numReplies[i]);
+			STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
 		}
 	}
 	
@@ -123,7 +121,8 @@ void TimeCheck::OnRead()
 	{
 		CheckNodeIdentity();
 		unsigned senderID = msg.nodeID;
-		msg.Response(RCONF->GetNodeID(), msg.series, msg.requestTimestamp, Now());
+		msg.Response(RCONF->GetNodeID(), msg.series,
+					 msg.requestTimestamp, Now());
 		msg.Write(data);
 		writers[senderID]->Write(data);
 	}
