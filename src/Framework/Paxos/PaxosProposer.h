@@ -11,10 +11,11 @@
 
 class PaxosProposer
 {
-	friend class ReplicatedLog;
-	typedef TransportTCPWriter**	Writers;
-	typedef MFunc<PaxosProposer>	Func;
-	typedef PaxosProposerState		State;
+friend class ReplicatedLog;
+typedef TransportTCPWriter**	Writers;
+typedef MFunc<PaxosProposer>	Func;
+typedef PaxosProposerState		State;
+
 public:
 	PaxosProposer();
 
