@@ -67,6 +67,7 @@ public:
 	int64_t					num;
 	uint64_t				count;
 	uint64_t				offset;
+	bool					forward;
 	bool					status;
 	
 	KeyspaceService*		service;
@@ -92,10 +93,13 @@ public:
 	
 	bool IsWrite()
 	{
-		return (type == KeyspaceOp::SET || type == KeyspaceOp::TEST_AND_SET ||
-			type == KeyspaceOp::DELETE || type == KeyspaceOp::REMOVE ||
-			type == KeyspaceOp::ADD || type == KeyspaceOp::RENAME ||
-			type == KeyspaceOp::PRUNE);
+		return (type == KeyspaceOp::SET ||
+				type == KeyspaceOp::TEST_AND_SET ||
+				type == KeyspaceOp::DELETE ||
+				type == KeyspaceOp::REMOVE ||
+				type == KeyspaceOp::ADD ||
+				type == KeyspaceOp::RENAME ||
+				type == KeyspaceOp::PRUNE);
 	}
 
 	bool IsRead()
@@ -110,18 +114,26 @@ public:
 	
 	bool IsList()
 	{
-		return (type == LIST || type == DIRTY_LIST || type == LISTP || type == DIRTY_LISTP);
+		return (type == LIST ||
+				type == DIRTY_LIST ||
+				type == LISTP ||
+				type == DIRTY_LISTP);
 	}
 
 	
 	bool IsDirty()
 	{
-		return (type == DIRTY_GET || type == DIRTY_LIST || DIRTY_LISTP);
+		return (type == DIRTY_GET ||
+				type == DIRTY_LIST ||
+				DIRTY_LISTP);
 	}
 	
 	bool MasterOnly()
 	{
-		return (type == GET || type == LIST || type == LISTP || IsWrite());
+		return (type == GET ||
+				type == LIST ||
+				type == LISTP ||
+				IsWrite());
 	}
 };
 
