@@ -296,7 +296,8 @@ void Result::AppendResponse(Response* resp_)
 // ClientConn
 //
 //===================================================================
-ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_, uint64_t timeout_) :
+ClientConn::ClientConn(Client &client, int nodeID_,
+const Endpoint &endpoint_, uint64_t timeout_) :
 client(client),
 endpoint(endpoint_),
 onReadTimeout(this, &ClientConn::OnReadTimeout),
@@ -312,7 +313,8 @@ readTimeout(&onReadTimeout)
 
 void ClientConn::Send(Command &cmd)
 {
-	Log_Trace("nodeID = %d, cmd = %.*s", nodeID, min(cmd.msg.length, 30), cmd.msg.buffer);
+	Log_Trace("nodeID = %d, cmd = %.*s",
+			  nodeID, min(cmd.msg.length, 30), cmd.msg.buffer);
 	cmd.nodeID = nodeID;
 #ifdef CLIENT_LATENCY
 	cmd.sendTime = NowMicro();
@@ -368,13 +370,16 @@ bool ClientConn::ProcessResponse(Response* resp)
 		{
 			cmd->status = resp->status;
 			
-			Log_Trace("status = %d, id = %lu", (int) cmd->status, (unsigned long) cmd->cmdID);
+			Log_Trace("status = %d, id = %lu",
+					  (int) cmd->status, (unsigned long) cmd->cmdID);
 			// GET_MASTER is a special case, because it is only used internally
 			if (cmd->type == KEYSPACECLIENT_GET_MASTER)
 			{
 				getMasterPending = false;
 				if (resp->status == KEYSPACE_OK)
-					client.SetMaster((int) strntoint64(resp->value.buffer, resp->value.length, &nread));
+					client.SetMaster((int) strntoint64(resp->value.buffer, 
+													   resp->value.length,
+													   &nread));
 				else
 					client.SetMaster(-1);
 					
@@ -386,8 +391,8 @@ bool ClientConn::ProcessResponse(Response* resp)
 				return false;
 			}
 			
-			// with LIST style commands there can be more than one response with
-			// the same id
+			// with LIST style commands there can be more
+			// than one response with the same id
 			if (cmd->type == KEYSPACECLIENT_LIST ||
 				cmd->type == KEYSPACECLIENT_LISTP ||
 				cmd->type == KEYSPACECLIENT_DIRTY_LIST ||
@@ -663,27 +668,33 @@ int Client::DirtyGet(const ByteString &key, bool submit)
 	return Get(key, true, submit);
 }
 
-int	Client::ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+int	Client::ListKeys(const ByteString &prefix,
+const ByteString &startKey, uint64_t count, bool next)
 {
 	return ListKeyValues(prefix, startKey, count, next, false, false);
 }
 
-int	Client::DirtyListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+int	Client::DirtyListKeys(const ByteString &prefix,
+const ByteString &startKey, uint64_t count, bool next)
 {
 	return ListKeyValues(prefix, startKey, count, next, true, false);
 }
 
-int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+int Client::ListKeyValues(const ByteString &prefix,
+const ByteString &startKey, uint64_t count, bool next)
 {
 	return ListKeyValues(prefix, startKey, count, next, false, true);
 }
 
-int Client::DirtyListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next)
+int Client::DirtyListKeyValues(const ByteString &prefix,
+const ByteString &startKey, uint64_t count, bool next)
 {
 	return ListKeyValues(prefix, startKey, count, next, true, true);
 }
 
-int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty, bool values)
+int Client::ListKeyValues(const ByteString &prefix,
+const ByteString &startKey, uint64_t count,
+bool next, bool dirty, bool values)
 {
 	Command*	cmd;
 	ByteString	args[4];
@@ -697,16 +708,18 @@ int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, 
 	else
 		nextString.Append("0", 1);
 
-	if (prefix.length > 0 &&
-		startKey.length >= prefix.length &&
-		memcmp(prefix.buffer, startKey.buffer, min(prefix.length, startKey.length)) == 0)
+	if (prefix.length > 0 && startKey.length >= prefix.length)
 	{
-		sk.buffer = startKey.buffer + prefix.length;
-		sk.length = startKey.length - prefix.length;
-		sk.size = startKey.size - prefix.length;
+		if (memcmp(prefix.buffer, startKey.buffer,
+			min(prefix.length, startKey.length)) == 0)
+		{
+			sk.buffer = startKey.buffer + prefix.length;
+			sk.length = startKey.length - prefix.length;
+			sk.size = startKey.size - prefix.length;
+		}
 	}
 	else
-		sk = startKey;
+		sk = startKey; // TODO: this seems inconsistent
 
 	args[0] = prefix;
 	args[1] = sk;
@@ -716,9 +729,11 @@ int Client::ListKeyValues(const ByteString &prefix, const ByteString &startKey, 
 	if (dirty)
 	{
 		if (values)
-			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LISTP, false, SIZE(args), args);
+			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LISTP,
+								false, SIZE(args), args);
 		else
-			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, false, SIZE(args), args);
+			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, false,
+								SIZE(args), args);
 
 		dirtyCommands.Append(cmd);
 	}
@@ -772,7 +787,8 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	return status;
 }
 
-int Client::TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, bool submit)
+int Client::TestAndSet(const ByteString &key,
+const ByteString &test, const ByteString &value, bool submit)
 {
 	Command*	cmd;
 	ByteString	args[3];
@@ -1064,7 +1080,8 @@ uint64_t Client::GetNextID()
 	return cmdID++;
 }
 
-Command* Client::CreateCommand(char type, bool submit, int msgc, ByteString *msgv)
+Command* Client::CreateCommand(char type, bool submit,
+int msgc, ByteString *msgv)
 {
 	Command*		cmd;
 	int				len;
