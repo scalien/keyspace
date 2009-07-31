@@ -16,29 +16,32 @@ class KeyspaceOp;
 
 class KeyspaceMsg
 {
+typedef ByteArray<KEYSPACE_KEY_SIZE> KeyBuffer;
+typedef ByteArray<KEYSPACE_VAL_SIZE> ValBuffer;
 public:
-	char							type;
-	ByteArray<KEYSPACE_KEY_SIZE>	key;
-	ByteArray<KEYSPACE_KEY_SIZE>	newKey;
-	ByteArray<KEYSPACE_VAL_SIZE>	value;
-	ByteArray<KEYSPACE_VAL_SIZE>	test;
-	ByteArray<KEYSPACE_VAL_SIZE>	prefix;
-	int64_t							num;
+	char		type;
+	KeyBuffer	key;
+	KeyBuffer	newKey;
+	ValBuffer	value;
+	ValBuffer	test;
+	ValBuffer	prefix;
+	int64_t		num;
 	
-	void							Init(char type_);
+	void		Init(char type_);
 	
-	void							Set(ByteString key_, ByteString value_);
-	void							TestAndSet(ByteString key_, ByteString test_, ByteString value_);
-	void							Add(ByteString key_, int64_t num_);
-	void							Rename(ByteString key_, ByteString newKey_);
-	void							Delete(ByteString key_);
-	void							Remove(ByteString key_);
-	void							Prune(ByteString prefix_);
+	void		Set(ByteString key_, ByteString value_);
+	void		TestAndSet(ByteString key_, 
+				ByteString test_, ByteString value_);
+	void		Add(ByteString key_, int64_t num_);
+	void		Rename(ByteString key_, ByteString newKey_);
+	void		Delete(ByteString key_);
+	void		Remove(ByteString key_);
+	void		Prune(ByteString prefix_);
 
-	bool							Read(ByteString& data, unsigned &nread);
-	bool							Write(ByteString& data);
+	bool		Read(ByteString& data, unsigned &nread);
+	bool		Write(ByteString& data);
 
-	bool							FromKeyspaceOp(KeyspaceOp* op);
+	bool		FromKeyspaceOp(KeyspaceOp* op);
 };
 
 #endif

@@ -62,16 +62,19 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	Transaction* transaction;
 
 	// don't allow writes for @@ keys
-	if (op->IsWrite() && op->key.length > 2 && op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
-		return false;
+	if (op->IsWrite() && op->key.length > 2 &&
+		op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
+			return false;
 
 	if (catchingUp)
 		return false;
 	
-	// reads are handled locally, they don't have to be added to the ReplicatedLog
+	// reads are handled locally, they don't have to
+	// be added to the ReplicatedLog
 	if (op->IsGet())
 	{
-		// only handle GETs if I'm the master and it's safe to do so (I have NOPed)
+		// only handle GETs if I'm the master and
+		// it's safe to do so (I have NOPed)
 		if (op->type == KeyspaceOp::GET &&
 		   (!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
@@ -182,12 +185,13 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 			if (ownAppend)
 			{
 				op = *it;
-				if (op->type == KeyspaceOp::DIRTY_GET || op->type == KeyspaceOp::GET)
-					ASSERT_FAIL();
+				if (op->type == KeyspaceOp::DIRTY_GET ||
+					op->type == KeyspaceOp::GET)
+						ASSERT_FAIL();
 				if ((op->type == KeyspaceOp::ADD ||
 					 op->type == KeyspaceOp::TEST_AND_SET ||
 					 op->type == KeyspaceOp::REMOVE) && ret)
-					op->value.Set(data);
+						op->value.Set(data);
 				op->status = ret;
 				it = ops.Next(it);
 			}
@@ -235,15 +239,19 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 		break;
 
 	case KEYSPACE_ADD:
-		ret &= table->Get(transaction, msg.key, data); // read number
+		// read number:
+		ret &= table->Get(transaction, msg.key, data);
 		if (!ret)
 			break;
-		num = strntoint64(data.buffer, data.length, &nread); // parse number
+		// parse number:
+		num = strntoint64(data.buffer, data.length, &nread);
 		if (nread == (unsigned) data.length)
 		{
 			num = num + msg.num;
-			data.length = snwritef(data.buffer, data.size, "%I", num); // print number
-			ret &= table->Set(transaction, msg.key, data); // write number
+			// print number:
+			data.length = snwritef(data.buffer, data.size, "%I", num);
+			// write number:
+			ret &= table->Set(transaction, msg.key, data);
 		}
 		else
 			ret = false;

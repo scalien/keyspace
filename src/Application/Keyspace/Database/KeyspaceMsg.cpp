@@ -13,7 +13,8 @@ void KeyspaceMsg::Set(ByteString key_, ByteString value_)
 	value.Set(value_);
 }
 	
-void KeyspaceMsg::TestAndSet(ByteString key_, ByteString test_, ByteString value_)
+void KeyspaceMsg::TestAndSet(ByteString key_,
+ByteString test_, ByteString value_)
 {
 	Init(KEYSPACE_TEST_AND_SET);
 	key.Set(key_);

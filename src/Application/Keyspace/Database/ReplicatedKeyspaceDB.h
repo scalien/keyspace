@@ -16,58 +16,64 @@
 
 class ReplicatedKeyspaceDB : public ReplicatedDB, public KeyspaceDB
 {
+typedef ByteArray<KEYSPACE_BUF_SIZE>	BufBuffer;
+typedef ByteArray<KEYSPACE_VAL_SIZE>	ValBuffer;
+typedef MFunc<ReplicatedKeyspaceDB>		Func;
+typedef List<KeyspaceOp*>				OpList;
+typedef List<ProtocolServer*>			ServerList;
+
 public:
 	ReplicatedKeyspaceDB();
 	
-	bool					Init();
-	void					Shutdown();
-	bool					Add(KeyspaceOp* op);
-	bool					Submit();
-	unsigned				GetNodeID();
-	bool					IsMasterKnown();
-	int						GetMaster();
-	bool					IsMaster();
-	void					SetProtocolServer(ProtocolServer* pserver);
+	bool			Init();
+	void			Shutdown();
+	bool			Add(KeyspaceOp* op);
+	bool			Submit();
+	unsigned		GetNodeID();
+	bool			IsMasterKnown();
+	int				GetMaster();
+	bool			IsMaster();
+	void			SetProtocolServer(ProtocolServer* pserver);
 	
-	void					OnCatchupComplete();	// called by CatchupClient
-	void					OnCatchupFailed();		// called by CatchupClient
+	void			OnCatchupComplete();	// called by CatchupClient
+	void			OnCatchupFailed();		// called by CatchupClient
 	
 // ReplicatedDB interface:
-	virtual void			OnAppend(Transaction* transaction, uint64_t paxosID,
-									 ByteString value, bool ownAppend);
-	virtual void			OnMasterLease(unsigned nodeID);
-	virtual void			OnMasterLeaseExpired();
-	virtual void			OnDoCatchup(unsigned nodeID);
-	virtual void			Stop();
-	virtual void			Continue();
+	virtual void	OnAppend(Transaction* transaction, uint64_t paxosID,
+							 ByteString value, bool ownAppend);
+	virtual void	OnMasterLease(unsigned nodeID);
+	virtual void	OnMasterLeaseExpired();
+	virtual void	OnDoCatchup(unsigned nodeID);
+	virtual void	Stop();
+	virtual void	Continue();
 	
-	void					AsyncOnAppend();
-	void					OnAppendComplete();
+	void			AsyncOnAppend();
+	void			OnAppendComplete();
 	
 private:
-	bool					AddWithoutReplicatedLog(KeyspaceOp* op);
-	bool					Execute(Transaction* transaction);
-	void					Append();
-	void					FailKeyspaceOps();
+	bool			AddWithoutReplicatedLog(KeyspaceOp* op);
+	bool			Execute(Transaction* transaction);
+	void			Append();
+	void			FailKeyspaceOps();
 	
-	bool					asyncAppenderActive;
-	bool					catchingUp;
-	List<KeyspaceOp*>		ops;
-	Table*					table;
-	KeyspaceMsg				msg;
-	ByteArray<KEYSPACE_BUF_SIZE>pvalue;
-	ByteArray<KEYSPACE_VAL_SIZE>data;
-	CatchupServer			catchupServer;
-	CatchupReader			catchupClient;
+	bool			asyncAppenderActive;
+	bool			catchingUp;
+	OpList			ops;
+	Table*			table;
+	KeyspaceMsg		msg;
+	BufBuffer		pvalue;
+	ValBuffer		data;
+	CatchupServer	catchupServer;
+	CatchupReader	catchupClient;
 	
-	Transaction*			transaction;
-	ByteBuffer				valueBuffer;
-	bool					ownAppend;
-	MFunc<ReplicatedKeyspaceDB> asyncOnAppend;
-	MFunc<ReplicatedKeyspaceDB> onAppendComplete;
-	ThreadPool				asyncAppender;
-	unsigned				numOps;
-	List<ProtocolServer*>	pservers;
+	Transaction*	transaction;
+	ByteBuffer		valueBuffer;
+	bool			ownAppend;
+	Func			asyncOnAppend;
+	Func			onAppendComplete;
+	ThreadPool		asyncAppender;
+	unsigned		numOps;
+	ServerList		pservers;
 };
 
 #endif

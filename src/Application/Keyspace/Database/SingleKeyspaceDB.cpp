@@ -93,16 +93,20 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::ADD)
 	{
-		op->status = table->Get(&transaction, op->key, data); // read number
+		// read number:
+		op->status = table->Get(&transaction, op->key, data);
 		
 		if (op->status)
 		{
-			num = strntoint64(data.buffer, data.length, &nread); // parse number
+			// parse number:
+			num = strntoint64(data.buffer, data.length, &nread);
 			if (nread == (unsigned) data.length)
 			{
 				num = num + op->num;
-				data.length = snwritef(data.buffer, data.size, "%I", num); // print number
-				op->status &= table->Set(&transaction, op->key, data); // write number
+				 // print number:
+				data.length = snwritef(data.buffer, data.size, "%I", num);
+				 // write number:
+				op->status &= table->Set(&transaction, op->key, data);
 				op->value.Allocate(data.length);
 				op->value.Set(data);
 			}
