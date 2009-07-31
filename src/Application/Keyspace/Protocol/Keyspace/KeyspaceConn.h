@@ -14,8 +14,8 @@ class KeyspaceServer;
 
 class KeyspaceConn : public MessageConn<>, public KeyspaceService
 {
-typedef MFunc<KeyspaceConn> Func;
-typedef ByteArray<KEYSPACE_BUF_SIZE> Buffer;
+typedef MFunc<KeyspaceConn>				Func;
+typedef ByteArray<KEYSPACE_BUF_SIZE>	Buffer;
 public:
 	KeyspaceConn();
 	
