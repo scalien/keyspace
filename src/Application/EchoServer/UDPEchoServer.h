@@ -9,23 +9,25 @@
 
 class UDPEchoServer
 {
+typedef ByteArray<1024>			Buffer;
+typedef MFunc<UDPEchoServer>	Func;
+
 public:
 	UDPEchoServer();
 
-	IOProcessor*			ioproc;
-	Scheduler*				scheduler;
-	Socket					socket;
-	UDPRead					udpread;
-	UDPWrite				udpwrite;
-	ByteArray<1024>			data;
+	bool			Init(IOProcessor* ioproc_, Scheduler* scheduler_);	
+	void			OnRead();
+	void			OnWrite();
 
-	bool					Init(IOProcessor* ioproc_, Scheduler* scheduler_);
-	
-	void					OnRead();
-	void					OnWrite();
-	
-	MFunc<UDPEchoServer>	onRead;
-	MFunc<UDPEchoServer>	onWrite;
+private:
+	IOProcessor*	ioproc;
+	Scheduler*		scheduler;
+	Socket			socket;
+	UDPRead			udpread;
+	UDPWrite		udpwrite;
+	Buffer			data;
+	Func			onRead;
+	Func			onWrite;
 };
 
 #endif

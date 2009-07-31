@@ -9,19 +9,20 @@
 
 class TCPEchoServer
 {
+typedef MFunc<TCPEchoServer> Func;
+
 public:
 	TCPEchoServer();
 	
-	IOProcessor*		ioproc;
-	Scheduler*			scheduler;
-	Socket				listener;
-	TCPRead				tcpread;
-
-	bool				Init(IOProcessor* ioproc_, Scheduler* scheduler_);
+private:
+	bool			Init(IOProcessor* ioproc_, Scheduler* scheduler_);
 	
-	void				OnConnect();
-
-	MFunc<TCPEchoServer> onConnect;
+	void			OnConnect();
+	IOProcessor*	ioproc;
+	Scheduler*		scheduler;
+	Socket			listener;
+	TCPRead			tcpread;
+	Func			onConnect;
 };
 
 #endif

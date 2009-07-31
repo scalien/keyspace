@@ -7,29 +7,32 @@
 
 class TCPEchoConn
 {
+typedef ByteArray<1024>		Buffer;
+typedef MFunc<TCPEchoConn>	Func;
+
 public:
 	TCPEchoConn();
 
-	IOProcessor*		ioproc;
-	Socket				socket;
-	TCPRead				tcpread;
-	TCPWrite			tcpwrite;
-	ByteArray<1024>		data;
-	
-	bool				Init(IOProcessor* ioproc_);
-	void				Shutdown();
-	
-	void				OnWelcome();
-	void				OnRead();
-	void				OnWrite();
-	void				OnCloseRead();
-	void				OnCloseWrite();	
-	
-	MFunc<TCPEchoConn>	onWelcome;
-	MFunc<TCPEchoConn>	onRead;
-	MFunc<TCPEchoConn>	onWrite;
-	MFunc<TCPEchoConn>	onCloseRead;
-	MFunc<TCPEchoConn>	onCloseWrite;
+	bool			Init(IOProcessor* ioproc_);
+	void			Shutdown();	
+	void			OnWelcome();
+	void			OnRead();
+	void			OnWrite();
+	void			OnCloseRead();
+	void			OnCloseWrite();	
+
+
+private:
+	IOProcessor*	ioproc;
+	Socket			socket;
+	TCPRead			tcpread;
+	TCPWrite		tcpwrite;
+	Buffer			data;
+	Func			onWelcome;
+	Func			onRead;
+	Func			onWrite;
+	Func			onCloseRead;
+	Func			onCloseWrite;
 };
 
 #endif
