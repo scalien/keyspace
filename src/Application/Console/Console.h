@@ -10,19 +10,19 @@ class Console;
 class ConsoleConn : public TCPConn<CONSOLE_SIZE>
 {
 public:
-	void				Init(Console* console);
-	void				Disconnect();
+	void			Init(Console* console);
+	void			Disconnect();
 	
 private:
-	Console*			console;
-	char				endpointString[ENDPOINT_STRING_SIZE];
+	Console*		console;
+	char			endpointString[ENDPOINT_STRING_SIZE];
 	
 	// TCPConn interface
-	virtual void		OnClose();
-	virtual void		OnRead();
-	virtual void		OnWrite();
+	virtual void	OnClose();
+	virtual void	OnRead();
+	virtual void	OnWrite();
 
-	void				WritePrompt();
+	void			WritePrompt();
 };
 
 class ConsoleCommand
@@ -32,18 +32,21 @@ public:
 
 	virtual			~ConsoleCommand() {}
 
-	virtual void	Execute(const char *cmd, const char* args, ConsoleConn *conn) = 0;
+	virtual void	Execute(const char *cmd,
+							const char* args, ConsoleConn *conn) = 0;
 };
 
 class Console : public TCPServerT<Console, ConsoleConn, CONSOLE_SIZE>
 {
 public:
 	void			Init(int port, const char* interface = "127.0.0.1");
-	void			Execute(const char* cmd, const char* args, ConsoleConn *conn);
+	void			Execute(const char* cmd,
+							const char* args, ConsoleConn *conn);
 	void			RegisterCommand(ConsoleCommand* command);
 
 private:
-	typedef Queue<ConsoleCommand, &ConsoleCommand::nextConsoleCommand> CommandQueue;
+	typedef Queue<ConsoleCommand, &ConsoleCommand::nextConsoleCommand> 
+				CommandQueue;
 	
 	CommandQueue	commands;
 };
