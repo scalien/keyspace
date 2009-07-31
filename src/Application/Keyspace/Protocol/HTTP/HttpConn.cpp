@@ -177,7 +177,6 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	params = (char*) request.line.uri;
 	bool ret;
 		
-	PREFIXFUNC("/getmaster",			ProcessGetMaster()) else
 	PREFIXFUNC("/get?",					ProcessGet(params, op)) else
 	PREFIXFUNC("/dirtyget?",			ProcessGet(params, op, true)) else
 	PREFIXFUNC("/set?",					ProcessSet(params, op)) else
@@ -258,18 +257,6 @@ bool ParseParams(const char* s, unsigned num, ...)
 
 #define VALIDATE_KEYLEN(bs) if (bs.length > KEYSPACE_KEY_SIZE) { RESPONSE_FAIL; return false; }
 #define VALIDATE_VALLEN(bs) if (bs.length > KEYSPACE_VAL_SIZE) { RESPONSE_FAIL; return false; }
-
-bool HttpConn::ProcessGetMaster()
-{
-	ByteArray<32> ba;
-	if (kdb->IsMaster())
-		ba.Writef("%d\n\nI'm the master", kdb->GetMaster());
-	else
-		ba.Writef("%d\n\nI'm a slave", kdb->GetMaster());
-	
-	Response(200, ba.buffer, ba.length);
-	return false;
-}
 
 bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op, bool dirty)
 {
@@ -442,10 +429,12 @@ bool HttpConn::ProcessLatency()
 bool HttpConn::PrintHello()
 {
 	ByteArray<128> text;
-
 	text.length = snprintf(text.buffer, text.size,
-		"Keyspace v" VERSION_STRING " r%.*s running",
-		(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+		"Keyspace v" VERSION_STRING " r%.*s running\n\nMaster: %d%s%s",
+		(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
+		kdb->GetMaster(),
+		kdb->IsMaster() ? " (me)" : "",
+		kdb->IsMasterKnown() ? "" : " (unknown)");
 
 	Response(200, text.buffer, text.length);
 	return true;

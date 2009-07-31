@@ -44,7 +44,7 @@ unsigned ReplicatedKeyspaceDB::GetNodeID()
 
 bool ReplicatedKeyspaceDB::IsMasterKnown()
 {
-	return RLOG->GetMaster();
+	return (RLOG->GetMaster() != -1);
 }
 
 int ReplicatedKeyspaceDB::GetMaster()
