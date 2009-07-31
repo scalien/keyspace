@@ -9,7 +9,8 @@
 #define MSG_FAIL			"Unable to process your request at this time"
 #define MSG_NOT_FOUND		"Not found"
 #define RESPONSE_FAIL		Response(500, MSG_FAIL, sizeof(MSG_FAIL) - 1)
-#define RESPONSE_NOTFOUND	Response(404, MSG_NOT_FOUND, sizeof(MSG_NOT_FOUND) - 1)
+#define RESPONSE_NOTFOUND	Response(404, MSG_NOT_FOUND,\
+							sizeof(MSG_NOT_FOUND) - 1)
 #define PARAMSEP			','
 
 HttpConn::HttpConn()
@@ -54,19 +55,22 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 		else
 			Response(200, "Failed", strlen("Failed"));
 	}
-	else if (op->type == KeyspaceOp::DELETE || op->type == KeyspaceOp::PRUNE
-			|| op->type == KeyspaceOp::RENAME)
+	else if (op->type == KeyspaceOp::DELETE ||
+			 op->type == KeyspaceOp::PRUNE ||
+			 op->type == KeyspaceOp::RENAME)
 	{
 		if (op->status)
 			Response(200, "OK", strlen("OK"));
 		else
 			RESPONSE_NOTFOUND;
 	}
-	else if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
+	else if (op->type == KeyspaceOp::LIST ||
+			 op->type == KeyspaceOp::DIRTY_LIST)
 	{
 		if (!headerSent)
 		{
-			ResponseHeader(200, false, "Content-type: text/plain" CS_CRLF CS_CRLF);
+			ResponseHeader(200, false,
+				"Content-type: text/plain" CS_CRLF CS_CRLF);
 			headerSent = true;
 		}
 		if (op->key.length > 0)
@@ -75,11 +79,13 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 			Write("\n", 1);
 		}
 	}
-	else if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
+	else if (op->type == KeyspaceOp::LISTP ||
+			 op->type == KeyspaceOp::DIRTY_LISTP)
 	{
 		if (!headerSent)
 		{
-			ResponseHeader(200, false, "Content-type: text/plain" CS_CRLF CS_CRLF);
+			ResponseHeader(200, false,
+				"Content-type: text/plain" CS_CRLF CS_CRLF);
 			headerSent = true;
 		}
 		if (op->key.length > 0)
@@ -161,7 +167,7 @@ int HttpConn::Parse(char* buf, int len)
 
 int HttpConn::ProcessGetRequest()
 {
-#define PREFIXFUNC(prefix, func) \
+#define PFUNC(prefix, func) \
 if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 { \
 	params += strlen(prefix); \
@@ -177,20 +183,20 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	params = (char*) request.line.uri;
 	bool ret;
 		
-	PREFIXFUNC("/get?",					ProcessGet(params, op)) else
-	PREFIXFUNC("/dirtyget?",			ProcessGet(params, op, true)) else
-	PREFIXFUNC("/set?",					ProcessSet(params, op)) else
-	PREFIXFUNC("/testandset?",			ProcessTestAndSet(params, op)) else
-	PREFIXFUNC("/add?",					ProcessAdd(params, op)) else
-	PREFIXFUNC("/rename?",				ProcessRename(params, op)) else
-	PREFIXFUNC("/delete?",				ProcessDelete(params, op)) else
-	PREFIXFUNC("/remove?",				ProcessRemove(params, op)) else
-	PREFIXFUNC("/prune?",				ProcessPrune(params, op)) else
-	PREFIXFUNC("/listkeys?",			ProcessList(params, op, false)) else
-	PREFIXFUNC("/dirtylistkeys?",		ProcessList(params, op, false, true)) else
-	PREFIXFUNC("/listkeyvalues?",		ProcessList(params, op, true)) else
-	PREFIXFUNC("/dirtylistkeyvalues?",	ProcessList(params, op, true, true)) else
-	PREFIXFUNC("/latency?",				ProcessLatency()) else
+	PFUNC("/get?",					ProcessGet(params, op)) else
+	PFUNC("/dirtyget?",				ProcessGet(params, op, true)) else
+	PFUNC("/set?",					ProcessSet(params, op)) else
+	PFUNC("/testandset?",			ProcessTestAndSet(params, op)) else
+	PFUNC("/add?",					ProcessAdd(params, op)) else
+	PFUNC("/rename?",				ProcessRename(params, op)) else
+	PFUNC("/delete?",				ProcessDelete(params, op)) else
+	PFUNC("/remove?",				ProcessRemove(params, op)) else
+	PFUNC("/prune?",				ProcessPrune(params, op)) else
+	PFUNC("/listkeys?",				ProcessList(params, op, false)) else
+	PFUNC("/dirtylistkeys?",		ProcessList(params, op, false, true)) else
+	PFUNC("/listkeyvalues?",		ProcessList(params, op, true)) else
+	PFUNC("/dirtylistkeyvalues?",	ProcessList(params, op, true, true)) else
+	PFUNC("/latency?",				ProcessLatency()) else
 	if (request.line.uri[0] == 0 ||
 		(request.line.uri[0] == '/' && request.line.uri[1] == 0))
 	{
@@ -255,8 +261,11 @@ bool ParseParams(const char* s, unsigned num, ...)
 		return false;
 }
 
-#define VALIDATE_KEYLEN(bs) if (bs.length > KEYSPACE_KEY_SIZE) { RESPONSE_FAIL; return false; }
-#define VALIDATE_VALLEN(bs) if (bs.length > KEYSPACE_VAL_SIZE) { RESPONSE_FAIL; return false; }
+#define VALIDATE_KEYLEN(bs)\
+if (bs.length > KEYSPACE_KEY_SIZE) { RESPONSE_FAIL; return false; }
+
+#define VALIDATE_VALLEN(bs)\
+if (bs.length > KEYSPACE_VAL_SIZE) { RESPONSE_FAIL; return false; }
 
 bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op, bool dirty)
 {
@@ -269,9 +278,10 @@ bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op, bool dirty)
 	return true;
 }
 
-bool HttpConn::ProcessList(const char* params, KeyspaceOp* op, bool p, bool dirty)
+bool HttpConn::ProcessList(const char* params,
+KeyspaceOp* op, bool p, bool dirty)
 {
-	ByteString prefix, key, count, offset;
+	ByteString prefix, key, count, offset, direction;
 	unsigned nread;
 
 	if (!p)
@@ -289,14 +299,17 @@ bool HttpConn::ProcessList(const char* params, KeyspaceOp* op, bool p, bool dirt
 			op->type = KeyspaceOp::DIRTY_LISTP;
 	}
 	
-	ParseParams(params, 4, &prefix, &key, &count, &offset);
+	ParseParams(params, 5, &prefix, &key, &count, &offset, &direction);
 	
 	VALIDATE_KEYLEN(prefix);
 	VALIDATE_KEYLEN(key);
+	if (direction.length != 1)
+		return false;
 	
 	op->prefix.Set(prefix);
 	op->key.Set(key);
 	op->count = strntoint64(count.buffer, count.length, &nread);
+	op->forward = (direction.buffer[0] == 'f');
 	if (nread != (unsigned) count.length)
 	{
 		RESPONSE_FAIL;
@@ -450,12 +463,14 @@ const char* HttpConn::Status(int code)
 	return "";
 }
 
-void HttpConn::Response(int code, const char* data, int len, bool close, const char* header)
+void HttpConn::Response(int code, const char* data,
+int len, bool close, const char* header)
 {	
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
 
-	Log_Message("[%s] HTTP: %s %s %d %d", endpoint.ToString(), request.line.method, request.line.uri, code, len);
+	Log_Message("[%s] HTTP: %s %s %d %d", endpoint.ToString(),
+				request.line.method, request.line.uri, code, len);
 
 	do {
 		size = snwritef(httpHeader.buffer, httpHeader.size,
@@ -487,7 +502,9 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
 
-	Log_Message("[%s] HTTP: %s %s %d ?", endpoint.ToString(), request.line.method, request.line.uri, code);
+	Log_Message("[%s] HTTP: %s %s %d ?",
+				endpoint.ToString(), request.line.method,
+				request.line.uri, code);
 
 	do {
 		size = snwritef(httpHeader.buffer, httpHeader.size,
