@@ -46,8 +46,11 @@ private:
 
 class ClientConn : public MessageConn<>
 {
+typedef MFunc<ClientConn> Func;
+
 public:
-	ClientConn(Client &client, int nodeID, const Endpoint &endpoint_, uint64_t timeout);
+	ClientConn(Client &client, int nodeID,
+			   const Endpoint &endpoint_, uint64_t timeout);
 
 	// MessageConn interface
 	virtual void	OnMessageRead(const ByteString& msg);
@@ -77,7 +80,7 @@ private:
 	uint64_t		disconnectTime;
 	uint64_t		getMasterTime;
 	uint64_t		timeout;
-	MFunc<ClientConn> onReadTimeout;
+	Func			onReadTimeout;
 	CdownTimer		readTimeout;
 	int				sent;
 };
@@ -86,6 +89,9 @@ typedef List<Response*> ResponseList;
 
 class Result
 {
+friend class ClientConn;
+friend class Client;
+
 public:
 	enum Latency
 	{
@@ -103,10 +109,7 @@ public:
 
 	double				GetLatency(int type = AVERAGE);
 
-private:
-	friend class ClientConn;
-	friend class Client;
-	
+private:	
 	ResponseList		responses;
 	ByteString			empty;
 	int					status;
@@ -154,28 +157,45 @@ public:
 	double			GetLatency();
 				
 	// simple get commands with preallocated value
-	int				Get(const ByteString &key, ByteString &value, bool dirty = false);
+	int				Get(const ByteString &key, ByteString &value,
+						bool dirty = false);
 	int				DirtyGet(const ByteString &key, ByteString &value);
 
 	// commands that return a Result
-	int				Get(const ByteString &key, bool dirty = false, bool submit = true);
+	int				Get(const ByteString &key, bool dirty = false,
+						bool submit = true);
 	int				DirtyGet(const ByteString &key, bool submit = true);
 
-	int				ListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
-	int				DirtyListKeys(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
-	int				ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
-	int				DirtyListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count = 0, bool next = false);
+	int				ListKeys(const ByteString &prefix,
+							 const ByteString &startKey,
+							 uint64_t count = 0, bool next = false);
+	int				DirtyListKeys(const ByteString &prefix,
+								  const ByteString &startKey,
+								  uint64_t count = 0, bool next = false);
+	int				ListKeyValues(const ByteString &prefix,
+								  const ByteString &startKey,
+								  uint64_t count = 0, bool next = false);
+	int				DirtyListKeyValues(const ByteString &prefix,
+									   const ByteString &startKey,
+									   uint64_t count = 0, bool next = false);
 
 	Result*			GetResult(int &status);
 
 	// write commands
-	int				Set(const ByteString &key, const ByteString &value, bool sumbit = true);
-	int				TestAndSet(const ByteString &key, const ByteString &test, const ByteString &value, 
+	int				Set(const ByteString &key,
+						const ByteString &value,
+						bool sumbit = true);
+	int				TestAndSet(const ByteString &key,
+							   const ByteString &test,
+							   const ByteString &value, 
 							   bool submit = true);
-	int				Add(const ByteString &key, int64_t num, int64_t &result, bool submit = true);
-	int				Delete(const ByteString &key, bool submit = true, bool remove = false);
+	int				Add(const ByteString &key, int64_t num,
+						int64_t &result, bool submit = true);
+	int				Delete(const ByteString &key, bool submit = true,
+						   bool remove = false);
 	int				Remove(const ByteString &key, bool submit = true);
-	int				Rename(const ByteString &from, const ByteString &to, bool submit = true);
+	int				Rename(const ByteString &from, const ByteString &to,
+						   bool submit = true);
 	int				Prune(const ByteString &prefix, bool submit = true);
 
 	// grouping write commands
@@ -190,11 +210,15 @@ private:
 	void			EventLoop();
 	bool			IsDone();
 	uint64_t		GetNextID();
-	Command*		CreateCommand(char cmd, bool submit, int msgc, ByteString *msgv);
+	Command*		CreateCommand(char cmd, bool submit,
+								  int msgc, ByteString *msgv);
 	void			SendCommand(ClientConn* conn, CommandList& commands);
 	void			DeleteCommands(CommandList& commands);
 	void			SetMaster(int master);
-	int				ListKeyValues(const ByteString &prefix, const ByteString &startKey, uint64_t count, bool next, bool dirty, bool values);
+	int				ListKeyValues(const ByteString &prefix,
+								  const ByteString &startKey,
+								  uint64_t count, bool next,
+								  bool dirty, bool values);
 	void			StopConnTimeout();
 	
 	CommandList		safeCommands;
