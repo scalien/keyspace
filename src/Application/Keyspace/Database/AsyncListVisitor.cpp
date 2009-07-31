@@ -185,6 +185,11 @@ void AsyncListVisitor::OnComplete()
 	delete this;
 }
 
+bool AsyncListVisitor::IsForward()
+{
+	return op->forward;
+}
+
 AsyncMultiDatabaseOp::AsyncMultiDatabaseOp()
 {
 	SetCallback(this);

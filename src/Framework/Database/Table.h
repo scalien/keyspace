@@ -12,6 +12,7 @@ public:
 	virtual bool Accept(const ByteString &key, const ByteString &value) = 0;
 	virtual const ByteString* GetStartKey() { return 0; }
 	virtual void OnComplete() {}
+	virtual bool IsForward() { return true; }
 };
 
 class Table

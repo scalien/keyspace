@@ -43,6 +43,7 @@ public:
 	virtual bool				Accept(const ByteString &key, const ByteString &value);
 	virtual const ByteString*	GetStartKey();
 	virtual void				OnComplete();
+	virtual bool				IsForward();
 	
 private:
 	KeyspaceOp*					op;

@@ -245,7 +245,7 @@ bool Table::Visit(TableVisitor &tv)
 	ByteString bsKey, bsValue;
 	Dbc* cursor = NULL;
 	bool ret = true;
-	u_int32_t flags = DB_NEXT;
+	u_int32_t flags = tv.IsForward() ? DB_NEXT : DB_PREV;
 
 	// TODO call tv.OnComplete() or error handling
 	if (db->cursor(NULL, &cursor, 0) != 0)
@@ -273,7 +273,7 @@ bool Table::Visit(TableVisitor &tv)
 		if (!ret)
 			break;
 
-		flags = DB_NEXT;
+		flags = tv.IsForward() ? DB_NEXT : DB_PREV;
 	}
 	
 	cursor->close();	
