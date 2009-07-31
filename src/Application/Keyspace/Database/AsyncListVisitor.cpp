@@ -31,7 +31,8 @@ bool AsyncVisitorCallback::AppendKey(const ByteString &key)
 	return false;
 }
 
-bool AsyncVisitorCallback::AppendKeyValue(const ByteString &key, const ByteString &value)
+bool AsyncVisitorCallback::AppendKeyValue(const ByteString &key,
+const ByteString &value)
 {
 	int numvalue;
 
@@ -67,7 +68,8 @@ void AsyncVisitorCallback::Execute()
 		op->key.size = keys[i].size;
 		op->key.length = keys[i].length;
 		
-		if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
+		if (op->type == KeyspaceOp::LISTP ||
+			op->type == KeyspaceOp::DIRTY_LISTP)
 		{
 			// this is a huge hack, since op->value is a ByteBuffer!
 			// if it were allocated, this would result in memleak
@@ -127,7 +129,8 @@ void AsyncListVisitor::AppendKey(const ByteString &key)
 	}
 }
 
-void AsyncListVisitor::AppendKeyValue(const ByteString &key, const ByteString &value)
+void AsyncListVisitor::AppendKeyValue(const ByteString &key,
+									  const ByteString &value)
 {
 	if (!avc->AppendKeyValue(key, value))
 	{
@@ -137,7 +140,8 @@ void AsyncListVisitor::AppendKeyValue(const ByteString &key, const ByteString &v
 	}
 }
 
-bool AsyncListVisitor::Accept(const ByteString &key, const ByteString &value)
+bool AsyncListVisitor::Accept(const ByteString &key,
+							  const ByteString &value)
 {
 	// don't list system keys
 	if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
@@ -151,16 +155,19 @@ bool AsyncListVisitor::Accept(const ByteString &key, const ByteString &value)
 
 	if ((count == 0 || num < count) &&
 		(prefix.length == 0 ||
-		strncmp(prefix.buffer, key.buffer, min(prefix.length, key.length)) == 0))
+		strncmp(prefix.buffer, key.buffer,
+		min(prefix.length, key.length)) == 0))
 	{
 		if (offset > 0)
 			offset--;
 		else
 		{
-			if (op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::DIRTY_LIST)
-				AppendKey(key);
-			if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
-				AppendKeyValue(key, value);
+			if (op->type == KeyspaceOp::LIST ||
+				op->type == KeyspaceOp::DIRTY_LIST)
+					AppendKey(key);
+			if (op->type == KeyspaceOp::LISTP ||
+				op->type == KeyspaceOp::DIRTY_LISTP)
+					AppendKeyValue(key, value);
 			num++;
 		}
 		return true;

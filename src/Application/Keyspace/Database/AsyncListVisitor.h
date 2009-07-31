@@ -12,7 +12,8 @@
 class AsyncVisitorCallback : public Callable
 {
 public:
-	typedef ByteArray<VISITOR_LIMIT>		KeyBuffer; // TODO better initial value
+	// TODO better initial value
+	typedef ByteArray<VISITOR_LIMIT>		KeyBuffer;
 	typedef DynArray<100 * VISITOR_LIMIT>	ValueBuffer;
 	
 	ByteString		keys[VISITOR_LIMIT];
@@ -28,7 +29,8 @@ public:
 	~AsyncVisitorCallback();
 
 	bool			AppendKey(const ByteString &key);
-	bool			AppendKeyValue(const ByteString &key, const ByteString &value);
+	bool			AppendKeyValue(const ByteString &key,
+								   const ByteString &value);
 	void			Execute();
 };
 
@@ -39,8 +41,10 @@ public:
 	
 	void						Init();
 	void						AppendKey(const ByteString &key);
-	void						AppendKeyValue(const ByteString &key, const ByteString &value);
-	virtual bool				Accept(const ByteString &key, const ByteString &value);
+	void						AppendKeyValue(const ByteString &key,
+											   const ByteString &value);
+	virtual bool				Accept(const ByteString &key,
+									   const ByteString &value);
 	virtual const ByteString*	GetStartKey();
 	virtual void				OnComplete();
 	virtual bool				IsForward();
