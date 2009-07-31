@@ -242,10 +242,13 @@ bool Table::Truncate(Transaction* tx)
 
 bool Table::Visit(TableVisitor &tv)
 {
+	if (!tv.IsForward())
+		return VisitBackward(tv);
+
 	ByteString bsKey, bsValue;
 	Dbc* cursor = NULL;
 	bool ret = true;
-	u_int32_t flags = tv.IsForward() ? DB_NEXT : DB_PREV;
+	u_int32_t flags = DB_NEXT;
 
 	// TODO call tv.OnComplete() or error handling
 	if (db->cursor(NULL, &cursor, 0) != 0)
@@ -273,11 +276,84 @@ bool Table::Visit(TableVisitor &tv)
 		if (!ret)
 			break;
 
-		flags = tv.IsForward() ? DB_NEXT : DB_PREV;
+		flags = DB_NEXT;
 	}
 	
 	cursor->close();	
 	tv.OnComplete();
 	
 	return ret;
+}
+
+bool Table::VisitBackward(TableVisitor &tv)
+{
+	ByteString bsKey, bsValue;
+	Dbc* cursor = NULL;
+	bool ret = true;
+	u_int32_t flags = DB_PREV;
+
+	// TODO call tv.OnComplete() or error handling
+	if (db->cursor(NULL, &cursor, 0) != 0)
+		return false;
+	
+	Dbt key, value;
+	if (tv.GetStartKey() && tv.GetStartKey()->length > 0)
+	{
+		key.set_data(tv.GetStartKey()->buffer);
+		key.set_size(tv.GetStartKey()->length);
+		flags = DB_SET_RANGE;		
+
+		// as DB_SET_RANGE finds the smallest key greater than or equal to the
+		// specified key, in order to visit the database backwards, move to the
+		// first matching elem, then move backwards
+		if (cursor->get(&key, &value, flags) != 0)
+		{
+			// end of database
+			cursor->close();
+			if (db->cursor(NULL, &cursor, 0) != 0)
+				return false;
+		}
+		else
+		{
+			// if there is a match, call the acceptor, otherwise move to the
+			// previous elem in the database
+			if (memcmp(tv.GetStartKey()->buffer, key.get_data(),
+				min(tv.GetStartKey()->length, key.get_size())) == 0)
+			{
+				bsKey = ByteString(key.get_size(),
+								   key.get_size(),
+								   (char*) key.get_data());
+				
+				bsValue = ByteString(value.get_size(),
+									 value.get_size(),
+									 (char*) value.get_data());
+
+				ret = tv.Accept(bsKey, bsValue);
+			}
+		}
+	}
+		
+	flags = DB_PREV;
+	while (ret && cursor->get(&key, &value, flags) == 0)
+	{
+		bsKey = ByteString(key.get_size(),
+						   key.get_size(),
+						   (char*) key.get_data());
+		
+		bsValue = ByteString(value.get_size(),
+							 value.get_size(),
+							 (char*) value.get_data());
+
+		ret = tv.Accept(bsKey, bsValue);
+		if (!ret)
+			break;
+
+		flags = DB_PREV;
+	}
+	
+	cursor->close();	
+	tv.OnComplete();
+	
+	return ret;
+
 }

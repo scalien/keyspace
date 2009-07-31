@@ -42,6 +42,8 @@ public:
 private:
 	Database*	database;
 	Db*			db;
+	
+	bool		VisitBackward(TableVisitor &tv);
 };
 
 
