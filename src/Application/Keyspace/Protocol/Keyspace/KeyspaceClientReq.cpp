@@ -12,7 +12,8 @@ void KeyspaceClientReq::Init()
 	
 bool KeyspaceClientReq::Read(const ByteString& data)
 {
-	int read;		// %u:%u and %I:%I is stupid
+	int			read;
+	unsigned	dummy;
 	
 	if (data.length < 1)
 		return false;
@@ -32,9 +33,13 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 		case KEYSPACECLIENT_DIRTY_LIST:
 		case KEYSPACECLIENT_LISTP:
 		case KEYSPACECLIENT_DIRTY_LISTP:
-			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N:%u:%u:%u:%u",
+			read = snreadf(data.buffer, data.length,
+						   "%c:%U:%N:%N:%u:%u:%u:%u:%u:%c",
 						   &type, &cmdID, &prefix, &key,
-						   &count, &count, &offset, &offset);
+						   &dummy, &count, &dummy, &offset,
+						   &dummy, &direction);
+			if (direction != 'f' && direction != 'b')
+				return false;
 			break;
 		case KEYSPACECLIENT_SET:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N",
@@ -54,8 +59,8 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 						   &type, &cmdID, &prefix);
 			break;
 		case KEYSPACECLIENT_ADD:
-			read = snreadf(data.buffer, data.length, "%c:%U:%N:%I:%I",
-						   &type, &cmdID, &key, &num, &num);
+			read = snreadf(data.buffer, data.length, "%c:%U:%N:%u:%I",
+						   &type, &cmdID, &key, &dummy, &num);
 			break;
 		case KEYSPACECLIENT_RENAME:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N",
@@ -85,21 +90,25 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			op->type = KeyspaceOp::LIST;
 			op->count = count;
 			op->offset = offset;
+			op->forward = (direction == 'f');
 			break;
 		case KEYSPACECLIENT_DIRTY_LIST:
 			op->type = KeyspaceOp::DIRTY_LIST;
 			op->count = count;
 			op->offset = offset;
+			op->forward = (direction == 'f');
 			break;
 		case KEYSPACECLIENT_LISTP:
 			op->type = KeyspaceOp::LISTP;
 			op->count = count;
 			op->offset = offset;
+			op->forward = (direction == 'f');
 			break;
 		case KEYSPACECLIENT_DIRTY_LISTP:
 			op->type = KeyspaceOp::DIRTY_LISTP;
 			op->count = count;
 			op->offset = offset;
+			op->forward = (direction == 'f');
 			break;
 		case KEYSPACECLIENT_SET:
 			op->type = KeyspaceOp::SET;
