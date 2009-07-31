@@ -85,7 +85,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 		if (op->key.length > 0)
 		{
 			Write(op->key.buffer, op->key.length, false);
-			Write(":", 1);
+			Write(" => ", 4);
 			Write(op->value.buffer, op->value.length, false);
 			Write("\n", 1);
 		}
