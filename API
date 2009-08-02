@@ -46,11 +46,11 @@ you can connect to any node and perform dirty reads.
 HTTP protocol
 =============
 
-You can issue all commands over HTTP. The commands and responses are
-people-friendly, so you can issue them from your browser. Be aware that
-HTTP should only be used for testing and peeking, as each command creates
-a new TCP/HTTP connection, which is fairly expensive and unnecessary.
-The programmatic APIs use the Keyspace protocol.
+You can issue all commands over HTTP with the GET method. The commands 
+and responses are people-friendly, so you can issue them from your browser.
+Be aware that HTTP should only be used for testing and peeking, as each 
+command creates a new TCP/HTTP connection, which is fairly expensive and 
+unnecessary. The programmatic APIs use the Keyspace protocol.
 
 The syntax for HTTP commands is http://yoursever:port
 where port is http.port specified in your conf file (default 8080),
