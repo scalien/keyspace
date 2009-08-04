@@ -66,6 +66,17 @@ void SetupSignals()
 
 	sigemptyset(&mask);
 	pthread_sigmask(SIG_SETMASK, &mask, NULL);
+
+//	AddKq(SIGINT, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGTERM, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGBUS, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGINT, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGFPE, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGILL, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGSEGV, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGSYS, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGXCPU, EVFILT_SIGNAL, NULL);
+//	AddKq(SIGXFSZ, EVFILT_SIGNAL, NULL);
 }
 
 bool IOProcessor::Init(int maxfd_)
@@ -73,7 +84,6 @@ bool IOProcessor::Init(int maxfd_)
 	rlimit rl;
 
 	terminated = false;
-	SetupSignals();	
 	
 	kq = kqueue();
 	if (kq < 0)
@@ -81,6 +91,8 @@ bool IOProcessor::Init(int maxfd_)
 		Log_Errno();
 		return false;
 	}
+
+	SetupSignals();	
 	
 	rl.rlim_cur = maxfd_;
 	rl.rlim_max = maxfd_;
@@ -102,7 +114,7 @@ bool IOProcessor::Init(int maxfd_)
 
 	if (!AddKq(asyncOpPipe[0], EVFILT_READ, NULL))
 		return false;
-	
+		
 	return true;
 }
 
@@ -216,9 +228,12 @@ bool IOProcessor::Poll(int sleep)
 
 	if (nevents < 0 || terminated)
 	{
-		Log_Trace("terminated = %s", terminated ? "true" : "false");
 		Log_Errno();
-		return false;
+		Log_Trace("terminated = %s", terminated ? "true" : "false");
+		if (terminated)
+			return false;
+		else
+			return true;
 	}
 	
 	for (i = 0; i < nevents; i++)
@@ -234,7 +249,10 @@ bool IOProcessor::Poll(int sleep)
 	for (i = 0; i < nevents; i++)
 	{
 		if (events[i].filter == EVFILT_SIGNAL)
+		{
+			Log_Trace("SIGNAL caught, %d", events[i].ident);
 			return false;
+		}
 
 		if (events[i].flags & EV_ERROR)
 			continue;

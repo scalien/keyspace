@@ -155,8 +155,9 @@ bool AsyncListVisitor::Accept(const ByteString &key,
 
 	if ((count == 0 || num < count) &&
 		(prefix.length == 0 ||
+		(key.length >= prefix.length &&
 		strncmp(prefix.buffer, key.buffer,
-		min(prefix.length, key.length)) == 0))
+		min(prefix.length, key.length)) == 0)))
 	{
 		if (offset > 0)
 			offset--;
