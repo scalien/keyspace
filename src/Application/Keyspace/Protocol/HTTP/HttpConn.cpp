@@ -112,6 +112,14 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 }
 
 
+bool HttpConn::IsAborted()
+{
+	if (state == DISCONNECTED)
+		return true;
+	return false;
+}
+
+
 void HttpConn::OnRead()
 {
 	Log_Trace();

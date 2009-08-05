@@ -20,14 +20,17 @@ public:
 	KeyspaceConn();
 	
 	void				Init(KeyspaceDB* kdb_, KeyspaceServer* server_);
-	void				OnComplete(KeyspaceOp* op, bool final);
-	void				OnConnectionTimeout();
-	void				OnMessageRead(const ByteString& message);
+
+	// KeyspaceService interface
+	virtual void		OnComplete(KeyspaceOp* op, bool final);
+	virtual bool		IsAborted();
 
 private:
 	// TCPConn interface
 	virtual void		OnClose();
 	virtual void		OnWrite();
+	virtual void		OnConnectionTimeout();
+	virtual void		OnMessageRead(const ByteString& message);
 
 	void				Write(ByteString &bs);
 	void				ProcessMsg();

@@ -11,7 +11,8 @@ class KeyspaceService
 public:
 	virtual			~KeyspaceService() {}
 	virtual	void	OnComplete(KeyspaceOp* op, bool final = true) = 0;
-	
+	virtual bool	IsAborted() = 0;
+
 	void Init(KeyspaceDB* kdb_)
 	{
 		kdb = kdb_;
@@ -89,6 +90,11 @@ public:
 		value.Free();
 		test.Free();
 		prefix.Free();
+	}
+	
+	bool IsAborted()
+	{
+		return service->IsAborted();
 	}
 	
 	bool IsWrite()

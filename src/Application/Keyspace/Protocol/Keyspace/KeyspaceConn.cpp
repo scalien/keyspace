@@ -125,6 +125,13 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 		server->DeleteConn(this);
 }
 
+bool KeyspaceConn::IsAborted()
+{
+	if (state == DISCONNECTED)
+		return true;
+	return false;
+}
+
 void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
 	req.Init();

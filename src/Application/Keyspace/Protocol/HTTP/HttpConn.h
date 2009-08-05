@@ -15,7 +15,10 @@ public:
 	HttpConn();
 	
 	void			Init(KeyspaceDB* kdb_, HttpServer* server_);
-	void			OnComplete(KeyspaceOp* op, bool final);
+
+	// KeyspaceService interface
+	virtual void	OnComplete(KeyspaceOp* op, bool final);
+	virtual bool	IsAborted();
 
 private:	
 	HttpServer*		server;

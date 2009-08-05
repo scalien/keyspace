@@ -143,6 +143,9 @@ void AsyncListVisitor::AppendKeyValue(const ByteString &key,
 bool AsyncListVisitor::Accept(const ByteString &key,
 							  const ByteString &value)
 {
+	if (op->IsAborted())
+		return false;
+
 	// don't list system keys
 	if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
 		return true;
