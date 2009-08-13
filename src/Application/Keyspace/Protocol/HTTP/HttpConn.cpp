@@ -37,6 +37,7 @@ void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 
 void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 {
+	static bool rowp = 0;
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
 		op->type == KeyspaceOp::ADD ||
@@ -53,7 +54,6 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("Keyspace contents of: ");
 				Write(op->key.buffer, op->key.length, false);
 				Print("</title>");
-
 				Write(op->value.buffer, op->value.length, true);
 			}
 			else
@@ -92,7 +92,10 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Write(op->prefix.buffer, op->prefix.length, false);
 				Print("</title>");
 				Print("<style>");
-				Print("div { margin-bottom: 3px; }");
+				Print("div { margin-bottom: 3px; ");
+				Print("      font-size: 12px; font-family: courier; }");
+				Print("div.even { background-color: white }");
+				Print("div.odd { background-color: #F0F0F0; }");
 				Print("a:link { color: black; text-decoration:none; }");
 				Print("a:visited { text-decoration:none; }");
 				Print("a:hover { text-decoration: underline; }");
@@ -109,14 +112,19 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 		{
 			if (html)
 			{
-				if (op->type == KeyspaceOp::LIST)
-					Print("<div><a href='/html/get?");
+				if (rowp)
+					Print("<div class='even'>");
 				else
-					Print("<div><a href='/html/dirtyget?");
+					Print("<div class='odd'>");
+				if (op->type == KeyspaceOp::LIST)
+					Print("<a href='/html/get?");
+				else
+					Print("<a href='/html/dirtyget?");
 				Write(op->key.buffer, op->key.length, false);
 				Print("'>");
 				Write(op->key.buffer, op->key.length, false);
 				Print("</a></div>");
+				rowp = !rowp;
 			}
 			else
 			{
@@ -130,16 +138,62 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 	{
 		if (!headerSent)
 		{
-			ResponseHeader(200, false,
+			if (html)
+			{
+				ResponseHeader(200, false,
+				"Content-type: text/html" CS_CRLF CS_CRLF);
+				Print("<title>");
+				Print("Keyspace listing of: ");
+				Write(op->prefix.buffer, op->prefix.length, false);
+				Print("</title>");
+				Print("<style>");
+				Print("div { margin-bottom: 3px; ");
+				Print("      font-size: 12px; font-family: courier; }");
+				Print("div.even { background-color: white; }");
+				Print("div.odd { background-color: #F0F0F0; }");
+				Print("a:link { color: black; text-decoration:none; }");
+				Print("a:visited { text-decoration:none; }");
+				Print("a:hover { text-decoration: underline; }");
+				Print("span.value { color: #006600; }");
+				Print("</style>");
+			}
+			else
+			{
+				ResponseHeader(200, false,
 				"Content-type: text/plain" CS_CRLF CS_CRLF);
+			}
 			headerSent = true;
 		}
 		if (op->key.length > 0)
 		{
-			Write(op->key.buffer, op->key.length, false);
-			Write(" => ", 4);
-			Write(op->value.buffer, op->value.length, false);
-			Write("\n", 1);
+			if (html)
+			{
+				if (rowp)
+					Print("<div class='even'>");
+				else
+					Print("<div class='odd'>");
+				if (op->type == KeyspaceOp::LIST)
+					Print("<a href='/html/get?");
+				else
+					Print("<a href='/html/dirtyget?");
+				Write(op->key.buffer, op->key.length, false);
+				Print("'>");
+				Write(op->key.buffer, op->key.length, false);
+				Print("</a>");
+				Print(" => ");
+				Print("<span class='value'>");
+				Write(op->value.buffer, op->value.length, false);
+				Print("</span>");
+				Print("</div>");
+				rowp = !rowp;
+			}
+			else
+			{
+				Write(op->key.buffer, op->key.length, false);
+				Print(" => ");
+				Write(op->value.buffer, op->value.length, false);
+				Print("\n");
+			}
 		}
 	}
 	else
@@ -244,9 +298,7 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	bool ret;
 		
 	MF("/get?",					ProcessGet(pars, op, false, false)) else
-	MF("/html/get?",			ProcessGet(pars, op, false, true)) else
 	MF("/dirtyget?",			ProcessGet(pars, op, true, false)) else
-	MF("/html/dirtyget?",		ProcessGet(pars, op, true, true)) else
 	MF("/set?",					ProcessSet(pars, op)) else
 	MF("/testandset?",			ProcessTestAndSet(pars, op)) else
 	MF("/add?",					ProcessAdd(pars, op)) else
@@ -258,6 +310,10 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	MF("/dirtylistkeys?",		ProcessList(pars, op, false, true, false)) else
 	MF("/listkeyvalues?",		ProcessList(pars, op, true, false, false)) else
 	MF("/dirtylistkeyvalues?",	ProcessList(pars, op, true, true, false)) else
+	MF("/html/get?",			ProcessGet(pars, op, false, true)) else
+	MF("/html/dirtyget?",		ProcessGet(pars, op, true, true)) else
+	MF("/html/dirtylistkeys?",	ProcessList(pars, op, false, true, true)) else
+	MF("/html/listkeyvalues?",	ProcessList(pars, op, true, false, true)) else
 	MF("/html/listkeys?",		ProcessList(pars, op, false, false, true)) else
 	MF("/html/dirtylistkeys?",	ProcessList(pars, op, false, true, true)) else
 	MF("/latency?",				ProcessLatency()) else
