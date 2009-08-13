@@ -24,6 +24,7 @@ private:
 	HttpServer*		server;
 	HttpRequest		request;
 	Endpoint		endpoint;
+	bool			html;
 	bool			headerSent;
 	bool			closeAfterSend;
 
@@ -32,6 +33,7 @@ private:
 	virtual void	OnClose();
 	virtual void	OnWrite();
 	
+	void			Print(const char* s);
 	int				Parse(char* buf, int len);
 	int				ProcessGetRequest();
 	const char*		Status(int code);
@@ -42,9 +44,9 @@ private:
 	
 	bool			ProcessGetMaster();
 	bool			ProcessGet(const char* params,
-					KeyspaceOp* op, bool dirty = false);
+					KeyspaceOp* op, bool dirty, bool html_);
 	bool			ProcessList(const char* params,
-					KeyspaceOp* op, bool p, bool dirty = false);
+					KeyspaceOp* op, bool p, bool dirty, bool html_);
 	bool			ProcessSet(const char* params, KeyspaceOp* op);
 	bool			ProcessTestAndSet(const char* params, KeyspaceOp* op);
 	bool			ProcessAdd(const char* params, KeyspaceOp* op);

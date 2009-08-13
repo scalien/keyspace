@@ -44,7 +44,16 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 		op->type == KeyspaceOp::REMOVE)
 	{
 		if (op->status)
-			Response(200, op->value.buffer, op->value.length);
+		{
+			if (html)
+			{
+				ResponseHeader(200, false,
+				"Content-type: text/html" CS_CRLF CS_CRLF);
+				Write(op->value.buffer, op->value.length, true);
+			}
+			else
+				Response(200, op->value.buffer, op->value.length);
+		}
 		else
 			RESPONSE_NOTFOUND;
 	}
@@ -69,14 +78,42 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 	{
 		if (!headerSent)
 		{
-			ResponseHeader(200, false,
+			if (html)
+			{
+				ResponseHeader(200, false,
+				"Content-type: text/html" CS_CRLF CS_CRLF);
+				Print("<style>");
+				Print("div { margin-bottom: 3px; }");
+				Print("a:link { color: black; text-decoration:none; }");
+				Print("a:visited { text-decoration:none; }");
+				Print("a:hover { text-decoration: underline; }");
+				Print("</style>");
+			}
+			else
+			{
+				ResponseHeader(200, false,
 				"Content-type: text/plain" CS_CRLF CS_CRLF);
+			}
 			headerSent = true;
 		}
 		if (op->key.length > 0)
 		{
-			Write(op->key.buffer, op->key.length, false);
-			Write("\n", 1);
+			if (html)
+			{
+				if (op->type == KeyspaceOp::LIST)
+					Print("<div><a href='/html/get?");
+				else
+					Print("<div><a href='/html/dirtyget?");
+				Write(op->key.buffer, op->key.length, false);
+				Print("'>");
+				Write(op->key.buffer, op->key.length, false);
+				Print("</a></div>");
+			}
+			else
+			{
+				Write(op->key.buffer, op->key.length, false);
+				Print("\n");
+			}
 		}
 	}
 	else if (op->type == KeyspaceOp::LISTP ||
@@ -152,6 +189,12 @@ void HttpConn::OnWrite()
 }
 
 
+void HttpConn::Print(const char* s)
+{
+	Write(s, strlen(s));
+}
+
+
 int HttpConn::Parse(char* buf, int len)
 {
 	int pos;
@@ -175,10 +218,10 @@ int HttpConn::Parse(char* buf, int len)
 
 int HttpConn::ProcessGetRequest()
 {
-#define PFUNC(prefix, func) \
+#define MF(prefix, func) \
 if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 { \
-	params += strlen(prefix); \
+	pars += strlen(prefix); \
 	ret = func; \
 }
 
@@ -186,25 +229,29 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	op = new KeyspaceOp;
 	op->service = this;
 	
-	char* params;
+	char* pars;
 	
-	params = (char*) request.line.uri;
+	pars = (char*) request.line.uri;
 	bool ret;
 		
-	PFUNC("/get?",					ProcessGet(params, op)) else
-	PFUNC("/dirtyget?",				ProcessGet(params, op, true)) else
-	PFUNC("/set?",					ProcessSet(params, op)) else
-	PFUNC("/testandset?",			ProcessTestAndSet(params, op)) else
-	PFUNC("/add?",					ProcessAdd(params, op)) else
-	PFUNC("/rename?",				ProcessRename(params, op)) else
-	PFUNC("/delete?",				ProcessDelete(params, op)) else
-	PFUNC("/remove?",				ProcessRemove(params, op)) else
-	PFUNC("/prune?",				ProcessPrune(params, op)) else
-	PFUNC("/listkeys?",				ProcessList(params, op, false)) else
-	PFUNC("/dirtylistkeys?",		ProcessList(params, op, false, true)) else
-	PFUNC("/listkeyvalues?",		ProcessList(params, op, true)) else
-	PFUNC("/dirtylistkeyvalues?",	ProcessList(params, op, true, true)) else
-	PFUNC("/latency?",				ProcessLatency()) else
+	MF("/get?",					ProcessGet(pars, op, false, false)) else
+	MF("/html/get?",			ProcessGet(pars, op, false, true)) else
+	MF("/dirtyget?",			ProcessGet(pars, op, true, false)) else
+	MF("/html/dirtyget?",		ProcessGet(pars, op, true, true)) else
+	MF("/set?",					ProcessSet(pars, op)) else
+	MF("/testandset?",			ProcessTestAndSet(pars, op)) else
+	MF("/add?",					ProcessAdd(pars, op)) else
+	MF("/rename?",				ProcessRename(pars, op)) else
+	MF("/delete?",				ProcessDelete(pars, op)) else
+	MF("/remove?",				ProcessRemove(pars, op)) else
+	MF("/prune?",				ProcessPrune(pars, op)) else
+	MF("/listkeys?",			ProcessList(pars, op, false, false, false)) else
+	MF("/dirtylistkeys?",		ProcessList(pars, op, false, true, false)) else
+	MF("/listkeyvalues?",		ProcessList(pars, op, true, false, false)) else
+	MF("/dirtylistkeyvalues?",	ProcessList(pars, op, true, true, false)) else
+	MF("/html/listkeys?",		ProcessList(pars, op, false, false, true)) else
+	MF("/html/dirtylistkeys?",	ProcessList(pars, op, false, true, true)) else
+	MF("/latency?",				ProcessLatency()) else
 	if (request.line.uri[0] == 0 ||
 		(request.line.uri[0] == '/' && request.line.uri[1] == 0))
 	{
@@ -275,8 +322,11 @@ if (bs.length > KEYSPACE_KEY_SIZE) { RESPONSE_FAIL; return false; }
 #define VALIDATE_VALLEN(bs)\
 if (bs.length > KEYSPACE_VAL_SIZE) { RESPONSE_FAIL; return false; }
 
-bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op, bool dirty)
+bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op,
+bool dirty, bool html_)
 {
+	html = html_;
+	
 	if (dirty)
 		op->type = KeyspaceOp::DIRTY_GET;
 	else
@@ -287,10 +337,12 @@ bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op, bool dirty)
 }
 
 bool HttpConn::ProcessList(const char* params,
-KeyspaceOp* op, bool p, bool dirty)
+KeyspaceOp* op, bool p, bool dirty, bool html_)
 {
 	ByteString prefix, key, count, offset, direction;
 	unsigned nread;
+
+	html = html_;
 
 	if (!p)
 	{
