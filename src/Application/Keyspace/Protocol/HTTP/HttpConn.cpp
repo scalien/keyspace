@@ -96,7 +96,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("      font-size: 12px; font-family: courier; }");
 				Print("div.even { background-color: white }");
 				Print("div.odd { background-color: #F0F0F0; }");
-				Print("a:link { color: black; text-decoration:none; }");
+				Print("a:link { text-decoration:none; }");
 				Print("a:visited { text-decoration:none; }");
 				Print("a:hover { text-decoration: underline; }");
 				Print("</style>");
@@ -151,7 +151,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("      font-size: 12px; font-family: courier; }");
 				Print("div.even { background-color: white; }");
 				Print("div.odd { background-color: #F0F0F0; }");
-				Print("a:link { color: black; text-decoration:none; }");
+				Print("a:link { text-decoration:none; }");
 				Print("a:visited { text-decoration:none; }");
 				Print("a:hover { text-decoration: underline; }");
 				Print("span.value { color: #006600; }");
