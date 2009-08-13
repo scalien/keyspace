@@ -21,7 +21,8 @@ public:
 	
 	uint64_t		acceptedProposalID;
 	unsigned		leaseOwner;
-	uint64_t		expireTime;
+	unsigned		duration;
+	uint64_t		localExpireTime;
 	uint64_t		paxosID; // so only up-to-date nodes can become masters
 	
 	void			Init(char type_, unsigned nodeID_);
@@ -31,15 +32,16 @@ public:
 	bool			PrepareRejected(unsigned nodeID_, uint64_t proposalID_);
 	bool			PreparePreviouslyAccepted(unsigned nodeID_,
 					uint64_t proposalID_, uint64_t acceptedProposalID_,
-					unsigned leaseOwner_, uint64_t expireTime_);
+					unsigned leaseOwner_, unsigned duration_);
 	bool			PrepareCurrentlyOpen(unsigned nodeID_,
 					uint64_t proposalID_);	
 	bool			ProposeRequest(unsigned nodeID_, uint64_t proposalID_,
-					unsigned leaseOwner_, uint64_t expireTime_);
+					unsigned leaseOwner_, unsigned duration_);
 	bool			ProposeRejected(unsigned nodeID_, uint64_t proposalID_);
 	bool			ProposeAccepted(unsigned nodeID_, uint64_t proposalID_);
 	bool			LearnChosen(unsigned nodeID,
-					unsigned leaseOwner_, uint64_t expireTime_);
+					unsigned leaseOwner_, unsigned duration_,
+					uint64_t localExpireTime_);
 	
 	bool			IsRequest();
 	bool			IsPrepareResponse();

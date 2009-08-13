@@ -134,7 +134,6 @@ CLIENTLIBS = \
 EXECUTABLES = \
 	$(BIN_DIR)/keyspaced \
 	$(BIN_DIR)/clienttest \
-	$(BIN_DIR)/timechecktest \
 	$(BIN_DIR)/bdbtool \
 	
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
@@ -162,9 +161,6 @@ $(BIN_DIR)/keyspaced: $(BUILD_DIR) $(LIBS) $(OBJECTS)
 $(BIN_DIR)/clienttest: $(BUILD_DIR) $(TEST_OBJECTS) $(BIN_DIR)/$(ALIB)
 	$(CXX) $(LDFLAGS) -o $@ $(TEST_OBJECTS) $(LIBS) $(BIN_DIR)/$(ALIB)
 
-$(BIN_DIR)/timechecktest: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Test/TimeCheckTest.o
-	$(CXX) $(LDFLAGS) -o $@ $(ALL_OBJECTS) $(LIBS) $(BUILD_DIR)/Test/TimeCheckTest.o
-
 $(BIN_DIR)/bdbtool: $(BUILD_DIR) $(LIBS) $(ALL_OBJECTS) $(BUILD_DIR)/Application/Tools/BDBTool/BDBTool.o
 	$(CXX) $(LDFLAGS) -o $@ $(ALL_OBJECTS) $(LIBS) $(BUILD_DIR)/Application/Tools/BDBTool/BDBTool.o
 
@@ -186,9 +182,6 @@ clienttest:
 clientlib:
 	$(MAKE) clientlib_targets BUILD="debug"
 
-timechecktest:
-	$(MAKE) timechecktest_targets BUILD="release"
-	
 targets: $(BUILD_DIR) executables clientlibs
 
 clientlibs: $(BUILD_DIR) $(CLIENTLIBS)

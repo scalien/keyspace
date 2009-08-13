@@ -12,7 +12,6 @@
 #include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
 #include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
-#include "Application/TimeCheck/TimeCheck.h"
 
 #ifdef DEBUG
 #define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s (DEBUG build date " __DATE__ " " __TIME__ ")"
@@ -93,15 +92,9 @@ int main(int argc, char* argv[])
 		STOP_FAIL("Cannot initialize paxos!", 1);
 
 	KeyspaceDB* kdb;
-	TimeCheck *tc;
 	if (RCONF->GetNumNodes() > 1)
 	{
 		RLOG->Init(Config::GetBoolValue("paxos.useSoftClock", true));
-		
-		tc = new TimeCheck;
-		if (Config::GetBoolValue("timecheck.active", true))
-			tc->Init();
-		
 		kdb = new ReplicatedKeyspaceDB;
 	}
 	else

@@ -49,7 +49,7 @@ void PLeaseProposer::StopAcquireLease()
 void PLeaseProposer::OnNewPaxosRound()
 {
 	// since PaxosLease msgs carry the paxosID, and nodes
-	// won't reply if their paxosID is larges than the msg's
+	// won't reply if their paxosID is larger than the msg's
 	// if the paxosID increases we must restart the
 	// PaxosLease round, if it's active
 	// only restart if we're masters
@@ -92,9 +92,6 @@ void PLeaseProposer::OnPrepareResponse()
 {
 	Log_Trace();
 
-	if (state.expireTime < Now())
-		return; // wait for timer
-
 	if (!state.preparing || msg.proposalID != state.proposalID)
 		return;
 		
@@ -103,8 +100,7 @@ void PLeaseProposer::OnPrepareResponse()
 	if (msg.type == PLEASE_PREPARE_REJECTED)
 		numRejected++;
 	else if (msg.type == PLEASE_PREPARE_PREVIOUSLY_ACCEPTED && 
-			 msg.acceptedProposalID >= state.highestReceivedProposalID &&
-			 msg.expireTime > Now())
+			 msg.acceptedProposalID >= state.highestReceivedProposalID)
 	{
 		state.highestReceivedProposalID = msg.acceptedProposalID;
 		state.leaseOwner = msg.leaseOwner;
@@ -126,7 +122,7 @@ void PLeaseProposer::OnProposeResponse()
 	Log_Trace();
 
 	if (state.expireTime < Now())
-		return; // wait for timer
+		return; // already expired, wait for timer
 	
 	if (!state.proposing || msg.proposalID != state.proposalID)
 		return;
@@ -137,12 +133,13 @@ void PLeaseProposer::OnProposeResponse()
 		numAccepted++;
 
 	// see if we have enough positive replies to advance
-	if (numAccepted >= RCONF->MinMajority())
+	if (numAccepted >= RCONF->MinMajority() &&
+	state.expireTime - Now() > 500 /*msec*/)
 	{
 		// a majority have accepted our proposal, we have consensus
 		state.proposing = false;
 		msg.LearnChosen(RCONF->GetNodeID(),
-		state.leaseOwner, state.expireTime);
+		state.leaseOwner, state.expireTime - Now(), state.expireTime);
 		
 		EventLoop::Remove(&acquireLeaseTimeout);
 		
@@ -168,7 +165,6 @@ void PLeaseProposer::StartPreparing()
 	state.preparing = true;
 	
 	state.leaseOwner = RCONF->GetNodeID();
-	state.expireTime = Now() + MAX_LEASE_TIME;
 	
 	state.highestReceivedProposalID = 0;
 
@@ -195,9 +191,10 @@ void PLeaseProposer::StartProposing()
 
 	state.proposing = true;
 
-	// acceptors get (t_e + S)
+	state.duration = MAX_LEASE_TIME;
+	state.expireTime = Now() + state.duration;
 	msg.ProposeRequest(RCONF->GetNodeID(), state.proposalID,
-		state.leaseOwner, state.expireTime + MAX_CLOCK_SKEW);
+		state.leaseOwner, state.duration);
 
 	BroadcastMessage();
 }

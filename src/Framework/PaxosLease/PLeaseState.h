@@ -18,6 +18,7 @@ public:
 		proposing =	false;
 		proposalID = 0;
 		highestReceivedProposalID =	0;
+		duration = 0;
 		expireTime = 0;
 	}
 	
@@ -27,6 +28,7 @@ public:
 	uint64_t	proposalID;
 	uint64_t	highestReceivedProposalID;
 	unsigned	leaseOwner;
+	unsigned	duration;
 	uint64_t	expireTime;
 
 };
@@ -41,6 +43,7 @@ public:
 		accepted = false;
 		acceptedProposalID = 0;
 		acceptedLeaseOwner = 0;
+		acceptedDuration = 0;
 		acceptedExpireTime = 0;
 	}
 
@@ -49,6 +52,7 @@ public:
 		accepted = false;
 		acceptedProposalID = 0;
 		acceptedLeaseOwner = 0;
+		acceptedDuration   = 0;
 		acceptedExpireTime = 0;
 	}
 public:
@@ -56,6 +60,7 @@ public:
 	bool		accepted;
 	uint64_t	acceptedProposalID;
 	unsigned	acceptedLeaseOwner;
+	unsigned	acceptedDuration;
 	uint64_t	acceptedExpireTime;
 };
 

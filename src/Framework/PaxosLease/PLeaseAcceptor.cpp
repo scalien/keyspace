@@ -18,9 +18,9 @@ PLeaseAcceptor::PLeaseAcceptor() :
 void PLeaseAcceptor::Init(Writers writers_)
 {
 	Log_Message("*** Sleeping %d milliseconds... (this is normal) ***",
-	MAX_LEASE_TIME + MAX_CLOCK_SKEW);
+	MAX_LEASE_TIME);
 
-	usleep((MAX_LEASE_TIME + MAX_CLOCK_SKEW) * 1000);
+	usleep(MAX_LEASE_TIME * 1000);
 
 	Log_Message("*** Done sleeping ***");
 	
@@ -78,7 +78,7 @@ void PLeaseAcceptor::OnPrepareRequest()
 		else
 			msg.PreparePreviouslyAccepted(RCONF->GetNodeID(),
 			msg.proposalID, state.acceptedProposalID,
-			state.acceptedLeaseOwner, state.acceptedExpireTime);
+			state.acceptedLeaseOwner, state.acceptedDuration);
 	}
 	
 	SendReply(senderID);
@@ -95,20 +95,7 @@ void PLeaseAcceptor::OnProposeRequest()
 		EventLoop::Remove(&leaseTimeout);
 		OnLeaseTimeout();
 	}
-
-	if (msg.expireTime < Now())
-	{
-		Log_Trace("Expired propose request received "
-				  "(msg.expireTime = %" PRIu64 " | Now = %" PRIu64 ")",
-				  msg.expireTime, Now());
-		
-		return;
-	}
 	
-	if (Config::GetBoolValue("timecheck.active", true) &&
-		msg.expireTime > Now() + MAX_LEASE_TIME + 2 * MAX_CLOCK_SKEW)
-			STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
-
 	if (msg.proposalID < state.promisedProposalID)
 		msg.ProposeRejected(RCONF->GetNodeID(), msg.proposalID);
 	else
@@ -116,7 +103,8 @@ void PLeaseAcceptor::OnProposeRequest()
 		state.accepted = true;
 		state.acceptedProposalID = msg.proposalID;
 		state.acceptedLeaseOwner = msg.leaseOwner;
-		state.acceptedExpireTime = msg.expireTime;
+		state.acceptedDuration = msg.duration;
+		state.acceptedExpireTime = Now() + state.acceptedDuration;
 		
 		leaseTimeout.Set(state.acceptedExpireTime);
 		EventLoop::Reset(&leaseTimeout);

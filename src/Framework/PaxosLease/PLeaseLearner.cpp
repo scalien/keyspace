@@ -33,27 +33,30 @@ void PLeaseLearner::OnLearnChosen()
 	
 	if (state.learned && state.expireTime < Now())
 		OnLeaseTimeout();
-	
-	if (state.learned && state.leaseOwner != msg.leaseOwner)
-		STOP_FAIL("Clock skew between nodes exceeds allowed maximum", 1);
-				
-	if (msg.expireTime > Now())
-	{
-		if (!state.learned)
-			Log_Message("PaxosLease: Node %d is the master", state.leaseOwner);
-	
-		state.learned = true;
-		state.leaseOwner = msg.leaseOwner;
-		state.expireTime = msg.expireTime;
-		
-		Log_Trace("+++ Node %d has the lease for %" PRIu64 " msec +++",
-			state.leaseOwner, state.expireTime - Now());
 
-		leaseTimeout.Set(state.expireTime);
-		EventLoop::Reset(&leaseTimeout);
-		
-		Call(onLearnLeaseCallback);
-	}
+	uint64_t expireTime;
+	if (msg.leaseOwner == RCONF->GetNodeID())
+		expireTime = msg.localExpireTime; // I'm the master
+	else
+		expireTime = Now() + msg.duration - 500 /* msec */;
+		// conservative estimate
+	
+	if (expireTime < Now())
+		return;
+	
+	if (!state.learned)
+		Log_Message("PaxosLease: Node %d is the master", state.leaseOwner);
+	
+	state.learned = true;
+	state.leaseOwner = msg.leaseOwner;
+	state.expireTime = expireTime;
+	Log_Trace("+++ Node %d has the lease for %" PRIu64 " msec +++",
+		state.leaseOwner, state.expireTime - Now());
+
+	leaseTimeout.Set(state.expireTime);
+	EventLoop::Reset(&leaseTimeout);
+	
+	Call(onLearnLeaseCallback);
 }
 
 void PLeaseLearner::OnLeaseTimeout()

@@ -144,14 +144,6 @@ For numeric values you may use the K, M, G suffices that mean 1024,
 	This must be different on all nodes. The first node's ID is 0,
 	the second's is 1 and so on. If you are running in single-mode, put 0 here.
 
-- timecheck.active
-
-	Boolean. OPTIONAL. Default is true.
-	Turns on (or off) system time synchronity check. This is accomplished by nodes
-	exchanging timestamped UDP messages. If the timecheck module finds
-	that two nodes' clock skew is greater than 2 seconds, it will halt
-	the node to avoid inconsistency in master election.
-
 - io.maxfd
 
 	Number. OPTIONAL. Default is 1024.
@@ -255,12 +247,11 @@ port offset     name
 0               Paxos (tcp)
 1               PaxosLease (udp)
 2               Catchup (tcp)
-3               TimeCheck (udp)
 
 Eg. if you have nodes with Paxos port on 10000/tcp, you need
 to open the following ports on your firewall: 
 
-10000/tcp, 10001/udp, 10002/tcp, 10003/udp
+10000/tcp, 10001/udp, 10002/tcp
 
 In addition the server ports, you need to open the client protocol
 ports too (see 'Configuration options': http.port, keyspace.port).

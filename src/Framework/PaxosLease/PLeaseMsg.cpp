@@ -26,13 +26,13 @@ bool PLeaseMsg::PrepareRejected(unsigned nodeID_, uint64_t proposalID_)
 
 bool PLeaseMsg::PreparePreviouslyAccepted(unsigned nodeID_,
 uint64_t proposalID_, uint64_t acceptedProposalID_,
-unsigned leaseOwner_, uint64_t expireTime_)
+unsigned leaseOwner_, unsigned duration_)
 {
 	Init(PLEASE_PREPARE_PREVIOUSLY_ACCEPTED, nodeID_);
 	proposalID = proposalID_;
 	acceptedProposalID = acceptedProposalID_;
 	leaseOwner = leaseOwner_;
-	expireTime = expireTime_;
+	duration = duration_;
 	
 	return true;
 }
@@ -46,12 +46,12 @@ bool PLeaseMsg::PrepareCurrentlyOpen(unsigned nodeID_, uint64_t proposalID_)
 }
 
 bool PLeaseMsg::ProposeRequest(unsigned nodeID_,
-uint64_t proposalID_, unsigned int leaseOwner_, uint64_t expireTime_)
+uint64_t proposalID_, unsigned int leaseOwner_, unsigned duration_)
 {
 	Init(PLEASE_PROPOSE_REQUEST, nodeID_);
 	proposalID = proposalID_;
 	leaseOwner = leaseOwner_;
-	expireTime = expireTime_;
+	duration = duration_;
 	
 	return true;
 }
@@ -73,11 +73,12 @@ bool PLeaseMsg::ProposeAccepted(unsigned nodeID_, uint64_t proposalID_)
 }
 
 bool PLeaseMsg::LearnChosen(unsigned nodeID_,
-unsigned leaseOwner_, uint64_t expireTime_)
+unsigned leaseOwner_, unsigned duration_, uint64_t localExpireTime_)
 {
 	Init(PLEASE_LEARN_CHOSEN, nodeID_);
 	leaseOwner = leaseOwner_;
-	expireTime = expireTime_;
+	duration = duration_;
+	localExpireTime = localExpireTime_;
 
 	return true;
 }
@@ -124,18 +125,18 @@ bool PLeaseMsg::Read(const ByteString& data)
 						   &type, &nodeID, &proposalID);
 			break;
 		case PLEASE_PREPARE_PREVIOUSLY_ACCEPTED:
-			read = snreadf(data.buffer, data.length, "%c:%u:%U:%U:%u:%U",
+			read = snreadf(data.buffer, data.length, "%c:%u:%U:%U:%u:%u",
 						   &type, &nodeID, &proposalID, &acceptedProposalID,
-						   &leaseOwner, &expireTime);
+						   &leaseOwner, &duration);
 			break;
 		case PLEASE_PREPARE_CURRENTLY_OPEN:
 			read = snreadf(data.buffer, data.length, "%c:%u:%U",
 						   &type, &nodeID, &proposalID);
 			break;
 		case PLEASE_PROPOSE_REQUEST:
-			read = snreadf(data.buffer, data.length, "%c:%u:%U:%u:%U",
+			read = snreadf(data.buffer, data.length, "%c:%u:%U:%u:%u",
 						   &type, &nodeID, &proposalID,
-						   &leaseOwner, &expireTime);
+						   &leaseOwner, &duration);
 			break;
 		case PLEASE_PROPOSE_REJECTED:
 			read = snreadf(data.buffer, data.length, "%c:%u:%U",
@@ -146,8 +147,9 @@ bool PLeaseMsg::Read(const ByteString& data)
 						   &type, &nodeID, &proposalID);
 			break;
 		case PLEASE_LEARN_CHOSEN:
-			read = snreadf(data.buffer, data.length, "%c:%u:%u:%U",
-						   &type, &nodeID, &leaseOwner, &expireTime);
+			read = snreadf(data.buffer, data.length, "%c:%u:%u:%u:%U",
+						   &type, &nodeID, &leaseOwner, &duration,
+						   &localExpireTime);
 			break;
 		default:
 			return false;
@@ -169,18 +171,18 @@ bool PLeaseMsg::Write(ByteString& data)
 						       type, nodeID, proposalID);
 			break;
 		case PLEASE_PREPARE_PREVIOUSLY_ACCEPTED:
-			return data.Writef("%c:%u:%U:%U:%u:%U",
+			return data.Writef("%c:%u:%U:%U:%u:%u",
 						       type, nodeID, proposalID, acceptedProposalID,
-						       leaseOwner, expireTime);
+						       leaseOwner, duration);
 			break;
 		case PLEASE_PREPARE_CURRENTLY_OPEN:
 			return data.Writef("%c:%u:%U",
 						       type, nodeID, proposalID);
 			break;
 		case PLEASE_PROPOSE_REQUEST:
-			return data.Writef("%c:%u:%U:%u:%U",
+			return data.Writef("%c:%u:%U:%u:%u",
 						       type, nodeID, proposalID,
-							   leaseOwner, expireTime);
+							   leaseOwner, duration);
 			break;
 		case PLEASE_PROPOSE_REJECTED:
 			return data.Writef("%c:%u:%U",
@@ -191,8 +193,9 @@ bool PLeaseMsg::Write(ByteString& data)
 						       type, nodeID, proposalID);
 			break;
 		case PLEASE_LEARN_CHOSEN:
-			return data.Writef("%c:%u:%u:%U",
-						       type, nodeID, leaseOwner, expireTime);
+			return data.Writef("%c:%u:%u:%u:%U",
+						       type, nodeID, leaseOwner, duration,
+							   localExpireTime);
 			break;
 		default:
 			return false;
