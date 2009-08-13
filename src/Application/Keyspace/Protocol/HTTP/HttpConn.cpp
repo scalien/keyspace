@@ -49,6 +49,11 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 			{
 				ResponseHeader(200, false,
 				"Content-type: text/html" CS_CRLF CS_CRLF);
+				Print("<title>");
+				Print("Keyspace contents of: ");
+				Write(op->key.buffer, op->key.length, false);
+				Print("</title>");
+
 				Write(op->value.buffer, op->value.length, true);
 			}
 			else
@@ -82,6 +87,10 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 			{
 				ResponseHeader(200, false,
 				"Content-type: text/html" CS_CRLF CS_CRLF);
+				Print("<title>");
+				Print("Keyspace listing of: ");
+				Write(op->prefix.buffer, op->prefix.length, false);
+				Print("</title>");
 				Print("<style>");
 				Print("div { margin-bottom: 3px; }");
 				Print("a:link { color: black; text-decoration:none; }");
