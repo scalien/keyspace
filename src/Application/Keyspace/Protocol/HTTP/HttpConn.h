@@ -56,6 +56,7 @@ private:
 	bool			ProcessPrune(const char* params, KeyspaceOp* op);
 	bool			ProcessLatency();
 	bool			PrintHello();
+	void			PrintStyle();
 };
 
 #endif

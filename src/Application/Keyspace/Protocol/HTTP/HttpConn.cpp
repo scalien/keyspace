@@ -91,15 +91,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("Keyspace listing of: ");
 				Write(op->prefix.buffer, op->prefix.length, false);
 				Print("</title>");
-				Print("<style>");
-				Print("div { margin-bottom: 3px; ");
-				Print("      font-size: 12px; font-family: courier; }");
-				Print("div.even { background-color: white }");
-				Print("div.odd { background-color: #F0F0F0; }");
-				Print("a:link { text-decoration:none; }");
-				Print("a:visited { text-decoration:none; }");
-				Print("a:hover { text-decoration: underline; }");
-				Print("</style>");
+				PrintStyle();
 			}
 			else
 			{
@@ -146,16 +138,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("Keyspace listing of: ");
 				Write(op->prefix.buffer, op->prefix.length, false);
 				Print("</title>");
-				Print("<style>");
-				Print("div { margin-bottom: 3px; ");
-				Print("      font-size: 12px; font-family: courier; }");
-				Print("div.even { background-color: white; }");
-				Print("div.odd { background-color: #F0F0F0; }");
-				Print("a:link { text-decoration:none; }");
-				Print("a:visited { text-decoration:none; }");
-				Print("a:hover { text-decoration: underline; }");
-				Print("span.value { color: #006600; }");
-				Print("</style>");
+				PrintStyle();
 			}
 			else
 			{
@@ -651,4 +634,18 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 	} while (1);
 			
 	Write(httpHeader.buffer, size, false);
+}
+
+void HttpConn::PrintStyle()
+{
+	Print("<style>");
+	Print("div { padding: 4px; ");
+	Print("      font-size: 12px; font-family: courier; }");
+	Print("div.even { background-color: white; }");
+	Print("div.odd { background-color: #F0F0F0; }");
+	Print("a:link { text-decoration:none; }");
+	Print("a:visited { text-decoration:none; }");
+	Print("a:hover { text-decoration: underline; }");
+	Print("span.value { color: #006600; }");
+	Print("</style>");
 }
