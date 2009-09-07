@@ -184,7 +184,12 @@ For numeric values you may use the K, M, G suffices that mean 1024,
 - database.checkpointTimeout
 
 	Number [msec]. OPTIONAL. Default is 60000 msec. BDB related.
-	Database checkpointing occurs this often.  
+	Database checkpointing occurs this often.
+	
+- database.numReaders
+
+	Number. OPTIONAL. Default is 20.
+	Number of threads used for transactional reads such as lists.
 
 - database.verbose
 	Boolean. OPTIONAL. Default is false. BDB related.

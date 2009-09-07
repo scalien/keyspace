@@ -88,6 +88,9 @@ int main(int argc, char* argv[])
 	if (!database.Init(dbConfig))
 		STOP_FAIL("Cannot initialize database!", 1);
 	
+	dbWriter.Init(1);
+	dbReader.Init(Config::GetIntValue("database.numReaders", 20));
+	
 	if (!RCONF->Init())
 		STOP_FAIL("Cannot initialize paxos!", 1);
 
