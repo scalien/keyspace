@@ -1,5 +1,21 @@
 Keyspace changelog
 
+1.1
+===
+
+- New PaxosLease algorithm does not require clock synchronization (!).
+
+- Added COUNT and DIRTYCOUNT command.
+
+- Added /html/ part to HTTP interface, which pretty prints the list output.
+
+- Added possibility to reverse list direction.
+
+- The http://server/ prints the version number and master information.
+
+- added database.numReaders config option.
+
+
 1.0.1
 =====
 

@@ -25,13 +25,13 @@ These operations are
 - write operations
   (SET, TEST-AND-SET, ADD, DELETE, REMOVE, PRUNE and SUBMIT)
 - safe read operations
-  (GET, LIST-KEYS, LIST-KEYVALUES)
+  (GET, LIST-KEYS, LIST-KEYVALUES, COUNT)
 
 The following operations are served by *all* nodes:
 - who is the current master
   (GET-MASTER)
 - dirty read operations
-  (DIRTY-GET, DIRTY-LIST-KEYS, DIRTY-LIST-KEYVALUES)
+  (DIRTY-GET, DIRTY-LIST-KEYS, DIRTY-LIST-KEYVALUES, DIRTY-COUNT)
 
 Dirty read operations will succeed on any server regardless of
 internode connectivity, but may return inconsistent (not up-to-date)
@@ -53,8 +53,19 @@ command creates a new TCP/HTTP connection, which is fairly expensive and
 unnecessary. The programmatic APIs use the Keyspace protocol.
 
 The syntax for HTTP commands is http://yoursever:port
-where port is http.port specified in your conf file (default 8080),
-followed by
+where port is http.port specified in your conf file (default 8080).
+
+If you look at the root http://yoursever:port Keyspace displays
+its version number and master information.
+
+The commands are:
+
+/html/listkeys?prefix,startkey,count,next,forward
+/html/listkeyvalues?prefix,startkey,count,next,forward
+/html/dirtylistkeys?prefix,startkey,count,next,forward
+/html/dirtylistkeyvalues?prefix,startkey,count,next,forward
+
+and
 
 /getmaster
 /get?key
@@ -66,11 +77,22 @@ followed by
 /delete?key
 /remove?key
 /prune?prefix
-/listkeys?prefix,startkey,count,next
-/listkeyvalues?prefix,startkey,count,next
-/dirtylistkeys?prefix,startkey,count,next
-/dirtylistkeyvalues?prefix,startkey,count,next
+/listkeys?prefix,startkey,count,next,forward
+/listkeyvalues?prefix,startkey,count,next,forward
+/count?prefix,startkey,count,next,forward
+/dirtylistkeys?prefix,startkey,count,next,forward
+/dirtylistkeyvalues?prefix,startkey,count,next,forward
+/dirtycount?prefix,startkey,count,next,forward
 
+The commands starting with /html/ produce pretty-printed lists where the keys
+are clickable links to the appropriate GET command.
+
+For the list and count commands:
+- the list returns keys starting with <prefix>
+- listing starts with <prefix> + <startkey> (<startkey> is optional)
+- return at most <count> elements (<count> is optional)
+- if <next> is x, the first x elements are skipped (<next> is optional)
+- if <forward> is not 'f', list backwards (<forward> is optional)
 
 Keyspace protocol
 =================
