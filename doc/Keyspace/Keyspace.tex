@@ -94,6 +94,7 @@ Notice that the probabilities for even sized systems are lower than for odd size
 Keyspace supports the following client commands (note the dirty-read operations at the end of the list):
 
 \begin{itemize}
+\sloppy
 \item \texttt{GET(key)}: returns the value of \texttt{key}, if it exists in the database.
 \item \texttt{SET(key, value)}: sets the value of \texttt{key}, overwriting the previous value if it already existed in the database.
 \item \texttt{TEST-AND-SET(key, test, value)}: atomically changes the value of \texttt{key} to \texttt{value} if its current value is \texttt{test}.
@@ -102,14 +103,14 @@ Keyspace supports the following client commands (note the dirty-read operations 
 \item \texttt{DELETE(key)}: deletes \texttt{key} and its value from the database.
 \item \texttt{REMOVE(key)}: deletes \texttt{key} and its value from the database and returns the value.
 \item \texttt{PRUNE(prefix)}: deletes all key-value pairs where key starts with \texttt{prefix}.
-\item \texttt{LIST-KEYS(prefix, startKey, count, next)}: returns at most \texttt{count} keys whose beginning matches \texttt{prefix}, starting at position \texttt{startKey} in the database. If \texttt{startKey} is not found in the database, the listing starts at the next item lexicographically. If \texttt{startKey} is found, \texttt{startKey} itself may be skipped by passing in \texttt{next = true}. This is useful for pagination, where you pass in the last key that you showed on the previous page, but don't want to see it at the top of the next page.
+\item \texttt{LIST-KEYS(prefix, startKey, count, next, forward)}: returns at most \texttt{count} keys whose beginning matches \texttt{prefix}, starting at position \texttt{startKey} in the database. If \texttt{startKey} is not found in the database, the listing starts at the next item lexicographically. If \texttt{startKey} is found, \texttt{startKey} itself may be skipped by passing in \texttt{next = true}. This is useful for pagination, where you pass in the last key that you showed on the previous page, but don't want to see it at the top of the next page. \texttt{forward} specifies the direction of the listing.
 
-\item \texttt{LIST-KEYVALUES(prefix, startKey, count, next)}: same as \texttt{LIST-KEYS}, but returns keys \textit{and values}.
-\item \texttt{COUNT(prefix, startKey, count, next)}: returns the number of items the same \texttt{LIST} operation with the same arguments would return.
+\item \texttt{LIST-KEYVALUES(prefix, startKey, count, next, forward)}: same as \texttt{LIST-KEYS}, but returns keys \textit{and values}.
+\item \texttt{COUNT(prefix, startKey, count, next, forward, forward)}: returns the number of items the same \texttt{LIST} operation with the same arguments would return.
 \item \texttt{DIRTY-GET(key)}: returns the value of \texttt{key}, if it exists in the database, without making any consistency guarantees about reflecting previous write operations.
-\item \texttt{DIRTY-LIST-KEYS(prefix, startKey, count, next)}: same as \texttt{LIST-KEYS}, but without making any consistency guarantees about reflecting previous write operations.
-\item \texttt{DIRTY-LIST-KEYVALUES(prefix, startKey, count, next)}: same as \newline \texttt{LIST-KEY-VALUES}, but without making any consistency guarantees about reflecting previous write operations.
-\item \texttt{DIRTY-COUNT(prefix, startKey, count, next)}: same as \newline \texttt{COUNT}, but without making any consistency guarantees about reflecting previous write operations.
+\item \texttt{DIRTY-LIST-KEYS(prefix, startKey, count, next, forward)}: same as \texttt{LIST-KEYS}, but without making any consistency guarantees about reflecting previous write operations.
+\item \texttt{DIRTY-LIST-KEYVALUES(prefix, startKey, count, next, forward)}: same as \newline \texttt{LIST-KEY-VALUES}, but without making any consistency guarantees about reflecting previous write operations.
+\item \texttt{DIRTY-COUNT(prefix, startKey, count, next, forward)}: same as \newline \texttt{COUNT}, but without making any consistency guarantees about reflecting previous write operations.
 \end{itemize}
 
 \section{ Master leases }
