@@ -314,7 +314,7 @@ readTimeout(&onReadTimeout)
 void ClientConn::Send(Command &cmd)
 {
 	Log_Trace("nodeID = %d, cmd = %.*s",
-			  nodeID, min(cmd.msg.length, 30), cmd.msg.buffer);
+			  nodeID, min(cmd.msg.length, 40), cmd.msg.buffer);
 	cmd.nodeID = nodeID;
 #ifdef CLIENT_LATENCY
 	cmd.sendTime = NowMicro();
