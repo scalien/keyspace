@@ -670,9 +670,9 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 		nextString.Append("0", 1);
 
 	if (forward)
-		backString.Append("b", 1);
-	else
 		backString.Append("f", 1);
+	else
+		backString.Append("b", 1);
 
 	if (prefix.length > 0 && startKey.length >= prefix.length)
 	{
@@ -794,9 +794,9 @@ bool next, bool forward, bool dirty, bool values)
 		nextString.Append("0", 1);
 
 	if (forward)
-		backString.Append("b", 1);
-	else
 		backString.Append("f", 1);
+	else
+		backString.Append("b", 1);
 
 	if (prefix.length > 0 && startKey.length >= prefix.length)
 	{
