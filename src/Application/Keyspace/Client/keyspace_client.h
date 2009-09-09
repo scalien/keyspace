@@ -250,6 +250,7 @@ int keyspace_client_list_keyvalues(keyspace_client_t kc,
 		const void *prefix, unsigned prefixlen,
 		const void *start_key, unsigned sklen,
 		uint64_t count,
+		int backward,
 		int skip,
 		int dirty);
 
