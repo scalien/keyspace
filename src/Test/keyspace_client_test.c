@@ -66,7 +66,7 @@ int keyspace_client_test()
 	keylen = snprintf(key, sizeof(key), "user:");		
 
 	// list all keys starting with "user:"
-	keyspace_client_list_keys(kc, key, keylen, NULL, 0, 0, 0, 0);
+	keyspace_client_list_keys(kc, key, keylen, NULL, 0, 0, 0, 0, 0);
 	kr = keyspace_client_result(kc, &status);
 	while (status == KEYSPACE_OK && kr != KEYSPACE_INVALID_RESULT)
 	{
@@ -78,7 +78,7 @@ int keyspace_client_test()
 	
 	// list all keys and values starting with "user:" (List Key-Value Pairs)
 	keylen = snprintf(key, sizeof(key), "user:");		
-	keyspace_client_list_keyvalues(kc, key, keylen, NULL, 0, 0, 0, 0);
+	keyspace_client_list_keyvalues(kc, key, keylen, NULL, 0, 0, 0, 0, 0);
 	kr = keyspace_client_result(kc, &status);
 	while (status == KEYSPACE_OK && kr != KEYSPACE_INVALID_RESULT)
 	{
