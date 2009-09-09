@@ -59,6 +59,7 @@ const ByteString &value)
 	return false;
 }
 
+// this is the callback running in the main thread
 void AsyncVisitorCallback::Execute()
 {
 	Log_Trace();
@@ -111,8 +112,12 @@ void AsyncVisitorCallback::Execute()
 		op->service->OnComplete(op, complete);
 	}
 	
+	// as AsyncVisitorCallback is allocated both in the main
+	// thread and also in the thread pool, it is responsible
+	// for deleting itself.
 	delete this;
 }
+
 
 AsyncListVisitor::AsyncListVisitor(KeyspaceOp* op_) :
 prefix(op_->prefix)
@@ -153,6 +158,8 @@ void AsyncListVisitor::AppendKeyValue(const ByteString &key,
 	}
 }
 
+// this is called by MultiDatabaseOp::Visit in the 
+// dbReader thread pool
 bool AsyncListVisitor::Accept(const ByteString &key,
 							  const ByteString &value)
 {

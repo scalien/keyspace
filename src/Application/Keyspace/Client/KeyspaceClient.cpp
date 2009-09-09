@@ -706,8 +706,8 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	}
 	
 	result.Close();
-	
 	EventLoop();
+	status = result.Status();
 	if (status != KEYSPACE_OK)
 	{
 		result.Close();
