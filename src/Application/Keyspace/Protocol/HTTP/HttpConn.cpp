@@ -32,6 +32,8 @@ void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 	// HACK
 	headerSent = false;
 	closeAfterSend = false;
+	
+	html = false;
 }
 
 
@@ -40,6 +42,8 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 	static bool rowp = 0;
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
+		op->type == KeyspaceOp::COUNT ||
+		op->type == KeyspaceOp::DIRTY_COUNT ||
 		op->type == KeyspaceOp::ADD ||
 		op->type == KeyspaceOp::TEST_AND_SET ||
 		op->type == KeyspaceOp::REMOVE)
@@ -293,6 +297,8 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	MF("/dirtylistkeys?",		ProcessList(pars, op, false, true, false)) else
 	MF("/listkeyvalues?",		ProcessList(pars, op, true, false, false)) else
 	MF("/dirtylistkeyvalues?",	ProcessList(pars, op, true, true, false)) else
+	MF("/count?",				ProcessCount(pars, op, false)) else
+	MF("/dirtycount?",			ProcessCount(pars, op, true)) else
 	MF("/html/get?",			ProcessGet(pars, op, false, true)) else
 	MF("/html/dirtyget?",		ProcessGet(pars, op, true, true)) else
 	MF("/html/dirtylistkeys?",	ProcessList(pars, op, false, true, true)) else
@@ -406,6 +412,43 @@ KeyspaceOp* op, bool p, bool dirty, bool html_)
 		else
 			op->type = KeyspaceOp::DIRTY_LISTP;
 	}
+	
+	ParseParams(params, 5, &prefix, &key, &count, &offset, &direction);
+	
+	VALIDATE_KEYLEN(prefix);
+	VALIDATE_KEYLEN(key);
+	
+	op->prefix.Set(prefix);
+	op->key.Set(key);
+	op->count = strntoint64(count.buffer, count.length, &nread);
+	if (direction.length != 1)
+		op->forward = true;
+	else
+		op->forward = (direction.buffer[0] == 'f');
+	if (nread != (unsigned) count.length)
+	{
+		RESPONSE_FAIL;
+		return false;
+	}
+	op->offset = strntoint64(offset.buffer, offset.length, &nread);
+	if (nread != (unsigned) offset.length)
+	{
+		RESPONSE_FAIL;
+		return false;
+	}
+	return true;
+}
+
+bool HttpConn::ProcessCount(const char* params,
+KeyspaceOp* op, bool dirty)
+{
+	ByteString prefix, key, count, offset, direction;
+	unsigned nread;
+
+	if (!dirty)
+		op->type = KeyspaceOp::COUNT;
+	else
+		op->type = KeyspaceOp::DIRTY_COUNT;
 	
 	ParseParams(params, 5, &prefix, &key, &count, &offset, &direction);
 	

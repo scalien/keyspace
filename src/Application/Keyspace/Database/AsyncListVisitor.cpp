@@ -14,6 +14,11 @@ AsyncVisitorCallback::~AsyncVisitorCallback()
 {
 }
 
+void AsyncVisitorCallback::Increment()
+{
+	numkey++;
+}
+
 bool AsyncVisitorCallback::AppendKey(const ByteString &key)
 {
 	if (key.length + keybuf.length <= keybuf.size && numkey < VISITOR_LIMIT - 1)
@@ -60,36 +65,44 @@ void AsyncVisitorCallback::Execute()
 
 	op->status = true;
 	
-	for (int i = 0; i < numkey; i++)
+	if (op->IsCount())
 	{
-		// HACK in order to not copy the buffer we set the members of
-		// the key and value manually and set it back before deleting 
-		op->key.buffer = keys[i].buffer;
-		op->key.size = keys[i].size;
-		op->key.length = keys[i].length;
-		
-		if (op->type == KeyspaceOp::LISTP ||
-			op->type == KeyspaceOp::DIRTY_LISTP)
-		{
-			// this is a huge hack, since op->value is a ByteBuffer!
-			// if it were allocated, this would result in memleak
-			op->value.buffer = valuebuf.buffer + valuepos[i];
-			op->value.size = valuelen[i];
-			op->value.length = valuelen[i];
-		}
-		
-		op->service->OnComplete(op, false);
+		op->value.Allocate(CS_INT_SIZE(uint64_t));
+		op->value.length = snwritef(op->value.buffer, op->value.size,
+									"%I", numkey);
 	}
-
-	op->key.buffer = NULL;
-	op->key.size = 0;
-	op->key.length = 0;
-	
-	if (op->type == KeyspaceOp::LISTP || op->type == KeyspaceOp::DIRTY_LISTP)
+	else
 	{
-		op->value.buffer = NULL;
-		op->value.size = 0;
-		op->value.length = 0;
+		for (uint64_t i = 0; i < numkey; i++)
+		{
+			// HACK in order to not copy the buffer we set the members of
+			// the key and value manually and set it back before deleting 
+			op->key.buffer = keys[i].buffer;
+			op->key.size = keys[i].size;
+			op->key.length = keys[i].length;
+			
+			if (op->IsListKeyValues())
+			{
+				// this is a huge hack, since op->value is a ByteBuffer!
+				// if it were allocated, this would result in memleak
+				op->value.buffer = valuebuf.buffer + valuepos[i];
+				op->value.size = valuelen[i];
+				op->value.length = valuelen[i];
+			}
+			
+			op->service->OnComplete(op, false);
+		}
+
+		op->key.buffer = NULL;
+		op->key.size = 0;
+		op->key.length = 0;
+		
+		if (op->IsListKeyValues())
+		{
+			op->value.buffer = NULL;
+			op->value.size = 0;
+			op->value.length = 0;
+		}
 	}
 
 	if (complete)
@@ -166,12 +179,12 @@ bool AsyncListVisitor::Accept(const ByteString &key,
 			offset--;
 		else
 		{
-			if (op->type == KeyspaceOp::LIST ||
-				op->type == KeyspaceOp::DIRTY_LIST)
-					AppendKey(key);
-			if (op->type == KeyspaceOp::LISTP ||
-				op->type == KeyspaceOp::DIRTY_LISTP)
-					AppendKeyValue(key, value);
+			if (op->IsListKeys())
+				AppendKey(key);
+			else if (op->IsListKeyValues())
+				AppendKeyValue(key, value);
+			else if (op->IsCount())
+				avc->Increment();
 			num++;
 		}
 		return true;

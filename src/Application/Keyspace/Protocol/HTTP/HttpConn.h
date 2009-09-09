@@ -47,6 +47,8 @@ private:
 					KeyspaceOp* op, bool dirty, bool html_);
 	bool			ProcessList(const char* params,
 					KeyspaceOp* op, bool p, bool dirty, bool html_);
+	bool			ProcessCount(const char* params,
+					KeyspaceOp* op, bool dirty);
 	bool			ProcessSet(const char* params, KeyspaceOp* op);
 	bool			ProcessTestAndSet(const char* params, KeyspaceOp* op);
 	bool			ProcessAdd(const char* params, KeyspaceOp* op);

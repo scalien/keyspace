@@ -33,6 +33,8 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 		case KEYSPACECLIENT_DIRTY_LIST:
 		case KEYSPACECLIENT_LISTP:
 		case KEYSPACECLIENT_DIRTY_LISTP:
+		case KEYSPACECLIENT_COUNT:
+		case KEYSPACECLIENT_DIRTY_COUNT:
 			read = snreadf(data.buffer, data.length,
 						   "%c:%U:%N:%N:%u:%u:%u:%u:%u:%c",
 						   &type, &cmdID, &prefix, &key,
@@ -106,6 +108,18 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			break;
 		case KEYSPACECLIENT_DIRTY_LISTP:
 			op->type = KeyspaceOp::DIRTY_LISTP;
+			op->count = count;
+			op->offset = offset;
+			op->forward = (direction == 'f');
+			break;
+		case KEYSPACECLIENT_COUNT:
+			op->type = KeyspaceOp::COUNT;
+			op->count = count;
+			op->offset = offset;
+			op->forward = (direction == 'f');
+			break;
+		case KEYSPACECLIENT_DIRTY_COUNT:
+			op->type = KeyspaceOp::DIRTY_COUNT;
 			op->count = count;
 			op->offset = offset;
 			op->forward = (direction == 'f');

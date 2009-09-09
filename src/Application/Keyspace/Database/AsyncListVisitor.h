@@ -21,13 +21,14 @@ public:
 	unsigned int	valuelen[VISITOR_LIMIT];
 	KeyBuffer		keybuf;
 	ValueBuffer		valuebuf;
-	int				numkey;
+	uint64_t		numkey;
 	KeyspaceOp*		op;
 	bool			complete;
 	
 	AsyncVisitorCallback();
 	~AsyncVisitorCallback();
 
+	void			Increment();
 	bool			AppendKey(const ByteString &key);
 	bool			AppendKeyValue(const ByteString &key,
 								   const ByteString &value);

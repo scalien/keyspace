@@ -47,6 +47,8 @@ public:
 		DIRTY_LIST,
 		LISTP,
 		DIRTY_LISTP,
+		COUNT,
+		DIRTY_COUNT,
 		SET,
 		TEST_AND_SET,
 		ADD,
@@ -118,6 +120,16 @@ public:
 		return (type == GET || type == DIRTY_GET);
 	}
 	
+	bool IsListKeys()
+	{
+		return (type == LIST || type == DIRTY_LIST);
+	}
+
+	bool IsListKeyValues()
+	{
+		return (type == LISTP || type == DIRTY_LISTP);
+	}
+	
 	bool IsList()
 	{
 		return (type == LIST ||
@@ -126,12 +138,18 @@ public:
 				type == DIRTY_LISTP);
 	}
 
+	bool IsCount()
+	{
+		return (type == COUNT || type == DIRTY_COUNT);
+	}
 	
 	bool IsDirty()
 	{
 		return (type == DIRTY_GET ||
 				type == DIRTY_LIST ||
-				DIRTY_LISTP);
+				type == DIRTY_LISTP ||
+				type == DIRTY_COUNT
+				);
 	}
 	
 	bool MasterOnly()
@@ -139,6 +157,7 @@ public:
 		return (type == GET ||
 				type == LIST ||
 				type == LISTP ||
+				type == COUNT ||
 				IsWrite());
 	}
 };

@@ -77,6 +77,13 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		mdbop->Visit(table, *alv);
 		dbReader.Add(mdbop);
 	}
+	else if (op->IsCount())
+	{
+		AsyncListVisitor *alv = new AsyncListVisitor(op);
+		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
+		mdbop->Visit(table, *alv);
+		dbReader.Add(mdbop);
+	}
 	else if (op->type == KeyspaceOp::SET)
 	{
 		op->status &= table->Set(&transaction, op->key, op->value);

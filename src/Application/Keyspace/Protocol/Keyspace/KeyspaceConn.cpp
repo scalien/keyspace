@@ -25,8 +25,6 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	Log_Message("[%s] Keyspace: client connected", endpointString);
 	
 	AsyncRead();
-	
-//	EventLoop::Reset(&connectionTimeout);
 }
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
@@ -46,6 +44,8 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 		{
 			if (op->type == KeyspaceOp::GET ||
 				op->type == KeyspaceOp::DIRTY_GET ||
+				op->type == KeyspaceOp::COUNT ||
+				op->type == KeyspaceOp::DIRTY_COUNT ||
 				op->type == KeyspaceOp::ADD ||
 				op->type == KeyspaceOp::REMOVE)
 			{
@@ -206,10 +206,7 @@ void KeyspaceConn::ProcessMsg()
 void KeyspaceConn::OnClose()
 {
 	Log_Trace("numpending: %d", numpending);
-	
-//	if (connectionTimeout.IsActive())
-//		EventLoop::Remove(&connectionTimeout);
-	
+		
 	Log_Message("[%s] Keyspace: client disconnected", endpointString);
 
 	Close();
@@ -220,9 +217,6 @@ void KeyspaceConn::OnClose()
 void KeyspaceConn::OnWrite()
 {
 	Log_Trace();
-
-//	if (connectionTimeout.IsActive())
-//		EventLoop::Reset(&connectionTimeout);
 	
 	TCPConn<>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
