@@ -105,19 +105,21 @@ Keyspace supports the following client commands (note the dirty-read operations 
 \item \texttt{LIST-KEYS(prefix, startKey, count, next)}: returns at most \texttt{count} keys whose beginning matches \texttt{prefix}, starting at position \texttt{startKey} in the database. If \texttt{startKey} is not found in the database, the listing starts at the next item lexicographically. If \texttt{startKey} is found, \texttt{startKey} itself may be skipped by passing in \texttt{next = true}. This is useful for pagination, where you pass in the last key that you showed on the previous page, but don't want to see it at the top of the next page.
 
 \item \texttt{LIST-KEYVALUES(prefix, startKey, count, next)}: same as \texttt{LIST-KEYS}, but returns keys \textit{and values}.
+\item \texttt{COUNT(prefix, startKey, count, next)}: returns the number of items the same \texttt{LIST} operation with the same arguments would return.
 \item \texttt{DIRTY-GET(key)}: returns the value of \texttt{key}, if it exists in the database, without making any consistency guarantees about reflecting previous write operations.
 \item \texttt{DIRTY-LIST-KEYS(prefix, startKey, count, next)}: same as \texttt{LIST-KEYS}, but without making any consistency guarantees about reflecting previous write operations.
 \item \texttt{DIRTY-LIST-KEYVALUES(prefix, startKey, count, next)}: same as \newline \texttt{LIST-KEY-VALUES}, but without making any consistency guarantees about reflecting previous write operations.
+\item \texttt{DIRTY-COUNT(prefix, startKey, count, next)}: same as \newline \texttt{COUNT}, but without making any consistency guarantees about reflecting previous write operations.
 \end{itemize}
 
 \section{ Master leases }
 %%%%%%%%%%%%%%%%%%%%%%%%% switch with operations?
 
-Keyspace is a master-slave system. Any node can obtain a master lease, which is valid for a maximum of five seconds, and can extend the lease before it expires, thus holding on to its mastership as long as it doesn't fail and network conditions are favorable. If the master fails, another node (previously a slave) will take over mastership within a few seconds. It is guaranteed that this process is safe, ie. only a single node will believe itself to be the master.
+Keyspace is a master-slave system. Any node can obtain a master lease, which is valid for a maximum of 7 seconds, and can extend the lease before it expires, thus holding on to its mastership as long as it doesn't fail and network conditions are favorable. If the master fails, another node (previously a slave) will take over mastership within a few seconds. It is guaranteed that this process is safe, ie. only a single node will believe itself to be the master.
 
 In Keyspace, only the master node serves read and write operations. but all nodes will perform dirty-reads. The advantage is that, since all write operations go through the master, it can be sure that is has seen all write operations, thus it can safely serve read operations without contacting other nodes. This means read operations are cheap, while write operations are not more expensive. The downside is that only a single node services client requests, meaning it could become a performance bottleneck.
 
-Keyspace uses the PaxosLease protocol for master leases, a variant of Paxos which does not require disk writes during lease negotiation. PaxosLease, like similar lease algorithms have to make assumptions about clock skew on the nodes participating in the distributed algorithm. Thus servers running Keyspace are required to synchronize their clocks (eg. by using the standard Network Time Protocol (NTP) UNIX service) to guarantee clock skew is less than $2 seconds$. As a safeguard, Keyspace runs a simple TimeCheck module every minute which uses timestamped UDP messages to estimate clock skew between nodes and halts the program if the estimate exceeds the limit.
+Keyspace uses the PaxosLease protocol for master leases, a variant of Paxos which does not require disk writes during lease negotiation. PaxosLease does not require clock synchrony between the nodes participating in the distributed algorithm. For a more complete description of PaxosLease, please see the whitepaper at \texttt{http://scalien.com/whitepapers}.
 
 \section{ Architecture }
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -239,6 +241,9 @@ T. Chandra, R. Griesemer, J. Redstone, \emph{Paxos Made Live - An Engineering Pe
 
 \bibitem{Chubby}
 M. Burrows, \emph{The Chubby Lock Service for Loosely-Coupled Distributed Systems}, OSDI'06: Seventh Symposium on Operating System Design and Implementation.
+
+\bibitem{AGPL}
+\texttt{http://www.gnu.org/licenses/agpl-3.0.html}
 
 \end{thebibliography}
 
