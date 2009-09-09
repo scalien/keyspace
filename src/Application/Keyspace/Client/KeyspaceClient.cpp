@@ -606,6 +606,16 @@ int Client::GetMaster()
 	return master;
 }
 
+void Client::DistributeDirty(bool dd)
+{
+	distributeDirty = dd;
+}
+
+double Client::GetLatency()
+{
+	return result.GetLatency(Result::AVERAGE);
+}
+
 int Client::Get(const ByteString &key, ByteString &value, bool dirty)
 {
 	int		ret;
@@ -621,19 +631,93 @@ int Client::Get(const ByteString &key, ByteString &value, bool dirty)
 	return KEYSPACE_OK;
 }
 
-void Client::DistributeDirty(bool dd)
-{
-	distributeDirty = dd;
-}
-
-double Client::GetLatency()
-{
-	return result.GetLatency(Result::AVERAGE);
-}
-
 int	Client::DirtyGet(const ByteString &key, ByteString &value)
 {
 	return Get(key, value, true);
+}
+
+int Client::Count(uint64_t &res, const ByteString &prefix,
+const ByteString &startKey,
+uint64_t count, bool next, bool forward)
+{
+	return Count(res, prefix, startKey, count, next, forward, false);
+}
+
+int Client::DirtyCount(uint64_t &res, const ByteString &prefix,
+const ByteString &startKey,
+uint64_t count, bool next, bool forward)
+{
+	return Count(res, prefix, startKey, count, next, forward, true);
+}
+
+int Client::Count(uint64_t &res, const ByteString &prefix,
+const ByteString &startKey,
+uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
+{
+	Command*		cmd;
+	ByteString		args[5];
+	DynArray<32>	countString;
+	DynArray<10>	nextString;
+	DynArray<10>	backString;
+	ByteString		sk;
+	int				status;
+	unsigned		nread;
+	
+	countString.Writef("%U", count);
+	if (next)
+		nextString.Append("1", 1);
+	else
+		nextString.Append("0", 1);
+
+	if (forward)
+		backString.Append("b", 1);
+	else
+		backString.Append("f", 1);
+
+	if (prefix.length > 0 && startKey.length >= prefix.length)
+	{
+		if (memcmp(prefix.buffer, startKey.buffer,
+			min(prefix.length, startKey.length)) == 0)
+		{
+			sk.buffer = startKey.buffer + prefix.length;
+			sk.length = startKey.length - prefix.length;
+			sk.size = startKey.size - prefix.length;
+		}
+	}
+	else
+		sk = startKey; // TODO: this seems inconsistent
+
+	args[0] = prefix;
+	args[1] = sk;
+	args[2] = countString;
+	args[3] = nextString;
+	args[4] = backString;
+	
+	if (dirty)
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_COUNT,
+								false, SIZE(args), args);
+		dirtyCommands.Append(cmd);
+	}
+	else
+	{
+		cmd = CreateCommand(KEYSPACECLIENT_COUNT, false, SIZE(args), args);
+		safeCommands.Append(cmd);
+	}
+	
+	result.Close();
+	
+	EventLoop();
+	if (status != KEYSPACE_OK)
+	{
+		result.Close();
+		return status;
+	}
+	
+	// TODO check conversion
+	res = strntoint64(result.Value().buffer, result.Value().length, &nread);
+	result.Close();
+	return status;
 }
 
 int Client::Get(const ByteString &key, bool dirty, bool submit)
@@ -669,44 +753,50 @@ int Client::DirtyGet(const ByteString &key, bool submit)
 }
 
 int	Client::ListKeys(const ByteString &prefix,
-const ByteString &startKey, uint64_t count, bool next)
+const ByteString &startKey, uint64_t count, bool next, bool forward)
 {
-	return ListKeyValues(prefix, startKey, count, next, false, false);
+	return ListKeyValues(prefix, startKey, count, next, forward, false, false);
 }
 
 int	Client::DirtyListKeys(const ByteString &prefix,
-const ByteString &startKey, uint64_t count, bool next)
+const ByteString &startKey, uint64_t count, bool next, bool forward)
 {
-	return ListKeyValues(prefix, startKey, count, next, true, false);
+	return ListKeyValues(prefix, startKey, count, next, forward, true, false);
 }
 
 int Client::ListKeyValues(const ByteString &prefix,
-const ByteString &startKey, uint64_t count, bool next)
+const ByteString &startKey, uint64_t count, bool next, bool forward)
 {
-	return ListKeyValues(prefix, startKey, count, next, false, true);
+	return ListKeyValues(prefix, startKey, count, next, forward, false, true);
 }
 
 int Client::DirtyListKeyValues(const ByteString &prefix,
-const ByteString &startKey, uint64_t count, bool next)
+const ByteString &startKey, uint64_t count, bool next, bool forward)
 {
-	return ListKeyValues(prefix, startKey, count, next, true, true);
+	return ListKeyValues(prefix, startKey, count, next, forward, true, true);
 }
 
 int Client::ListKeyValues(const ByteString &prefix,
 const ByteString &startKey, uint64_t count,
-bool next, bool dirty, bool values)
+bool next, bool forward, bool dirty, bool values)
 {
-	Command*	cmd;
-	ByteString	args[4];
-	DynArray<32> countString;
-	DynArray<10> nextString;
-	ByteString	sk;
+	Command*		cmd;
+	ByteString		args[5];
+	DynArray<32>	countString;
+	DynArray<10>	nextString;
+	DynArray<10>	backString;
+	ByteString		sk;
 	
 	countString.Writef("%U", count);
 	if (next)
 		nextString.Append("1", 1);
 	else
 		nextString.Append("0", 1);
+
+	if (forward)
+		backString.Append("b", 1);
+	else
+		backString.Append("f", 1);
 
 	if (prefix.length > 0 && startKey.length >= prefix.length)
 	{
@@ -725,6 +815,7 @@ bool next, bool dirty, bool values)
 	args[1] = sk;
 	args[2] = countString;
 	args[3] = nextString;
+	args[4] = backString;
 	
 	if (dirty)
 	{

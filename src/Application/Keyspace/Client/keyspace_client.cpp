@@ -112,11 +112,13 @@ keyspace_client_get(keyspace_client_t kc,
 }
 
 int
-keyspace_client_list_keys(keyspace_client_t kc, 
+keyspace_client_count(keyspace_client_t kc, 
+		uint64_t *res,
 		const void *key_, unsigned keylen,
 		const void *start_key, unsigned sklen,
 		uint64_t count,
 		int skip,
+		int backward,
 		int dirty)
 {
 	Client *client = (Client *) kc;
@@ -124,9 +126,28 @@ keyspace_client_list_keys(keyspace_client_t kc,
 	const ByteString sk(sklen, sklen, start_key);
 	
 	if (dirty)
-		return client->DirtyListKeys(key, sk, count, skip ? true : false);
+		return client->DirtyCount(*res, key, sk, count, skip ? true : false, backward ? false : true);
 	else
-		return client->ListKeys(key, sk, count, skip ? true : false);
+		return client->Count(*res, key, sk, count, skip ? true : false, backward ? false : true);
+}
+
+int
+keyspace_client_list_keys(keyspace_client_t kc, 
+		const void *key_, unsigned keylen,
+		const void *start_key, unsigned sklen,
+		uint64_t count,
+		int skip,
+		int backward,
+		int dirty)
+{
+	Client *client = (Client *) kc;
+	const ByteString key(keylen, keylen, key_);
+	const ByteString sk(sklen, sklen, start_key);
+	
+	if (dirty)
+		return client->DirtyListKeys(key, sk, count, skip ? true : false, backward ? false : true);
+	else
+		return client->ListKeys(key, sk, count, skip ? true : false, backward ? false : true);
 
 }
 
@@ -136,6 +157,7 @@ keyspace_client_list_keyvalues(keyspace_client_t kc,
 		const void *start_key, unsigned sklen,
 		uint64_t count,
 		int skip,
+		int backward,
 		int dirty)
 {
 	Client *client = (Client *) kc;
@@ -143,9 +165,9 @@ keyspace_client_list_keyvalues(keyspace_client_t kc,
 	const ByteString sk(sklen, sklen, start_key);
 	
 	if (dirty)
-		return client->DirtyListKeyValues(key, sk, count, skip ? true : false);
+		return client->DirtyListKeyValues(key, sk, count, skip ? true : false, backward ? false : true);
 	else
-		return client->ListKeyValues(key, sk, count, skip ? true : false);
+		return client->ListKeyValues(key, sk, count, skip ? true : false, backward ? false : true);
 }
 
 int

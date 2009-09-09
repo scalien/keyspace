@@ -171,6 +171,35 @@ int	keyspace_client_get(keyspace_client_t kc,
 		int dirty);
 
 /*
+ * COUNT operation
+ *
+ * Return the number of matching keys with the same parameters as
+ * with list.
+ * The count is returned in res variable.
+ *
+ * Parameters:
+ *  kc:			client object
+ *	prefix:		buffer to the prefix data
+ *	prefixlen:	length of the prefix
+ *  start_key:	buffer to the starting key
+ *  sklen:		length of the starting key
+ *  count:		limit the number of results to this value
+ *  skip:		skip that much items in the result
+ *  backward:	direction of listing, nonzero means backwards listing
+ *	dirty:		nonzero value denotes dirty operation
+ *
+ * Return value: the status of the operation
+ */
+int keyspace_client_count(keyspace_client_t kc,
+		uint64_t *res,
+		const void *prefix, unsigned prefixlen,
+		const void *start_key, unsigned sklen,
+		uint64_t count,
+		int skip,
+		int backward,
+		int dirty);
+
+/*
  * LISTKEYS operation.
  *
  * Return at most count 'keys' starting with 'prefix'.
@@ -184,6 +213,7 @@ int	keyspace_client_get(keyspace_client_t kc,
  *  sklen:		length of the starting key
  *  count:		limit the number of results to this value
  *  skip:		skip that much items in the result
+ *  backward:	direction of listing, nonzero means backwards listing
  *	dirty:		nonzero value denotes dirty operation
  *
  * Return value: the status of the operation
@@ -193,6 +223,7 @@ int	keyspace_client_list_keys(keyspace_client_t kc,
 		const void *start_key, unsigned sklen,
 		uint64_t count,
 		int skip,
+		int backward,
 		int dirty);
 
 
@@ -210,6 +241,7 @@ int	keyspace_client_list_keys(keyspace_client_t kc,
  *  sklen:		length of the starting key
  *  count:		limit the number of results to this value
  *  skip:		skip that much items in the result
+ *  backward:	direction of listing, nonzero means backwards listing
  *	dirty:		nonzero value denotes dirty operation
  *
  * Return value: the status of the operation

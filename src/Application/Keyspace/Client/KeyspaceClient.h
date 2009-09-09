@@ -161,6 +161,16 @@ public:
 						bool dirty = false);
 	int				DirtyGet(const ByteString &key, ByteString &value);
 
+	// commands that return a number as res
+	int				Count(uint64_t &res, const ByteString &prefix,
+						  const ByteString &startKey,
+						  uint64_t count = 0,
+						  bool next = false, bool forward = true);
+	int				DirtyCount(uint64_t &res, const ByteString &prefix,
+							   const ByteString &startKey,
+							   uint64_t count = 0,
+							    bool next = false, bool forward = true);
+
 	// commands that return a Result
 	int				Get(const ByteString &key, bool dirty = false,
 						bool submit = true);
@@ -168,16 +178,20 @@ public:
 
 	int				ListKeys(const ByteString &prefix,
 							 const ByteString &startKey,
-							 uint64_t count = 0, bool next = false);
+							 uint64_t count = 0,
+							 bool next = false, bool forward = true);
 	int				DirtyListKeys(const ByteString &prefix,
 								  const ByteString &startKey,
-								  uint64_t count = 0, bool next = false);
+								  uint64_t count = 0,
+								  bool next = false, bool forward = true);
 	int				ListKeyValues(const ByteString &prefix,
 								  const ByteString &startKey,
-								  uint64_t count = 0, bool next = false);
+								  uint64_t count = 0,
+								  bool next = false, bool forward = true);
 	int				DirtyListKeyValues(const ByteString &prefix,
 									   const ByteString &startKey,
-									   uint64_t count = 0, bool next = false);
+									   uint64_t count = 0,
+									   bool next = false, bool forward = true);
 
 	Result*			GetResult(int &status);
 
@@ -215,10 +229,14 @@ private:
 	void			SendCommand(ClientConn* conn, CommandList& commands);
 	void			DeleteCommands(CommandList& commands);
 	void			SetMaster(int master);
+	int				Count(uint64_t &res, const ByteString &prefix,
+						  const ByteString &startKey,
+						  uint64_t count, bool next,
+						  bool forward, bool dirty);
 	int				ListKeyValues(const ByteString &prefix,
 								  const ByteString &startKey,
 								  uint64_t count, bool next,
-								  bool dirty, bool values);
+								  bool forward, bool dirty, bool values);
 	void			StopConnTimeout();
 	
 	CommandList		safeCommands;
