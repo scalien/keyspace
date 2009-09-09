@@ -97,8 +97,8 @@ PaxosLease preserves the \emph{lease-invariant}: at any given time, there is no 
 
 This section describes the basic flow of the algorithm in terms of the proposer's and acceptor's algorithm. The proposers send prepare and propose requests, acceptors reply with prepare and propose responses. If all goes well, it takes two round-trip times for the proposer to acquire the lease.
 
-\sloppy
 \begin{enumerate}
+\sloppy
 
 \item A proposer wishes to acquire the lease for $T < M$ seconds. It generates a ballot number \texttt{[request.ballotNumber]}, chooses a time $T$ and sends prepare request messages to a majority of acceptors.
 
