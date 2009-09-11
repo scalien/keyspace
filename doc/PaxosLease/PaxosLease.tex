@@ -100,15 +100,14 @@ This section describes the basic flow of the algorithm in terms of the proposer'
 \begin{enumerate}
 \sloppy
 
-\item A proposer wishes to acquire the lease for $T < M$ seconds. It generates a ballot number \texttt{[request.ballotNumber]}, chooses a time $T$ and sends prepare request messages to a majority of acceptors.
+\item A proposer wishes to acquire the lease for $T < M$ seconds. It generates a ballot number \texttt{[request.ballotNumber]}, and sends prepare request messages to a majority of acceptors.
 
 \begin{verbatim}
 Proposer::Propose()
 {
-   state.ballotNumber = NextBallotNumber();
-   state.timeout = T
+   state.ballotNumber = NextBallotNumber()
    reqest.type = PrepareRequest
-   reqest.ballotNumber = state.timeout
+   reqest.ballotNumber = state.ballotNumber
    Broadcast(request)
 }
 \end{verbatim}
@@ -139,6 +138,7 @@ Proposer::OnPrepareResponse()
       numOpen++
    if (numOpen < majority)
       return
+   state.timeout = T
    SetTimeout(state.timeout)
    request.type = ProposeRequest
    request.ballotNumber = state.ballotNumber
@@ -149,7 +149,8 @@ Proposer::OnPrepareResponse()
 
 Proposer::OnTimeout()
 {
-   state.leaseOwner = false // set in Proposer::OnProposeResponse()
+   state.ballotNumber = empty // set in Proposer::Propose()
+   state.leaseOwner = false   // set in Proposer::OnProposeResponse()
 }
 \end{verbatim}
 
