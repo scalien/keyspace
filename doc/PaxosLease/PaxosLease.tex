@@ -27,13 +27,13 @@
 \section{ Introduction }
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-In concurrent programming, \emph{locks} are a basic primitive which processes use to synchronize access to a shared resource. In a system where locks are granted without an automatic expiry time (and without an overseer process), failure of the lock owner before it releases the lock may cause other processes to block.
+In concurrent programming, \emph{locks} are a basic primitive which processes use to synchronize access to a shared resource. In a system where locks are granted without an expiry time (and without a supervisor process), failure of the lock owner before it releases the lock may cause other processes to block.
 
-In a highly-available distributed system, one wishes to avoid single node failure to cause the entire system to block. Also, "restarting" the system in case of failure may be harder restarting a multi-threaded program. Thus, in distributed systems, \emph{leases} take the place of locks to avoid starvation. \emph{A lease is a lock with an automatic expiry time.} If the owner of the lock fails or becomes disconnected from the rest, its lease automatically expires and other nodes can acquire it.
+In a highly-available distributed system, one wishes to avoid single node failures to cause the entire system to block. Also, "restarting" the system in case of failure may be harder than restarting a multi-threaded program. Thus, in distributed systems, \emph{leases} take the place of locks to avoid starvation. \emph{A lease is a lock with an expiry time.} If the owner of the lock fails or becomes disconnected from the rest, its lease automatically expires and other nodes can acquire it.
 
-We assume the basic set up is as follows: the system consists of a set of \emph{poposers} who follow the proposer's algorithm and a set of \emph{acceptors} who follow the acceptor's algorithm. It is assumed the system is non-byzantine, ie. the nodes do not cheat (are not hacked) by not following their algorithm. The number of acceptors is fixed and does not change.
+We assume the basic setup is as follows: the system consists of a set of \emph{proposers} who follow the proposer's algorithm and a set of \emph{acceptors} who follow the acceptor's algorithm. It is assumed the system is non-byzantine, i.e. the nodes do not cheat (are not hacked) by not following their algorithm. The number of acceptors is fixed and does not change.
 
-A naive, majority vote type algorithm can be given which correctly solves the distributed lease problem, \emph{correct} meaning that the lease is held by no more than one node at any time. However, this simple algorithm will frequently \emph{block} in the presence of many proposers, hence the need for a more sophisticated approach. 
+A naive, majority vote type algorithm can be given which correctly solves the distributed lease problem; \emph{correct} meaning that the lease is held by no more than one node at any time. However, this simple algorithm will frequently \emph{block} in the presence of many proposers, hence the need for a more sophisticated approach. 
 
 The naive majority algorithm is as follows: proposers start local timeouts for $T$ seconds and send requests to the acceptors for the lease with timespan $T$. The acceptors, upon receiving the request, start a timer for $T$ seconds and sends an accept message to the proposer. After the timeout, the acceptors clear their state. If an acceptor receives a request but its state is not empty it either does not answer or sends a reject message. To make sure only one proposer has the lease at any time, the proposer must receive accept messages from a majority of acceptors; then it has the lease until its local timer expires.
 
@@ -53,7 +53,7 @@ PaxosLease is a natural specialization of Paxos. As in Paxos, it is assumed that
 \end{center}
 \end{figure}
 
-To acquire the lease, PaxosLease proposer nodes propose the value: "node i has the lease", and the return to the "noone has the lease" state is automatic after the expiry time. Proposers may also extend their leases by proposing the "node i has the lease" value again before their previous lease expires, and may optionally release the lease before it expires.
+To acquire the lease, PaxosLease proposer nodes propose the value: "node i has the lease", and will automatically return to the "no one has the lease" state after the expiry time. Proposers may also extend their leases by proposing the "node i has the lease" value again before their previous lease expires, and may optionally release the lease before it expires.
 
 Similar to Paxos, PaxosLease intrinsically handles all relevant failure conditions:
 \begin{enumerate*}
@@ -121,8 +121,8 @@ Acceptor::OnPrepareRequest()
       return
    state.highestPromised = reqeust.ballotNumber
    response.type = PrepareRespose
-   resonse.ballotNumber = request.ballotNumber
-   reponse.acceptedProposal = state.acceptedProposal  // may be 'empty'
+   response.ballotNumber = request.ballotNumber
+   response.acceptedProposal = state.acceptedProposal  // may be 'empty'
    Send(response)
 }
 \end{verbatim}
@@ -174,7 +174,7 @@ Acceptor::OnTimeout()
 }
 \end{verbatim}
 
-\item The proposer examines the propose responses messages. If a majority of acceptors responded accepting the proposal, the proposer has the lease until its local timeout, started in step 3. expires. The time at which the proposer receives the last message necessary for a majority is the time at which it acquired the lease and may switch its internal state to "I have the lease".
+\item The proposer examines the propose responses messages. If a majority of acceptors responded accepting the proposal, the proposer has the lease until its local timeout (started in step 3) expires. The time at which the proposer receives the last message necessary for a majority is the time at which it acquired the lease and may switch its internal state to "I have the lease".
 
 \begin{verbatim}
 Proposer::OnProposeResponse()
@@ -200,7 +200,7 @@ Note that acceptors do not store their state to stable storage. Upon restart, th
 \end{center}
 \end{figure}
 
-It is important to note that since all that is transmitted is timespans (relative times), only the proposer which has the lease knows it has the lease. It cannot tell other nodes it has the lease (similar to learn messages is classical Paxos or Fatlease), since other nodes cannot know how much time these learn messages spent in transit. Thus, only the proposer which has the lease knows it has the lease. All other nodes know is that they do not have the lease. In other words, each proposer has two states regarding the lease: "I do not have the lease and I don't know who has the lease" and "I have the lease". Of course, nodes may send out learn messages as \emph{hints} which may be used in higher-level applications or heuristics, but this is beyond the scope of this paper.
+It is important to note that since all that is transmitted is timespans (relative times), only the proposer which has the lease knows it has the lease. It cannot tell other nodes it has the lease (similar to learn messages in classical Paxos or Fatlease), since other nodes cannot know how much time these learn messages spent in transit. Thus, only the proposer which has the lease knows it has the lease. All the other nodes know is that they do not have the lease. In other words, each proposer has two states regarding the lease: "I do not have the lease and I don't know who has the lease" and "I have the lease". Of course, nodes may send out learn messages as \emph{hints} which may be used in higher-level applications or heuristics, but this is beyond the scope of this paper.
 
 It is possible that a proposer cannot get a majority of acceptors to send favorable responses in steps 3. and 5. above. In this case the proposer may sleep for a while and then restart its algorithm at step 1. with a higher ballot number.
 
@@ -221,18 +221,18 @@ Part 2. No other proposer $q$ can hold the lease between $t_{acquire}$ and $t_{e
 
 Paxos-type algorithms such as PaxosLease contain the possibility of dynamical deadlock: two proposers can continually generate higher and higher ballot numbers, send prepare requests to acceptors, who continually increase their highest ballot number promised, and neither of the proposers can get acceptors to accept their proposals. In practice, this can be worked around by proposers waiting a small but random time before re-running their algorithm.
 
-The main advantage of Paxos-type algorithms is that static deadlocks, as described in the naive majority vote algorithm are not possible because proposers can overwrite acceptor states and the algorithm guarantees that no majority is overwritten.
+The main advantage of Paxos-type algorithms is that static deadlocks, as described in the naive majority vote algorithm, are not possible because proposers can overwrite acceptor states and the algorithm guarantees that no majority is overwritten.
 
 \section{ Extending leases }
 
-In some situations, once a proposer has the lease, it is important that it can hold on to it beyond its original lease time. A typical case is whent the lease identifies the master node in a distributed system and it is desirable that a node can hold on to its mastership for a long time.
+In some situations, once a proposer has the lease, it is important that it can hold on to it beyond its original lease time. A typical case is when the lease identifies the master node in a distributed system and it is desirable that a node can hold on to its mastership for a long time.
 
-To accomodate this only the proposer's algorithm needs to be modified. In step 3., if a majority responded either with empty proposals \emph{or its existing proposal} whose lease has not yet expired, it can propose itself again as the lease holder. This will allow the proposer to extend its lease by $O(T)$ time. The acceptor's algorithm does not change.
+To accomodate this, only the proposer's algorithm needs to be modified. In step 3., if a majority responded either with empty proposals \emph{or its existing proposal} whose lease has not yet expired, it can propose itself again as the lease holder. This will allow the proposer to extend its lease by $O(T)$ time. The acceptor's algorithm does not change.
 
 \section{ Releasing leases }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In the algorithm described so far, the proposerss lease automatically expire after some time. In some situations, it is important to release the lease as soon as possible so that other nodes may acquire it. A typical case is a distributed process, where workers acquire a lease for a resource, do work on it, and then wish to release the lease as asson as possible so that other workers can acquire it.
+In the algorithm described so far, the proposers' lease automatically expires after some time. In some situations, it is important to release the lease as soon as possible so that other nodes may acquire it. A typical case is a distributed process, where workers acquire a lease for a resource, do work on it, and then wish to release the lease as soon as possible so that other workers can acquire it.
 
 To accomodate this, any proposer may at any point in time send special release messages to acceptors which contain the ballot number of the lease they wish to release. Before sending out the release messages, the proposer switches its internal state from "I have the lease" to "I do not have the lease". If an acceptor receives a release message, it checks whether its accepted ballot number matches. If if does, it discards its state; otherwise it does nothing. Proposers can also send out release messages to other proposers as hints, telling them that they may be able to acquire the lease now.
 
@@ -244,7 +244,7 @@ The algorithm defines lease actions concerning a single resource $R$. In practic
 \section{ Implementation}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-PaxosLease is used for master lease negotiation is Scalien Software's Keyspace replicated key-value store. Since Keyspace is licensed under the Affero GPL, this reference implementation, which contains many practical optimizations is freely available to all interested readers. The source code and binaries may be downloaded at \texttt{http://scalien.com}.
+PaxosLease is used for master lease negotiation in Scalien Software's Keyspace replicated key-value store. Since Keyspace is licensed under the Affero GPL, this reference implementation, which contains many practical optimizations, is freely available to all interested readers. The source code and binaries may be downloaded at \texttt{http://scalien.com}.
 
 \section{ Genealogy }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
