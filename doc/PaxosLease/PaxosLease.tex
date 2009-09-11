@@ -106,20 +106,20 @@ This section describes the basic flow of the algorithm in terms of the proposer'
 Proposer::Propose()
 {
    state.ballotNumber = NextBallotNumber()
-   reqest.type = PrepareRequest
-   reqest.ballotNumber = state.ballotNumber
+   request.type = PrepareRequest
+   request.ballotNumber = state.ballotNumber
    Broadcast(request)
 }
 \end{verbatim}
 
-\item Acceptors, upon receiving a prepare request check whether the ballot number \texttt{[request.ballotNumber]} is higher than their local highest ballot number promised \texttt{[state.highestPromised]}. If it is lower, they either discard the message or send a prepare response with a \emph{reject} answer. If it equal or higher, the acceptor constructs a prepare response with an \emph{accept} answer containing the currently accepted proposal \texttt{[state.acceptedProposal]}, which may be \emph{empty}. The acceptor sets its highest ballot number promised \texttt{[state.highestPromised]} equal to the ballot number of the message \texttt{[request.ballotNumber]} and sends the prepare response back to the proposer.
+\item Acceptors, upon receiving a prepare request check whether the ballot number \texttt{[request.ballotNumber]} is higher than their local highest ballot number promised \texttt{[state.highestPromised]}. If it is lower, they either discard the message or send a prepare response with a \emph{reject} answer. If it is equal or higher, the acceptor constructs a prepare response with an \emph{accept} answer containing the currently accepted proposal \texttt{[state.acceptedProposal]}, which may be \emph{empty}. The acceptor sets its highest ballot number promised \texttt{[state.highestPromised]} equal to the ballot number of the message \texttt{[request.ballotNumber]} and sends the prepare response back to the proposer.
 
 \begin{verbatim}
 Acceptor::OnPrepareRequest()
 {
    if (request.ballotNumber < state.highestPromised)
       return
-   state.highestPromised = reqeust.ballotNumber
+   state.highestPromised = request.ballotNumber
    response.type = PrepareRespose
    response.ballotNumber = request.ballotNumber
    response.acceptedProposal = state.acceptedProposal  // may be 'empty'
@@ -142,7 +142,7 @@ Proposer::OnPrepareResponse()
    SetTimeout(state.timeout)
    request.type = ProposeRequest
    request.ballotNumber = state.ballotNumber
-   request.proposal.proposerID = me
+   request.proposal.proposerID = self.proposerID
    request.proposal.timeout = state.timeout
    Broadcast(request)
 }
@@ -154,7 +154,7 @@ Proposer::OnTimeout()
 }
 \end{verbatim}
 
-\item Acceptors, upon receiving a propose request check whether the ballot number \texttt{[request.ballotNumber]} is higher than their highest ballot number promised \texttt{[state.highestPromised]}. If it is lower, they can either discard the message or send a propose response with a \emph{reject} answer. If it equal or higher, the acceptor accepts the proposal: if starts a timeout which will expire in $T$ seconds and sets its accepted proposal to the proposal received (if it has stored a previous proposal, it discards it). It then constructs a propose response with an \emph{accept} answer containing the ballot number \texttt{[request.ballotNumber]}. After the timeout expires the acceptor resets its accepted proposal to \emph{empty}. Acceptors never reset their highest ballot number promised, except when restarting.
+\item Acceptors, upon receiving a propose request check whether the ballot number \texttt{[request.ballotNumber]} is higher than their highest ballot number promised \texttt{[state.highestPromised]}. If it is lower, they can either discard the message or send a propose response with a \emph{reject} answer. If it is equal or higher, the acceptor accepts the proposal: if starts a timeout which will expire in $T$ seconds and sets its accepted proposal to the proposal received (if it has stored a previous proposal, it discards it). It then constructs a propose response with an \emph{accept} answer containing the ballot number \texttt{[request.ballotNumber]}. After the timeout expires the acceptor resets its accepted proposal to \emph{empty}. Acceptors never reset their highest ballot number promised, except when restarting.
 
 \begin{verbatim}
 Acceptor::OnProposeRequest()
@@ -200,7 +200,7 @@ Note that acceptors do not store their state to stable storage. Upon restart, th
 \end{center}
 \end{figure}
 
-It is important to note that since all that is transmitted is timespans (relative times), only the proposer which has the lease knows it has the lease. It cannot tell other nodes it has the lease (similar to learn messages in classical Paxos or Fatlease), since other nodes cannot know how much time these learn messages spent in transit. Thus, only the proposer which has the lease knows it has the lease. All the other nodes know is that they do not have the lease. In other words, each proposer has two states regarding the lease: "I do not have the lease and I don't know who has the lease" and "I have the lease". Of course, nodes may send out learn messages as \emph{hints} which may be used in higher-level applications or heuristics, but this is beyond the scope of this paper.
+It is important to note that since all that is transmitted are timespans (relative times), only the proposer which has the lease knows it has the lease. It cannot tell other nodes it has the lease (similar to learn messages in classical Paxos or Fatlease), since other nodes cannot know how much time these learn messages spent in transit. Thus, only the proposer which has the lease knows it has the lease. All the other nodes know is that they do not have the lease. In other words, each proposer has two states regarding the lease: "I do not have the lease and I don't know who has the lease" and "I have the lease". Of course, nodes may send out learn messages as \emph{hints} which may be used in higher-level applications or heuristics, but this is beyond the scope of this paper.
 
 It is possible that a proposer cannot get a majority of acceptors to send favorable responses in steps 3. and 5. above. In this case the proposer may sleep for a while and then restart its algorithm at step 1. with a higher ballot number.
 
