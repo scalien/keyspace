@@ -1,0 +1,89 @@
+Keyspace Client Application Programming Interface (API)
+=======================================================
+
+It is a good idea to have a basic understanding of your
+distributed system. Thus it is recommended that you read the
+Keyspace whitepaper first. The whitepaper is at
+
+http://scalien.com/whitepapers
+
+Keyspace is a *master based* replicated database, where
+certain operations are only serviced by the master node.
+These operations are
+- write operations
+  (SET, TEST-AND-SET, ADD, DELETE, REMOVE, PRUNE and SUBMIT)
+- safe read operations
+  (GET, LIST-KEYS, LIST-KEYVALUES, COUNT)
+
+The following operations are served by *all* nodes:
+- who is the current master
+  (GET-MASTER)
+- dirty read operations
+  (DIRTY-GET, DIRTY-LIST-KEYS, DIRTY-LIST-KEYVALUES, DIRTY-COUNT)
+
+Dirty read operations will succeed on any server regardless of
+internode connectivity, but may return inconsistent (not up-to-date)
+data; hence the name dirty.
+
+If your client wants to modify the database, it must be connected
+to the master. On the other hand, if consistency does not matter
+or your application logic guarantees it (eg. you stopped all writers),
+you can connect to any node and perform dirty reads.
+
+
+HTTP protocol
+=============
+
+You can issue all commands over HTTP with the GET method. The commands 
+and responses are people-friendly, so you can issue them from your browser.
+Be aware that HTTP should only be used for testing and peeking, as each 
+command creates a new TCP/HTTP connection, which is fairly expensive and 
+unnecessary. The programmatic APIs use the Keyspace protocol.
+
+The syntax for HTTP commands is http://yoursever:port
+where port is http.port specified in your conf file (default 8080).
+
+If you look at the root http://yoursever:port Keyspace displays
+its version number and master information.
+
+The commands are:
+
+/getmaster
+/get?key
+/dirtyget?key
+/set?key,value
+/testandset?key,test,value
+/add?key,num
+/rename?key,newKey
+/delete?key
+/remove?key
+/prune?prefix
+/listkeys?prefix,startkey,count,next,forward
+/listkeyvalues?prefix,startkey,count,next,forward
+/count?prefix,startkey,count,next,forward
+/dirtylistkeys?prefix,startkey,count,next,forward
+/dirtylistkeyvalues?prefix,startkey,count,next,forward
+/dirtycount?prefix,startkey,count,next,forward
+
+
+For the list and count commands:
+- the list returns keys starting with <prefix>
+- listing starts with <prefix> + <startkey> (<startkey> is optional)
+- return at most <count> elements (<count> is optional)
+- if <next> is x, the first x elements are skipped (<next> is optional)
+- if <forward> is not 'f', list backwards (<forward> is optional)
+
+HTTP+HTML protocol
+------------------
+The is the same as the plain HTTP protocol, except LIST operations' output is 
+pretty printed and key names are links to the appropriate GET commands. The 
+HTTP commands are same as above prefixed with /html, for example /html/get?key
+
+HTTP+JSON protocol
+------------------
+The JSON protocol is similar to the previous two, but results are returned as 
+Javascript objects so you can use it from a Web2.0 application using the AJAX
+mechanism. The HTTP commands are the same as above prefixed with /json or
+/json,func, for example http://server:8080/json/get?key or 
+http://server:8080/json,func/get?key where func is an optional Javascript
+callback function.

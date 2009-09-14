@@ -56,7 +56,7 @@ class Client:
 	PRUNE = "z"
 
 
-	def __init__(self, nodes, timeout = None, trace_ = False):
+	def __init__(self, nodes, timeout = 60, trace_ = False):
 		global TRACE
 		TRACE = trace_
 		self.nodes = nodes

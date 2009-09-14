@@ -1,0 +1,120 @@
+Example usage
+=============
+
+To use the Keyspace Python API, import the included keyspace.py file which can 
+be found in the client directory.
+
+>>> import keyspace
+
+After importing, you can create and use the Client object.
+
+>>> client = keyspace.Client(["localhost:7080"])
+>>> client.set("key", "value")
+>>> client.get("key")
+'value'
+>>>
+
+Documentation
+=============
+
+Constructor
+-----------
+
+class Client(nodes, timeout = 60, trace = False)
+
+	Creates a client object, connecting to nodes. Nodes is an array of strings
+	in "host:port" format. Timeout is given in seconds.
+
+Instance methods
+----------------
+
+get(key, submit = True)
+	Returns the value of key, if it exists in the database. If submit is False
+	the query will be queued, and will be submitted when submit() is called.
+
+dirtyget(key, submit = True)
+	Returns the value of key, if it exists in the database, without making any
+	consistency guarantees about reflecting previous write operations.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+set(key, value, submit = True)
+	Sets the value of key, overwriting the previous value if it already 
+	existed in the database.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+testandset(key, test, value, submit = True)
+	Atomically changes the value of key to value if its current value is test.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+add(key, num, submit = True)
+	Treats the value of key as a number and atomically increments it by num, 
+	where num may be a negative number. Useful for building indexes and 
+	counters. Returns the new value.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+delete(key, submit = True)
+	Deletes key and its value from the database.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+remove(key, submit = True)
+	Deletes key and its value from the database and returns the value.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+rename(key, newKey, submit = True)
+	Renames key to newKey.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+prune(prefix, submit = True)
+	Deletes all key-value pairs where key starts with prefix.
+	If submit is False the query will be queued, and will be submitted when 
+	submit() is called.
+
+listkeys(prefix = "", startKey = "", count = 0, next = 0, backward = False)
+ 	Returns at most count keys whose beginning matches prefix, starting at 
+	position startKey in the database. If startKey is not found in the 
+	database, the listing starts at the next item lexicographically. If 
+	startKey is found, startKey itself may be skipped by passing in next = 1. 
+	This is useful for pagination, where you pass in the last key that you 
+	showed on the previous page, but don't want to see it at the top of the 
+	next page. backward specifies the direction of the listing.
+	Returns an array of values.
+
+dirtylistkeys(prefix, startKey, count, next, backward)
+	Same as listkeys, but without making any consistency guarantees about 
+	reflecting previous write operations.
+
+listkeyvalues(prefix, startKey, count, next, backward)
+ 	Same as listkeys, but returns keys and values in a dict instead of an
+	array.
+
+dirtylistkeyvalues(prefix, startKey, count, next, backward)
+	Same as listkeyvalues, but without making any consistency guarantees 
+	about reflecting previous write operations.
+
+count(prefix, startKey, count, next, forward, backward)
+	Returns the number of items the same listkeys operation with the same 
+	arguments would return.
+
+dirtycount(prefix, startKey, count, next, backward)
+	Same as count(), but without making any consistency guarantees about 
+	reflecting previous write operations.
+
+begin()
+	Starts queueing requests.
+
+submit()
+	Submits the queued requests. The result of the operations can be
+	obtained with the values() method.
+
+cancel()
+	Cancels queueing.
+
+values()
+	Returns the result of the last operations.
