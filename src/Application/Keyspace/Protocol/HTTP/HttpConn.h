@@ -20,13 +20,22 @@ public:
 	virtual void	OnComplete(KeyspaceOp* op, bool final);
 	virtual bool	IsAborted();
 
-private:	
+private:
+	enum Type
+	{
+		PLAIN,
+		HTML,
+		JSON
+	};
+	
 	HttpServer*		server;
 	HttpRequest		request;
 	Endpoint		endpoint;
-	bool			html;
 	bool			headerSent;
 	bool			closeAfterSend;
+	Type			type;
+	ByteString		jsonCallback;
+	bool			rowp;
 
 	// TCPConn interface
 	virtual void	OnRead();
@@ -34,6 +43,8 @@ private:
 	virtual void	OnWrite();
 	
 	void			Print(const char* s);
+	void			PrintJSONString(const char* s, unsigned len);
+	void			PrintJSONStatus(const char* status, const char* type = NULL);
 	int				Parse(char* buf, int len);
 	int				ProcessGetRequest();
 	const char*		Status(int code);
@@ -41,12 +52,14 @@ private:
 					int len, bool close = true, const char* header = NULL);
 	void			ResponseHeader(int code, bool close = true,
 					const char* header = NULL);
+	void			ResponseFail();
+	void			ResponseNotFound();
 	
 	bool			ProcessGetMaster();
 	bool			ProcessGet(const char* params,
-					KeyspaceOp* op, bool dirty, bool html_);
+					KeyspaceOp* op, bool dirty);
 	bool			ProcessList(const char* params,
-					KeyspaceOp* op, bool p, bool dirty, bool html_);
+					KeyspaceOp* op, bool p, bool dirty);
 	bool			ProcessCount(const char* params,
 					KeyspaceOp* op, bool dirty);
 	bool			ProcessSet(const char* params, KeyspaceOp* op);
