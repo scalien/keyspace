@@ -70,14 +70,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		op->status &= table->Get(NULL, op->key, op->value);
 		op->service->OnComplete(op);
 	}
-	else if (op->IsList())
-	{
-		AsyncListVisitor *alv = new AsyncListVisitor(op);
-		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
-		mdbop->Visit(table, *alv);
-		dbReader.Add(mdbop);
-	}
-	else if (op->IsCount())
+	else if (op->IsList() || op->IsCount())
 	{
 		AsyncListVisitor *alv = new AsyncListVisitor(op);
 		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();

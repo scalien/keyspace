@@ -89,10 +89,12 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 		return true;
 	}
 	
-	if (op->IsList())
+	if (op->IsList() || op->IsCount())
 	{
-		if ((op->type == KeyspaceOp::LIST || op->type == KeyspaceOp::LISTP) &&
-		   (!RLOG->IsMaster() || !RLOG->IsSafeDB()))
+		if ((op->type == KeyspaceOp::LIST ||
+		op->type == KeyspaceOp::LISTP ||
+		op->type == KeyspaceOp::COUNT) &&
+		(!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
 
 		AsyncListVisitor *alv = new AsyncListVisitor(op);
