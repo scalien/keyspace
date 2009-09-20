@@ -23,7 +23,7 @@
 
 \maketitle
 
-\abstract{ This paper describes PaxosLease, a distributed algorithm for lease negotiation. PaxosLease is based on Paxos, but does not require disk writes and does not make clock synchrony and skew assumptions. PaxosLease is used for master lease negotation in the open-source Keyspace replicated key-value store. }
+\abstract{ This paper describes PaxosLease, a distributed algorithm for lease negotiation. PaxosLease is based on Paxos, but does not require disk writes or clock synchrony. PaxosLease is used for master lease negotation in the open-source Keyspace replicated key-value store. }
 
 \section{ Introduction }
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -42,7 +42,7 @@ As discussed previously, it is possible (and likely), that with many proposers, 
 
 The solution described in this paper is to follow the scheme of Paxos \cite{Parliament}, and introduce \emph{prepare} and \emph{propose} phases, which avoids this kind of blocking altogether\footnote{Another solution may be to let the system block, but introduce an "undo" mechanism which lets some proposers undo their proposals to let one proposer acquire the lease.}. Paxos solves the problem of replicated state-machines, where each node has a local copy of a state-machine, and they wish to reach consensus on the next state transition. Paxos is a majority based algorithm, meaning a majority of the nodes have to be up and communicating for consensus to be possible. Paxos deals with reaching consensus on a single state transition, so in practice several Paxos rounds are run in sequence to negotiate the sequence of state transitions \cite{PaxosMadeLive}. In Paxos, acceptors record their state to disk before sending responses, which guarantees that once a value (state transition) is chosen, it is chosen at all later times; in other words, all state machines go through the same sequence of state transitions, whatever error conditions occur.
 
-Unlike earlier Paxos-based distributed lease algorithms such as Fatlease \cite{Fatlease}, PaxosLease does not make any time synchrony assumptions about local clocks of nodes (no global synchronization with a bounded skew is required). Also, Fatlease runs Paxos rounds in succession for lease commands, whereas PaxosLease makes use of the temporal nature of leases and avoids this complication altogether for a simpler and elegant algorithm.
+Unlike earlier Paxos-based distributed lease algorithms such as Fatlease \cite{Fatlease}, PaxosLease does not make any time synchrony assumptions about local clocks of nodes (no global synchronization is required). Also, Fatlease runs Paxos rounds in succession for lease commands, whereas PaxosLease makes use of the temporal nature of leases and avoids this complication altogether for a simpler and elegant algorithm.
 
 PaxosLease is a natural specialization of Paxos. As in Paxos, it is assumed that the number of nodes is fixed (and node identities are globally known). PaxosLease deals with a special replicated state-machine of the form:
 
