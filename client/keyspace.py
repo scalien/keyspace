@@ -25,7 +25,7 @@ def trace(msg = ""):
 		caller = str(frame.f_locals["self"].__class__.__name__) + "."
 	caller += frame.f_code.co_name
 	ts = time.strftime("%Y-%m-%d %H:%M:%S")
-	logstr = ts + ": " + unicode(caller + ": ") + unicode(msg)
+	logstr = ts + ": " + unicode(caller + ": ") + unicode(msg[:1024])
 	print logstr
 
 def closure(func, *args):

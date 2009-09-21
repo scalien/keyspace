@@ -1124,7 +1124,10 @@ function _trace($msg)
 		if (isset($caller["class"])) $cstr .= $caller["class"] . "::";
 		if (isset($caller["function"])) $cstr .= $caller["function"];
 		if (is_string($msg))
-			echo($cstr . ": " . $msg . "\n");
+		{
+			// truncate output
+			echo($cstr . ": " . substr($msg, 0, 1000) . "\n");
+		}
 		else
 		{
 			echo($cstr . " ");
