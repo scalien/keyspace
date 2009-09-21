@@ -24,7 +24,8 @@ def trace(msg = ""):
 	if frame.f_locals.has_key("self"):
 		caller = str(frame.f_locals["self"].__class__.__name__) + "."
 	caller += frame.f_code.co_name
-	logstr = unicode(caller + ": ") + unicode(msg)
+	ts = time.strftime("%Y-%m-%d %H:%M:%S")
+	logstr = ts + ": " + unicode(caller + ": ") + unicode(msg)
 	print logstr
 
 def closure(func, *args):
@@ -132,7 +133,7 @@ class Client:
 			dir = "b"
 		else:
 			dir = "f"
-		msg = self.createCommand(Client.DIRTYLISTKEYS, False, prefix, count, dir)
+		cmd = self.createCommand(Client.DIRTYLISTKEYS, False, prefix, startKey, count, next, dir)
 		self.dirtyCommands.append(cmd)
 		self.result.close()
 		self.loop()
@@ -285,6 +286,7 @@ class Client:
 			self.client = client
 			self.eventLoop = client.eventLoop
 			self.state = Client.Connection.DISCONNECTED
+			self.sock = None
 			self.node = node
 			nodeparts = node.split(":")
 			self.host = nodeparts[0]
@@ -316,8 +318,13 @@ class Client:
 			self.state = Client.Connection.CONNECTING
 		
 		def onConnect(self):
+			try:
+				self.sock.getpeername()
+			except socket.error, e:
+				self.onClose()
+				return
 			self.state = Client.Connection.CONNECTED
-			trace("state = " + str(self.state))
+			trace("node = %s, state = %s" % (self.node, str(self.state)))
 			self.eventLoop.registerRead(self.sock, closure(self.onRead), closure(self.onClose))
 
 		def onConnectTimeout(self):
@@ -325,9 +332,10 @@ class Client:
 			
 
 		def onClose(self):
+			trace("node = %s" % (self.node))
 			self.state = Client.Connection.DISCONNECTED
 			self.disconnectTime = self.eventLoop.now()
-			self.client.sentCommands.clear()
+			# self.client.sentCommands.clear()
 			self.sock.close()
 			self.eventLoop.close(self.sock)
 			self.client.stateFunc()
@@ -335,7 +343,7 @@ class Client:
 		def onRead(self):
 			try:
 				data = self.sock.recv(4096)
-				trace("len(data) = %d" % (len(data)))
+				trace("node = %s, len(data) = %d" % (self.node, len(data)))
 				if len(data) == 0:
 					trace("before onClose")
 					self.onClose()
@@ -347,7 +355,7 @@ class Client:
 				
 				while True:
 					msg = self.readMessage()
-					trace("msg = " + str(msg))
+					trace("node = %s, msg = %s" % (self.node, str(msg)))
 					if msg == None:
 						break;
 					resp = Client.Response()
@@ -373,8 +381,9 @@ class Client:
 				self.writing = True
 			
 		def onWrite(self):
-			trace(self.writeBuffer)
+			trace("node = %s, writeBuffer = %s" % (self.node, self.writeBuffer))
 			nwrite = self.sock.send(self.writeBuffer)
+			trace("node = %s, nwrite = %d" % (self.node, nwrite))
 			self.writeBuffer = self.writeBuffer[nwrite:]
 			if len(self.writeBuffer) == 0:
 				self.writing = False
@@ -448,15 +457,17 @@ class Client:
 			self.timeout = 0
 
 		def registerRead(self, sock, onRead, onClose):
-			self.readCallbacks[sock] = onRead
-			self.rlist.append(sock)
+			if not sock in self.readCallbacks:
+				self.readCallbacks[sock] = onRead
+				self.rlist.append(sock)
 			if not sock in self.exCallbacks:
 				self.exCallbacks[sock] = onClose
 				self.xlist.append(sock)
 		
 		def registerWrite(self, sock, onRead, onClose):
-			self.writeCallbacks[sock] = onRead
-			self.wlist.append(sock)
+			if not sock in self.writeCallbacks:
+				self.writeCallbacks[sock] = onRead
+				self.wlist.append(sock)
 			if not sock in self.exCallbacks:
 				self.exCallbacks[sock] = onClose
 				self.xlist.append(sock)
@@ -492,8 +503,9 @@ class Client:
 				timeout = self.timers[0].timeout
 				
 			startTime = self.now()
-			trace("rlist = %d, wlist = %d" % (len(self.rlist), len(self.wlist)))
+			trace("rlist = %d, wlist = %d, xlist = %d" % (len(self.rlist), len(self.wlist), len(self.xlist)))
 			rc, wc, ec = select.select(self.rlist, self.wlist, self.xlist, timeout)
+			trace("rc = %d, wc = %d, ec = %d" % (len(rc), len(wc), len(ec)))
 			endTime = self.now()
 			if len(rc) == 0 and len(wc) == 0 and len(ec) == 0:
 				# timeout
@@ -739,6 +751,9 @@ class Client:
 			self.eventLoop.runOnce()
 	
 	def stateFunc(self):
+		trace("safeCommands: " + str(len(self.safeCommands)))
+		trace("dirtyCommands: " + str(len(self.dirtyCommands)))
+		trace("sentCommands: " + str(len(self.sentCommands)))
 		for conn in self.conns:
 			if conn.state == Client.Connection.DISCONNECTED and \
 			conn.disconnectTime + self.reconnectTimeout <= self.eventLoop.now():
@@ -763,9 +778,10 @@ class Client:
 		
 		if len(self.dirtyCommands) > 0:
 			# TODO distribute dirty commands
-			for conn in conns:
+			for conn in self.conns:
 				if conn.state == Client.Connection.CONNECTED:
 					self.sendCommand(conn, self.dirtyCommands)
+					break
 		
 	def sendCommand(self, conn, commandList):
 		cmd = commandList.pop(0)

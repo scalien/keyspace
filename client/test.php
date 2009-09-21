@@ -4,8 +4,8 @@ include_once("keyspace.php");
 
 define(PREFIX, "/test/");
 define(TIMEOUT, 0);
-define(TRACE, FALSE);
-$NODES = array("localhost:7080");
+define(TRACE, TRUE);
+$NODES = array("localhost:7080","localhost:7081");
 
 function testBasic($client)
 {
@@ -92,15 +92,36 @@ function basicRenameTest($client)
 	$client->delete(PREFIX . "b");
 }
 
+function basicUsersTest($client)
+{
+		$client->set("user:0", "mtrencseni");
+		$client->set("user:1", "agazso");
+		$client->set("user:2", "pjozsa");
+		$client->set("user:3", "dtorok");
+		$client->set("user:4", "pbagi");
+		$client->set("user:5", "zsszabo");
+		$client->set("user:6", "koszko");
+		$client->set("user:7", "itakacs");
+		$client->set("user:8", "akutasi");
+		$client->set("user:9", "tmatrahegyi");
+		$client->set("user:10", "pfarago");
+		$client->set("user:11", "glaszlo");
+		$client->set("user:11", "abeliczay");
+
+		$client->listkeys("user");
+		$client->dirtylistkeys();
+}
+
 $client = new KeyspaceClient($NODES, TIMEOUT, TRACE);
 pruneTest($client);
-testBasic($client);
+// testBasic($client);
+basicUsersTest($client);
 // stress($client);
 // submitTest($client);
 // protocolError($client);
-basicListTest($client);
-basicAddTest($client);
-basicRenameTest($client);
+// basicListTest($client);
+// basicAddTest($client);
+// basicRenameTest($client);
 
 print("all OK\n");
 
