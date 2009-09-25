@@ -122,12 +122,12 @@ static void Log_Flush(const char* buf, int /*size*/)
 
 void Log(const char* file, int line, const char* func, int type, const char* fmt, ...)
 {
-	char	buf[LOG_MSG_SIZE];
-	int		remaining;
-	char	*p;
-	char	*sep;
-	int		ret;
-	va_list ap;
+	char		buf[LOG_MSG_SIZE];
+	int			remaining;
+	char		*p;
+	const char	*sep;
+	int			ret;
+	va_list		ap;
 	
 	if ((type == LOG_TYPE_TRACE || type == LOG_TYPE_ERRNO) && !trace)
 		return;
