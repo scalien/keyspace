@@ -501,7 +501,6 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 	IF_PREFIX("/dirtylistkeyvalues?",	ProcessList(pars, op, true, true)) else
 	IF_PREFIX("/count?",				ProcessCount(pars, op, false)) else
 	IF_PREFIX("/dirtycount?",			ProcessCount(pars, op, true)) else
-	IF_PREFIX("/latency?",				ProcessLatency()) else
 	if (ret &&
 		(request.line.uri[0] == 0 ||
 		(request.line.uri[0] == '/' && request.line.uri[1] == 0)))
@@ -742,12 +741,6 @@ bool HttpConn::ProcessPrune(const char* params, KeyspaceOp* op)
 	
 	op->type = KeyspaceOp::PRUNE;
 	op->prefix.Set(prefix);
-	return true;
-}
-
-bool HttpConn::ProcessLatency()
-{
-	Response(200, "OK", 2);
 	return true;
 }
 
