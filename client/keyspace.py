@@ -25,7 +25,7 @@ def trace(msg = ""):
 		caller = str(frame.f_locals["self"].__class__.__name__) + "."
 	caller += frame.f_code.co_name
 	ts = time.strftime("%Y-%m-%d %H:%M:%S")
-	logstr = ts + ": " + unicode(caller + ": ") + unicode(msg[:1024])
+	logstr = ts + ": " + unicode(caller + ": ") + unicode(msg, "utf-8")[:1024]
 	print logstr
 
 def closure(func, *args):
@@ -285,16 +285,19 @@ class Client:
 		def __init__(self, client, node, timeout):
 			self.client = client
 			self.eventLoop = client.eventLoop
-			self.state = Client.Connection.DISCONNECTED
-			self.sock = None
 			self.node = node
 			nodeparts = node.split(":")
 			self.host = nodeparts[0]
 			self.port = int(nodeparts[1])
 			self.timeout = timeout
-			self.disconnectTime = 0
-			self.getMasterPending = False
 			self.getMasterTime = 0
+			self.disconnectTime = 0
+			self.init()
+		
+		def init(self):
+			self.state = Client.Connection.DISCONNECTED
+			self.sock = None
+			self.getMasterPending = False
 			self.readBuffer = ""
 			self.writeBuffer = ""
 			self.writing = False
@@ -328,6 +331,7 @@ class Client:
 			self.eventLoop.registerRead(self.sock, closure(self.onRead), closure(self.onClose))
 
 		def onConnectTimeout(self):
+			# self.onClose()
 			trace()
 			
 
@@ -338,6 +342,7 @@ class Client:
 			# self.client.sentCommands.clear()
 			self.sock.close()
 			self.eventLoop.close(self.sock)
+			self.init()
 			self.client.stateFunc()
 			
 		def onRead(self):

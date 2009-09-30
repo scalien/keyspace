@@ -39,6 +39,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 		{
 			resp.NotMaster(op->cmdID);
 			resp.Write(data);
+			Write(data);
 		}
 		else
 		{

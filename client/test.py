@@ -34,8 +34,8 @@ def users(client):
 	print(str(client.set("user:11", "glaszlo")))
 	print(str(client.set("user:11", "abeliczay")))
 	
-	print(str(client.listkeys("user")))
-	print(str(client.dirtylistkeys()))
+	# print(str(client.listkeys("user")))
+	# print(str(client.dirtylistkeys()))
 	
 def hol(client):
 	print(str(client.set("hol","peru")))
@@ -95,6 +95,7 @@ if __name__ == "__main__":
 	import time
 	starttime = time.time()
 
+	# client.prune("")
 	# stress(client)
 	# submitTest(client)
 	users(client)
