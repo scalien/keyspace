@@ -135,6 +135,8 @@ bool KeyspaceConn::IsAborted()
 
 void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
+	Log_Trace("Message = %.*s", message.length, message.buffer);
+	
 	req.Init();
 	if (req.Read(message))
 		ProcessMsg();
