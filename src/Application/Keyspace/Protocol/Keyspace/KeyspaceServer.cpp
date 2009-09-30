@@ -2,7 +2,7 @@
 #include "System/IO/IOProcessor.h"
 
 #define KEYSPACE_PORT	7080
-#define CONN_BACKLOG	0
+#define CONN_BACKLOG	10
 
 void KeyspaceServer::Init(KeyspaceDB* kdb_, int port_)
 {
