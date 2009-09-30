@@ -272,10 +272,6 @@ bool Table::Visit(TableVisitor &tv)
 							 value.get_size(),
 							 (char*) value.get_data());
 
-		Log_Trace("Listing: %.*s %.*s", tv.GetStartKey()->length,
-								        tv.GetStartKey()->buffer,
-										bsKey.length, bsKey.buffer);
-
 		ret = tv.Accept(bsKey, bsValue);
 		if (!ret)
 			break;
