@@ -40,6 +40,8 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 						   &type, &cmdID, &prefix, &key,
 						   &dummy, &count, &dummy, &offset,
 						   &dummy, &direction);
+			if (count > 10000 || offset > 10000)
+				Log_Trace("PARSE FAILED CDVDSGSDGDG");
 			if (direction != 'f' && direction != 'b')
 				return false;
 			break;
