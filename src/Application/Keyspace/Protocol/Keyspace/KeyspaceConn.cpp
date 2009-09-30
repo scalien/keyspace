@@ -13,6 +13,9 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	Log_Trace();
 	
 	TCPConn<>::Init();
+	if (!running)
+		Log_Trace("KeyspaceConn::Init(): running == false");
+	running = true;
 	KeyspaceService::Init(kdb_);
 	
 	server = server_;

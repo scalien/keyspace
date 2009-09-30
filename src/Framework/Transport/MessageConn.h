@@ -19,7 +19,7 @@ public:
 	virtual void	Stop();
 	virtual void	Continue();
 
-private:
+protected:
 	bool			running;
 };
 
