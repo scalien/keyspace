@@ -180,7 +180,7 @@ clienttest:
 	$(MAKE) test_targets BUILD="debug"
 
 clientlib:
-	$(MAKE) clientlib_targets BUILD="debug"
+	$(MAKE) clientlibs BUILD="debug"
 
 targets: $(BUILD_DIR) executables clientlibs
 

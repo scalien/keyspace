@@ -1,0 +1,88 @@
+Contact
+=======
+
+If you are experiencing difficulties please visit our Google Groups page:
+
+- group home page:      http://groups.google.com/group/keyspace
+- group email address:  keyspace@googlegroups.com
+
+The official Keyspace homepage is at http://scalien.com
+
+
+Keyspace Client Application Programming Interface (API)
+=======================================================
+
+It is a good idea to have a basic understanding of your
+distributed system. Thus it is recommended that you read the
+Keyspace whitepaper first. The whitepaper is at
+
+http://scalien.com/whitepapers
+
+Keyspace is a *master based* replicated database, where
+certain operations are only serviced by the master node.
+These operations are
+- write operations
+  (SET, TEST-AND-SET, ADD, DELETE, REMOVE, PRUNE and SUBMIT)
+- safe read operations
+  (GET, LIST-KEYS, LIST-KEYVALUES, COUNT)
+
+The following operations are served by *all* nodes:
+- who is the current master
+  (GET-MASTER)
+- dirty read operations
+  (DIRTY-GET, DIRTY-LIST-KEYS, DIRTY-LIST-KEYVALUES, DIRTY-COUNT)
+
+Dirty read operations will succeed on any server regardless of
+internode connectivity, but may return inconsistent (not up-to-date)
+data; hence the name dirty.
+
+If your client wants to modify the database, it must be connected
+to the master. On the other hand, if consistency does not matter
+or your application logic guarantees it (eg. you stopped all writers),
+you can connect to any node and perform dirty reads.
+
+
+HTTP protocol
+=============
+
+You can issue all commands over HTTP with the GET method. The commands 
+and responses are people-friendly, so you can issue them from your browser.
+Be aware that HTTP should only be used for testing and peeking, as each 
+command creates a new TCP/HTTP connection, which is fairly expensive and 
+unnecessary. The programmatic APIs use the Keyspace protocol.
+For detailed documentation see api.http.txt.
+
+Keyspace protocol
+=================
+
+The Keyspace client protocol is what the programmatic API uses.
+
+This part is unfinished. If you'd like to write a client library
+for a new platform, please contact us and we'll push it to the
+top of our priority queue.
+
+
+Keyspace C API
+==============
+
+See api.c.txt.
+
+Python API
+==========
+
+See api.python.txt.
+
+
+PHP API
+==========
+
+We're working on it. If you'd like to use Keyspace from PHP,
+please contact us and we'll push it to the top of our priority queue.
+
+
+Java API
+==========
+
+We're working on it. If you'd like to use Keyspace from Java,
+please contact us and we'll push it to the top of our priority queue.
+

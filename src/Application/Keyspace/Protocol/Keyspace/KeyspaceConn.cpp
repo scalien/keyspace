@@ -13,6 +13,9 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	Log_Trace();
 	
 	TCPConn<>::Init();
+	if (!running)
+		Log_Trace("KeyspaceConn::Init(): running == false");
+	running = true;
 	KeyspaceService::Init(kdb_);
 	
 	server = server_;
@@ -39,6 +42,7 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 		{
 			resp.NotMaster(op->cmdID);
 			resp.Write(data);
+			Write(data);
 		}
 		else
 		{
@@ -134,6 +138,8 @@ bool KeyspaceConn::IsAborted()
 
 void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
+	Log_Trace("Message = %.*s", message.length, message.buffer);
+	
 	req.Init();
 	if (req.Read(message))
 		ProcessMsg();

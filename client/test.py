@@ -34,8 +34,8 @@ def users(client):
 	print(str(client.set("user:11", "glaszlo")))
 	print(str(client.set("user:11", "abeliczay")))
 	
-	print(str(client.list("user")))
-	print(str(client.dirtylist()))
+	# print(str(client.listkeys("user")))
+	# print(str(client.dirtylistkeys()))
 	
 def hol(client):
 	print(str(client.set("hol","peru")))
@@ -89,16 +89,16 @@ def submitTest(client):
 	
 
 if __name__ == "__main__":
-	nodes=["127.0.0.1:7080"]
-	client = keyspace.KeyspaceClient(nodes, 5)
+	nodes=["127.0.0.1:7080","127.0.0.1:7081","127.0.0.1:7082"]
+	client = keyspace.Client(nodes, 5, True)
 	
-	client.connectMaster()
-
 	import time
 	starttime = time.time()
 
+	# client.prune("")
 	# stress(client)
-	submitTest(client)
+	# submitTest(client)
+	users(client)
 
 	endtime = time.time()
 	elapsed = endtime - starttime

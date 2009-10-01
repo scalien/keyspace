@@ -1,4 +1,13 @@
-Keyspace changelog
+
+1.2
+===
+
+- Relicensed under the permissive BSD licence
+
+- New JSON API
+
+- Added Python client API
+
 
 1.1
 ===
@@ -13,7 +22,7 @@ Keyspace changelog
 
 - The http://server/ prints the version number and master information.
 
-- added database.numReaders config option.
+- Added database.numReaders config option.
 
 
 1.0.1

@@ -45,7 +45,7 @@ void PLeaseLearner::OnLearnChosen()
 		return;
 	
 	if (!state.learned)
-		Log_Message("PaxosLease: Node %d is the master", state.leaseOwner);
+		Log_Message("PaxosLease: Node %d is the master", msg.leaseOwner);
 	
 	state.learned = true;
 	state.leaseOwner = msg.leaseOwner;

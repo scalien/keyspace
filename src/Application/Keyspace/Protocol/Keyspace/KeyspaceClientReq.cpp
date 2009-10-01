@@ -8,6 +8,11 @@ void KeyspaceClientReq::Init()
 	test.length = 0;
 	value.length = 0;
 	prefix.length = 0;
+
+	cmdID = 0;
+	count = 0;
+	offset = 0;
+	num = 0;
 }
 	
 bool KeyspaceClientReq::Read(const ByteString& data)
@@ -36,7 +41,7 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 		case KEYSPACECLIENT_COUNT:
 		case KEYSPACECLIENT_DIRTY_COUNT:
 			read = snreadf(data.buffer, data.length,
-						   "%c:%U:%N:%N:%u:%u:%u:%u:%u:%c",
+						   "%c:%U:%N:%N:%u:%U:%u:%U:%u:%c",
 						   &type, &cmdID, &prefix, &key,
 						   &dummy, &count, &dummy, &offset,
 						   &dummy, &direction);

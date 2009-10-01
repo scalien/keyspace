@@ -1,3 +1,6 @@
+// TODOs
+// - Add API key
+
 #include "HttpConn.h"
 #include "Version.h"
 #include "HttpServer.h"
@@ -8,9 +11,6 @@
 #define CS_CRLF				CS_CR CS_LF
 #define MSG_FAIL			"Unable to process your request at this time"
 #define MSG_NOT_FOUND		"Not found"
-#define RESPONSE_FAIL		Response(500, MSG_FAIL, sizeof(MSG_FAIL) - 1)
-#define RESPONSE_NOTFOUND	Response(404, MSG_NOT_FOUND,\
-							sizeof(MSG_NOT_FOUND) - 1)
 #define PARAMSEP			','
 
 HttpConn::HttpConn()
@@ -32,14 +32,15 @@ void HttpConn::Init(KeyspaceDB* kdb_, HttpServer* server_)
 	// HACK
 	headerSent = false;
 	closeAfterSend = false;
-	
-	html = false;
+
+	type = PLAIN;
+	rowp = false;
+	jsonCallback.Init();
 }
 
 
 void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 {
-	static bool rowp = 0;
 	if (op->type == KeyspaceOp::GET ||
 		op->type == KeyspaceOp::DIRTY_GET ||
 		op->type == KeyspaceOp::COUNT ||
@@ -50,7 +51,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 	{
 		if (op->status)
 		{
-			if (html)
+			if (type == HTML)
 			{
 				ResponseHeader(200, false,
 				"Content-type: text/html" CS_CRLF CS_CRLF);
@@ -60,34 +61,68 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("</title>");
 				Write(op->value.buffer, op->value.length, true);
 			}
+			else if (type == JSON)
+			{
+				ResponseHeader(200, false,
+				"Content-type: text/plain" CS_CRLF CS_CRLF);
+				if (jsonCallback.length)
+				{
+					Write(jsonCallback.buffer, jsonCallback.length, false);
+					Print("(");
+				}
+				Print("{");
+				PrintJSONString(op->key.buffer, op->key.length);
+				Print(":");
+				PrintJSONString(op->value.buffer, op->value.length);
+				Print("}");
+				if (jsonCallback.length)
+					Print(")");
+			}
 			else
 				Response(200, op->value.buffer, op->value.length);
 		}
 		else
-			RESPONSE_NOTFOUND;
+		{
+			if (type == JSON)
+				ResponseFail();
+			else
+				ResponseNotFound();
+		}
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
 		if (op->status)
-			Response(200, "OK", strlen("OK"));
+			if (type == JSON)
+				PrintJSONStatus("ok");
+			else
+				Response(200, "OK", strlen("OK"));
 		else
-			Response(200, "Failed", strlen("Failed"));
+			if (type == JSON)
+				PrintJSONStatus("failed");
+			else
+				Response(200, "Failed", strlen("Failed"));
 	}
 	else if (op->type == KeyspaceOp::DELETE ||
 			 op->type == KeyspaceOp::PRUNE ||
 			 op->type == KeyspaceOp::RENAME)
 	{
 		if (op->status)
-			Response(200, "OK", strlen("OK"));
+			if (type == JSON)
+				PrintJSONStatus("ok");
+			else
+				Response(200, "OK", strlen("OK"));
 		else
-			RESPONSE_NOTFOUND;
+			if (type == JSON)
+				PrintJSONStatus("failed");
+			else
+				ResponseNotFound();
 	}
 	else if (op->type == KeyspaceOp::LIST ||
 			 op->type == KeyspaceOp::DIRTY_LIST)
 	{
 		if (!headerSent)
 		{
-			if (html)
+			if (type == HTML)
 			{
 				ResponseHeader(200, false,
 				"Content-type: text/html" CS_CRLF CS_CRLF);
@@ -96,6 +131,19 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Write(op->prefix.buffer, op->prefix.length, false);
 				Print("</title>");
 				PrintStyle();
+			}
+			else if (type == JSON)
+			{
+				ResponseHeader(200, false,
+				"Content-type: text/plain" CS_CRLF CS_CRLF);
+				if (jsonCallback.length)
+				{
+					Write(jsonCallback.buffer, jsonCallback.length, false);
+					Print("(");
+				}
+				Print("{");
+				PrintJSONString(op->prefix.buffer, op->prefix.length);
+				Print(":[");
 			}
 			else
 			{
@@ -106,7 +154,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 		}
 		if (op->key.length > 0)
 		{
-			if (html)
+			if (type == HTML)
 			{
 				if (rowp)
 					Print("<div class='even'>");
@@ -122,6 +170,16 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("</a></div>");
 				rowp = !rowp;
 			}
+			else if (type == JSON)
+			{
+				// with JSON rowp indicates that it is the first item or not
+				if (rowp)
+					Print(",");
+				else
+					rowp = true;
+
+				PrintJSONString(op->key.buffer, op->key.length);
+			}
 			else
 			{
 				Write(op->key.buffer, op->key.length, false);
@@ -134,7 +192,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 	{
 		if (!headerSent)
 		{
-			if (html)
+			if (type == HTML)
 			{
 				ResponseHeader(200, false,
 				"Content-type: text/html" CS_CRLF CS_CRLF);
@@ -143,6 +201,19 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Write(op->prefix.buffer, op->prefix.length, false);
 				Print("</title>");
 				PrintStyle();
+			}
+			else if (type == JSON)
+			{
+				ResponseHeader(200, false,
+				"Content-type: text/plain" CS_CRLF CS_CRLF);
+				if (jsonCallback.length)
+				{
+					Write(jsonCallback.buffer, jsonCallback.length, false);
+					Print("(");
+				}
+				Print("{");
+				PrintJSONString(op->prefix.buffer, op->prefix.length);
+				Print(":{");
 			}
 			else
 			{
@@ -153,7 +224,7 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 		}
 		if (op->key.length > 0)
 		{
-			if (html)
+			if (type == HTML)
 			{
 				if (rowp)
 					Print("<div class='even'>");
@@ -174,6 +245,18 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 				Print("</div>");
 				rowp = !rowp;
 			}
+			else if (type == JSON)
+			{
+				// with JSON rowp indicates that it is the first item or not
+				if (rowp)
+					Print(",");
+				else
+					rowp = true;
+
+				PrintJSONString(op->key.buffer, op->key.length);
+				Print(":");
+				PrintJSONString(op->value.buffer, op->value.length);
+			}
 			else
 			{
 				Write(op->key.buffer, op->key.length, false);
@@ -188,6 +271,20 @@ void HttpConn::OnComplete(KeyspaceOp* op, bool final)
 
 	if (final)
 	{
+		if (type == JSON && op->IsList())
+		{
+			if (op->type == KeyspaceOp::LISTP ||
+				op->type == KeyspaceOp::DIRTY_LISTP)
+			{
+				Print("}");
+			}
+			else
+				Print("]");
+			Print("}");
+			if (jsonCallback.length)
+				Print(")");
+		}
+		
 		WritePending(); // flush data to TCP socket
 		numpending--;
 		delete op;
@@ -241,7 +338,43 @@ void HttpConn::OnWrite()
 
 void HttpConn::Print(const char* s)
 {
-	Write(s, strlen(s));
+	Write(s, strlen(s), false);
+}
+
+
+void HttpConn::PrintJSONString(const char *s, unsigned len)
+{
+	Write("\"", 1, false);
+	for (unsigned i = 0; i < len; i++)
+	{
+		if (s[i] == '"')
+			Write("\\", 1, false);
+		Write(s + i, 1, false);
+	}
+	Write("\"", 1, false);
+}
+
+
+void HttpConn::PrintJSONStatus(const char* status, const char* type_)
+{
+	ResponseHeader(200, false,
+	"Content-type: text/plain" CS_CRLF CS_CRLF);
+	if (jsonCallback.length)
+	{
+		Write(jsonCallback.buffer, jsonCallback.length, false);
+		Print("(");
+	}
+	Print("{\"status\":\"");
+	Print(status);
+	if (type_)
+	{
+		Print("\",\"type\":\"");
+		Print(type_);
+	}
+	Print("\"}");
+
+	if (jsonCallback.length)
+		Print(")");				
 }
 
 
@@ -266,10 +399,63 @@ int HttpConn::Parse(char* buf, int len)
 	return -1;
 }
 
+const char* ParseParamsVarArg(const char* s, char sep, unsigned num, va_list ap)
+{
+	unsigned	length;
+	ByteString* bs;
+
+	while (*s != '\0' && num > 0)
+	{
+		bs = va_arg(ap, ByteString*);
+		bs->buffer = (char*) s;
+		length = 0;
+		while(*s != '\0' && *s != sep)
+		{
+			length++;
+			s++;
+		}
+		bs->length = length;
+		bs->size = length;
+		if (*s == sep)
+			s++;
+		num--;
+	}
+	
+	return s;
+}
+
+bool ParseParamsSep(const char* s, char sep, unsigned num, ...)
+{
+	va_list		ap;	
+	
+	va_start(ap, num);
+	s = ParseParamsVarArg(s, sep, num, ap);
+	va_end(ap);
+	
+	if (num == 0 && *s == '\0')
+		return true;
+	else
+		return false;
+}
+
+bool ParseParams(const char* s, unsigned num, ...)
+{
+	va_list		ap;	
+	
+	va_start(ap, num);
+	s = ParseParamsVarArg(s, PARAMSEP, num, ap);
+	va_end(ap);
+	
+	if (num == 0 && *s == '\0')
+		return true;
+	else
+		return false;
+}
+
 int HttpConn::ProcessGetRequest()
 {
-#define MF(prefix, func) \
-if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
+#define IF_PREFIX(prefix, func) \
+if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 { \
 	pars += strlen(prefix); \
 	ret = func; \
@@ -279,53 +465,63 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	op = new KeyspaceOp;
 	op->service = this;
 	
-	char* pars;
+	// note that these variables are used in IF_PREFIX macro
+	char* pars = (char*) request.line.uri;
+	bool ret = true;
+
+	// first see if the url contains the response type (json or html)
+	type = PLAIN;
+	IF_PREFIX("/json", (type = JSON, true)) else
+	IF_PREFIX("/html", (type = HTML, true));
 	
-	pars = (char*) request.line.uri;
-	bool ret;
-		
-	MF("/get?",					ProcessGet(pars, op, false, false)) else
-	MF("/dirtyget?",			ProcessGet(pars, op, true, false)) else
-	MF("/set?",					ProcessSet(pars, op)) else
-	MF("/testandset?",			ProcessTestAndSet(pars, op)) else
-	MF("/add?",					ProcessAdd(pars, op)) else
-	MF("/rename?",				ProcessRename(pars, op)) else
-	MF("/delete?",				ProcessDelete(pars, op)) else
-	MF("/remove?",				ProcessRemove(pars, op)) else
-	MF("/prune?",				ProcessPrune(pars, op)) else
-	MF("/listkeys?",			ProcessList(pars, op, false, false, false)) else
-	MF("/dirtylistkeys?",		ProcessList(pars, op, false, true, false)) else
-	MF("/listkeyvalues?",		ProcessList(pars, op, true, false, false)) else
-	MF("/dirtylistkeyvalues?",	ProcessList(pars, op, true, true, false)) else
-	MF("/count?",				ProcessCount(pars, op, false)) else
-	MF("/dirtycount?",			ProcessCount(pars, op, true)) else
-	MF("/html/get?",			ProcessGet(pars, op, false, true)) else
-	MF("/html/dirtyget?",		ProcessGet(pars, op, true, true)) else
-	MF("/html/dirtylistkeys?",	ProcessList(pars, op, false, true, true)) else
-	MF("/html/listkeyvalues?",	ProcessList(pars, op, true, false, true)) else
-	MF("/html/listkeys?",		ProcessList(pars, op, false, false, true)) else
-	MF("/html/dirtylistkeys?",	ProcessList(pars, op, false, true, true)) else
-	MF("/latency?",				ProcessLatency()) else
-	if (request.line.uri[0] == 0 ||
-		(request.line.uri[0] == '/' && request.line.uri[1] == 0))
+	// special case for JSONP callback
+	if (type == JSON && *pars == PARAMSEP)
+	{
+		pars++;
+		ParseParamsSep(pars, '/', 1, &jsonCallback);
+		if (jsonCallback.length == 0)
+			ret = false;
+		else
+			pars += jsonCallback.length;
+	}
+	
+	// parse the command part of the request uri
+	IF_PREFIX("/get?",					ProcessGet(pars, op, false)) else
+	IF_PREFIX("/dirtyget?",				ProcessGet(pars, op, true)) else
+	IF_PREFIX("/set?",					ProcessSet(pars, op)) else
+	IF_PREFIX("/testandset?",			ProcessTestAndSet(pars, op)) else
+	IF_PREFIX("/add?",					ProcessAdd(pars, op)) else
+	IF_PREFIX("/rename?",				ProcessRename(pars, op)) else
+	IF_PREFIX("/delete?",				ProcessDelete(pars, op)) else
+	IF_PREFIX("/remove?",				ProcessRemove(pars, op)) else
+	IF_PREFIX("/prune?",				ProcessPrune(pars, op)) else
+	IF_PREFIX("/listkeys?",				ProcessList(pars, op, false, false)) else
+	IF_PREFIX("/dirtylistkeys?",		ProcessList(pars, op, false, true)) else
+	IF_PREFIX("/listkeyvalues?",		ProcessList(pars, op, true, false)) else
+	IF_PREFIX("/dirtylistkeyvalues?",	ProcessList(pars, op, true, true)) else
+	IF_PREFIX("/count?",				ProcessCount(pars, op, false)) else
+	IF_PREFIX("/dirtycount?",			ProcessCount(pars, op, true)) else
+	if (ret &&
+		(request.line.uri[0] == 0 ||
+		(request.line.uri[0] == '/' && request.line.uri[1] == 0)))
 	{
 		ret = PrintHello();
 		ret = false;
 	}
 	else
 	{
-		RESPONSE_NOTFOUND;
+		ResponseNotFound();
 		ret = false;
 	}
 	
 	if (ret && !Add(op))
 	{
-		RESPONSE_FAIL;
+		ResponseFail();
 		ret = false;
 	}
 
 
-	if (op->IsWrite() && ret)
+	if (ret && op->IsWrite())
 		ret = kdb->Submit();
 	
 	if (!ret)
@@ -337,50 +533,15 @@ if (strncmp(request.line.uri, prefix, strlen(prefix)) == 0) \
 	return 0;
 }
 
-bool ParseParams(const char* s, unsigned num, ...)
-{
-	unsigned	length;
-	ByteString* bs;
-	va_list		ap;	
-	
-	va_start(ap, num);
-
-	while (*s != '\0' && num > 0)
-	{
-		bs = va_arg(ap, ByteString*);
-		bs->buffer = (char*) s;
-		length = 0;
-		while(*s != '\0' && *s != PARAMSEP)
-		{
-			length++;
-			s++;
-		}
-		bs->length = length;
-		bs->size = length;
-		if (*s == PARAMSEP)
-			s++;
-		num--;
-	}
-
-	va_end(ap);
-	
-	if (num == 0 && *s == '\0')
-		return true;
-	else
-		return false;
-}
-
 #define VALIDATE_KEYLEN(bs)\
-if (bs.length > KEYSPACE_KEY_SIZE) { RESPONSE_FAIL; return false; }
+if (bs.length > KEYSPACE_KEY_SIZE) { ResponseFail(); return false; }
 
 #define VALIDATE_VALLEN(bs)\
-if (bs.length > KEYSPACE_VAL_SIZE) { RESPONSE_FAIL; return false; }
+if (bs.length > KEYSPACE_VAL_SIZE) { ResponseFail(); return false; }
 
 bool HttpConn::ProcessGet(const char* params, KeyspaceOp* op,
-bool dirty, bool html_)
+bool dirty)
 {
-	html = html_;
-	
 	if (dirty)
 		op->type = KeyspaceOp::DIRTY_GET;
 	else
@@ -391,12 +552,10 @@ bool dirty, bool html_)
 }
 
 bool HttpConn::ProcessList(const char* params,
-KeyspaceOp* op, bool p, bool dirty, bool html_)
+KeyspaceOp* op, bool p, bool dirty)
 {
 	ByteString prefix, key, count, offset, direction;
 	unsigned nread;
-
-	html = html_;
 
 	if (!p)
 	{
@@ -427,13 +586,13 @@ KeyspaceOp* op, bool p, bool dirty, bool html_)
 		op->forward = (direction.buffer[0] == 'f');
 	if (nread != (unsigned) count.length)
 	{
-		RESPONSE_FAIL;
+		ResponseFail();
 		return false;
 	}
 	op->offset = strntoint64(offset.buffer, offset.length, &nread);
 	if (nread != (unsigned) offset.length)
 	{
-		RESPONSE_FAIL;
+		ResponseFail();
 		return false;
 	}
 	return true;
@@ -464,13 +623,13 @@ KeyspaceOp* op, bool dirty)
 		op->forward = (direction.buffer[0] == 'f');
 	if (nread != (unsigned) count.length)
 	{
-		RESPONSE_FAIL;
+		ResponseFail();
 		return false;
 	}
 	op->offset = strntoint64(offset.buffer, offset.length, &nread);
 	if (nread != (unsigned) offset.length)
 	{
-		RESPONSE_FAIL;
+		ResponseFail();
 		return false;
 	}
 	return true;
@@ -525,7 +684,7 @@ bool HttpConn::ProcessAdd(const char* params, KeyspaceOp* op)
 	op->num	= strntoint64(value.buffer, value.length, &nread);
 	if (nread != (unsigned) value.length)
 	{
-		RESPONSE_FAIL;
+		ResponseFail();
 		return false;
 	}
 	return true;
@@ -582,12 +741,6 @@ bool HttpConn::ProcessPrune(const char* params, KeyspaceOp* op)
 	
 	op->type = KeyspaceOp::PRUNE;
 	op->prefix.Set(prefix);
-	return true;
-}
-
-bool HttpConn::ProcessLatency()
-{
-	Response(200, "OK", 2);
 	return true;
 }
 
@@ -677,6 +830,30 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 	} while (1);
 			
 	Write(httpHeader.buffer, size, false);
+}
+
+void HttpConn::ResponseFail()
+{
+	if (type == JSON)
+	{
+		PrintJSONStatus("error", MSG_FAIL);
+		WritePending();
+		closeAfterSend = true;
+	}
+	else
+		Response(500, MSG_FAIL, sizeof(MSG_FAIL) - 1);
+}
+
+void HttpConn::ResponseNotFound()
+{
+	if (type == JSON)
+	{
+		PrintJSONStatus("error", MSG_NOT_FOUND);
+		WritePending();
+		closeAfterSend = true;
+	}
+	else
+		Response(404, MSG_NOT_FOUND, sizeof(MSG_NOT_FOUND) - 1);
 }
 
 void HttpConn::PrintStyle()

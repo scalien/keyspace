@@ -19,7 +19,7 @@ public:
 	virtual void	Stop();
 	virtual void	Continue();
 
-private:
+protected:
 	bool			running;
 };
 
@@ -29,7 +29,9 @@ void MessageConn<bufSize>::OnRead()
 	TCPRead& tcpread = TCPConn<bufSize>::tcpread;
 	unsigned pos, msglength, nread, msgbegin, msgend;
 	ByteString msg;
-			
+	
+	Log_Trace("Read buffer: %.*s", tcpread.data.length, tcpread.data.buffer);
+	
 	tcpread.requested = IO_READ_ANY;
 
 	pos = 0;

@@ -155,6 +155,7 @@ template<int bufSize>
 void TCPConn<bufSize>::OnWrite()
 {
 	Log_Trace("Written %d bytes", tcpwrite.data.length);
+	Log_Trace("Written: %.*s", tcpwrite.data.length, tcpwrite.data.buffer);
 
 	Buffer* buf;
 	
