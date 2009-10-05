@@ -19,7 +19,7 @@ test -f $DEFAULT || exit 0
 test -x $DAEMON || exit 0
 
 pidof_daemon() {
-        pid=`ps auxw | grep "$DAEMON" | grep -v grep | awk '{print $2}'`
+        pid=`ps auxw | grep "$DAEMON" | grep -v grep | grep -v "$SAFE_DAEMON" | awk '{print $2}'`
 }
 
 wait_stop() {

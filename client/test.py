@@ -36,6 +36,14 @@ def users(client):
 	
 	# print(str(client.listkeys("user")))
 	# print(str(client.dirtylistkeys()))
+
+def nset(client, num, value = "0123456789"):
+	for i in xrange(num):
+		try:
+			client.set("x:%d" % i, value)
+		except keyspace.NotMasterException, e:
+			print("NotMasterException")
+			# time.sleep(10)
 	
 def hol(client):
 	print(str(client.set("hol","peru")))
@@ -90,7 +98,7 @@ def submitTest(client):
 
 if __name__ == "__main__":
 	nodes=["127.0.0.1:7080","127.0.0.1:7081","127.0.0.1:7082"]
-	client = keyspace.Client(nodes, 5, True)
+	client = keyspace.Client(nodes, 15, True)
 	
 	import time
 	starttime = time.time()
@@ -98,7 +106,8 @@ if __name__ == "__main__":
 	# client.prune("")
 	# stress(client)
 	# submitTest(client)
-	users(client)
+	# users(client)
+	nset(client, 100000)
 
 	endtime = time.time()
 	elapsed = endtime - starttime

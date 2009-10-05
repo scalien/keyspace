@@ -15,6 +15,7 @@ FAILED = -2
 ERROR = -3
 
 TRACE = False
+LOGFUNC = None
 def trace(msg = ""):
 	if not TRACE:
 		return
@@ -24,9 +25,11 @@ def trace(msg = ""):
 	if frame.f_locals.has_key("self"):
 		caller = str(frame.f_locals["self"].__class__.__name__) + "."
 	caller += frame.f_code.co_name
-	ts = time.strftime("%Y-%m-%d %H:%M:%S")
-	logstr = ts + ": " + unicode(caller + ": ") + unicode(msg, "utf-8")[:1024]
-	print logstr
+	logstr = unicode(caller + ": ") + unicode(msg)
+	if LOGFUNC != None:
+		LOGFUNC(logstr)
+	else:
+		print logstr
 
 def closure(func, *args):
 	return lambda: func(*args)
@@ -57,15 +60,18 @@ class Client:
 	PRUNE = "z"
 
 
-	def __init__(self, nodes, timeout = 60, trace_ = False):
+	def __init__(self, nodes, timeout = 60, trace_ = False, logfunc = None):
 		global TRACE
 		TRACE = trace_
+		if logfunc != None:
+			global LOGFUNC
+			LOGFUNC = logfunc
 		self.nodes = nodes
 		self.conns = []
 		self.master = -1
 		self.masterTime = 0
 		self.timeout = timeout
-		self.reconnectTimeout = timeout
+		self.reconnectTimeout = timeout / 2
 		self.result = Client.Result()
 		self.eventLoop = Client.EventLoop()
 		self.id = int(time.time() * 1000)
@@ -86,13 +92,18 @@ class Client:
 		return conns[node].state
 
 	def get(self, key, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.GET, submit, key)
 		self.safeCommands.append(cmd)
 		if not submit:
 			return None
+		trace(str(len(self.safeCommands)))
 		return self.resultValue()		
 
 	def dirtyget(self, key, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.DIRTYGET, submit, key)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -100,6 +111,9 @@ class Client:
 		return self.resultValue()		
 
 	def count(self, prefix = "", startKey = "", count = 0, next = 0, backward = False):
+		if len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
+
 		if backward:
 			dir = "b"
 		else:
@@ -109,6 +123,9 @@ class Client:
 		return self.resultValue()
 	
 	def dirtyCount(self, prefix = "", startKey = "", count = 0, next = 0, backward = False):
+		if len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
+
 		if backward:
 			dir = "b"
 		else:
@@ -118,6 +135,9 @@ class Client:
 		return self.resultValue()
 
 	def listkeys(self, prefix = "", startKey = "", count = 0, next = 0, backward = False):
+		if len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
+
 		if backward:
 			dir = "b"
 		else:
@@ -129,17 +149,23 @@ class Client:
 		return self.result.keys(cmd.id)
 
 	def dirtylistkeys(self, prefix = "", startKey = "", count = 0, next = 0, backward = False):
+		if len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
+
 		if backward:
 			dir = "b"
 		else:
 			dir = "f"
-		cmd = self.createCommand(Client.DIRTYLISTKEYS, False, prefix, startKey, count, next, dir)
+		msg = self.createCommand(Client.DIRTYLISTKEYS, False, prefix, count, dir)
 		self.dirtyCommands.append(cmd)
 		self.result.close()
 		self.loop()
 		return self.result.keys(cmd.id)
 
 	def listkeyvalues(self, prefix = "", startKey = "", count = 0, next = 0, backward = False):
+		if len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
+
 		if backward:
 			dir = "b"
 		else:
@@ -151,6 +177,9 @@ class Client:
 		return self.result.keyValues(cmd.id)
 		
 	def dirtylistkeyvalues(self, prefix = "", startKey = "", count = 0, next = 0, backward = False):
+		if len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
+
 		if backward:
 			dir = "b"
 		else:
@@ -162,6 +191,8 @@ class Client:
 		return self.result.keyValues(cmd.id)
 
 	def set(self, key, value = "", submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.SET, submit, key, value)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -172,6 +203,8 @@ class Client:
 		return None
 
 	def testandset(self, key, test, value, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.TESTANDSET, submit, key, test, value)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -182,6 +215,8 @@ class Client:
 		return self.result.firstValue()
 
 	def add(self, key, num, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.ADD, submit, key, num)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -196,6 +231,8 @@ class Client:
 		return int(value)
 
 	def delete(self, key, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.DELETE, submit, key)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -206,6 +243,8 @@ class Client:
 		return None
 	
 	def remove(self, key, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.REMOVE, submit, key)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -216,6 +255,8 @@ class Client:
 		return self.result.firstValue()
 	
 	def rename(self, src, dst, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.RENAME, submit, src, dst)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -227,6 +268,8 @@ class Client:
 		
 		
 	def prune(self, prefix, submit = True):
+		if submit and len(self.safeCommands) > 0:
+			raise ProtocolException("already queued commands")
 		cmd = self.createCommand(Client.PRUNE, submit, prefix)
 		self.safeCommands.append(cmd)
 		if not submit:
@@ -285,12 +328,12 @@ class Client:
 		def __init__(self, client, node, timeout):
 			self.client = client
 			self.eventLoop = client.eventLoop
+			self.state = Client.Connection.DISCONNECTED
 			self.node = node
 			nodeparts = node.split(":")
 			self.host = nodeparts[0]
 			self.port = int(nodeparts[1])
 			self.timeout = timeout
-			self.getMasterTime = 0
 			self.disconnectTime = 0
 			self.init()
 		
@@ -298,6 +341,7 @@ class Client:
 			self.state = Client.Connection.DISCONNECTED
 			self.sock = None
 			self.getMasterPending = False
+			self.getMasterTime = 0
 			self.readBuffer = ""
 			self.writeBuffer = ""
 			self.writing = False
@@ -305,6 +349,7 @@ class Client:
 		def getMaster(self):
 			cmd = self.client.createCommand(Client.GETMASTER, False)
 			self.client.sentCommands[cmd.id] = cmd
+			trace("%s:%d, sentCommands = %d" % (self.host, self.port, len(self.client.sentCommands)))
 			self.send(cmd)
 			self.getMasterPending = True
 			self.getMasterTime = self.eventLoop.now()
@@ -331,19 +376,15 @@ class Client:
 			self.eventLoop.registerRead(self.sock, closure(self.onRead), closure(self.onClose))
 
 		def onConnectTimeout(self):
-			# self.onClose()
-			trace()
-			
+			trace()			
 
 		def onClose(self):
-			trace("node = %s" % (self.node))
 			self.state = Client.Connection.DISCONNECTED
 			self.disconnectTime = self.eventLoop.now()
-			# self.client.sentCommands.clear()
 			self.sock.close()
 			self.eventLoop.close(self.sock)
 			self.init()
-			self.client.stateFunc()
+			self.client.onCloseConn(self)
 			
 		def onRead(self):
 			try:
@@ -363,13 +404,20 @@ class Client:
 					trace("node = %s, msg = %s" % (self.node, str(msg)))
 					if msg == None:
 						break;
-					resp = Client.Response()
-					if resp.read(msg) != False:
-						self.processResponse(resp)
+					try:
+						resp = Client.Response()
+						if resp.read(msg) != False:
+							self.processResponse(resp)
 						self.client.stateFunc()
-				
+					except NotMasterException, e:
+						trace("NotMasterException")
+						self.eventLoop.registerRead(self.sock, closure(self.onRead), closure(self.onClose))
+						self.client.setMaster(-1)
+						return
+					
 				self.eventLoop.registerRead(self.sock, closure(self.onRead), closure(self.onClose))
 			except socket.error, e:
+				self.onClose()
 				trace(str(e))
 			
 		def send(self, cmd):
@@ -517,19 +565,25 @@ class Client:
 				return
 						
 			for sock in rc:
-				callback = self.readCallbacks[sock]
+				callback = self.readCallbacks.get(sock, None)
+				if callback == None:
+					break
 				del self.readCallbacks[sock]
 				self.rlist.remove(sock)
 				callback()
 			
 			for sock in wc:
-				callback = self.writeCallbacks[sock]
+				callback = self.writeCallbacks.get(sock, None)
+				if callback == None:
+					break
 				del self.writeCallbacks[sock]
 				self.wlist.remove(sock)
 				callback()
 
 			for sock in ec:
-				callback = self.exCallbacks[sock]
+				callback = self.exCallbacks.get(sock, None)
+				if callback == None:
+					break
 				del self.exCallbacks[sock]
 				self.xlist.remove(sock)
 				callback()
@@ -572,6 +626,7 @@ class Client:
 				
 				if cmd == Client.Response.NOTMASTER:
 					self.status = NOTMASTER
+					raise NotMasterException
 					return self.validateLength()
 				elif cmd == Client.Response.FAILED:
 					self.status = FAILED
@@ -583,7 +638,7 @@ class Client:
 					self.status = OK
 					if self.pos < len(self.data):
 						msg = self.readMessage()
-						trace(msg)
+						trace("OK %s" % msg)
 						if msg != None:
 							self.value = msg
 					return self.validateLength()
@@ -605,7 +660,6 @@ class Client:
 					
 			except ProtocolException, e:
 				# TODO
-				print("protocol exception")
 				trace(str(e))
 				return False
 			
@@ -741,6 +795,10 @@ class Client:
 		if master >= len(self.conns):
 			master = -1
 		self.masterTime = self.eventLoop.now()
+		if master != -1 and self.conns[master].state != Client.Connection.CONNECTED:
+			self.setMasterTime = 0
+			self.master = -1
+			return
 		self.master = master
 
 	def isDone(self):
@@ -759,6 +817,7 @@ class Client:
 		trace("safeCommands: " + str(len(self.safeCommands)))
 		trace("dirtyCommands: " + str(len(self.dirtyCommands)))
 		trace("sentCommands: " + str(len(self.sentCommands)))
+		trace("master = %d" % self.master)
 		for conn in self.conns:
 			if conn.state == Client.Connection.DISCONNECTED and \
 			conn.disconnectTime + self.reconnectTimeout <= self.eventLoop.now():
@@ -767,19 +826,26 @@ class Client:
 		if len(self.safeCommands) > 0 and self.master == -1:
 			# TODO in case of master timeout clear safeCommands
 			if self.masterTime != 0 and self.masterTime + self.timeout < self.eventLoop.now():
-				del self.safeCommands[:]
-				self.result.close()
-				return
-
+				self.masterTime = 0
+				self.cancel()
+				raise NotMasterException
+			
 			for conn in self.conns:
 				if conn.state == Client.Connection.CONNECTED and \
 				not conn.getMasterPending:
 					if conn.getMasterTime == 0 or conn.getMasterTime + self.timeout < self.eventLoop.now():
 						conn.getMaster()
 
-		if len(self.safeCommands) > 0 and self.master != -1 and \
-		self.conns[self.master].state == Client.Connection.CONNECTED:
-			self.sendCommand(self.conns[self.master], self.safeCommands)
+		if len(self.safeCommands) > 0 and self.master != -1:
+			if self.conns[self.master].state == Client.Connection.CONNECTED:
+				trace("calling sendCommand")
+				self.sendCommand(self.conns[self.master], self.safeCommands)
+			elif self.conns[self.master].state == Client.Connection.DISCONNECTED:
+				self.setMaster(-1)
+				self.masterTime = 0
+				self.cancel()
+				trace("raising NotMasterException, timeout = %d" % self.timeout)
+				raise NotMasterException
 		
 		if len(self.dirtyCommands) > 0:
 			# TODO distribute dirty commands
@@ -787,6 +853,11 @@ class Client:
 				if conn.state == Client.Connection.CONNECTED:
 					self.sendCommand(conn, self.dirtyCommands)
 					break
+
+
+	def onCloseConn(self, conn):
+		if self.master != -1 and conn == self.conns[self.master]:
+			self.sentCommands = {}
 		
 	def sendCommand(self, conn, commandList):
 		cmd = commandList.pop(0)

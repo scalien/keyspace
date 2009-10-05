@@ -3,7 +3,7 @@
 safe_keyspace()
 {
 	while (:); do
-		$1 $2 &> /dev/null
+		$1 $2 2>&1 >> /dev/null
 		EXITSTATUS=$?
 		if [ "$EXITSTATUS" = "0" -o "$EXITSTATUS" = "1" -o "$EXITSTATUS" = "143" ]; then
 			exit 0
@@ -21,4 +21,4 @@ safe_keyspace()
 	done
 }
 
-safe_keyspace $1 $2 $3 &> /dev/null &
+safe_keyspace $1 $2 $3 2>&1 >> /dev/null &
