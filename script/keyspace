@@ -38,6 +38,12 @@ wait_stop() {
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
+	
+	pidof_daemon
+	if [ "$pid" != "" ]; then
+		echo "$DAEMON is already running!"
+		exit 1
+	fi
 
 	$SAFE_DAEMON $DAEMON $DEFAULT_CONFIG $DATABASE_DIR
 	
