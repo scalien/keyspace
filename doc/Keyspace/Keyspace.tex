@@ -106,7 +106,6 @@ Keyspace supports the following client commands (note the dirty-read operations 
 \item \texttt{REMOVE(key)}: deletes \texttt{key} and its value from the database and returns the value.
 \item \texttt{PRUNE(prefix)}: deletes all key-value pairs where key starts with \texttt{prefix}.
 \item \texttt{LIST-KEYS(prefix, startKey, count, next, forward)}: returns at most \texttt{count} keys whose beginning matches \texttt{prefix}, starting at position \texttt{startKey} in the database. If \texttt{startKey} is not found in the database, the listing starts at the next item lexicographically. If \texttt{startKey} is found, \texttt{startKey} itself may be skipped by passing in \texttt{next = true}. This is useful for pagination, where you pass in the last key that you showed on the previous page, but don't want to see it at the top of the next page. \texttt{forward} specifies the direction of the listing.
-
 \item \texttt{LIST-KEYVALUES(prefix, startKey, count, next, forward)}: same as \texttt{LIST-KEYS}, but returns keys \textit{and values}.
 \item \texttt{COUNT(prefix, startKey, count, next, forward, forward)}: returns the number of items the same \texttt{LIST} operation with the same arguments would return.
 \item \texttt{DIRTY-GET(key)}: returns the value of \texttt{key}, if it exists in the database, without making any consistency guarantees about reflecting previous write operations.
@@ -228,7 +227,7 @@ Leslie Lamport invented Paxos in 1990, but it was only published in 1998. This p
 L. Lamport, \emph{The Part-Time Parliament}, ACM Transactions on Computer Systems 16, 2 (May 1998), 133-169.
 
 \bibitem{PaxosMadeSimple}
-L. Lamport, \emph{Paxos Made Simple}, ACM SIGACT News 32, 4 (Dec. 2001), 18Ð25.
+L. Lamport, \emph{Paxos Made Simple}, ACM SIGACT News 32, 4 (Dec. 2001), 18-25.
 
 \bibitem{PaxosMadeLive}
 T. Chandra, R. Griesemer, J. Redstone, \emph{Paxos Made Live - An Engineering Perspective}, PODC '07: 26th ACM Symposium on Principles of Distributed Computing
