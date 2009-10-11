@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=latex 2009.2.27)  11 OCT 2009 14:49
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=latex 2009.2.27)  11 OCT 2009 15:56
 entering extended mode
  %&-line parsing enabled.
 **FSFConf.tex
@@ -197,11 +197,7 @@ rd)\OT1/cmr/m/n/10.95 :
  []
 
 File: perf_ops1.eps Graphic file (type eps)
-<perf_ops1.eps> [6] [7] (./FSFConf.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+<perf_ops1.eps> [6] [7] [8] (./FSFConf.aux) ) 
 Here is how much of TeX's memory you used:
  1082 strings out of 493877
  14696 string characters out of 1150591
@@ -211,4 +207,4 @@ Here is how much of TeX's memory you used:
  714 hyphenation exceptions out of 8191
  25i,8n,29p,1059b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on FSFConf.dvi (7 pages, 33536 bytes).
+Output written on FSFConf.dvi (8 pages, 38652 bytes).

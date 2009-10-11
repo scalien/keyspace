@@ -149,10 +149,24 @@ A Keyspace adatbázist saját, nagy hatékonyságú protokollon ill. adminisztációs é
 %\label{default}
 \end{center}
 \end{figure}
+
+A Keyspace letölthetõ a Scalien honlapjáról a \texttt{http://scalien.com} címen, az adatbázis és kliens library-k (C, PHP, Python) a nyílt BSD licensz alatt érhetõk el.
  
+\section{ Más nyílt forráskódú elosztott rendszerek } 
+
+Alább a teljesség igénye nélkül felsoroljuk a fontosabb nyílt forráskódú elosztott rendszereket, rövid leírással.
+
+\begin{itemize}
+\sloppy
+\item Apache Hadoop. Az Apache Foundation Java alapú projektje, mely az ismertetett Google architektúrát másolja. A HDFS a GFS, a HBase a Bigtable megfelelõje, illetve tartalmaz MapReduce modult is. A Hadoop-ot eredetileg a Yahoo! cég fejlesztette ki, egyben a legnagyobb felhasználója is, és hasonló feladatokra használja, mint a Google saját rendszerét. A Hadoop rendszer viszonylag elterjedt és népszerû, pl. AWS-en ``natív'' módon lehet futtatni.
+\item Facebook Cassandra. A Cassandra a Facebook Java alapú belsõ projektje, melyet az Amazon Dynamo egyik erdeti fejlesztõje vezet, így sokban hasonlít ahhoz. A hangsúly a véletlen mûveletek (vs. bulk írások vagy olvasások) kiszolgálásán van, könnyen skálázható, a Dynamohoz hasonlóan gyengén konzisztens (``eventual consistency''). Az adatmodellt a Bigtable-tõl kölcsönzi: tábla-szerû, de gyakorlatilag kulcs-érték alapú.
+\item Memcached. A Memcached-t a Danga Interactive cégnél fejlesztették ki a LiveJournal szolgáltatásukhoz. A Memcached önmagában nem egy elosztott szoftver, csupán egy tisztán memóriában dolgozó, kulcs-érték alapú cache. A cachelés azonban annyira alapvetõ része egy nagy teljesítményû elosztott rendszernek, hogy ezt a viszonylag egyszerû szoftvert használják a leggyakrabban (pl. Facebook rendszereiben is). Mivel a Memached maga nem tud a többi szerveren futó másik Memcached példányokról, ezért az alkalmazás feladata a kulcsok szétosztása és nyilvántartása. Egy jól mûködõ rendszerben a kérések több mint 95 \%-át kívánatos cache-bõl kiszolgálni, diszk hozzáférés nélkül. 
+\end{itemize}
+
+
 \section{ Konklúzió }
 
-Ez a vegso konkluzio...
+A webes alkalmazások és hálózatba kapcsolt eszközök terjedésével egyre több adat és számítási kapacitásra van szükség a szolgáltatók oldalán, akiknek üzleti igényük, hogy szolgáltatásaik gyorsak, nagy megbízhatóságuak és skálázhatók legyenek. A szolgáltatók egy jelentõs része kulturális és anyagi okokból kifolyólag nyílt forráskódú megoldásokat alkalmaz az adattároláasi és feldolgozási feladatokra. Ebben a szegmensben jelenleg a de facto standard a LAMP (Linux, Apache, Mysql, PHP) stack. Az elõadás során megmutattuk, hogy a nagy Internetes cégek milyen belsõ megoldásokat használnak, azok milyen tulajdonsággal rendelkeznek és ennek milyen következményei vannak (pl. konzisztencia). Végül bemutattuk néhány, jelenleg is elérhetõ nyílt forráskódú elosztott rendszert, melyek a nagyok rendszerei alapján készülnek, tézisünk szerint ezekbõl vagy hasonló rendszerekbõl fog kialakulni néhány éven belül egy \textit{nyílt forráskódú elosztott stack}.
 
 \begin{thebibliography}{9}
 
@@ -181,7 +195,7 @@ F. Chang et al., \emph{Bigtable: A Distributed Storage System for Structured Dat
 W. Vogels et al., \emph{Dynamo: Amazon's Highly Available Key-value store}, SOSP '07: Proceedings of twenty-first ACM SIGOPS symposium on Operating systems principles (2007), pp. 205-220.
 
 \bibitem{Keyspace}
-M. Trencseni, A. Gazso \emph{Keyspace: A Consistently Replicated, Highly-Available Key-Value Store}, \texttt{http://scalien.com/whitepapers}.
+M. Trencseni, A. Gazso, \emph{Keyspace: A Consistently Replicated, Highly-Available Key-Value Store}, \texttt{http://scalien.com/whitepapers}.
 
 \end{thebibliography}
 
