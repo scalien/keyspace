@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=latex 2009.2.27)  11 OCT 2009 22:53
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=latex 2009.2.27)  11 OCT 2009 23:16
 entering extended mode
  %&-line parsing enabled.
 **FSFConf.tex
@@ -85,21 +85,41 @@ Package ifvtex Info: VTeX not detected.
 (/usr/local/texlive/2008/texmf-dist/tex/latex/ltxmisc/url.sty
 \Urlmuskip=\muskip10
 Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
-) (./FSFConf.aux)
+)
+(/usr/local/texlive/2008/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2008/07/06 v3.8l The Babel package
+
+(/usr/local/texlive/2008/texmf-dist/tex/generic/babel/magyar.ldf
+Language: magyar 2005/03/30 v1.4j Magyar support from the babel system
+
+(/usr/local/texlive/2008/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2008/07/06 v3.8l Babel common definitions
+\babel@savecnt=\count90
+\U@D=\dimen109
+)
+Package babel Info: Making ` an active character on input line 597.
+)
+(/usr/local/texlive/2008/texmf-dist/tex/generic/babel/english.ldf
+Language: english 2005/03/30 v3.3o English support from the babel system
+\l@canadian = a dialect from \language\l@american 
+\l@australian = a dialect from \language\l@british 
+\l@newzealand = a dialect from \language\l@british 
+))
+(./FSFConf.aux)
 \openout1 = `FSFConf.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
 
 *geometry auto-detecting driver*
 *geometry detected driver: dvips*
@@ -143,63 +163,52 @@ driver: dvips
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 18.
+(Font)              <14.4> on input line 23.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 18.
+(Font)              <7> on input line 23.
 [1
 
 ]
 File: CAP.eps Graphic file (type eps)
  <CAP.eps>
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 58.
+(Font)              <10.95> on input line 63.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 58.
+(Font)              <8> on input line 63.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 58.
+(Font)              <6> on input line 63.
  [2] [3] [4]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 98.
+(Font)              <12> on input line 103.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 131.
 
-Underfull \hbox (badness 2142) in paragraph at lines 122--123
-[]\OT1/cmr/m/n/10.95 A Keyspace m^^Sas kulcs-^^Sert^^Sek adatb^^Sazisokhoz k^^S
-epest vis-zony-lag kiter-jedt
- []
-
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 126.
 
 (/usr/local/texlive/2008/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 126.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 131.
  [5]
-Underfull \hbox (badness 1072) in paragraph at lines 135--136
+Underfull \hbox (badness 1072) in paragraph at lines 140--141
 []\OT1/cmtt/m/n/10.95 LIST-KEYVALUES(prefix, startKey, count, next, forward)\OT
 1/cmr/m/n/10.95 : ugyanaz,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--140
+Underfull \hbox (badness 10000) in paragraph at lines 144--145
 []\OT1/cmtt/m/n/10.95 DIRTY-LIST-KEYVALUES(prefix, startKey, count, next, forwa
 rd)\OT1/cmr/m/n/10.95 :
  []
 
 File: perf_ops1.eps Graphic file (type eps)
-<perf_ops1.eps> [6]
-Underfull \hbox (badness 1533) in paragraph at lines 169--170
-\OT1/cmr/m/n/10.95 ^^?uzleti ig^^Seny^^?uk, hogy szolg^^Saltat^^Sasaik gy-or-sa
-k, megb^^S^^Pzhat^^Soak ^^Ses sk^^Sal^^Sazhat^^Soak
- []
-
-[7] [8] (./FSFConf.aux) ) 
+<perf_ops1.eps> [6] [7] [8] (./FSFConf.aux) ) 
 Here is how much of TeX's memory you used:
- 1082 strings out of 493877
- 14696 string characters out of 1150591
- 72395 words of memory out of 3000000
- 4379 multiletter control sequences out of 10000+50000
+ 1486 strings out of 493877
+ 19460 string characters out of 1150591
+ 86259 words of memory out of 3000000
+ 4769 multiletter control sequences out of 10000+50000
  10408 words of font info for 37 fonts, out of 3000000 for 5000
  714 hyphenation exceptions out of 8191
- 25i,8n,29p,1106b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 25i,8n,29p,1108b,304s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on FSFConf.dvi (8 pages, 38568 bytes).
+Output written on FSFConf.dvi (8 pages, 38836 bytes).
