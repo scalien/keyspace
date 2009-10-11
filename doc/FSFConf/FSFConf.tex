@@ -1,0 +1,188 @@
+%%!TEX TS-program = latex
+%%!TEX encoding = IsoLatin2
+
+\documentclass[12pt]{article}
+\usepackage[latin2]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{url}
+\geometry{a4paper} % or letter
+\geometry{margin=1in}
+
+\title{ Nyílt forráskódú elosztott rendszerek }
+\author{ Trencséni Márton, \texttt{mtrencseni@scalien.com} \and Gazsó Attila, \texttt{agazso@scalien.com} }
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\sloppy
+\abstract{ Az elõadás tézise, hogy néhány éven belül nyílt forrású elosztott rendszerek fognak nagy skálájú, nagy megbízhatóságú webes háttérarchitektúráját szolgáltatni. Ezen rendszerek jelenleg a nagy Internetes cégek, mint Google, Amazon és Facebook által nyilvánosságra hozott architektúrák, mérnöki tapasztalatok, illetve forráskódok alapján készülnek. Az elõadásban ismertetjük az iparág által felhalmozott tapasztalokat és tervezési pontokat, melyek segítségével jobban érthetõk lesznek az elosztott rendszerek közötti különbségek, elõnyök, hátrányok, informált döntések hozhatók. Az elõadás második felében a jelenleg is elérhetõ elosztott rendszereket ismertetjük, különös hangsúlyt fektetve a saját készítésû Keyspace kulcs-érték adatbázisra. }
+
+\section{ Bevezetés }
+%%%%%%%%%%%%%%%%%%%%%
+
+Ma már a legtöbb alkalmazás \textit{web alkalmazás}, fusson az az Interneten vagy céges belsõ hálózaton. A web alapú alkalmazások sajátossága, hogy a felhasználó adatait a szolgáltató rendszerein tárolják, és az alkalmazás futása során a szolgáltató rendszere is számításokat végez. A webes alkalmazások természetüknél fogva elosztott rendszerek, általában három különbözõ számítógépen fut a browser, az alkalmazás szerver és az adatbázis szerver. Egyre inkább igény van arra, hogy ezek az elosztott rendszerek, pontosabban az alkalmazás és adatbázis réteg skálázhatók és/vagy hibatûrõk legyenek, azaz minél több klienst ki tudjanak szolgálni, minél több adatot tudjanak tárolni, illetve egyes komponensek meghibásodása esetén a rendszer összeségében tobább üzemeljen.
+
+Ebben az elõadásban a \textit{ nyílt forráskódú } elosztott rendszerekrõl lesz szó. Ezeket a szoftvereket általában néhány éve kezdték el fejleszteni, és egy-két kivételtõl eltekintve de facto standard megoldások (mint pl. Mysql nyílt forrású adatbázisok terén) még nincsenek. Az elõadás alaptézise, hogy néhány éven belül létezni fognak produkciós rendszerekben használható skálázható, hibatûrõ rendszerek; az elõadás ezeknek a rendszereknek a rövid történetével kezdõdik, majd néhány, már használható rendszert mutat be, különös hangsúlyt fektetve a szerzõk saját (Scalien Kft.) készítésû nagy megbízhatóságú kulcs-érték adatbázisára, a \textit{Keyspace}-re.
+
+Az elõadás elsõ részében általános elveket ismertetek melyek az elosztott rendzserek megértéséhez elengedhetetlenek: shared nothing architektúra, CAP háromszög, konzisztencia kérdések.
+
+A legelsõ, nagyon nagy webes alkalmazásokat kiszolgáló elosztott rendszerek nagy Internetes cégeknél alakultak ki. Néhány esetben cikkekben publikálták a rendszer mûködését, néhány rendszernek pedig kiadták a forráskódját is. A jelenleg fejlesztés alatt álló nyílt forráskódú projektek is ezen --- komoly mérnöki tudást és tapasztalatokat képviselõ --- rendszerekbõl merítenek ötleteket és általános elveket, gyakran ezeket a rendszereket duplikálják. Ezért az elõadás elsõ részében \textit{a Google Chubby, BigTable, MapReduce és az Amazon Dynamo} belsõ használatban lévõ elosztott rendszereit ismertetem a fontosabb tervezési pontokra koncentrálva.
+
+Az elõdás második részében 1.x verziónál tartó, jelenleg is fejlesztés alatt álló,  \textit{a saját fejlesztésû Keyspace} rendszert mutatom be.
+
+\section{ Elosztott rendszerek tulajdonságai }
+
+A webes alkalmazások és az open-source világában az ún. \textit{shared nothing} \cite{SharedNothing} elosztott architektúra dominál, ami lényegében azt jelenti, hogy különálló szerverek együttesen alkotnak egy elosztott rendszert, de nincsen szorosan csatolva (pl. hardveres vagy operációs rendszer szinten) a gépek memóriája (shared memory) vagy diszkjei (shared disk).
+
+Az elosztott rendszereknél alapvetõ ökölszabály az ún. \textit{CAP (consistency, availability, partition tolerance) tézis} \cite{CAP}, mely azt mondja ki, hogy a felsorolt három tulajdonság közül nem valósítható meg mindhárom egyszerre shared nothing architektúrákban. A három fogalom tömör magyarázata:
+
+\begin{enumerate}
+\sloppy
+\item \textit{Konzisztencia:} ez elosztott rendszerhez intézett, egymást követõ írás és olvasás mûveletek esetén, melyeket potenciálisan más-más szerver szolgál ki, milyen garanciákat nyújt a rendszer arra, hogy az olvasás során az elõzöleg beírt adatot viszontlátjuk.  
+\item \textit{Rendelkezésre állás:} a rendszer képes kérések (írás és olvasás mûveletek) kiszolgálására néhány szerver kiesése mellett is.
+\item \textit{Particíció tolerancia:} a rendszer mûködése, amennyiben a szervereket összekötõ hálózat (hub, switch, router, kábel) meghibásodása esetén a rendszer kettõ vagy több különálló hálózatra esik szét. 
+\end{enumerate}
+
+Két rövid példán keresztül ecseteljük, hogy a ``CAP háromszögben''elhelyezett különbözõ rendszerek hogyan viselkedhetnek.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=0.5]{CAP.eps}
+\caption{A CAP háromszög.}
+\end{center}
+\end{figure}
+
+Elsõ példaként képzeljünk el egy $n=3$ szerverbõl álló rendszert, ahol induláskor mindhárom szerver szerint az \texttt{mtrencseni} felhasználó (az elosztott adatbázisban) tárolt születési dátuma \texttt{1881-04-24}, majd megváltoztatjuk \texttt{1981-04-24}-re, de a változás csak az 1. és 2. szerveren történik meg, és azok, mielõtt továbbítanák a változást a harmadikhoz, hiba folytán lekapcsolódnak. Újra lekérdezve a születési dátumot a még rendelkezésre álló szervertõl a régi, elavult, ``rossz'' adatot kapjuk vissza. Egy ilyen esetet engedélyezõ rendszert \textit{gyengén konzisztensnek} nevezünk; ez a furcsa, de nagy rendelkezésre állású és mindenféle particionálást magában foglaló mûködés elõnyös, amikor egy ``régi, elavult, kicsit rossz'' adat visszakapása elõnyösebb, mint hibával visszatérni. Ilyen, gyengén konzisztens rendszer a késõbb bemutatott Amazon Dynamo.
+
+Második példaként vegyünk egy ``többség alapú'' rendszert, amelynél írás és olvasás mûveletekhez a szerverek többsége rendelkezésre kell álljon. Egy ilyen rendszer csak akkor fejez be írás mûveletet, ha a szerverek többségére kikerült. A fenti $n=3$ példánál maradva, az írás mûveletnél a kliens fele akkor jelez OK-t a rendszer, ha legalább két szerverre kikerült az új \texttt{1981-04-24} adat. Amennyiben két szerver kiesik, a rendszer nem tud olvasás mûveletet kiszolgálni, mert többség kell; viszont ha kettõ rendelkezésre áll, akkor mindig vissza tudja adni a ``jó, friss'' értéket hiszen a rendelkezésre álló két gépbõl legalább az egyiken megvan. Ilyen, erõsebb garanciát biztosító rendszereket erõsen konzisztensnek nevezünk; az ilyen rendszer, ahol a mûködéshez többség kell, egészséges állapotában nagyon hasonlít egy hagyományos, egy szerveres rendszerre. Az erõs konzisztencia ára, hogy a szerverek többsége egy particióban rendelkezésre kell álljon. Ilyen, erõsen konzisztens rendszer a saját készítésû Keyspace.
+
+\section{ Google architektúra }
+
+A Google néhány évvel ezelõtt cikkek formájában nyilvánosságra hozta a belsõ rendszerének leírását. A rendszer a Google keresõjére lett optimalizálva, azóta azonban teljesen más alkalmazások is futnak fölötte, pl. Google Mail és Google App Engine, ami az eredeti rendszer robosztusságát jelzi.
+
+A Google architektúrája a következõ elemekbõl épül fel:
+\begin{enumerate}
+\item Chubby: elosztott lock szerver \cite{Chubby}.
+\item Google File System (GFS): nagy teljesítményû elosztott file rendszer \cite{GFS}.
+\item MapReduce: elosztott batch feldolgozó rendszer \cite{MapReduce}.
+\item Bigtable: tábla alapú elosztott adatbázis \cite{Bigtable}.
+\end{enumerate}
+
+A Chubby egy elosztott lock szerver, amelyt más szolgáltatások (pl. GFS vagy Bigtable) használnak jól ismert elosztott primitívként. Egy Chubby cella több tízezer másik szerveren futó elosztott rendszereket szolgál ki, amelyek master választásra vagy alapvetõ metaadatok (pl. mely szerverek részei a rendszernek?) megosztására használják azt. A Chubby egy erõsen konzisztens rendszer, lényegében a többségi alapú Paxos \cite{PaxosMadeSimple} algoritmust valósítja meg, melyrõl késõbb még lesz szó a Keyspace kapcsán.
+
+A GFS a Google második generációs nagy teljesítményû elosztott filerendszere, mely a keresõhöz szükséges nagy mennyiségû, szekvenciális írásokhoz (pl. weboldalak lementése), és kisebb, véletlenszerû olvasásokhoz (pl. keresésnél) lett optimalizálva. Master-alapú filerendszer, ahol a master tárolja az tárolja az összes metaadatot, és ún. chunkszerverek tárolják a chunkokra bontott fileokat, 64MB-os blokkokban, replikálva. Érdekesség, hogy mivel egy master szerver van, ezért az összes metaadatot memóriában tárol, hogy a kliens kéréseket megfelelõ sebességgel kiszolgálhassa, ami bizonyos korlátokat jelent a rendszerre nézve (metaadat mérete). Egy GFS rendszer néhány millió file-t, petabyte mennyiségû adatot tárol. Konzisztencia szempontjából a metaadatok erõsen konzisztensek, mivel a master szerveren keresztül történik a változtatásuk, míg az chunkok lényegében egy eventual consistency modelt követnek, melyre az elosztott filerendszert használó alkalmazásnak fel kell készülnie.
+
+Míg az eddig felsorolt rendszerek file vagy adatbázis rendszerek voltak, a MapReduce egy elosztott job-kezelõ rendszer, melyet a Google a keresõjének alapjául szolgáló index elõállításához használ. A MapReduce lényege, hogy a feladatot a funkcionális nyelvekbõl ismert egy Map és egy Reduce lépésre bontja, amelyeket a rendszer automatikusan szétoszt és két fázisban végrehajt. A legegyszerûbb példa weblapokban szavak elõfordulását számolja ki: a Map lépésben egy weblapból kiszedi a $w$ szavakat, és $(w, darab)$ alakú kulcs-érték párokat ír ki; a Reduce lépésben a $w$ szót tartalmazó párokat található darabszámokat összeadja, így megkapható a szavak elõfordulása egy adott mintában. A Map és Reduce lépések eloszthatók, így nagy mennyiségû adatot lehet egyszerre, gyorsan feldolgozni. A Google esetében a MapReduce rendszer GFS vagy Bigtable fölött fut.
+
+Az utolsó Google rendszer amit itt említünk a tábla (sor/oszlop) alapú tárolásra használt Bigtable. A hagyományos relációs adatmodell helyett a Bigtable egy, elosztott módon is implementálható, lényegében kulcs-érték adatmodellt kínál. A Bigtable adatokat \texttt{(sor, oszlop) -> adat} címzéssel kaphatja vissza a kliens; illetve egy plusz \texttt{verziót} is megadhat, amivel az egy adat egy régebbi verzióját kaphatja vissza, ti. a Bigtable változtatás esetén automatikusan tárolja a régi verziókat is. A hozzáfárás sor (és oszlop) szinten történik, és csak sor szintû módosítások végezhetõk tranzakciósan. A Bigtable GFS fölött fut, és Chubby-t használ master kiválasztásra és metaadat tárolására.
+
+\section{ Amazon Dynamo }
+
+Az Amazon több belsõ elosztott rendszert is üzemeltet: egy részük az \texttt{amazon.com} online boltot szolgálja ki, egy másik részük az Amazon Web Services (AWS) rendszert alkotják. Itt az online boltnál használt Dynamo rendszert mutatjuk be röviden a 2007-ben kiadott cikk alapján \cite{Dynamo}.
+
+A Dynamo egy gyengén konzisztens rendszer, melynek a célja, hogy minden esetben kiszolgálja a kliens kéréseit --- akkor is, ha nem teljesen friss adattal tud dolgozni valamilyen hiba vagy hálózati partíció miatt. Ezt az online bolt követeli meg, melynek mindig mûködnie kell (``always-on experience''), ti. ha nem mûködik, akkor jól becsülhetõ, lényeges pénzügyi veszteséget szenved a cég. A rendszer kulcs-érték alapon mûködik, a kulcs-érték párok többszörösen replikálva vannak, ahol a gyenge konzisztencia miatt ugyanazon adat több verziója lehet a rendszerben, így az adatok családfaszerûen verziókkal vannak ellátva. Amennyiben egy adatnak több verziója van jelen, azt elõbb-utóbb észleli a rendszer, és alkalmazás-specifikus konfkliktus feloldó algoritmus újra elõállít egy konzisztens elosztott állapotot. Ezért ezt a modellt \textit{eventual consistency}-nek is hívják (kb. ``elõbb-utóbb konzisztens lesz'').
+
+Például, tegyük fel hogy az \texttt{mtrencseni} vásárlónak két könyv van a kosarában, A és B. A vásárlás folyamata közben a felhasználó kosarát tároló szervek hálózati hiba miatt lekapcsolódnak, ezért a rendszer nem éri el a kosár legutolsó állapotát, így a rendszer a kosarat üresnek jelzi a felhasználónak. A felhasználó érzékeli a hibát, és újra belerakja az A és B könyvet, majd kicsit késõbb egy új C könyvet. Közben a hálózati hiba helyreáll, és a rendszer érzékeli, hogy a felhasználónak két különbözõ verziójú kosara van a rendszerben. Ilyenkor egy alkalmazás (kosár alkalmazás) specifikus konfliktus feloldó specifikus algoritmus elõállít egy áj, konzisztens állapotot, pl. a kosarak unióját képzi. A vásárló úgy is ellenõrzi a kosarát fizetés elõtt.
+
+\section{ Scalien Keyspace }
+
+A saját készítésû, kulcs-érték alapú Keyspace adatbázisrendszer az elsõ nyílt forráskódú adattároló amit bemutatunk. A Keyspace az eddig bemutatott rendszerek közül a leginkább a Google Chubby rendszeréhez hasonlít. A Keyspace egy konzisztensen replikált adatbázis: replikált, mert az összes szerver ugyanazt az adatot tárolja; konzisztens, mert a CAP háromszögben a konzisztenciára helyezi a hangsúlyt (vs. ``eventual consistency''), és garantálja, hogy sikeres írások után az olvasások tükrözik az írást, akármilyen hálózati vagy szerver hiba esetén is.
+
+Hasonlóan a Chubby-hoz a Keyspace is a Lamport-féle Paxos algoritmust valósítja meg, mely egy többségi algoritmus; a Keyspace cellákat $n=3$ konfigurációban futtatva, pl. egy szerveres $95 \%$-os rendelkezésre állás $99.27 \%$-ra javítható (ld. táblázat).
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{ | c | c | c | }
+\hline
+szerverek & többség & rendelkezésre állás \\
+\hline \hline
+1 & 1 & 95.00\% \\ \hline
+2 & 2 & 90.25\% \\ \hline
+\textbf{3} & \textbf{2} & \textbf{99.27\%} \\ \hline
+4 & 3 & 98.59\% \\ \hline
+5 & 3 & 99.88\% \\ \hline
+.. & .. & .. \\ \hline
+\end{tabular}
+\caption{ Rendelkezésre állás különbözõ méretû Keyspace cellák esetében. }
+\end{center}
+\end{table}
+
+A rendszer lelkét alkotó elosztott algoritmus, a Paxos miatt a Keyspace minden praktikusan elõálló hálózati vagy szerver hiba esetet kezel, és tovább üzemel, amennyiben a szerverek többsége rendelkezésre áll és kommunikál:
+
+\begin{enumerate}
+\item Szerverek leállnak és újraindulnak: a Keyspace programot futtató szerverek leállhatnak és újraindulhatnak, elveszítve a memóriában tárolt állapotot, de nem a diszkre kiírt adatokat.
+\item Hálózati partíciók: hubok és routerek tönkremehetnek, a hálózat átmeneti részekre esését okozva.
+\item Csomgagveszteség, duplikáció és átrendezõdés: Operációs rendszerek hálózati stackje és routerek eldobhatnak és átrendezhetnek üzeneteket. A TCP-szerû protokollok garantálják ezen esetek kezelését, míg az UDP-szerûek nem. A Keyspace mindkét fajta hálózati protokoll fölött tud futni.
+\item Hálózati késleltetések: terhelt helyi hálózatokon és WAN-okon mint az Internet az üzenetek több másodperces késéssel érkezhetnek meg a címzetthez.
+\end{enumerate}
+
+A Keyspace más kulcs-érték adatbázisokhoz képest viszonylag kiterjedt adathozzáférési API-val rendelkezik, mivel támogat plusz atomi mûveleteket mint \texttt{TESTANDSET} és \texttt{ADD}, illetve listázási mûveleteket. Ezen kívûl az olvasási mûveleteknek létezik piszkos (``dirty'') verziója is, mely semmilyen konzisztencia garanciát nem ad, viszont akár egyedülálló szerver is ki tudja szolgálni. 
+
+\begin{itemize}
+\sloppy
+\item \texttt{GET(key)}: visszaadja a \texttt{key}-hez tartozó értéket, ha létezik az adatbázisban.
+\item \texttt{SET(key, value)}: beállítja a \texttt{key} értékét, átírva az elõzõ értéket ha létezett az adatbázisban.
+\item \texttt{TEST-AND-SET(key, test, value)}: atomi módon átírja \texttt{key} értékét \texttt{value}-ra, ha a jelenlegi értéke \texttt{test}.
+\item \texttt{ADD(key, a)}: a \texttt{key} értéket számként értelmezi és hozzáad \texttt{a}-t.
+\item \texttt{RENAME(key, newKey)}: átnevezi \texttt{key}-t \texttt{newKey}-re, megtartva az értékét.
+\item \texttt{DELETE(key)}: kitörli \texttt{key}-t és az értékét az adatbázisból.
+\item \texttt{REMOVE(key)}: kitörli \texttt{key}-t és az értékét az adatbázisból, visszaadja az értéket.
+\item \texttt{PRUNE(prefix)}: kitörli az összes kulcs-érték párt amely \texttt{prefix}-szel kezdõdik.
+\item \texttt{LIST-KEYS(prefix, startKey, count, next, forward)}: legfeljebb \texttt{count} kulcsot ad vissza, melyek \texttt{prefix}-szel kezdõdnek, a \texttt{startKey} kulcstól indulva. Amennyiben a \texttt{startKey} kulcs nem létezik az adatbázisban, lexikografikusan a következõ kulcsnál kezdõdik. Amennyiben \texttt{startKey} létezik, átugorható \texttt{next = true} beadásával. Ez webes ``lapozott'' oldalak elõállításánál hasznos.
+\item \texttt{LIST-KEYVALUES(prefix, startKey, count, next, forward)}: ugyanaz, mint \texttt{LIST-KEYS}, de a kulcsokon kívûl az értékeket is visszaadja.
+\item \texttt{COUNT(prefix, startKey, count, next, forward, forward)}: visszaadja a kulcsok számát, melyeket az ugyanezen paraméterekkel meghívott \texttt{LIST} adna vissza.
+\item \texttt{DIRTY-GET(key)}: mint az elõzõ \texttt{GET}, de konzisztencia garanciák nélkül.
+\item \texttt{DIRTY-LIST-KEYS(prefix, startKey, count, next, forward)}: mint az elõzõ \texttt{LIST-KEYS}, de konzisztencia garanciák nélkül.
+\item \texttt{DIRTY-LIST-KEYVALUES(prefix, startKey, count, next, forward)}: mint az elõzõ \texttt{DIRTY-LIST-KEYVALUES}, de konzisztencia garanciák nélkül.
+\item \texttt{DIRTY-COUNT(prefix, startKey, count, next, forward)}: mint az elõzõ \texttt{COUNT}, de konzisztencia garanciák nélkül.
+\end{itemize}
+
+A Keyspace adatbázist saját, nagy hatékonyságú protokollon ill. adminisztációs és tesztelési célból HTTP illetve HTTP+JSON API-n keresztül lehet elérni. A nagyhatékonyságú aszinkron architektúra miatt a Keyspace nagy számú konkurrens mûveletet tud kiszolgálni (ld. köv. ábra).
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{perf_ops1.eps}
+\caption{Keyspace bulk adatátviteli sebességek.}
+%\label{default}
+\end{center}
+\end{figure}
+ 
+\section{ Konklúzió }
+
+Ez a vegso konkluzio...
+
+\begin{thebibliography}{9}
+
+\bibitem{SharedNothing}
+M. Stonebraker. \emph{The Case for Shared Nothing}, Database Engineering, Volume 9, Number 1 (1986).
+
+\bibitem{CAP}
+E. Brewer. \emph{Keynote Address}, Symposium on Principles of Distributed Computing (2000).
+
+\bibitem{PaxosMadeSimple}
+L. Lamport, \emph{Paxos Made Simple}, ACM SIGACT News 32, 4 (Dec. 2001), pp. 18-25.
+
+\bibitem{Chubby}
+M. Burrows, \emph{The Chubby Lock Service for Loosely-Coupled Distributed Systems}, OSDI '06: Seventh Symposium on Operating System Design and Implementation.
+
+\bibitem{GFS}
+S. Ghemawat, H. Gobioff, S. Leung, \emph{The Google File System}, 19th ACM Symposium on Operating Systems Principles (2003).
+
+\bibitem{MapReduce}
+J. Dean, S. Ghemawat, \emph{MapReduce: Simplified Data Processing on Large Clusters}, OSDI'04: Sixth Symposium on Operating System Design and Implementation (2004).
+
+\bibitem{Bigtable}
+F. Chang et al., \emph{Bigtable: A Distributed Storage System for Structured Data}, OSDI'06: Seventh Symposium on Operating System Design and Implementation (2006).
+
+\bibitem{Dynamo}
+W. Vogels et al., \emph{Dynamo: Amazon's Highly Available Key-value store}, SOSP '07: Proceedings of twenty-first ACM SIGOPS symposium on Operating systems principles (2007), pp. 205-220.
+
+\bibitem{Keyspace}
+M. Trencseni, A. Gazso \emph{Keyspace: A Consistently Replicated, Highly-Available Key-Value Store}, \texttt{http://scalien.com/whitepapers}.
+
+\end{thebibliography}
+
+\end{document}
