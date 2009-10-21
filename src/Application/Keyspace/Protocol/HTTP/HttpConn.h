@@ -69,7 +69,7 @@ private:
 	bool			ProcessDelete(const char* params, KeyspaceOp* op);
 	bool			ProcessRemove(const char* params, KeyspaceOp* op);
 	bool			ProcessPrune(const char* params, KeyspaceOp* op);
-	bool			ProcessLatency();
+	bool			ProcessAdminCheckpoint();
 	bool			PrintHello();
 	void			PrintStyle();
 };

@@ -32,7 +32,7 @@ def users(client):
 	print(str(client.set("user:9", "tmatrahegyi")))
 	print(str(client.set("user:10", "pfarago")))
 	print(str(client.set("user:11", "glaszlo")))
-	print(str(client.set("user:11", "abeliczay")))
+	print(str(client.set("user:12", "abeliczay")))
 	
 	# print(str(client.listkeys("user")))
 	# print(str(client.dirtylistkeys()))

@@ -4,6 +4,7 @@
 #include "HttpConn.h"
 #include "Version.h"
 #include "HttpServer.h"
+#include "Framework/Database/Database.h"
 
 #define MAX_MESSAGE_SIZE	4096
 #define CS_CR				"\015"
@@ -471,6 +472,7 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 
 	// first see if the url contains the response type (json or html)
 	type = PLAIN;
+	IF_PREFIX("/admin/checkpoint", (ProcessAdminCheckpoint(), true)) else
 	IF_PREFIX("/json", (type = JSON, true)) else
 	IF_PREFIX("/html", (type = HTML, true));
 	
@@ -741,6 +743,14 @@ bool HttpConn::ProcessPrune(const char* params, KeyspaceOp* op)
 	
 	op->type = KeyspaceOp::PRUNE;
 	op->prefix.Set(prefix);
+	return true;
+}
+
+bool HttpConn::ProcessAdminCheckpoint()
+{
+	// call Database::Checkpoint in an async way
+	Response(200, "OK", strlen("OK"));
+	database.OnCheckpointTimeout();
 	return true;
 }
 

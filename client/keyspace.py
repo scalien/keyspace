@@ -25,7 +25,7 @@ def trace(msg = ""):
 	if frame.f_locals.has_key("self"):
 		caller = str(frame.f_locals["self"].__class__.__name__) + "."
 	caller += frame.f_code.co_name
-	logstr = unicode(caller + ": ") + unicode(msg)
+	logstr = unicode(caller + ": ", "utf-8", "ignore") + unicode(msg, "utf-8", "ignore")
 	if LOGFUNC != None:
 		LOGFUNC(logstr)
 	else:
@@ -68,6 +68,8 @@ class Client:
 			LOGFUNC = logfunc
 		self.nodes = nodes
 		self.conns = []
+		self.async = False
+		self.asyncSend = False
 		self.master = -1
 		self.masterTime = 0
 		self.timeout = timeout
@@ -199,6 +201,8 @@ class Client:
 			return None
 		
 		self.result.close()
+		if self.async: self.asyncSend = True
+		else: self.asyncSend = False
 		self.loop()
 		return None
 
@@ -211,6 +215,8 @@ class Client:
 			return None
 		
 		self.result.close()
+		if self.async: self.asyncSend = True
+		else: self.asyncSend = False
 		self.loop()
 		return self.result.firstValue()
 
@@ -223,6 +229,8 @@ class Client:
 			return None
 		
 		self.result.close()
+		if self.async: self.asyncSend = True
+		else: self.asyncSend = False
 		self.loop()
 		value = self.result.firstValue()
 		trace(str(value))
@@ -239,6 +247,8 @@ class Client:
 			return None
 		
 		self.result.close()
+		if self.async: self.asyncSend = True
+		else: self.asyncSend = False
 		self.loop()
 		return None
 	
@@ -251,6 +261,8 @@ class Client:
 			return None
 		
 		self.result.close()
+		if self.async: self.asyncSend = True
+		else: self.asyncSend = False
 		self.loop()
 		return self.result.firstValue()
 	
@@ -263,6 +275,8 @@ class Client:
 			return None
 		
 		self.result.close()
+		if self.async: self.asyncSend = True
+		else: self.asyncSend = False
 		self.loop()
 		return self.result.firstStatus()
 		
@@ -276,6 +290,8 @@ class Client:
 			return None
 		
 		self.result.close()
+		if self.async: self.asyncSend = True
+		else: self.asyncSend = False
 		self.loop()
 		return None
 	
@@ -803,9 +819,14 @@ class Client:
 
 	def isDone(self):
 		if len(self.safeCommands) == 0 and \
-			len(self.dirtyCommands) == 0 and \
-			len(self.sentCommands.keys()) == 0:
-			return True
+			len(self.dirtyCommands) == 0:
+			if len(self.sentCommands.keys()) == 0:
+				return True
+			elif self.asyncSend:
+				for conn in self.conns:
+					if len(conn.writeBuffer) != 0:
+						return False
+				return True
 		return False
 
 	def loop(self):
@@ -868,9 +889,8 @@ class Client:
 		self.id += 1
 		return self.id
 	
-	def createString(self, us):
-		bs = us.encode("utf-8")
-		return ":".join((str(len(bs)), bs))
+	def createString(self, s):
+		return ":".join((str(len(s)), s))
 
 	def createCommand(self, command, submit, *args):
 		cmd = Client.Command()
@@ -880,10 +900,10 @@ class Client:
 	
 		msg = command + ":" + str(cmd.id)
 		for arg in args:
-			if isinstance(arg, str):
-				us = unicode(arg, "utf-8")
+			if isinstance(arg, unicode):
+				bs = arg.encode("utf-8")
 			else:
-				us = unicode(arg)
-			msg = "".join((msg, ":", self.createString(us)))
-		cmd.msg = self.createString(unicode(msg, "utf-8"))
+				bs = str(arg)
+			msg = "".join((msg, ":", self.createString(bs)))
+		cmd.msg = self.createString(msg)
 		return cmd

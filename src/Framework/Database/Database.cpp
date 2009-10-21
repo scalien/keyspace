@@ -105,8 +105,12 @@ bool Database::Init(const DatabaseConfig& config_)
 	Checkpoint();
 	
 	running = true;
-	checkpointTimeout.SetDelay(config.checkpointTimeout);
-	EventLoop::Add(&checkpointTimeout);
+	
+	if (config.checkpointTimeout)
+	{
+		checkpointTimeout.SetDelay(config.checkpointTimeout);
+		EventLoop::Add(&checkpointTimeout);
+	}
 	cpThread.Start();
 	
 	return true;
@@ -134,7 +138,8 @@ Table* Database::GetTable(const char* name)
 void Database::OnCheckpointTimeout()
 {
 	cpThread.Execute(&checkpoint);
-	EventLoop::Reset(&checkpointTimeout);
+	if (config.checkpointTimeout)
+		EventLoop::Reset(&checkpointTimeout);
 }
 
 void Database::Checkpoint()
