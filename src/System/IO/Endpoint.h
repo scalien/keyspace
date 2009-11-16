@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include "System/Log.h"
 
-#define ENDPOINT_STRING_SIZE	22
+#define ENDPOINT_STRING_SIZE	32
 
 class Endpoint
 {

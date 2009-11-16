@@ -99,8 +99,12 @@ bool PaxosAcceptor::ReadState()
 
 	ret = table->Get(NULL, "@@accepted", buffers[1]);
 	if (!ret)
-		return false;
-
+	{
+		// going from single to multi config
+		state.Init();
+		return (paxosID > 0);
+	}
+	
 	nread = 0;
 	state.accepted =
 		strntoint64(buffers[1].buffer, buffers[1].length, &nread);
