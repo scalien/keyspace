@@ -16,7 +16,7 @@
 \maketitle
 
 \sloppy
-\abstract{ This paper describes the design and architecture of Keyspace, a distributed key-value store offering  strong consistency, fault-tolerance and high availability. The source code is released as free, open-source software under the BSD license. Keyspace is a product of Scalien Software, available for download at \texttt{http://scalien.com}. }
+\abstract{ This paper describes the design and architecture of Keyspace, a distributed key-value store offering  strong consistency, fault-tolerance and high availability. The source code is released as free, open-source software under the AGPL license. Keyspace is a product of Scalien Software, available for download at \texttt{http://scalien.com}. }
 
 \section{ Introduction }
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,7 +32,7 @@ This paper describes the design and architecture of Keyspace, a distributed key-
 \item Highly-available: the system continuously serves client request. In the case of Keyspace, replication and fault-tolerance guarantee high availability.
 \end{enumerate}
 
-The intended use of Keyspace is as a building block for other distributed systems, ie. the lowest layer in a distributed stack, for example as a controller which distributes data and workload across other machines. Alternatively, Keyspace may be used in itself to store and serve small-to-medium amounts of data in a scenario when replication and high-availability are desired. Keyspace is released under the open-source BSD license for Linux, Darwin (MacOS X) and other UNIX-like operating systems.
+The intended use of Keyspace is as a building block for other distributed systems, ie. the lowest layer in a distributed stack, for example as a controller which distributes data and workload across other machines. Alternatively, Keyspace may be used in itself to store and serve small-to-medium amounts of data in a scenario when replication and high-availability are desired. Keyspace is released under the open-source AGPL license for Linux, Darwin (MacOS X) and other UNIX-like operating systems.
 
 \section{ Consistency }
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -235,8 +235,8 @@ T. Chandra, R. Griesemer, J. Redstone, \emph{Paxos Made Live - An Engineering Pe
 \bibitem{Chubby}
 M. Burrows, \emph{The Chubby Lock Service for Loosely-Coupled Distributed Systems}, OSDI'06: Seventh Symposium on Operating System Design and Implementation.
 
-\bibitem{BSD}
-BSD Licenses. \url{http://en.wikipedia.org/wiki/BSD_licenses}
+\bibitem{AGPl}
+AGPL License. \url{http://www.fsf.org/licensing/licenses/agpl-3.0.html}
 
 \end{thebibliography}
 
