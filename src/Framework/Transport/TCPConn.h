@@ -131,7 +131,7 @@ void TCPConn<bufSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 	Init(false);
 	state = CONNECTING;
 
-	socket.Create(TCP);
+	socket.Create(Socket::TCP);
 	socket.SetNonblocking();
 	ret = socket.Connect(endpoint_);
 	

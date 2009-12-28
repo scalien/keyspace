@@ -150,6 +150,8 @@ void PaxosLease::CheckNodeIdentity()
 	
 	b = RCONF->GetEndpoint(msg.nodeID);
 	
-	if (b.GetAddress() != INADDR_ANY && a.GetAddress() != b.GetAddress())
+	if (a.GetAddress() != ENDPOINT_ANY_ADDRESS && 
+		b.GetAddress() != ENDPOINT_ANY_ADDRESS && 
+		a.GetAddress() != b.GetAddress())
 		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
 }

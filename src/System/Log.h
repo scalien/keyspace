@@ -16,9 +16,13 @@
 #define Log_Message(...)
 #define Log_Trace(...)
 #else
+#ifdef WIN32
+#define __func__ __FUNCTION__
+#endif
 #define Log_Errno() Log(__FILE__, __LINE__, __func__, LOG_TYPE_ERRNO, "")
 #define Log_Message(...) Log(__FILE__, __LINE__, __func__, LOG_TYPE_MSG, __VA_ARGS__)
-#define Log_Trace(...) Log(__FILE__, __LINE__, __func__, LOG_TYPE_TRACE, "" __VA_ARGS__)
+#define Log_Trace(...) Log_Trace_("" __VA_ARGS__)
+#define Log_Trace_(...) Log(__FILE__, __LINE__, __func__, LOG_TYPE_TRACE, __VA_ARGS__)
 #endif
 
 #ifdef GCC

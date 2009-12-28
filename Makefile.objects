@@ -45,9 +45,11 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/System/Config.o \
 	$(BUILD_DIR)/System/Events/Scheduler.o \
 	$(BUILD_DIR)/System/Log.o \
-	$(BUILD_DIR)/System/ThreadPool.o \
+	$(BUILD_DIR)/System/Platform.o \
+	$(BUILD_DIR)/System/ThreadPool_Posix.o \
+	$(BUILD_DIR)/System/Time_Posix.o \
 	$(BUILD_DIR)/System/Events/EventLoop.o \
 	$(BUILD_DIR)/System/IO/Endpoint.o \
 	$(BUILD_DIR)/System/IO/IOProcessor_Darwin.o \
 	$(BUILD_DIR)/System/IO/IOProcessor_Linux.o \
-	$(BUILD_DIR)/System/IO/Socket.o \
+	$(BUILD_DIR)/System/IO/Socket_Posix.o \

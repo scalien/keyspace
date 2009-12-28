@@ -43,7 +43,7 @@ public:
 		backlog = backlog_;
 	
 		ret = true;
-		ret &= listener.Create(TCP);
+		ret &= listener.Create(Socket::TCP);
 		ret &= listener.Listen(port_, backlog_, interface_);
 		ret &= listener.SetNonblocking();
 		if (!ret)

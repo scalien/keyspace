@@ -1,6 +1,7 @@
 #ifndef TRANSPORT_UDP_WRITER_H
 #define TRANSPORT_UDP_WRITER_H
 
+#include "System/IO/Endpoint.h"
 #include "System/IO/Socket.h"
 #include "System/Buffer.h"
 

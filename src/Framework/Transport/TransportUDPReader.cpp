@@ -12,7 +12,7 @@ bool TransportUDPReader::Init(int port)
 	bool ret;
 		
 	ret = true;
-	ret &= socket.Create(UDP);
+	ret &= socket.Create(Socket::UDP);
 	ret &= socket.Bind(port);
 	ret &= socket.SetNonblocking();
 	

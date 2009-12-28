@@ -427,12 +427,12 @@ void ProcessUDPRead(struct kevent* ev)
 
 	udpread = (UDPRead*) ev->udata;
 	
-	salen = sizeof(udpread->endpoint.sa);
+	salen = ENDPOINT_SOCKADDR_SIZE;
 	nread = recvfrom(udpread->fd,
 					 udpread->data.buffer,
 					 udpread->data.size,
 					 0,
-					 (sockaddr*)&udpread->endpoint.sa,
+					 (sockaddr*) udpread->endpoint.GetSockAddr(),
 					 (socklen_t*)&salen);
 	
 	if (nread < 0)
@@ -465,8 +465,8 @@ void ProcessUDPWrite(struct kevent* ev)
 						udpwrite->data.buffer,
 						udpwrite->data.length,
 						0,
-						(const sockaddr*)&udpwrite->endpoint.sa,
-						sizeof(udpwrite->endpoint.sa));
+						(const sockaddr*) udpwrite->endpoint.GetSockAddr(),
+						ENDPOINT_SOCKADDR_SIZE);
 		
 		if (nwrite < 0)
 		{

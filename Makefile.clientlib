@@ -4,9 +4,11 @@ CLIENTLIB_OBJECTS = \
 	$(BUILD_DIR)/System/Common.o \
 	$(BUILD_DIR)/System/Config.o \
 	$(BUILD_DIR)/System/Log.o \
+	$(BUILD_DIR)/System/Platform.o \
+	$(BUILD_DIR)/System/Time_Posix.o \
 	$(BUILD_DIR)/System/Events/EventLoop.o \
 	$(BUILD_DIR)/System/Events/Scheduler.o \
 	$(BUILD_DIR)/System/IO/Endpoint.o \
-	$(BUILD_DIR)/System/IO/Socket.o \
+	$(BUILD_DIR)/System/IO/Socket_Posix.o \
 	$(BUILD_DIR)/System/IO/IOProcessor_$(PLATFORM).o \
 	

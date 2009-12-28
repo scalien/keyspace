@@ -6,7 +6,14 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
+#ifdef WIN32
+#include <windows.h>
+#define snprintf _snprintf
+#define strdup _strdup
+#define strerror_r(errno, buf, buflen) strerror_s(buf, buflen, errno)
+#else
 #include <sys/time.h>
+#endif
 
 #define ONLY_FILENAMES
 
@@ -19,21 +26,38 @@ static int		target = LOG_TARGET_STDOUT;
 static FILE*	logfile = NULL;
 static char*	logfilename = NULL;
 
+#ifdef WIN32
+typedef char log_timestamp_t[24];
+#else
 typedef char log_timestamp_t[27];
+#endif
 
 static const char* GetFullTimestamp(log_timestamp_t ts)
 {
-	struct timeval tv;
-	struct tm tm;
-	time_t sec;
-
 	if (!timestamping)
 		return "";
+
+#ifdef WIN32
+	SYSTEMTIME	st;
+	GetSystemTime(&st);
+	
+	snprintf(ts, sizeof(log_timestamp_t), "%04d-%02d-%02d %02d:%02d:%02d.%03d",
+			(int) st.wYear,
+			(int) st.wMonth,
+			(int) st.wDay,
+			(int) st.wHour,
+			(int) st.wMinute,
+			(int) st.wSecond,
+			(int) st.wMilliseconds);
+#else
+	struct tm tm;
+	time_t sec;
+	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
 	sec = (time_t) tv.tv_sec;
 	localtime_r(&sec, &tm);
-	
+
 	snprintf(ts, sizeof(log_timestamp_t), "%04d-%02d-%02d %02d:%02d:%02d.%06lu", 
 			tm.tm_year + 1900,
 			tm.tm_mon + 1,
@@ -41,7 +65,9 @@ static const char* GetFullTimestamp(log_timestamp_t ts)
 			tm.tm_hour,
 			tm.tm_min,
 			tm.tm_sec,
-			(long unsigned int)tv.tv_usec);
+			(long unsigned int) tv.tv_usec);
+#endif
+
 	
 	return ts;
 }
@@ -147,7 +173,11 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 
 	if (type != LOG_TYPE_MSG && file && func)
 	{
+#ifdef PLATFORM_WINDOWS
+		sep = strrchr(file, '\\');
+#else
 		sep = strrchr(file, '/');
+#endif
 		if (sep)
 			file = sep + 1;
 		
@@ -187,7 +217,7 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 #else
 		ret = strerror_r(errno, p, remaining - 1);
 		if (ret >= 0)
-			ret = strlen(p);
+			ret = (int) strlen(p);
 #endif
 		if (ret < 0)
 			ret = remaining;

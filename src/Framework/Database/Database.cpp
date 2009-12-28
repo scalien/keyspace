@@ -26,11 +26,11 @@ static void DatabaseTrace(const DbEnv* /*dbenv*/, const char* msg)
 
 Database::Database() :
 env(DB_CXX_NO_EXCEPTIONS),
-cpThread(1),
 checkpoint(this, &Database::Checkpoint),
 checkpointTimeout(&onCheckpointTimeout),
 onCheckpointTimeout(this, &Database::OnCheckpointTimeout)
 {
+	cpThread = ThreadPool::Create(1);
 }
 
 Database::~Database()
@@ -105,13 +105,9 @@ bool Database::Init(const DatabaseConfig& config_)
 	Checkpoint();
 	
 	running = true;
-	
-	if (config.checkpointTimeout)
-	{
-		checkpointTimeout.SetDelay(config.checkpointTimeout);
-		EventLoop::Add(&checkpointTimeout);
-	}
-	cpThread.Start();
+	checkpointTimeout.SetDelay(config.checkpointTimeout);
+	EventLoop::Add(&checkpointTimeout);
+	cpThread->Start();
 	
 	return true;
 }
@@ -122,7 +118,7 @@ void Database::Shutdown()
 		return;
 
 	running = false;
-	cpThread.Stop();
+	cpThread->Stop();
 	delete keyspace;	
 	env.close(0);
 }
@@ -137,9 +133,8 @@ Table* Database::GetTable(const char* name)
 
 void Database::OnCheckpointTimeout()
 {
-	cpThread.Execute(&checkpoint);
-	if (config.checkpointTimeout)
-		EventLoop::Reset(&checkpointTimeout);
+	cpThread->Execute(&checkpoint);
+	EventLoop::Reset(&checkpointTimeout);
 }
 
 void Database::Checkpoint()

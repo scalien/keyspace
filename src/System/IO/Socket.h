@@ -1,25 +1,26 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#include <sys/types.h>
-#include <sys/socket.h>
+#include "System/Platform.h"
 #include "Endpoint.h"
-
-#define TCP SOCK_STREAM
-#define UDP SOCK_DGRAM
+#include "FD.h"
 
 class Socket
 {
 public:
+	enum Proto {
+		TCP,
+		UDP
+	};
 	
 	Socket();
 	
-	bool		Create(int type);
+	bool		Create(Proto proto);
 
 	bool		SetNonblocking();
 
-	bool		Bind(int port, const char* interface = NULL);
-	bool		Listen(int port, int backlog = 1024, const char* interface = NULL);
+	bool		Bind(int port, const char* interface = 0);
+	bool		Listen(int port, int backlog = 1024, const char* interface = 0);
 	bool		Accept(Socket* newSocket);
 	bool		Connect(Endpoint &endpoint);
 
@@ -33,9 +34,9 @@ public:
 	void		Close();
 
 public:	
-	int		fd;
-	int		type;
-	bool	listening;
+	FD			fd;
+	int			type; // TODO rename to proto
+	bool		listening;
 
 };
 

@@ -9,7 +9,7 @@ AsyncDatabase dbReader;
 
 void AsyncDatabase::Init(int numThread)
 {
-	threadPool = new ThreadPool(numThread);
+	threadPool = ThreadPool::Create(numThread);
 	threadPool->Start();
 }
 

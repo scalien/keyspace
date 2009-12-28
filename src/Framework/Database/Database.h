@@ -33,7 +33,7 @@ private:
 	DatabaseConfig	config;
 	DbEnv			env;
 	Table*			keyspace;
-	ThreadPool		cpThread;
+	ThreadPool*		cpThread;
 	bool			running;
 	Func			checkpoint;
 	CdownTimer		checkpointTimeout;

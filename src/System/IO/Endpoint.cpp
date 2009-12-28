@@ -1,21 +1,53 @@
 #include "Endpoint.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#ifdef WIN32
+#include <winsock2.h>
+#define s_addr S_un.S_addr
+#undef SetPort
+#else
+#include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif
+
+#ifdef WIN32
+int inet_aton(const char *cp, struct in_addr *in)
+{
+	if (strcmp(cp, "255.255.255.255") == 0)
+	{
+		in->s_addr = (u_long) 0xFFFFFFFF;
+		return 1;
+	}
+	
+	in->s_addr = inet_addr(cp);
+	if (in->s_addr == INADDR_NONE)
+		return 0;
+
+	return 1;
+}
+#endif
 
 Endpoint::Endpoint()
 {
-	bzero(&sa, sizeof(sa));
-	sa.sin_family = 0; sa.sin_port = 0; 
-	sa.sin_addr.s_addr = 0; sa.sin_zero[0] = 0;
+	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+
+	memset((char *) sa, 0, sizeof(sa));
+	sa->sin_family = 0; sa->sin_port = 0; 
+	sa->sin_addr.s_addr = 0; sa->sin_zero[0] = 0;
 	buffer[0] = 0;
 }
 
 bool Endpoint::operator==(const Endpoint &other) const
 {
-	return	sa.sin_family == other.sa.sin_family &&
-			sa.sin_port == other.sa.sin_port &&
-			sa.sin_addr.s_addr == other.sa.sin_addr.s_addr;
+	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+	struct sockaddr_in *other_sa = (struct sockaddr_in *) &other.saBuffer;
+
+	return	sa->sin_family == other_sa->sin_family &&
+			sa->sin_port == other_sa->sin_port &&
+			sa->sin_addr.s_addr == other_sa->sin_addr.s_addr;
 }
 
 bool Endpoint::operator!=(const Endpoint &other) const
@@ -23,18 +55,14 @@ bool Endpoint::operator!=(const Endpoint &other) const
 	return !operator==(other);
 }
 
-bool Endpoint::Set(struct sockaddr_in &sa_)
-{
-	sa = sa_;
-	return true;
-}
-
 bool Endpoint::Set(const char* ip, int port)
 {
-	memset((char *) &sa, 0, sizeof(sa));
-	sa.sin_family = AF_INET;
-	sa.sin_port = htons((uint16_t)port);
-	if (inet_aton(ip, &sa.sin_addr) == 0)
+	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+
+	memset((char *) sa, 0, sizeof(sa));
+	sa->sin_family = AF_INET;
+	sa->sin_port = htons((uint16_t)port);
+	if (inet_aton(ip, &sa->sin_addr) == 0)
 	{
 		Log_Trace("inet_aton() failed");
 		return false;
@@ -81,18 +109,24 @@ bool Endpoint::Set(const char* ip_port)
 
 bool Endpoint::SetPort(int port)
 {
-	sa.sin_port = htons((uint16_t)port);
+	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+
+	sa->sin_port = htons((uint16_t)port);
 	return true;
 }
 
 int Endpoint::GetPort()
 {
-	return ntohs(sa.sin_port);
+	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+
+	return ntohs(sa->sin_port);
 }
 
 uint32_t Endpoint::GetAddress()
 {
-	return ntohl(sa.sin_addr.s_addr);
+	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+
+	return ntohl(sa->sin_addr.s_addr);
 }
 
 const char* Endpoint::ToString()
@@ -102,8 +136,10 @@ const char* Endpoint::ToString()
 
 const char* Endpoint::ToString(char s[ENDPOINT_STRING_SIZE])
 {
+	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+
 	snprintf(s, ENDPOINT_STRING_SIZE, "%s:%u",
-		inet_ntoa(sa.sin_addr), ntohs(sa.sin_port));
+		inet_ntoa(sa->sin_addr), ntohs(sa->sin_port));
 	
 	return s;
 }

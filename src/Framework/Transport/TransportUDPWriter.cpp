@@ -17,7 +17,7 @@ bool TransportUDPWriter::Init(Endpoint &endpoint_)
 	endpoint = endpoint_;
 
 	ret = true;
-	ret &= socket.Create(UDP);
+	ret &= socket.Create(Socket::UDP);
 	ret &= socket.SetNonblocking();
 	return ret;
 }

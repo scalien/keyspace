@@ -8,6 +8,7 @@
 #include "System/Events/Callable.h"
 #include "System/Buffer.h"
 #include "Endpoint.h"
+#include "FD.h"
 
 /* all the cursor-type members of IOOperations are absolute cursors */
 
@@ -30,7 +31,7 @@ class IOOperation
 public:
 	IOOperation()
 	{
-		fd = -1;
+		fd = INVALID_FD;
 		active = false;
 		pending = false;
 		offset = 0;
@@ -43,7 +44,7 @@ public:
 	ByteString		data;
 	
 	char			type;
-	int				fd;
+	FD				fd;
 	int				offset;
 	
 	bool			active;

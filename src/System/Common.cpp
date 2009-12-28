@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
-#include <inttypes.h>
 #include <sys/stat.h>
 #include <signal.h>
 #include "Buffer.h"
@@ -110,6 +109,9 @@ int randint(int min, int max)
 	assert(min < max);
 
 	interval = max - min;
+#ifdef WIN32
+#define random rand
+#endif
 	rnd = (int)(random() / (float) RAND_MAX * interval + 0.5);
 	return rnd + min;
 }
@@ -136,11 +138,15 @@ void* Alloc(int num, int size)
 
 void BlockSignals()
 {
+#ifdef WIN32
+	// dummy
+#else
 	sigset_t	sigmask;
 	
 	// block all signals
 	sigfillset(&sigmask);
 	pthread_sigmask(SIG_SETMASK, &sigmask, NULL);
+#endif
 }
 
 bool IsFolder(const char* path)

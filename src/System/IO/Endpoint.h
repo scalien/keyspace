@@ -1,25 +1,21 @@
 #ifndef ENDPOINT_H
 #define ENDPOINT_H
 
-#include <string.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include "System/Platform.h"
 #include "System/Log.h"
 
+#define ENDPOINT_ANY_ADDRESS	0
 #define ENDPOINT_STRING_SIZE	32
+#define ENDPOINT_SOCKADDR_SIZE	16
 
 class Endpoint
 {
 public:
-	sockaddr_in	sa;
-
 	Endpoint();
 	
 	bool		operator==(const Endpoint &other) const;
 	bool		operator!=(const Endpoint &other) const;
 	
-	bool		Set(struct sockaddr_in &sa_);
 	bool		Set(const char* ip, int port);
 	bool		Set(const char* ip_port);
 
@@ -30,8 +26,12 @@ public:
 	
 	const char*	ToString();
 	const char* ToString(char s[ENDPOINT_STRING_SIZE]);
+
+	char*		GetSockAddr() { return saBuffer; }
+
 private:
 	char		buffer[ENDPOINT_STRING_SIZE];
+	char		saBuffer[ENDPOINT_SOCKADDR_SIZE];
 };
 
 #endif

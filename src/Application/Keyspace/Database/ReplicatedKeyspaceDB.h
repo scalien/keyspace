@@ -71,7 +71,7 @@ private:
 	bool			ownAppend;
 	Func			asyncOnAppend;
 	Func			onAppendComplete;
-	ThreadPool		asyncAppender;
+	ThreadPool*		asyncAppender;
 	unsigned		numOps;
 	ServerList		pservers;
 };

@@ -1,43 +1,10 @@
 #ifndef TIME_H
 #define TIME_H
 
-#include <time.h>
-#include <sys/time.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdint.h>
+#include "Platform.h"
 
-inline uint64_t Now()
-{
-	uint64_t now;
-	struct timeval tv;
-	
-    gettimeofday(&tv, NULL);
-	
-	now = tv.tv_sec;
-	now *= 1000;
-	now += tv.tv_usec / 1000;
-    
-	return now;
-}
-
-inline uint64_t NowMicro()
-{
-	uint64_t now;
-	struct timeval tv;
-	
-    gettimeofday(&tv, NULL);
-	
-	now = tv.tv_sec;
-	now *= 1000000;
-	now += tv.tv_usec;
-    
-	return now;
-}
-
-inline void Sleep(unsigned long msec)
-{
-	usleep(msec * 1000);
-}
+uint64_t	Now();
+uint64_t	NowMicro();
+void		USleep(unsigned long msec);
 
 #endif

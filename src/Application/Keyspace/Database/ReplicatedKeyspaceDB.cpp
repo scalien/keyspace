@@ -10,9 +10,9 @@
 
 ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
 :	asyncOnAppend(this, &ReplicatedKeyspaceDB::AsyncOnAppend),
-	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete),
-	asyncAppender(1)
+	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete)
 {
+	asyncAppender = ThreadPool::Create(1);
 	catchingUp = false;
 }
 
@@ -27,14 +27,14 @@ bool ReplicatedKeyspaceDB::Init()
 	catchupServer.Init(RCONF->GetPort() + CATCHUP_PORT_OFFSET);
 	catchupClient.Init(this, table);
 
-	asyncAppender.Start();
+	asyncAppender->Start();
 	asyncAppenderActive = false;
 	return true;
 }
 
 void ReplicatedKeyspaceDB::Shutdown()
 {
-	asyncAppender.Stop();
+	asyncAppender->Stop();
 }
 
 unsigned ReplicatedKeyspaceDB::GetNodeID()
@@ -151,7 +151,7 @@ uint64_t /*paxosID*/, ByteString value_, bool ownAppend_)
 
 	assert(asyncAppenderActive == false);
 	asyncAppenderActive = true;
-	asyncAppender.Execute(&asyncOnAppend);
+	asyncAppender->Execute(&asyncOnAppend);
 }
 
 void ReplicatedKeyspaceDB::AsyncOnAppend()
