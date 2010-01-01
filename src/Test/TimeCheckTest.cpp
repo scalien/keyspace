@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
 		STOP_FAIL("Cannot initalize IOProcessor!", 1);
 	
-	if (!ReplicatedConfig::Get()->Init())
+	if (!RCONF->Init())
 		STOP_FAIL("Cannot initialize paxos!", 1);
 
 	TimeCheck tc;
