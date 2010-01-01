@@ -1,4 +1,2 @@
-rm test/$1/__*
 rm test/$1/log*
 rm test/$1/keyspace
-rm test/$1/*.log
