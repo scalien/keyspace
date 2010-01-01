@@ -13,7 +13,7 @@ bool TCPEchoServer::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	ioproc = ioproc_;
 	scheduler = scheduler_;
 	
-	listener.Create(TCP);
+	listener.Create(Socket::TCP);
 	listener.Listen(TCPECHOSERVER_PORT);
 	listener.SetNonblocking();
 

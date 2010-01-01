@@ -13,7 +13,7 @@ bool UDPEchoServer::Init(IOProcessor* ioproc_, Scheduler* scheduler_)
 	ioproc = ioproc_;
 	scheduler = scheduler_;
 	
-	socket.Create(UDP);
+	socket.Create(Socket::UDP);
 	socket.Bind(UDPECHOSERVER_PORT);
 	socket.SetNonblocking();
 	Log_Trace("Bound to socket %d", socket.fd);
