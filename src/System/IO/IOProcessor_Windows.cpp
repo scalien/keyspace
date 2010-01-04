@@ -18,6 +18,7 @@ struct IODesc
 {
 	IOOperation*	read;
 	IOOperation*	write;
+	
 	OVERLAPPED		ovlRead;			// for accept/recv
 	OVERLAPPED		ovlWrite;			// for connect/send
 
