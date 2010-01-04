@@ -1,3 +1,5 @@
+#ifdef PLATFORM_WINDOWS
+
 #include "Platform.h"
 #include <windows.h>
 
@@ -15,3 +17,5 @@ void USleep(unsigned long msec)
 {
 	Sleep(msec);
 }
+
+#endif
