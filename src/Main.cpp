@@ -1,5 +1,4 @@
 #include <sys/types.h>
-#include <pwd.h>
 
 #include "Version.h"
 #include "System/Config.h"
@@ -57,7 +56,8 @@ int main(int argc, char* argv[])
 			logTargets |= LOG_TARGET_STDERR;
 	}
 	Log_SetTarget(logTargets);
-	Log_SetTrace(Config::GetBoolValue("log.trace", false));
+	//Log_SetTrace(Config::GetBoolValue("log.trace", false));
+	Log_SetTrace(Config::GetBoolValue("log.trace", true));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
 
 	Log_Message(VERSION_FMT_STRING " started",
@@ -68,14 +68,8 @@ int main(int argc, char* argv[])
 
 	// after io is initialized, drop root rights
 	user = Config::GetValue("daemon.user", NULL);
-	if (user != NULL && *user && (getuid() == 0 || geteuid() == 0)) 
-	{
-		struct passwd *pw = getpwnam(user);
-		if (!pw)
-			STOP_FAIL(rprintf("Cannot setuid to %s", user), 1);
-		
-		setuid(pw->pw_uid);
-	}
+	if (!ChangeUser(user))
+		STOP_FAIL(rprintf("Cannot setuid to %s", user), 1);
 	
 	DatabaseConfig dbConfig;
 	dbConfig.dir = Config::GetValue("database.dir", DATABASE_CONFIG_DIR);
