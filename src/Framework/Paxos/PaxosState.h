@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include "System/Buffer.h"
-#include <stdint.h>
+#include "System/Platform.h"
 
 class PaxosProposerState
 {

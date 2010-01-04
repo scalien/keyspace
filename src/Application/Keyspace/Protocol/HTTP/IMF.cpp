@@ -8,6 +8,10 @@
 #define CS_LF				"\012"
 #define CS_CRLF				CS_CR CS_LF
 
+#ifdef WIN32
+#define strncasecmp _strnicmp
+#endif
+
 static char* SkipWhitespace(char* p)
 {
 	while (p && *p && *p <= ' ') p++;
