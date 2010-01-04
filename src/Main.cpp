@@ -56,8 +56,8 @@ int main(int argc, char* argv[])
 			logTargets |= LOG_TARGET_STDERR;
 	}
 	Log_SetTarget(logTargets);
-	//Log_SetTrace(Config::GetBoolValue("log.trace", false));
-	Log_SetTrace(Config::GetBoolValue("log.trace", true));
+	Log_SetTrace(Config::GetBoolValue("log.trace", false));
+	//Log_SetTrace(Config::GetBoolValue("log.trace", true));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
 
 	Log_Message(VERSION_FMT_STRING " started",
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 	if (!database.Init(dbConfig))
 		STOP_FAIL("Cannot initialize database!", 1);
 	
-	dbWriter.Init(1);
+ 	dbWriter.Init(1);
 	dbReader.Init(Config::GetIntValue("database.numReaders", 20));
 	
 	if (!RCONF->Init())

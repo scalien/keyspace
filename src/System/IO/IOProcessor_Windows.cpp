@@ -130,12 +130,13 @@ static bool StartAsyncRead(IOOperation* ioop)
 	if (iod->read)
 		return false;
 
-	wsabuf.buf = (char *)ioop->data.buffer;
-	wsabuf.len = ioop->data.size;
+	wsabuf.buf = (char *)ioop->data.buffer + ioop->data.length;
+	wsabuf.len = ioop->data.size - ioop->data.length;
 
 	flags = 0;
 	memset(&iod->ovlRead, 0, sizeof(OVERLAPPED));
-	if (WSARecv(ioop->fd.sock, &wsabuf, 1, &numBytes, &flags, &iod->ovlRead, NULL) == SOCKET_ERROR)
+	ret = WSARecv(ioop->fd.sock, &wsabuf, 1, &numBytes, &flags, &iod->ovlRead, NULL);
+	if (ret == SOCKET_ERROR)
 	{
 		ret = WSAGetLastError();
 		if (ret != WSA_IO_PENDING)
@@ -299,8 +300,9 @@ bool IOProcessor::Poll(int msec)
 		{
 			if (overlapped == &iod->ovlRead && iod->read)
 			{
-				Log_Trace("read: %d", numBytes);
-				iod->read->data.length = numBytes;
+				Log_Trace("read: %d, data.size: %d", numBytes, iod->read->data.size);
+				iod->read->data.length += numBytes;
+				assert(iod->read->data.length <= iod->read->data.size);
 				
 				if ((iod->read->data.size > 0 && numBytes > 0) ||
 					(iod->read->data.size == 0 && numBytes == 0))
@@ -340,7 +342,6 @@ bool IOProcessor::Poll(int msec)
 
 		return true;
 	}
-
 	return true;
 }
 
