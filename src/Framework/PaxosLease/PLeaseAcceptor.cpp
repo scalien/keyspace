@@ -5,6 +5,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "System/Config.h"
+#include "System/Time.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
@@ -20,7 +21,7 @@ void PLeaseAcceptor::Init(Writers writers_)
 	Log_Message("*** Sleeping %d milliseconds... (this is normal) ***",
 	MAX_LEASE_TIME);
 
-	usleep(MAX_LEASE_TIME * 1000);
+	USleep(MAX_LEASE_TIME);
 
 	Log_Message("*** Done sleeping ***");
 	
