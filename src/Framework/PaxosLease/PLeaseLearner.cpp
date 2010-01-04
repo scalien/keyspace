@@ -1,5 +1,5 @@
 #include "PLeaseLearner.h"
-#include <inttypes.h>
+#include "System/Platform.h"
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
