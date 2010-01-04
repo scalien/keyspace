@@ -1,8 +1,8 @@
 #ifndef PLEASESTATE_H
 #define PLEASESTATE_H
 
+#include "System/Platform.h"
 #include "System/Buffer.h"
-#include <stdint.h>
 
 class PLeaseProposerState
 {

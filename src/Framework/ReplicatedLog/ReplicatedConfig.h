@@ -1,7 +1,7 @@
 #ifndef REPLICATEDCONFIG_H
 #define REPLICATEDCONFIG_H
 
-#include <stdint.h>
+#include "System/Platform.h"
 #include "System/IO/Endpoint.h"
 
 #define MAX_CELL_SIZE				256
