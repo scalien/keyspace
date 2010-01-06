@@ -95,7 +95,7 @@ void Log_SetTarget(int target_)
 	target = target_;
 }
 
-bool Log_SetOutputFile(const char* filename)
+bool Log_SetOutputFile(const char* filename, bool truncate)
 {
 	if (logfile)
 	{
@@ -104,7 +104,10 @@ bool Log_SetOutputFile(const char* filename)
 		logfilename = NULL;
 	}
 
-	logfile = fopen(filename, "a");
+	if (truncate)
+		logfile = fopen(filename, "w");
+	else
+		logfile = fopen(filename, "a");
 	if (!logfile)
 	{
 		target &= ~LOG_TARGET_FILE;
@@ -174,7 +177,9 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 	if (type != LOG_TYPE_MSG && file && func)
 	{
 #ifdef PLATFORM_WINDOWS
-		sep = strrchr(file, '\\');
+		sep = strrchr(file, '/');
+		if (!sep)
+			sep = strrchr(file, '\\');
 #else
 		sep = strrchr(file, '/');
 #endif

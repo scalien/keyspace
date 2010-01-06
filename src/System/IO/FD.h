@@ -16,7 +16,7 @@ struct FD
 	intptr_t	sock;
 };
 
-extern FD INVALID_FD;
+extern const FD INVALID_FD;
 
 #else
 typedef int FD;

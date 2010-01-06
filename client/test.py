@@ -95,24 +95,38 @@ def submitTest(client):
 		client.set("test" + str(i), i, False)
 	client.submit()
 	
-
-if __name__ == "__main__":
-	nodes=["127.0.0.1:7080","127.0.0.1:7081","127.0.0.1:7082"]
-	client = keyspace.Client(nodes, 15, True)
-	
-	import time
+def benchmarkSet(client):
+	nset = 100000
 	starttime = time.time()
 
-	# client.prune("")
-	# stress(client)
-	# submitTest(client)
-	# users(client)
-	nset(client, 100000)
+	client.begin()
+	for i in xrange(nset):
+		client.set("test" + str(i), i, False)
+	client.submit()
 
 	endtime = time.time()
 	elapsed = endtime - starttime
-	print("elapsedGet: %f" % elapsed)
+	print("benchmarkSet: %f/s" % (float(nset) / elapsed))
 	
+
+if __name__ == "__main__":
+	nodes=["127.0.0.1:7080","127.0.0.1:7081","127.0.0.1:7082"]
+	client = keyspace.Client(nodes, 15, False)
+	
+	#starttime = time.time()
+
+	#client.prune("")
+	#stress(client)
+	# submitTest(client)
+	# users(client)
+	# nset(client, 100000)
+	
+
+	#endtime = time.time()
+	#elapsed = endtime - starttime
+	#print("elapsedGet: %f" % elapsed)
+	
+	benchmarkSet(client)
 	#users(client)
 	#counter(client)
 	#hol(client)

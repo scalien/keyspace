@@ -10,6 +10,9 @@ using namespace Keyspace;
 int KeyspaceClientTestSuite(Keyspace::Client& client);
 int DatabaseSetTest(TestConfig& conf);
 
+#ifdef PLATFORM_WINDOWS
+void IgnorePipeSignal() {}
+#else
 void IgnorePipeSignal()
 {
 	sigset_t	sigset;
@@ -18,7 +21,7 @@ void IgnorePipeSignal()
 	sigaddset(&sigset, SIGPIPE);
 	sigprocmask(SIG_BLOCK, &sigset, NULL);
 }
-
+#endif
 
 static const char *Status(int status)
 {
@@ -189,6 +192,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	numTest = conf.datasetTotal / conf.valueSize;
 	for (int i = 0; i < numTest; i++)
 	{
+		conf.key.Reallocate(conf.keySize, false);
 		if (conf.rndkey)
 			GenRandomString(conf.key, conf.keySize);
 		else
@@ -247,6 +251,7 @@ int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
 	
 	for (int i = 0; i < numTest; i++)
 	{
+		conf.key.Reallocate(conf.keySize, false);
 		if (conf.rndkey)
 			GenRandomString(conf.key, conf.keySize);
 		else
@@ -293,6 +298,7 @@ int KeyspaceClientTest(int argc, char **argv)
 	TestConfig			testConf;
 	uint64_t			timeout;
 	const char			*LOCAL_NODES[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
+	int					logTargets;
 
 
 	if (argc < 3)
@@ -304,6 +310,24 @@ int KeyspaceClientTest(int argc, char **argv)
 
 	IgnorePipeSignal();
 	Config::Init(argv[1]);
+
+	logTargets = 0;
+	if (Config::GetListNum("log.targets") == 0)
+		logTargets = LOG_TARGET_STDOUT;
+	for (int i = 0; i < Config::GetListNum("log.targets"); i++)
+	{
+		if (strcmp(Config::GetListValue("log.targets", i, ""), "file") == 0)
+		{
+			logTargets |= LOG_TARGET_FILE;
+			Log_SetOutputFile(Config::GetValue("log.file", NULL), 
+				Config::GetBoolValue("log.truncate", false));
+		}
+		if (strcmp(Config::GetListValue("log.targets", i, NULL), "stdout") == 0)
+			logTargets |= LOG_TARGET_STDOUT;
+		if (strcmp(Config::GetListValue("log.targets", i, NULL), "stderr") == 0)
+			logTargets |= LOG_TARGET_STDERR;
+	}
+	Log_SetTarget(logTargets);
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(true);
 
@@ -365,6 +389,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	
 	reference.Writef("1234567890");
 
+	Log_Message("SUITE starting");
 	//goto limitset;
 
 	// basic SET test
@@ -1098,6 +1123,10 @@ int
 main(int argc, char** argv)
 {
 	KeyspaceClientTest(argc, argv);
+
+#if defined(WIN32) && defined(_DEBUG)
+	system("pause");
+#endif
 
 	return 0;
 }

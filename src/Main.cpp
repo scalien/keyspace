@@ -48,7 +48,8 @@ int main(int argc, char* argv[])
 		if (strcmp(Config::GetListValue("log.targets", i, ""), "file") == 0)
 		{
 			logTargets |= LOG_TARGET_FILE;
-			Log_SetOutputFile(Config::GetValue("log.file", NULL));
+			Log_SetOutputFile(Config::GetValue("log.file", NULL), 
+							Config::GetBoolValue("log.truncate", false));
 		}
 		if (strcmp(Config::GetListValue("log.targets", i, NULL), "stdout") == 0)
 			logTargets |= LOG_TARGET_STDOUT;

@@ -107,7 +107,7 @@ bool PaxosAcceptor::ReadState()
 	
 	nread = 0;
 	state.accepted =
-		strntoint64(buffers[1].buffer, buffers[1].length, &nread);
+		strntoint64(buffers[1].buffer, buffers[1].length, &nread) ? true : false;
 	if (nread != (unsigned) buffers[1].length)
 	{
 		state.accepted = false;

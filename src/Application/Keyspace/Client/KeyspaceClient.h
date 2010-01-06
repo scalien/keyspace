@@ -227,6 +227,7 @@ private:
 	Command*		CreateCommand(char cmd, bool submit,
 								  int msgc, ByteString *msgv);
 	void			SendCommand(ClientConn* conn, CommandList& commands);
+	void			SendAllCommands(ClientConn* conn, CommandList& commands);
 	void			DeleteCommands(CommandList& commands);
 	void			SetMaster(int master);
 	int				Count(uint64_t &res, const ByteString &prefix,

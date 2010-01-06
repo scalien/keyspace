@@ -32,7 +32,9 @@ static HANDLE	iocp;					// global completion port handle
 static IODesc*	iods;					// pointer to allocated array of IODesc's
 static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
-FD				INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
+const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
+
+static LPFN_CONNECTEX	ConnectEx;
 
 // helper function for FD -> IODesc mapping
 static IODesc* GetIODesc(const FD& fd)
@@ -50,6 +52,35 @@ bool IOProcessorAccept(const FD& listeningFd, FD& fd)
 
 	// this need to be called so that getpeername works
 	setsockopt(fd.sock, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, (const char *)&listeningFd.sock, sizeof(SOCKET));
+
+	return true;
+}
+
+// asynchronous connect
+bool IOProcessorConnect(FD& fd, Endpoint& endpoint)
+{
+	sockaddr_in	localAddr;
+	IODesc*		iod;
+
+	memset(&localAddr, 0, sizeof(sockaddr_in));
+	localAddr.sin_family = AF_INET;
+	localAddr.sin_addr.S_un.S_addr = INADDR_ANY;
+
+	// the socket must be bound so that ConnectEx works
+	if (bind(fd.sock, (sockaddr*) &localAddr,  sizeof(sockaddr_in)) == SOCKET_ERROR)
+	{
+		// WSAINVAL means it is already bound
+		if (WSAGetLastError() != WSAEINVAL)
+			return false;
+	}
+
+	iod = GetIODesc(fd);
+	memset(&iod->ovlWrite, 0, sizeof(OVERLAPPED));
+	if (!ConnectEx(fd.sock, (sockaddr*) endpoint.GetSockAddr(), ENDPOINT_SOCKADDR_SIZE, NULL, 0, NULL, &iod->ovlWrite))
+	{
+		if (WSAGetLastError() != WSA_IO_PENDING)
+			return false;
+	}
 
 	return true;
 }
@@ -90,6 +121,9 @@ bool IOProcessorUnregisterSocket(FD& fd)
 bool IOProcessor::Init(int maxfd)
 {
 	WSADATA		wsaData;
+	SOCKET		s;
+	GUID		guid = WSAID_CONNECTEX;
+	DWORD		bytesReturned;
 
 	// initialize Winsock2 library
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData))
@@ -97,6 +131,20 @@ bool IOProcessor::Init(int maxfd)
 
 	// create a global completion port object
 	iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
+
+	// create a dummy socket to pass to WSAIoctl()
+	s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (!s)
+		return false;
+
+	// get ConnectEx function pointer
+	if (WSAIoctl(s, SIO_GET_EXTENSION_FUNCTION_POINTER,
+		&guid, sizeof(GUID), &ConnectEx, sizeof(LPFN_CONNECTEX),
+		&bytesReturned, NULL, NULL) == SOCKET_ERROR)
+	{
+		return false;
+	}
+	closesocket(s);
 
 	// create an array for IODesc indexing
 	iods = new IODesc[maxfd];
@@ -222,14 +270,27 @@ static bool StartAsyncAccept(IOOperation* ioop)
 	return true;
 }
 
+bool StartAsyncConnect(IOOperation* ioop)
+{
+	IODesc*	iod;
 
+	iod = GetIODesc(ioop->fd);
+	iod->write = ioop;
+	
+	return true;
+}
 
 bool IOProcessor::Add(IOOperation* ioop)
 {
 	ioop->active = true;
 
+	// empty buffer indicates that we are waiting for accept event
 	if (ioop->type == TCP_READ && ioop->data.buffer == NULL)
 		return StartAsyncAccept(ioop);
+
+	// zero length indicates that we are waiting for connect event
+	if (ioop->type == TCP_WRITE && ioop->data.length == 0)
+		return StartAsyncConnect(ioop);
 
 	switch (ioop->type)
 	{
@@ -274,10 +335,11 @@ bool IOProcessor::Poll(int msec)
 	OVERLAPPED*	overlapped;
 	BOOL		ret;
 	DWORD		error;
+	DWORD		flags;
 	IODesc*		iod;
 	Callable*	callable;
 
-	Log_Trace("msec = %d", msec);
+	//Log_Trace("msec = %d", msec);
 
 	timeout = (msec >= 0) ? msec : INFINITE;
 
@@ -301,7 +363,10 @@ bool IOProcessor::Poll(int msec)
 			if (overlapped == &iod->ovlRead && iod->read)
 			{
 				Log_Trace("read: %d, data.size: %d", numBytes, iod->read->data.size);
-				iod->read->data.length += numBytes;
+				if (iod->read->type == UDP_READ)
+					iod->read->data.length = numBytes;
+				else
+					iod->read->data.length += numBytes;
 				assert(iod->read->data.length <= iod->read->data.size);
 				
 				if ((iod->read->data.size > 0 && numBytes > 0) ||
@@ -321,7 +386,19 @@ bool IOProcessor::Poll(int msec)
 				Log_Trace("write: %d", numBytes);
 				
 				if (numBytes == iod->write->data.length)
-					callable = iod->write->onComplete;
+				{
+					// check connection status
+					if (iod->write->data.length == 0)
+					{
+						ret = WSAGetOverlappedResult(iod->write->fd.sock, &iod->ovlWrite, &numBytes, FALSE, &flags);
+						if (ret)
+							callable = iod->write->onComplete;
+						else
+							callable = iod->write->onClose;
+					}
+					else
+						callable = iod->write->onComplete;
+				}
 				else
 					callable = iod->write->onClose;
 
@@ -342,6 +419,7 @@ bool IOProcessor::Poll(int msec)
 
 		return true;
 	}
+
 	return true;
 }
 

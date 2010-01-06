@@ -40,7 +40,7 @@ bool Log_SetTrace(bool trace);
 void Log_SetTimestamping(bool ts);
 void Log_SetMaxLine(int maxLine);
 void Log_SetTarget(int target);
-bool Log_SetOutputFile(const char* file);
+bool Log_SetOutputFile(const char* file, bool truncate);
 
 #ifdef __cplusplus
 }

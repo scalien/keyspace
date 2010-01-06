@@ -1,5 +1,4 @@
 #ifdef PLATFORM_WINDOWS
-
 #include "Socket.h"
 #include "System/Log.h"
 #include "System/Common.h"
@@ -13,10 +12,16 @@
 
 unsigned long iftonl(const char* interface_);
 
+/*
+ * The Socket implementation is tightly coupled with the
+ * IOProcessor because Windows asynchronous mechanism and
+ * the IO completion uses the same Windows specific OVERLAPPED
+ * structures, therefore these functions are imported here.
+ */
 bool IOProcessorRegisterSocket(FD& fd);
 bool IOProcessorUnregisterSocket(FD& fd);
 bool IOProcessorAccept(const FD& listeningFd, FD& fd);
-
+bool IOProcessorConnect(FD& fd, Endpoint& endpoint);
 
 Socket::Socket()
 {
@@ -54,7 +59,7 @@ bool Socket::Create(Proto proto)
 	if (fd.sock == INVALID_SOCKET)
 		return false;
 
-	if (setsockopt(fd.sock, SOL_SOCKET, SO_REUSEADDR, (char *)&trueval, sizeof(BOOL)))
+	if (setsockopt(fd.sock, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char *)&trueval, sizeof(BOOL)))
 	{
 		Close();
 		return false;
@@ -130,8 +135,6 @@ bool Socket::Listen(int port, int backlog, const char* interface_)
 
 bool Socket::Accept(Socket *newSocket)
 {
-	//newSocket->fd.sock = accept(fd.sock, NULL, NULL);
-
 	if (!IOProcessorAccept(fd, newSocket->fd))
 	{
 		Log_Errno();
@@ -139,7 +142,7 @@ bool Socket::Accept(Socket *newSocket)
 		return false;
 	}
 
-	// set FD index too
+	// register the newly created socket
 	IOProcessorRegisterSocket(newSocket->fd);
 	
 	return true;
@@ -147,18 +150,10 @@ bool Socket::Accept(Socket *newSocket)
 
 bool Socket::Connect(Endpoint &endpoint)
 {
-	int					ret;
-	struct sockaddr*	sa = (struct sockaddr*) endpoint.GetSockAddr();
-	
-	ret = connect(fd.sock, sa, ENDPOINT_SOCKADDR_SIZE);
-	
-	if (ret == INVALID_SOCKET)
+	if (!IOProcessorConnect(fd, endpoint))
 	{
-		if (WSAGetLastError() != WSAEWOULDBLOCK)
-		{
-			Log_Errno();
-			return false;
-		}
+		Log_Errno();
+		return false;
 	}
 
 	return true;

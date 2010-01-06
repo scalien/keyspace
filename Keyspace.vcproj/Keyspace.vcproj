@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9.00"
 	Name="Keyspace"
 	ProjectGUID="{71C21FF8-1C74-4835-BBEC-45E40EF9C561}"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -16,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="..\bin"
+			IntermediateDirectory="$(SolutionDir)\Build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -45,7 +46,7 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -60,10 +61,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libdb48.lib ws2_32.lib mswsock.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-Debug.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -85,16 +89,13 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="..\bin"
+			IntermediateDirectory="$(SolutionDir)\Build\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -114,12 +115,15 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
+				Optimization="3"
+				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="../src;../include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;PLATFORM_WINDOWS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -132,11 +136,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="libdb48.lib ws2_32.lib mswsock.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -156,9 +164,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -365,26 +370,6 @@
 							</File>
 							<File
 								RelativePath="..\src\Application\Keyspace\Protocol\Keyspace\KeyspaceServer.h"
-								>
-							</File>
-						</Filter>
-						<Filter
-							Name="Memcache"
-							>
-							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\Memcache\MemcacheConn.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\Memcache\MemcacheConn.h"
-								>
-							</File>
-							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\Memcache\MemcacheServer.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\Memcache\MemcacheServer.h"
 								>
 							</File>
 						</Filter>

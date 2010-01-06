@@ -60,5 +60,6 @@ void TransportUDPReader::OnRead()
 {
 	Call(userCallback);
 	
+	udpread.data.Clear();
 	IOProcessor::Add(&udpread);
 }

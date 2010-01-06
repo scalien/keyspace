@@ -377,15 +377,19 @@ bool ClientConn::ProcessResponse(Response* resp)
 			{
 				getMasterPending = false;
 				if (resp->status == KEYSPACE_OK)
+				{
 					client.SetMaster((int) strntoint64(resp->value.buffer, 
 													   resp->value.length,
 													   &nread));
+					if (nread != resp->value.length)
+						resp->status = KEYSPACE_ERROR;
+				}
 				else
+				{
 					client.SetMaster(-1);
-					
-				if (nread != resp->value.length)
 					resp->status = KEYSPACE_ERROR;
-				
+				}				
+					
 				delete cmd;
 				RemoveSentCommand(it);
 				return false;
@@ -1115,7 +1119,9 @@ void Client::StateFunc()
 		master != -1 && 
 		conns[master]->GetState() == ClientConn::CONNECTED)
 	{
-		SendCommand(conns[master], safeCommands);
+		// TODO find a better way to queue commands
+		//SendCommand(conns[master], safeCommands);
+		SendAllCommands(conns[master], safeCommands);
 	}
 	
 	if (dirtyCommands.Length() > 0)
@@ -1155,6 +1161,12 @@ void Client::SendCommand(ClientConn* conn, CommandList& commands)
 	commands.Remove(it);
 }
 
+void Client::SendAllCommands(ClientConn* conn, CommandList& commands)
+{
+	while (commands.Head())
+		SendCommand(conn, commands);
+}
+
 void Client::DeleteCommands(CommandList& commands)
 {
 	Command**	it;
@@ -1170,7 +1182,6 @@ uint64_t Client::GetNextID()
 {
 	return cmdID++;
 }
-
 Command* Client::CreateCommand(char type, bool submit,
 int msgc, ByteString *msgv)
 {
@@ -1210,6 +1221,12 @@ int msgc, ByteString *msgv)
 
 void Client::SetMaster(int master_)
 {
+	if (master_ < 0 || master_ >= numConns)
+	{
+		master = -1;
+		return;
+	}
+
 	master = master_;
 	masterTime = EventLoop::Now();
 }

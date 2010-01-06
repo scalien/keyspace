@@ -75,9 +75,8 @@ void PaxosProposer::BroadcastMessage()
 
 void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 {
-	Log_Trace();
-
 	msg = msg_;
+	Log_Trace("msg.nodeID = %u", msg.nodeID);
 
 	if (!state.preparing || msg.proposalID != state.proposalID)
 		return;
@@ -115,9 +114,8 @@ void PaxosProposer::OnPrepareResponse(PaxosMsg& msg_)
 
 void PaxosProposer::OnProposeResponse(PaxosMsg& msg_)
 {
-	Log_Trace();
-	
 	msg = msg_;
+	Log_Trace("msg.nodeID = %u", msg.nodeID);
 	
 	if (!state.proposing || msg.proposalID != state.proposalID)
 		return;
