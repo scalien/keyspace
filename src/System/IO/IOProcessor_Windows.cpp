@@ -18,7 +18,8 @@ struct IODesc
 {
 	IOOperation*	read;
 	IOOperation*	write;
-	
+
+	Callable*		readCallback;
 	OVERLAPPED		ovlRead;			// for accept/recv
 	OVERLAPPED		ovlWrite;			// for connect/send
 
@@ -94,6 +95,7 @@ bool IOProcessorRegisterSocket(FD& fd)
 	// unlink iod from free list
 	freeIods = iod->next;
 	iod->next = NULL;
+	iod->readCallback = NULL;
 	iod->read = NULL;
 	iod->write = NULL;
 
@@ -175,6 +177,14 @@ static bool StartAsyncRead(IOOperation* ioop)
 
 	iod = GetIODesc(ioop->fd);
 
+	// if there is an active callback, complete it before the new async operation
+	if (iod->readCallback)
+	{
+		PostQueuedCompletionStatus(iocp, 0, (ULONG_PTR) &iod, NULL);
+		ioop->active = true;
+		return true;
+	}
+
 	if (iod->read)
 		return false;
 
@@ -195,6 +205,8 @@ static bool StartAsyncRead(IOOperation* ioop)
 	}
 
 	iod->read = ioop;
+	ioop->active = true;
+
 	return true;
 }
 
@@ -227,6 +239,8 @@ static bool StartAsyncWrite(IOOperation* ioop)
 	}
 
 	iod->write = ioop;
+	ioop->active = true;
+
 	return true;
 }
 
@@ -266,6 +280,7 @@ static bool StartAsyncAccept(IOOperation* ioop)
 	}
 
 	iod->read = ioop;
+	ioop->active = true;
 
 	return true;
 }
@@ -276,13 +291,15 @@ bool StartAsyncConnect(IOOperation* ioop)
 
 	iod = GetIODesc(ioop->fd);
 	iod->write = ioop;
+	ioop->active = true;
 	
 	return true;
 }
 
 bool IOProcessor::Add(IOOperation* ioop)
 {
-	ioop->active = true;
+	if (ioop->active)
+		return false;
 
 	// empty buffer indicates that we are waiting for accept event
 	if (ioop->type == TCP_READ && ioop->data.buffer == NULL)
@@ -311,13 +328,18 @@ bool IOProcessor::Remove(IOOperation *ioop)
 {
 	IODesc*	iod;
 
+	ioop->active = false;
 	iod = GetIODesc(ioop->fd);
 
 	switch (ioop->type)
 	{
 	case TCP_READ:
 	case UDP_READ:
-		iod->read = NULL;
+		/*
+		 * Here the ioop's active flag is set to false. This indicates
+		 * for Poll that there is no need for calling the callback.
+		 * Next time the ioop is Added, the callback is activated.
+		 */
 		break;
 	case TCP_WRITE:
 	case UDP_WRITE:
@@ -355,6 +377,17 @@ bool IOProcessor::Poll(int msec)
 			callable = (Callable *) overlapped;
 			Call(callable);
 		}
+		else if (iod->readCallback)
+		{
+			if (iod->read && iod->read->active)
+			{
+				iod->read->active = false;
+				iod->read = NULL;
+				callable = iod->readCallback;
+				iod->readCallback = NULL;
+				Call(callable);
+			}
+		}
 		// sometimes we get this after closesocket, so check first
 		// if iod is in the freelist
 		// TODO clarify which circumstances lead to this issue
@@ -368,7 +401,7 @@ bool IOProcessor::Poll(int msec)
 				else
 					iod->read->data.length += numBytes;
 				assert(iod->read->data.length <= iod->read->data.size);
-				
+
 				if ((iod->read->data.size > 0 && numBytes > 0) ||
 					(iod->read->data.size == 0 && numBytes == 0))
 				{
@@ -377,9 +410,17 @@ bool IOProcessor::Poll(int msec)
 				else
 					callable = iod->read->onClose;
 
-				iod->read->active = false;
-				iod->read = NULL;
-				Call(callable);
+				if (iod->read->active)
+				{
+					iod->read->active = false;
+					iod->read = NULL;
+					Call(callable);
+				}
+				else
+				{
+					iod->read = NULL;
+					iod->readCallback = callable;
+				}
 			}
 			else if (overlapped == &iod->ovlWrite && iod->write)
 			{
