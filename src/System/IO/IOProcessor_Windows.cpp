@@ -186,7 +186,10 @@ static bool StartAsyncRead(IOOperation* ioop)
 	}
 
 	if (iod->read)
+	{
+		ioop->active = true;
 		return false;
+	}
 
 	wsabuf.buf = (char *)ioop->data.buffer + ioop->data.length;
 	wsabuf.len = ioop->data.size - ioop->data.length;
@@ -254,7 +257,7 @@ static bool StartAsyncAccept(IOOperation* ioop)
 	iod = GetIODesc(ioop->fd);
 
 	if (iod->read || iod->write)
-		return false;
+		ASSERT_FAIL();
 
 	// create an accepting socket with WSA_FLAG_OVERLAPPED to support async operations
 	iod->acceptFd.sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
@@ -327,6 +330,7 @@ bool IOProcessor::Add(IOOperation* ioop)
 bool IOProcessor::Remove(IOOperation *ioop)
 {
 	IODesc*	iod;
+	TCPRead* tcpread;
 
 	ioop->active = false;
 	iod = GetIODesc(ioop->fd);
@@ -334,12 +338,11 @@ bool IOProcessor::Remove(IOOperation *ioop)
 	switch (ioop->type)
 	{
 	case TCP_READ:
+		tcpread = (TCPRead*) ioop;
+		if (tcpread->listening)
+			iod->read = NULL;
+		break;
 	case UDP_READ:
-		/*
-		 * Here the ioop's active flag is set to false. This indicates
-		 * for Poll that there is no need for calling the callback.
-		 * Next time the ioop is Added, the callback is activated.
-		 */
 		break;
 	case TCP_WRITE:
 	case UDP_WRITE:
@@ -387,6 +390,10 @@ bool IOProcessor::Poll(int msec)
 				iod->readCallback = NULL;
 				Call(callable);
 			}
+			else
+			{
+				ASSERT_FAIL();
+			}
 		}
 		// sometimes we get this after closesocket, so check first
 		// if iod is in the freelist
@@ -416,7 +423,7 @@ bool IOProcessor::Poll(int msec)
 					iod->read = NULL;
 					Call(callable);
 				}
-				else
+				else if (numBytes > 0)
 				{
 					iod->read = NULL;
 					iod->readCallback = callable;
