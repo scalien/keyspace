@@ -199,7 +199,7 @@ static bool StartAsyncRead(IOOperation* ioop)
 	if (iod->read)
 	{
 		ioop->active = true;
-		return false;
+		return true;
 	}
 
 	wsabuf.buf = (char *)ioop->data.buffer + ioop->data.length;
