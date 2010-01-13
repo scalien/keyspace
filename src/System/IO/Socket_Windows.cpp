@@ -31,7 +31,7 @@ Socket::Socket()
 
 bool Socket::Create(Proto proto)
 {
-	int		stype, ipproto;
+	int		ret, stype, ipproto;
 	BOOL	trueval = TRUE;
 
 	if (fd.sock != INVALID_SOCKET)
@@ -61,6 +61,8 @@ bool Socket::Create(Proto proto)
 
 	if (setsockopt(fd.sock, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char *)&trueval, sizeof(BOOL)))
 	{
+		ret = WSAGetLastError();
+		Log_Trace("error = %d", ret);
 		Close();
 		return false;
 	}

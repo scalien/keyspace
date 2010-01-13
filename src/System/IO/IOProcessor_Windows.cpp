@@ -102,6 +102,8 @@ bool IOProcessorRegisterSocket(FD& fd)
 	fd.index = iod - iods;
 
 	CreateIoCompletionPort((HANDLE)fd.sock, iocp, (ULONG_PTR)iod, 0);
+
+	Log_Trace("fd = %d", fd.index);
 		
 	return true;
 }
@@ -110,12 +112,21 @@ bool IOProcessorRegisterSocket(FD& fd)
 bool IOProcessorUnregisterSocket(FD& fd)
 {
 	IODesc*		iod;
+	BOOL		ret;
+
+	Log_Trace("fd = %d", fd.index);
 
 	iod = &iods[fd.index];
 	iod->next = freeIods;
 	freeIods = iod;
 
-	CancelIo((HANDLE)fd.sock);
+	ret = CancelIo((HANDLE)fd.sock);
+	if (ret == 0)
+	{
+		ret = WSAGetLastError();
+		Log_Trace("CancelIo error %d", ret);
+		return false;
+	}
 
 	return true;
 }
@@ -359,6 +370,7 @@ bool IOProcessor::Poll(int msec)
 	DWORD		timeout;
 	OVERLAPPED*	overlapped;
 	BOOL		ret;
+	BOOL		result;
 	DWORD		error;
 	DWORD		flags;
 	IODesc*		iod;
@@ -402,7 +414,9 @@ bool IOProcessor::Poll(int msec)
 		{
 			if (overlapped == &iod->ovlRead && iod->read)
 			{
-				Log_Trace("read: %d, data.size: %d", numBytes, iod->read->data.size);
+				result = WSAGetOverlappedResult(iod->read->fd.sock, &iod->ovlRead, &numBytes, FALSE, &flags);
+//				Log_Trace("read: %d, data.size: %d, result: %d", numBytes, iod->read->data.size, result);
+
 				if (iod->read->type == UDP_READ)
 					iod->read->data.length = numBytes;
 				else
@@ -412,7 +426,15 @@ bool IOProcessor::Poll(int msec)
 				if ((iod->read->data.size > 0 && numBytes > 0) ||
 					(iod->read->data.size == 0 && numBytes == 0))
 				{
-					callable = iod->read->onComplete;
+					if (iod->read->data.size == 0)
+					{
+						if (result)
+							callable = iod->read->onComplete;
+						else
+							callable = iod->read->onClose;
+					}
+					else
+						callable = iod->read->onComplete;
 				}
 				else
 					callable = iod->read->onClose;

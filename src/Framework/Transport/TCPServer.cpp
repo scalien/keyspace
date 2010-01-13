@@ -12,10 +12,13 @@ bool TCPServer::Init(int port)
 
 	bool ret;
 
-	ret = true;
-	ret &= listener.Create(Socket::TCP);
-	ret &= listener.Listen(port);
-	ret &= listener.SetNonblocking();
+	ret = listener.Create(Socket::TCP);
+	if (!ret)
+		return false;
+	ret = listener.Listen(port);
+	if (!ret)
+		return false;	
+	ret = listener.SetNonblocking();
 	if (!ret)
 		return false;
 	

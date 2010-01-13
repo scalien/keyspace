@@ -42,13 +42,16 @@ public:
 		Log_Trace();
 		backlog = backlog_;
 	
-		ret = true;
-		ret &= listener.Create(Socket::TCP);
-		ret &= listener.Listen(port_, backlog_, interface_);
-		ret &= listener.SetNonblocking();
+		ret = listener.Create(Socket::TCP);
 		if (!ret)
 			return false;
-		
+		ret = listener.Listen(port_);
+		if (!ret)
+			return false;	
+		ret = listener.SetNonblocking();
+		if (!ret)
+			return false;
+
 		tcpread.fd = listener.fd;
 		tcpread.listening = true;
 		tcpread.onComplete = &onConnect;
