@@ -43,10 +43,10 @@ public:
 	unsigned 			GetNodeID();
 	void				StopPaxos();
 	void				StopMasterLease();
-	void				StopReplicatedDB();
+//	void				StopReplicatedDB();
 	void				ContinuePaxos();
 	void				ContinueMasterLease();
-	void				ContinueReplicatedDB();
+//	void				ContinueReplicatedDB();
 	bool				IsPaxosActive();
 	bool				IsMasterLeaseActive();
 	bool				IsAppending();

@@ -98,11 +98,11 @@ void ReplicatedLog::StopMasterLease()
 	masterLease.Stop();
 }
 
-void ReplicatedLog::StopReplicatedDB()
-{
-	if (replicatedDB)
-		replicatedDB->Stop();
-}
+//void ReplicatedLog::StopReplicatedDB()
+//{
+//	if (replicatedDB)
+//		replicatedDB->Stop();
+//}
 
 void ReplicatedLog::ContinuePaxos()
 {
@@ -116,11 +116,11 @@ void ReplicatedLog::ContinueMasterLease()
 	masterLease.Continue();
 }
 
-void ReplicatedLog::ContinueReplicatedDB()
-{
-	if (replicatedDB)
-		replicatedDB->Continue();
-}
+//void ReplicatedLog::ContinueReplicatedDB()
+//{
+//	if (replicatedDB)
+//		replicatedDB->Continue();
+//}
 
 bool ReplicatedLog::IsPaxosActive()
 {

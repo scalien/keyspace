@@ -28,6 +28,7 @@ void TransportTCPConn::OnClose()
 bool TransportTCPReader::Init(int port)
 {
 	onRead = NULL;
+	running = true;
 	return TCPServer::Init(port);
 }
 
@@ -56,13 +57,13 @@ void TransportTCPReader::Stop()
 	Log_Trace();
 	
 	TransportTCPConn** it;
-		
-	IOProcessor::Remove(&tcpread);
+
+	running = false;
 	
 	for (it = conns.Head(); it != NULL; it = conns.Next(it))
 	{
 		(*it)->Stop();
-		if (tcpread.active)
+		if (running)
 			break; // user called Continue(), stop looping
 	}
 }
@@ -73,12 +74,12 @@ void TransportTCPReader::Continue()
 
 	TransportTCPConn** it;
 	
-	IOProcessor::Add(&tcpread);
+	running = true;
 	
 	for (it = conns.Head(); it != NULL; it = conns.Next(it))
 	{
 		(*it)->Continue();
-		if (!tcpread.active)
+		if (!running)
 			break; // user called Stop(), stop looping
 	}
 }
@@ -99,6 +100,8 @@ void TransportTCPReader::OnConnect()
 		
 		conn->GetSocket().SetNonblocking();
 		conn->Init(true);
+		if (!running)
+			conn->Stop();
 		conns.Append(conn);
 	}
 	else

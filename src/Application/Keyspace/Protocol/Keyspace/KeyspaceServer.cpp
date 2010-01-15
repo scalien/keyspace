@@ -24,34 +24,34 @@ void KeyspaceServer::DeleteConn(KeyspaceConn* conn)
 	activeConns.Remove(conn);
 }
 
-void KeyspaceServer::Stop()
-{
-	Log_Trace();
-	
-	KeyspaceConn** it;
-		
-	IOProcessor::Remove(&tcpread);
-	
-	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
-	{
-		(*it)->Stop();
-		if (tcpread.active)
-			break; // user called Continue(), stop looping
-	}
-}
-
-void KeyspaceServer::Continue()
-{
-	Log_Trace();
-
-	KeyspaceConn** it;
-	
-	IOProcessor::Add(&tcpread);
-	
-	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
-	{
-		(*it)->Continue();
-		if (!tcpread.active)
-			break; // user called Stop(), stop looping
-	}
-}
+//void KeyspaceServer::Stop()
+//{
+//	Log_Trace();
+//	
+//	KeyspaceConn** it;
+//		
+//	IOProcessor::Remove(&tcpread);
+//	
+//	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
+//	{
+//		(*it)->Stop();
+//		if (tcpread.active)
+//			break; // user called Continue(), stop looping
+//	}
+//}
+//
+//void KeyspaceServer::Continue()
+//{
+//	Log_Trace();
+//
+//	KeyspaceConn** it;
+//	
+//	IOProcessor::Add(&tcpread);
+//	
+//	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
+//	{
+//		(*it)->Continue();
+//		if (!tcpread.active)
+//			break; // user called Stop(), stop looping
+//	}
+//}

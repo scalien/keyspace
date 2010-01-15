@@ -147,7 +147,7 @@ uint64_t /*paxosID*/, ByteString value_, bool ownAppend_)
 	ownAppend = ownAppend_;
 	
 	RLOG->StopPaxos();
-	RLOG->StopReplicatedDB();
+//	RLOG->StopReplicatedDB();
 
 	assert(asyncAppenderActive == false);
 	asyncAppenderActive = true;
@@ -312,7 +312,7 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 		FailKeyspaceOps();
 
 	RLOG->ContinuePaxos();
-	RLOG->ContinueReplicatedDB();
+//	RLOG->ContinueReplicatedDB();
 	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
 		Append();
 }
@@ -435,26 +435,26 @@ void ReplicatedKeyspaceDB::SetProtocolServer(ProtocolServer* pserver)
 	pservers.Append(pserver);
 }
 
-void ReplicatedKeyspaceDB::Stop()
-{
-	ProtocolServer** it;
-	ProtocolServer*	 pserver;
-	
-	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
-	{
-		pserver = *it;
-		pserver->Stop();
-	}
-}
-
-void ReplicatedKeyspaceDB::Continue()
-{
-	ProtocolServer** it;
-	ProtocolServer*	 pserver;
-	
-	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
-	{
-		pserver = *it;
-		pserver->Continue();
-	}
-}
+//void ReplicatedKeyspaceDB::Stop()
+//{
+//	ProtocolServer** it;
+//	ProtocolServer*	 pserver;
+//	
+//	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
+//	{
+//		pserver = *it;
+//		pserver->Stop();
+//	}
+//}
+//
+//void ReplicatedKeyspaceDB::Continue()
+//{
+//	ProtocolServer** it;
+//	ProtocolServer*	 pserver;
+//	
+//	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
+//	{
+//		pserver = *it;
+//		pserver->Continue();
+//	}
+//}

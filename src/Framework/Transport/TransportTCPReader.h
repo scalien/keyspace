@@ -45,6 +45,7 @@ private:
 	Callable*	onRead;
 	ByteString	msg;
 	ConnsList	conns;
+	bool		running;
 };
 
 #endif

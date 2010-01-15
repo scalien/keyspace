@@ -232,7 +232,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	WriteState();
 	RLOG->StopPaxos();
-	RLOG->StopReplicatedDB();
+//	RLOG->StopReplicatedDB();
 }
 
 void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
@@ -277,7 +277,7 @@ void PaxosAcceptor::OnDBComplete()
 	Log_Trace();
 
 	RLOG->ContinuePaxos();
-	RLOG->ContinueReplicatedDB();
+//	RLOG->ContinueReplicatedDB();
 
 	if (writtenPaxosID == paxosID)
 		SendReply(senderID); // TODO: check that the transaction commited

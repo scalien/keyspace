@@ -5,7 +5,6 @@
 
 #define ACQUIRELEASE_TIMEOUT	1000	// msec
 #define MAX_LEASE_TIME			7000	// msec
-
 #define PLEASE_PORT_OFFSET		1
 
 #endif

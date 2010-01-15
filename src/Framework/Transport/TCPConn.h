@@ -111,11 +111,15 @@ void TCPConn<bufSize>::Init(bool startRead)
 	state = CONNECTED;
 	
 	readBuffer.Clear();
-	AsyncRead(startRead);
-	
+
+	assert(tcpread.active == false);
+	assert(tcpwrite.active == false);
+
 	tcpwrite.fd = socket.fd;
 	tcpwrite.onComplete = &onWrite;
 	tcpwrite.onClose = &onClose;
+
+	AsyncRead(startRead);
 }
 
 template<int bufSize>
@@ -202,6 +206,8 @@ void TCPConn<bufSize>::AsyncRead(bool start)
 	tcpread.requested = IO_READ_ANY;
 	if (start)
 		IOProcessor::Add(&tcpread);
+	else
+		Log_Trace("not posting read");
 }
 
 template<int bufSize>

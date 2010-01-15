@@ -44,8 +44,8 @@ public:
 	virtual void	OnMasterLease(unsigned nodeID);
 	virtual void	OnMasterLeaseExpired();
 	virtual void	OnDoCatchup(unsigned nodeID);
-	virtual void	Stop();
-	virtual void	Continue();
+//	virtual void	Stop();
+//	virtual void	Continue();
 	
 	void			AsyncOnAppend();
 	void			OnAppendComplete();

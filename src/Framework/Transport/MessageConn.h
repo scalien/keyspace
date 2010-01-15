@@ -89,7 +89,7 @@ void MessageConn<bufSize>::OnRead()
 		tcpread.data.length -= pos;
 	}
 	
-	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED && running)
+	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED && running && !tcpread.active)
 		IOProcessor::Add(&tcpread);
 }
 

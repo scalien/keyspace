@@ -26,8 +26,6 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	endpoint.ToString(endpointString);
 	
 	Log_Message("[%s] Keyspace: client connected", endpointString);
-	
-	AsyncRead();
 }
 
 void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)

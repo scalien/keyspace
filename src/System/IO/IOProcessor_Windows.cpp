@@ -19,7 +19,6 @@ struct IODesc
 	IOOperation*	read;
 	IOOperation*	write;
 
-	Callable*		readCallback;
 	OVERLAPPED		ovlRead;			// for accept/recv
 	OVERLAPPED		ovlWrite;			// for connect/send
 
@@ -36,6 +35,12 @@ static IODesc	callback;				// special IODesc for handling IOProcessor::Complete 
 const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
 
 static LPFN_CONNECTEX	ConnectEx;
+
+bool ProcessTCPRead(TCPRead* tcpread);
+bool ProcessUDPRead(UDPRead* udpread);
+bool ProcessTCPWrite(TCPWrite* tcpwrite);
+bool ProcessUDPWrite(UDPWrite* udpwrite);
+
 
 // helper function for FD -> IODesc mapping
 static IODesc* GetIODesc(const FD& fd)
@@ -95,7 +100,6 @@ bool IOProcessorRegisterSocket(FD& fd)
 	// unlink iod from free list
 	freeIods = iod->next;
 	iod->next = NULL;
-	iod->readCallback = NULL;
 	iod->read = NULL;
 	iod->write = NULL;
 
@@ -177,7 +181,7 @@ void IOProcessor::Shutdown()
 	WSACleanup();
 }
 
-static bool StartAsyncRead(IOOperation* ioop)
+static bool RequestReadNotification(IOOperation* ioop)
 {
 	DWORD	numBytes, flags;
 	WSABUF	wsabuf;
@@ -188,25 +192,18 @@ static bool StartAsyncRead(IOOperation* ioop)
 
 	iod = GetIODesc(ioop->fd);
 
-	// if there is an active callback, complete it before the new async operation
-	if (iod->readCallback)
-	{
-		PostQueuedCompletionStatus(iocp, 0, (ULONG_PTR) &iod, NULL);
-		ioop->active = true;
-		return true;
-	}
+	assert(iod->read == NULL);
 
-	if (iod->read)
-	{
-		ioop->active = true;
-		return true;
-	}
-
-	wsabuf.buf = (char *)ioop->data.buffer + ioop->data.length;
-	wsabuf.len = ioop->data.size - ioop->data.length;
+	wsabuf.buf = NULL;
+	wsabuf.len = 0;
 
 	flags = 0;
 	memset(&iod->ovlRead, 0, sizeof(OVERLAPPED));
+
+	if (ioop->type == UDP_READ)
+		flags |= MSG_PEEK;	// without this, the O/S would discard each incoming UDP packet
+							// as it doesn't fit into the user-supplied (0 length) buffer
+
 	ret = WSARecv(ioop->fd.sock, &wsabuf, 1, &numBytes, &flags, &iod->ovlRead, NULL);
 	if (ret == SOCKET_ERROR)
 	{
@@ -224,7 +221,7 @@ static bool StartAsyncRead(IOOperation* ioop)
 	return true;
 }
 
-static bool StartAsyncWrite(IOOperation* ioop)
+static bool RequestWriteNotification(IOOperation* ioop)
 {
 	DWORD	numBytes;
 	WSABUF	wsabuf;
@@ -235,11 +232,10 @@ static bool StartAsyncWrite(IOOperation* ioop)
 
 	iod = GetIODesc(ioop->fd);
 
-	if (iod->write)
-		return false;
+	assert(iod->write == NULL);
 
-	wsabuf.buf = (char *)ioop->data.buffer;
-	wsabuf.len = ioop->data.length;
+	wsabuf.buf = NULL;
+	wsabuf.len = 0;
 
 	memset(&iod->ovlWrite, 0, sizeof(OVERLAPPED));
 	if (WSASend(ioop->fd.sock, &wsabuf, 1, &numBytes, 0, &iod->ovlWrite, NULL) == SOCKET_ERROR)
@@ -313,7 +309,10 @@ bool StartAsyncConnect(IOOperation* ioop)
 bool IOProcessor::Add(IOOperation* ioop)
 {
 	if (ioop->active)
-		return false;
+	{
+		ASSERT_FAIL();
+//		return true;
+	}
 
 	// empty buffer indicates that we are waiting for accept event
 	if (ioop->type == TCP_READ && ioop->data.buffer == NULL)
@@ -327,11 +326,11 @@ bool IOProcessor::Add(IOOperation* ioop)
 	{
 	case TCP_READ:
 	case UDP_READ:
-		return StartAsyncRead(ioop);
+		return RequestReadNotification(ioop);
 		break;
 	case TCP_WRITE:
 	case UDP_WRITE:
-		return StartAsyncWrite(ioop);
+		return RequestWriteNotification(ioop);
 		break;
 	}
 
@@ -340,25 +339,47 @@ bool IOProcessor::Add(IOOperation* ioop)
 
 bool IOProcessor::Remove(IOOperation *ioop)
 {
-	IODesc*	iod;
-	TCPRead* tcpread;
+	int			ret;
+	IODesc*		iod;
+	TCPRead*	tcpread;
+
+	if (ioop->type == TCP_READ)
+	{
+		tcpread = (TCPRead*) ioop;
+		if (tcpread->listening)
+			ASSERT_FAIL(); // Remove() not supported for listening sockets
+	}
 
 	ioop->active = false;
 	iod = GetIODesc(ioop->fd);
 
-	switch (ioop->type)
+	ret = CancelIo((HANDLE)ioop->fd.sock);
+	if (ret == 0)
 	{
-	case TCP_READ:
-		tcpread = (TCPRead*) ioop;
-		if (tcpread->listening)
-			iod->read = NULL;
-		break;
-	case UDP_READ:
-		break;
-	case TCP_WRITE:
-	case UDP_WRITE:
+		ret = WSAGetLastError();
+		Log_Trace("ret = %d", ret);
+		return false;
+	}
+
+	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
+	{
+		iod->read = NULL;
+		if (iod->write != NULL)
+		{
+			assert(iod->write->active);
+			iod->write->active = false;
+			IOProcessor::Add(iod->write);
+		}
+	}
+	else
+	{
 		iod->write = NULL;
-		break;
+		if (iod->read != NULL)
+		{
+			assert(iod->read->active);
+			iod->read->active = false;
+			IOProcessor::Add(iod->read);
+		}
 	}
 
 	return true;
@@ -366,46 +387,29 @@ bool IOProcessor::Remove(IOOperation *ioop)
 
 bool IOProcessor::Poll(int msec)
 {
-	DWORD		numBytes;
-	DWORD		timeout;
-	OVERLAPPED*	overlapped;
-	BOOL		ret;
-	BOOL		result;
-	DWORD		error;
-	DWORD		flags;
-	IODesc*		iod;
-	Callable*	callable;
-
-	//Log_Trace("msec = %d", msec);
+	DWORD			numBytes;
+	DWORD			timeout;
+	OVERLAPPED*		overlapped;
+	BOOL			ret;
+	BOOL			result;
+	DWORD			error;
+	DWORD			flags;
+	IODesc*			iod;
+	IOOperation*	ioop;
 
 	timeout = (msec >= 0) ? msec : INFINITE;
 
 	ret = GetQueuedCompletionStatus(iocp, &numBytes, (PULONG_PTR)&iod, &overlapped, timeout);
 	EventLoop::UpdateTime();
-
+	ioop = NULL;
+	flags = 0;
 	// ret == TRUE: a completion packet for a successful I/O operation was dequeued
 	// ret == FALSE && overlapped != NULL: a completion packet for a failed I/O operation was dequeued
 	if (ret || overlapped)
 	{
 		if (iod == &callback)
 		{
-			callable = (Callable *) overlapped;
-			Call(callable);
-		}
-		else if (iod->readCallback)
-		{
-			if (iod->read && iod->read->active)
-			{
-				iod->read->active = false;
-				iod->read = NULL;
-				callable = iod->readCallback;
-				iod->readCallback = NULL;
-				Call(callable);
-			}
-			else
-			{
-				ASSERT_FAIL();
-			}
+			Call((Callable*) overlapped);
 		}
 		// sometimes we get this after closesocket, so check first
 		// if iod is in the freelist
@@ -414,67 +418,58 @@ bool IOProcessor::Poll(int msec)
 		{
 			if (overlapped == &iod->ovlRead && iod->read)
 			{
-				result = WSAGetOverlappedResult(iod->read->fd.sock, &iod->ovlRead, &numBytes, FALSE, &flags);
-//				Log_Trace("read: %d, data.size: %d, result: %d", numBytes, iod->read->data.size, result);
+				ioop = iod->read;
+				assert(ioop->active);
+				iod->read = NULL;
 
-				if (iod->read->type == UDP_READ)
-					iod->read->data.length = numBytes;
-				else
-					iod->read->data.length += numBytes;
-				assert(iod->read->data.length <= iod->read->data.size);
+				result = WSAGetOverlappedResult(ioop->fd.sock, &iod->ovlRead, &numBytes, FALSE, &flags);
 
-				if ((iod->read->data.size > 0 && numBytes > 0) ||
-					(iod->read->data.size == 0 && numBytes == 0))
+				if (ioop->type == UDP_READ)
 				{
-					if (iod->read->data.size == 0)
+					return ProcessUDPRead((UDPRead*)ioop);
+				}
+				else if (result)
+				{
+					return ProcessTCPRead((TCPRead*)ioop);
+				}
+				else
+				{
+					error = GetLastError();
+					if (error != WSA_IO_INCOMPLETE)
 					{
-						if (result)
-							callable = iod->read->onComplete;
-						else
-							callable = iod->read->onClose;
+						Log_Trace("last error = %d", error);
+						ioop->active = false;
+						Call(ioop->onClose);
 					}
-					else
-						callable = iod->read->onComplete;
-				}
-				else
-					callable = iod->read->onClose;
 
-				if (iod->read->active)
-				{
-					iod->read->active = false;
-					iod->read = NULL;
-					Call(callable);
-				}
-				else if (numBytes > 0)
-				{
-					iod->read = NULL;
-					iod->readCallback = callable;
 				}
 			}
 			else if (overlapped == &iod->ovlWrite && iod->write)
 			{
-				Log_Trace("write: %d", numBytes);
-				
-				if (numBytes == iod->write->data.length)
+				ioop = iod->write;
+				assert(ioop->active);
+				iod->write = NULL;
+
+				result = WSAGetOverlappedResult(ioop->fd.sock, &iod->ovlWrite, &numBytes, FALSE, &flags);
+
+				if (result && ioop->type == TCP_WRITE)
 				{
-					// check connection status
-					if (iod->write->data.length == 0)
-					{
-						ret = WSAGetOverlappedResult(iod->write->fd.sock, &iod->ovlWrite, &numBytes, FALSE, &flags);
-						if (ret)
-							callable = iod->write->onComplete;
-						else
-							callable = iod->write->onClose;
-					}
-					else
-						callable = iod->write->onComplete;
+					return ProcessTCPWrite((TCPWrite*)ioop);
+				}
+				else if (result && ioop->type == UDP_WRITE)
+				{
+					return ProcessUDPWrite((UDPWrite*)ioop);
 				}
 				else
-					callable = iod->write->onClose;
-
-				iod->write->active = false;
-				iod->write = NULL;
-				Call(callable);
+				{
+					error = GetLastError();
+					if (error != WSA_IO_INCOMPLETE)
+					{
+						Log_Trace("last error = %d", error);
+						ioop->active = false;
+						Call(ioop->onClose);
+					}
+				}
 			}
 		}
 		timeout = 0;
@@ -482,7 +477,6 @@ bool IOProcessor::Poll(int msec)
 	else
 	{
 		// no completion packet was dequeued
-		// TODO: check for errors
 		error = GetLastError();
 		if (error != WAIT_TIMEOUT)
 			Log_Trace("last error = %d", error);
@@ -507,6 +501,152 @@ bool IOProcessor::Complete(Callable *callable)
 	}
 
 	return true;
+}
+
+bool ProcessTCPRead(TCPRead* tcpread)
+{
+	BOOL		ret;
+	DWORD		flags;
+	DWORD		error;
+	WSABUF		wsabuf;
+	Callable*	callable;
+	DWORD		numBytes;
+
+	callable = NULL;
+
+	if (tcpread->listening)
+	{
+		callable = tcpread->onComplete;
+	}
+	else
+	{
+		wsabuf.buf = (char*) tcpread->data.buffer + tcpread->data.length;
+		wsabuf.len = tcpread->data.size - tcpread->data.length;
+
+		flags = 0;
+		ret = WSARecv(tcpread->fd.sock, &wsabuf, 1, &numBytes, &flags, NULL, NULL);
+		if (ret != 0)
+		{
+			error = GetLastError();
+			if (error == WSAEWOULDBLOCK)
+			{
+				tcpread->active = false; // otherwise Add() returns
+				IOProcessor::Add(tcpread);
+			}
+			else
+				callable = tcpread->onClose;
+		}
+		else if (numBytes == 0)
+			callable = tcpread->onClose;
+		else
+		{
+			tcpread->data.length += numBytes;
+			assert(tcpread->data.length <= tcpread->data.size);
+			callable = tcpread->onComplete;
+		}
+	}
+
+	if (callable)
+	{
+		tcpread->active = false;
+		Call(callable);
+	}
+
+	return true;
+}
+
+bool ProcessUDPRead(UDPRead* udpread)
+{
+	BOOL		ret;
+	DWORD		flags;
+	DWORD		error;
+	WSABUF		wsabuf;
+	Callable*	callable;
+	DWORD		numBytes;
+
+	callable = NULL;
+
+	wsabuf.buf = (char*) udpread->data.buffer;
+	wsabuf.len = udpread->data.size;
+
+	flags = 0;
+	ret = WSARecv(udpread->fd.sock, &wsabuf, 1, &numBytes, &flags, NULL, NULL);
+	if (ret != 0)
+	{
+		error = GetLastError();
+		if (error == WSAEWOULDBLOCK)
+		{
+			udpread->active = false; // otherwise Add() returns
+			IOProcessor::Add(udpread);
+		}
+		else
+			callable = udpread->onClose;
+	}
+	else if (numBytes == 0)
+		callable = udpread->onClose;
+	else
+	{
+		udpread->data.length = numBytes;
+		assert(udpread->data.length <= udpread->data.size);
+		callable = udpread->onComplete;
+	}
+
+	if (callable)
+	{
+		udpread->active = false;
+		Call(callable);
+	}
+
+	return true;
+}
+
+bool ProcessTCPWrite(TCPWrite* tcpwrite)
+{
+	BOOL		ret;
+	WSABUF		wsabuf;
+	Callable*	callable;
+	DWORD		numBytes;
+
+	callable = NULL;
+
+	if (tcpwrite->data.length == 0)
+		callable = tcpwrite->onComplete; // tcp connect case
+	else
+	{
+		// handle tcp write partial writes
+		wsabuf.buf = (char*) tcpwrite->data.buffer + tcpwrite->transferred;
+		wsabuf.len = tcpwrite->data.length - tcpwrite->transferred;
+
+		// perform non-blocking write
+		ret = WSASend(tcpwrite->fd.sock, &wsabuf, 1, &numBytes, 0, NULL, NULL);
+		if (numBytes == 0)
+			callable = tcpwrite->onClose;
+		else
+		{
+			tcpwrite->transferred += numBytes;
+			if (tcpwrite->transferred == tcpwrite->data.length)
+				callable = tcpwrite->onComplete;
+			else
+			{
+				tcpwrite->active = false; // otherwise Add() returns
+				IOProcessor::Add(tcpwrite);
+			}
+		}
+	}
+
+	if (callable)
+	{
+		tcpwrite->active = false;
+		Call(callable);
+	}
+
+	return true;
+}
+
+bool ProcessUDPWrite(UDPWrite* ioop)
+{
+	ASSERT_FAIL();
+	return false;
 }
 
 #endif
