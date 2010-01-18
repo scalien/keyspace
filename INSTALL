@@ -50,6 +50,15 @@ To install these, issue the following command:
 	
 	Select from the interactive menu.
 
+- Windows (XP, 2003 Server, Vista, 2008 Server, Windows 7)
+
+	There is a Visual Studio project file included which can be used with the
+	freely downloadable Visual C++ Express 2008 or later.
+	
+	For obtaining Berkeley DB, you can use the prepackaged zip file from the
+	Scalien website which contains the necessary include and lib directories,
+	and also the precompiled Keyspace and client test binaries.
+	
 - Other systems
 
 Edit Makefile.Linux (or Makefile.Darwin) accordingly; 
@@ -67,7 +76,8 @@ build Keyspace:
 
 	$ gmake
 
-This will create the Keyspace binary 'keyspace' in the 'bin' folder.
+This will create the Keyspace binary 'keyspace' (or 'Keyspace.exe' 
+on Windows) in the 'bin' folder.
 
 If something went wrong, try 'make clean' before recompiling.
 
@@ -76,7 +86,8 @@ Running Keyspace
 ================
 
 To launch Keyspace, start it with the included safe script
-located at script/safe_keyspaced.
+located at script/safe_keyspaced. On Windows the script is 
+located at script/safe_keyspaced.cmd.
 
 Usage:
 
