@@ -9,8 +9,8 @@ goto start
 :delete_database
 set KEYSPACE_DIR=%3
 if "%KEYSPACE_DIR%" == "" set KEYSPACE_DIR=%~dp1
-del %KEYSPACE_DIR%/__*
-del %KEYSPACE_DIR%/log*
-del %KEYSPACE_DIR%/keyspace
+del %KEYSPACE_DIR%\__*
+del %KEYSPACE_DIR%\log*
+del %KEYSPACE_DIR%\keyspace
 goto start
 :end
