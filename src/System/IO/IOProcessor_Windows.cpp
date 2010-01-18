@@ -12,6 +12,7 @@
 
 // the address buffer passed to AcceptEx() must be 16 more than the max address length (see MSDN)
 #define ACCEPT_ADDR_LEN		(sizeof(sockaddr_in) + 16)
+#define MAX_TCP_READ		8192
 
 // this structure is used for storing Windows/IOCP specific data
 struct IODesc
@@ -542,6 +543,8 @@ bool ProcessTCPRead(TCPRead* tcpread)
 	{
 		wsabuf.buf = (char*) tcpread->data.buffer + tcpread->data.length;
 		wsabuf.len = tcpread->data.size - tcpread->data.length;
+		if (wsabuf.len > MAX_TCP_READ)
+			wsabuf.len = MAX_TCP_READ;
 
 		flags = 0;
 		ret = WSARecv(tcpread->fd.sock, &wsabuf, 1, &numBytes, &flags, NULL, NULL);
