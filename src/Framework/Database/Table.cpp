@@ -33,13 +33,11 @@ database(database)
 		STOP_FAIL("Could not open database", 1);
 	}
 	Log_Trace();
-	db->set_flags(0);
 }
 
 Table::~Table()
 {
 	db->close(0);
-	delete db;
 }
 
 bool Table::Iterate(Transaction* tx, Cursor& cursor)

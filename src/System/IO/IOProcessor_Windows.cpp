@@ -33,6 +33,7 @@ static IODesc*	iods;					// pointer to allocated array of IODesc's
 static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
 const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
+static volatile bool terminated = false;
 
 static LPFN_CONNECTEX	ConnectEx;
 
@@ -135,12 +136,28 @@ bool IOProcessorUnregisterSocket(FD& fd)
 	return true;
 }
 
+BOOL WINAPI ConsoleCtrlHandler(DWORD /*ctrlType*/)
+{
+	if (terminated)
+	{
+		STOP_FAIL("aborting due to user request", 0);
+		return FALSE;
+	}
+		
+	terminated = true;
+	IOProcessor::Complete(NULL);
+	return TRUE;
+}
+
 bool IOProcessor::Init(int maxfd)
 {
 	WSADATA		wsaData;
 	SOCKET		s;
 	GUID		guid = WSAID_CONNECTEX;
 	DWORD		bytesReturned;
+
+	// initialize a Console Control Handler routine
+	SetConsoleCtrlHandler(ConsoleCtrlHandler, TRUE);
 
 	// initialize Winsock2 library
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData))
@@ -400,6 +417,9 @@ bool IOProcessor::Poll(int msec)
 	timeout = (msec >= 0) ? msec : INFINITE;
 
 	ret = GetQueuedCompletionStatus(iocp, &numBytes, (PULONG_PTR)&iod, &overlapped, timeout);
+	if (terminated)
+		return false;
+
 	EventLoop::UpdateTime();
 	ioop = NULL;
 	flags = 0;
