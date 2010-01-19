@@ -1,1 +1,43 @@
-Empty.
+Introduction
+============
+
+Keyspace is a consistently replicated fault-tolerant key-value store.
+Keyspace is a product of Scalien, the official homepage is at
+
+http://scalien.com
+
+You can reach us at info@scalien.com or http://twitter.com/scalien .
+We would like to hear about you!
+
+
+
+Setting up and running
+======================
+
+For detailed instructions about setting up and running Keyspace,
+see the INSTALL file.
+
+
+
+Licensing
+=========
+
+Keyspace is licensed under the open-source Affero GPL license.
+For more more information see the LICENSE file.
+
+Some versions of Keyspace (e. g. Windows) includes BerkeleyDB 
+include and header files. The licensing of the BerkeleyDB can 
+be found in lib/LICENSE.txt.
+
+For custom licensing please contact info@scalien.com .
+
+
+
+Contact
+=======
+
+If you are experiencing difficulties please visit our Google Groups page:
+
+- group home page:      http://groups.google.com/group/keyspace
+- group email address:  keyspace@googlegroups.com
+

@@ -14,6 +14,7 @@ Building Keyspace
 =================
 
 In order to build Keyspace, you will need
+
 1. gcc, the GNU C++ compiler,
 2. GNU make and 
 3. the BerkeleyDB C++ library.
@@ -32,7 +33,7 @@ To install these, issue the following command:
 
 	$ sudo yum install gcc-c++ db4
 
-- Mac OS X 10.4 & 10.5
+- Mac OS X 10.4, 10.5 & 10.6
 
 	Install the Developer Tools from the MacOS DVD.
 	Use a port system such as MacPorts or Fink to install Berkeley DB.
@@ -46,6 +47,7 @@ To install these, issue the following command:
 - OpenBSD 4.5
 
 	$ export PKG_PATH=ftp://ftp.openbsd.org/pub/OpenBSD/4.5/packages/`machine -a`
+
 	$ pkg_add -i db
 	
 	Select from the interactive menu.
@@ -61,9 +63,9 @@ To install these, issue the following command:
 	
 - Other systems
 
-Edit Makefile.Linux (or Makefile.Darwin) accordingly; 
-modify INCLUDE and LDPATH according to the location of Berkeley DB in 
-your system.
+	Edit Makefile.Linux (or Makefile.Darwin) accordingly; 
+	modify INCLUDE and LDPATH according to the location of Berkeley DB in 
+	your system.
 
 After you have set up the neccessary components, you can proceed to
 build Keyspace:
@@ -107,6 +109,7 @@ on the keyspace.conf file.
 If you want to run more than one instances on the same computer:
 
 	$ script/safe_keyspaced bin/keyspaced test/1/keyspace.conf test/1
+
 	$ script/safe_keyspaced bin/keyspaced test/2/keyspace.conf test/2
 
 The safe script relaunches Keyspace when a crash occurs or something bad
@@ -248,11 +251,13 @@ Keyspace uses several ports to communicate with other nodes. These are
 the following, with relative offset to the Paxos port (see 'Configuration
 options', paxos.endpoints regarding configuration of the Paxos port).
 
+============== =================
 port offset     name
-----------------------------------
+============== =================
 0               Paxos (tcp)
 1               PaxosLease (udp)
 2               Catchup (tcp)
+============== =================
 
 Eg. if you have nodes with Paxos port on 10000/tcp, you need
 to open the following ports on your firewall: 

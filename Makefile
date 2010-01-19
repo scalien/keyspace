@@ -177,7 +177,7 @@ release:
 	$(MAKE) targets BUILD="release"
 
 clienttest:
-	$(MAKE) test_targets BUILD="debug"
+	$(MAKE) targets BUILD="debug"
 
 clientlib:
 	$(MAKE) clientlibs BUILD="debug"
