@@ -16,7 +16,7 @@
 \maketitle
 
 \sloppy
-\abstract{ This paper describes the design and architecture of Keyspace, a distributed key-value store offering  strong consistency, fault-tolerance and high availability. The source code is released as free, open-source software under the AGPL license. Keyspace is a product of Scalien Software, available for download at \texttt{http://scalien.com}. }
+\abstract{ This paper describes the design and architecture of Keyspace, a distributed key-value store offering  strong consistency, fault-tolerance and high availability. The source code is released as free, open-source software under the AGPL license for Linux, Windows and BSD-like platforms. Keyspace is a product of Scalien Software, available for download at \texttt{http://scalien.com}. }
 
 \section{ Introduction }
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,7 +32,7 @@ This paper describes the design and architecture of Keyspace, a distributed key-
 \item Highly-available: the system continuously serves client request. In the case of Keyspace, replication and fault-tolerance guarantee high availability.
 \end{enumerate}
 
-The intended use of Keyspace is as a building block for other distributed systems, ie. the lowest layer in a distributed stack, for example as a controller which distributes data and workload across other machines. Alternatively, Keyspace may be used in itself to store and serve small-to-medium amounts of data in a scenario when replication and high-availability are desired. Keyspace is released under the open-source AGPL license for Linux, Darwin (MacOS X) and other UNIX-like operating systems.
+The intended use of Keyspace is as a building block for other distributed systems, ie. the lowest layer in a distributed stack, for example as a controller which distributes data and workload across other machines. Alternatively, Keyspace may be used in itself to store and serve small-to-medium amounts of data in a scenario when replication and high-availability are desired. Keyspace is released under the open-source AGPL license for Linux, Windows, and BSD-like operating systems (eg. MacOS X).
 
 \section{ Consistency }
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -150,7 +150,7 @@ The protocol layer passes the client commands to the KeyspaceDB module, which, i
 
 If the client submitted a safe-read operation, the node will read the value(s) from its local database and return it. If the node is not the master it will only serve dirty-read requests. Clients can initially connect to any node to find out who the master is.
 
-In terms of implementation, Keyspace is a completely asynchronous network server. On Linux, it uses the \texttt{epoll} event notification API, while on BSD-like platforms it uses \texttt{kqueue}. Since the Berkeley DB API is not asynchronous, we use multi-threading to avoid blocking the application during database operations.
+In terms of implementation, Keyspace is a completely asynchronous network server. On Linux, it uses the \texttt{epoll} event notification API, on BSD-like platforms it uses \texttt{kqueue}, while on Windows is uses the Completion Ports API. Since the Berkeley DB API is not asynchronous, we use multi-threading to avoid blocking the application during database operations.
 
 \section{ Catchup }
 %%%%%%%%%%%%%%%%%%
