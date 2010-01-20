@@ -331,7 +331,7 @@ int KeyspaceClientTest(int argc, char **argv)
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(true);
 
-	nodec = Config::GetListNum("paxos.endpoints");
+	nodec = Config::GetListNum("keyspace.endpoints");
 	if (nodec <= 0)
 	{
 		nodec = SIZE(LOCAL_NODES);
@@ -341,7 +341,7 @@ int KeyspaceClientTest(int argc, char **argv)
 	{
 		nodes = new const char*[nodec];
 		for (int i = 0; i < nodec; i++)
-			nodes[i] = Config::GetListValue("paxos.endpoints", i, NULL);
+			nodes[i] = Config::GetListValue("keyspace.endpoints", i, NULL);
 	}
 	
 	timeout = Config::GetIntValue("paxos.timeout", 10000);
