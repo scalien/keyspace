@@ -198,8 +198,8 @@ void KeyspaceConn::ProcessMsg()
 	
 	if (!Add(op))
 	{
-		delete op;
 		resp.Failed(op->cmdID);
+		delete op;
 		resp.Write(data);
 		Write(data);
 		closeAfterSend = true;
