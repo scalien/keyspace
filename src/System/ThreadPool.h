@@ -10,6 +10,8 @@ class ThreadPool
 public:
 	static ThreadPool*	Create(int numThread);
 
+	virtual ~ThreadPool() {}
+
 	virtual void		Start() = 0;
 	virtual void		Stop() = 0;
 

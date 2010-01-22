@@ -344,7 +344,7 @@ int KeyspaceClientTest(int argc, char **argv)
 			nodes[i] = Config::GetListValue("keyspace.endpoints", i, NULL);
 	}
 	
-	timeout = Config::GetIntValue("paxos.timeout", 10000);
+	timeout = Config::GetIntValue("keyspace.timeout", 10000);
 	testConf.datasetTotal = Config::GetIntValue("dataset.total", 100 * 1000000);
 	
 	status = client.Init(nodec, nodes, timeout);

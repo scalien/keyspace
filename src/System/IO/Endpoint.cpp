@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 #endif
 
 #ifdef WIN32
@@ -31,7 +32,7 @@ int inet_aton(const char *cp, struct in_addr *in)
 #endif
 
 // TODO this is temporary, we need a real DNS resolver
-static bool DNS_ResolveIpv4(const char* name, u_long* addr)
+static bool DNS_ResolveIpv4(const char* name, struct in_addr* addr)
 {
 	struct hostent* hostent;
 
@@ -43,7 +44,7 @@ static bool DNS_ResolveIpv4(const char* name, u_long* addr)
 	if (hostent->h_addrtype != AF_INET)
 		return false;
 
-	*addr = *(u_long *) hostent->h_addr_list[0];
+	addr->s_addr = *(u_long *) hostent->h_addr_list[0];
 
 	return true;
 }
@@ -85,7 +86,7 @@ bool Endpoint::Set(const char* ip, int port, bool resolv)
 	{
 		if (resolv)
 		{
-			if (!DNS_ResolveIpv4(ip, &sa->sin_addr.s_addr))
+			if (!DNS_ResolveIpv4(ip, &sa->sin_addr))
 			{
 				Log_Trace("DNS resolv failed");
 				return false;

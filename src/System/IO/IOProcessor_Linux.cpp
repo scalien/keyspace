@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <unistd.h>
 #include <signal.h>
 #include <math.h>
@@ -583,18 +585,17 @@ void ProcessTCPWrite(TCPWrite* tcpwrite)
 
 void ProcessUDPRead(UDPRead* udpread)
 {
-	int salen, nread;
+	int			nread;
+	socklen_t	salen = ENDPOINT_SOCKADDR_SIZE;
 	
-	salen = sizeof(udpread->endpoint.sa);
-
 	do
 	{
 		nread = recvfrom(udpread->fd,
 						 udpread->data.buffer,
 						 udpread->data.size,
 						 0,
-						 (sockaddr*)&udpread->endpoint.sa,
-						 (socklen_t*)&salen);
+						 (sockaddr*) udpread->endpoint.GetSockAddr(),
+						 &salen);
 	
 		if (nread < 0)
 		{
@@ -623,13 +624,14 @@ void ProcessUDPRead(UDPRead* udpread)
 void ProcessUDPWrite(UDPWrite* udpwrite)
 {
 	int			nwrite;
+	socklen_t	salen = ENDPOINT_SOCKADDR_SIZE;
 
 	nwrite = sendto(udpwrite->fd,
 					udpwrite->data.buffer + udpwrite->offset,
 					udpwrite->data.length - udpwrite->offset,
 					0,
-					(const sockaddr*)&udpwrite->endpoint.sa,
-					sizeof(udpwrite->endpoint.sa));
+					(const sockaddr*) udpwrite->endpoint.GetSockAddr(),
+					salen);
 
 	if (nwrite < 0)
 	{
