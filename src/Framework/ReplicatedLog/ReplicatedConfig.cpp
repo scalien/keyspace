@@ -31,7 +31,7 @@ bool ReplicatedConfig::Init()
 
 		for (unsigned i = 0; i < numNodes; i++)
 		{
-			endpoint.Set(Config::GetListValue("paxos.endpoints", i, NULL));
+			endpoint.Set(Config::GetListValue("paxos.endpoints", i, NULL), true);
 			endpoints[i] = endpoint;
 		}
 	}

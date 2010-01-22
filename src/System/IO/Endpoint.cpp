@@ -30,6 +30,25 @@ int inet_aton(const char *cp, struct in_addr *in)
 }
 #endif
 
+// TODO this is temporary, we need a real DNS resolver
+static bool DNS_ResolveIpv4(const char* name, u_long* addr)
+{
+	struct hostent* hostent;
+
+	// FIXME gethostbyname is not multithread-safe!
+	hostent = gethostbyname(name);
+	if (!hostent)
+		return false;
+
+	if (hostent->h_addrtype != AF_INET)
+		return false;
+
+	*addr = *(u_long *) hostent->h_addr_list[0];
+
+	return true;
+}
+
+
 Endpoint::Endpoint()
 {
 	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
@@ -55,7 +74,7 @@ bool Endpoint::operator!=(const Endpoint &other) const
 	return !operator==(other);
 }
 
-bool Endpoint::Set(const char* ip, int port)
+bool Endpoint::Set(const char* ip, int port, bool resolv)
 {
 	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
 
@@ -64,6 +83,17 @@ bool Endpoint::Set(const char* ip, int port)
 	sa->sin_port = htons((uint16_t)port);
 	if (inet_aton(ip, &sa->sin_addr) == 0)
 	{
+		if (resolv)
+		{
+			if (!DNS_ResolveIpv4(ip, &sa->sin_addr.s_addr))
+			{
+				Log_Trace("DNS resolv failed");
+				return false;
+			}
+			else
+				return true;
+		}
+		
 		Log_Trace("inet_aton() failed");
 		return false;
 	}
@@ -72,7 +102,7 @@ bool Endpoint::Set(const char* ip, int port)
 
 #define MAX_IP 16
 
-bool Endpoint::Set(const char* ip_port)
+bool Endpoint::Set(const char* ip_port, bool resolv)
 {
 	const char*	p;
 	int			port;
@@ -102,7 +132,7 @@ bool Endpoint::Set(const char* ip_port)
 		return false;
 	}
 
-	ret = Set(ip, port);
+	ret = Set(ip, port, resolv);
 	
 	return ret;
 }

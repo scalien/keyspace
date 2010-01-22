@@ -574,7 +574,7 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 	{
 		Endpoint endpoint;
 		
-		endpoint.Set(nodev[i]);
+		endpoint.Set(nodev[i], true);
 		conns[i] = new ClientConn(*this, i, endpoint, timeout);
 	}
 	numConns = nodec;

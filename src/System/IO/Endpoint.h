@@ -16,8 +16,8 @@ public:
 	bool		operator==(const Endpoint &other) const;
 	bool		operator!=(const Endpoint &other) const;
 	
-	bool		Set(const char* ip, int port);
-	bool		Set(const char* ip_port);
+	bool		Set(const char* ip, int port, bool resolve = false);
+	bool		Set(const char* ip_port, bool resolve = false);
 
 	bool		SetPort(int port);
 	int			GetPort();
