@@ -73,7 +73,7 @@ bool Socket::Create(Proto proto)
 	return true;
 }
 
-bool Socket::Bind(int port, const char* interface_)
+bool Socket::Bind(int port)
 {
 	int					ret;
 	struct sockaddr_in	sa;
@@ -81,10 +81,7 @@ bool Socket::Bind(int port, const char* interface_)
 	memset(&sa, 0, sizeof(sa));
 	sa.sin_family = AF_INET;
 	sa.sin_port = htons((uint16_t)port);
-	if (!interface_)
-		sa.sin_addr.s_addr = htonl(INADDR_ANY);
-	else
-		sa.sin_addr.s_addr = iftonl(interface_);
+	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 	
 	ret = bind(fd.sock, (struct sockaddr *)&sa, sizeof(struct sockaddr_in));
 	if (ret < 0)
@@ -115,11 +112,11 @@ bool Socket::SetNonblocking()
 }
 
 
-bool Socket::Listen(int port, int backlog, const char* interface_)
+bool Socket::Listen(int port, int backlog)
 {
 	int	ret;
 	
-	if (!Bind(port, interface_))
+	if (!Bind(port))
 		return false;
 	
 	ret = listen(fd.sock, backlog);

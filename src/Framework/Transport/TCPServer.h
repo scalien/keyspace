@@ -35,7 +35,7 @@ public:
 		numActive = 0;
 	}
 	
-	bool Init(int port_, int backlog_, const char* interface_ = NULL)
+	bool Init(int port_, int backlog_)
 	{
 		bool ret;
 		

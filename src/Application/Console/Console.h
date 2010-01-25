@@ -39,7 +39,7 @@ public:
 class Console : public TCPServerT<Console, ConsoleConn, CONSOLE_SIZE>
 {
 public:
-	void			Init(int port, const char* interface = "127.0.0.1");
+	void			Init(int port);
 	void			Execute(const char* cmd,
 							const char* args, ConsoleConn *conn);
 	void			RegisterCommand(ConsoleCommand* command);
