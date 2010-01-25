@@ -72,6 +72,10 @@
 		54E3FB9710EE6285004EF4A4 /* Time_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FB9610EE6285004EF4A4 /* Time_Posix.cpp */; };
 		54E3FB9F10EE62A2004EF4A4 /* ThreadPool_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FB9E10EE62A2004EF4A4 /* ThreadPool_Posix.cpp */; };
 		54E3FBC210EE6351004EF4A4 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FBC110EE6351004EF4A4 /* Platform.cpp */; };
+		54E3FC6F10F213D9004EF4A4 /* Time_Windows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FC6D10F213D9004EF4A4 /* Time_Windows.cpp */; };
+		54E3FC7010F213D9004EF4A4 /* ThreadPool_Windows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FC6E10F213D9004EF4A4 /* ThreadPool_Windows.cpp */; };
+		54E3FC8510F2142A004EF4A4 /* Socket_Windows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FC8310F2142A004EF4A4 /* Socket_Windows.cpp */; };
+		54E3FC8610F2142A004EF4A4 /* IOProcessor_Windows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FC8410F2142A004EF4A4 /* IOProcessor_Windows.cpp */; };
 		54F16BD510233C3F00614C2D /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
 		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
 		9A05218B0F78633D0066338D /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
@@ -287,6 +291,11 @@
 		54E3FB9E10EE62A2004EF4A4 /* ThreadPool_Posix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool_Posix.cpp; sourceTree = "<group>"; };
 		54E3FBC010EE6351004EF4A4 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
 		54E3FBC110EE6351004EF4A4 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
+		54E3FC6D10F213D9004EF4A4 /* Time_Windows.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Time_Windows.cpp; sourceTree = "<group>"; };
+		54E3FC6E10F213D9004EF4A4 /* ThreadPool_Windows.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool_Windows.cpp; sourceTree = "<group>"; };
+		54E3FC8310F2142A004EF4A4 /* Socket_Windows.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Socket_Windows.cpp; sourceTree = "<group>"; };
+		54E3FC8410F2142A004EF4A4 /* IOProcessor_Windows.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Windows.cpp; sourceTree = "<group>"; };
+		54E3FC8B10F214B2004EF4A4 /* FD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FD.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* Keyspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Keyspace; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncDatabase.h; path = AsyncDatabase/AsyncDatabase.h; sourceTree = "<group>"; };
 		9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabase.cpp; path = AsyncDatabase/AsyncDatabase.cpp; sourceTree = "<group>"; };
@@ -686,8 +695,10 @@
 				548147460F31B6B200F3D2B6 /* Stopwatch.h */,
 				9A89F5860F3F444C0041D4A1 /* ThreadPool.h */,
 				54E3FB9E10EE62A2004EF4A4 /* ThreadPool_Posix.cpp */,
+				54E3FC6E10F213D9004EF4A4 /* ThreadPool_Windows.cpp */,
 				548147470F31B6B200F3D2B6 /* Time.h */,
 				54E3FB9610EE6285004EF4A4 /* Time_Posix.cpp */,
+				54E3FC6D10F213D9004EF4A4 /* Time_Windows.cpp */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -721,12 +732,15 @@
 			children = (
 				5481473C0F31B6B200F3D2B6 /* Endpoint.h */,
 				5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */,
+				54E3FC8B10F214B2004EF4A4 /* FD.h */,
 				5481473D0F31B6B200F3D2B6 /* IOOperation.h */,
 				5481473E0F31B6B200F3D2B6 /* IOProcessor.h */,
 				9A8B47420FAF54EB003EA36E /* IOProcessor_Linux.cpp */,
 				5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */,
+				54E3FC8410F2142A004EF4A4 /* IOProcessor_Windows.cpp */,
 				54E3FB9110E91882004EF4A4 /* Socket_Posix.cpp */,
 				548147420F31B6B200F3D2B6 /* Socket.h */,
+				54E3FC8310F2142A004EF4A4 /* Socket_Windows.cpp */,
 			);
 			path = IO;
 			sourceTree = "<group>";
@@ -1125,6 +1139,10 @@
 				54E3FB9710EE6285004EF4A4 /* Time_Posix.cpp in Sources */,
 				54E3FB9F10EE62A2004EF4A4 /* ThreadPool_Posix.cpp in Sources */,
 				54E3FBC210EE6351004EF4A4 /* Platform.cpp in Sources */,
+				54E3FC6F10F213D9004EF4A4 /* Time_Windows.cpp in Sources */,
+				54E3FC7010F213D9004EF4A4 /* ThreadPool_Windows.cpp in Sources */,
+				54E3FC8510F2142A004EF4A4 /* Socket_Windows.cpp in Sources */,
+				54E3FC8610F2142A004EF4A4 /* IOProcessor_Windows.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
