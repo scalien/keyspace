@@ -3,15 +3,22 @@
 #include <stdio.h>
 #include "Application/Keyspace/Client/keyspace_client.h"
 
+#ifdef _WIN32
+#define __func__ __FUNCTION__
+#define snprintf _snprintf
+#endif
+
 #define Log_Trace(fmt, ...) printf("%s:%d: " fmt "\n", __func__, __LINE__, __VA_ARGS__)
 
 void ignore_pipe_signal()
 {
+#ifndef _WIN32
 	sigset_t	sigset;
 	
 	sigemptyset(&sigset);
 	sigaddset(&sigset, SIGPIPE);
 	sigprocmask(SIG_BLOCK, &sigset, NULL);
+#endif
 }
 
 int keyspace_client_test()

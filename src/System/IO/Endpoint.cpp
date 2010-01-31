@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef WIN32
+#ifdef _WIN32
 #include <winsock2.h>
 #define s_addr S_un.S_addr
 #undef SetPort
@@ -14,7 +14,7 @@
 #include <netdb.h>
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 int inet_aton(const char *cp, struct in_addr *in)
 {
 	if (strcmp(cp, "255.255.255.255") == 0)

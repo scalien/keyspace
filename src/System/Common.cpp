@@ -109,7 +109,7 @@ int randint(int min, int max)
 	assert(min < max);
 
 	interval = max - min;
-#ifdef WIN32
+#ifdef _WIN32
 #define random rand
 #endif
 	rnd = (int)(random() / (float) RAND_MAX * interval + 0.5);
@@ -138,7 +138,7 @@ void* Alloc(int num, int size)
 
 void BlockSignals()
 {
-#ifdef WIN32
+#ifdef _WIN32
 	// dummy
 #else
 	sigset_t	sigmask;

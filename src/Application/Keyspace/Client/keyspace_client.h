@@ -1,7 +1,7 @@
 #ifndef KEYSPACE_CLIENT_H
 #define KEYSPACE_CLIENT_H
 
-#ifdef WIN32
+#ifdef _WIN32
 typedef __int64				int64_t;
 typedef unsigned __int64	uint64_t;
 #else

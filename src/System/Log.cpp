@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #define snprintf _snprintf
 #define strdup _strdup

@@ -1,7 +1,7 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#ifdef WIN32
+#ifdef _WIN32
 //#define _WIN32_WINNT			0x0400	// Windows NT 4.0
 //#define WIN32_LEAN_AND_MEAN
 

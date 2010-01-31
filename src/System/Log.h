@@ -16,7 +16,7 @@
 #define Log_Message(...)
 #define Log_Trace(...)
 #else
-#ifdef WIN32
+#ifdef _WIN32
 #define __func__ __FUNCTION__
 #endif
 #define Log_Errno() Log(__FILE__, __LINE__, __func__, LOG_TYPE_ERRNO, "")
