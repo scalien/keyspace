@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="KeyspaceClientLib"
 	ProjectGUID="{B1077A72-AA0E-49DA-861A-A337FF61AB90}"
 	RootNamespace="KeyspaceClientLib"
@@ -59,6 +59,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\keyspace_clientd.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -103,6 +104,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\src"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PLATFORM_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -120,6 +122,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\keyspace_client.lib"
+				IgnoreAllDefaultLibraries="false"
 			/>
 			<Tool
 				Name="VCALinkTool"
