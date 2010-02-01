@@ -98,6 +98,8 @@ bool IOProcessorRegisterSocket(FD& fd)
 {
 	IODesc*		iod;
 
+	assert(freeIods != NULL);
+
 	iod = freeIods;
 	// unlink iod from free list
 	freeIods = iod->next;
@@ -114,7 +116,7 @@ bool IOProcessorRegisterSocket(FD& fd)
 	return true;
 }
 
-// put back the IODesc to the free list and cancel all io and put back FD
+// put back the IODesc to the free list and cancel all IO and put back FD
 bool IOProcessorUnregisterSocket(FD& fd)
 {
 	IODesc*		iod;
@@ -184,9 +186,8 @@ bool IOProcessor::Init(int maxfd)
 	// create an array for IODesc indexing
 	iods = new IODesc[maxfd];
 	for (int i = 0; i < maxfd - 1; i++)
-	{
 		iods[i].next = &iods[i + 1];
-	}
+
 	iods[maxfd - 1].next = NULL;
 	freeIods = iods;
 
@@ -446,13 +447,9 @@ bool IOProcessor::Poll(int msec)
 				result = WSAGetOverlappedResult(ioop->fd.sock, &iod->ovlRead, &numBytes, FALSE, &flags);
 
 				if (ioop->type == UDP_READ)
-				{
 					return ProcessUDPRead((UDPRead*)ioop);
-				}
 				else if (result)
-				{
 					return ProcessTCPRead((TCPRead*)ioop);
-				}
 				else
 				{
 					error = GetLastError();
@@ -474,13 +471,9 @@ bool IOProcessor::Poll(int msec)
 				result = WSAGetOverlappedResult(ioop->fd.sock, &iod->ovlWrite, &numBytes, FALSE, &flags);
 
 				if (result && ioop->type == TCP_WRITE)
-				{
 					return ProcessTCPWrite((TCPWrite*)ioop);
-				}
 				else if (result && ioop->type == UDP_WRITE)
-				{
 					return ProcessUDPWrite((UDPWrite*)ioop);
-				}
 				else
 				{
 					error = GetLastError();
