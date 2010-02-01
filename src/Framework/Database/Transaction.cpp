@@ -35,7 +35,7 @@ bool Transaction::IsActive()
 
 bool Transaction::Begin()
 {
-	if (database->env.txn_begin(NULL, &txn, DB_TXN_NOSYNC) != 0)
+	if (database->env.txn_begin(NULL, &txn, DB_TXN_SYNC) != 0)
 		return false;
 	
 	active = true;
@@ -46,7 +46,7 @@ bool Transaction::Commit()
 {
 	active = false;
 	
-	if (txn->commit(DB_TXN_NOSYNC) != 0)
+	if (txn->commit(DB_TXN_SYNC) != 0)
 		return false;
 	
 	return true;
