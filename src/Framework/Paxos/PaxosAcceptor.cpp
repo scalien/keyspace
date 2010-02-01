@@ -202,7 +202,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	senderID = msg.nodeID;
 	
-	Log_Trace("state.promisedProposasID: %" PRIu64 ""
+	Log_Trace("state.promisedProposalID: %" PRIu64 " "
 			   "msg.proposalID: %" PRIu64 "",
 			   state.promisedProposalID, msg.proposalID);
 	
@@ -246,7 +246,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	
 	senderID = msg.nodeID;
 
-	Log_Trace("state.promisedProposasID: %" PRIu64 ""
+	Log_Trace("state.promisedProposalID: %" PRIu64 ""
 				"msg.proposalID: %" PRIu64 "",
 				state.promisedProposalID, msg.proposalID);
 	
