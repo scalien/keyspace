@@ -18,7 +18,7 @@ void TransportTCPWriter::Write(ByteString &bs)
 	char lbuf[20];
 	int llen;
 	
-	if (state == CONNECTED || state == CONNECTING)
+	if (state == CONNECTED)
 	{
 		llen = snwritef(lbuf, sizeof(lbuf), "%d:", bs.length);
 		
