@@ -85,6 +85,11 @@ bool Log_SetTrace(bool trace_)
 	return prev;
 }
 
+bool Log_GetTrace()
+{
+	return trace;
+}
+
 void Log_SetMaxLine(int maxLine_)
 {
 	maxLine = maxLine_ > LOG_MSG_SIZE ? LOG_MSG_SIZE : maxLine_;

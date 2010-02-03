@@ -3,14 +3,34 @@
 
 #define CONN_BACKLOG	10
 
-void HttpServer::Init(KeyspaceDB* kdb_, int port)
+void HttpServer::Init(int port)
 {
 	if (!TCPServerT<HttpServer, HttpConn>::Init(port, CONN_BACKLOG))
 		STOP_FAIL("Cannot initialize HttpServer", 1);
-	kdb = kdb_;
+	handlers = NULL;
 }
 
 void HttpServer::InitConn(HttpConn* conn)
 {
-	conn->Init(kdb, this);
+	conn->Init(this);
 }
+
+void HttpServer::RegisterHandler(HttpHandler* handler)
+{
+	handler->nextHttpHandler = handlers;
+	handlers = handler;
+}
+
+bool HttpServer::HandleRequest(HttpConn* conn, const HttpRequest& request)
+{
+	HttpHandler*	handler;
+	bool			ret;
+	
+	// call each handler until one handles the request
+	ret = false;
+	for (handler = handlers; handler && !ret; handler = handler->nextHttpHandler)
+		ret = handler->HandleRequest(conn, request);
+	
+	return ret;
+}
+

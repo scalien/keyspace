@@ -17,7 +17,7 @@
 
 #define ASSERT_FAIL() assert(false)
 
-#define STOP_FAIL(msg, code) { Log_SetTarget(LOG_TARGET_STDERR|LOG_TARGET_FILE); Log_Message(msg); _exit(code); }
+#define STOP_FAIL(msg, code) { Log_SetTarget(LOG_TARGET_STDERR|LOG_TARGET_FILE); Log_Message(msg); Log_Message("Exit code: %d", code); _exit(code); }
 
 #define RESTART(msg) { Log_Message(msg); _exit(2); }
 

@@ -88,4 +88,5 @@ private:
 	ReplicatedDB*		replicatedDB;
 	bool				safeDB;
 };
+
 #endif

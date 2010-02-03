@@ -23,8 +23,11 @@ public:
 	{
 	public:
 		const char*	method;
+		int			methodLen;
 		const char* uri;
+		int			uriLen;
 		const char* version;
+		int			versionLen;
 		
 		int Parse(char* buf, int len, int offs);
 	};
@@ -33,8 +36,11 @@ public:
 	{
 	public:
 		const char* version;
+		int			versionLen;
 		const char* code;
+		int			codeLen;
 		const char* reason;
+		int			reasonLen;
 		
 		int Parse(char* buf, int len, int offs);
 	};

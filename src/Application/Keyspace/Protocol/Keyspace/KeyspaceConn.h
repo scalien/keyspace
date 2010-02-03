@@ -1,7 +1,6 @@
 #ifndef KEYSPACECONN_H
 #define KEYSPACECONN_H
 
-#include "System/Containers/LinkedList.h"
 #include "Framework/Transport/MessageConn.h"
 #include "Application/Keyspace/Database/KeyspaceDB.h"
 #include "Application/Keyspace/Database/KeyspaceService.h"

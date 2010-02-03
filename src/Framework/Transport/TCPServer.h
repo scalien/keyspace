@@ -45,7 +45,7 @@ public:
 		ret = listener.Create(Socket::TCP);
 		if (!ret)
 			return false;
-		ret = listener.Listen(port_);
+		ret = listener.Listen(port_, backlog_);
 		if (!ret)
 			return false;	
 		ret = listener.SetNonblocking();

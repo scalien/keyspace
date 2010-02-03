@@ -111,16 +111,17 @@ def benchmarkSet(client):
 
 if __name__ == "__main__":
 	nodes=["127.0.0.1:7080","127.0.0.1:7081","127.0.0.1:7082"]
-	client = keyspace.Client(nodes, 15, False)
+	#nodes = ["192.168.1.50:7080"]
+	client = keyspace.Client(nodes, 5, True)
 	
 	#starttime = time.time()
 
+	client.prune("")
+	# stress(client)
 	#client.prune("")
-	#stress(client)
 	# submitTest(client)
-	# users(client)
-	# nset(client, 100000)
-	
+	#users(client)
+	nset(client, 100)
 
 	#endtime = time.time()
 	#elapsed = endtime - starttime

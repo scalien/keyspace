@@ -1,25 +1,27 @@
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H
+#ifndef IN_LIST_H
+#define IN_LIST_H
 
-template<class T> class LinkedListNode;
-template<class T, LinkedListNode<T> T::*pnode> class LinkedList;
+// Intrusive List template types
+
+template<class T> class InListNode;
+template<class T, InListNode<T> T::*pnode> class InList;
 
 
 template<class T>
-class LLNode
+class ILNode
 {
 public:
-	LLNode*		next;
-	LLNode*		prev;
+	ILNode*		next;
+	ILNode*		prev;
 	T*			owner;
 	
-	LLNode()
+	ILNode()
 	{
 		next = prev = this;
 		owner = 0;
 	}
 	
-	~LLNode()
+	~ILNode()
 	{
 		Remove();
 	}
@@ -39,15 +41,15 @@ public:
 	}
 };
 
-template<class T, LLNode<T> T::*pnode>
-class LList
+template<class T, ILNode<T> T::*pnode>
+class IList
 {
 public:
-	LLNode<T>*	head;
-	LLNode<T>*	tail;
+	ILNode<T>*	head;
+	ILNode<T>*	tail;
 	int			size;
 
-	LList()
+	IList()
 	{
 		head = tail = 0;
 		size = 0;
@@ -55,7 +57,7 @@ public:
 	
 	T* Next(T* t)
 	{
-		LLNode<T>* node = t->*pnode.next;
+		ILNode<T>* node = t->*pnode.next;
 		if (node)
 			return node->owner;
 		return 0;
@@ -63,7 +65,7 @@ public:
 	
 	T* Prev(T* t)
 	{
-		LLNode<T>* node = t->*pnode.prev;
+		ILNode<T>* node = t->*pnode.prev;
 		if (node)
 			return node->owner;
 		return 0;
@@ -71,7 +73,7 @@ public:
 
 	void Add(T &t)
 	{
-		LLNode<T>* node = &(t.*pnode);
+		ILNode<T>* node = &(t.*pnode);
 
 		node->next = head;
 		node->prev = 0;
@@ -89,7 +91,7 @@ public:
 	
 	void Append(T &t)
 	{
-		LLNode<T>* node = &(t->*pnode);
+		ILNode<T>* node = &(t->*pnode);
 
 		node->next = 0;
 		node->prev = tail;
@@ -107,7 +109,7 @@ public:
 	
 	T* Remove(T* t)
 	{
-		LLNode<T>* node = &(t->*pnode);
+		ILNode<T>* node = &(t->*pnode);
 		T* ret;
 
 		if (head == node)
@@ -130,27 +132,27 @@ public:
 };
 
 template<class T>
-class LinkedListNode
+class InListNode
 {
 public:
 	T*	next;
 	T*	prev;
 
-	LinkedListNode()
+	InListNode()
 	{
 		next = prev = 0;
 	}	
 };
 
-template<class T, LinkedListNode<T> T::*pnode>
-class LinkedList
+template<class T, InListNode<T> T::*pnode>
+class InList
 {
 public:
 	T*		head;
 	T*		tail;
 	int		size;
 	
-	LinkedList()
+	InList()
 	{
 		head = tail = 0;
 		size = 0;
@@ -230,14 +232,14 @@ public:
 };
 
 template<class T, T* T::*pnext, T* T::*pprev>
-class LinkedList2
+class InList2
 {
 public:
 	T*		head;
 	T*		tail;
 	int		size;
 
-	LinkedList2()
+	InList2()
 	{
 		head = tail = 0;
 		size = 0;

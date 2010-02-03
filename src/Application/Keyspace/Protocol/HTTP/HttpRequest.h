@@ -20,9 +20,9 @@ public:
 	int				pos;
 	int				contentLength;
 	
-	void Init();
-	void Free();
-	int Parse(char *buf, int len);
+	void			Init();
+	void			Free();
+	int				Parse(char *buf, int len);
 };
 
 #endif

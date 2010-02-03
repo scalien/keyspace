@@ -41,6 +41,35 @@ typedef unsigned __int64	uint64_t;
 #include <unistd.h>
 #endif
 
+// PLATFORM_STRING selection
+#ifdef PLATFORM_WINDOW
+
+#ifdef _WIN64
+#define PLATFORM_STRING		"Windows 64bit"
+#else
+#define PLATFORM_STRING		"Windows"
+#endif
+
+#else
+
+#ifdef PLATFORM_LINUX
+#ifdef __amd64__
+#define PLATFORM_STRING		"Linux 64bit"
+#else
+#define PLATFORM_STRING		"Linux"
+#endif
+#endif
+
+#ifdef PLATFORM_DARWIN
+#ifdef __amd64__
+#define PLATFORM_STRING		"Darwin 64bit"
+#else
+#define PLATFORM_STRING		"Darwin"
+#endif
+#endif
+
+#endif
+
 bool		ChangeUser(const char *username);
 uint64_t	GetMicroTimestamp();
 uint64_t	GetMilliTimestamp();

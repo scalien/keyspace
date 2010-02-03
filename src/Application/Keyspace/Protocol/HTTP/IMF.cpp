@@ -58,7 +58,7 @@ static char* SeekCrlf(char* p)
 	return p;	
 }
 
-static int LineParse(char* buf, int /*len*/, int offs, const char** values[3])
+static int LineParse(char* buf, int /*len*/, int offs, const char** values[3], int *lens[3])
 {
 	char* p;
 	
@@ -67,6 +67,7 @@ static int LineParse(char* buf, int /*len*/, int offs, const char** values[3])
 	*values[0] = p;
 	p = SeekWhitespace(p);
 	if (!p) return -1;
+	*lens[0] = p - *values[0];
 	
 	*p++ = '\0';
 	p = SkipWhitespace(p);
@@ -74,6 +75,7 @@ static int LineParse(char* buf, int /*len*/, int offs, const char** values[3])
 	*values[1] = p;
 	p = SeekWhitespace(p);
 	if (!p) return -1;
+	*lens[1] = p - *values[1];
 	
 	*p++ = '\0';
 	p = SkipWhitespace(p);
@@ -81,6 +83,7 @@ static int LineParse(char* buf, int /*len*/, int offs, const char** values[3])
 	*values[2] = p;
 	p = SeekCrlf(p);
 	if (!p) return -1;
+	*lens[2] = p - *values[2];
 	
 	*p = '\0';
 	p += 2;
@@ -90,24 +93,34 @@ static int LineParse(char* buf, int /*len*/, int offs, const char** values[3])
 
 int IMFHeader::RequestLine::Parse(char* buf, int len, int offs)
 {
-	const char** values[3];
+	const char**	values[3];
+	int*			lens[3];
 	
 	values[0] = &method;
 	values[1] = &uri;
 	values[2] = &version;
 	
-	return LineParse(buf, len, offs, values);
+	lens[0] = &methodLen;
+	lens[1] = &uriLen;
+	lens[2] = &versionLen;
+	
+	return LineParse(buf, len, offs, values, lens);
 }
 
 int IMFHeader::StatusLine::Parse(char* buf, int len, int offs)
 {
-	const char** values[3];
+	const char**	values[3];
+	int*			lens[3];
 	
 	values[0] = &version;
 	values[1] = &code;
 	values[2] = &reason;
 	
-	return LineParse(buf, len, offs, values);
+	lens[0] = &versionLen;
+	lens[1] = &codeLen;
+	lens[2] = &reasonLen;
+	
+	return LineParse(buf, len, offs, values, lens);
 }
 
 IMFHeader::IMFHeader()

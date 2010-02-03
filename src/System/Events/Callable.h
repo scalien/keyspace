@@ -81,4 +81,10 @@ inline void Call(Callable* callable)
 		callable->Execute();
 }
 
+template<class T, void (T::*Callback)()>
+Callable* InitMFunc(T* t, Callable* callable)
+{
+	return new (callable) MFunc<T>(t, Callback);
+}
+
 #endif
