@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>Keyspace Admin Console</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<script language="javascript" src="keyspace.js" type="text/javascript"></script>                                          
+<script language="javascript" src="json2.js" type="text/javascript"></script>                                          
+<link rel="stylesheet" type="text/css" href="index.css" />
+<!--[if IE 7]><link rel="stylesheet" type="text/css" href="index_ie7.css" /><![endif]-->
+<link rel="shortcut icon" href="favicon.ico" />
+<base target="_top">
+</head>
+<body>
+<div class="container">
+	<div class="loading" id="loading" style="display:none"><span class='loading_text'>Loading...</span></div>
+	<div class="top" id="top">
+ 		<div class="top_logo"><a href="http://scalien.com/keyspace"><img src="logo.png"/></a></div>
+		<div class="top_welcome">
+			<b>admin</b> -
+			<a href="#" onclick="keyspace.admin.status(); return false;">Status</a> -
+			<a href="#" onclick="keyspace.admin.restart(); return false;">Restart</a> - 
+			<a href="#" onclick="debug.toggleTrace(); return false;">Debug</a>
+		</div>
+	</div>
+	<div class="left" id="left">
+		<div class="left_title">Tools</div>
+			<a href="#" class="adummy" onclick="keyspace.db.get('hol'); return false"><div class="left_moused"><span class="left_filter">Control</span></div></a>
+			<a href="#" class="adummy" onclick="keyspace.db.get('hol'); return false"><div class="left_moused"><span class="left_filter">Shell</span></div></a>
+			<a href="#" class="adummy" onclick="keyspace.admin.status(); return false"><div class="left_moused"><span class="left_filter">Status</span></div></a>
+			<br/>
+		<div class="left_title">Database</div>
+ 			<a href="#" class="adummy" onclick="keyspace.db.get('hol'); return false"><div class="left_moused"><span class="left_filter">Get</span></div></a>
+ 			<a href="#" class="adummy" onclick="keyspace.db.set('hol', 'peru'); return false"><div class="left_moused"><span class="left_filter">Set</span></div></a>
+ 			<a href="#" class="adummy" onclick="keyspace.db.testandset('hol', 'peru', 'budapest'); return false"><div class="left_moused"><span class="left_filter">Testandset</span></div></a>
+ 			<a href="#" class="adummy" onclick="keyspace.db.add('counter', 1); return false"><div class="left_moused"><span class="left_filter">Add</span></div></a>
+ 			<a href="#" class="adummy" onclick="keyspace.db.rename('hol', 'where'); return false"><div class="left_moused"><span class="left_filter">Rename</span></div></a>
+
+ 			<a href="#" class="adummy" onclick="keyspace.db.delete_('where'); return false"><div class="left_moused"><span class="left_filter">Delete</span></div></a>
+ 			<a href="#" class="adummy" onclick="keyspace.db.remove('where'); return false"><div class="left_moused"><span class="left_filter">Remove</span></div></a>
+ 			<a href="#" class="adummy" onclick="keyspace.db.prune(); return false"><div class="left_moused"><span class="left_filter">Prune</span></div></a>
+   		
+			<a href="#" class="adummy" onclick="keyspace.db.listkeys('', '', keyspace.rowsPerPage); return false"><div class="left_moused"><span class="left_filter">Listkeys</span></div></a>
+			<a href="#" class="adummy" onclick="keyspace.db.listkeyvalues('', '', keyspace.rowsPerPage); return false"><div class="left_moused"><span class="left_filter">Listkeyvalues</span></div></a>
+			<a href="#" class="adummy" onclick="keyspace.db.count(); return false"><div class="left_moused"><span class="left_filter">Count</span></div></a>
+		
+	</div>
+	<div class="right" id="right"></div>
+</div>
+<div id="fade" class="black_overlay"></div>
+<div class="img_preloads">
+</div>
+
+<script language="javascript" src="debug.js" type="text/javascript"></script>
+<div id="debug">
+	<div id="head">Debugger</div>
+	<form id="debug_form" action="javascript:debug.evalExpression()">
+	<input type="text" name="expr" class="fixed" onkeyup="debug.onKeyUp()" />
+	<input type="submit" value="eval" />
+	<input type="button" value="clear" onclick="debug.clearTrace()" />
+	<input type="button" value="hide" style="align: right;" onClick="debug.toggleTrace()"/>
+	</form>
+	<hr/>
+	<div id="content">
+	</div>
+</div>
+
+</body>
+</html>
