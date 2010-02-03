@@ -9,9 +9,9 @@
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Application/Keyspace/Database/SingleKeyspaceDB.h"
 #include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
-#include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
+#include "Application/HTTP/HttpServer.h"
+#include "Application/HTTP/HttpFileHandler.h"
 #include "Application/Keyspace/Protocol/HTTP/HttpApiHandler.h"
-#include "Application/Keyspace/Protocol/HTTP/HttpFileHandler.h"
 #include "Application/Keyspace/Protocol/HTTP/HttpKeyspaceHandler.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 

@@ -1,7 +1,7 @@
 #ifndef HTTP_API_HANDLER_H
 #define HTTP_API_HANDLER_H
 
-#include "HttpServer.h"
+#include "Application/HTTP/HttpServer.h"
 
 class JSONSession;
 class UrlParam;

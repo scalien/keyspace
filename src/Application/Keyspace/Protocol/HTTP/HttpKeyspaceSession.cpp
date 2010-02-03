@@ -1,8 +1,8 @@
 #include "HttpKeyspaceSession.h"
-#include "HttpConn.h"
-#include "HttpServer.h"
-#include "HttpConsts.h"
-#include "UrlParam.h"
+#include "Application/HTTP/HttpConn.h"
+#include "Application/HTTP/HttpServer.h"
+#include "Application/HTTP/HttpConsts.h"
+#include "Application/HTTP/UrlParam.h"
 #include "Framework/Database/Database.h"
 #include "Version.h"
 
