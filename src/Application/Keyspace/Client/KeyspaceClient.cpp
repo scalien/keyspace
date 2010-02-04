@@ -584,7 +584,7 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 	distributeDirty = false;
 	currentConn = 0;
 	
-	return KEYSPACECLIENT_OK;
+	return KEYSPACE_OK;
 }
 
 uint64_t Client::SetTimeout(uint64_t timeout_)
