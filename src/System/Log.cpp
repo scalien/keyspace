@@ -20,7 +20,7 @@
 #define LOG_MSG_SIZE	1024
 
 static bool		timestamping = false;
-static bool		trace = true;
+static bool		trace = false;
 static int		maxLine = LOG_MSG_SIZE;
 static int		target = LOG_TARGET_STDOUT;
 static FILE*	logfile = NULL;

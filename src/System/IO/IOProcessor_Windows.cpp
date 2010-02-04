@@ -160,7 +160,9 @@ bool IOProcessor::Init(int maxfd)
 	DWORD		bytesReturned;
 
 	// initialize a Console Control Handler routine
+#ifndef KEYSPACE_CLIENTLIB
 	SetConsoleCtrlHandler(ConsoleCtrlHandler, TRUE);
+#endif
 
 	// initialize Winsock2 library
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData))
@@ -622,6 +624,7 @@ bool ProcessTCPWrite(TCPWrite* tcpwrite)
 	WSABUF		wsabuf;
 	Callable*	callable;
 	DWORD		numBytes;
+	DWORD		error;
 
 	callable = NULL;
 
@@ -635,7 +638,18 @@ bool ProcessTCPWrite(TCPWrite* tcpwrite)
 
 		// perform non-blocking write
 		ret = WSASend(tcpwrite->fd.sock, &wsabuf, 1, &numBytes, 0, NULL, NULL);
-		if (numBytes == 0)
+		if (ret != 0)
+		{
+			error = GetLastError();
+			if (error == WSAEWOULDBLOCK)
+			{
+				tcpwrite->active = false; // otherwise Add() returns
+				IOProcessor::Add(tcpwrite);
+			}
+			else
+				callable = tcpwrite->onClose;
+		}
+		else if (numBytes == 0)
 			callable = tcpwrite->onClose;
 		else
 		{
