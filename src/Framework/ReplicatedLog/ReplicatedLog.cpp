@@ -274,7 +274,7 @@ void ReplicatedLog::OnLearnChosen()
 	Log_Trace();
 
 	uint64_t paxosID;
-	bool	ownAppend, clientAppend;
+	bool	ownAppend, clientAppend, commit;
 
 	if (pmsg.paxosID == learner.paxosID)
 	{
@@ -293,7 +293,8 @@ void ReplicatedLog::OnLearnChosen()
 		}
 		
 		// save it in the logCache (includes the epoch info)
-		logCache.Push(learner.paxosID, learner.state.value);
+		commit = learner.paxosID == (highestPaxosID - 1);
+		logCache.Push(learner.paxosID, learner.state.value, commit);
 		
 		rmsg.Read(learner.state.value);	// rmsg.value holds the 'user value'
 		paxosID = learner.paxosID;		// this is the value we
@@ -393,6 +394,8 @@ void ReplicatedLog::OnLearnChosen()
 
 void ReplicatedLog::OnRequestChosen()
 {
+	Log_Trace();
+
 	ByteString value_;
 	
 	if (pmsg.paxosID == learner.paxosID)
@@ -403,7 +406,10 @@ void ReplicatedLog::OnRequestChosen()
 	{
 		// the node is lagging and needs to catch-up
 		if (logCache.Get(pmsg.paxosID, value_))
+		{
+			Log_Trace("Sending paxosID %d to node %d", pmsg.paxosID, pmsg.nodeID);
 			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value_);
+		}
 	}
 }
 

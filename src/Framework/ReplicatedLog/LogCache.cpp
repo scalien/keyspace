@@ -18,10 +18,12 @@ bool LogCache::Init()
 	return true;
 }
 
-bool LogCache::Push(uint64_t paxosID, ByteString value)
+bool LogCache::Push(uint64_t paxosID, ByteString value, bool commit)
 {
 	ByteArray<128> buf;
 	Transaction* transaction;
+	
+	Log_Trace("Storing paxosID %d with length %d", paxosID, value.length);
 	
 	transaction = RLOG->GetTransaction();
 	
@@ -38,6 +40,9 @@ bool LogCache::Push(uint64_t paxosID, ByteString value)
 		buf.Writef("@@round:%U", paxosID);	
 		table->Delete(transaction, buf);
 	}
+	
+	if (commit)
+		transaction->Commit();
 	
 	return true;
 }

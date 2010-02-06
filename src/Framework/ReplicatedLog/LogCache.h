@@ -14,12 +14,12 @@ public:
 	~LogCache();
 
 	bool			Init();
-	bool			Push(uint64_t paxosID, ByteString value);
+	bool			Push(uint64_t paxosID, ByteString value, bool commit);
 	bool			Get(uint64_t paxosID, ByteString& value);
 
 private:
 	Table*			table;
-	ByteArray<PAXOS_SIZE> value;
+	ByteArray<PAXOS_SIZE + 10*KB> value;
 };
 
 #endif
