@@ -1,7 +1,7 @@
 #include "LogCache.h"
 #include "ReplicatedLog.h"
 #include "Framework/Database/Transaction.h"
-#include "stdint.h"
+#include "System/Platform.h"
 
 LogCache::LogCache()
 {
