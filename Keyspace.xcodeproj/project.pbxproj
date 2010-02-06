@@ -62,6 +62,10 @@
 		548147750F31B8BE00F3D2B6 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		54814C000F35084500F3D2B6 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
 		54AFE4690F39B241001EE6B4 /* LogQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE4680F39B241001EE6B4 /* LogQueue.cpp */; };
+		54D6A480111D7F4C008573AA /* Socket_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FB9110E91882004EF4A4 /* Socket_Posix.cpp */; };
+		54D6A482111D7F63008573AA /* Time_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FB9610EE6285004EF4A4 /* Time_Posix.cpp */; };
+		54D6A491111D7F8E008573AA /* ThreadPool_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FB9E10EE62A2004EF4A4 /* ThreadPool_Posix.cpp */; };
+		54D6A49E111D7FC6008573AA /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FBC110EE6351004EF4A4 /* Platform.cpp */; };
 		54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */; };
 		54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */; };
 		54D96EC00F9B35CB005658C9 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EB80F9B35CB005658C9 /* HttpConn.cpp */; };
@@ -1189,6 +1193,10 @@
 				9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */,
 				9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */,
 				9AC32D00105824D300FE0A6F /* KeyspaceClient.cpp in Sources */,
+				54D6A480111D7F4C008573AA /* Socket_Posix.cpp in Sources */,
+				54D6A482111D7F63008573AA /* Time_Posix.cpp in Sources */,
+				54D6A491111D7F8E008573AA /* ThreadPool_Posix.cpp in Sources */,
+				54D6A49E111D7FC6008573AA /* Platform.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
