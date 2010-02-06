@@ -1,7 +1,8 @@
 #ifndef LOGQUEUE_H
 #define LOGQUEUE_H
 
-#include "Framework/ReplicatedLog/LogCache.h"
+#include "System/Buffer.h"
+#include "System/Containers/List.h"
 
 class LogQueue
 {

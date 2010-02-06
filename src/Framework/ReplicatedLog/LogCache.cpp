@@ -22,16 +22,11 @@ bool LogCache::Push(uint64_t paxosID, ByteString value)
 {
 	ByteArray<128> buf;
 	Transaction* transaction;
-	bool commit;
 	
 	transaction = RLOG->GetTransaction();
 	
-	commit = false;
 	if (!transaction->IsActive())
-	{
 		transaction->Begin();
-		commit = true;
-	}
 	
 	buf.Writef("@@round:%U", paxosID);	
 	table->Set(transaction, buf, value);
@@ -43,9 +38,6 @@ bool LogCache::Push(uint64_t paxosID, ByteString value)
 		buf.Writef("@@round:%U", paxosID);	
 		table->Delete(transaction, buf);
 	}
-	
-	if (commit)
-		transaction->Commit();
 	
 	return true;
 }

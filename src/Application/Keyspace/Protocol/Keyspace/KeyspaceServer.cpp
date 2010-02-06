@@ -6,7 +6,8 @@
 
 void KeyspaceServer::Init(KeyspaceDB* kdb_, int port_)
 {
-	if (!TCPServerT<KeyspaceServer, KeyspaceConn>::Init(port_, CONN_BACKLOG))
+	if (!TCPServerT<KeyspaceServer, KeyspaceConn, KEYSPACE_BUF_SIZE>
+	::Init(port_, CONN_BACKLOG))
 		STOP_FAIL("Cannot initialize KeyspaceServer", 1);
 	kdb = kdb_;
 	kdb->SetProtocolServer(this);
@@ -20,38 +21,7 @@ void KeyspaceServer::InitConn(KeyspaceConn* conn)
 
 void KeyspaceServer::DeleteConn(KeyspaceConn* conn)
 {
-	TCPServerT<KeyspaceServer, KeyspaceConn>::DeleteConn(conn);
+	TCPServerT<KeyspaceServer, KeyspaceConn, KEYSPACE_BUF_SIZE>
+	::DeleteConn(conn);
 	activeConns.Remove(conn);
 }
-
-//void KeyspaceServer::Stop()
-//{
-//	Log_Trace();
-//	
-//	KeyspaceConn** it;
-//		
-//	IOProcessor::Remove(&tcpread);
-//	
-//	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
-//	{
-//		(*it)->Stop();
-//		if (tcpread.active)
-//			break; // user called Continue(), stop looping
-//	}
-//}
-//
-//void KeyspaceServer::Continue()
-//{
-//	Log_Trace();
-//
-//	KeyspaceConn** it;
-//	
-//	IOProcessor::Add(&tcpread);
-//	
-//	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
-//	{
-//		(*it)->Continue();
-//		if (!tcpread.active)
-//			break; // user called Stop(), stop looping
-//	}
-//}

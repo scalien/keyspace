@@ -29,19 +29,19 @@ void PaxosLease::InitTransport()
 	unsigned	i;
 	Endpoint	endpoint;
 	
-	reader = new TransportUDPReader;
+	reader = new TransportTCPReader;
 	if (!reader->Init(RCONF->GetPort() + PLEASE_PORT_OFFSET))
 		STOP_FAIL("cannot bind PaxosLease port", 1);
 	reader->SetOnRead(&onRead);
 	
 	writers = (Writers)
-	Alloc(sizeof(TransportUDPWriter*) * RCONF->GetNumNodes());
+	Alloc(sizeof(TransportTCPWriter*) * RCONF->GetNumNodes());
 	
 	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
 		endpoint = RCONF->GetEndpoint(i);
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
-		writers[i] = new TransportUDPWriter;
+		writers[i] = new TransportTCPWriter;
 		if (!writers[i]->Init(endpoint))
 			STOP_FAIL("cannot bind PaxosLease port", 1);
 	}	
@@ -145,13 +145,13 @@ void PaxosLease::OnLeaseTimeout()
 
 void PaxosLease::CheckNodeIdentity()
 {
-	Endpoint a, b;
-	reader->GetEndpoint(a);
-	
-	b = RCONF->GetEndpoint(msg.nodeID);
-	
-	if (a.GetAddress() != ENDPOINT_ANY_ADDRESS && 
-		b.GetAddress() != ENDPOINT_ANY_ADDRESS && 
-		a.GetAddress() != b.GetAddress())
-		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
+//	Endpoint a, b;
+//	reader->GetEndpoint(a);
+//	
+//	b = RCONF->GetEndpoint(msg.nodeID);
+//	
+//	if (a.GetAddress() != ENDPOINT_ANY_ADDRESS && 
+//		b.GetAddress() != ENDPOINT_ANY_ADDRESS && 
+//		a.GetAddress() != b.GetAddress())
+//		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
 }

@@ -274,6 +274,7 @@
 		549D467B0FDFB74C005B92D3 /* TimeCheckTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeCheckTest.cpp; sourceTree = "<group>"; };
 		54AFE4670F39B241001EE6B4 /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
 		54AFE4680F39B241001EE6B4 /* LogQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogQueue.cpp; sourceTree = "<group>"; };
+		54D6A65B111DD3A4008573AA /* PaxosConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosConsts.h; sourceTree = "<group>"; };
 		54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceConn.cpp; sourceTree = "<group>"; };
 		54D96E8E0F9B332C005658C9 /* KeyspaceConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConn.h; sourceTree = "<group>"; };
 		54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceServer.cpp; sourceTree = "<group>"; };
@@ -659,6 +660,7 @@
 				5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */,
 				5421D81B0F6424CE004BBDB4 /* PaxosLearner.h */,
 				5421D81C0F6424CE004BBDB4 /* PaxosLearner.cpp */,
+				54D6A65B111DD3A4008573AA /* PaxosConsts.h */,
 			);
 			path = Paxos;
 			sourceTree = "<group>";

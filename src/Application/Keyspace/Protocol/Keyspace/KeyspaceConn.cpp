@@ -12,7 +12,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 {
 	Log_Trace();
 	
-	TCPConn<>::Init();
+	TCPConn<KEYSPACE_BUF_SIZE>::Init();
 	if (!running)
 		Log_Trace("KeyspaceConn::Init(): running == false");
 	running = true;
@@ -136,8 +136,6 @@ bool KeyspaceConn::IsAborted()
 
 void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
-	Log_Trace("Message = %.*s", message.length, message.buffer);
-	
 	req.Init();
 	if (req.Read(message))
 		ProcessMsg();
@@ -151,14 +149,12 @@ void KeyspaceConn::Write(ByteString &bs)
 	
 	prefix.length = snwritef(prefix.buffer, prefix.size, "%d:", bs.length);
 
-	TCPConn<>::Write(prefix.buffer, prefix.length, false);
-	TCPConn<>::Write(bs.buffer, bs.length);
+	TCPConn<KEYSPACE_BUF_SIZE>::Write(prefix.buffer, prefix.length, false);
+	TCPConn<KEYSPACE_BUF_SIZE>::Write(bs.buffer, bs.length);
 }
 
 void KeyspaceConn::ProcessMsg()
 {
-//	Log_Trace();
-
 	static ByteArray<32> ba;
 	
 	if (req.type == KEYSPACECLIENT_GET_MASTER)
@@ -222,7 +218,7 @@ void KeyspaceConn::OnWrite()
 {
 	Log_Trace();
 	
-	TCPConn<>::OnWrite();
+	TCPConn<KEYSPACE_BUF_SIZE>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
 		OnClose();
 }

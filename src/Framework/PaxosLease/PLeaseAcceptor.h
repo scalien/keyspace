@@ -3,7 +3,7 @@
 
 #include "System/Common.h"
 #include "System/Events/Timer.h"
-#include "Framework/Transport/TransportUDPWriter.h"
+#include "Framework/Transport/TransportTCPWriter.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseState.h"
@@ -12,7 +12,7 @@ class ReplicatedLog;
 
 class PLeaseAcceptor
 {
-	typedef TransportUDPWriter**	Writers;
+	typedef TransportTCPWriter**	Writers;
 	typedef MFunc<PLeaseAcceptor>	Func;
 	typedef PLeaseAcceptorState		State;
 	

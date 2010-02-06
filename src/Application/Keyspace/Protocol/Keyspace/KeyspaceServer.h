@@ -8,15 +8,12 @@
 class KeyspaceDB;
 
 class KeyspaceServer : public ProtocolServer,
-public TCPServerT<KeyspaceServer, KeyspaceConn>
+public TCPServerT<KeyspaceServer, KeyspaceConn, KEYSPACE_BUF_SIZE>
 {
 public:
 	void				Init(KeyspaceDB* kdb, int port);
 	void				InitConn(KeyspaceConn* conn);
 	void				DeleteConn(KeyspaceConn* conn);
-	
-//	virtual void		Stop();
-//	virtual void		Continue();
 
 private:
 	KeyspaceDB*			kdb;

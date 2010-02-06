@@ -190,7 +190,8 @@ const char* Socket::ToString(char s[ENDPOINT_STRING_SIZE])
 bool Socket::SendTo(void *data, int count, const Endpoint &endpoint)
 {
 	int ret;
-	const struct sockaddr* sa = (const struct sockaddr*) ((Endpoint&) endpoint).GetSockAddr();
+	const struct sockaddr* sa =
+	(const struct sockaddr*) ((Endpoint&) endpoint).GetSockAddr();
 	
 	ret = sendto(fd, data, count, 0, sa, ENDPOINT_SOCKADDR_SIZE);
 	

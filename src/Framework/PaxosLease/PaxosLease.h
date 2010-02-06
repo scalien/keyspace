@@ -1,8 +1,8 @@
 #ifndef PAXOSLEASE_H
 #define PAXOSLEASE_H
 
-#include "Framework/Transport/TransportUDPReader.h"
-#include "Framework/Transport/TransportUDPWriter.h"
+#include "Framework/Transport/TransportTCPReader.h"
+#include "Framework/Transport/TransportTCPWriter.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
@@ -14,8 +14,8 @@ class ReplicatedLog;
 
 class PaxosLease
 {
-	typedef TransportUDPReader*		Reader;
-	typedef TransportUDPWriter**	Writers;
+	typedef TransportTCPReader*		Reader;
+	typedef TransportTCPWriter**	Writers;
 	typedef MFunc<PaxosLease>		Func;
 public:
 	PaxosLease();

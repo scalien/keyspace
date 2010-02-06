@@ -757,14 +757,15 @@ bool HttpConn::ProcessAdminCheckpoint()
 
 bool HttpConn::PrintHello()
 {
-	ByteArray<128> text;
+	ByteArray<10*KB> text;
 	if (kdb->IsReplicated())
 	{
 		text.length = snprintf(text.buffer, text.size,
-			"Keyspace v" VERSION_STRING " r%.*s running\n\n" \
-			"Running in replicated mode with %d nodes, I am: %d\n\n" \
-			"Master: %d%s%s" \
-			"\n\nPaxosID: %" PRIu64 "",
+			"Keyspace v" VERSION_STRING " r%.*s\n\n"
+			"Running in replicated mode with %d nodes\n\n" \
+			"I am node %d\n\n" \
+			"Master is node %d%s%s\n\n" \
+			"I am in replication round %" PRIu64 "\n",
 			(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
 			RLOG->GetNumNodes(),
 			RLOG->GetNodeID(),

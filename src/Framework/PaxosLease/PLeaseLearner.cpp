@@ -62,7 +62,7 @@ void PLeaseLearner::OnLearnChosen()
 void PLeaseLearner::OnLeaseTimeout()
 {
 	if (state.learned)
-		Log_Message("+++ Node %d lost its mastership +++", state.leaseOwner);
+		Log_Message("+++ Node %d lost the lease (its mastership) +++", state.leaseOwner);
 
 	EventLoop::Remove(&leaseTimeout);
 

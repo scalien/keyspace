@@ -352,16 +352,16 @@ void ReplicatedLog::OnLearnChosen()
 				 rmsg.value.length > 0 &&
 				 !(rmsg.value == BS_MSG_NOP))
 		{
-			if (!acceptor.transaction.IsActive())
+			if (!GetTransaction()->IsActive())
 			{
 				Log_Trace("starting new transaction");
-				acceptor.transaction.Begin();
+				GetTransaction()->Begin();
 			}
 			clientAppend = ownAppend &&
 						   rmsg.leaseEpoch == masterLease.GetLeaseEpoch() &&
 						   IsMaster();
 			
-			replicatedDB->OnAppend(&acceptor.transaction,
+			replicatedDB->OnAppend(GetTransaction(),
 				paxosID,
 				rmsg.value,
 				clientAppend);

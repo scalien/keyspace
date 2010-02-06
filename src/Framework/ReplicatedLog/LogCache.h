@@ -3,8 +3,9 @@
 
 #include "System/Buffer.h"
 #include "Framework/Database/Table.h"
+#include "Framework/Paxos/PaxosConsts.h"
 
-#define LOGCACHE_SIZE	10*1000 // # of Paxos rounds cached in db
+#define LOGCACHE_SIZE	(100*1000)	// # of Paxos rounds cached in db
 
 class LogCache
 {
@@ -18,7 +19,7 @@ public:
 
 private:
 	Table*			table;
-	ByteArray<2*MB + 10*KB> value;
+	ByteArray<PAXOS_SIZE> value;
 };
 
 #endif

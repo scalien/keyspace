@@ -16,7 +16,7 @@
 
 class ReplicatedKeyspaceDB : public ReplicatedDB, public KeyspaceDB
 {
-typedef ByteArray<KEYSPACE_BUF_SIZE>	BufBuffer;
+typedef ByteArray<PAXOS_SIZE>			PaxosBuffer;
 typedef ByteArray<KEYSPACE_VAL_SIZE>	ValBuffer;
 typedef MFunc<ReplicatedKeyspaceDB>		Func;
 typedef List<KeyspaceOp*>				OpList;
@@ -60,7 +60,7 @@ private:
 	OpList			ops;
 	Table*			table;
 	KeyspaceMsg		msg;
-	BufBuffer		pvalue;
+	PaxosBuffer		pvalue;
 	ValBuffer		data;
 	CatchupServer	catchupServer;
 	CatchupReader	catchupClient;
