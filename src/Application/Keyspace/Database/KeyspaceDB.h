@@ -19,6 +19,7 @@ public:
 	virtual bool		IsMasterKnown() = 0;
 	virtual int			GetMaster() = 0;
 	virtual bool		IsMaster() = 0;
+	virtual bool		IsReplicated() = 0;
 	virtual void		SetProtocolServer(ProtocolServer* pserver) = 0;
 };
 

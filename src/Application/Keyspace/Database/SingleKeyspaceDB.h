@@ -17,6 +17,7 @@ public:
 	bool				IsMasterKnown();
 	int					GetMaster();
 	bool				IsMaster();
+	bool				IsReplicated() { return false; }
 	void				SetProtocolServer(ProtocolServer*) {}
 	void				Stop() {}
 	void				Continue() {}

@@ -434,27 +434,3 @@ void ReplicatedKeyspaceDB::SetProtocolServer(ProtocolServer* pserver)
 {
 	pservers.Append(pserver);
 }
-
-//void ReplicatedKeyspaceDB::Stop()
-//{
-//	ProtocolServer** it;
-//	ProtocolServer*	 pserver;
-//	
-//	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
-//	{
-//		pserver = *it;
-//		pserver->Stop();
-//	}
-//}
-//
-//void ReplicatedKeyspaceDB::Continue()
-//{
-//	ProtocolServer** it;
-//	ProtocolServer*	 pserver;
-//	
-//	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
-//	{
-//		pserver = *it;
-//		pserver->Continue();
-//	}
-//}

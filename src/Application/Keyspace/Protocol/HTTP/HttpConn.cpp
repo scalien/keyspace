@@ -5,6 +5,7 @@
 #include "Version.h"
 #include "HttpServer.h"
 #include "Framework/Database/Database.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 
 #define MAX_MESSAGE_SIZE	4096
 #define CS_CR				"\015"
@@ -757,13 +758,29 @@ bool HttpConn::ProcessAdminCheckpoint()
 bool HttpConn::PrintHello()
 {
 	ByteArray<128> text;
-	text.length = snprintf(text.buffer, text.size,
-		"Keyspace v" VERSION_STRING " r%.*s running\n\nMaster: %d%s%s",
-		(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
-		kdb->GetMaster(),
-		kdb->IsMaster() ? " (me)" : "",
-		kdb->IsMasterKnown() ? "" : " (unknown)");
-
+	if (kdb->IsReplicated())
+	{
+		text.length = snprintf(text.buffer, text.size,
+			"Keyspace v" VERSION_STRING " r%.*s running\n\n" \
+			"Running in replicated mode with %d nodes, I am: %d\n\n" \
+			"Master: %d%s%s" \
+			"\n\nPaxosID: %" PRIu64 "",
+			(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
+			RLOG->GetNumNodes(),
+			RLOG->GetNodeID(),
+			kdb->GetMaster(),
+			kdb->IsMaster() ? " (me)" : "",
+			kdb->IsMasterKnown() ? "" : " (unknown)",
+			RLOG->GetPaxosID());
+	}
+	else
+	{
+		text.length = snprintf(text.buffer, text.size,
+			"Keyspace v" VERSION_STRING " r%.*s running\n\n" \
+			"Running in single mode",
+			(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+	}
+	
 	Response(200, text.buffer, text.length);
 	return true;
 }

@@ -33,6 +33,7 @@ public:
 	bool			IsMasterKnown();
 	int				GetMaster();
 	bool			IsMaster();
+	bool			IsReplicated() { return true; }
 	void			SetProtocolServer(ProtocolServer* pserver);
 	
 	void			OnCatchupComplete();	// called by CatchupClient
@@ -44,8 +45,6 @@ public:
 	virtual void	OnMasterLease(unsigned nodeID);
 	virtual void	OnMasterLeaseExpired();
 	virtual void	OnDoCatchup(unsigned nodeID);
-//	virtual void	Stop();
-//	virtual void	Continue();
 	
 	void			AsyncOnAppend();
 	void			OnAppendComplete();
