@@ -23,7 +23,7 @@ bool LogCache::Push(uint64_t paxosID, ByteString value, bool commit)
 	ByteArray<128> buf;
 	Transaction* transaction;
 	
-	Log_Trace("Storing paxosID %d with length %d", paxosID, value.length);
+	Log_Trace("Storing paxosID %" PRIu64 " with length %d", paxosID, value.length);
 	
 	transaction = RLOG->GetTransaction();
 	
