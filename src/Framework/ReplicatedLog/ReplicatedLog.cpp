@@ -19,8 +19,6 @@ ReplicatedLog* ReplicatedLog::Get()
 
 ReplicatedLog::ReplicatedLog()
 :	onRead(this, &ReplicatedLog::OnRead),
-	onCatchupTimeout(this, &ReplicatedLog::OnCatchupTimeout),
-	catchupTimeout(CATCHUP_TIMEOUT, &onCatchupTimeout),
 	onLearnLease(this, &ReplicatedLog::OnLearnLease),
 	onLeaseTimeout(this, &ReplicatedLog::OnLeaseTimeout)
 {
@@ -48,6 +46,8 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
 	//if (RCONF->GetNodeID() == 0) // TODO: FOR DEBUGGING
 		masterLease.AcquireLease();
+	
+	logCache.Init();
 	
 	safeDB = false;
 	
@@ -89,7 +89,6 @@ void ReplicatedLog::StopPaxos()
 {
 	Log_Trace();
 	
-	EventLoop::Remove(&catchupTimeout);
 	reader->Stop();
 }
 
@@ -97,12 +96,6 @@ void ReplicatedLog::StopMasterLease()
 {
 	masterLease.Stop();
 }
-
-//void ReplicatedLog::StopReplicatedDB()
-//{
-//	if (replicatedDB)
-//		replicatedDB->Stop();
-//}
 
 void ReplicatedLog::ContinuePaxos()
 {
@@ -115,12 +108,6 @@ void ReplicatedLog::ContinueMasterLease()
 {
 	masterLease.Continue();
 }
-
-//void ReplicatedLog::ContinueReplicatedDB()
-//{
-//	if (replicatedDB)
-//		replicatedDB->Continue();
-//}
 
 bool ReplicatedLog::IsPaxosActive()
 {
@@ -172,11 +159,6 @@ void ReplicatedLog::SetReplicatedDB(ReplicatedDB* replicatedDB_)
 	replicatedDB = replicatedDB_;
 }
 
-bool ReplicatedLog::GetLogItem(uint64_t paxosID, ByteString& value)
-{
-	return logCache.Get(paxosID, value);
-}
-
 uint64_t ReplicatedLog::GetPaxosID()
 {
 	return proposer.paxosID;
@@ -205,6 +187,11 @@ bool ReplicatedLog::IsMaster()
 int ReplicatedLog::GetMaster()
 {
 	return masterLease.GetLeaseOwner();
+}
+
+unsigned ReplicatedLog::GetNumNodes()
+{
+	return RCONF->GetNumNodes();
 }
 
 unsigned ReplicatedLog::GetNodeID()
@@ -291,9 +278,6 @@ void ReplicatedLog::OnLearnChosen()
 
 	if (pmsg.paxosID == learner.paxosID)
 	{
-		if (catchupTimeout.IsActive())
-			EventLoop::Remove(&catchupTimeout);
-
 		if (pmsg.type == PAXOS_LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
 				pmsg.LearnValue(pmsg.paxosID,
@@ -321,7 +305,6 @@ void ReplicatedLog::OnLearnChosen()
 		if (highestPaxosID > paxosID)
 		{
 			learner.RequestChosen(pmsg.nodeID);
-			return;
 		}
 
 		Log_Trace("%d %d %" PRIu64 " %" PRIu64 "",
@@ -401,10 +384,10 @@ void ReplicatedLog::OnLearnChosen()
 	{
 		//	I am lagging and need to catch-up
 		
-		if (!catchupTimeout.IsActive())
-			EventLoop::Add(&catchupTimeout);
-		
-		learner.RequestChosen(pmsg.nodeID);
+		if ((pmsg.paxosID - learner.paxosID) < (LOGCACHE_SIZE - 1))
+			learner.RequestChosen(pmsg.nodeID);
+		else if (replicatedDB != NULL && masterLease.IsLeaseKnown())
+			replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 	}
 }
 
@@ -440,10 +423,10 @@ void ReplicatedLog::OnRequest()
 	{
 		//	I am lagging and need to catch-up
 		
-		if (!catchupTimeout.IsActive())
-			EventLoop::Add(&catchupTimeout);
-		
-		learner.RequestChosen(pmsg.nodeID);
+		if ((pmsg.paxosID - learner.paxosID) < (LOGCACHE_SIZE - 1))
+			learner.RequestChosen(pmsg.nodeID);
+		else if (replicatedDB != NULL && masterLease.IsLeaseKnown())
+			replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 	}
 }
 
@@ -461,14 +444,6 @@ void ReplicatedLog::NewPaxosRound()
 	learner.state.Init();
 	
 	masterLease.OnNewPaxosRound();
-}
-
-void ReplicatedLog::OnCatchupTimeout()
-{
-	Log_Trace();
-
-	if (replicatedDB != NULL && masterLease.IsLeaseKnown())
-		replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 }
 
 void ReplicatedLog::OnLearnLease()
@@ -515,13 +490,17 @@ void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
 {
 	if (paxosID > learner.paxosID)
 	{
+		if (paxosID > highestPaxosID)
+			highestPaxosID = paxosID;
+
 		// I am lagging and need to catch-up
 		
 		if (IsPaxosActive())
 		{
-			if (!catchupTimeout.IsActive())
-				EventLoop::Add(&catchupTimeout);
-			learner.RequestChosen(nodeID);
+			if ((paxosID - learner.paxosID) < (LOGCACHE_SIZE - 1))
+				learner.RequestChosen(nodeID);
+			else if (replicatedDB != NULL && masterLease.IsLeaseKnown())
+				replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 		}
 	}
 }

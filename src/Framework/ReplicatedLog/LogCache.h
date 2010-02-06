@@ -1,11 +1,10 @@
 #ifndef LOGCACHE_H
 #define LOGCACHE_H
 
-#include "System/Containers/List.h"
-#include "Framework/Paxos/PaxosMsg.h"
+#include "System/Buffer.h"
+#include "Framework/Database/Table.h"
 
-#define DEFAULT_CACHE_SIZE		10*1000
-#define DEFAULT_MAX_MEM_USE		256*MB
+#define LOGCACHE_SIZE	10*1000 // # of Paxos rounds cached in db
 
 class LogCache
 {
@@ -13,17 +12,13 @@ public:
 	LogCache();
 	~LogCache();
 
+	bool			Init();
 	bool			Push(uint64_t paxosID, ByteString value);
 	bool			Get(uint64_t paxosID, ByteString& value);
 
 private:
-	ByteBuffer*		logItems;
-	int				count;
-	int				next;
-	int				size;
-	unsigned long	maxmem;
-	unsigned long	allocated;
-	uint64_t		paxosID;
+	Table*			table;
+	ByteArray<2*MB + 10*KB> value;
 };
 
 #endif

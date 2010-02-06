@@ -35,18 +35,16 @@ public:
 	bool				Append(ByteString &value);
 	void				SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	Transaction*		GetTransaction();
-	bool				GetLogItem(uint64_t paxosID, ByteString& value);
 	uint64_t			GetPaxosID();
 	void				SetPaxosID(Transaction* transaction, uint64_t paxosID);
 	bool				IsMaster();
 	int					GetMaster();
+	unsigned			GetNumNodes();
 	unsigned 			GetNodeID();
 	void				StopPaxos();
 	void				StopMasterLease();
-//	void				StopReplicatedDB();
 	void				ContinuePaxos();
 	void				ContinueMasterLease();
-//	void				ContinueReplicatedDB();
 	bool				IsPaxosActive();
 	bool				IsMasterLeaseActive();
 	bool				IsAppending();
@@ -63,7 +61,6 @@ private:
 	void				OnLearnChosen();
 	void				OnRequestChosen();
 	void				OnRequest();
-	void				OnCatchupTimeout();
 	void				OnLearnLease();
 	void				OnLeaseTimeout();
 	void				NewPaxosRound();
@@ -81,8 +78,6 @@ private:
 	uint64_t			highestPaxosID;
 	LogCache			logCache;
 	LogQueue			logQueue;
-	Func				onCatchupTimeout;
-	CdownTimer			catchupTimeout;
 	Func				onLearnLease;
 	Func				onLeaseTimeout;
 	ReplicatedDB*		replicatedDB;
