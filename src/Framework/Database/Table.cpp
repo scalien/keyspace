@@ -273,8 +273,15 @@ bool Table::Visit(TableVisitor &tv)
 		ret = tv.Accept(bsKey, bsValue);
 		if (!ret)
 			break;
-
-		flags = DB_NEXT;
+		
+		if (bsKey.length > 2 && bsKey.buffer[0] == '@' && bsKey.buffer[1] == '@')
+		{
+			key.set_data((void*)"@@~");
+			key.set_size(3);
+			flags = DB_SET_RANGE;
+		}
+		else
+			flags = DB_NEXT;
 	}
 	
 	cursor->close();	
