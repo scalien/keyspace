@@ -100,6 +100,8 @@ public:
 		MAX = 2
 	};
 	
+	Result();
+	
 	void				Close();
 	Result*				Next(int &status);
 
@@ -250,6 +252,7 @@ private:
 	uint64_t		timeout;
 	uint64_t		reconnectTimeout;
 	uint64_t		masterTime;
+	uint64_t		lastActivityTime;
 	uint64_t		cmdID;
 	Result			result;
 	bool			distributeDirty;

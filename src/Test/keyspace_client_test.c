@@ -3,7 +3,12 @@
 #include <stdio.h>
 #include "Application/Keyspace/Client/keyspace_client.h"
 
+// Test configuration
+static const char *	NODES[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
+static const int	TIMEOUT = 10000;
+
 #ifdef _WIN32
+#include <windows.h>
 #define __func__ __FUNCTION__
 #define snprintf _snprintf
 #endif
@@ -21,9 +26,217 @@ void ignore_pipe_signal()
 #endif
 }
 
-int keyspace_client_test()
+// for test functions we use the Unix return values:
+// 0 for success
+// anything else means failure
+#define TEST_SUCCESS	0
+#define TEST_FAILURE	Log_Trace("%s", "failure"), 1
+#define TEST_CALL(testfn) { Log_Trace("%s: testing", #testfn); int status = testfn; Log_Trace("%s: %s", #testfn, status == TEST_SUCCESS ? "success" : "failure"); if (status != TEST_SUCCESS) return 1;}
+
+// timing stuff
+static const char* timeout_funcname = NULL;
+static void timeout_func(void);
+#ifdef _WIN32
+static DWORD threadID;
+static int threadTimeout;
+// TODO cancel previous thread if there is any
+#define TEST_TIMEOUT_CALL(testfn, timeout) { timeout_funcname = #testfn; threadTimeout = timeout; CreateThread(NULL, 0, TimeoutThread, 0, 0, &threadID); testfn; timeout_funcname = NULL; }
+DWORD WINAPI TimeoutThread(LPVOID)
 {
-	const char *		nodes[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
+	void timeout_func();
+	Sleep(threadTimeout);
+	if (timeout_funcname)
+		timeout_func();	
+}
+#else
+#define TEST_TIMEOUT_CALL(testfn, timeout) { timeout_funcname = #testfn; signal(SIGALRM, sigalrm); alarm((int)(timeout / 1000.0 + 0.5)); testfn; alarm(0); }
+static void sigalrm(int sig)
+{
+	(void) sig;
+	timeout_func();
+}
+#endif
+
+static void timeout_func()
+{
+	printf("%s: failure", timeout_funcname);
+	exit(1);
+}
+
+// any command before init must fall
+static int test_init_with_commands(keyspace_client_t kc)
+{
+	int					status;
+	const char			key[] = "key";
+	uint64_t			ures;
+	int64_t				res;
+	
+	status = keyspace_client_get_master(kc);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	// this one is different
+	status = keyspace_client_get_simple(kc, key, sizeof(key), NULL, 0, 0);
+	if (status >= 0)
+		return TEST_FAILURE;
+	
+	status = keyspace_client_get(kc, key, sizeof(key), 0);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+	
+	status = keyspace_client_count(kc, &ures, key, sizeof(key), key, sizeof(key), 0, 0, 0, 0);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+	
+	status = keyspace_client_list_keys(kc, key, sizeof(key), key, sizeof(key), 0, 0, 0, 0);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_client_list_keyvalues(kc, key, sizeof(key), key, sizeof(key), 0, 0, 0, 0);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	// only submitted set return with error, the unsubmitted gets queued
+	status = keyspace_client_set(kc, key, sizeof(key), key, sizeof(key), 1);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_client_test_and_set(kc, key, sizeof(key), key, sizeof(key), key, sizeof(key), 1);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_client_add(kc, key, sizeof(key), 0, &res, 1);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_client_delete(kc, key, sizeof(key), 1);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_client_remove(kc, key, sizeof(key), 1);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_client_rename(kc, key, sizeof(key), key, sizeof(key), 1);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_client_prune(kc, key, sizeof(key), 1);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	return TEST_SUCCESS;
+}
+
+// any operation before init must fall
+static int test_init()
+{
+	keyspace_client_t	kc;
+	keyspace_result_t	kr;
+	int					status;
+	
+	kc = keyspace_client_create();
+	
+	status = keyspace_client_submit(kc);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+	
+	status = keyspace_client_begin(kc);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+	
+	status = keyspace_client_cancel(kc);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	kr = keyspace_client_result(kc, &status);
+	if (kr != KEYSPACE_INVALID_RESULT || status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	TEST_CALL(test_init_with_commands(kc));
+
+	// test init with invalid arguments
+	status = keyspace_client_init(kc, 0, NULL, TIMEOUT);
+	if (status == KEYSPACE_OK)
+		return TEST_FAILURE;
+	
+	status = keyspace_client_init(kc, sizeof(NODES) / sizeof(*NODES), NODES, TIMEOUT);
+	if (status != KEYSPACE_OK)
+		return TEST_FAILURE;
+	
+	keyspace_client_destroy(kc);
+	
+	return TEST_SUCCESS;
+}
+
+static int test_badconnect()
+{
+	keyspace_client_t	kc;
+	int					status;
+	const char*			nodes[] = {"127.0.0.0:7080"}; // Note that this is a bad address!
+	const char			key[] = "key";
+	
+	kc = keyspace_client_create();
+	status = keyspace_client_init(kc, sizeof(nodes) / sizeof(*nodes), nodes, TIMEOUT);
+	if (status == KEYSPACE_ERROR)
+		return TEST_FAILURE;
+		
+	TEST_TIMEOUT_CALL(status = keyspace_client_set(kc, key, sizeof(key), key, sizeof(key), 1), TIMEOUT + 1000);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+		
+	keyspace_client_destroy(kc);
+	
+	return TEST_SUCCESS;
+}
+
+static int test_invalid_result()
+{
+	keyspace_result_t	kr;
+	int					status;
+	const void*			p;
+	unsigned			len;
+
+	kr = KEYSPACE_INVALID_RESULT;
+	
+	kr = keyspace_result_next(kr, NULL);
+	if (kr != KEYSPACE_INVALID_RESULT)
+		return TEST_FAILURE;
+	
+	kr = keyspace_result_next(kr, &status);
+	if (kr != KEYSPACE_INVALID_RESULT || status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	status = keyspace_result_status(kr);
+	if (status != KEYSPACE_ERROR)
+		return TEST_FAILURE;
+
+	p = keyspace_result_key(kr, NULL);
+	if (p != NULL)
+		return TEST_FAILURE;
+	
+	len = 0x12345678;
+	p = keyspace_result_key(kr, &len);
+	if (p != NULL || len != 0)
+		return TEST_FAILURE;
+	
+	p = keyspace_result_value(kr, NULL);
+	if (p != NULL)
+		return TEST_FAILURE;
+		
+	len = 0x12345678;
+	p = keyspace_result_value(kr, &len);
+	if (p != NULL || len != 0)
+		return TEST_FAILURE;
+	
+	keyspace_result_close(kr);
+	
+	return TEST_SUCCESS;
+}
+
+
+int keyspace_client_basic_test()
+{
 //	char				*nodes[] = {"127.0.0.1:7080"};
 	keyspace_client_t	kc;
 	const void *		pkey;
@@ -39,9 +252,9 @@ int keyspace_client_test()
 	
 	kc = keyspace_client_create();
 	
-	status = keyspace_client_init(kc, sizeof(nodes) / sizeof(*nodes), nodes, 10000);
+	status = keyspace_client_init(kc, sizeof(NODES) / sizeof(*NODES), NODES, TIMEOUT);
 	if (status < 0)
-		return 1;
+		return TEST_FAILURE;
 		
 	// set 100 keyvalues named user:
 	status = keyspace_client_begin(kc);
@@ -65,7 +278,7 @@ int keyspace_client_test()
 	{
 		pkey = keyspace_result_key(kr, &keylen);
 		pval = keyspace_result_value(kr, &vallen);
-		Log_Trace("Get result: key = %.*s, value = %.*s", keylen, pkey, vallen, pval);
+		Log_Trace("Get result: key = %.*s, value = %.*s", keylen, (char*) pkey, vallen, (char*) pval);
 		
 		keyspace_result_close(kr);
 	}
@@ -78,7 +291,7 @@ int keyspace_client_test()
 	while (status == KEYSPACE_OK && kr != KEYSPACE_INVALID_RESULT)
 	{
 		pkey = keyspace_result_key(kr, &keylen);
-		Log_Trace("List result: key = %.*s", keylen, pkey);
+		Log_Trace("List result: key = %.*s", keylen, (char*) pkey);
 
 		kr = keyspace_result_next(kr, &status);
 	}
@@ -91,12 +304,22 @@ int keyspace_client_test()
 	{
 		pkey = keyspace_result_key(kr, &keylen);
 		pval = keyspace_result_value(kr, &vallen);
-		Log_Trace("List result: key = %.*s, value = %.*s", keylen, pkey, vallen, pval);
+		Log_Trace("List result: key = %.*s, value = %.*s", keylen, (char*) pkey, vallen, (char*) pval);
 
 		kr = keyspace_result_next(kr, &status);
 	}
 	
-	return 0;
+	return TEST_SUCCESS;
+}
+
+int keyspace_client_test()
+{
+//	TEST_CALL(keyspace_client_basic_test());
+	TEST_CALL(test_invalid_result());
+	TEST_CALL(test_init());
+	TEST_CALL(test_badconnect());
+	
+	return TEST_SUCCESS;
 }
 
 #ifndef TEST
@@ -104,9 +327,7 @@ int keyspace_client_test()
 int
 main(int argc, char** argv)
 {
-	keyspace_client_test();
-
-	return 0;
+	return keyspace_client_test();
 }
 
 #endif

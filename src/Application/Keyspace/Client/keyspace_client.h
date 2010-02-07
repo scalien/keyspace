@@ -184,6 +184,7 @@ int	keyspace_client_get(keyspace_client_t kc,
  *
  * Parameters:
  *  kc:			client object
+ *  res:		contains the return value
  *	prefix:		buffer to the prefix data
  *	prefixlen:	length of the prefix
  *  start_key:	buffer to the starting key
@@ -425,6 +426,17 @@ int	keyspace_client_begin(keyspace_client_t kc);
  */
 int	keyspace_client_submit(keyspace_client_t kc);
 
+/*
+ * Cancel grouped commands.
+ *
+ * This function cancels all the grouped operations.
+ * 
+ * Parameters:
+ *	kc:			client object
+ *
+ * Return value: the status of the grouped operations.
+ */
+int keyspace_client_cancel(keyspace_client_t kc);
 
 #ifdef __cplusplus
 }

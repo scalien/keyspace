@@ -12,8 +12,8 @@ main(int argc, char** argv)
 	(void) argc;
 	(void) argv;
 //	ret = KeyspaceClientTestSuite();
-	ret = KeyspaceClientTest(argc, argv);
-//	ret = keyspace_client_test();
+//	ret = KeyspaceClientTest(argc, argv);
+	ret = keyspace_client_test();
 
 	return ret;
 }

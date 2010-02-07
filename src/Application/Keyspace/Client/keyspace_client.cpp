@@ -8,6 +8,15 @@ keyspace_client_result(keyspace_client_t kc, int *status)
 {
 	Client *client = (Client *) kc;
 	
+	if (status == NULL)
+		return KEYSPACE_INVALID_RESULT;
+
+	if (client == NULL)
+	{
+		*status = KEYSPACE_ERROR;
+		return KEYSPACE_INVALID_RESULT;
+	}
+
 	return (keyspace_result_t) client->GetResult(*status);
 }
 
@@ -16,6 +25,9 @@ keyspace_result_close(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
 
+	if (result == NULL)
+		return;
+		
 	result->Close();
 }
 
@@ -23,6 +35,15 @@ keyspace_result_t
 keyspace_result_next(keyspace_result_t kr, int *status)
 {
 	Result *result = (Result *) kr;
+	
+	if (status == NULL)
+		return KEYSPACE_INVALID_RESULT;
+
+	if (result == NULL)
+	{
+		*status = KEYSPACE_ERROR;
+		return KEYSPACE_INVALID_RESULT;
+	}
 	
 	return (keyspace_result_t) result->Next(*status);
 }
@@ -32,6 +53,9 @@ keyspace_result_status(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
 
+	if (result == NULL)
+		return KEYSPACE_ERROR;
+
 	return result->Status();
 }
 
@@ -39,6 +63,16 @@ const void *
 keyspace_result_key(keyspace_result_t kr, unsigned *keylen)
 {
 	Result *result = (Result *) kr;
+	
+	if (keylen == NULL)
+		return NULL;
+
+	if (result == NULL)
+	{
+		*keylen = 0;
+		return NULL;
+	}
+
 	const ByteString &key = result->Key();
 
 	*keylen = key.length;
@@ -49,6 +83,16 @@ const void *
 keyspace_result_value(keyspace_result_t kr, unsigned *vallen)
 {
 	Result *result = (Result *) kr;
+	
+	if (vallen == NULL)
+		return NULL;
+
+	if (result == NULL)
+	{
+		*vallen = 0;
+		return NULL;
+	}
+
 	const ByteString &val = result->Value();
 
 	*vallen = val.length;
@@ -273,4 +317,11 @@ keyspace_client_submit(keyspace_client_t kc)
 	return client->Submit();
 }
 
+int
+keyspace_client_cancel(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+	
+	return client->Cancel();
+}
 

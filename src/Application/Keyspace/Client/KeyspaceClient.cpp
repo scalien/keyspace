@@ -177,6 +177,10 @@ bool Response::ValidateLength()
 //
 /////////////////////////////////////////////////////////////////////
 
+Result::Result()
+{
+	Close();
+}
 
 void Result::Close()
 {
@@ -565,9 +569,15 @@ Client::~Client()
 
 int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 {
+	// validate args
+	if (nodec <= 0 || nodev == NULL)
+		return KEYSPACE_ERROR;
+
 	timeout = timeout_;
 	reconnectTimeout = timeout;
-	IOProcessor::Init(nodec + 64);
+	if (!IOProcessor::Init(nodec + 64))
+		return KEYSPACE_ERROR;
+
 	conns = new ClientConn*[nodec];
 	
 	for (int i = 0; i < nodec; i++)
@@ -607,6 +617,9 @@ uint64_t Client::GetTimeout()
 
 int Client::GetMaster()
 {
+	if (!conns)
+		return KEYSPACE_ERROR;
+
 	return master;
 }
 
@@ -1018,6 +1031,9 @@ int Client::Prune(const ByteString &prefix, bool submit)
 
 int Client::Begin()
 {
+	if (!conns)
+		return KEYSPACE_ERROR;
+
 	if (!IsDone())
 		return KEYSPACE_ERROR;
 
@@ -1029,6 +1045,9 @@ int Client::Begin()
 int Client::Submit()
 {
 	Command**	it;
+	
+	if (!conns)
+		return KEYSPACE_ERROR;
 	
 	it = safeCommands.Tail();
 	if (it)
@@ -1046,6 +1065,9 @@ int Client::Submit()
 
 int Client::Cancel()
 {
+	if (!conns)
+		return KEYSPACE_ERROR;
+
 	if (sentCommands.Length() != 0)
 		return KEYSPACE_ERROR;
 	
@@ -1059,7 +1081,11 @@ int Client::Cancel()
 
 void Client::EventLoop()
 {
-	while (!IsDone())
+	if (!conns)
+		return;
+
+	lastActivityTime = EventLoop::Now();
+	while (!IsDone() && lastActivityTime + timeout > EventLoop::Now())
 	{
 		StateFunc();
 		if (!EventLoop::RunOnce())
@@ -1094,6 +1120,7 @@ void Client::StateFunc()
 	
 	if (safeCommands.Length() > 0 && master == -1)
 	{
+		lastActivityTime = EventLoop::Now();
 		if (masterTime && masterTime + timeout < EventLoop::Now())
 		{
 			DeleteCommands(safeCommands);
@@ -1119,6 +1146,7 @@ void Client::StateFunc()
 		master != -1 && 
 		conns[master]->GetState() == ClientConn::CONNECTED)
 	{
+		lastActivityTime = EventLoop::Now();
 		// TODO find a better way to queue commands
 		//SendCommand(conns[master], safeCommands);
 		SendAllCommands(conns[master], safeCommands);
@@ -1126,6 +1154,7 @@ void Client::StateFunc()
 	
 	if (dirtyCommands.Length() > 0)
 	{
+		lastActivityTime = EventLoop::Now();
 		int numTries = 3;
 		while (distributeDirty && numTries > 0)
 		{
