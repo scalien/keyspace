@@ -1120,7 +1120,7 @@ void Client::StateFunc()
 	
 	if (safeCommands.Length() > 0 && master == -1)
 	{
-		lastActivityTime = EventLoop::Now();
+		//lastActivityTime = EventLoop::Now();
 		if (masterTime && masterTime + timeout < EventLoop::Now())
 		{
 			DeleteCommands(safeCommands);
