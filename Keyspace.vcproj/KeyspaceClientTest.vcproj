@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="KeyspaceClientTest"
 	ProjectGUID="{37F4BC82-1B56-40B2-B474-D2021EFC0E3E}"
 	RootNamespace="KeyspaceClientTest"
@@ -349,6 +349,10 @@
 			<Filter
 				Name="Test"
 				>
+				<File
+					RelativePath="..\src\Test\keyspace_client_test.c"
+					>
+				</File>
 				<File
 					RelativePath="..\src\Test\KeyspaceClientTest.cpp"
 					>
