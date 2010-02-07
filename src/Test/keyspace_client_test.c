@@ -31,7 +31,7 @@ void ignore_pipe_signal()
 // anything else means failure
 #define TEST_SUCCESS	0
 #define TEST_FAILURE	Log_Trace("%s", "failure"), 1
-#define TEST_CALL(testfn) { Log_Trace("%s: testing", #testfn); int status = testfn; Log_Trace("%s: %s", #testfn, status == TEST_SUCCESS ? "success" : "failure"); if (status != TEST_SUCCESS) return 1;}
+#define TEST_CALL(testfn) { int status; Log_Trace("%s: testing", #testfn); status = testfn; Log_Trace("%s: %s", #testfn, status == TEST_SUCCESS ? "success" : "failure"); if (status != TEST_SUCCESS) return 1;}
 
 // timing stuff
 static const char* timeout_funcname = NULL;
@@ -41,12 +41,14 @@ static DWORD threadID;
 static int threadTimeout;
 // TODO cancel previous thread if there is any
 #define TEST_TIMEOUT_CALL(testfn, timeout) { timeout_funcname = #testfn; threadTimeout = timeout; CreateThread(NULL, 0, TimeoutThread, 0, 0, &threadID); testfn; timeout_funcname = NULL; }
-DWORD WINAPI TimeoutThread(LPVOID)
+DWORD WINAPI TimeoutThread(LPVOID pv)
 {
 	void timeout_func();
 	Sleep(threadTimeout);
-	if (timeout_funcname)
+	if (timeout_funcname && threadID == GetCurrentThreadId())
 		timeout_func();	
+
+	return 0;
 }
 #else
 #define TEST_TIMEOUT_CALL(testfn, timeout) { timeout_funcname = #testfn; signal(SIGALRM, sigalrm); alarm((int)(timeout / 1000.0 + 0.5)); testfn; alarm(0); }

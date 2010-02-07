@@ -1120,7 +1120,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 #ifndef TEST
 
 int
-main(int argc, char** argv)
+_main(int argc, char** argv)
 {
 	KeyspaceClientTest(argc, argv);
 
