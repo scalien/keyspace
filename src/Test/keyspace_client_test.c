@@ -189,7 +189,7 @@ static int test_badconnect()
 	if (status == KEYSPACE_ERROR)
 		return TEST_FAILURE;
 		
-	TEST_TIMEOUT_CALL(status = keyspace_client_set(kc, key, sizeof(key), key, sizeof(key), 1), 10000000* TIMEOUT + 1000);
+	TEST_TIMEOUT_CALL(status = keyspace_client_set(kc, key, sizeof(key), key, sizeof(key), 1), TIMEOUT + 1000);
 	if (status != KEYSPACE_ERROR)
 		return TEST_FAILURE;
 		
