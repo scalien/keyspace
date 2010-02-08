@@ -21,7 +21,7 @@ void PLeaseAcceptor::Init(Writers writers_)
 	Log_Message("*** Sleeping %d milliseconds... (this is normal) ***",
 	MAX_LEASE_TIME);
 
-	USleep(MAX_LEASE_TIME);
+	MSleep(MAX_LEASE_TIME);
 
 	Log_Message("*** Done sleeping ***");
 	

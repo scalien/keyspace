@@ -1066,7 +1066,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 
 		Log_Message("TimeoutTest: waiting for %d usecs", client.GetTimeout() + 1000);
-		USleep(client.GetTimeout() + 1000);
+		MSleep(client.GetTimeout() + 1000);
 		
 		status = client.Get(key);
 		if (status != KEYSPACE_OK)

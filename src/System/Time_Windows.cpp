@@ -13,7 +13,7 @@ uint64_t NowMicro()
 	return GetMicroTimestamp();
 }
 
-void USleep(unsigned long msec)
+void MSleep(unsigned long msec)
 {
 	Sleep(msec);
 }
