@@ -978,7 +978,24 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 		Log_Message("LISTKEYS/paginated3 succeeded");
 	}
-		
+
+	// COUNT test 
+	{
+		DynArray<128>	prefix;
+		DynArray<128>	startKey;
+		uint64_t		res;
+
+		prefix.Writef("test:");
+		status = client.Count(res, prefix, startKey);
+		if (status != KEYSPACE_OK || res != NUM_TEST_KEYS)
+		{
+			Log_Message("COUNT failed, status = %s", Status(status));
+			return 1;
+		}
+
+		Log_Message("COUNT succeeded");
+	}
+
 	// PRUNE test
 	{
 		DynArray<128> prefix;
@@ -1093,7 +1110,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			return 1;
 		}
 
-		Log_Message("TimeoutTest: waiting for %d usecs", client.GetTimeout() + 1000);
+		Log_Message("TimeoutTest: waiting for %d msecs", client.GetTimeout() + 1000);
 		MSleep(client.GetTimeout() + 1000);
 		
 		status = client.Get(key);
@@ -1109,7 +1126,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// limit SET test
 	{
 		int d = 1;
-		uint64_t timeout = client.SetTimeout(3000);
+		//uint64_t timeout = client.SetTimeout(3000);
 		
 		key.Fill('k', KEYSPACE_KEY_SIZE + d);
 		value.Fill('v', KEYSPACE_VAL_SIZE + d);
@@ -1141,7 +1158,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			}
 		}
 		
-		client.SetTimeout(timeout);
+		//client.SetTimeout(timeout);
 		Log_Message("SET/limit succeeded");
 	}
 

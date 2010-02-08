@@ -1138,11 +1138,14 @@ void Client::EventLoop()
 	if (!conns)
 		return;
 
+	EventLoop::UpdateTime();
 	lastActivityTime = EventLoop::Now();
-	while (!IsDone() && lastActivityTime + timeout > EventLoop::Now())
+	while (!IsDone())
 	{
 		StateFunc();
 		if (!EventLoop::RunOnce())
+			break;
+		if (lastActivityTime + timeout < EventLoop::Now())
 			break;
 	}
 
@@ -1175,7 +1178,6 @@ void Client::StateFunc()
 	
 	if (safeCommands.Length() > 0 && master == -1)
 	{
-		//lastActivityTime = EventLoop::Now();
 		if (masterTime && masterTime + masterTimeout < EventLoop::Now())
 		{
 			DeleteCommands(safeCommands);
