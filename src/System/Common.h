@@ -23,6 +23,8 @@
 
 #define CS_INT_SIZE(int_type) ((size_t)(0.30103 * sizeof(int_type) * 8) + 2 + 1)
 
+#define ABS(a) ((a) > 0 ? (a) : -1*(a))
+
 inline int min(int a, int b) { if (a < b) return a; else return b; }
 
 inline int max(int a, int b) { if (a > b) return a; else return b; }

@@ -15,6 +15,7 @@ class KeyspaceServer;
 class KeyspaceConn : public MessageConn<KEYSPACE_BUF_SIZE>,
 public KeyspaceService
 {
+friend class KeyspaceServer;
 typedef MFunc<KeyspaceConn>				Func;
 typedef ByteArray<KEYSPACE_BUF_SIZE>	Buffer;
 public:
@@ -45,6 +46,7 @@ private:
 	KeyspaceClientResp	resp;
 	bool				closeAfterSend;
 	char				endpointString[ENDPOINT_STRING_SIZE];
+	unsigned			bytesRead;
 };
 
 #endif

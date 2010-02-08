@@ -760,19 +760,24 @@ bool HttpConn::PrintHello()
 	ByteArray<10*KB> text;
 	if (kdb->IsReplicated())
 	{
+		// TODO: print catching up, highest paxosID seen here
 		text.length = snprintf(text.buffer, text.size,
 			"Keyspace v" VERSION_STRING " r%.*s\n\n"
 			"Running in replicated mode with %d nodes\n\n" \
 			"I am node %d\n\n" \
 			"Master is node %d%s%s\n\n" \
-			"I am in replication round %" PRIu64 "\n",
+			"I am in replication round %" PRIu64 "\n\n" \
+			"Last replication round was %d bytes, took %d msec, thruput was %d KB/sec\n",
 			(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
 			RLOG->GetNumNodes(),
 			RLOG->GetNodeID(),
 			kdb->GetMaster(),
 			kdb->IsMaster() ? " (me)" : "",
 			kdb->IsMasterKnown() ? "" : " (unknown)",
-			RLOG->GetPaxosID());
+			RLOG->GetPaxosID(),
+			RLOG->GetLastRound_Length(),
+			RLOG->GetLastRound_Time(),
+			RLOG->GetLastRound_Thruput()/1000 + 1);
 	}
 	else
 	{

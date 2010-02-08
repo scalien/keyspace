@@ -12,6 +12,7 @@ public:
 		running = true;
 	}
 	
+	virtual void	Init(bool startRead = true);
 	virtual void	OnMessageRead(const ByteString& msg) = 0;
 	virtual void	OnClose() = 0;
 	virtual void	OnRead();
@@ -22,6 +23,14 @@ public:
 protected:
 	bool			running;
 };
+
+template<int bufSize>
+void MessageConn<bufSize>::Init(bool startRead)
+{
+	running = true;
+	TCPConn<bufSize>::Init(startRead);
+}
+
 
 template<int bufSize>
 void MessageConn<bufSize>::OnRead()

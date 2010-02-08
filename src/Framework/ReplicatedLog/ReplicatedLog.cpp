@@ -37,6 +37,10 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	learner.Init(writers);
 	
 	highestPaxosID = 0;
+	lastStarted = 0;
+	lastLength = 0;
+	lastTook = 0;
+	thruput = 0;
 	
 	proposer.paxosID = acceptor.paxosID;
 	learner.paxosID = acceptor.paxosID;
@@ -438,6 +442,14 @@ void ReplicatedLog::OnRequest()
 
 void ReplicatedLog::NewPaxosRound()
 {
+	uint64_t now;
+
+	now = EventLoop::Now();
+	lastTook = ABS(now - lastStarted);
+	lastLength = learner.state.value.length;
+	thruput = (lastLength / (lastTook / 1000.0));
+	lastStarted = now;
+	
 	EventLoop::Remove(&(proposer.prepareTimeout));
 	EventLoop::Remove(&(proposer.proposeTimeout));
 	proposer.paxosID++;
@@ -509,5 +521,20 @@ void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
 				replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 		}
 	}
+}
+
+unsigned ReplicatedLog::GetLastRound_Length()
+{
+	return lastLength;
+}
+
+unsigned ReplicatedLog::GetLastRound_Time()
+{
+	return lastTook;
+}
+
+unsigned ReplicatedLog::GetLastRound_Thruput()
+{
+	return thruput;
 }
 

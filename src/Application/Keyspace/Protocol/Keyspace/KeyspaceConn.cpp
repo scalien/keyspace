@@ -20,6 +20,7 @@ void KeyspaceConn::Init(KeyspaceDB* kdb_, KeyspaceServer* server_)
 	
 	server = server_;
 	closeAfterSend = false;
+	bytesRead = 0;
 	
 	Endpoint endpoint;
 	socket.GetEndpoint(endpoint);
@@ -137,8 +138,16 @@ bool KeyspaceConn::IsAborted()
 void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
 	req.Init();
+	
 	if (req.Read(message))
+	{
 		ProcessMsg();
+		if (kdb->IsReplicated())
+		{
+			bytesRead += message.length;
+			server->OnDataRead(this, message.length);
+		}
+	}
 	else
 		OnClose();
 }

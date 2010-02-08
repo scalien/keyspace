@@ -50,6 +50,9 @@ public:
 	bool				IsAppending();
 	bool				IsSafeDB();
 	void				OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID);
+	unsigned			GetLastRound_Length();
+	unsigned			GetLastRound_Time();
+	unsigned			GetLastRound_Thruput();
 
 private:
 	void				InitTransport();
@@ -82,5 +85,10 @@ private:
 	Func				onLeaseTimeout;
 	ReplicatedDB*		replicatedDB;
 	bool				safeDB;
+	
+	uint64_t			lastStarted;
+	unsigned			lastLength;
+	unsigned			lastTook;
+	unsigned			thruput;
 };
 #endif

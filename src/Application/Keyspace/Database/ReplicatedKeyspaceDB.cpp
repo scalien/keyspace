@@ -78,7 +78,6 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 			return false;
 				
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		Log_Trace();
 		op->status = table->Get(NULL, op->key, op->value);
 		op->service->OnComplete(op);
 		return true;

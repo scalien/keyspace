@@ -2,10 +2,10 @@
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 
 PaxosProposer::PaxosProposer() :
-	onPrepareTimeout(this, &PaxosProposer::OnPrepareTimeout),
-	onProposeTimeout(this, &PaxosProposer::OnProposeTimeout),
-	prepareTimeout(PAXOS_TIMEOUT, &onPrepareTimeout),
-	proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout)
+onPrepareTimeout(this, &PaxosProposer::OnPrepareTimeout),
+onProposeTimeout(this, &PaxosProposer::OnProposeTimeout),
+prepareTimeout(PAXOS_TIMEOUT, &onPrepareTimeout),
+proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout)
 {
 }
 
