@@ -3,13 +3,14 @@
 #include "Platform.h"
 #include <windows.h>
 
+/*
 static int gettimeofday (struct timeval *tv, void* tz)
 {
 	DYNAMIC_TIME_ZONE_INFORMATION	dtzInfo;
 	DWORD							tzId;
 	LONG							bias;
 	union {
-		LONGLONG ns100; /*time since 1 Jan 1601 in 100ns units */
+		LONGLONG ns100; //time since 1 Jan 1601 in 100ns units
 		FILETIME ft;
 	} now;
 
@@ -25,6 +26,7 @@ static int gettimeofday (struct timeval *tv, void* tz)
 	tv->tv_sec = (long) ((now.ns100 - 116444736000000000LL) / 10000000LL - bias * 60);
 	return (0);
 } 
+*/
 
 uint64_t Now()
 {

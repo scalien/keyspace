@@ -15,8 +15,6 @@
 #include <sys/time.h>
 #endif
 
-#define ONLY_FILENAMES
-
 #define LOG_MSG_SIZE	1024
 
 static bool		timestamping = false;
@@ -26,7 +24,7 @@ static int		target = LOG_TARGET_STDOUT;
 static FILE*	logfile = NULL;
 static char*	logfilename = NULL;
 
-#ifdef WIN32
+#ifdef _WIN32
 typedef char log_timestamp_t[24];
 #else
 typedef char log_timestamp_t[27];
@@ -37,9 +35,9 @@ static const char* GetFullTimestamp(log_timestamp_t ts)
 	if (!timestamping)
 		return "";
 
-#ifdef WIN32
+#ifdef _WIN32
 	SYSTEMTIME	st;
-	GetSystemTime(&st);
+	GetLocalTime(&st);
 	
 	snprintf(ts, sizeof(log_timestamp_t), "%04d-%02d-%02d %02d:%02d:%02d.%03d",
 			(int) st.wYear,
@@ -176,7 +174,7 @@ void Log(const char* file, int line, const char* func, int type, const char* fmt
 
 	if (type != LOG_TYPE_MSG && file && func)
 	{
-#ifdef PLATFORM_WINDOWS
+#ifdef _WIN32
 		sep = strrchr(file, '/');
 		if (!sep)
 			sep = strrchr(file, '\\');
