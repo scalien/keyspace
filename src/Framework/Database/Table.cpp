@@ -12,7 +12,8 @@ database(database)
 	const char *filename = name;
 	const char *dbname = NULL;
 	DBTYPE type = DB_BTREE;
-	u_int32_t flags = DB_CREATE | DB_AUTO_COMMIT | DB_NOMMAP;
+	u_int32_t flags = DB_CREATE | DB_AUTO_COMMIT |
+	DB_NOMMAP | DB_READ_UNCOMMITTED;
 	int mode = 0;
 	
 	db = new Db(&database->env, 0);

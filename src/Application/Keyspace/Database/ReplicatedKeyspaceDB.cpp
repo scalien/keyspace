@@ -59,8 +59,6 @@ bool ReplicatedKeyspaceDB::IsMaster()
 
 bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 {
-	Transaction* transaction;
-
 	// don't allow writes for @@ keys
 	if (op->IsWrite() && op->key.length > 2 &&
 		op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
@@ -78,13 +76,10 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 		if (op->type == KeyspaceOp::GET &&
 		   (!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
-		
-		if ((transaction = RLOG->GetTransaction()) != NULL)
-			if (!transaction->IsActive())
-				transaction = NULL;
-		
+				
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status = table->Get(transaction, op->key, op->value);
+		Log_Trace();
+		op->status = table->Get(NULL, op->key, op->value);
 		op->service->OnComplete(op);
 		return true;
 	}
