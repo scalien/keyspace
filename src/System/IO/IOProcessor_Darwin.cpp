@@ -340,7 +340,7 @@ void ProcessTCPRead(struct kevent* ev)
 			readlen = tcpread->data.size - tcpread->data.length;
 		else
 			readlen = tcpread->requested - tcpread->data.length;
-		readlen = min(ev->data, readlen);
+		readlen = MIN(ev->data, readlen);
 		if (readlen > 0)
 		{
 			nread = read(tcpread->fd,
@@ -394,7 +394,7 @@ void ProcessTCPWrite(struct kevent* ev)
 	}
 
 	writelen = tcpwrite->data.length - tcpwrite->transferred;
-	writelen = min(ev->data, writelen);
+	writelen = MIN(ev->data, writelen);
 	
 	if (writelen > 0)
 	{
