@@ -13,7 +13,8 @@ public:
 		LISTP,
 		GETLATENCY,
 		DIRTYGETLATENCY,
-		SETLATENCY
+		SETLATENCY,
+		API
 	};
 	
 	int					type;
@@ -109,6 +110,11 @@ public:
 		if (strcmp(s, "setlatency") == 0)
 		{
 			type = SETLATENCY;
+			return;
+		}
+		if (strcmp(s, "api") == 0)
+		{
+			type = API;
 			return;
 		}
 	}

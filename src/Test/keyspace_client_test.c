@@ -51,6 +51,7 @@ DWORD WINAPI TimeoutThread(LPVOID pv)
 	return 0;
 }
 #else
+#include <unistd.h>
 #define TEST_TIMEOUT_CALL(testfn, timeout) { timeout_funcname = #testfn; signal(SIGALRM, sigalrm); alarm((int)(timeout / 1000.0 + 0.5)); testfn; alarm(0); }
 static void sigalrm(int sig)
 {
@@ -324,7 +325,7 @@ int keyspace_client_test()
 	return TEST_SUCCESS;
 }
 
-#ifndef TEST
+#ifdef CLIENT_TEST
 
 int
 main(int argc, char** argv)

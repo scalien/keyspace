@@ -7,6 +7,7 @@
 #include <float.h>
 
 using namespace Keyspace;
+extern "C" int keyspace_client_test();
 int KeyspaceClientTestSuite(Keyspace::Client& client);
 int DatabaseSetTest(TestConfig& conf);
 
@@ -304,7 +305,7 @@ int KeyspaceClientTest(int argc, char **argv)
 	if (argc < 3)
 	{
 		Log_Message("usage:\n\t%s <configFile> <command>", argv[0]);
-		Log_Message("\n\t\tcommand can be any of get, dirtyget, set, rndset, list, listp, getlatency, dirtygetlatency, setlatency, suite\n");
+		Log_Message("\n\t\tcommand can be any of get, dirtyget, set, rndset, list, listp, getlatency, dirtygetlatency, setlatency, suite, api\n");
 		return 1;
 	}
 
@@ -368,6 +369,8 @@ int KeyspaceClientTest(int argc, char **argv)
 		return KeyspaceClientLatencyTest(client, testConf);
 	if (testConf.type == TestConfig::GET)
 		return KeyspaceClientGetTest(client, testConf);
+	if (testConf.type == TestConfig::API)
+		return keyspace_client_test();
 
 	Log_Message("no such test: %s", testConf.typeString);
 		
@@ -1120,15 +1123,17 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 #ifndef TEST
 
 int
-_main(int argc, char** argv)
+main(int argc, char** argv)
 {
-	KeyspaceClientTest(argc, argv);
+	int ret = 0;
+	
+	ret = KeyspaceClientTest(argc, argv);
 
 #if defined(WIN32) && defined(_DEBUG)
 	system("pause");
 #endif
 
-	return 0;
+	return ret;
 }
 
 #endif
