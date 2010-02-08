@@ -112,8 +112,8 @@ int main(int argc, char* argv[])
 	
 	Log_Message("Keyspace shutting down.");
 	kdb->Shutdown();
-	RLOG->Shutdown();
 	dbReader.Shutdown();
 	dbWriter.Shutdown();
+	RLOG->Shutdown();
 	database.Shutdown();
 }
