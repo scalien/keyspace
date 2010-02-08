@@ -129,6 +129,8 @@ class Command
 {
 public:
 	Command();
+	
+	bool				IsDirty() const;
 
 	char				type;
 	DynArray<128>		msg;
@@ -155,6 +157,9 @@ public:
 	int				GetMaster();
 	int				GetState(int node);
 	void			DistributeDirty(bool dd);
+	void			SetAutoFailover(bool fo);
+	void			SetReconnectTimeout(uint64_t rt);
+	void			SetMasterTimeout(uint64_t mt);
 	
 	double			GetLatency();
 				
@@ -251,11 +256,13 @@ private:
 	int				master;
 	uint64_t		timeout;
 	uint64_t		reconnectTimeout;
+	uint64_t		masterTimeout;
 	uint64_t		masterTime;
 	uint64_t		lastActivityTime;
 	uint64_t		cmdID;
 	Result			result;
 	bool			distributeDirty;
+	bool			autoFailover;
 	int				currentConn;
 };
 

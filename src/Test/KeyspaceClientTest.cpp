@@ -289,6 +289,32 @@ int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
 	return 0;
 }
 
+int KeyspaceClientFailoverTest(Keyspace::Client& client, TestConfig& conf)
+{
+	int status;
+	
+	
+	client.SetReconnectTimeout(1000);
+	
+	for (int j = 0; j < 10; j++)
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			conf.key.Reallocate(conf.keySize, false);
+			if (conf.rndkey)
+				GenRandomString(conf.key, conf.keySize);
+			else
+				conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
+
+			status = client.Set(conf.key, conf.value);
+			if (status != KEYSPACE_OK)
+				return 1;
+		}
+		MSleep(1000);
+	}
+	
+	return 0;
+}
 
 int KeyspaceClientTest(int argc, char **argv)
 {
@@ -367,8 +393,10 @@ int KeyspaceClientTest(int argc, char **argv)
 		return KeyspaceClientListTest(client, testConf);
 	if (testConf.type == TestConfig::GETLATENCY || testConf.type == TestConfig::DIRTYGETLATENCY || testConf.type == TestConfig::SETLATENCY)
 		return KeyspaceClientLatencyTest(client, testConf);
-	if (testConf.type == TestConfig::GET)
+	if (testConf.type == TestConfig::GET || testConf.type == TestConfig::DIRTYGET)
 		return KeyspaceClientGetTest(client, testConf);
+	if (testConf.type == TestConfig::FAILOVER)
+		return KeyspaceClientFailoverTest(client, testConf);
 	if (testConf.type == TestConfig::API)
 		return keyspace_client_test();
 

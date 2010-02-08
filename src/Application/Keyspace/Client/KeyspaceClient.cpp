@@ -443,8 +443,23 @@ void ClientConn::DeleteCommands()
 		cmd = *it;
 		if (cmd->nodeID == nodeID)
 		{
+			// get the next command's iterator
 			it = client.sentCommands.Remove(it);
-			client.result.Close();
+			
+			if (!client.autoFailover)
+			{
+				// remove all commands that are not sent yet
+				delete cmd;
+				client.result.Close();
+			}
+			else
+			{
+				// put back the command to the beginning of a list to be sent again
+				if (cmd->IsDirty())
+					client.dirtyCommands.Add(cmd);
+				else
+					client.safeCommands.Add(cmd);
+			}
 		}
 		else
 			it = client.sentCommands.Next(it);
@@ -495,8 +510,13 @@ void ClientConn::OnWrite()
 void ClientConn::OnClose()
 {
 	Close();
+
+	if (client.master != -1 && client.conns[client.master] == this)
+		client.SetMaster(-1);
+
 	client.StateFunc();
 	DeleteCommands();
+	RemoveReadTimeout();
 	disconnectTime = EventLoop::Now();
 }
 
@@ -509,6 +529,7 @@ void ClientConn::OnConnect()
 
 void ClientConn::OnConnectTimeout()
 {
+	Log_Trace();
 	OnClose();
 }
 
@@ -545,6 +566,22 @@ Command::Command()
 	submit = false;
 }
 
+bool Command::IsDirty() const
+{
+	switch(type)
+	{
+	case KEYSPACECLIENT_GET_MASTER:
+	case KEYSPACECLIENT_DIRTY_GET:
+	case KEYSPACECLIENT_DIRTY_LIST:
+	case KEYSPACECLIENT_DIRTY_LISTP:
+	case KEYSPACECLIENT_DIRTY_COUNT:
+		return true;
+
+	default:
+		return false;
+	}
+}
+
 //===================================================================
 //
 // Client
@@ -575,6 +612,7 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 
 	timeout = timeout_;
 	reconnectTimeout = timeout;
+	masterTimeout = timeout;
 	if (!IOProcessor::Init(nodec + 64))
 		return KEYSPACE_ERROR;
 
@@ -592,6 +630,7 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 	masterTime = 0;
 	cmdID = 0;
 	distributeDirty = false;
+	autoFailover = true;
 	currentConn = 0;
 	
 	return KEYSPACE_OK;
@@ -626,6 +665,21 @@ int Client::GetMaster()
 void Client::DistributeDirty(bool dd)
 {
 	distributeDirty = dd;
+}
+
+void Client::SetAutoFailover(bool fo)
+{
+	autoFailover = fo;
+}
+
+void Client::SetReconnectTimeout(uint64_t rt)
+{
+	reconnectTimeout = rt;
+}
+
+void Client::SetMasterTimeout(uint64_t mt)
+{
+	masterTimeout = mt;
 }
 
 double Client::GetLatency()
@@ -1109,19 +1163,20 @@ bool Client::IsDone()
 
 void Client::StateFunc()
 {
+	Log_Trace();
 	for (int i = 0; i < numConns; i++)
 	{
 		if (conns[i]->GetState() == ClientConn::DISCONNECTED &&
 			conns[i]->disconnectTime + reconnectTimeout <= EventLoop::Now())
 		{
-			conns[i]->Connect(conns[i]->GetEndpoint(), timeout);
+			conns[i]->Connect(conns[i]->GetEndpoint(), reconnectTimeout);
 		}
 	}
 	
 	if (safeCommands.Length() > 0 && master == -1)
 	{
 		//lastActivityTime = EventLoop::Now();
-		if (masterTime && masterTime + timeout < EventLoop::Now())
+		if (masterTime && masterTime + masterTimeout < EventLoop::Now())
 		{
 			DeleteCommands(safeCommands);
 			result.Close();
@@ -1134,7 +1189,7 @@ void Client::StateFunc()
 				!conns[i]->getMasterPending)
 				{
 					if (!conns[i]->getMasterTime || 
-						conns[i]->getMasterTime + timeout < EventLoop::Now())
+						conns[i]->getMasterTime + reconnectTimeout < EventLoop::Now())
 					{
 						conns[i]->GetMaster();
 					}
@@ -1211,6 +1266,7 @@ uint64_t Client::GetNextID()
 {
 	return cmdID++;
 }
+
 Command* Client::CreateCommand(char type, bool submit,
 int msgc, ByteString *msgv)
 {

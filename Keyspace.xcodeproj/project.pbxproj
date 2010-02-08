@@ -844,10 +844,10 @@
 		9AC69B0D0F9D213D003C631E /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				9A8B4A890FC080DC003EA36E /* KeyspaceClient.h */,
 				9AC32CFF105824D300FE0A6F /* KeyspaceClient.cpp */,
 				9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */,
 				9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */,
-				9A8B4A890FC080DC003EA36E /* KeyspaceClient.h */,
 			);
 			path = Client;
 			sourceTree = "<group>";

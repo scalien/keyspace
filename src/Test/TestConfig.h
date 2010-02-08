@@ -14,7 +14,8 @@ public:
 		GETLATENCY,
 		DIRTYGETLATENCY,
 		SETLATENCY,
-		API
+		API,
+		FAILOVER
 	};
 	
 	int					type;
@@ -115,6 +116,11 @@ public:
 		if (strcmp(s, "api") == 0)
 		{
 			type = API;
+			return;
+		}
+		if (strcmp(s, "failover") == 0)
+		{
+			type = FAILOVER;
 			return;
 		}
 	}
