@@ -104,9 +104,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	
 	ops.Append(op);
 
-#ifdef SUBMIT_HACK
 	Submit();
-#endif
 	
 	return true;
 }

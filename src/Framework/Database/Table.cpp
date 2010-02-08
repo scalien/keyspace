@@ -324,7 +324,7 @@ bool Table::VisitBackward(TableVisitor &tv)
 			// if there is a match, call the acceptor, otherwise move to the
 			// previous elem in the database
 			if (memcmp(tv.GetStartKey()->buffer, key.get_data(),
-				min(tv.GetStartKey()->length, key.get_size())) == 0)
+				MIN(tv.GetStartKey()->length, key.get_size())) == 0)
 			{
 				bsKey = ByteString(key.get_size(),
 								   key.get_size(),

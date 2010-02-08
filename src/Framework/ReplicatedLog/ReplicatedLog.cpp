@@ -37,7 +37,7 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	learner.Init(writers);
 	
 	highestPaxosID = 0;
-	lastStarted = 0;
+	lastStarted = EventLoop::Now();
 	lastLength = 0;
 	lastTook = 0;
 	thruput = 0;
@@ -48,8 +48,7 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	masterLease.Init(useSoftClock);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	//if (RCONF->GetNodeID() == 0) // TODO: FOR DEBUGGING
-		masterLease.AcquireLease();
+	masterLease.AcquireLease();
 	
 	logCache.Init();
 	
@@ -523,17 +522,17 @@ void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
 	}
 }
 
-unsigned ReplicatedLog::GetLastRound_Length()
+uint64_t ReplicatedLog::GetLastRound_Length()
 {
 	return lastLength;
 }
 
-unsigned ReplicatedLog::GetLastRound_Time()
+uint64_t ReplicatedLog::GetLastRound_Time()
 {
 	return lastTook;
 }
 
-unsigned ReplicatedLog::GetLastRound_Thruput()
+uint64_t ReplicatedLog::GetLastRound_Thruput()
 {
 	return thruput;
 }

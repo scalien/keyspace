@@ -62,7 +62,7 @@ void KeyspaceServer::OnDataRead(KeyspaceConn* conn, unsigned bytes)
 	
 	bytesRead += bytes;
 
-	t = max(RLOG->GetLastRound_Thruput(), KEYSPACE_POOL_MIN_THRUPUT);
+	t = MAX(RLOG->GetLastRound_Thruput(), KEYSPACE_POOL_MIN_THRUPUT);
 
 	if (bytesRead > t &&
 	conn->bytesRead > KEYSPACE_CONN_MIN_THRUPUT)

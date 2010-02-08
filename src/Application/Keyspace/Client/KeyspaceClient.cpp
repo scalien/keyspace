@@ -318,7 +318,7 @@ readTimeout(&onReadTimeout)
 void ClientConn::Send(Command &cmd)
 {
 	Log_Trace("nodeID = %d, cmd = %.*s",
-			  nodeID, min(cmd.msg.length, 40), cmd.msg.buffer);
+			  nodeID, MIN(cmd.msg.length, 40), cmd.msg.buffer);
 	cmd.nodeID = nodeID;
 #ifdef CLIENT_LATENCY
 	cmd.sendTime = NowMicro();
@@ -694,7 +694,7 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	if (prefix.length > 0 && startKey.length >= prefix.length)
 	{
 		if (memcmp(prefix.buffer, startKey.buffer,
-			min(prefix.length, startKey.length)) == 0)
+			MIN(prefix.length, startKey.length)) == 0)
 		{
 			sk.buffer = startKey.buffer + prefix.length;
 			sk.length = startKey.length - prefix.length;
@@ -818,7 +818,7 @@ bool next, bool forward, bool dirty, bool values)
 	if (prefix.length > 0 && startKey.length >= prefix.length)
 	{
 		if (memcmp(prefix.buffer, startKey.buffer,
-			min(prefix.length, startKey.length)) == 0)
+			MIN(prefix.length, startKey.length)) == 0)
 		{
 			sk.buffer = startKey.buffer + prefix.length;
 			sk.length = startKey.length - prefix.length;

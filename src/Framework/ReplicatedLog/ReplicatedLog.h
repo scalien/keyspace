@@ -50,9 +50,9 @@ public:
 	bool				IsAppending();
 	bool				IsSafeDB();
 	void				OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID);
-	unsigned			GetLastRound_Length();
-	unsigned			GetLastRound_Time();
-	unsigned			GetLastRound_Thruput();
+	uint64_t			GetLastRound_Length();
+	uint64_t			GetLastRound_Time();
+	uint64_t			GetLastRound_Thruput();
 
 private:
 	void				InitTransport();
@@ -87,8 +87,8 @@ private:
 	bool				safeDB;
 	
 	uint64_t			lastStarted;
-	unsigned			lastLength;
-	unsigned			lastTook;
-	unsigned			thruput;
+	uint64_t			lastLength;
+	uint64_t			lastTook;
+	uint64_t			thruput;
 };
 #endif

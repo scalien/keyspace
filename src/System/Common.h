@@ -25,11 +25,8 @@
 
 #define ABS(a) ((a) > 0 ? (a) : -1*(a))
 
-inline int min(int a, int b) { if (a < b) return a; else return b; }
-
-inline int max(int a, int b) { if (a > b) return a; else return b; }
-
-inline uint64_t max(uint64_t a, uint64_t b) { if (a > b) return a; else return b; }
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int randint(int min, int max);
 

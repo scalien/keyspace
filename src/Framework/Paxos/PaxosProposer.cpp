@@ -164,7 +164,7 @@ void PaxosProposer::StartPreparing()
 	state.numProposals++;
 	
 	state.proposalID = RCONF->NextHighest(
-		max(state.proposalID, state.highestPromisedProposalID));
+		MAX(state.proposalID, state.highestPromisedProposalID));
 	
 	state.highestReceivedProposalID = 0;
 	

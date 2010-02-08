@@ -775,9 +775,9 @@ bool HttpConn::PrintHello()
 			kdb->IsMaster() ? " (me)" : "",
 			kdb->IsMasterKnown() ? "" : " (unknown)",
 			RLOG->GetPaxosID(),
-			RLOG->GetLastRound_Length(),
-			RLOG->GetLastRound_Time(),
-			RLOG->GetLastRound_Thruput()/1000 + 1);
+			(int)RLOG->GetLastRound_Length(),
+			(int)RLOG->GetLastRound_Time(),
+			(int)RLOG->GetLastRound_Thruput()/1000 + 1);
 	}
 	else
 	{
