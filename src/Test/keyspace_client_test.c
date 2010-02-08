@@ -1,3 +1,7 @@
+/*
+ * Keyspace C client API tests
+ *
+ */
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -38,9 +42,10 @@ static const char* timeout_funcname = NULL;
 static void timeout_func(void);
 #ifdef _WIN32
 static DWORD threadID;
+static HANDLE threadHandle;
 static int threadTimeout;
 // TODO cancel previous thread if there is any
-#define TEST_TIMEOUT_CALL(testfn, timeout) { timeout_funcname = #testfn; threadTimeout = timeout; CreateThread(NULL, 0, TimeoutThread, 0, 0, &threadID); testfn; timeout_funcname = NULL; }
+#define TEST_TIMEOUT_CALL(testfn, timeout) { timeout_funcname = #testfn; threadTimeout = timeout; threadHandle = CreateThread(NULL, 0, TimeoutThread, 0, 0, &threadID); testfn; TerminateThread(threadHandle, 0); timeout_funcname = NULL; }
 DWORD WINAPI TimeoutThread(LPVOID pv)
 {
 	void timeout_func();

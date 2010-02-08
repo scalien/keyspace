@@ -29,7 +29,7 @@ struct IODesc
 	IODesc*			next;				// pointer for free list handling
 };
 
-static HANDLE	iocp;					// global completion port handle
+static HANDLE	iocp = NULL;			// global completion port handle
 static IODesc*	iods;					// pointer to allocated array of IODesc's
 static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
@@ -159,6 +159,9 @@ bool IOProcessor::Init(int maxfd)
 	GUID		guid = WSAID_CONNECTEX;
 	DWORD		bytesReturned;
 
+	if (iocp)
+		Shutdown();
+
 	// initialize a Console Control Handler routine
 #ifndef KEYSPACE_CLIENTLIB
 	SetConsoleCtrlHandler(ConsoleCtrlHandler, TRUE);
@@ -198,7 +201,12 @@ bool IOProcessor::Init(int maxfd)
 
 void IOProcessor::Shutdown()
 {
+	if (iocp == NULL)
+		return;
+
+	delete[] iods;
 	CloseHandle(iocp);
+	iocp = NULL;
 	WSACleanup();
 }
 
@@ -209,7 +217,7 @@ static bool RequestReadNotification(IOOperation* ioop)
 	IODesc*	iod;
 	int		ret;
 
-	Log_Trace("fd.index = %d", ioop->fd.index);
+//	Log_Trace("fd.index = %d", ioop->fd.index);
 
 	iod = GetIODesc(ioop->fd);
 
@@ -249,7 +257,7 @@ static bool RequestWriteNotification(IOOperation* ioop)
 	IODesc*	iod;
 	int		ret;
 
-	Log_Trace("fd.index = %d", ioop->fd.index);
+//	Log_Trace("fd.index = %d", ioop->fd.index);
 
 	iod = GetIODesc(ioop->fd);
 
