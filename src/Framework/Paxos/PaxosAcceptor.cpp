@@ -32,8 +32,9 @@ void PaxosAcceptor::Init(Writers writers_)
 
 void PaxosAcceptor::Shutdown()
 {
-	if (transaction.IsActive())
-		transaction.Rollback();
+// causes PANIC
+//	if (transaction.IsActive())
+//		transaction.Rollback();
 }
 
 bool PaxosAcceptor::Persist(Transaction* transaction)
