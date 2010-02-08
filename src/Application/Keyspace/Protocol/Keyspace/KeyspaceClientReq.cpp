@@ -174,3 +174,36 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 
 	return true;
 }
+
+bool KeyspaceClientReq::IsRead()
+{
+	if (type == KEYSPACECLIENT_GET_MASTER ||
+	type == KEYSPACECLIENT_GET ||
+	type == KEYSPACECLIENT_DIRTY_GET ||
+	type == KEYSPACECLIENT_LIST ||
+	type == KEYSPACECLIENT_DIRTY_LIST ||
+	type == KEYSPACECLIENT_LISTP ||
+	type == KEYSPACECLIENT_DIRTY_LISTP ||
+	type == KEYSPACECLIENT_COUNT ||
+	type == KEYSPACECLIENT_DIRTY_COUNT)
+		return true;
+
+	return false;
+}
+
+
+bool KeyspaceClientReq::IsWrite()
+{
+	return !IsRead();
+}
+
+bool KeyspaceClientReq::IsDirty()
+{
+	if (type == KEYSPACECLIENT_DIRTY_GET ||
+	type == KEYSPACECLIENT_DIRTY_LIST ||
+	type == KEYSPACECLIENT_DIRTY_LISTP ||
+	type == KEYSPACECLIENT_DIRTY_COUNT)
+		return true;
+	
+	return false;
+}

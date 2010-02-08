@@ -142,7 +142,7 @@ void KeyspaceConn::OnMessageRead(const ByteString& message)
 	if (req.Read(message))
 	{
 		ProcessMsg();
-		if (kdb->IsReplicated())
+		if (kdb->IsReplicated() && req.IsWrite())
 		{
 			bytesRead += message.length;
 			server->OnDataRead(this, message.length);
