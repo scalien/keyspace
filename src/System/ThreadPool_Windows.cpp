@@ -113,6 +113,7 @@ void ThreadPool_Windows::ThreadPoolFunc()
 	callable = NULL;
 	while (running)
 	{
+		// TODO simplify the logic here & make it similar to Posix implementation
 		if (!callable && running)
 			WaitForSingleObject(event, INFINITE);
 
@@ -120,6 +121,8 @@ void ThreadPool_Windows::ThreadPoolFunc()
 		{
 			callable = NULL;
 			EnterCriticalSection(&critsec);
+
+			numActive--;
 			
 			it = callables.Head();
 			if (it)
@@ -128,7 +131,7 @@ void ThreadPool_Windows::ThreadPoolFunc()
 				callables.Remove(it);
 				numPending--;
 			}
-				
+			
 			numActive++;
 
 			LeaveCriticalSection(&critsec);
