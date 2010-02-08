@@ -30,6 +30,8 @@ bool EventLoop::RunOnce()
 
 	sleep = RunTimers();
 	
+	Log_Message("sleep = %ld, timer.length = %d", sleep, timers.length);
+
 	if (sleep < 0)
 		sleep = SLEEP_MSEC;
 	
