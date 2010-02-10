@@ -25,17 +25,6 @@
 		5430A5360FC04BF800AA8EC9 /* SingleKeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5350FC04BF800AA8EC9 /* SingleKeyspaceDB.cpp */; };
 		5430A5980FC0513400AA8EC9 /* AsyncListVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */; };
 		5430A67F0FC0581D00AA8EC9 /* ReplicatedConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */; };
-		54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
-		54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
-		54460CF40F519A9200EFBBDE /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
-		54460CF50F519A9700EFBBDE /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
-		54460CF60F519A9F00EFBBDE /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
-		54460CF80F519AAB00EFBBDE /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
-		54460CFA0F519AB600EFBBDE /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
-		54460CFC0F519AC200EFBBDE /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
-		54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
-		544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */; };
-		544611FB0F533FAB00EFBBDE /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		54507AB40FCC8351009D9B99 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A765F0F7680D6003084C9 /* Cursor.cpp */; };
 		54507BAD0FCD3D4D009D9B99 /* KeyspaceClientReq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507BAC0FCD3D4D009D9B99 /* KeyspaceClientReq.cpp */; };
 		54507BB70FCD3DB4009D9B99 /* KeyspaceClientResp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507BB60FCD3DB4009D9B99 /* KeyspaceClientResp.cpp */; };
@@ -80,16 +69,9 @@
 		54E3FC7010F213D9004EF4A4 /* ThreadPool_Windows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FC6E10F213D9004EF4A4 /* ThreadPool_Windows.cpp */; };
 		54E3FC8510F2142A004EF4A4 /* Socket_Windows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FC8310F2142A004EF4A4 /* Socket_Windows.cpp */; };
 		54E3FC8610F2142A004EF4A4 /* IOProcessor_Windows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FC8410F2142A004EF4A4 /* IOProcessor_Windows.cpp */; };
-		54F16BD510233C3F00614C2D /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
 		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
-		9A05218B0F78633D0066338D /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
 		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
-		9A27231C0F5F9BBE00EE25E2 /* TableVisitorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */; };
-		9A2723220F5F9D7900EE25E2 /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
-		9A2723230F5F9D8900EE25E2 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
-		9A2723240F5F9D9F00EE25E2 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
-		9A2723270F5F9DB600EE25E2 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		9A2724310F654C5400EE25E2 /* Test.agazso.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A2724300F654C5400EE25E2 /* Test.agazso.cpp */; };
 		9A2724640F6550E000EE25E2 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
 		9A2724650F6550E000EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
@@ -101,38 +83,20 @@
 		9A27246F0F6551B100EE25E2 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		9A2724700F6551B100EE25E2 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
 		9A2724720F6551C600EE25E2 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
-		9A2725AF0F66E45800EE25E2 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
-		9A2725B00F66E45800EE25E2 /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
-		9A2725B20F66E45800EE25E2 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
-		9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		9A4894350FF24AC100A586FB /* Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A4894340FF24AC100A586FB /* Console.cpp */; };
-		9A4D2B69108DEC2F000A88C0 /* PTreeTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A4D2B68108DEC2E000A88C0 /* PTreeTest.cpp */; };
-		9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DB0F6C09B0009576A1 /* HubSim.cpp */; };
-		9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6204DE0F6C09B0009576A1 /* Main.cpp */; };
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
 		9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */; };
-		9A8B44C30FA8C17F003EA36E /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
-		9A8B44C80FA8C1E9003EA36E /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
-		9A8B44C90FA8C1F2003EA36E /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
-		9A8B461A0FA9EF12003EA36E /* kdbfs_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B46170FA9EED9003EA36E /* kdbfs_main.c */; };
 		9A8B4DEC0FC8589E003EA36E /* AsyncListVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */; };
 		9A8B4DEE0FC858B4003EA36E /* ReplicatedConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */; };
 		9AC32D00105824D300FE0A6F /* KeyspaceClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC32CFF105824D300FE0A6F /* KeyspaceClient.cpp */; };
-		9AC32D01105824D300FE0A6F /* KeyspaceClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC32CFF105824D300FE0A6F /* KeyspaceClient.cpp */; };
-		9AC698E50F97982D003C631E /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
-		9AC698E60F979836003C631E /* BDBTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC698D40F979720003C631E /* BDBTest.cpp */; };
-		9AC698E70F9798A7003C631E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
-		9AC698E90F9798C4003C631E /* Tester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC698DB0F9797D8003C631E /* Tester.cpp */; };
 		9AC69C530F9E3144003C631E /* KeyspaceClientTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC69C520F9E3144003C631E /* KeyspaceClientTest.cpp */; };
 		9AC69C590F9E32BA003C631E /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF508680F8AB05300F7F49E /* Config.cpp */; };
 		9ADA094511233C8800D9CA2B /* KeyspaceCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA094411233C8800D9CA2B /* KeyspaceCommand.cpp */; };
 		9ADA094911233DAF00D9CA2B /* KeyspaceResponse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA094811233DAF00D9CA2B /* KeyspaceResponse.cpp */; };
 		9ADA095C11233F5D00D9CA2B /* KeyspaceClientConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA095B11233F5D00D9CA2B /* KeyspaceClientConn.cpp */; };
 		9ADA097B112340DB00D9CA2B /* KeyspaceResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA097A112340DB00D9CA2B /* KeyspaceResult.cpp */; };
-		9ADC984D0F7C00C50025A7AB /* QueueTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC98430F7C004E0025A7AB /* QueueTest.cpp */; };
-		9ADC98670F7C01C10025A7AB /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		9ADC9A520F7E78D80025A7AB /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
 		9ADC9A530F7E78D80025A7AB /* TransportTCPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E35F0F6C13CC004BBDB4 /* TransportTCPReader.cpp */; };
 		9ADC9A590F7E78ED0025A7AB /* TransportUDPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421E61C0F6C3F98004BBDB4 /* TransportUDPReader.cpp */; };
@@ -140,18 +104,6 @@
 		9ADC9AD40F7E89330025A7AB /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
 		9AE7CC4A0FEE3697000B8774 /* keyspace_client_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */; };
 		9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
-		9AF5010A0F83953500F7F49E /* kdbfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501090F83953500F7F49E /* kdbfs.c */; };
-		9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
-		9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
-		9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473F0F31B6B200F3D2B6 /* IOProcessor_Darwin.cpp */; };
-		9AF501200F83A9F600F7F49E /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
-		9AF501FD0F8826A900F7F49E /* BDBTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF501F10F88226400F7F49E /* BDBTool.cpp */; };
-		9AF502000F8826CC00F7F49E /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
-		9AF502010F8826CC00F7F49E /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
-		9AF502030F8826DB00F7F49E /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
-		9AF504260F8A2E7500F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
-		9AF504A70F8A2FA300F7F49E /* EventLoop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */; };
-		9AF507DB0F8A726200F7F49E /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
 		9AF508690F8AB05300F7F49E /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF508680F8AB05300F7F49E /* Config.cpp */; };
 /* End PBXBuildFile section */
 
@@ -203,7 +155,6 @@
 		5430A67D0FC0581D00AA8EC9 /* ReplicatedConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedConfig.h; sourceTree = "<group>"; };
 		5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedConfig.cpp; sourceTree = "<group>"; };
 		544032D30FC711E800A2AA8A /* MessageConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageConn.h; sourceTree = "<group>"; };
-		54460CD40F5198E800EFBBDE /* AsyncDBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncDBTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		544611EF0F533FAB00EFBBDE /* AsyncDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncDBTest.cpp; sourceTree = "<group>"; };
 		544611F00F533FAB00EFBBDE /* IOTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOTest.cpp; sourceTree = "<group>"; };
 		544611F10F533FAB00EFBBDE /* OpenDirect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenDirect.cpp; sourceTree = "<group>"; };
@@ -310,11 +261,9 @@
 		9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabase.cpp; path = AsyncDatabase/AsyncDatabase.cpp; sourceTree = "<group>"; };
 		9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiDatabaseOp.cpp; path = AsyncDatabase/MultiDatabaseOp.cpp; sourceTree = "<group>"; };
 		9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiDatabaseOp.h; path = AsyncDatabase/MultiDatabaseOp.h; sourceTree = "<group>"; };
-		9A2723170F5F9B9F00EE25E2 /* TableVisitorTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TableVisitorTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableVisitorTest.cpp; sourceTree = "<group>"; };
 		9A27242A0F65480E00EE25E2 /* Test.agazso */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Test.agazso; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A2724300F654C5400EE25E2 /* Test.agazso.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test.agazso.cpp; sourceTree = "<group>"; };
-		9A2725180F65AA4000EE25E2 /* HubSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HubSim; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A2727000F692B4800EE25E2 /* UDPTestClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPTestClient.c; sourceTree = "<group>"; };
 		9A4894330FF24AC100A586FB /* Console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Console.h; path = Console/Console.h; sourceTree = "<group>"; };
 		9A4894340FF24AC100A586FB /* Console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Console.cpp; path = Console/Console.cpp; sourceTree = "<group>"; };
@@ -343,7 +292,6 @@
 		9AC32CFF105824D300FE0A6F /* KeyspaceClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClient.cpp; sourceTree = "<group>"; };
 		9AC698D40F979720003C631E /* BDBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBTest.cpp; sourceTree = "<group>"; };
 		9AC698DB0F9797D8003C631E /* Tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tester.cpp; sourceTree = "<group>"; };
-		9AC698E00F979809003C631E /* Tester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Tester; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AC69A6A0F9C98F5003C631E /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		9AC69C520F9E3144003C631E /* KeyspaceClientTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientTest.cpp; sourceTree = "<group>"; };
 		9ADA094311233C8800D9CA2B /* KeyspaceCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceCommand.h; sourceTree = "<group>"; };
@@ -357,31 +305,20 @@
 		9ADA097A112340DB00D9CA2B /* KeyspaceResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceResult.cpp; sourceTree = "<group>"; };
 		9ADC98040F7BFBA50025A7AB /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		9ADC98430F7C004E0025A7AB /* QueueTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QueueTest.cpp; sourceTree = "<group>"; };
-		9ADC98480F7C00960025A7AB /* QueueTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = QueueTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkedList.h; sourceTree = "<group>"; };
 		9ADC9AD20F7E89330025A7AB /* EventLoop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventLoop.cpp; sourceTree = "<group>"; };
 		9ADCA0290F82D6EE0025A7AB /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
 		9ADCA02A0F82D6EE0025A7AB /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpClient.cpp; sourceTree = "<group>"; };
-		9ADCA04B0F82D7C90025A7AB /* Kdbfs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Kdbfs; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADCA07E0F8385580025A7AB /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
 		9ADCA07F0F8385580025A7AB /* Channel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Channel.cpp; sourceTree = "<group>"; };
 		9AF501090F83953500F7F49E /* kdbfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kdbfs.c; sourceTree = "<group>"; };
 		9AF501F10F88226400F7F49E /* BDBTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BDBTool.cpp; sourceTree = "<group>"; };
-		9AF501F50F88229800F7F49E /* bdblist */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bdblist; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AF508670F8AB05300F7F49E /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		9AF508680F8AB05300F7F49E /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cpp; sourceTree = "<group>"; };
 		C6A0FF2C0290799A04C91782 /* Keyspace.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Keyspace.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		54460CD20F5198E800EFBBDE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				54460CF80F519AAB00EFBBDE /* libdb_cxx.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8DD76FAD0486AB0100D96B5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -390,56 +327,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9A2723150F5F9B9F00EE25E2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9A2723270F5F9DB600EE25E2 /* libdb_cxx.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A2724280F65480E00EE25E2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				9A27246C0F65517100EE25E2 /* libdb_cxx.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9A2725160F65AA4000EE25E2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9AC698DE0F979809003C631E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9AC698E70F9798A7003C631E /* libdb_cxx.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9ADC98460F7C00960025A7AB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9ADCA0490F82D7C90025A7AB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9AF501F30F88229800F7F49E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9AF502030F8826DB00F7F49E /* libdb_cxx.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,14 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				8DD76FB20486AB0100D96B5E /* Keyspace */,
-				54460CD40F5198E800EFBBDE /* AsyncDBTest */,
-				9A2723170F5F9B9F00EE25E2 /* TableVisitorTest */,
 				9A27242A0F65480E00EE25E2 /* Test.agazso */,
-				9A2725180F65AA4000EE25E2 /* HubSim */,
-				9ADC98480F7C00960025A7AB /* QueueTest */,
-				9ADCA04B0F82D7C90025A7AB /* Kdbfs */,
-				9AF501F50F88229800F7F49E /* bdblist */,
-				9AC698E00F979809003C631E /* Tester */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -914,22 +799,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		54460CD30F5198E800EFBBDE /* AsyncDBTest */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 54460CD90F51990600EFBBDE /* Build configuration list for PBXNativeTarget "AsyncDBTest" */;
-			buildPhases = (
-				54460CD10F5198E800EFBBDE /* Sources */,
-				54460CD20F5198E800EFBBDE /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = AsyncDBTest;
-			productName = AsyncDBTest;
-			productReference = 54460CD40F5198E800EFBBDE /* AsyncDBTest */;
-			productType = "com.apple.product-type.tool";
-		};
 		8DD76FA90486AB0100D96B5E /* Keyspace */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Keyspace" */;
@@ -948,25 +817,9 @@
 			productReference = 8DD76FB20486AB0100D96B5E /* Keyspace */;
 			productType = "com.apple.product-type.tool";
 		};
-		9A2723160F5F9B9F00EE25E2 /* TableVisitorTest */ = {
+		9A2724290F65480E00EE25E2 /* KeyspaceClientTest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9A27231D0F5F9BBF00EE25E2 /* Build configuration list for PBXNativeTarget "TableVisitorTest" */;
-			buildPhases = (
-				9A2723140F5F9B9F00EE25E2 /* Sources */,
-				9A2723150F5F9B9F00EE25E2 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = TableVisitorTest;
-			productName = TableVisitorTest;
-			productReference = 9A2723170F5F9B9F00EE25E2 /* TableVisitorTest */;
-			productType = "com.apple.product-type.tool";
-		};
-		9A2724290F65480E00EE25E2 /* Test.agazso */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9A27242E0F65482D00EE25E2 /* Build configuration list for PBXNativeTarget "Test.agazso" */;
+			buildConfigurationList = 9A27242E0F65482D00EE25E2 /* Build configuration list for PBXNativeTarget "KeyspaceClientTest" */;
 			buildPhases = (
 				9A2724270F65480E00EE25E2 /* Sources */,
 				9A2724280F65480E00EE25E2 /* Frameworks */,
@@ -975,89 +828,9 @@
 			);
 			dependencies = (
 			);
-			name = Test.agazso;
+			name = KeyspaceClientTest;
 			productName = Test.agazso;
 			productReference = 9A27242A0F65480E00EE25E2 /* Test.agazso */;
-			productType = "com.apple.product-type.tool";
-		};
-		9A2725170F65AA4000EE25E2 /* HubSim */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9A27251E0F65AA5300EE25E2 /* Build configuration list for PBXNativeTarget "HubSim" */;
-			buildPhases = (
-				9A2725150F65AA4000EE25E2 /* Sources */,
-				9A2725160F65AA4000EE25E2 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = HubSim;
-			productName = HubSim;
-			productReference = 9A2725180F65AA4000EE25E2 /* HubSim */;
-			productType = "com.apple.product-type.tool";
-		};
-		9AC698DF0F979809003C631E /* Tester */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9AC698E40F979828003C631E /* Build configuration list for PBXNativeTarget "Tester" */;
-			buildPhases = (
-				9AC698DD0F979809003C631E /* Sources */,
-				9AC698DE0F979809003C631E /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Tester;
-			productName = Tester;
-			productReference = 9AC698E00F979809003C631E /* Tester */;
-			productType = "com.apple.product-type.tool";
-		};
-		9ADC98470F7C00960025A7AB /* QueueTest */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9ADC984C0F7C00B50025A7AB /* Build configuration list for PBXNativeTarget "QueueTest" */;
-			buildPhases = (
-				9ADC98450F7C00960025A7AB /* Sources */,
-				9ADC98460F7C00960025A7AB /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = QueueTest;
-			productName = QueueTest;
-			productReference = 9ADC98480F7C00960025A7AB /* QueueTest */;
-			productType = "com.apple.product-type.tool";
-		};
-		9ADCA04A0F82D7C90025A7AB /* Kdbfs */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9ADCA0520F82D83B0025A7AB /* Build configuration list for PBXNativeTarget "Kdbfs" */;
-			buildPhases = (
-				9ADCA0480F82D7C90025A7AB /* Sources */,
-				9ADCA0490F82D7C90025A7AB /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Kdbfs;
-			productName = Kdbfs;
-			productReference = 9ADCA04B0F82D7C90025A7AB /* Kdbfs */;
-			productType = "com.apple.product-type.tool";
-		};
-		9AF501F40F88229800F7F49E /* BDBTool */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "BDBTool" */;
-			buildPhases = (
-				9AF501F20F88229800F7F49E /* Sources */,
-				9AF501F30F88229800F7F49E /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = BDBTool;
-			productName = bdbdump;
-			productReference = 9AF501F50F88229800F7F49E /* bdblist */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -1073,37 +846,12 @@
 			projectRoot = "";
 			targets = (
 				8DD76FA90486AB0100D96B5E /* Keyspace */,
-				54460CD30F5198E800EFBBDE /* AsyncDBTest */,
-				9A2723160F5F9B9F00EE25E2 /* TableVisitorTest */,
-				9A2724290F65480E00EE25E2 /* Test.agazso */,
-				9A2725170F65AA4000EE25E2 /* HubSim */,
-				9ADC98470F7C00960025A7AB /* QueueTest */,
-				9ADCA04A0F82D7C90025A7AB /* Kdbfs */,
-				9AF501F40F88229800F7F49E /* BDBTool */,
-				9AC698DF0F979809003C631E /* Tester */,
+				9A2724290F65480E00EE25E2 /* KeyspaceClientTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		54460CD10F5198E800EFBBDE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				54460CEF0F519A4800EFBBDE /* AsyncDatabase.cpp in Sources */,
-				54460CF20F519A8900EFBBDE /* MultiDatabaseOp.cpp in Sources */,
-				54460CF40F519A9200EFBBDE /* Table.cpp in Sources */,
-				54460CF50F519A9700EFBBDE /* Transaction.cpp in Sources */,
-				54460CF60F519A9F00EFBBDE /* Database.cpp in Sources */,
-				54460CFA0F519AB600EFBBDE /* IOProcessor_Darwin.cpp in Sources */,
-				54460CFC0F519AC200EFBBDE /* Log.cpp in Sources */,
-				54460E3A0F51A5C500EFBBDE /* Scheduler.cpp in Sources */,
-				544611F70F533FAB00EFBBDE /* AsyncDBTest.cpp in Sources */,
-				544611FB0F533FAB00EFBBDE /* Test.c in Sources */,
-				9AF504260F8A2E7500F7F49E /* EventLoop.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8DD76FAB0486AB0100D96B5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1161,8 +909,6 @@
 				54507DFD0FCD6CF7009D9B99 /* CatchupReader.cpp in Sources */,
 				54507DFE0FCD6CF7009D9B99 /* CatchupWriter.cpp in Sources */,
 				9A4894350FF24AC100A586FB /* Console.cpp in Sources */,
-				54F16BD510233C3F00614C2D /* keyspace_client.cpp in Sources */,
-				9AC32D01105824D300FE0A6F /* KeyspaceClient.cpp in Sources */,
 				54E3FB9210E91882004EF4A4 /* Socket_Posix.cpp in Sources */,
 				54E3FB9710EE6285004EF4A4 /* Time_Posix.cpp in Sources */,
 				54E3FB9F10EE62A2004EF4A4 /* ThreadPool_Posix.cpp in Sources */,
@@ -1171,19 +917,6 @@
 				54E3FC7010F213D9004EF4A4 /* ThreadPool_Windows.cpp in Sources */,
 				54E3FC8510F2142A004EF4A4 /* Socket_Windows.cpp in Sources */,
 				54E3FC8610F2142A004EF4A4 /* IOProcessor_Windows.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9A2723140F5F9B9F00EE25E2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9A27231C0F5F9BBE00EE25E2 /* TableVisitorTest.cpp in Sources */,
-				9A2723220F5F9D7900EE25E2 /* Test.c in Sources */,
-				9A2723230F5F9D8900EE25E2 /* Database.cpp in Sources */,
-				9A2723240F5F9D9F00EE25E2 /* Table.cpp in Sources */,
-				9A05218B0F78633D0066338D /* Common.cpp in Sources */,
-				9A4D2B69108DEC2F000A88C0 /* PTreeTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1225,66 +958,6 @@
 				9ADA094911233DAF00D9CA2B /* KeyspaceResponse.cpp in Sources */,
 				9ADA095C11233F5D00D9CA2B /* KeyspaceClientConn.cpp in Sources */,
 				9ADA097B112340DB00D9CA2B /* KeyspaceResult.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9A2725150F65AA4000EE25E2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9A2725AF0F66E45800EE25E2 /* Scheduler.cpp in Sources */,
-				9A2725B00F66E45800EE25E2 /* IOProcessor_Darwin.cpp in Sources */,
-				9A2725B20F66E45800EE25E2 /* Log.cpp in Sources */,
-				9A27267F0F69285400EE25E2 /* Endpoint.cpp in Sources */,
-				9A6204DF0F6C09B0009576A1 /* HubSim.cpp in Sources */,
-				9A6204E00F6C09B0009576A1 /* Main.cpp in Sources */,
-				9AF504A70F8A2FA300F7F49E /* EventLoop.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9AC698DD0F979809003C631E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9AC698E50F97982D003C631E /* Test.c in Sources */,
-				9AC698E60F979836003C631E /* BDBTest.cpp in Sources */,
-				9AC698E90F9798C4003C631E /* Tester.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9ADC98450F7C00960025A7AB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9ADC984D0F7C00C50025A7AB /* QueueTest.cpp in Sources */,
-				9ADC98670F7C01C10025A7AB /* Test.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9ADCA0480F82D7C90025A7AB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9AF5010A0F83953500F7F49E /* kdbfs.c in Sources */,
-				9AF5011C0F83A9F600F7F49E /* EventLoop.cpp in Sources */,
-				9AF5011D0F83A9F600F7F49E /* Scheduler.cpp in Sources */,
-				9AF5011E0F83A9F600F7F49E /* IOProcessor_Darwin.cpp in Sources */,
-				9AF501200F83A9F600F7F49E /* Log.cpp in Sources */,
-				9A8B44C30FA8C17F003EA36E /* keyspace_client.cpp in Sources */,
-				9A8B44C80FA8C1E9003EA36E /* Endpoint.cpp in Sources */,
-				9A8B44C90FA8C1F2003EA36E /* Common.cpp in Sources */,
-				9A8B461A0FA9EF12003EA36E /* kdbfs_main.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9AF501F20F88229800F7F49E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9AF501FD0F8826A900F7F49E /* BDBTool.cpp in Sources */,
-				9AF502000F8826CC00F7F49E /* Table.cpp in Sources */,
-				9AF502010F8826CC00F7F49E /* Database.cpp in Sources */,
-				9AF507DB0F8A726200F7F49E /* Common.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1406,81 +1079,6 @@
 			};
 			name = Release;
 		};
-		54460CD60F5198E800EFBBDE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = AsyncDBTest;
-				ZERO_LINK = YES;
-			};
-			name = Debug;
-		};
-		54460CD70F5198E800EFBBDE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = AsyncDBTest;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		9A2723190F5F9BA100EE25E2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = TableVisitorTest;
-			};
-			name = Debug;
-		};
-		9A27231A0F5F9BA100EE25E2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = TableVisitorTest;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 		9A27242C0F65480F00EE25E2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1526,191 +1124,6 @@
 			};
 			name = Release;
 		};
-		9A27251A0F65AA4100EE25E2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
-				PRODUCT_NAME = HubSim;
-			};
-			name = Debug;
-		};
-		9A27251B0F65AA4100EE25E2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
-				PRODUCT_NAME = HubSim;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		9AC698E20F97980A003C631E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = Tester;
-			};
-			name = Debug;
-		};
-		9AC698E30F97980A003C631E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = Tester;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		9ADC984A0F7C00970025A7AB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
-				PRODUCT_NAME = QueueTest;
-			};
-			name = Debug;
-		};
-		9ADC984B0F7C00970025A7AB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
-				PRODUCT_NAME = QueueTest;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		9ADCA04D0F82D7CA0025A7AB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = (
-					/usr/local/include/fuse,
-					/opt/local/include/db46,
-					src,
-				);
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = (
-					"-D_FILE_OFFSET_BITS=64",
-					"-D__FreeBSD__=10",
-					"-DFUSE_USE_VERSION=26",
-					"-D__STDC_FORMAT_MACROS",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DPLATFORM_DARWIN",
-					"-D_FILE_OFFSET_BITS=64",
-					"-D__FreeBSD__=10",
-					"-DFUSE_USE_VERSION=26",
-					"-D__STDC_FORMAT_MACROS",
-				);
-				OTHER_LDFLAGS = "-lfuse_ino64";
-				PREBINDING = NO;
-				PRODUCT_NAME = Kdbfs;
-			};
-			name = Debug;
-		};
-		9ADCA04E0F82D7CA0025A7AB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
-				PRODUCT_NAME = Kdbfs;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		9AF501F70F88229900F7F49E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = bdblist;
-			};
-			name = Debug;
-		};
-		9AF501F80F88229900F7F49E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/local/lib/db46,
-				);
-				PREBINDING = NO;
-				PRODUCT_NAME = bdbdump;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1732,74 +1145,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		54460CD90F51990600EFBBDE /* Build configuration list for PBXNativeTarget "AsyncDBTest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				54460CD60F5198E800EFBBDE /* Debug */,
-				54460CD70F5198E800EFBBDE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9A27231D0F5F9BBF00EE25E2 /* Build configuration list for PBXNativeTarget "TableVisitorTest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9A2723190F5F9BA100EE25E2 /* Debug */,
-				9A27231A0F5F9BA100EE25E2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9A27242E0F65482D00EE25E2 /* Build configuration list for PBXNativeTarget "Test.agazso" */ = {
+		9A27242E0F65482D00EE25E2 /* Build configuration list for PBXNativeTarget "KeyspaceClientTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9A27242C0F65480F00EE25E2 /* Debug */,
 				9A27242D0F65480F00EE25E2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9A27251E0F65AA5300EE25E2 /* Build configuration list for PBXNativeTarget "HubSim" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9A27251A0F65AA4100EE25E2 /* Debug */,
-				9A27251B0F65AA4100EE25E2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9AC698E40F979828003C631E /* Build configuration list for PBXNativeTarget "Tester" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9AC698E20F97980A003C631E /* Debug */,
-				9AC698E30F97980A003C631E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9ADC984C0F7C00B50025A7AB /* Build configuration list for PBXNativeTarget "QueueTest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9ADC984A0F7C00970025A7AB /* Debug */,
-				9ADC984B0F7C00970025A7AB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9ADCA0520F82D83B0025A7AB /* Build configuration list for PBXNativeTarget "Kdbfs" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9ADCA04D0F82D7CA0025A7AB /* Debug */,
-				9ADCA04E0F82D7CA0025A7AB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9AF501F90F8822B700F7F49E /* Build configuration list for PBXNativeTarget "BDBTool" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9AF501F70F88229900F7F49E /* Debug */,
-				9AF501F80F88229900F7F49E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
