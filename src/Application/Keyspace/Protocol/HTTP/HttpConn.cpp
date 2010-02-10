@@ -489,6 +489,7 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 	}
 	
 	// parse the command part of the request uri
+	IF_PREFIX("/getmaster",				ProcessGetMaster()) else
 	IF_PREFIX("/get?",					ProcessGet(pars, op, false)) else
 	IF_PREFIX("/dirtyget?",				ProcessGet(pars, op, true)) else
 	IF_PREFIX("/set?",					ProcessSet(pars, op)) else
@@ -789,6 +790,18 @@ bool HttpConn::PrintHello()
 	
 	Response(200, text.buffer, text.length);
 	return true;
+}
+
+bool HttpConn::ProcessGetMaster()
+{
+	ByteArray<10> text;
+	if (kdb->IsReplicated())
+		text.length = snprintf(text.buffer, text.size, "%d", kdb->GetMaster());
+	else
+		text.length = snprintf(text.buffer, text.size, "0");
+	
+	Response(200, text.buffer, text.length);
+	return false;
 }
 
 const char* HttpConn::Status(int code)
