@@ -80,7 +80,7 @@ static int test_init_with_commands(keyspace_client_t kc)
 	int64_t				res;
 	
 	status = keyspace_client_get_master(kc);
-	if (status != KEYSPACE_ERROR)
+	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 
 	// this one is different
@@ -89,48 +89,48 @@ static int test_init_with_commands(keyspace_client_t kc)
 		return TEST_FAILURE;
 	
 	status = keyspace_client_get(kc, key, sizeof(key), 0);
-	if (status != KEYSPACE_ERROR)
+	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 	
 	status = keyspace_client_count(kc, &ures, key, sizeof(key), key, sizeof(key), 0, 0, 0, 0);
-	if (status != KEYSPACE_ERROR)
+	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 	
 	status = keyspace_client_list_keys(kc, key, sizeof(key), key, sizeof(key), 0, 0, 0, 0);
-	if (status != KEYSPACE_ERROR)
+	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 
 	status = keyspace_client_list_keyvalues(kc, key, sizeof(key), key, sizeof(key), 0, 0, 0, 0);
-	if (status != KEYSPACE_ERROR)
+	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 
 	// only submitted set return with error, the unsubmitted gets queued
 	status = keyspace_client_set(kc, key, sizeof(key), key, sizeof(key), 1);
-	if (status != KEYSPACE_ERROR)
+	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 
 	status = keyspace_client_test_and_set(kc, key, sizeof(key), key, sizeof(key), key, sizeof(key), 1);
-	if (status != KEYSPACE_ERROR)
+	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 
 	status = keyspace_client_add(kc, key, sizeof(key), 0, &res, 1);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 
 	status = keyspace_client_delete(kc, key, sizeof(key), 1);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 
 	status = keyspace_client_remove(kc, key, sizeof(key), 1);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 
 	status = keyspace_client_rename(kc, key, sizeof(key), key, sizeof(key), 1);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 
 	status = keyspace_client_prune(kc, key, sizeof(key), 1);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 
 	return TEST_SUCCESS;
@@ -146,30 +146,30 @@ static int test_init()
 	kc = keyspace_client_create();
 	
 	status = keyspace_client_submit(kc);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
 	status = keyspace_client_begin(kc);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
 	status = keyspace_client_cancel(kc);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 
-	kr = keyspace_client_result(kc, &status);
-	if (kr != KEYSPACE_INVALID_RESULT || status != KEYSPACE_ERROR)
+	kr = keyspace_client_result(kc);
+	if (kr != KEYSPACE_INVALID_RESULT)
 		return TEST_FAILURE;
 
 	TEST_CALL(test_init_with_commands(kc));
 
 	// test init with invalid arguments
 	status = keyspace_client_init(kc, 0, NULL, TIMEOUT);
-	if (status == KEYSPACE_OK)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
 	status = keyspace_client_init(kc, sizeof(NODES) / sizeof(*NODES), NODES, TIMEOUT);
-	if (status != KEYSPACE_OK)
+	if (status != KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
 	keyspace_client_destroy(kc);
@@ -186,13 +186,18 @@ static int test_badconnect()
 	
 	kc = keyspace_client_create();
 	status = keyspace_client_init(kc, sizeof(nodes) / sizeof(*nodes), nodes, TIMEOUT);
-	if (status == KEYSPACE_ERROR)
+	if (status != KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
+		
+	Log_SetTarget(1);
 		
 	TEST_TIMEOUT_CALL(status = keyspace_client_set(kc, key, sizeof(key), key, sizeof(key), 1), TIMEOUT + 1000);
-	if (status != KEYSPACE_ERROR)
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
-		
+	
+	if (status == KEYSPACE_API_ERROR)
+		return TEST_FAILURE;
+	
 	keyspace_client_destroy(kc);
 	
 	return TEST_SUCCESS;
@@ -206,35 +211,27 @@ static int test_invalid_result()
 	unsigned			len;
 
 	kr = KEYSPACE_INVALID_RESULT;
-	
-	kr = keyspace_result_next(kr, NULL);
-	if (kr != KEYSPACE_INVALID_RESULT)
-		return TEST_FAILURE;
-	
-	kr = keyspace_result_next(kr, &status);
-	if (kr != KEYSPACE_INVALID_RESULT || status != KEYSPACE_ERROR)
+		
+	status = keyspace_result_transport_status(kr);
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 
-	status = keyspace_result_status(kr);
-	if (status != KEYSPACE_ERROR)
-		return TEST_FAILURE;
-
-	p = keyspace_result_key(kr, NULL);
-	if (p != NULL)
+	status = keyspace_result_key(kr, &p, NULL);
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
 	len = 0x12345678;
-	p = keyspace_result_key(kr, &len);
-	if (p != NULL || len != 0)
+	status = keyspace_result_key(kr, &p, &len);
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
-	p = keyspace_result_value(kr, NULL);
-	if (p != NULL)
+	status = keyspace_result_value(kr, &p, NULL);
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 		
 	len = 0x12345678;
-	p = keyspace_result_value(kr, &len);
-	if (p != NULL || len != 0)
+	status = keyspace_result_value(kr, &p, &len);
+	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
 	keyspace_result_close(kr);
@@ -266,7 +263,7 @@ int keyspace_client_basic_test()
 		
 	// set 100 keyvalues named user:
 	status = keyspace_client_begin(kc);
-	if (status == KEYSPACE_OK)
+	if (status == KEYSPACE_SUCCESS)
 	{
 		int i;
 		for (i = 0; i < 100; i++)
@@ -281,11 +278,11 @@ int keyspace_client_basic_test()
 	// get a key named "counter"
 	keylen = snprintf(key, sizeof(key), "counter");
 	keyspace_client_get(kc, key, keylen, 0);
-	kr = keyspace_client_result(kc, &status);
-	if (status == KEYSPACE_OK && kr != KEYSPACE_INVALID_RESULT)
+	kr = keyspace_client_result(kc);
+	if (kr != KEYSPACE_INVALID_RESULT)
 	{
-		pkey = keyspace_result_key(kr, &keylen);
-		pval = keyspace_result_value(kr, &vallen);
+		status = keyspace_result_key(kr, &pkey, &keylen);
+		status = keyspace_result_value(kr, &pval, &vallen);
 		Log_Trace("Get result: key = %.*s, value = %.*s", keylen, (char*) pkey, vallen, (char*) pval);
 		
 		keyspace_result_close(kr);
@@ -295,26 +292,32 @@ int keyspace_client_basic_test()
 
 	// list all keys starting with "user:"
 	keyspace_client_list_keys(kc, key, keylen, NULL, 0, 0, 0, 0, 0);
-	kr = keyspace_client_result(kc, &status);
-	while (status == KEYSPACE_OK && kr != KEYSPACE_INVALID_RESULT)
+	kr = keyspace_client_result(kc);
+	while (kr != KEYSPACE_INVALID_RESULT)
 	{
-		pkey = keyspace_result_key(kr, &keylen);
+		status = keyspace_result_key(kr, &pkey, &keylen);
 		Log_Trace("List result: key = %.*s", keylen, (char*) pkey);
 
-		kr = keyspace_result_next(kr, &status);
+		if (keyspace_result_is_end(kr))
+			break;
+			
+		keyspace_result_next(kr);
 	}
 	
 	// list all keys and values starting with "user:" (List Key-Value Pairs)
 	keylen = snprintf(key, sizeof(key), "user:");		
 	keyspace_client_list_keyvalues(kc, key, keylen, NULL, 0, 0, 0, 0, 0);
-	kr = keyspace_client_result(kc, &status);
-	while (status == KEYSPACE_OK && kr != KEYSPACE_INVALID_RESULT)
+	kr = keyspace_client_result(kc);
+	while (kr != KEYSPACE_INVALID_RESULT)
 	{
-		pkey = keyspace_result_key(kr, &keylen);
-		pval = keyspace_result_value(kr, &vallen);
+		status = keyspace_result_key(kr, &pkey, &keylen);
+		status = keyspace_result_value(kr, &pval, &vallen);
 		Log_Trace("List result: key = %.*s, value = %.*s", keylen, (char*) pkey, vallen, (char*) pval);
 
-		kr = keyspace_result_next(kr, &status);
+		if (keyspace_result_is_end(kr))
+			break;
+			
+		keyspace_result_next(kr);
 	}
 	
 	return TEST_SUCCESS;

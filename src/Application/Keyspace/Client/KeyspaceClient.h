@@ -6,142 +6,15 @@
 #include "System/Buffer.h"
 #include "System/Containers/List.h"
 #include "System/Stopwatch.h"
-#include "Framework/Transport/MessageConn.h"
-
-#define KEYSPACE_OK			0
-#define KEYSPACE_NOTMASTER	-1
-#define KEYSPACE_FAILED		-2
-#define KEYSPACE_ERROR		-3
+#include "System/Events/Callable.h"
+#include "System/Events/Timer.h"
+#include "KeyspaceClientConsts.h"
+#include "KeyspaceResult.h"
 
 namespace Keyspace
 {
 
-class Client;
-class Command;
 
-class Response
-{
-public:
-	DynArray<128>	key;
-	DynArray<128>	value;
-	char			status;
-	uint64_t		id;
-	
-	bool			Read(const ByteString& data);
-private:
-	char*			pos;
-	char			separator;
-	ByteString		data;
-	ByteString		msg;
-	
-	bool			CheckOverflow();
-	bool			ReadUint64(uint64_t& num);
-	bool			ReadChar(char& c);
-	bool			ReadSeparator();
-	bool			ReadMessage(ByteString& bs);
-	bool			ReadData(ByteString& bs, uint64_t length);
-
-	bool			ValidateLength();
-};
-
-class ClientConn : public MessageConn<>
-{
-typedef MFunc<ClientConn> Func;
-
-public:
-	ClientConn(Client &client, int nodeID,
-			   const Endpoint &endpoint_, uint64_t timeout);
-
-	// MessageConn interface
-	virtual void	OnMessageRead(const ByteString& msg);
-	virtual void	OnWrite();
-	virtual void	OnClose();
-	virtual void	OnConnect();
-	virtual void	OnConnectTimeout();
-
-	void			OnReadTimeout();
-	Endpoint&		GetEndpoint();
-	void			Send(Command &cmd);
-	void			RemoveSentCommand(Command** cmdit);
-	bool			ReadMessage(ByteString &msg);
-	bool			ProcessResponse(Response* msg);
-	void			GetMaster();
-	void			DeleteCommands();
-	void			RemoveReadTimeout();
-	void			SetTimeout(uint64_t timeout);
-
-private:
-	friend class Client;
-
-	Client&			client;
-	Endpoint		endpoint;
-	bool			getMasterPending;
-	int				nodeID;
-	uint64_t		disconnectTime;
-	uint64_t		getMasterTime;
-	uint64_t		timeout;
-	Func			onReadTimeout;
-	CdownTimer		readTimeout;
-	int				sent;
-};
-
-typedef List<Response*> ResponseList;
-
-class Result
-{
-friend class ClientConn;
-friend class Client;
-
-public:
-	enum Latency
-	{
-		AVERAGE = 0,
-		MIN = 1,
-		MAX = 2
-	};
-	
-	Result();
-	
-	void				Close();
-	Result*				Next(int &status);
-
-	const ByteString&	Key() const;
-	const ByteString&	Value() const;
-	int					Status() const;
-
-	double				GetLatency(int type = AVERAGE);
-
-private:	
-	ResponseList		responses;
-	ByteString			empty;
-	int					status;
-	int					numLatency;
-	double				minLatency;
-	double				maxLatency;
-	double				avgLatency;
-	
-	void				UpdateLatency(uint64_t latency);
-	void				SetStatus(int status);
-	void				AppendResponse(Response* resp);
-};
-
-class Command
-{
-public:
-	Command();
-	
-	bool				IsDirty() const;
-
-	char				type;
-	DynArray<128>		msg;
-	int					nodeID;
-	int					status;
-	uint64_t			cmdID;
-	bool				submit;
-	uint64_t			sendTime;
-};
-
-typedef List<Command*> CommandList;
 
 class Client
 {
@@ -158,10 +31,11 @@ public:
 	int				GetState(int node);
 	void			DistributeDirty(bool dd);
 	void			SetAutoFailover(bool fo);
-	void			SetReconnectTimeout(uint64_t rt);
-	void			SetMasterTimeout(uint64_t mt);
 	
-	double			GetLatency();
+	Result*			GetResult();
+	int				TransportStatus();
+	int				ConnectivityStatus();
+	int				TimeoutStatus();
 				
 	// simple get commands with preallocated value
 	int				Get(const ByteString &key, ByteString &value,
@@ -200,8 +74,6 @@ public:
 									   uint64_t count = 0,
 									   bool next = false, bool forward = true);
 
-	Result*			GetResult(int &status);
-
 	// write commands
 	int				Set(const ByteString &key,
 						const ByteString &value,
@@ -226,17 +98,17 @@ public:
 
 private:
 	friend class ClientConn;
+	typedef MFunc<Client> Func;
 	
 	void			StateFunc();
 	void			EventLoop();
 	bool			IsDone();
 	uint64_t		GetNextID();
-	Command*		CreateCommand(char cmd, bool submit,
-								  int msgc, ByteString *msgv);
+	Command*		CreateCommand(char cmd, int msgc, ByteString *msgv);
 	void			SendCommand(ClientConn* conn, CommandList& commands);
-	void			SendAllCommands(ClientConn* conn, CommandList& commands);
+	void			SendDirtyCommands();
 	void			DeleteCommands(CommandList& commands);
-	void			SetMaster(int master);
+	void			SetMaster(int master, int node);
 	int				Count(uint64_t &res, const ByteString &prefix,
 						  const ByteString &startKey,
 						  uint64_t count, bool next,
@@ -245,25 +117,30 @@ private:
 								  const ByteString &startKey,
 								  uint64_t count, bool next,
 								  bool forward, bool dirty, bool values);
-	void			StopConnTimeout();
+	void			OnGlobalTimeout();
+	void			OnMasterTimeout();
 	
 	CommandList		safeCommands;
 	CommandList		dirtyCommands;
-	CommandList		sentCommands;
-	ClientConn		**conns;
+	ClientConn**	conns;
 	int				numConns;
 	int				numFinished;
 	int				master;
 	uint64_t		timeout;
-	uint64_t		reconnectTimeout;
-	uint64_t		masterTimeout;
 	uint64_t		masterTime;
-	uint64_t		lastActivityTime;
 	uint64_t		cmdID;
-	Result			result;
+	Result*			result;
+	bool			masterQuery;
 	bool			distributeDirty;
 	bool			autoFailover;
 	int				currentConn;
+	int				connectivityStatus;
+	int				timeoutStatus;
+
+	CdownTimer		globalTimeout;
+	Func			onGlobalTimeout;
+	CdownTimer		masterTimeout;
+	Func			onMasterTimeout;
 };
 
 }; // namespace

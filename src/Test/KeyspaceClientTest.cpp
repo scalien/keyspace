@@ -1,4 +1,5 @@
 #include "Application/Keyspace/Client/KeyspaceClient.h"
+#include "Application/Keyspace/Client/KeyspaceClient.h"
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "System/Stopwatch.h"
 #include "System/Config.h"
@@ -28,14 +29,26 @@ static const char *Status(int status)
 {
 	switch (status)
 	{
-	case KEYSPACE_OK:
-		return "OK";
+	case KEYSPACE_SUCCESS:
+		return "KEYSPACE_SUCCESS";
+	case KEYSPACE_API_ERROR:
+		return "KEYSPACE_API_ERROR";
+	case KEYSPACE_PARTIAL:
+		return "KEYSPACE_PARTIAL";
+	case KEYSPACE_FAILURE:
+		return "KEYSPACE_FAILURE";
+	case KEYSPACE_NOMASTER:
+		return "KEYSPACE_NOMASTER";
+	case KEYSPACE_NOCONNECTION:
+		return "KEYSPACE_NOCONNECTION";
+	case KEYSPACE_MASTER_TIMEOUT:
+		return "KEYSPACE_MASTER_TIMEOUT";
+	case KEYSPACE_GLOBAL_TIMEOUT:
+		return "KEYSPACE_GLOBAL_TIMEOUT";
+	case KEYSPACE_NOSERVICE:
+		return "KEYSPACE_NOSERVICE";
 	case KEYSPACE_FAILED:
-		return "FAILED";
-	case KEYSPACE_NOTMASTER:
-		return "NOTMASTER";
-	case KEYSPACE_ERROR:
-		return "ERROR";
+		return "KEYSPACE_FAILED";
 	default:
 		return "<UNKNOWN>";
 	}
@@ -73,19 +86,19 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 
 	sw.Stop();
 	
-	result = client.GetResult(status);
-	if (status != KEYSPACE_OK || !result)
+	result = client.GetResult();
+	if (status != KEYSPACE_SUCCESS || !result)
 	{
+		delete result;
 		Log_Message("Test failed, status = %s (%s failed after %lu msec)", Status(status), conf.typeString, (unsigned long) sw.elapsed);
 		return 1;
 	}
 	
 	num = 0;
-	while (result)
-	{
+	for (result->Begin(); result->IsEnd(); result->Next())
 		num++;
-		result = result->Next(status);
-	}
+	
+	delete result;
 	
 	Log_Message("Test succeeded (%s %d, elapsed %lu)", conf.typeString, num, (unsigned long) sw.elapsed);
 	return 0;
@@ -128,7 +141,7 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		
 		//sw.Stop();
 
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("Test failed, status = %s (%s failed after %d)", Status(status), conf.typeString, i);
 			return 1;
@@ -139,7 +152,7 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 	status = client.Submit();
 	sw.Stop();
 
-	if (status != KEYSPACE_OK)
+	if (status != KEYSPACE_SUCCESS)
 	{
 		Log_Message("Test failed, status = %s (%s)", Status(status), conf.typeString);
 		return 1;
@@ -200,7 +213,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 			conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
 		
 		status = client.Set(conf.key, conf.value, false);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("Test failed, status = %s (%s failed after %d)", Status(status), conf.typeString, i);
 			return 1;
@@ -215,7 +228,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	status = client.Submit();
 
 	sw.Stop();
-	if (status != KEYSPACE_OK)
+	if (status != KEYSPACE_SUCCESS)
 	{
 		Log_Message("Test failed, status = %s (Submit failed)", Status(status));
 		return 1;
@@ -227,75 +240,11 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	return 0;
 }
 
-int KeyspaceClientLatencyTest(Keyspace::Client& client, TestConfig& conf)
-{
-	int			status;
-	int			numTest;
-	Stopwatch	sw;
-	double		minLatency = DBL_MAX;
-	double		maxLatency = DBL_MIN;
-	double		avgLatency = 0.0;
-	double		latency;
-
-	if (conf.argc < 6)
-	{
-		Log_Message("\n\tusage: %s <keySize> <valueSize> <numTest>", conf.typeString);
-		return -1;
-	}
-	
-	conf.SetKeySize(atoi(conf.argv[3]));
-	conf.SetValueSize(atoi(conf.argv[4]));
-	numTest = atoi(conf.argv[5]);
-
-	Log_Message("Test type = %s, keySize = %d, valueSize = %d, numTest = %d",
-			conf.typeString, conf.keySize, conf.valueSize, numTest);
-	
-	for (int i = 0; i < numTest; i++)
-	{
-		conf.key.Reallocate(conf.keySize, false);
-		if (conf.rndkey)
-			GenRandomString(conf.key, conf.keySize);
-		else
-			conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
-
-		if (conf.type == TestConfig::GETLATENCY)
-			status = client.Get(conf.key);
-		else if (conf.type == TestConfig::DIRTYGETLATENCY)
-			status = client.DirtyGet(conf.key);
-		else if (conf.type == TestConfig::SETLATENCY)
-			status = client.Set(conf.key, conf.value);
-		else
-			return 1;
-			
-		if (status != KEYSPACE_OK)
-		{
-			Log_Message("Test failed, status = %s (%s failed after %d)", Status(status), conf.typeString, i);
-			return 1;
-		}
-		
-		latency = client.GetLatency();
-		if (i > 0)
-			avgLatency = (avgLatency * (i - 1)) / i + latency / i;
-		else
-			avgLatency = latency;
-		if (latency < minLatency)
-			minLatency = latency;
-		if (latency > maxLatency)
-			maxLatency = latency;
-	}
-
-	Log_Message("Test succeeded, %s: avg = %lf, min = %lf, max = %lf", conf.typeString, avgLatency, minLatency, maxLatency);
-	
-	return 0;
-}
-
 int KeyspaceClientFailoverTest(Keyspace::Client& client, TestConfig& conf)
 {
 	int status;
 	
-	
-	client.SetReconnectTimeout(1000);
-	
+		
 	for (int j = 0; j < 10; j++)
 	{
 		for (int i = 0; i < 100; i++)
@@ -307,7 +256,7 @@ int KeyspaceClientFailoverTest(Keyspace::Client& client, TestConfig& conf)
 				conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
 
 			status = client.Set(conf.key, conf.value);
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 				return 1;
 		}
 		MSleep(1000);
@@ -391,8 +340,6 @@ int KeyspaceClientTest(int argc, char **argv)
 		return KeyspaceClientSetTest(client, testConf);
 	if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)
 		return KeyspaceClientListTest(client, testConf);
-	if (testConf.type == TestConfig::GETLATENCY || testConf.type == TestConfig::DIRTYGETLATENCY || testConf.type == TestConfig::SETLATENCY)
-		return KeyspaceClientLatencyTest(client, testConf);
 	if (testConf.type == TestConfig::GET || testConf.type == TestConfig::DIRTYGET)
 		return KeyspaceClientGetTest(client, testConf);
 	if (testConf.type == TestConfig::FAILOVER)
@@ -428,7 +375,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		key.Writef("%s", "test:0");
 		value.Set(reference);
 		status = client.Set(key, value);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("SET failed, status = %s", Status(status));
 			return 1;
@@ -440,7 +387,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	{
 		value.Clear();
 		status = client.Get(key, value);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("GET failed, status = %s", Status(status));
 			return 1;
@@ -457,20 +404,23 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// LISTKEYS test
 	{
 		DynArray<128>	startKey;
+		ByteString		key;
 		
 		status = client.ListKeys(key, startKey);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("LISTKEYS failed, status = %s", Status(status));
 			return 1;
 		}
 
-		result = client.GetResult(status);
-		while (result)
+		result = client.GetResult();
+		for (result->Begin(); result->IsEnd(); result->Next())
 		{
-			Log_Trace("LISTKEYS: %.*s", result->Key().length, result->Key().buffer);
-			result = result->Next(status);		
+			result->Key(key);
+			Log_Trace("LISTKEYS: %.*s", key.length, key.buffer);
 		}
+		
+		delete result;
 		
 		Log_Message("LISTKEYS succeeded");
 	}
@@ -478,7 +428,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// ADD test
 	{
 		status = client.Add(key, 1, num);
-		if (status != KEYSPACE_OK || num != 1234567891UL)
+		if (status != KEYSPACE_SUCCESS || num != 1234567891UL)
 		{
 			Log_Message("ADD failed, status = %s", Status(status));
 			return 1;
@@ -490,7 +440,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// DELETE test
 	{
 		status = client.Delete(key);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("DELETE failed, status = %s", Status(status));
 			return 1;
@@ -503,7 +453,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	{
 		value.Writef("%U", num);
 		status = client.TestAndSet(key, reference, value);
-		if (status == KEYSPACE_OK)
+		if (status == KEYSPACE_SUCCESS)
 		{
 			Log_Message("TESTANDSET failed, status = %s", Status(status));
 			return 1;
@@ -515,21 +465,21 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// SET test (again)
 	{
 		status = client.Set(key, reference);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
 			return 1;
 		}
 
 		status = client.TestAndSet(key, reference, value);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
 			return 1;
 		}
 		
 		status = client.Set(key, reference);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
 			return 1;
@@ -542,7 +492,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	{
 		newName.Writef("%s", "test:1");
 		status = client.Rename(key, newName);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("RENAME failed, status = %s", Status(status));
 			return 1;
@@ -553,18 +503,25 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	
 	// REMOVE test
 	{
+		ByteString	value;
+		
 		status = client.Remove(newName);
-		result = client.GetResult(status);
-		if (status != KEYSPACE_OK || !result)
+		result = client.GetResult();
+		if (status != KEYSPACE_SUCCESS || !result)
 		{
+			delete result;
 			Log_Message("REMOVE failed, status = %s", Status(status));
 			return 1;
 		}
-		if (!(result->Value() == reference))
+		result->Value(value);
+		if (value != reference)
 		{
+			delete result;
 			Log_Message("REMOVE failed");
 			return 1;
 		}
+		
+		delete result;
 		
 		Log_Message("REMOVE succeeded");
 	}
@@ -572,7 +529,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// SET test (again)
 	{
 		status = client.Set(key, reference);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("SET/2 failed, status = %s", Status(status));
 			return 1;
@@ -584,20 +541,26 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 	// LISTKEYVALUES test
 	{
-		DynArray<128> startKey;
+		DynArray<128>	startKey;
+		ByteString		key, value;
+		
 		status = client.ListKeyValues(key, startKey);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("LISTKEYVALUES failed, status = %s", Status(status));
 			return 1;
 		}
 
-		result = client.GetResult(status);
-		while (result)
+		result = client.GetResult();
+		for (result->Begin(); result->IsEnd(); result->Next())
 		{
-			Log_Trace("LISTKEYVALUES: %.*s, %.*s", result->Key().length, result->Key().buffer, result->Value().length, result->Value().buffer);
-			result = result->Next(status);		
+			result->Key(key);
+			result->Value(value);
+			
+			Log_Trace("LISTKEYVALUES: %.*s, %.*s", key.length, key.buffer, value.length, value.buffer);
 		}
+		
+		delete result;
 		
 		Log_Message("LISTKEYVALUES succeeded");
 	}
@@ -606,7 +569,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// batched SET test
 	{
 		status = client.Begin();
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("SET/batched Begin() failed, status = %s", Status(status));
 			return 1;
@@ -618,7 +581,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		{
 			key.Writef("test:%d", i);
 			status = client.Set(key, value, false);
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("SET/batched failed after %d, status = %s", i, Status(status));
 				return 1;
@@ -630,7 +593,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		sw.Start();
 
 		status = client.Submit();
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("SET/batched Submit() failed, status = %s", Status(status));
 			return 1;
@@ -651,7 +614,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			sw.Start();
 			status = client.DirtyGet(key);
 			sw.Stop();
-			if (status != KEYSPACE_OK && status != KEYSPACE_FAILED)
+			if (status != KEYSPACE_SUCCESS && status != KEYSPACE_FAILED)
 			{
 				Log_Message("DIRTYGET/discrete failed, status = %s", Status(status));
 				return 1;
@@ -670,7 +633,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		{
 			key.Writef("test:%d", i);
 			status = client.Get(key, true, false);
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("GET/batched failed, status = %s", Status(status));
 				return 1;
@@ -680,7 +643,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		sw.Start();
 		status = client.Submit();
 		sw.Stop();
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("GET/batched failed, status = %s", Status(status));
 			return 1;
@@ -699,7 +662,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		{
 			key.Writef("test:%d", i);
 			status = client.DirtyGet(key, false);
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("DIRTYGET/batched failed, status = %s", Status(status));
 				return 1;
@@ -709,7 +672,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		sw.Start();
 		status = client.Submit();
 		sw.Stop();
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("DIRTYGET/batched failed, status = %s", Status(status));
 			return 1;
@@ -728,7 +691,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		{
 			key.Writef("test:%d", i);
 			status = client.DirtyGet(key, false);
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("DIRTYGET/batched2 failed, status = %s", Status(status));
 				return 1;
@@ -738,7 +701,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		sw.Start();
 		status = client.Submit();
 		sw.Stop();
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("DIRTYGET/batched2 failed, status = %s", Status(status));
 			return 1;
@@ -758,24 +721,26 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		num = 10;
 		prefix.Writef("test:");
 		status = client.ListKeys(prefix, startKey, num, false);
-		result = client.GetResult(status);
-		if (status != KEYSPACE_OK || !result)
+		result = client.GetResult();
+		if (status != KEYSPACE_SUCCESS || !result)
 		{
+			delete result;
 			Log_Message("LISTKEYS/paginated failed, status = %s", Status(status));
 			return 1;
 		}
 		
 		i = 0;
-		while (result)
+		for (result->Begin(); result->IsEnd(); result->Next())
 		{
 			i++;
 			if (i > num)
 				break;
 
-			startKey.Set(result->Key());
+			result->Key(startKey);
 			Log_Trace("%s", startKey.buffer);
-			result = result->Next(status);
 		}
+		
+		delete result;
 		
 		if (i != num)
 		{
@@ -785,24 +750,26 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		
 		// list the next num items
 		status = client.ListKeys(prefix, startKey, num, true);
-		result = client.GetResult(status);
-		if (status != KEYSPACE_OK || !result)
+		result = client.GetResult();
+		if (status != KEYSPACE_SUCCESS || !result)
 		{
+			delete result;
 			Log_Message("LISTKEYS/paginated failed, status = %s", Status(status));
 			return 1;
 		}
 		
 		i = 0;
-		while (result)
+		for (result->Begin(); result->IsEnd(); result->Next())
 		{
 			i++;
 			if (i > num)
 				break;
 
-			startKey.Set(result->Key());
+			result->Key(startKey);
 			Log_Trace("%s", startKey.buffer);
-			result = result->Next(status);
 		}
+		
+		delete result;
 		
 		if (i != num)
 		{
@@ -828,15 +795,16 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			int j = 10;
 			status = client.ListKeys(prefix, startKey, j, skip);
 
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
 			
-			result = client.GetResult(status);
-			if (status != KEYSPACE_OK)
+			result = client.GetResult();
+			if (status != KEYSPACE_SUCCESS)
 			{
+				delete result;
 				Log_Message("LISTKEYS/paginated2 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
@@ -844,16 +812,17 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			if (!result)
 				break;
 			
-			while (result)
+			for (result->Begin(); result->IsEnd(); result->Next())
 			{
 				i++;
 				if (i > num)
 					break;
 				j--;
-				startKey.Set(result->Key());
+				result->Key(startKey);
 				//Log_Message("LISTKEYS/paginated2: %.*s", startKey.length, startKey.buffer);
-				result = result->Next(status);
 			}
+			
+			delete result;
 			
 			if (j != 0)
 				break;
@@ -922,7 +891,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		{
 			key.Writef("%B%s", prefix.length, prefix.buffer, MCULE_KEYS[i]);
 			status = client.Set(key, key);
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("LISTKEYS/paginated3 Set() failed, status = %s", Status(status));
 				return 1;
@@ -936,15 +905,16 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			int j = 10;
 			status = client.ListKeys(prefix, startKey, j, skip);
 
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
 			
-			result = client.GetResult(status);
-			if (status != KEYSPACE_OK)
+			result = client.GetResult();
+			if (status != KEYSPACE_SUCCESS)
 			{
+				delete result;
 				Log_Message("LISTKEYS/paginated3 failed (returned %d of %d), status = %s", i, num, Status(status));
 				return 1;
 			}
@@ -952,16 +922,17 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			if (!result)
 				break;
 			
-			while (result)
+			for (result->Begin(); result->IsEnd(); result->Next())
 			{
 				i++;
 				if (i > num)
 					break;
 				j--;
-				startKey.Set(result->Key());
+				result->Key(startKey);
 				//Log_Message("LISTKEYS/paginated3: %.*s", startKey.length, startKey.buffer);
-				result = result->Next(status);
 			}
+			
+			delete result;
 			
 			if (j != 0)
 				break;
@@ -987,7 +958,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 		prefix.Writef("test:");
 		status = client.Count(res, prefix, startKey);
-		if (status != KEYSPACE_OK || res != NUM_TEST_KEYS)
+		if (status != KEYSPACE_SUCCESS || res != (uint64_t) NUM_TEST_KEYS)
 		{
 			Log_Message("COUNT failed, status = %s", Status(status));
 			return 1;
@@ -1002,7 +973,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		
 		prefix.Writef("test:");
 		status = client.Prune(prefix);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("PRUNE failed, status = %s", Status(status));
 			return 1;
@@ -1018,17 +989,20 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		
 		prefix.Writef("test:");
 		status = client.ListKeys(prefix, startKey, 0, false);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("LISTKEYS/empty failed, status = %s", Status(status));
 			return -1;
 		}
-		result = client.GetResult(status);
-		if (status != KEYSPACE_OK || result != NULL)
+		result = client.GetResult();
+		if (status != KEYSPACE_SUCCESS || result != NULL)
 		{
+			delete result;
 			Log_Message("LISTKEYS/empty failed, status = %s", Status(status));
 			return -1;
 		}
+		
+		delete result;
 		
 		Log_Message("LISTKEYS/emtpy succeeded");
 	}
@@ -1040,7 +1014,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		
 		key.Writef("test:0");
 		status = client.Set(key, key);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("LISTKEYS/empty2 Set() failed, status = %s", Status(status));
 			return -1;
@@ -1048,13 +1022,13 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		
 		prefix.Writef("test:");
 		status = client.ListKeys(prefix, startKey, 0, true);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("LISTKEYS/empty2 status failed, status = %s", Status(status));
 			return -1;
 		}
-		result = client.GetResult(status);
-		if (status != KEYSPACE_OK || result != NULL)
+		result = client.GetResult();
+		if (status != KEYSPACE_SUCCESS || result != NULL)
 		{
 			Log_Message("LISTKEYS/empty2 result failed, status = %s", Status(status));
 			return -1;
@@ -1066,7 +1040,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// cancel test
 	{
 		status = client.Begin();
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("CancelTest Begin failed, status = %s", Status(status));
 			return 1;
@@ -1076,7 +1050,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		{
 			key.Writef("test:%d", i);
 			status = client.Get(key, true, false);
-			if (status != KEYSPACE_OK)
+			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("CancelTest Get failed, status = %s", Status(status));
 				return 1;
@@ -1084,7 +1058,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		status = client.Cancel();
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("CancelTest Cancel failed, status = %s", Status(status));
 			return 1;
@@ -1097,14 +1071,14 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	{
 		key.Writef("test:0");
 		status = client.Set(key, key);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("TimeoutTest Set failed, status = %s", Status(status));
 			return 1;
 		}
 		
 		status = client.Get(key);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("TimeoutTest failed, status = %s", Status(status));
 			return 1;
@@ -1114,7 +1088,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		MSleep(client.GetTimeout() + 1000);
 		
 		status = client.Get(key);
-		if (status != KEYSPACE_OK)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("TimeoutTest failed, status = %s", Status(status));
 			return 1;
@@ -1139,7 +1113,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 				value.length = KEYSPACE_VAL_SIZE + j;
 
 				status = client.Set(key, value);
-				if (status != KEYSPACE_OK)
+				if (status != KEYSPACE_SUCCESS)
 				{
 					if (key.length <= KEYSPACE_KEY_SIZE && value.length <= KEYSPACE_VAL_SIZE)
 					{

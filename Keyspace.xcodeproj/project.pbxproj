@@ -127,6 +127,10 @@
 		9AC698E90F9798C4003C631E /* Tester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC698DB0F9797D8003C631E /* Tester.cpp */; };
 		9AC69C530F9E3144003C631E /* KeyspaceClientTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AC69C520F9E3144003C631E /* KeyspaceClientTest.cpp */; };
 		9AC69C590F9E32BA003C631E /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AF508680F8AB05300F7F49E /* Config.cpp */; };
+		9ADA094511233C8800D9CA2B /* KeyspaceCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA094411233C8800D9CA2B /* KeyspaceCommand.cpp */; };
+		9ADA094911233DAF00D9CA2B /* KeyspaceResponse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA094811233DAF00D9CA2B /* KeyspaceResponse.cpp */; };
+		9ADA095C11233F5D00D9CA2B /* KeyspaceClientConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA095B11233F5D00D9CA2B /* KeyspaceClientConn.cpp */; };
+		9ADA097B112340DB00D9CA2B /* KeyspaceResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADA097A112340DB00D9CA2B /* KeyspaceResult.cpp */; };
 		9ADC984D0F7C00C50025A7AB /* QueueTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC98430F7C004E0025A7AB /* QueueTest.cpp */; };
 		9ADC98670F7C01C10025A7AB /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 544611F30F533FAB00EFBBDE /* Test.c */; };
 		9ADC9A520F7E78D80025A7AB /* TransportUDPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */; };
@@ -342,6 +346,15 @@
 		9AC698E00F979809003C631E /* Tester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Tester; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AC69A6A0F9C98F5003C631E /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		9AC69C520F9E3144003C631E /* KeyspaceClientTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientTest.cpp; sourceTree = "<group>"; };
+		9ADA094311233C8800D9CA2B /* KeyspaceCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceCommand.h; sourceTree = "<group>"; };
+		9ADA094411233C8800D9CA2B /* KeyspaceCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceCommand.cpp; sourceTree = "<group>"; };
+		9ADA094611233D1200D9CA2B /* KeyspaceClientConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientConsts.h; sourceTree = "<group>"; };
+		9ADA094711233DAF00D9CA2B /* KeyspaceResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceResponse.h; sourceTree = "<group>"; };
+		9ADA094811233DAF00D9CA2B /* KeyspaceResponse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceResponse.cpp; sourceTree = "<group>"; };
+		9ADA095A11233F5D00D9CA2B /* KeyspaceClientConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientConn.h; sourceTree = "<group>"; };
+		9ADA095B11233F5D00D9CA2B /* KeyspaceClientConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientConn.cpp; sourceTree = "<group>"; };
+		9ADA0979112340DB00D9CA2B /* KeyspaceResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceResult.h; sourceTree = "<group>"; };
+		9ADA097A112340DB00D9CA2B /* KeyspaceResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceResult.cpp; sourceTree = "<group>"; };
 		9ADC98040F7BFBA50025A7AB /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		9ADC98430F7C004E0025A7AB /* QueueTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QueueTest.cpp; sourceTree = "<group>"; };
 		9ADC98480F7C00960025A7AB /* QueueTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = QueueTest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -848,6 +861,15 @@
 				9AC32CFF105824D300FE0A6F /* KeyspaceClient.cpp */,
 				9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */,
 				9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */,
+				9ADA094311233C8800D9CA2B /* KeyspaceCommand.h */,
+				9ADA094411233C8800D9CA2B /* KeyspaceCommand.cpp */,
+				9ADA094611233D1200D9CA2B /* KeyspaceClientConsts.h */,
+				9ADA094711233DAF00D9CA2B /* KeyspaceResponse.h */,
+				9ADA094811233DAF00D9CA2B /* KeyspaceResponse.cpp */,
+				9ADA095A11233F5D00D9CA2B /* KeyspaceClientConn.h */,
+				9ADA095B11233F5D00D9CA2B /* KeyspaceClientConn.cpp */,
+				9ADA0979112340DB00D9CA2B /* KeyspaceResult.h */,
+				9ADA097A112340DB00D9CA2B /* KeyspaceResult.cpp */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -1199,6 +1221,10 @@
 				54D6A482111D7F63008573AA /* Time_Posix.cpp in Sources */,
 				54D6A491111D7F8E008573AA /* ThreadPool_Posix.cpp in Sources */,
 				54D6A49E111D7FC6008573AA /* Platform.cpp in Sources */,
+				9ADA094511233C8800D9CA2B /* KeyspaceCommand.cpp in Sources */,
+				9ADA094911233DAF00D9CA2B /* KeyspaceResponse.cpp in Sources */,
+				9ADA095C11233F5D00D9CA2B /* KeyspaceClientConn.cpp in Sources */,
+				9ADA097B112340DB00D9CA2B /* KeyspaceResult.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

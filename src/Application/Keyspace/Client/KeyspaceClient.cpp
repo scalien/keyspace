@@ -2,8 +2,12 @@
 //#include <inttypes.h>
 
 #include "KeyspaceClient.h"
+#include "KeyspaceClientConn.h"
+#include "KeyspaceCommand.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientReq.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientResp.h"
+#include "Framework/PaxosLease/PLeaseConsts.h"
+
 
 using namespace Keyspace;
 
@@ -12,589 +16,41 @@ using namespace Keyspace;
 // Response implementation
 //
 /////////////////////////////////////////////////////////////////////
-bool Response::Read(const ByteString& data_)
-{
-	bool		ret;
-	char		cmd;
-	uint64_t	cmdID;
-	ByteString	tmp;
-
-	status = KEYSPACE_ERROR;
-	data = data_;
-	pos = data.buffer;
-	separator = ':';
-
-	msg.Clear();
-	key.Clear();
-	value.Clear();
-	
-	ret = ReadChar(cmd);
-	ret = ret && ReadSeparator();
-	ret = ret && ReadUint64(cmdID);
-	if (!ret)
-		return false;
-	
-	id = cmdID;
-	
-	if (cmd == KEYSPACECLIENT_NOT_MASTER)
-	{
-		status = KEYSPACE_NOTMASTER;
-		return ValidateLength();
-	}
-	
-	if (cmd == KEYSPACECLIENT_FAILED)
-	{
-		status = KEYSPACE_FAILED;
-		return ValidateLength();
-	}
-	
-	if (cmd == KEYSPACECLIENT_LIST_END)
-	{
-		status = KEYSPACE_OK;
-		return ValidateLength();
-	}
-	
-	if (cmd == KEYSPACECLIENT_OK)
-	{
-		status = KEYSPACE_OK;
-		ret = ReadMessage(tmp);
-		if (ret)
-			value.Append(tmp.buffer, tmp.length);
-
-		return ValidateLength();
-	}
-	
-	if (cmd == KEYSPACECLIENT_LIST_ITEM)
-	{
-		status = KEYSPACE_OK;
-		ret = ReadMessage(tmp);
-		if (ret)
-			key.Append(tmp.buffer, tmp.length);
-		ret = ret && ValidateLength();
-		return ret;
-	}
-	
-	if (cmd == KEYSPACECLIENT_LISTP_ITEM)
-	{
-		status = KEYSPACE_OK;
-		ret = ReadMessage(tmp);
-		if (ret)
-			key.Append(tmp.buffer, tmp.length);
-		ret = ret && ReadMessage(tmp);
-		if (ret)
-			value.Append(tmp.buffer, tmp.length);
-		
-		ret = ret && ValidateLength();
-		return ret;
-	}
-	
-	return false;
-}
-
-bool Response::CheckOverflow()
-{
-	if ((pos - data.buffer) >= (int) data.length || pos < data.buffer)
-		return false;
-	return true;
-}
-
-bool Response::ReadUint64(uint64_t& num)
-{
-	unsigned	nread;
-	
-	if (!CheckOverflow())
-		return false;
-
-	num = strntouint64(pos, data.length - (pos - data.buffer), &nread);
-	if (nread < 1)
-		return false;
-	
-	pos += nread;
-	return true;
-}
-
-bool Response::ReadChar(char& c)
-{
-	if (!CheckOverflow())
-		return false;
-
-	c = *pos; 
-	pos++;
-	
-	return true;
-}
-
-bool Response::ReadSeparator()
-{
-	if (!CheckOverflow())
-		return false;
-	
-	if (*pos != separator) 
-		return false; 
-	
-	pos++;
-	return true;
-}
-
-bool Response::ReadMessage(ByteString& bs)
-{
-	bool		ret;
-	uint64_t	num;
-	
-	ret = true;
-	ret = ret && ReadSeparator();
-	ret = ret && ReadUint64(num);
-	ret = ret && ReadSeparator();
-	ret = ret && ReadData(bs, num);
-	
-	return ret;
-}
-
-bool Response::ReadData(ByteString& bs, uint64_t length)
-{
-	if (pos - length > data.buffer + data.length)
-		return false;
-	
-	bs.buffer = pos;
-	bs.length = length;
-
-	pos += length;
-	
-	return true;
-}
-
-bool Response::ValidateLength()
-{
-	if ((pos - data.buffer) != (int) data.length) 
-		return false;
-	
-	return true;
-}
-
 /////////////////////////////////////////////////////////////////////
 //
 // Result implementation
 //
 /////////////////////////////////////////////////////////////////////
-
-Result::Result()
-{
-	Close();
-}
-
-void Result::Close()
-{
-	Response**	it;
-	
-	status = KEYSPACE_ERROR;
-	
-	numLatency = 0;
-	avgLatency = 0.0;
-	minLatency = std::numeric_limits<double>::max();
-	maxLatency = std::numeric_limits<double>::min();
-	
-	while ((it = responses.Head()) != NULL)
-	{
-		delete *it;
-		responses.Remove(it);
-	}
-}
-
-Result* Result::Next(int &status)
-{
-	Response**	it;
-
-	it = responses.Head();
-	if (!it)
-	{
-		status = KEYSPACE_OK;
-		return NULL;
-	}
-
-	delete *it;
-	responses.Remove(it);
-
-	if (!responses.Head())
-	{
-		status = KEYSPACE_OK;
-		return NULL;
-	}
-	
-	return this;
-}
-
-const ByteString& Result::Key() const
-{
-	Response**	it;
-	
-	it = responses.Head();
-	if (it)
-		return (*it)->key;
-		
-	return empty;
-}
-
-const ByteString& Result::Value() const
-{
-	Response**	it;
-	
-	it = responses.Head();
-	if (it)
-		return (*it)->value;
-		
-	return empty;
-}
-
-int Result::Status() const
-{
-	Response**	it;
-	
-	it = responses.Head();
-	if (it)
-		return (*it)->status;
-		
-	return status;
-}
-
-double Result::GetLatency(int type)
-{
-	if (numLatency == 0)
-		return 0.0;
-
-	switch (type)
-	{
-	case AVERAGE:
-		return avgLatency;
-	case MIN:
-		return minLatency;
-	case MAX:
-		return maxLatency;
-	default:
-		return 0.0;
-	}
-}
-
-void Result::UpdateLatency(uint64_t latency)
-{
-	if (latency < minLatency)
-		minLatency = latency;
-	if (latency > maxLatency)
-		maxLatency = latency;
-	
-	avgLatency = ((avgLatency * numLatency) + latency) / (numLatency + 1);
-	numLatency++;
-}
-
-void Result::SetStatus(int status_)
-{
-	status = status_;
-}
-
-void Result::AppendResponse(Response* resp_)
-{
-	responses.Append(resp_);
-}
-
 //===================================================================
 //
 // ClientConn
 //
 //===================================================================
-ClientConn::ClientConn(Client &client, int nodeID_,
-const Endpoint &endpoint_, uint64_t timeout_) :
-client(client),
-endpoint(endpoint_),
-onReadTimeout(this, &ClientConn::OnReadTimeout),
-readTimeout(&onReadTimeout)
-{
-	nodeID = nodeID_;
-	disconnectTime = 0;
-	getMasterTime = 0;
-	getMasterPending = false;
-	timeout = timeout_;
-	sent = 0;
-}
-
-void ClientConn::Send(Command &cmd)
-{
-	Log_Trace("nodeID = %d, cmd = %.*s",
-			  nodeID, MIN(cmd.msg.length, 40), cmd.msg.buffer);
-	cmd.nodeID = nodeID;
-#ifdef CLIENT_LATENCY
-	cmd.sendTime = NowMicro();
-	//Log_Message("sending command, sendTime = %" PRIu64, cmd.sendTime);
-#endif
-	
-	if (cmd.submit)
-	{
-		Write(cmd.msg.buffer, cmd.msg.length, false);
-		Write("1:*", 3);
-	}
-	else
-	{
-		Write(cmd.msg.buffer, cmd.msg.length);
-	}
-
-	sent++;
-
-	if (timeout && !readTimeout.IsActive())
-	{
-		readTimeout.SetDelay(timeout);
-		EventLoop::Add(&readTimeout);
-	}
-}
-
-void ClientConn::RemoveSentCommand(Command** it)
-{
-	Command*	cmd;
-	
-	cmd = *it;
-#ifdef CLIENT_LATENCY
-	uint64_t	latency;
-	latency = NowMicro() - cmd->sendTime;
-	//Log_Message("latency = %" PRIu64 " usec", latency);
-	client.result.UpdateLatency(latency);
-#endif
-	
-	client.sentCommands.Remove(it);
-	if (--sent == 0)
-		RemoveReadTimeout();
-}
-
-bool ClientConn::ProcessResponse(Response* resp)
-{
-	Command**	it;
-	unsigned	nread;
-	
-	for (it = client.sentCommands.Head(); it != NULL; /* advanced in body */)
-	{
-		Command* cmd = *it;
-		
-		if (cmd->cmdID == resp->id)
-		{
-			cmd->status = resp->status;
-			
-			Log_Trace("status = %d, id = %lu",
-					  (int) cmd->status, (unsigned long) cmd->cmdID);
-			// GET_MASTER is a special case, because it is only used internally
-			if (cmd->type == KEYSPACECLIENT_GET_MASTER)
-			{
-				getMasterPending = false;
-				if (resp->status == KEYSPACE_OK)
-				{
-					client.SetMaster((int) strntoint64(resp->value.buffer, 
-													   resp->value.length,
-													   &nread));
-					if (nread != resp->value.length)
-						resp->status = KEYSPACE_ERROR;
-				}
-				else
-				{
-					client.SetMaster(-1);
-					resp->status = KEYSPACE_ERROR;
-				}				
-					
-				delete cmd;
-				RemoveSentCommand(it);
-				return false;
-			}
-			
-			// with LIST style commands there can be more
-			// than one response with the same id
-			if (cmd->type == KEYSPACECLIENT_LIST ||
-				cmd->type == KEYSPACECLIENT_LISTP ||
-				cmd->type == KEYSPACECLIENT_DIRTY_LIST ||
-				cmd->type == KEYSPACECLIENT_DIRTY_LISTP)
-			{
-				// key.length == 0 means end of the list response
-				if (resp->key.length == 0)
-				{
-					delete cmd;
-					RemoveSentCommand(it);
-					client.result.SetStatus(resp->status);
-				}
-				else
-					client.result.AppendResponse(resp);
-			}
-			else
-			{
-				delete cmd;
-				RemoveSentCommand(it);
-				client.result.AppendResponse(resp);
-			}
-			
-			return true;
-		}
-		else
-			it = client.sentCommands.Next(it);
-	}
-	
-	return true;
-}
-
-void ClientConn::DeleteCommands()
-{
-	Command**	it;
-
-	for (it = client.sentCommands.Head(); it != NULL; /* advanced in body */)
-	{
-		Command*	cmd;
-
-		cmd = *it;
-		if (cmd->nodeID == nodeID)
-		{
-			// get the next command's iterator
-			it = client.sentCommands.Remove(it);
-			
-			if (!client.autoFailover)
-			{
-				// remove all commands that are not sent yet
-				delete cmd;
-				client.result.Close();
-			}
-			else
-			{
-				// put back the command to the beginning of a list to be sent again
-				if (cmd->IsDirty())
-					client.dirtyCommands.Add(cmd);
-				else
-					client.safeCommands.Add(cmd);
-			}
-		}
-		else
-			it = client.sentCommands.Next(it);
-	}
-}
-
-void ClientConn::GetMaster()
-{
-	Command* cmd;
-	
-	cmd = client.CreateCommand(KEYSPACECLIENT_GET_MASTER, false, 0, NULL);
-	client.sentCommands.Append(cmd);
-	Send(*cmd);
-	getMasterPending = true;
-	getMasterTime = Now();
-}
-
-Endpoint& ClientConn::GetEndpoint()
-{
-	return endpoint;
-}
-
-void ClientConn::OnMessageRead(const ByteString& msg)
-{
-	Response	*resp;
-	
-	Log_Trace();
-	EventLoop::Reset(&readTimeout);
-	
-	resp = new Response;
-	if (resp->Read(msg))
-	{
-		if (!ProcessResponse(resp))
-			delete resp;
-		client.StateFunc();
-	}
-	else
-		delete resp;
-}
-
-void ClientConn::OnWrite()
-{
-	TCPConn<>::OnWrite();
-	if (!tcpwrite.active)
-		client.StateFunc();
-}
-
-void ClientConn::OnClose()
-{
-	Close();
-
-	if (client.master != -1 && client.conns[client.master] == this)
-		client.SetMaster(-1);
-
-	client.StateFunc();
-	DeleteCommands();
-	RemoveReadTimeout();
-	disconnectTime = EventLoop::Now();
-}
-
-void ClientConn::OnConnect()
-{
-	TCPConn<>::OnConnect();
-	AsyncRead();
-	client.StateFunc();
-}
-
-void ClientConn::OnConnectTimeout()
-{
-	Log_Trace();
-	OnClose();
-}
-
-void ClientConn::OnReadTimeout()
-{
-	Log_Trace();
-	RemoveReadTimeout();
-	OnClose();
-}
-
-void ClientConn::RemoveReadTimeout()
-{
-	if (readTimeout.IsActive())
-		EventLoop::Remove(&readTimeout);
-}
-
-void ClientConn::SetTimeout(uint64_t timeout_)
-{
-	timeout = timeout_;
-	readTimeout.SetDelay(timeout);
-}
 
 //===================================================================
 //
 // Command
 //
 //===================================================================
-Command::Command()
-{
-	type = 0;
-	nodeID = -1;
-	status = 0;
-	cmdID = 0;
-	submit = false;
-}
-
-bool Command::IsDirty() const
-{
-	switch(type)
-	{
-	case KEYSPACECLIENT_GET_MASTER:
-	case KEYSPACECLIENT_DIRTY_GET:
-	case KEYSPACECLIENT_DIRTY_LIST:
-	case KEYSPACECLIENT_DIRTY_LISTP:
-	case KEYSPACECLIENT_DIRTY_COUNT:
-		return true;
-
-	default:
-		return false;
-	}
-}
-
 //===================================================================
 //
 // Client
 //
 //===================================================================
-Client::Client()
+Client::Client() :
+onGlobalTimeout(this, &Client::OnGlobalTimeout),
+globalTimeout(&onGlobalTimeout),
+onMasterTimeout(this, &Client::OnMasterTimeout),
+masterTimeout(&onMasterTimeout)
 {
 	numConns = 0;
 	conns = NULL;
+	result = new Result;
 }
 
 Client::~Client()
 {
+	delete result;
 	for (int i = 0; i < numConns; i++)
 	{
 		delete conns[i];
@@ -608,13 +64,18 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 {
 	// validate args
 	if (nodec <= 0 || nodev == NULL)
-		return KEYSPACE_ERROR;
+		return KEYSPACE_API_ERROR;
 
+	
 	timeout = timeout_;
-	reconnectTimeout = timeout;
-	masterTimeout = timeout;
+	masterTimeout.SetDelay(2 * MAX_LEASE_TIME);
+	globalTimeout.SetDelay(timeout);
+
+	connectivityStatus = KEYSPACE_NOCONNECTION;
+	timeoutStatus = KEYSPACE_SUCCESS;
+
 	if (!IOProcessor::Init(nodec + 64))
-		return KEYSPACE_ERROR;
+		return KEYSPACE_API_ERROR;
 
 	conns = new ClientConn*[nodec];
 	
@@ -625,15 +86,17 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 		endpoint.Set(nodev[i], true);
 		conns[i] = new ClientConn(*this, i, endpoint, timeout);
 	}
+	
 	numConns = nodec;
 	master = -1;
 	masterTime = 0;
 	cmdID = 0;
+	masterQuery = false;
 	distributeDirty = false;
 	autoFailover = true;
 	currentConn = 0;
 	
-	return KEYSPACE_OK;
+	return KEYSPACE_SUCCESS;
 }
 
 uint64_t Client::SetTimeout(uint64_t timeout_)
@@ -642,10 +105,7 @@ uint64_t Client::SetTimeout(uint64_t timeout_)
 	
 	prev = timeout;
 	timeout = timeout_;
-	
-	for (int i = 0; i < numConns; i++)
-		conns[i]->SetTimeout(timeout);	
-	
+		
 	return prev;
 }
 
@@ -657,8 +117,14 @@ uint64_t Client::GetTimeout()
 int Client::GetMaster()
 {
 	if (!conns)
-		return KEYSPACE_ERROR;
+		return KEYSPACE_API_ERROR;
 
+	masterQuery = true;
+	
+	EventLoop();
+	if (connectivityStatus < 0)
+		return connectivityStatus;
+		
 	return master;
 }
 
@@ -672,34 +138,19 @@ void Client::SetAutoFailover(bool fo)
 	autoFailover = fo;
 }
 
-void Client::SetReconnectTimeout(uint64_t rt)
-{
-	reconnectTimeout = rt;
-}
-
-void Client::SetMasterTimeout(uint64_t mt)
-{
-	masterTimeout = mt;
-}
-
-double Client::GetLatency()
-{
-	return result.GetLatency(Result::AVERAGE);
-}
-
 int Client::Get(const ByteString &key, ByteString &value, bool dirty)
 {
-	int		ret;
+	int			ret;
+	ByteString	tmp;
 
 	ret = Get(key, dirty);
 	if (ret < 0)
 		return ret;
 	
-	if (value.size < result.Value().length)
-		return result.Value().length;
+	ret = result->Value(tmp);
+	value.Set(tmp);
 	
-	value.Set(result.Value());
-	return KEYSPACE_OK;
+	return ret;
 }
 
 int	Client::DirtyGet(const ByteString &key, ByteString &value)
@@ -733,6 +184,10 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	ByteString		sk;
 	int				status;
 	unsigned		nread;
+	ByteString		value;
+	
+	if (result->isBatched)
+		return KEYSPACE_API_ERROR;
 	
 	countString.Writef("%U", count);
 	if (next)
@@ -766,28 +221,28 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	
 	if (dirty)
 	{
-		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_COUNT,
-								false, SIZE(args), args);
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_COUNT,	SIZE(args), args);
 		dirtyCommands.Append(cmd);
 	}
 	else
 	{
-		cmd = CreateCommand(KEYSPACECLIENT_COUNT, false, SIZE(args), args);
+		cmd = CreateCommand(KEYSPACECLIENT_COUNT, SIZE(args), args);
 		safeCommands.Append(cmd);
 	}
 	
-	result.Close();
+	result->Close();
+	result->AppendCommand(cmd);
+	
 	EventLoop();
-	status = result.Status();
-	if (status != KEYSPACE_OK)
-	{
-		result.Close();
+	status = result->TransportStatus();
+	if (status != KEYSPACE_SUCCESS)
 		return status;
-	}
 	
 	// TODO check conversion
-	res = strntoint64(result.Value().buffer, result.Value().length, &nread);
-	result.Close();
+	status = result->Value(value);
+	if (status == KEYSPACE_SUCCESS)
+		res = strntoint64(value.buffer, value.length, &nread);
+
 	return status;
 }
 
@@ -796,26 +251,33 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 	Command*	cmd;
 	ByteString	args[1];
 
+	if (result->isBatched && submit)
+		return KEYSPACE_API_ERROR;
+
 	args[0] = key;
 
 	if (dirty)
 	{
-		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_GET, false, 1, args);
+		cmd = CreateCommand(KEYSPACECLIENT_DIRTY_GET, 1, args);
 		dirtyCommands.Append(cmd);
 	}
 	else
 	{
-		cmd = CreateCommand(KEYSPACECLIENT_GET, false, 1, args);
+		cmd = CreateCommand(KEYSPACECLIENT_GET, 1, args);
 		safeCommands.Append(cmd);
 	}
 
 	if (!submit)
-		return KEYSPACE_OK;
-
-	result.Close();
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
+	
+	result->Close();
+	result->AppendCommand(cmd);
 	
 	EventLoop();	
-	return result.Status();
+	return result->TransportStatus();
 }
 
 int Client::DirtyGet(const ByteString &key, bool submit)
@@ -857,6 +319,9 @@ bool next, bool forward, bool dirty, bool values)
 	DynArray<10>	nextString;
 	DynArray<10>	backString;
 	ByteString		sk;
+
+	if (result->isBatched)
+		return KEYSPACE_API_ERROR;
 	
 	countString.Writef("%U", count);
 	if (next)
@@ -891,40 +356,55 @@ bool next, bool forward, bool dirty, bool values)
 	if (dirty)
 	{
 		if (values)
-			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LISTP,
-								false, SIZE(args), args);
+			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LISTP, SIZE(args), args);
 		else
-			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, false,
-								SIZE(args), args);
+			cmd = CreateCommand(KEYSPACECLIENT_DIRTY_LIST, SIZE(args), args);
 
 		dirtyCommands.Append(cmd);
 	}
 	else
 	{
 		if (values)
-			cmd = CreateCommand(KEYSPACECLIENT_LISTP, false, SIZE(args), args);
+			cmd = CreateCommand(KEYSPACECLIENT_LISTP, SIZE(args), args);
 		else
-			cmd = CreateCommand(KEYSPACECLIENT_LIST, false, SIZE(args), args);
+			cmd = CreateCommand(KEYSPACECLIENT_LIST, SIZE(args), args);
 		
 		safeCommands.Append(cmd);
 	}
 	
-	result.Close();
+	result->Close();
 	
 	EventLoop();
-	return result.Status();	
+	return result->TransportStatus();	
 
 }
 
 
-Result* Client::GetResult(int &status)
+Result* Client::GetResult()
 {
-	status = result.Status();
+	Result*		tmp;
 	
-	if (result.responses.Head())
-		return &result;
-	
-	return NULL;
+	if (conns == NULL)
+		return NULL;
+
+	tmp = result;
+	result = new Result();
+	return tmp;
+}
+
+int Client::TransportStatus()
+{
+	return result->TransportStatus();
+}
+
+int Client::ConnectivityStatus()
+{
+	return connectivityStatus;
+}
+
+int Client::TimeoutStatus()
+{
+	return timeoutStatus;
 }
 
 int Client::Set(const ByteString& key, const ByteString& value, bool submit)
@@ -933,18 +413,26 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	ByteString	args[2];
 	int			status;
 	
+	if (result->isBatched && submit)
+		return KEYSPACE_API_ERROR;	
+	
 	args[0] = key;
 	args[1] = value;
 	
-	cmd = CreateCommand(KEYSPACECLIENT_SET, submit, 2, args);
+	cmd = CreateCommand(KEYSPACECLIENT_SET, 2, args);
 	safeCommands.Append(cmd);
 	
 	if (!submit)
-		return KEYSPACE_OK;
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
 	
-	result.Close();
+	result->Close();
+	result->AppendCommand(cmd);
+
 	EventLoop();
-	status = result.Status();
+	status = result->TransportStatus();
 	
 	return status;
 }
@@ -956,19 +444,27 @@ const ByteString &test, const ByteString &value, bool submit)
 	ByteString	args[3];
 	int			status;
 	
+	if (result->isBatched && submit)
+		return KEYSPACE_API_ERROR;
+
 	args[0] = key;
 	args[1] = test;
 	args[2] = value;
 	
-	cmd = CreateCommand(KEYSPACECLIENT_TEST_AND_SET, submit, 3, args);
+	cmd = CreateCommand(KEYSPACECLIENT_TEST_AND_SET, 3, args);
 	safeCommands.Append(cmd);
 	
 	if (!submit)
-		return KEYSPACE_OK;
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
+	
+	result->Close();
+	result->AppendCommand(cmd);
 
-	result.Close();
 	EventLoop();
-	status = result.Status();
+	status = result->TransportStatus();
 	
 	return status;
 }
@@ -980,31 +476,39 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	DynArray<32> numString;
 	unsigned	nread;
 	int			status;
+	ByteString	value;
+
+	if (result->isBatched && submit)
+		return KEYSPACE_API_ERROR;
 	
 	numString.Writef("%U", num);
 	
 	args[0] = key;
 	args[1] = numString;
 	
-	cmd = CreateCommand(KEYSPACECLIENT_ADD, submit, 2, args);
+	cmd = CreateCommand(KEYSPACECLIENT_ADD, 2, args);
 	safeCommands.Append(cmd);
 	
 	if (!submit)
-		return KEYSPACE_OK;
-
-	result.Close();
-	EventLoop();
-	status = result.Status();
-	
-	if (status != KEYSPACE_OK)
 	{
-		result.Close();
-		return status;
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
 	}
 	
-	// TODO check conversion
-	res = strntoint64(result.Value().buffer, result.Value().length, &nread);
-	result.Close();
+	result->Close();
+	result->AppendCommand(cmd);
+	
+	EventLoop();
+	status = result->TransportStatus();
+	
+	if (status != KEYSPACE_SUCCESS)
+		return status;
+	
+	status = result->Value(value);
+	// TODO: check conversion
+	if (status == KEYSPACE_SUCCESS)
+		res = strntoint64(value.buffer, value.length, &nread);
+
 	return status;
 }
 
@@ -1014,6 +518,9 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	char		c;
 	Command*	cmd;
 	ByteString	args[1];
+
+	if (result->isBatched && submit)
+		return KEYSPACE_API_ERROR;
 	
 	args[0] = key;
 	
@@ -1022,15 +529,20 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	else
 		c = KEYSPACECLIENT_DELETE;
 		
-	cmd = CreateCommand(c, submit, SIZE(args), args);
+	cmd = CreateCommand(c, SIZE(args), args);
 	safeCommands.Append(cmd);
 	
 	if (!submit)
-		return KEYSPACE_OK;
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
+	
+	result->Close();
+	result->AppendCommand(cmd);
 
-	result.Close();
 	EventLoop();
-	status = result.Status();
+	status = result->TransportStatus();
 	
 	return status;
 }
@@ -1045,19 +557,27 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	int			status;
 	Command*	cmd;
 	ByteString	args[2];
-	
+
+	if (result->isBatched && submit)
+		return KEYSPACE_API_ERROR;
+
 	args[0] = from;
 	args[1] = to;
 	
-	cmd = CreateCommand(KEYSPACECLIENT_RENAME, submit, SIZE(args), args);
+	cmd = CreateCommand(KEYSPACECLIENT_RENAME, SIZE(args), args);
 	safeCommands.Append(cmd);
 	
 	if (!submit)
-		return KEYSPACE_OK;
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
 		
-	result.Close();
+	result->Close();
+	result->AppendCommand(cmd);
+	
 	EventLoop();
-	status = result.Status();
+	status = result->TransportStatus();
 	
 	return status;
 }
@@ -1068,17 +588,25 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	Command*	cmd;
 	ByteString	args[1];
 	
+	if (result->isBatched && submit)
+		return KEYSPACE_API_ERROR;
+
 	args[0] = prefix;
 	
-	cmd = CreateCommand(KEYSPACECLIENT_PRUNE, submit, SIZE(args), args);
+	cmd = CreateCommand(KEYSPACECLIENT_PRUNE, SIZE(args), args);
 	safeCommands.Append(cmd);
 	
 	if (!submit)
-		return KEYSPACE_OK;
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
 	
-	result.Close();
+	result->Close();
+	result->AppendCommand(cmd);
+
 	EventLoop();
-	status = result.Status();
+	status = result->TransportStatus();
 	
 	return status;
 }
@@ -1086,154 +614,87 @@ int Client::Prune(const ByteString &prefix, bool submit)
 int Client::Begin()
 {
 	if (!conns)
-		return KEYSPACE_ERROR;
+		return KEYSPACE_API_ERROR;
 
-	if (!IsDone())
-		return KEYSPACE_ERROR;
+	if (result->isBatched)
+		return KEYSPACE_API_ERROR;
 
-	result.Close();
+	result->Close();
+	result->isBatched = true;
 
-	return KEYSPACE_OK;
+	return KEYSPACE_SUCCESS;
 }
 
 int Client::Submit()
 {
-	Command**	it;
-	
 	if (!conns)
-		return KEYSPACE_ERROR;
-	
-	it = safeCommands.Tail();
-	if (it)
-		(*it)->submit = true;
-	else
-	{
-		it = dirtyCommands.Tail();
-		if (!it)
-			return KEYSPACE_OK;
-	}
+		return KEYSPACE_API_ERROR;
 	
 	EventLoop();
-	return result.Status();
+	result->isBatched = false;
+
+	return result->TransportStatus();
 }
 
 int Client::Cancel()
 {
 	if (!conns)
-		return KEYSPACE_ERROR;
-
-	if (sentCommands.Length() != 0)
-		return KEYSPACE_ERROR;
+		return KEYSPACE_API_ERROR;
 	
 	DeleteCommands(safeCommands);
 	DeleteCommands(dirtyCommands);
 	
-	result.Close();
+	result->isBatched = false;
+	result->Close();
 	
-	return KEYSPACE_OK;
+	return KEYSPACE_SUCCESS;
 }
 
 void Client::EventLoop()
 {
 	if (!conns)
+	{
+		// TODO: HACK:
+		result->transportStatus = KEYSPACE_API_ERROR;
 		return;
+	}
 
 	EventLoop::UpdateTime();
-	lastActivityTime = EventLoop::Now();
+	EventLoop::Reset(&globalTimeout);
+	EventLoop::Reset(&masterTimeout);
+	timeoutStatus = KEYSPACE_SUCCESS;
+	if (master != -1)
+		SendCommand(conns[master], safeCommands);
+	
+	SendDirtyCommands();
+
 	while (!IsDone())
 	{
-		StateFunc();
 		if (!EventLoop::RunOnce())
-			break;
-		if (lastActivityTime + timeout < EventLoop::Now())
 			break;
 	}
 
-	StopConnTimeout();
+	result->Begin();
 }
 
 bool Client::IsDone()
 {
-	if (safeCommands.Length() == 0 &&
-		dirtyCommands.Length() == 0 &&
-		sentCommands.Length() == 0)
+	if (masterQuery && master != -1)
 	{
+		result->transportStatus = KEYSPACE_SUCCESS;
 		return true;
 	}
 	
+	if (result->commands.Length() == result->numCompleted)
+	{
+		result->transportStatus = KEYSPACE_SUCCESS;
+		return true;
+	}
+	
+	if (timeoutStatus != KEYSPACE_SUCCESS)
+		return true;
+	
 	return false;
-}
-
-void Client::StateFunc()
-{
-	Log_Trace();
-	for (int i = 0; i < numConns; i++)
-	{
-		if (conns[i]->GetState() == ClientConn::DISCONNECTED &&
-			conns[i]->disconnectTime + reconnectTimeout <= EventLoop::Now())
-		{
-			conns[i]->Connect(conns[i]->GetEndpoint(), reconnectTimeout);
-		}
-	}
-	
-	if (safeCommands.Length() > 0 && master == -1)
-	{
-		if (masterTime && masterTime + masterTimeout < EventLoop::Now())
-		{
-			DeleteCommands(safeCommands);
-			result.Close();
-			return;			
-		}
-		
-		for (int i = 0; i < numConns; i++)
-		{
-			if (conns[i]->GetState() == ClientConn::CONNECTED &&
-				!conns[i]->getMasterPending)
-				{
-					if (!conns[i]->getMasterTime || 
-						conns[i]->getMasterTime + reconnectTimeout < EventLoop::Now())
-					{
-						conns[i]->GetMaster();
-					}
-				}
-		}
-	}
-	
-	if (safeCommands.Length() > 0 && 
-		master != -1 && 
-		conns[master]->GetState() == ClientConn::CONNECTED)
-	{
-		lastActivityTime = EventLoop::Now();
-		// TODO find a better way to queue commands
-		//SendCommand(conns[master], safeCommands);
-		SendAllCommands(conns[master], safeCommands);
-	}
-	
-	if (dirtyCommands.Length() > 0)
-	{
-		lastActivityTime = EventLoop::Now();
-		int numTries = 3;
-		while (distributeDirty && numTries > 0)
-		{
-			if (++currentConn >= numConns)
-				currentConn = 0;
-			if (conns[currentConn]->GetState() == ClientConn::CONNECTED)
-			{
-				SendCommand(conns[currentConn], dirtyCommands);
-				return;
-			}
-			numTries--;
-		}
-		
-		for (int i = 0; i < numConns; i++)
-		{
-			if (conns[i]->GetState() == ClientConn::CONNECTED)
-			{
-				SendCommand(conns[i], dirtyCommands);
-				return;
-			}
-		}
-	}
 }
 
 void Client::SendCommand(ClientConn* conn, CommandList& commands)
@@ -1241,16 +702,22 @@ void Client::SendCommand(ClientConn* conn, CommandList& commands)
 	Command**	it;
 	
 	it = commands.Head();
-	sentCommands.Append(*it);
-	
-	conn->Send(**it);
-	commands.Remove(it);
+	if (it != NULL)
+	{
+		conn->Send(**it);
+		commands.Remove(it);
+	}
 }
 
-void Client::SendAllCommands(ClientConn* conn, CommandList& commands)
+void Client::SendDirtyCommands()
 {
-	while (commands.Head())
-		SendCommand(conn, commands);
+	int	i;
+	
+	for (i = 0; i < numConns; i++)
+	{
+		if (conns[i]->GetState() == ClientConn::CONNECTED)
+			SendCommand(conns[i], dirtyCommands);
+	}
 }
 
 void Client::DeleteCommands(CommandList& commands)
@@ -1269,19 +736,28 @@ uint64_t Client::GetNextID()
 	return cmdID++;
 }
 
-Command* Client::CreateCommand(char type, bool submit,
-int msgc, ByteString *msgv)
+Command* Client::CreateCommand(char type, int msgc, ByteString *msgv)
 {
 	Command*		cmd;
 	int				len;
 	char			tmp[20];
 	char			idbuf[20];
 	int				idlen;
+	int				keyOffs;
+	int				keyLen;
+	
 
 	cmd = new Command;
-	cmd->cmdID = GetNextID();
+	cmd->cmdID = GetNextID() * 10;
 	cmd->type = type;
-	cmd->submit = submit;
+	cmd->nodeID = -1;
+	
+	if (cmd->type == KEYSPACECLIENT_GET_MASTER)
+		cmd->cmdID += KEYSPACE_MOD_GETMASTER;
+	else if (cmd->IsDirty())
+		cmd->cmdID += KEYSPACE_MOD_DIRTY_COMMAND;
+	else
+		cmd->cmdID += KEYSPACE_MOD_SAFE_COMMAND;
 	
 	len = 2; // command + colon
 	idlen = snwritef(idbuf, sizeof(idbuf), "%U", cmd->cmdID);
@@ -1300,26 +776,74 @@ int msgc, ByteString *msgv)
 	{
 		len = snwritef(tmp, sizeof(tmp), ":%d:", msgv[i].length);
 		cmd->msg.Append(tmp, len);
+
+		// HACK!
+		if (i == 0)
+		{
+			keyOffs = cmd->msg.length;
+			keyLen = msgv[i].length;
+		}
+		
 		cmd->msg.Append(msgv[i].buffer, msgv[i].length);
 	}
+	
+	cmd->key.buffer = cmd->msg.buffer + keyOffs;
+	cmd->key.length = keyLen;
+	cmd->key.size = keyLen;
 	
 	return cmd;
 }
 
-void Client::SetMaster(int master_)
+void Client::SetMaster(int master_, int nodeID)
 {
-	if (master_ < 0 || master_ >= numConns)
+	Command**	it;
+	Command*	cmd;
+	
+	if (master_ == nodeID)
 	{
-		master = -1;
-		return;
+		if (master != master_)
+		{
+			// node became the master
+			Log_Trace("node %d became the master", nodeID);
+			master = master_;
+			connectivityStatus = KEYSPACE_SUCCESS;
+			SendCommand(conns[master], safeCommands);
+		}
+		// else node is still the master
+		
+		EventLoop::Reset(&masterTimeout);
 	}
+	else if (master_ < 0 && master == nodeID)
+	{
+		// node lost its mastership
+		Log_Trace("node %d lost its mastership", nodeID);
+		master = -1;
+		connectivityStatus = KEYSPACE_NOMASTER;
+		
+		for (it = result->commands.Head(); it != NULL;  /* advanced in body */)
+		{
+			cmd = *it;
+			if (cmd->status == KEYSPACE_NOSERVICE && cmd->nodeID == nodeID)
+			{
+				cmd->nodeID = -1;
+				cmd->ClearResponse();
+				if (!cmd->IsDirty())
+					safeCommands.Append(cmd);
+			}
+		}
 
-	master = master_;
-	masterTime = EventLoop::Now();
+		// set master timeout
+	}
 }
 
-void Client::StopConnTimeout()
+void Client::OnGlobalTimeout()
 {
-	for (int i = 0; i < numConns; i++)
-		conns[i]->RemoveReadTimeout();
+	Log_Trace();
+	timeoutStatus = KEYSPACE_GLOBAL_TIMEOUT;
+}
+
+void Client::OnMasterTimeout()
+{
+	Log_Trace();
+	timeoutStatus = KEYSPACE_MASTER_TIMEOUT;
 }

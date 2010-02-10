@@ -16,16 +16,22 @@ extern "C" {
  * Status values. 
  * When using as a return value, negative values mean error.
  *
- * NOTMASTER is returned when a write or safe read operation was sent to a
- *	non-master server.
- * FAILED is returned when the operation failed, e.g. when there is no value to
- *	the key.
- * ERROR is returned when the connection closes unexpectedly or timeout occurs.
+ * TODO:
  */
-#define KEYSPACE_OK					0
-#define KEYSPACE_NOTMASTER			-1
-#define KEYSPACE_FAILED				-2
-#define KEYSPACE_ERROR				-3
+#define KEYSPACE_SUCCESS			0
+#define KEYSPACE_API_ERROR			-1
+
+#define KEYSPACE_PARTIAL			-101
+#define KEYSPACE_FAILURE			-102
+
+#define KEYSPACE_NOMASTER			-201
+#define KEYSPACE_NOCONNECTION		-202
+
+#define KEYSPACE_MASTER_TIMEOUT		-301
+#define KEYSPACE_GLOBAL_TIMEOUT		-302
+
+#define KEYSPACE_NOSERVICE			-401
+#define KEYSPACE_FAILED				-402
 
 #define KEYSPACE_INVALID_RESULT		NULL
 
@@ -41,12 +47,17 @@ typedef void * keyspace_result_t;
  *
  * Return value: the result object or KEYSPACE_INVALID_RESULT in case of error
  */ 
-keyspace_result_t keyspace_client_result(keyspace_client_t kc, int *status);
+keyspace_result_t keyspace_client_result(keyspace_client_t kc);
 
 /*
  * Close the result object and free allocated memory.
  */
 void keyspace_result_close(keyspace_result_t kr);
+
+// TODO: write comments
+void keyspace_result_begin(keyspace_result_t kr);
+
+int keyspace_result_is_end(keyspace_result_t kr);
 
 /*
  * Get the next result.
@@ -57,7 +68,7 @@ void keyspace_result_close(keyspace_result_t kr);
  *
  * Return value: the result object or KEYSPACE_INVALID_RESULT in case of error
  */ 
-keyspace_result_t keyspace_result_next(keyspace_result_t kr, int *status);
+void keyspace_result_next(keyspace_result_t kr);
 
 /*
  * Get the status of the last operation.
@@ -67,7 +78,11 @@ keyspace_result_t keyspace_result_next(keyspace_result_t kr, int *status);
  *
  * Return value: the status of the operation
  */
-int	keyspace_result_status(keyspace_result_t kr);
+int	keyspace_result_transport_status(keyspace_result_t kr);
+
+int keyspace_result_connectivity_status(keyspace_result_t kr);
+int keyspace_result_timeout_status(keyspace_result_t kr);
+int keyspace_result_command_status(keyspace_result_t kr);
 
 /*
  * Get the key data of the result (if any)
@@ -79,7 +94,7 @@ int	keyspace_result_status(keyspace_result_t kr);
  * Return value: pointer to the key data that is keylen long or 
  *	NULL if there is no data
  */
-const void * keyspace_result_key(keyspace_result_t kr, unsigned *keylen);
+int keyspace_result_key(keyspace_result_t kr, const void **key, unsigned *keylen);
 
 /*
  * Get the value data of the result (if any)
@@ -91,7 +106,7 @@ const void * keyspace_result_key(keyspace_result_t kr, unsigned *keylen);
  * Return value: pointer to the value data that is vallen long or 
  *	NULL if there is no data
  */
-const void * keyspace_result_value(keyspace_result_t kr, unsigned *vallen);
+int keyspace_result_value(keyspace_result_t kr, const void **val, unsigned *vallen);
 
 
 /*

@@ -205,6 +205,8 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	if (nev < 0)
 	{
 		Log_Errno();
+		// HACK:
+		ioop->active = false;
 		return false;
 	}
 	

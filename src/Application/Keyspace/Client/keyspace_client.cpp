@@ -4,20 +4,14 @@
 using namespace Keyspace;
 
 keyspace_result_t
-keyspace_client_result(keyspace_client_t kc, int *status)
+keyspace_client_result(keyspace_client_t kc)
 {
 	Client *client = (Client *) kc;
 	
-	if (status == NULL)
-		return KEYSPACE_INVALID_RESULT;
-
 	if (client == NULL)
-	{
-		*status = KEYSPACE_ERROR;
 		return KEYSPACE_INVALID_RESULT;
-	}
 
-	return (keyspace_result_t) client->GetResult(*status);
+	return (keyspace_result_t) client->GetResult();
 }
 
 void
@@ -31,72 +25,127 @@ keyspace_result_close(keyspace_result_t kr)
 	result->Close();
 }
 
-keyspace_result_t
-keyspace_result_next(keyspace_result_t kr, int *status)
+int
+keyspace_result_is_end(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
 	
-	if (status == NULL)
-		return KEYSPACE_INVALID_RESULT;
-
 	if (result == NULL)
-	{
-		*status = KEYSPACE_ERROR;
-		return KEYSPACE_INVALID_RESULT;
-	}
+		return KEYSPACE_API_ERROR;
 	
-	return (keyspace_result_t) result->Next(*status);
+	return result->IsEnd() ? 1 : 0;	
+}
+
+void
+keyspace_result_begin(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+	
+	if (result == NULL)
+		return;
+	
+	result->Begin();	
+}
+
+void
+keyspace_result_next(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+	
+	if (result == NULL)
+		return;
+	
+	result->Next();
 }
 
 int
-keyspace_result_status(keyspace_result_t kr)
+keyspace_result_transport_status(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
 
 	if (result == NULL)
-		return KEYSPACE_ERROR;
+		return KEYSPACE_API_ERROR;
 
-	return result->Status();
+	return result->TransportStatus();
 }
 
-const void *
-keyspace_result_key(keyspace_result_t kr, unsigned *keylen)
+int
+keyspace_result_connectivity_status(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
-	
-	if (keylen == NULL)
-		return NULL;
 
 	if (result == NULL)
-	{
-		*keylen = 0;
-		return NULL;
-	}
+		return KEYSPACE_API_ERROR;
 
-	const ByteString &key = result->Key();
-
-	*keylen = key.length;
-	return key.buffer;
+	return result->ConnectivityStatus();
 }
 
-const void *
-keyspace_result_value(keyspace_result_t kr, unsigned *vallen)
+int
+keyspace_result_timeout_status(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
-	
-	if (vallen == NULL)
-		return NULL;
 
 	if (result == NULL)
-	{
-		*vallen = 0;
-		return NULL;
-	}
+		return KEYSPACE_API_ERROR;
 
-	const ByteString &val = result->Value();
+	return result->TimeoutStatus();
+}
 
-	*vallen = val.length;
-	return val.buffer;
+int
+keyspace_result_command_status(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	return result->CommandStatus();
+}
+
+int
+keyspace_result_key(keyspace_result_t kr, const void** key, unsigned *keylen)
+{
+	Result *result = (Result *) kr;
+	ByteString bs;
+	int status;
+		
+	if (keylen == NULL || key == NULL)
+		return KEYSPACE_API_ERROR;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	status = result->Key(bs);
+	if (status != KEYSPACE_SUCCESS)
+		return status;
+
+	*key = bs.buffer;
+	*keylen = bs.length;
+
+	return status;
+}
+
+int
+keyspace_result_value(keyspace_result_t kr, const void **val, unsigned *vallen)
+{
+	Result *result = (Result *) kr;
+	ByteString bs;
+	int status;
+		
+	if (vallen == NULL || val == NULL)
+		return KEYSPACE_API_ERROR;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	status = result->Value(bs);
+	if (status != KEYSPACE_SUCCESS)
+		return status;
+
+	*val = bs.buffer;
+	*vallen = bs.length;
+
+	return status;
 }
 
 

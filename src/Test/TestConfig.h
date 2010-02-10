@@ -11,9 +11,6 @@ public:
 		SET,
 		LIST,
 		LISTP,
-		GETLATENCY,
-		DIRTYGETLATENCY,
-		SETLATENCY,
 		API,
 		FAILOVER
 	};
@@ -96,21 +93,6 @@ public:
 		if (strcmp(s, "listp") == 0)
 		{
 			type = LISTP;
-			return;
-		}
-		if (strcmp(s, "getlatency") == 0)
-		{
-			type = GETLATENCY;
-			return;
-		}
-		if (strcmp(s, "dirtygetlatency") == 0)
-		{
-			type = DIRTYGETLATENCY;
-			return;
-		}
-		if (strcmp(s, "setlatency") == 0)
-		{
-			type = SETLATENCY;
 			return;
 		}
 		if (strcmp(s, "api") == 0)
