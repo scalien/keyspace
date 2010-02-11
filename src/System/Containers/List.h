@@ -2,6 +2,7 @@
 #define LIST_H
 
 #include <stddef.h>
+#include <assert.h>
 
 template<class T>
 struct ListNode
@@ -46,6 +47,10 @@ class List
 				t = n;
 				length--;
 			}
+			
+			head = tail = NULL;
+			
+			assert(length == 0);
 		}
 		
 		int Length()

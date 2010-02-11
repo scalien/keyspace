@@ -95,7 +95,7 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 	}
 	
 	num = 0;
-	for (result->Begin(); result->IsEnd(); result->Next())
+	for (result->Begin(); !result->IsEnd(); result->Next())
 		num++;
 	
 	delete result;
@@ -368,7 +368,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	reference.Writef("1234567890");
 
 	Log_Message("SUITE starting");
-	//goto limitset;
+	goto timeout_test;
 
 	// basic SET test
 	{
@@ -414,7 +414,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 
 		result = client.GetResult();
-		for (result->Begin(); result->IsEnd(); result->Next())
+		for (result->Begin(); !result->IsEnd(); result->Next())
 		{
 			result->Key(key);
 			Log_Trace("LISTKEYS: %.*s", key.length, key.buffer);
@@ -453,7 +453,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	{
 		value.Writef("%U", num);
 		status = client.TestAndSet(key, reference, value);
-		if (status == KEYSPACE_SUCCESS)
+		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("TESTANDSET failed, status = %s", Status(status));
 			return 1;
@@ -552,7 +552,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 
 		result = client.GetResult();
-		for (result->Begin(); result->IsEnd(); result->Next())
+		for (result->Begin(); !result->IsEnd(); result->Next())
 		{
 			result->Key(key);
 			result->Value(value);
@@ -588,7 +588,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			}
 		}
 		
-		bool trace = Log_SetTrace(false);
+		//bool trace = Log_SetTrace(false);
 		sw.Reset();
 		sw.Start();
 
@@ -600,7 +600,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		sw.Stop();
-		Log_SetTrace(trace);
+		//Log_SetTrace(trace);
 		Log_Message("SET/batched succeeded, set/sec = %lf", num / (sw.elapsed / 1000.0));
 	}
 	
@@ -712,9 +712,10 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 	// paginated LISTKEYS
 	{
-		int i;
-		DynArray<128> prefix;
-		DynArray<128> startKey;
+		int				i;
+		DynArray<128>	prefix;
+		DynArray<128>	startKey;
+		ByteString		key;
 
 		//Log_SetTrace(true);
 
@@ -730,14 +731,14 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		i = 0;
-		for (result->Begin(); result->IsEnd(); result->Next())
+		for (result->Begin(); !result->IsEnd(); result->Next())
 		{
 			i++;
 			if (i > num)
 				break;
 
-			result->Key(startKey);
-			Log_Trace("%s", startKey.buffer);
+			result->Key(key);
+			Log_Trace("%s", key.buffer);
 		}
 		
 		delete result;
@@ -759,14 +760,14 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		i = 0;
-		for (result->Begin(); result->IsEnd(); result->Next())
+		for (result->Begin(); !result->IsEnd(); result->Next())
 		{
 			i++;
 			if (i > num)
 				break;
 
-			result->Key(startKey);
-			Log_Trace("%s", startKey.buffer);
+			result->Key(key);
+			Log_Trace("%s", key.buffer);
 		}
 		
 		delete result;
@@ -783,10 +784,12 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	// paginated LISTKEYS test #2
 	{
 		num = NUM_TEST_KEYS;
-		DynArray<128> prefix;
-		DynArray<128> startKey;
-		bool skip = false;
-		int i;
+
+		DynArray<128>	prefix;
+		DynArray<128>	startKey;
+		ByteString		key;
+		bool			skip = false;
+		int				i;
 		
 		i = 0;
 		prefix.Writef("test:");
@@ -812,23 +815,24 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			if (!result)
 				break;
 			
-			for (result->Begin(); result->IsEnd(); result->Next())
+			for (result->Begin(); !result->IsEnd(); result->Next())
 			{
 				i++;
 				if (i > num)
 					break;
 				j--;
-				result->Key(startKey);
-				//Log_Message("LISTKEYS/paginated2: %.*s", startKey.length, startKey.buffer);
+				result->Key(key);
+				//Log_Message("LISTKEYS/paginated2: %.*s", key.length, key.buffer);
 			}
 			
+			startKey.Set(key);
 			delete result;
 			
 			if (j != 0)
 				break;
 			
 			skip = true;
-			//Log_Message("LISTKEYS/paginated2: next startKey %.*s", startKey.length, startKey.buffer);
+			//Log_Message("LISTKEYS/paginated2: next key %.*s", key.length, key.buffer);
 		}
 		
 		if (i != num)
@@ -880,11 +884,12 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			"HNOGSSUZDLBROJ-MDVJYLRGCM",
 			"HYQGHDMXUYVPHG-KEBDBYFIBT",
 		};
-		DynArray<128> prefix;
-		DynArray<128> startKey;
-		bool skip = false;
-		int num = SIZE(MCULE_KEYS);
-		int i;
+		DynArray<128>	prefix;
+		DynArray<128>	startKey;
+		ByteString		key;
+		bool			skip = false;
+		int				num = SIZE(MCULE_KEYS);
+		int				i;
 		
 		prefix.Writef("mcule:");
 		for (i = 0; i < num; i++)
@@ -922,16 +927,17 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			if (!result)
 				break;
 			
-			for (result->Begin(); result->IsEnd(); result->Next())
+			for (result->Begin(); !result->IsEnd(); result->Next())
 			{
 				i++;
 				if (i > num)
 					break;
 				j--;
-				result->Key(startKey);
+				result->Key(key);
 				//Log_Message("LISTKEYS/paginated3: %.*s", startKey.length, startKey.buffer);
 			}
 			
+			startKey.Set(key);
 			delete result;
 			
 			if (j != 0)
@@ -995,7 +1001,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			return -1;
 		}
 		result = client.GetResult();
-		if (status != KEYSPACE_SUCCESS || result != NULL)
+		if (status != KEYSPACE_SUCCESS || !result->IsEnd())
 		{
 			delete result;
 			Log_Message("LISTKEYS/empty failed, status = %s", Status(status));
@@ -1028,11 +1034,14 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 			return -1;
 		}
 		result = client.GetResult();
-		if (status != KEYSPACE_SUCCESS || result != NULL)
+		if (status != KEYSPACE_SUCCESS || !result->IsEnd())
 		{
+			delete result;
 			Log_Message("LISTKEYS/empty2 result failed, status = %s", Status(status));
 			return -1;
 		}
+		
+		delete result;
 		
 		Log_Message("LISTKEYS/emtpy2 succeeded");
 	}
@@ -1067,6 +1076,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		Log_Message("CancelTest succeeded");
 	}
 
+timeout_test:
 	// timeout test
 	{
 		key.Writef("test:0");

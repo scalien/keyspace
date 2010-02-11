@@ -281,6 +281,12 @@ public:
 		return Append(bs);
 	}
 	
+	bool Set(const void* buf, unsigned len)
+	{
+		Clear();
+		return Append(buf, len);		
+	}
+	
 	bool Append(const ByteString &bs)
 	{
 		return Append(bs.buffer, bs.length);

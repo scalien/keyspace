@@ -90,7 +90,7 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 	numConns = nodec;
 	master = -1;
 	masterTime = 0;
-	cmdID = 0;
+	cmdID = 1;
 	masterQuery = false;
 	distributeDirty = false;
 	autoFailover = true;
@@ -373,6 +373,7 @@ bool next, bool forward, bool dirty, bool values)
 	}
 	
 	result->Close();
+	result->AppendCommand(cmd);
 	
 	EventLoop();
 	return result->TransportStatus();	
@@ -641,9 +642,9 @@ int Client::Cancel()
 	if (!conns)
 		return KEYSPACE_API_ERROR;
 	
-	DeleteCommands(safeCommands);
-	DeleteCommands(dirtyCommands);
-	
+	safeCommands.Clear();
+	dirtyCommands.Clear();
+		
 	result->isBatched = false;
 	result->Close();
 	
@@ -717,17 +718,6 @@ void Client::SendDirtyCommands()
 	{
 		if (conns[i]->GetState() == ClientConn::CONNECTED)
 			SendCommand(conns[i], dirtyCommands);
-	}
-}
-
-void Client::DeleteCommands(CommandList& commands)
-{
-	Command**	it;
-	
-	while ((it = commands.Head()) != NULL)
-	{
-		delete *it;
-		commands.Remove(it);
 	}
 }
 
@@ -820,7 +810,7 @@ void Client::SetMaster(int master_, int nodeID)
 		master = -1;
 		connectivityStatus = KEYSPACE_NOMASTER;
 		
-		for (it = result->commands.Head(); it != NULL;  /* advanced in body */)
+		for (it = result->commands.Head(); it != NULL; it = result->commands.Next(it))
 		{
 			cmd = *it;
 			if (cmd->status == KEYSPACE_NOSERVICE && cmd->nodeID == nodeID)

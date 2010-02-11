@@ -14,8 +14,6 @@
 namespace Keyspace
 {
 
-
-
 class Client
 {
 public:
@@ -107,7 +105,6 @@ private:
 	Command*		CreateCommand(char cmd, int msgc, ByteString *msgv);
 	void			SendCommand(ClientConn* conn, CommandList& commands);
 	void			SendDirtyCommands();
-	void			DeleteCommands(CommandList& commands);
 	void			SetMaster(int master, int node);
 	int				Count(uint64_t &res, const ByteString &prefix,
 						  const ByteString &startKey,

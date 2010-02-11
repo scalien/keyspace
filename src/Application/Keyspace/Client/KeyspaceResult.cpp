@@ -51,7 +51,10 @@ void Result::Begin()
 void Result::Next()
 {
 	if (responseCursor)
+	{
 		responseCursor = (*commandCursor)->responses.Next(responseCursor);
+		return;
+	}
 	
 	commandCursor = commands.Next(commandCursor);
 }
@@ -189,7 +192,9 @@ int Result::TimeoutStatus() const
 
 void Result::AppendCommandResponse(Command* cmd, Response* resp_)
 {
-	assert(!cmd->IsList() && cmd->responses.Length() > 0);
+	Log_Trace("%d", cmd->responses.Length());
+	if (!cmd->IsList())
+		assert(cmd->responses.Length() == 0);
 	
 	transportStatus = KEYSPACE_PARTIAL;
 	cmd->responses.Append(resp_);

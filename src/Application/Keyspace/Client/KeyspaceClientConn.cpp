@@ -39,11 +39,16 @@ void ClientConn::Send(Command &cmd)
 
 	cmd.nodeID = nodeID;	
 	Write(cmd.msg.buffer, cmd.msg.length);
+	submit = false;
 }
 
 void ClientConn::SendSubmit()
 {
-	Write("1:*", 3);
+	if (!submit)
+	{
+		submit = true;
+		Write("1:*", 3);
+	}
 }
 
 void ClientConn::SendGetMaster()
@@ -248,7 +253,7 @@ void ClientConn::OnClose()
 
 	if (state == CONNECTED)
 	{
-		for (it = client.result->commands.Head(); it != NULL;  /* advanced in body */)
+		for (it = client.result->commands.Head(); it != NULL;  it = client.result->commands.Next(it))
 		{
 			cmd = *it;
 			if (cmd->status == KEYSPACE_NOSERVICE && cmd->nodeID == nodeID)

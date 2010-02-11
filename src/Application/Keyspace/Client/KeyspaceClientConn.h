@@ -51,6 +51,7 @@ public:
 private:
 	friend class Client;
 
+	bool			submit;
 	Client&			client;
 	Endpoint		endpoint;
 	int				nodeID;
