@@ -35,6 +35,7 @@ static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
 const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
 static volatile bool terminated = false;
+static bool		wsaInited = false;
 
 static LPFN_CONNECTEX	ConnectEx;
 
@@ -205,9 +206,10 @@ void IOProcessor::Shutdown()
 		return;
 
 	delete[] iods;
+	freeIods = NULL;
 	CloseHandle(iocp);
 	iocp = NULL;
-	WSACleanup();
+	//WSACleanup();
 }
 
 static bool RequestReadNotification(IOOperation* ioop)

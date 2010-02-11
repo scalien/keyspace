@@ -88,6 +88,7 @@ onConnect(this, &TCPConn::OnConnect),
 onConnectTimeout(this, &TCPConn::OnConnectTimeout)
 {
 	state = DISCONNECTED;
+	next = NULL;
 }
 
 

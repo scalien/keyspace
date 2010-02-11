@@ -345,7 +345,9 @@ int KeyspaceClientTest(int argc, char **argv)
 	if (testConf.type == TestConfig::FAILOVER)
 		return KeyspaceClientFailoverTest(client, testConf);
 	if (testConf.type == TestConfig::API)
+	{
 		return keyspace_client_test();
+	}
 
 	Log_Message("no such test: %s", testConf.typeString);
 		

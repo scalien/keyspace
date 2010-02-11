@@ -201,6 +201,7 @@ bool Config::Init(const char* filename)
 		{
 			// syntax error
 			Log_Message("syntax error at %s, line %d", filename, nline);
+			fclose(fp);
 			return false;
 		}
 		

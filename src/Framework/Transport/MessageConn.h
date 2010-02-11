@@ -2,6 +2,7 @@
 #define MESSAGECONN_H
 
 #include "TCPConn.h"
+#include "System/Stopwatch.h"
 
 template<int bufSize = MAX_TCP_MESSAGE_SIZE>
 class MessageConn : public TCPConn<bufSize>
@@ -35,6 +36,9 @@ void MessageConn<bufSize>::Init(bool startRead)
 template<int bufSize>
 void MessageConn<bufSize>::OnRead()
 {
+	Stopwatch		sw;
+	sw.Start();
+
 	TCPRead& tcpread = TCPConn<bufSize>::tcpread;
 	unsigned pos, msglength, nread, msgbegin, msgend;
 	ByteString msg;
@@ -101,6 +105,9 @@ void MessageConn<bufSize>::OnRead()
 	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED &&
 	running && !tcpread.active)
 		IOProcessor::Add(&tcpread);
+
+	sw.Stop();
+	Log_Trace("time spent in OnRead(): %ld", sw.elapsed);
 }
 
 template<int bufSize>
