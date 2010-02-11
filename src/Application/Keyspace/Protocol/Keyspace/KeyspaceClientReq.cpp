@@ -20,6 +20,8 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 	int			read;
 	unsigned	dummy;
 	
+	Init();
+	
 	if (data.length < 1)
 		return false;
 	
@@ -79,6 +81,18 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 		default:
 			return false;
 	}
+	
+#define VALIDATE_KEYLEN(bs) { if (bs.length > KEYSPACE_KEY_SIZE) return false; }
+#define VALIDATE_VALLEN(bs) { if (bs.length > KEYSPACE_VAL_SIZE) return false; }
+
+	VALIDATE_KEYLEN(key);
+	VALIDATE_KEYLEN(newKey);
+	VALIDATE_KEYLEN(prefix);
+	VALIDATE_VALLEN(test);
+	VALIDATE_VALLEN(value);
+
+#undef VALIDATE_KEYLEN
+#undef VALIDATE_VALLEN
 			
 	return (read == (signed)data.length ? true : false);
 }
@@ -165,6 +179,9 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 	VALIDATE_KEYLEN(prefix);
 	VALIDATE_VALLEN(test);
 	VALIDATE_VALLEN(value);
+
+#undef VALIDATE_KEYLEN
+#undef VALIDATE_VALLEN
 	
 	if (!op->key.Set(key)) return false;
 	if (!op->newKey.Set(newKey)) return false;

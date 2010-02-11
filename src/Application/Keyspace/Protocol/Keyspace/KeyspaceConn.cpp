@@ -46,11 +46,11 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 		else
 		{
 			if (op->type == KeyspaceOp::GET ||
-				op->type == KeyspaceOp::DIRTY_GET ||
-				op->type == KeyspaceOp::COUNT ||
-				op->type == KeyspaceOp::DIRTY_COUNT ||
-				op->type == KeyspaceOp::ADD ||
-				op->type == KeyspaceOp::REMOVE)
+			op->type == KeyspaceOp::DIRTY_GET ||
+			op->type == KeyspaceOp::COUNT ||
+			op->type == KeyspaceOp::DIRTY_COUNT ||
+			op->type == KeyspaceOp::ADD ||
+			op->type == KeyspaceOp::REMOVE)
 			{
 				if (op->status)
 					resp.Ok(op->cmdID, op->value);
@@ -59,11 +59,19 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 
 				resp.Write(data);
 			}
-			else if (op->type == KeyspaceOp::SET ||
-					 op->type == KeyspaceOp::TEST_AND_SET)
+			else if (op->type == KeyspaceOp::SET)
 			{
 				if (op->status)
 					resp.Ok(op->cmdID);
+				else
+					resp.Failed(op->cmdID);
+
+				resp.Write(data);
+			}
+			else if (op->type == KeyspaceOp::TEST_AND_SET)
+			{
+				if (op->status)
+					resp.Ok(op->cmdID, op->value);
 				else
 					resp.Failed(op->cmdID);
 
@@ -137,8 +145,6 @@ bool KeyspaceConn::IsAborted()
 
 void KeyspaceConn::OnMessageRead(const ByteString& message)
 {
-	req.Init();
-	
 	if (req.Read(message))
 	{
 		ProcessMsg();

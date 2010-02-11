@@ -68,9 +68,14 @@ void ClientConn::SendGetMaster()
 
 void ClientConn::OnGetMaster()
 {
+	Log_Trace();
+
 	if (EventLoop::Now() - getMasterTime > MAX_LEASE_TIME)
 	{
+		Log_Trace();
+		
 		OnClose();
+		Connect();
 		return;
 	}
 	
@@ -236,12 +241,11 @@ void ClientConn::OnWrite()
 
 void ClientConn::OnClose()
 {
+	Log_Trace();
+	
 	Command**	it;
 	Command*	cmd;
 	bool		connected;
-
-	EventLoop::Remove(&getMasterTimeout);
-	EventLoop::Reset(&connectTimeout);
 
 	// delete getmaster requests
 	for (it = getMasterCommands.Head(); it != NULL; /* advanced in body */)
@@ -271,6 +275,9 @@ void ClientConn::OnClose()
 	// close the socket here
 	Close();
 
+	EventLoop::Remove(&getMasterTimeout);
+	EventLoop::Reset(&connectTimeout);
+
 	client.SetMaster(-1, nodeID);
 		
 	// TODO: move this to Client
@@ -286,6 +293,8 @@ void ClientConn::OnClose()
 
 void ClientConn::OnConnect()
 {
+	Log_Trace();
+	
 	TCPConn<KEYSPACE_BUF_SIZE>::OnConnect();
 	AsyncRead();
 	SendGetMaster();
@@ -297,6 +306,7 @@ void ClientConn::OnConnect()
 void ClientConn::OnConnectTimeout()
 {
 	Log_Trace();
+	
 	OnClose();
 	Connect();
 }

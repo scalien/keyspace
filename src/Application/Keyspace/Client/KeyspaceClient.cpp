@@ -786,6 +786,8 @@ Command* Client::CreateCommand(char type, int msgc, ByteString *msgv)
 
 void Client::SetMaster(int master_, int nodeID)
 {
+	Log_Trace("known master: %d, set master: %d, nodeID: %d", master, master_, nodeID);
+
 	Command**	it;
 	Command*	cmd;
 	

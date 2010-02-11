@@ -1121,6 +1121,9 @@ timeout_test:
 			{
 				key.length = KEYSPACE_KEY_SIZE + i;
 				value.length = KEYSPACE_VAL_SIZE + j;
+				
+				Log_Trace("Trying key.length = %d", key.length);
+				Log_Trace("       val.length = %d", value.length);
 
 				status = client.Set(key, value);
 				if (status != KEYSPACE_SUCCESS)
