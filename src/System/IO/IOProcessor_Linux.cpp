@@ -67,7 +67,7 @@ public:
 	IOOperation*	write;
 };
 
-static int			epollfd;
+static int			epollfd = 0;
 static int			maxfd;
 static PipeOp		asyncPipeOp;
 static EpollOp*		epollOps;
@@ -146,8 +146,20 @@ bool IOProcessor::Init(int maxfd_)
 	int i;
 	rlimit rl;
 
+	if (epollfd > 0)
+		return true;
+
+	epollfd = epoll_create(maxfd);
+	if (epollfd < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+
+#ifndef KEYSPACE_CLIENTLIB
 	SetupSignals();
-	
+#endif	
+
 	maxfd = maxfd_;
 	rl.rlim_cur = maxfd;
 	rl.rlim_max = maxfd;
@@ -163,12 +175,6 @@ bool IOProcessor::Init(int maxfd_)
 		epollOps[i].write = NULL;
 	}
 
-	epollfd = epoll_create(maxfd);
-	if (epollfd < 0)
-	{
-		Log_Errno();
-		return false;
-	}
 	
 	if (!InitPipe(asyncPipeOp, ProcessAsyncOp))
 		return false;
