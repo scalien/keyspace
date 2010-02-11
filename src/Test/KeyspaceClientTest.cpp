@@ -453,7 +453,8 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	{
 		value.Writef("%U", num);
 		status = client.TestAndSet(key, reference, value);
-		if (status != KEYSPACE_SUCCESS)
+		// this must fail because the previous test deletes the key
+		if (status != KEYSPACE_FAILED)
 		{
 			Log_Message("TESTANDSET failed, status = %s", Status(status));
 			return 1;
@@ -887,6 +888,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		DynArray<128>	prefix;
 		DynArray<128>	startKey;
 		DynArray<128>	key;
+		ByteString		tmp;
 		bool			skip = false;
 		int				num = SIZE(MCULE_KEYS);
 		int				i;
@@ -933,11 +935,11 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 				if (i > num)
 					break;
 				j--;
-				result->Key(key);
-				Log_Message("LISTKEYS/paginated3: %.*s", key.length, key.buffer);
+				result->Key(tmp);
+				//Log_Message("LISTKEYS/paginated3: %.*s", key.length, key.buffer);
 			}
 			
-			startKey.Set(key);
+			startKey.Set(tmp);
 			delete result;
 			
 			if (j != 0)
@@ -1115,12 +1117,17 @@ timeout_test:
 		key.Fill('k', KEYSPACE_KEY_SIZE + d);
 		value.Fill('v', KEYSPACE_VAL_SIZE + d);
 
+		int n = 0;
+		int numTest = (d * 2 + 1) * (d * 2 + 1);
 		for (int i = -d; i <= d; i++)
 		{
 			for (int j = -d; j <= d; j++)
 			{
 				key.length = KEYSPACE_KEY_SIZE + i;
 				value.length = KEYSPACE_VAL_SIZE + j;
+
+				n++;
+				//Log_Message("SET/limit test %d of %d, key = %d, value = %d", n, numTest, key.length, value.length);
 				
 				Log_Trace("Trying key.length = %d", key.length);
 				Log_Trace("       val.length = %d", value.length);

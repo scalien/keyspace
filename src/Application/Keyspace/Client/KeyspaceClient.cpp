@@ -11,32 +11,6 @@
 
 using namespace Keyspace;
 
-/////////////////////////////////////////////////////////////////////
-//
-// Response implementation
-//
-/////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-//
-// Result implementation
-//
-/////////////////////////////////////////////////////////////////////
-//===================================================================
-//
-// ClientConn
-//
-//===================================================================
-
-//===================================================================
-//
-// Command
-//
-//===================================================================
-//===================================================================
-//
-// Client
-//
-//===================================================================
 Client::Client() :
 onGlobalTimeout(this, &Client::OnGlobalTimeout),
 globalTimeout(&onGlobalTimeout),
@@ -234,7 +208,7 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	result->AppendCommand(cmd);
 	
 	EventLoop();
-	status = result->TransportStatus();
+	status = result->CommandStatus();
 	if (status != KEYSPACE_SUCCESS)
 		return status;
 	
@@ -277,7 +251,7 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 	result->AppendCommand(cmd);
 	
 	EventLoop();	
-	return result->TransportStatus();
+	return result->CommandStatus();
 }
 
 int Client::DirtyGet(const ByteString &key, bool submit)
@@ -376,7 +350,7 @@ bool next, bool forward, bool dirty, bool values)
 	result->AppendCommand(cmd);
 	
 	EventLoop();
-	return result->TransportStatus();	
+	return result->CommandStatus();	
 
 }
 
@@ -433,7 +407,7 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	result->AppendCommand(cmd);
 
 	EventLoop();
-	status = result->TransportStatus();
+	status = result->CommandStatus();
 	
 	return status;
 }
@@ -465,7 +439,7 @@ const ByteString &test, const ByteString &value, bool submit)
 	result->AppendCommand(cmd);
 
 	EventLoop();
-	status = result->TransportStatus();
+	status = result->CommandStatus();
 	
 	return status;
 }
@@ -500,7 +474,7 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	result->AppendCommand(cmd);
 	
 	EventLoop();
-	status = result->TransportStatus();
+	status = result->CommandStatus();
 	
 	if (status != KEYSPACE_SUCCESS)
 		return status;
@@ -543,7 +517,7 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	result->AppendCommand(cmd);
 
 	EventLoop();
-	status = result->TransportStatus();
+	status = result->CommandStatus();
 	
 	return status;
 }
@@ -578,7 +552,7 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	result->AppendCommand(cmd);
 	
 	EventLoop();
-	status = result->TransportStatus();
+	status = result->CommandStatus();
 	
 	return status;
 }
@@ -607,7 +581,7 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	result->AppendCommand(cmd);
 
 	EventLoop();
-	status = result->TransportStatus();
+	status = result->CommandStatus();
 	
 	return status;
 }
