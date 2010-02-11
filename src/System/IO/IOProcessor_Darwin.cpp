@@ -21,7 +21,7 @@
 
 #define	MAX_KEVENTS 1024
 
-static int				kq;			// the kqueue
+static int				kq = 0;			// the kqueue
 static int				asyncOpPipe[2];
 static volatile bool	terminated;
 
@@ -83,6 +83,9 @@ bool IOProcessor::Init(int maxfd_)
 {
 	rlimit rl;
 
+	if (kq != 0)
+		return true;
+
 	terminated = false;
 	
 	kq = kqueue();
@@ -121,6 +124,7 @@ bool IOProcessor::Init(int maxfd_)
 void IOProcessor::Shutdown()
 {
 	close(kq);
+	kq = 0;
 	close(asyncOpPipe[0]);
 	close(asyncOpPipe[1]);
 }
