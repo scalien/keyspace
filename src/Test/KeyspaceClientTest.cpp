@@ -368,7 +368,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	reference.Writef("1234567890");
 
 	Log_Message("SUITE starting");
-	goto timeout_test;
+//	goto timeout_test;
 
 	// basic SET test
 	{
@@ -886,7 +886,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		};
 		DynArray<128>	prefix;
 		DynArray<128>	startKey;
-		ByteString		key;
+		DynArray<128>	key;
 		bool			skip = false;
 		int				num = SIZE(MCULE_KEYS);
 		int				i;
@@ -934,7 +934,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 					break;
 				j--;
 				result->Key(key);
-				//Log_Message("LISTKEYS/paginated3: %.*s", startKey.length, startKey.buffer);
+				Log_Message("LISTKEYS/paginated3: %.*s", key.length, key.buffer);
 			}
 			
 			startKey.Set(key);
