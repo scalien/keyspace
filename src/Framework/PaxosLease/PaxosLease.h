@@ -4,6 +4,7 @@
 #include "Framework/Transport/TransportTCPReader.h"
 #include "Framework/Transport/TransportTCPWriter.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
+#include "System/Events/Timer.h"
 #include "PLeaseConsts.h"
 #include "PLeaseMsg.h"
 #include "PLeaseProposer.h"
@@ -35,6 +36,7 @@ public:
 	void			OnNewPaxosRound();
 	void			OnLearnLease();
 	void			OnLeaseTimeout();
+	void			OnStartupTimeout();
 	void			CheckNodeIdentity();
 	
 private:
@@ -46,6 +48,8 @@ private:
 	Func			onRead;
 	Func			onLearnLease;
 	Func			onLeaseTimeout;
+	Func			onStartupTimeout;
+	CdownTimer		startupTimeout;
 	Callable*		onLearnLeaseCallback;
 	Callable*		onLeaseTimeoutCallback;
 	PLeaseMsg		msg;

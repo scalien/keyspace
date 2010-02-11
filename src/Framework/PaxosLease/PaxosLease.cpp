@@ -4,10 +4,12 @@
 #include "Framework/Transport/TransportUDPReader.h"
 #include "Framework/Transport/TransportUDPWriter.h"
 
-PaxosLease::PaxosLease()
-: onRead(this, &PaxosLease::OnRead),
-  onLearnLease(this, &PaxosLease::OnLearnLease),
-  onLeaseTimeout(this, &PaxosLease::OnLeaseTimeout)
+PaxosLease::PaxosLease() :
+onRead(this, &PaxosLease::OnRead),
+onLearnLease(this, &PaxosLease::OnLearnLease),
+onLeaseTimeout(this, &PaxosLease::OnLeaseTimeout),
+onStartupTimeout(this, &PaxosLease::OnStartupTimeout),
+startupTimeout(MAX_LEASE_TIME, &onStartupTimeout)
 {
 }
 
@@ -32,6 +34,8 @@ void PaxosLease::InitTransport()
 	reader = new TransportTCPReader;
 	if (!reader->Init(RCONF->GetPort() + PLEASE_PORT_OFFSET))
 		STOP_FAIL("cannot bind PaxosLease port", 1);
+	reader->Stop();
+	EventLoop::Reset(&startupTimeout);
 	reader->SetOnRead(&onRead);
 	
 	writers = (Writers)
@@ -142,6 +146,14 @@ void PaxosLease::OnLeaseTimeout()
 	if (acquireLease)
 		proposer.StartAcquireLease();
 }
+
+void PaxosLease::OnStartupTimeout()
+{
+	Log_Trace();
+	
+	reader->Continue();
+}
+
 
 void PaxosLease::CheckNodeIdentity()
 {
