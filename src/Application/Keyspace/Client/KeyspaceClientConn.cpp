@@ -48,8 +48,9 @@ void ClientConn::Send(Command &cmd)
 	
 	Write(cmd.args.buffer, cmd.args.length, false);
 
-	if (BytesQueued() >= 1*MB || cmd.type == KEYSPACECLIENT_GET_MASTER)
-		WritePending();
+	if (BytesQueued() >= 1*MB || cmd.type == KEYSPACECLIENT_GET_MASTER ||
+		client.result->commands.Length() <= 1)
+			WritePending();
 
 	submit = false;
 }
