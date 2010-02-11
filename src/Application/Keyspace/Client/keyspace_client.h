@@ -51,11 +51,19 @@ keyspace_result_t keyspace_client_result(keyspace_client_t kc);
 
 /*
  * Close the result object and free allocated memory.
+ *
+ * Parameters:
+ *	kr:		result object
+ *
  */
 void keyspace_result_close(keyspace_result_t kr);
 
 /*
  * Set the result cursor to the beginning of the resultset.
+ *
+ * Parameters:
+ *	kr:		result object
+ *
  */
 void keyspace_result_begin(keyspace_result_t kr);
 
@@ -63,7 +71,9 @@ void keyspace_result_begin(keyspace_result_t kr);
  * Check if the result cursor is at the end of the resultset.
  *
  * Parameters:
+ *  kr:		result object
  *
+ * Return value: nonzero on end
  */
 int keyspace_result_is_end(keyspace_result_t kr);
 
@@ -72,24 +82,60 @@ int keyspace_result_is_end(keyspace_result_t kr);
  *
  * Parameters:
  *	kr:		result object
- *	status: return the status of the operation
  *
- * Return value: the result object or KEYSPACE_INVALID_RESULT in case of error
  */ 
 void keyspace_result_next(keyspace_result_t kr);
 
 /*
- * Get the status of the last operation.
+ * Get the transport status of the last operation.
  *
  * Parameters:
  *	kr:		result object
  *
- * Return value: the status of the operation
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_PARTIAL
+ *  - KEYSPACE_FAILURE
  */
 int	keyspace_result_transport_status(keyspace_result_t kr);
 
+/*
+ * Get the connectivity status of the last operation.
+ *
+ * Parameters:
+ *	kr:		result object
+ *
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_NOMASTER
+ *  - KEYSPACE_NOCONNECTION
+ */
 int keyspace_result_connectivity_status(keyspace_result_t kr);
+
+/*
+ * Get the timeout status of the last operation.
+ *
+ * Parameters:
+ *	kr:		result object
+ *
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_MASTER_TIMEOUT
+ *  - KEYSPACE_GLOBAL_TIMEOUT
+ */
 int keyspace_result_timeout_status(keyspace_result_t kr);
+
+/*
+ * Get the status of the command at the cursor
+ *
+ * Parameters:
+ *	kr:		result object
+ *
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_NOSERVICE
+ *  - KEYSPACE_FAILED
+ */
 int keyspace_result_command_status(keyspace_result_t kr);
 
 /*
@@ -97,10 +143,11 @@ int keyspace_result_command_status(keyspace_result_t kr);
  *
  * Parameters:
  *	kr:		result object
+ *  key:	pointer to the key data
  *  keylen:	return the length of the key data
  *
- * Return value: pointer to the key data that is keylen long or 
- *	NULL if there is no data
+ * Return value: command status
+ *	
  */
 int keyspace_result_key(keyspace_result_t kr, const void **key, unsigned *keylen);
 
@@ -109,10 +156,11 @@ int keyspace_result_key(keyspace_result_t kr, const void **key, unsigned *keylen
  *
  * Parameters:
  *	kr:		result object
+ *  val:	pointer to the value data
  *  vallen:	return the length of the value data
  *
- * Return value: pointer to the value data that is vallen long or 
- *	NULL if there is no data
+ * Return value: command status
+ *
  */
 int keyspace_result_value(keyspace_result_t kr, const void **val, unsigned *vallen);
 
@@ -140,26 +188,116 @@ void keyspace_client_destroy(keyspace_client_t kc);
  *	kc:			client object
  *	nodec:		number of node names to use
  *	nodev:		array of node names
- *	timeout:	socket timeout
  *
- * Return value: the status of the operation
+ * Return value: can be any of
+ *	- KEYSPACE_SUCCESS
+ *  - KEYSPACE_API_ERROR
+ *
  */
 int	keyspace_client_init(keyspace_client_t kc,
 		int nodec, const char* nodev[]);
 
+/*
+ * Set the global timeout
+ *
+ * Parameters:
+ *  kc:			client object
+ *  timeout:	timeout in millisec
+ *
+ * Return value: can be any of
+ * - KEYSPACE_SUCCESS
+ * - KEYSPACE_API_ERROR
+ *
+ */
 int keyspace_client_set_global_timeout(keyspace_client_t kc, uint64_t timeout);
 
+/*
+ * Set the master timeout
+ *
+ * Parameters:
+ *  kc:			client object
+ *  timeout:	timeout in millisec
+ *
+ * Return value: can be any of
+ * - KEYSPACE_SUCCESS
+ * - KEYSPACE_API_ERROR
+ *
+ */
 int keyspace_client_set_master_timeout(keyspace_client_t kc, uint64_t timeout);
 
+/*
+ * Get the global timeout
+ *
+ * Parameters:
+ *  kc:			client object
+ *
+ * Return value: the timeout
+ *
+ */
 uint64_t keyspace_client_get_global_timeout(keyspace_client_t kc);
 
+/*
+ * Get the master timeout
+ *
+ * Parameters:
+ *  kc:			client object
+ *
+ * Return value: the timeout
+ *
+ */
 uint64_t keyspace_client_get_master_timeout(keyspace_client_t kc);
 
-
+/*
+ * Get the transport status of the last operation.
+ *
+ * Parameters:
+ *	kc:		client object
+ *
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_PARTIAL
+ *  - KEYSPACE_FAILURE
+ */
 int	keyspace_client_transport_status(keyspace_client_t kc);
 
+/*
+ * Get the connectivity status of the last operation.
+ *
+ * Parameters:
+ *	kr:		client object
+ *
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_NOMASTER
+ *  - KEYSPACE_NOCONNECTION
+ */
 int keyspace_client_connectivity_status(keyspace_client_t kc);
+
+/*
+ * Get the timeout status of the last operation.
+ *
+ * Parameters:
+ *	kc:		client object
+ *
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_MASTER_TIMEOUT
+ *  - KEYSPACE_GLOBAL_TIMEOUT
+ */
 int keyspace_client_timeout_status(keyspace_client_t kc);
+
+
+/*
+ * Get the status of the first command
+ *
+ * Parameters:
+ *	kc:		client object
+ *
+ * Return value: can be any of:
+ *  - KEYSPACE_SUCCESS
+ *  - KEYSPACE_NOSERVICE
+ *  - KEYSPACE_FAILED
+ */
 int keyspace_client_command_status(keyspace_client_t kc);
 
 /*
@@ -205,12 +343,13 @@ int	keyspace_client_get_simple(keyspace_client_t kc,
  *	key:	buffer to the key data
  *	keylen:	length of the key
  *	dirty:	nonzero value denotes dirty operation
+ *  submit:	nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int	keyspace_client_get(keyspace_client_t kc, 
 		const void *key, unsigned keylen, 
-		int dirty);
+		int dirty, int submit);
 
 /*
  * COUNT operation
@@ -231,7 +370,7 @@ int	keyspace_client_get(keyspace_client_t kc,
  *  backward:	direction of listing, nonzero means backwards listing
  *	dirty:		nonzero value denotes dirty operation
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int keyspace_client_count(keyspace_client_t kc,
 		uint64_t *res,
@@ -259,7 +398,7 @@ int keyspace_client_count(keyspace_client_t kc,
  *  backward:	direction of listing, nonzero means backwards listing
  *	dirty:		nonzero value denotes dirty operation
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int	keyspace_client_list_keys(keyspace_client_t kc, 
 		const void *prefix, unsigned prefixlen,
@@ -287,7 +426,7 @@ int	keyspace_client_list_keys(keyspace_client_t kc,
  *  backward:	direction of listing, nonzero means backwards listing
  *	dirty:		nonzero value denotes dirty operation
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int keyspace_client_list_keyvalues(keyspace_client_t kc, 
 		const void *prefix, unsigned prefixlen,
@@ -311,7 +450,7 @@ int keyspace_client_list_keyvalues(keyspace_client_t kc,
  *	vallen:		length of the value
  *	submit:		nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int	keyspace_client_set(keyspace_client_t kc,
 		const void *key, unsigned keylen,
@@ -334,7 +473,7 @@ int	keyspace_client_set(keyspace_client_t kc,
  *	vallen:		length of the value
  *	submit:		nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int	keyspace_client_test_and_set(keyspace_client_t kc,
 		const void *key, unsigned keylen,
@@ -356,7 +495,7 @@ int	keyspace_client_test_and_set(keyspace_client_t kc,
  *	result:		return the resulting value
  *	submit:		nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int	keyspace_client_add(keyspace_client_t kc,
 		const void *key, unsigned keylen,
@@ -375,7 +514,7 @@ int	keyspace_client_add(keyspace_client_t kc,
  *	keylen:		length of the key
  *	submit:		nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int	keyspace_client_delete(keyspace_client_t kc,
 		const void *key, unsigned keylen,
@@ -392,7 +531,7 @@ int	keyspace_client_delete(keyspace_client_t kc,
  *	keylen:		length of the key
  *	submit:		nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int keyspace_client_remove(keyspace_client_t kc,
 		const void *key, unsigned keylen,
@@ -411,7 +550,7 @@ int keyspace_client_remove(keyspace_client_t kc,
  *  tolen:		length of the to
  *	submit:		nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int keyspace_client_rename(keyspace_client_t kc,
 		const void *from, unsigned fromlen,
@@ -430,7 +569,7 @@ int keyspace_client_rename(keyspace_client_t kc,
  *  prefixlen:	length of the prefix
  *	submit:		nonzero value submits the operation automatically
  *
- * Return value: the status of the operation
+ * Return value: the command status of the operation
  */
 int keyspace_client_prune(keyspace_client_t kc,
 		const void *prefix, unsigned prefixlen,
@@ -446,7 +585,7 @@ int keyspace_client_prune(keyspace_client_t kc,
  * Parameters:
  *	kc:			client object
  *
- * Return value: the status of the operation
+ * Return value: the transport status of the operation
  */
 int	keyspace_client_begin(keyspace_client_t kc);
 
@@ -459,7 +598,7 @@ int	keyspace_client_begin(keyspace_client_t kc);
  * Parameters:
  *	kc:			client object
  *
- * Return value: the status of the grouped operations.
+ * Return value: the transport status of the grouped operations.
  */
 int	keyspace_client_submit(keyspace_client_t kc);
 
@@ -471,7 +610,7 @@ int	keyspace_client_submit(keyspace_client_t kc);
  * Parameters:
  *	kc:			client object
  *
- * Return value: the status of the grouped operations.
+ * Return value: the transport status of the grouped operations.
  */
 int keyspace_client_cancel(keyspace_client_t kc);
 

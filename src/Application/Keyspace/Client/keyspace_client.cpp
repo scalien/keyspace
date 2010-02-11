@@ -292,12 +292,12 @@ keyspace_client_get_simple(keyspace_client_t kc,
 int
 keyspace_client_get(keyspace_client_t kc, 
 		const void *key_, unsigned keylen, 
-		int dirty)
+		int dirty, int submit)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 	
-	return client->Get(key, dirty ? true : false);
+	return client->Get(key, dirty ? true : false, submit ? true : false);
 }
 
 int

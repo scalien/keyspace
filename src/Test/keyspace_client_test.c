@@ -88,7 +88,7 @@ static int test_init_with_commands(keyspace_client_t kc)
 	if (status >= 0)
 		return TEST_FAILURE;
 	
-	status = keyspace_client_get(kc, key, sizeof(key), 0);
+	status = keyspace_client_get(kc, key, sizeof(key), 0, 1);
 	if (status != KEYSPACE_API_ERROR)
 		return TEST_FAILURE;
 	
@@ -284,7 +284,7 @@ int keyspace_client_basic_test()
 
 	// get a key named "counter"
 	keylen = snprintf(key, sizeof(key), "counter");
-	keyspace_client_get(kc, key, keylen, 0);
+	keyspace_client_get(kc, key, keylen, 0, 1);
 	kr = keyspace_client_result(kc);
 	if (kr != KEYSPACE_INVALID_RESULT)
 	{
