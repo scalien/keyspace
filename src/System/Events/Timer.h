@@ -78,6 +78,11 @@ public:
 		delay = delay_;
 	}
 
+	uint64_t GetDelay()
+	{
+		return delay;
+	}
+
 	virtual void OnAdd()
 	{
 		when = Now() + delay;

@@ -62,9 +62,12 @@ void KeyspaceServer::OnDataRead(KeyspaceConn* conn, unsigned bytes)
 	
 	bytesRead += bytes;
 
-	t = MAX(RLOG->GetLastRound_Thruput(), KEYSPACE_POOL_MIN_THRUPUT);
+	t = MAX(2 * RLOG->GetLastRound_Thruput(), KEYSPACE_POOL_MIN_THRUPUT);
 
 	if (bytesRead > t &&
 	conn->bytesRead > KEYSPACE_CONN_MIN_THRUPUT)
+	{
+		Log_Trace("Throttling connection; bytesRead: %d", bytesRead);
 		conn->Stop();
+	}
 }

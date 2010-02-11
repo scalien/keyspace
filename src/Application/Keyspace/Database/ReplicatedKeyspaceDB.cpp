@@ -27,6 +27,8 @@ bool ReplicatedKeyspaceDB::Init()
 	catchupServer.Init(RCONF->GetPort() + CATCHUP_PORT_OFFSET);
 	catchupClient.Init(this, table);
 
+	estimatedLength = 0;
+
 	asyncAppender->Start();
 	asyncAppenderActive = false;
 	return true;
@@ -104,7 +106,16 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	
 	ops.Append(op);
 
-	Submit();
+	// TODO: huge hack
+	if (estimatedLength < PAXOS_SIZE)
+	{
+		tmp.FromKeyspaceOp(op);
+		if (tmp.Write(tmpBuffer))
+			estimatedLength += tmpBuffer.length;
+	}
+	
+	if (estimatedLength >= PAXOS_SIZE)
+		Submit();
 	
 	return true;
 }
@@ -289,6 +300,7 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 	
 	if (ownAppend)
 	{
+		Log_Trace("my append");
 		for (i = 0; i < numOps; i++)
 		{
 			it = ops.Head();
@@ -297,6 +309,8 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 			op->service->OnComplete(op);
 		}
 	}
+	else
+		Log_Trace("not my append");
 
 	asyncAppenderActive = false;
 	
@@ -304,7 +318,6 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 		FailKeyspaceOps();
 
 	RLOG->ContinuePaxos();
-//	RLOG->ContinueReplicatedDB();
 	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
 		Append();
 }
@@ -346,6 +359,8 @@ void ReplicatedKeyspaceDB::Append()
 	
 	if (pvalue.length > 0)
 	{
+		estimatedLength -= pvalue.length;
+		if (estimatedLength < 0) estimatedLength = 0;
 		RLOG->Append(pvalue);
 		Log_Trace("appending %d ops (length: %d)", numAppended, pvalue.length);
 	}

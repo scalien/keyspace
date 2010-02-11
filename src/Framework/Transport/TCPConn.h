@@ -44,6 +44,8 @@ public:
 
 	Socket&			GetSocket() { return socket; }
 	const State		GetState() { return state; }
+	
+	unsigned		BytesQueued();
 
 	void			AsyncRead(bool start = true);
 	void			Write(const char* data, int count, bool flush = true);
@@ -124,6 +126,21 @@ void TCPConn<bufSize>::Init(bool startRead)
 }
 
 template<int bufSize>
+unsigned TCPConn<bufSize>::BytesQueued()
+{
+	unsigned bytes;
+	Buffer* buf;
+	
+	bytes = 0;
+	
+	for (buf = writeQueue.Head(); buf != NULL; buf = buf->next)
+		bytes += buf->length;
+	
+	return bytes;
+}
+
+
+template<int bufSize>
 void TCPConn<bufSize>::Connect(Endpoint &endpoint_, unsigned timeout)
 {
 	Log_Trace("endpoint_ = %s", endpoint_.ToString());
@@ -169,7 +186,10 @@ void TCPConn<bufSize>::OnWrite()
 	tcpwrite.data.Clear();
 	
 	if (writeQueue.Size() == 0)
+	{
+		Log_Trace("not posting write");
 		writeQueue.Append(buf);
+	}
 	else
 	{
 		delete buf;

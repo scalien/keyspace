@@ -60,6 +60,7 @@ private:
 	OpList			ops;
 	Table*			table;
 	KeyspaceMsg		msg;
+	KeyspaceMsg		tmp;
 	PaxosBuffer		pvalue;
 	ValBuffer		data;
 	CatchupServer	catchupServer;
@@ -67,12 +68,14 @@ private:
 	
 	Transaction*	transaction;
 	ByteBuffer		valueBuffer;
+	ByteBuffer		tmpBuffer;
 	bool			ownAppend;
 	Func			asyncOnAppend;
 	Func			onAppendComplete;
 	ThreadPool*		asyncAppender;
 	unsigned		numOps;
 	ServerList		pservers;
+	unsigned		estimatedLength;
 };
 
 #endif

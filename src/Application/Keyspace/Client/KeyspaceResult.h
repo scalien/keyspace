@@ -53,6 +53,9 @@ private:
 	int					timeoutStatus;
 	Command**			commandCursor;
 	Response**			responseCursor;
+	
+	Command**			cmdMap;
+
 
 	Result();
 
@@ -61,6 +64,9 @@ private:
 
 	int					ListKey(Command* cmd, ByteString& key) const;
 	int					ListValue(Command* cmd, ByteString& value) const;
+	
+	void				InitCommandMap();
+	void				FreeCommandMap();	
 };
 
 

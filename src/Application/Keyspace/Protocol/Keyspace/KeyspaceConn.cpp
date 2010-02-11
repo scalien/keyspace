@@ -2,8 +2,6 @@
 #include "KeyspaceServer.h"
 
 KeyspaceConn::KeyspaceConn()
-:	onConnectionTimeout(this, &KeyspaceConn::OnConnectionTimeout),
-	connectionTimeout(KEYSPACE_CONN_TIMEOUT, &onConnectionTimeout)
 {
 	server = NULL;
 }
@@ -236,11 +234,4 @@ void KeyspaceConn::OnWrite()
 	TCPConn<KEYSPACE_BUF_SIZE>::OnWrite();
 	if (closeAfterSend && !tcpwrite.active)
 		OnClose();
-}
-
-void KeyspaceConn::OnConnectionTimeout()
-{
-	Log_Trace("numpending: %d", numpending);
-	
-	OnClose();
 }

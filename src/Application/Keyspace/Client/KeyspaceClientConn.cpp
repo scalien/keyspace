@@ -13,8 +13,7 @@
 
 using namespace Keyspace;
 
-ClientConn::ClientConn(Client &client, int nodeID_,
-const Endpoint &endpoint_, uint64_t timeout_) :
+ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_) :
 client(client),
 endpoint(endpoint_),
 onGetMasterTimeout(this, &ClientConn::OnGetMaster),
@@ -22,7 +21,6 @@ getMasterTimeout(&onGetMasterTimeout)
 {
 	nodeID = nodeID_;
 	getMasterTime = 0;
-	timeout = timeout_;
 	getMasterTimeout.SetDelay(GETMASTER_TIMEOUT);
 	Connect();
 }
@@ -39,6 +37,10 @@ void ClientConn::Send(Command &cmd)
 
 	cmd.nodeID = nodeID;	
 	Write(cmd.msg.buffer, cmd.msg.length);
+
+	if (BytesQueued() >= 1*MB || cmd.type == KEYSPACECLIENT_GET_MASTER)
+		WritePending();
+
 	submit = false;
 }
 
@@ -84,8 +86,8 @@ void ClientConn::OnGetMaster()
 
 bool ClientConn::ProcessCommand(Response* resp)
 {
-	Command**	it;
-	
+	Command*	cmd;
+	uint64_t	index;	
 	if (resp->type == KEYSPACECLIENT_NOT_MASTER)
 	{
 		Log_Trace("NOTMASTER");
@@ -93,46 +95,51 @@ bool ClientConn::ProcessCommand(Response* resp)
 		return true;
 	}
 	
-	for (it = client.result->commands.Head(); it != NULL; /* advanced in body */)
-	{
-		Command* cmd = *it;
-		
-		if (cmd->cmdID == resp->id)
-		{
-			Log_Trace("status = %d, id = %lu",
-					  (int) cmd->status, (unsigned long) cmd->cmdID);
-			
-			// with LIST style commands there can be more
-			// than one response with the same id
-			if (cmd->IsList())
-			{
-				// key.length == 0 means end of the list response
-				if (resp->key.length == 0)
-				{
-					client.result->numCompleted++;
-					cmd->status = KEYSPACE_SUCCESS;
-				}
-				else
-					client.result->AppendCommandResponse(cmd, resp);
-			}
-			else
-			{
-				if (resp->type == KEYSPACECLIENT_OK)
-					cmd->status = KEYSPACE_SUCCESS;
-				else
-					cmd->status = KEYSPACE_FAILED;
+	index = (resp->id - (*client.result->commands.Head())->cmdID) / 10;
 
-				client.result->AppendCommandResponse(cmd, resp);
-				client.result->numCompleted++;
-			}
-			
-			return true;
+	if (index > (uint64_t)client.result->commands.Length())
+		return false;
+	
+	cmd = client.result->cmdMap[index];
+
+	Log_Trace("status = %d, id = %lu",
+			  (int) cmd->status, (unsigned long) cmd->cmdID);
+
+	if (!cmd->IsDirty() && resp->type == KEYSPACECLIENT_OK)
+	{
+		// the node replied to a safe command, it's the master!
+		client.SetMaster(nodeID, nodeID);
+		getMasterTime = EventLoop::Now();
+	}
+
+	// with LIST style commands there can be more
+	// than one response with the same id
+	if (cmd->IsList())
+	{
+		// key.length == 0 means end of the list response
+		if (resp->key.length == 0)
+		{
+			client.result->numCompleted++;
+			cmd->status = KEYSPACE_SUCCESS;
 		}
 		else
-			it = client.result->commands.Next(it);
+			client.result->AppendCommandResponse(cmd, resp);
 	}
-	
-	return false;
+	else
+	{
+		if (resp->type == KEYSPACECLIENT_OK)
+			cmd->status = KEYSPACE_SUCCESS;
+		else
+			cmd->status = KEYSPACE_FAILED;
+
+		client.result->AppendCommandResponse(cmd, resp);
+		client.result->numCompleted++;
+		Log_Trace("numCompleted = %d of %d",
+		client.result->numCompleted,
+		client.result->commands.Length());
+	}
+
+	return true;
 }
 
 bool ClientConn::ProcessGetMaster(Response* resp)
@@ -193,8 +200,7 @@ bool ClientConn::ProcessResponse(Response* resp)
 	case KEYSPACE_MOD_GETMASTER:
 		return ProcessGetMaster(resp);
 
-	case KEYSPACE_MOD_SAFE_COMMAND:
-	case KEYSPACE_MOD_DIRTY_COMMAND:
+	case KEYSPACE_MOD_COMMAND:
 		return ProcessCommand(resp);
 	}
 
@@ -230,9 +236,9 @@ void ClientConn::OnWrite()
 
 	if (client.master == nodeID)
 	{
-		if (client.safeCommands.Length() > 0)
+		while(client.safeCommands.Length() > 0 && BytesQueued() < 1*MB)
 			client.SendCommand(this, client.safeCommands);
-		else
+		if (client.safeCommands.Length() == 0)
 			SendSubmit();
 	}
 	else if (client.dirtyCommands.Length() > 0)

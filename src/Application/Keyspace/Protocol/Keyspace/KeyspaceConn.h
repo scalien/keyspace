@@ -31,15 +31,12 @@ private:
 	// TCPConn interface
 	virtual void		OnClose();
 	virtual void		OnWrite();
-	virtual void		OnConnectionTimeout();
 	virtual void		OnMessageRead(const ByteString& message);
 
 	void				Write(ByteString &bs);
 	void				ProcessMsg();
 	void				AppendOps();
 
-	Func				onConnectionTimeout;
-	CdownTimer			connectionTimeout;
 	Buffer				data;
 	KeyspaceServer*		server;
 	KeyspaceClientReq	req;

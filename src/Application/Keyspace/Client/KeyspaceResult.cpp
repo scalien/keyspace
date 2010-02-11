@@ -26,6 +26,7 @@ void Result::Close()
 	
 	commandCursor = NULL;
 	responseCursor = NULL;
+	cmdMap = NULL;
 	
 	while ((it = commands.Head()) != NULL)
 	{
@@ -193,8 +194,14 @@ int Result::TimeoutStatus() const
 void Result::AppendCommandResponse(Command* cmd, Response* resp_)
 {
 	Log_Trace("%d", cmd->responses.Length());
+
 	if (!cmd->IsList())
-		assert(cmd->responses.Length() == 0);
+		if (cmd->responses.Length() > 0)
+		{
+			Log_Message("%" PRIu64 "", cmd->cmdID);
+			Log_Message("%c", (*cmd->responses.Head())->type);
+			ASSERT_FAIL();
+		}
 	
 	transportStatus = KEYSPACE_PARTIAL;
 	cmd->responses.Append(resp_);
@@ -205,3 +212,23 @@ void Result::AppendCommand(Command* cmd)
 	commands.Append(cmd);
 }
 
+void Result::InitCommandMap()
+{
+	Command** it;
+	int i;
+
+	cmdMap = (Command**) malloc(commands.Length() * sizeof(Command*));
+
+	i = 0;
+	for (it = commands.Head(); it != NULL; it = commands.Next(it))
+	{
+		cmdMap[i] = *it;
+		i++;
+	}
+}
+
+void Result::FreeCommandMap()
+{
+	free(cmdMap);
+	cmdMap = NULL;
+}

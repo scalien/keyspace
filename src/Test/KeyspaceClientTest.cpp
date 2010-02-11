@@ -188,8 +188,6 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	int			numTest;
 	Stopwatch	sw;
 
-	//return DatabaseSetTest(conf);
-
 
 	if (conf.argc < 5)
 	{
@@ -230,7 +228,9 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	sw.Stop();
 	if (status != KEYSPACE_SUCCESS)
 	{
-		Log_Message("Test failed, status = %s (Submit failed)", Status(status));
+		Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+		Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+		Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 		return 1;
 	}
 	
@@ -272,7 +272,8 @@ int KeyspaceClientTest(int argc, char **argv)
 	int					status;
 	Keyspace::Client	client;
 	TestConfig			testConf;
-	uint64_t			timeout;
+	uint64_t			globalTimeout;
+	uint64_t			masterTimeout;
 	const char			*LOCAL_NODES[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 	int					logTargets;
 
@@ -320,10 +321,13 @@ int KeyspaceClientTest(int argc, char **argv)
 			nodes[i] = Config::GetListValue("keyspace.endpoints", i, NULL);
 	}
 	
-	timeout = Config::GetIntValue("keyspace.timeout", 10000);
+	globalTimeout = Config::GetIntValue("keyspace.globalTimeout", 10000);
+	masterTimeout = Config::GetIntValue("keyspace.masterTimeout", 10000);
 	testConf.datasetTotal = Config::GetIntValue("dataset.total", 100 * 1000000);
 	
-	status = client.Init(nodec, nodes, timeout);
+	status = client.Init(nodec, nodes);
+	client.SetGlobalTimeout(globalTimeout);
+	client.SetMasterTimeout(masterTimeout);
 	if (status < 0)
 		return 1;
 
@@ -1080,7 +1084,6 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		Log_Message("CancelTest succeeded");
 	}
 
-timeout_test:
 	// timeout test
 	{
 		key.Writef("test:0");
@@ -1098,8 +1101,9 @@ timeout_test:
 			return 1;
 		}
 
-		Log_Message("TimeoutTest: waiting for %d msecs", client.GetTimeout() + 1000);
-		MSleep(client.GetTimeout() + 1000);
+		Log_Message("TimeoutTest: waiting for %d msecs",
+		client.GetGlobalTimeout() + 1000);
+		MSleep(client.GetGlobalTimeout() + 1000);
 		
 		status = client.Get(key);
 		if (status != KEYSPACE_SUCCESS)

@@ -20,9 +20,11 @@ public:
 	Client();
 	~Client();
 	
-	int				Init(int nodec, const char* nodev[], uint64_t timeout);
-	uint64_t		SetTimeout(uint64_t timeout);
-	uint64_t		GetTimeout();
+	int				Init(int nodec, const char* nodev[]);
+	void			SetGlobalTimeout(uint64_t timeout);
+	void			SetMasterTimeout(uint64_t timeout);
+	uint64_t		GetGlobalTimeout();
+	uint64_t		GetMasterTimeout();
 	
 	// connection state related commands
 	int				GetMaster();
@@ -101,7 +103,8 @@ private:
 	void			StateFunc();
 	void			EventLoop();
 	bool			IsDone();
-	uint64_t		GetNextID();
+	uint64_t		NextMasterCommandID();
+	uint64_t		NextCommandID();
 	Command*		CreateCommand(char cmd, int msgc, ByteString *msgv);
 	void			SendCommand(ClientConn* conn, CommandList& commands);
 	void			SendDirtyCommands();
@@ -123,8 +126,8 @@ private:
 	int				numConns;
 	int				numFinished;
 	int				master;
-	uint64_t		timeout;
 	uint64_t		masterTime;
+	uint64_t		masterCmdID;
 	uint64_t		cmdID;
 	Result*			result;
 	bool			masterQuery;

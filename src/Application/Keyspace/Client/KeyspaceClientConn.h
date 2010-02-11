@@ -6,8 +6,7 @@
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 
 #define KEYSPACE_MOD_GETMASTER		0
-#define KEYSPACE_MOD_SAFE_COMMAND	1
-#define KEYSPACE_MOD_DIRTY_COMMAND	2
+#define KEYSPACE_MOD_COMMAND		1
 
 namespace Keyspace
 {
@@ -22,8 +21,7 @@ class ClientConn : public MessageConn<KEYSPACE_BUF_SIZE>
 typedef MFunc<ClientConn> Func;
 
 public:
-	ClientConn(Client &client, int nodeID,
-			   const Endpoint &endpoint_, uint64_t timeout);
+	ClientConn(Client &client, int nodeID, const Endpoint &endpoint_);
 
 	void			Connect();
 	void			Send(Command &cmd);
@@ -56,7 +54,6 @@ private:
 	Endpoint		endpoint;
 	int				nodeID;
 	uint64_t		getMasterTime;
-	uint64_t		timeout;
 	Func			onGetMasterTimeout;
 	CdownTimer		getMasterTimeout;
 	CommandList		getMasterCommands;

@@ -16,4 +16,6 @@
 #define KEYSPACE_NOSERVICE			-401
 #define KEYSPACE_FAILED				-402
 
+#define KEYSPACE_DEFAULT_TIMEOUT	20*1000 // sec
+
 #endif

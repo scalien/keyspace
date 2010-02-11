@@ -34,16 +34,14 @@ Client::~Client()
 	IOProcessor::Shutdown();
 }
 
-int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
+int Client::Init(int nodec, const char* nodev[])
 {
 	// validate args
 	if (nodec <= 0 || nodev == NULL)
 		return KEYSPACE_API_ERROR;
 
-	
-	timeout = timeout_;
-	masterTimeout.SetDelay(2 * MAX_LEASE_TIME);
-	globalTimeout.SetDelay(timeout);
+	masterTimeout.SetDelay(3 * MAX_LEASE_TIME);
+	globalTimeout.SetDelay(KEYSPACE_DEFAULT_TIMEOUT);
 
 	connectivityStatus = KEYSPACE_NOCONNECTION;
 	timeoutStatus = KEYSPACE_SUCCESS;
@@ -58,13 +56,14 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 		Endpoint endpoint;
 		
 		endpoint.Set(nodev[i], true);
-		conns[i] = new ClientConn(*this, i, endpoint, timeout);
+		conns[i] = new ClientConn(*this, i, endpoint);
 	}
 	
 	numConns = nodec;
 	master = -1;
 	masterTime = 0;
 	cmdID = 1;
+	masterCmdID = 1;
 	masterQuery = false;
 	distributeDirty = false;
 	autoFailover = true;
@@ -73,19 +72,24 @@ int Client::Init(int nodec, const char* nodev[], uint64_t timeout_)
 	return KEYSPACE_SUCCESS;
 }
 
-uint64_t Client::SetTimeout(uint64_t timeout_)
+void Client::SetGlobalTimeout(uint64_t timeout)
 {
-	uint64_t	prev;
-	
-	prev = timeout;
-	timeout = timeout_;
-		
-	return prev;
+	globalTimeout.SetDelay(timeout);
 }
 
-uint64_t Client::GetTimeout()
+void Client::SetMasterTimeout(uint64_t timeout)
 {
-	return timeout;
+	masterTimeout.SetDelay(timeout);
+}
+
+uint64_t Client::GetGlobalTimeout()
+{
+	return globalTimeout.GetDelay();
+}
+
+uint64_t Client::GetMasterTimeout()
+{
+	return masterTimeout.GetDelay();
 }
 
 int Client::GetMaster()
@@ -607,7 +611,7 @@ int Client::Submit()
 	
 	EventLoop();
 	result->isBatched = false;
-
+	
 	return result->TransportStatus();
 }
 
@@ -618,7 +622,7 @@ int Client::Cancel()
 	
 	safeCommands.Clear();
 	dirtyCommands.Clear();
-		
+	
 	result->isBatched = false;
 	result->Close();
 	
@@ -633,7 +637,9 @@ void Client::EventLoop()
 		result->transportStatus = KEYSPACE_API_ERROR;
 		return;
 	}
-
+	
+	result->InitCommandMap();
+	
 	EventLoop::UpdateTime();
 	EventLoop::Reset(&globalTimeout);
 	EventLoop::Reset(&masterTimeout);
@@ -648,6 +654,8 @@ void Client::EventLoop()
 		if (!EventLoop::RunOnce())
 			break;
 	}
+
+	result->FreeCommandMap();
 
 	result->Begin();
 }
@@ -674,6 +682,8 @@ bool Client::IsDone()
 
 void Client::SendCommand(ClientConn* conn, CommandList& commands)
 {
+//	Log_Message("Sending command");
+
 	Command**	it;
 	
 	it = commands.Head();
@@ -695,7 +705,12 @@ void Client::SendDirtyCommands()
 	}
 }
 
-uint64_t Client::GetNextID()
+uint64_t Client::NextMasterCommandID()
+{
+	return masterCmdID++;
+}
+
+uint64_t Client::NextCommandID()
 {
 	return cmdID++;
 }
@@ -712,16 +727,19 @@ Command* Client::CreateCommand(char type, int msgc, ByteString *msgv)
 	
 
 	cmd = new Command;
-	cmd->cmdID = GetNextID() * 10;
 	cmd->type = type;
 	cmd->nodeID = -1;
 	
 	if (cmd->type == KEYSPACECLIENT_GET_MASTER)
+	{
+		cmd->cmdID = NextMasterCommandID() * 10;
 		cmd->cmdID += KEYSPACE_MOD_GETMASTER;
-	else if (cmd->IsDirty())
-		cmd->cmdID += KEYSPACE_MOD_DIRTY_COMMAND;
+	}
 	else
-		cmd->cmdID += KEYSPACE_MOD_SAFE_COMMAND;
+	{
+		cmd->cmdID = NextCommandID() * 10;
+		cmd->cmdID += KEYSPACE_MOD_COMMAND;
+	}
 	
 	len = 2; // command + colon
 	idlen = snwritef(idbuf, sizeof(idbuf), "%U", cmd->cmdID);
@@ -770,7 +788,7 @@ void Client::SetMaster(int master_, int nodeID)
 		if (master != master_)
 		{
 			// node became the master
-			Log_Trace("node %d became the master", nodeID);
+			Log_Message("Node %d is the master", nodeID);
 			master = master_;
 			connectivityStatus = KEYSPACE_SUCCESS;
 			SendCommand(conns[master], safeCommands);
@@ -782,7 +800,7 @@ void Client::SetMaster(int master_, int nodeID)
 	else if (master_ < 0 && master == nodeID)
 	{
 		// node lost its mastership
-		Log_Trace("node %d lost its mastership", nodeID);
+		Log_Message("Node %d lost its mastership", nodeID);
 		master = -1;
 		connectivityStatus = KEYSPACE_NOMASTER;
 		

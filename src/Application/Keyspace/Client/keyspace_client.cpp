@@ -167,9 +167,14 @@ int
 keyspace_client_init(keyspace_client_t kc, int nodec,
 const char* nodev[], uint64_t timeout)
 {
+	int ret;
+	
 	Client *client = (Client *) kc;
 	
-	return client->Init(nodec, nodev, timeout);
+	ret = client->Init(nodec, nodev);
+	client->SetGlobalTimeout(timeout);
+	
+	return ret;
 }
 
 int
