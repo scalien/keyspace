@@ -164,11 +164,11 @@ static int test_init()
 	TEST_CALL(test_init_with_commands(kc));
 
 	// test init with invalid arguments
-	status = keyspace_client_init(kc, 0, NULL, TIMEOUT);
+	status = keyspace_client_init(kc, 0, NULL);
 	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
-	status = keyspace_client_init(kc, sizeof(NODES) / sizeof(*NODES), NODES, TIMEOUT);
+	status = keyspace_client_init(kc, sizeof(NODES) / sizeof(*NODES), NODES);
 	if (status != KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 	
@@ -185,10 +185,14 @@ static int test_badconnect()
 	const char			key[] = "key";
 	
 	kc = keyspace_client_create();
-	status = keyspace_client_init(kc, sizeof(nodes) / sizeof(*nodes), nodes, TIMEOUT);
+	status = keyspace_client_init(kc, sizeof(nodes) / sizeof(*nodes), nodes);
 	if (status != KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
 		
+	status = keyspace_client_set_global_timeout(kc, TIMEOUT);
+	if (status != KEYSPACE_SUCCESS)
+		return TEST_FAILURE;
+	
 	TEST_TIMEOUT_CALL(status = keyspace_client_set(kc, key, sizeof(key), key, sizeof(key), 1), TIMEOUT + 1000);
 	if (status == KEYSPACE_SUCCESS)
 		return TEST_FAILURE;
@@ -255,9 +259,14 @@ int keyspace_client_basic_test()
 	
 	kc = keyspace_client_create();
 	
-	status = keyspace_client_init(kc, sizeof(NODES) / sizeof(*NODES), NODES, TIMEOUT);
+	status = keyspace_client_init(kc, sizeof(NODES) / sizeof(*NODES), NODES);
 	if (status < 0)
 		return TEST_FAILURE;
+		
+	status = keyspace_client_set_global_timeout(kc, TIMEOUT);
+	if (status < 0)
+		return TEST_FAILURE;
+	
 		
 	// set 100 keyvalues named user:
 	status = keyspace_client_begin(kc);

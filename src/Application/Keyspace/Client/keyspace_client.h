@@ -137,8 +137,15 @@ void keyspace_client_destroy(keyspace_client_t kc);
  * Return value: the status of the operation
  */
 int	keyspace_client_init(keyspace_client_t kc,
-		int nodec, const char* nodev[], 
-		uint64_t timeout);
+		int nodec, const char* nodev[]);
+
+int keyspace_client_set_global_timeout(keyspace_client_t kc, uint64_t timeout);
+
+int keyspace_client_set_master_timeout(keyspace_client_t kc, uint64_t timeout);
+
+uint64_t keyspace_client_get_global_timeout(keyspace_client_t kc);
+
+uint64_t keyspace_client_get_master_timeout(keyspace_client_t kc);
 
 /*
  * Get the master node.

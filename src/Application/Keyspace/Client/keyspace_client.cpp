@@ -164,17 +164,60 @@ keyspace_client_destroy(keyspace_client_t kc)
 }
 
 int
-keyspace_client_init(keyspace_client_t kc, int nodec,
-const char* nodev[], uint64_t timeout)
+keyspace_client_init(keyspace_client_t kc, int nodec, const char* nodev[])
 {
-	int ret;
-	
 	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
 	
-	ret = client->Init(nodec, nodev);
+	return client->Init(nodec, nodev);
+}
+
+int
+keyspace_client_set_global_timeout(keyspace_client_t kc, uint64_t timeout)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+
 	client->SetGlobalTimeout(timeout);
+	return KEYSPACE_SUCCESS;
+}
+
+int
+keyspace_client_set_master_timeout(keyspace_client_t kc, uint64_t timeout)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+
+	client->SetMasterTimeout(timeout);
+	return KEYSPACE_SUCCESS;
+}
+
+uint64_t
+keyspace_client_get_global_timeout(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return 0;
 	
-	return ret;
+	return client->GetGlobalTimeout();
+}
+
+uint64_t
+keyspace_client_get_master_timeout(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return 0;
+	
+	return client->GetMasterTimeout();
 }
 
 int
