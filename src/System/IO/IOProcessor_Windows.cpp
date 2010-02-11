@@ -398,8 +398,10 @@ bool IOProcessor::Remove(IOOperation *ioop)
 		if (iod->write != NULL)
 		{
 			assert(iod->write->active);
-			iod->write->active = false;
-			IOProcessor::Add(iod->write);
+			ioop = iod->write;
+			iod->write = NULL;
+			ioop->active = false;
+			IOProcessor::Add(ioop);
 		}
 	}
 	else
@@ -408,8 +410,10 @@ bool IOProcessor::Remove(IOOperation *ioop)
 		if (iod->read != NULL)
 		{
 			assert(iod->read->active);
-			iod->read->active = false;
-			IOProcessor::Add(iod->read);
+			ioop = iod->read;
+			iod->read = NULL;
+			ioop->active = false;
+			IOProcessor::Add(ioop);
 		}
 	}
 

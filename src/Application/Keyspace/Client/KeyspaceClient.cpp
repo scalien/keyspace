@@ -8,6 +8,8 @@
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceClientResp.h"
 #include "Framework/PaxosLease/PLeaseConsts.h"
 
+#define VALIDATE_KEY_LEN(k) 	if (k.length > KEYSPACE_KEY_SIZE) return KEYSPACE_API_ERROR
+#define VALIDATE_VAL_LEN(v) 	if (v.length > KEYSPACE_VAL_SIZE) return KEYSPACE_API_ERROR
 
 using namespace Keyspace;
 
@@ -166,6 +168,8 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	
 	if (result->isBatched)
 		return KEYSPACE_API_ERROR;
+
+	VALIDATE_KEY_LEN(prefix);
 	
 	countString.Writef("%U", count);
 	if (next)
@@ -231,6 +235,8 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 
 	if (result->isBatched && submit)
 		return KEYSPACE_API_ERROR;
+
+	VALIDATE_KEY_LEN(key);
 
 	args[0] = key;
 
@@ -301,6 +307,8 @@ bool next, bool forward, bool dirty, bool values)
 	if (result->isBatched)
 		return KEYSPACE_API_ERROR;
 	
+	VALIDATE_KEY_LEN(prefix);
+
 	countString.Writef("%U", count);
 	if (next)
 		nextString.Append("1", 1);
@@ -395,6 +403,9 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	if (result->isBatched && submit)
 		return KEYSPACE_API_ERROR;	
 	
+	VALIDATE_KEY_LEN(key);
+	VALIDATE_VAL_LEN(value);
+
 	args[0] = key;
 	args[1] = value;
 	
@@ -425,6 +436,10 @@ const ByteString &test, const ByteString &value, bool submit)
 	
 	if (result->isBatched && submit)
 		return KEYSPACE_API_ERROR;
+
+	VALIDATE_KEY_LEN(key);
+	VALIDATE_VAL_LEN(test);
+	VALIDATE_VAL_LEN(value);
 
 	args[0] = key;
 	args[1] = test;
@@ -459,7 +474,9 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 
 	if (result->isBatched && submit)
 		return KEYSPACE_API_ERROR;
-	
+
+	VALIDATE_KEY_LEN(key);
+
 	numString.Writef("%U", num);
 	
 	args[0] = key;
@@ -500,7 +517,9 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 
 	if (result->isBatched && submit)
 		return KEYSPACE_API_ERROR;
-	
+
+	VALIDATE_KEY_LEN(key);
+
 	args[0] = key;
 	
 	if (remove)
@@ -540,6 +559,9 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	if (result->isBatched && submit)
 		return KEYSPACE_API_ERROR;
 
+	VALIDATE_KEY_LEN(from);
+	VALIDATE_KEY_LEN(to);
+
 	args[0] = from;
 	args[1] = to;
 	
@@ -569,6 +591,8 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	
 	if (result->isBatched && submit)
 		return KEYSPACE_API_ERROR;
+
+	VALIDATE_KEY_LEN(prefix);
 
 	args[0] = prefix;
 	
@@ -654,6 +678,9 @@ void Client::EventLoop()
 		if (!EventLoop::RunOnce())
 			break;
 	}
+
+	safeCommands.Clear();
+	dirtyCommands.Clear();
 
 	result->FreeCommandMap();
 

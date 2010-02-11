@@ -42,11 +42,11 @@ public:
 		{
 			last = value.buffer[value.length - 2];
 			if (last == 'K')
-				return ret * 1024;
+				return ret * 1000;
 			if (last == 'M')
-				return ret * 1024 * 1024;
+				return ret * 1000 * 1000;
 			if (last == 'G')
-				return ret * 1024 * 1024 * 1024;
+				return ret * 1000 * 1000 * 1000;
 		}
 
 		return ret;
