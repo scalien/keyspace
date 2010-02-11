@@ -57,7 +57,6 @@ void PaxosLease::OnRead()
 	reader->GetMessage(bs);
 	if (!msg.Read(bs))
 		return;	
-	CheckNodeIdentity();
 	
 	if ((msg.IsRequest()) &&
 		msg.proposalID > proposer.highestProposalID)
@@ -152,18 +151,4 @@ void PaxosLease::OnStartupTimeout()
 	Log_Trace();
 	
 	reader->Continue();
-}
-
-
-void PaxosLease::CheckNodeIdentity()
-{
-//	Endpoint a, b;
-//	reader->GetEndpoint(a);
-//	
-//	b = RCONF->GetEndpoint(msg.nodeID);
-//	
-//	if (a.GetAddress() != ENDPOINT_ANY_ADDRESS && 
-//		b.GetAddress() != ENDPOINT_ANY_ADDRESS && 
-//		a.GetAddress() != b.GetAddress())
-//		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
 }

@@ -37,7 +37,6 @@ public:
 	void			OnLearnLease();
 	void			OnLeaseTimeout();
 	void			OnStartupTimeout();
-	void			CheckNodeIdentity();
 	
 private:
 	void			InitTransport();
