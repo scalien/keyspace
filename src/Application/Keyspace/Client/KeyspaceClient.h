@@ -134,10 +134,10 @@ private:
 	int				connectivityStatus;
 	int				timeoutStatus;
 
-	CdownTimer		globalTimeout;
 	Func			onGlobalTimeout;
-	CdownTimer		masterTimeout;
+	CdownTimer		globalTimeout;
 	Func			onMasterTimeout;
+	CdownTimer		masterTimeout;
 };
 
 }; // namespace
