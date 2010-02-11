@@ -20,7 +20,7 @@
 static bool		timestamping = false;
 static bool		trace = false;
 static int		maxLine = LOG_MSG_SIZE;
-static int		target = LOG_TARGET_STDOUT;
+static int		target = 0;
 static FILE*	logfile = NULL;
 static char*	logfilename = NULL;
 
