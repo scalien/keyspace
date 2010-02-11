@@ -199,6 +199,42 @@
 							RelativePath="..\src\Application\Keyspace\Client\KeyspaceClient.h"
 							>
 						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceClientConn.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceClientConn.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceClientConsts.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceCommand.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceCommand.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceResponse.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceResponse.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceResult.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Client\KeyspaceResult.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
