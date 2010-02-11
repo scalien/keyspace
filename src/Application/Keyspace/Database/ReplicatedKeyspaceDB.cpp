@@ -377,6 +377,7 @@ void ReplicatedKeyspaceDB::FailKeyspaceOps()
 		op = *it;
 		
 		it = ops.Remove(it);
+		op->status = false;
 		op->service->OnComplete(op);
 	}
 	

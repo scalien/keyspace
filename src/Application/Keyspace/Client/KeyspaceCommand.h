@@ -23,12 +23,10 @@ public:
 
 	char				type;
 	ByteString			key;
-	DynArray<128>		msg;
+	DynArray<128>		args;
 	int					nodeID;
 	int					status;
 	uint64_t			cmdID;
-	//bool				submit;
-	uint64_t			sendTime;
 	
 	ResponseList		responses;
 };

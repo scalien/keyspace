@@ -56,4 +56,3 @@ void Command::ClearResponse()
 		it = responses.Remove(it);
 	}
 }
-

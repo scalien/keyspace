@@ -90,7 +90,9 @@ int KeyspaceClientListTest(Keyspace::Client& client, TestConfig& conf)
 	if (status != KEYSPACE_SUCCESS || !result)
 	{
 		delete result;
-		Log_Message("Test failed, status = %s (%s failed after %lu msec)", Status(status), conf.typeString, (unsigned long) sw.elapsed);
+		Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+		Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+		Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 		return 1;
 	}
 	
@@ -154,7 +156,9 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 
 	if (status != KEYSPACE_SUCCESS)
 	{
-		Log_Message("Test failed, status = %s (%s)", Status(status), conf.typeString);
+		Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+		Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+		Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 		return 1;
 	}
 
@@ -383,7 +387,10 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Set(key, value);
 		if (status != KEYSPACE_SUCCESS)
 		{
-			Log_Message("SET failed, status = %s", Status(status));
+			Log_Message("SET failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 		Log_Message("SET succeeded");
@@ -395,12 +402,18 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Get(key, value);
 		if (status != KEYSPACE_SUCCESS)
 		{
-			Log_Message("GET failed, status = %s", Status(status));
+			Log_Message("GET failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 		if (!(value == reference))
 		{
 			Log_Message("GET failed, value != reference");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 		Log_Message("GET succeeded");
@@ -415,7 +428,10 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.ListKeys(key, startKey);
 		if (status != KEYSPACE_SUCCESS)
 		{
-			Log_Message("LISTKEYS failed, status = %s", Status(status));
+			Log_Message("LISTKEYS failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 
@@ -436,7 +452,10 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Add(key, 1, num);
 		if (status != KEYSPACE_SUCCESS || num != 1234567891UL)
 		{
-			Log_Message("ADD failed, status = %s", Status(status));
+			Log_Message("ADD failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 
@@ -448,7 +467,10 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Delete(key);
 		if (status != KEYSPACE_SUCCESS)
 		{
-			Log_Message("DELETE failed, status = %s", Status(status));
+			Log_Message("DELETE failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 		
@@ -462,7 +484,10 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		// this must fail because the previous test deletes the key
 		if (status != KEYSPACE_FAILED)
 		{
-			Log_Message("TESTANDSET failed, status = %s", Status(status));
+			Log_Message("TESTANDSET failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 
@@ -474,14 +499,20 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		status = client.Set(key, reference);
 		if (status != KEYSPACE_SUCCESS)
 		{
-			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
+			Log_Message("SET/TESTANDSET failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 
 		status = client.TestAndSet(key, reference, value);
 		if (status != KEYSPACE_SUCCESS)
 		{
-			Log_Message("SET/TESTANDSET failed, status = %s", Status(status));
+			Log_Message("SET/TESTANDSET failed");
+			Log_Message("Test failed, transport status = %s (Submit failed)", Status(client.TransportStatus()));
+			Log_Message("Test failed, connectivity status = %s (Submit failed)", Status(client.ConnectivityStatus()));
+			Log_Message("Test failed, timeout status = %s (Submit failed)", Status(client.TimeoutStatus()));
 			return 1;
 		}
 		

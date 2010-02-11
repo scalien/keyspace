@@ -119,6 +119,7 @@ private:
 								  bool forward, bool dirty, bool values);
 	void			OnGlobalTimeout();
 	void			OnMasterTimeout();
+	bool			IsSafe();
 	
 	CommandList		safeCommands;
 	CommandList		dirtyCommands;

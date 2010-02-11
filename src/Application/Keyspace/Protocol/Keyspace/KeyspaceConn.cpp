@@ -174,7 +174,7 @@ void KeyspaceConn::ProcessMsg()
 	{
 		int master = kdb->GetMaster();
 		if (master < 0)
-			resp.Failed(req.cmdID);
+			resp.NotMaster(req.cmdID);
 		else
 		{
 			ba.length = snwritef(ba.buffer, ba.size, "%d", master);

@@ -32,11 +32,21 @@ void ClientConn::Connect()
 
 void ClientConn::Send(Command &cmd)
 {
-	Log_Trace("nodeID = %d, cmd = %.*s",
-			  nodeID, MIN(cmd.msg.length, 40), cmd.msg.buffer);
-
+	DynArray<32>	head;
+	int				length;
+	
+	Log_Trace("type = %c, nodeID = %d, cmd = %.*s",
+			  cmd.type, nodeID, MIN(cmd.args.length, 40), cmd.args.buffer);
+	
 	cmd.nodeID = nodeID;	
-	Write(cmd.msg.buffer, cmd.msg.length);
+
+	head.Writef("%c:%U", cmd.type, cmd.cmdID);
+	length = head.length + cmd.args.length;
+	
+	head.Writef("%d:%c:%U", length, cmd.type, cmd.cmdID);
+	Write(head.buffer, head.length, false);
+	
+	Write(cmd.args.buffer, cmd.args.length, false);
 
 	if (BytesQueued() >= 1*MB || cmd.type == KEYSPACECLIENT_GET_MASTER)
 		WritePending();
@@ -86,6 +96,8 @@ void ClientConn::OnGetMaster()
 
 bool ClientConn::ProcessCommand(Response* resp)
 {
+	Log_Trace();
+
 	Command*	cmd;
 	uint64_t	index;	
 	if (resp->type == KEYSPACECLIENT_NOT_MASTER)
@@ -95,11 +107,26 @@ bool ClientConn::ProcessCommand(Response* resp)
 		return true;
 	}
 	
+	if (client.result->commands.Head() == NULL)
+	{
+		Log_Trace();
+		return false;
+	}	
+	
+	if (resp->id < (*client.result->commands.Head())->cmdID)
+	{
+		Log_Trace("%" PRIu64 "", resp->id);
+		return false;
+	}	
+	
 	index = (resp->id - (*client.result->commands.Head())->cmdID) / 10;
 
 	if (index > (uint64_t)client.result->commands.Length())
+	{
+		Log_Trace();
 		return false;
-	
+	}	
+
 	cmd = client.result->cmdMap[index];
 
 	Log_Trace("status = %d, id = %lu",
@@ -134,9 +161,6 @@ bool ClientConn::ProcessCommand(Response* resp)
 
 		client.result->AppendCommandResponse(cmd, resp);
 		client.result->numCompleted++;
-		Log_Trace("numCompleted = %d of %d",
-		client.result->numCompleted,
-		client.result->commands.Length());
 	}
 
 	return true;
@@ -144,6 +168,8 @@ bool ClientConn::ProcessCommand(Response* resp)
 
 bool ClientConn::ProcessGetMaster(Response* resp)
 {
+	Log_Trace();
+	
 	Command**	it;
 	unsigned	nread;
 	int			master;
@@ -241,8 +267,12 @@ void ClientConn::OnWrite()
 		if (client.safeCommands.Length() == 0)
 			SendSubmit();
 	}
-	else if (client.dirtyCommands.Length() > 0)
-		client.SendCommand(this, client.dirtyCommands);
+	
+	if (client.dirtyCommands.Length() > 0)
+	{
+		while(client.dirtyCommands.Length() > 0 && BytesQueued() < 1*MB)
+			client.SendCommand(this, client.dirtyCommands);
+	}
 }
 
 void ClientConn::OnClose()

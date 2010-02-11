@@ -668,6 +668,8 @@ bool Client::IsDone()
 		return true;
 	}
 	
+	assert(result->commands.Length() >= result->numCompleted);
+	
 	if (result->commands.Length() == result->numCompleted)
 	{
 		result->transportStatus = KEYSPACE_SUCCESS;
@@ -707,12 +709,14 @@ void Client::SendDirtyCommands()
 
 uint64_t Client::NextMasterCommandID()
 {
-	return masterCmdID++;
+	masterCmdID++;
+	return (masterCmdID * 10 + KEYSPACE_MOD_GETMASTER);
 }
 
 uint64_t Client::NextCommandID()
 {
-	return cmdID++;
+	cmdID++;
+	return (cmdID * 10 + KEYSPACE_MOD_COMMAND);
 }
 
 Command* Client::CreateCommand(char type, int msgc, ByteString *msgv)
@@ -720,8 +724,6 @@ Command* Client::CreateCommand(char type, int msgc, ByteString *msgv)
 	Command*		cmd;
 	int				len;
 	char			tmp[20];
-	char			idbuf[20];
-	int				idlen;
 	int				keyOffs;
 	int				keyLen;
 	
@@ -731,45 +733,27 @@ Command* Client::CreateCommand(char type, int msgc, ByteString *msgv)
 	cmd->nodeID = -1;
 	
 	if (cmd->type == KEYSPACECLIENT_GET_MASTER)
-	{
-		cmd->cmdID = NextMasterCommandID() * 10;
-		cmd->cmdID += KEYSPACE_MOD_GETMASTER;
-	}
+		cmd->cmdID = NextMasterCommandID();
 	else
-	{
-		cmd->cmdID = NextCommandID() * 10;
-		cmd->cmdID += KEYSPACE_MOD_COMMAND;
-	}
+		cmd->cmdID = NextCommandID();
 	
-	len = 2; // command + colon
-	idlen = snwritef(idbuf, sizeof(idbuf), "%U", cmd->cmdID);
-	len += idlen;
-	for (int i = 0; msgv && i < msgc; i++)
-		len += 1 + NumLen(msgv[i].length) + 1 + msgv[i].length;
-	
-	len = snwritef(tmp, sizeof(tmp), "%d:", len);
-	cmd->msg.Append(tmp, len);
-	
-	cmd->msg.Append(&type, 1);
-	cmd->msg.Append(":", 1);
-	cmd->msg.Append(idbuf, idlen);
-	
+	// serialize args
 	for (int i = 0; msgv && i < msgc; i++)
 	{
 		len = snwritef(tmp, sizeof(tmp), ":%d:", msgv[i].length);
-		cmd->msg.Append(tmp, len);
+		cmd->args.Append(tmp, len);
 
 		// HACK!
 		if (i == 0)
 		{
-			keyOffs = cmd->msg.length;
+			keyOffs = cmd->args.length;
 			keyLen = msgv[i].length;
 		}
 		
-		cmd->msg.Append(msgv[i].buffer, msgv[i].length);
+		cmd->args.Append(msgv[i].buffer, msgv[i].length);
 	}
 	
-	cmd->key.buffer = cmd->msg.buffer + keyOffs;
+	cmd->key.buffer = cmd->args.buffer + keyOffs;
 	cmd->key.length = keyLen;
 	cmd->key.size = keyLen;
 	
@@ -804,15 +788,26 @@ void Client::SetMaster(int master_, int nodeID)
 		master = -1;
 		connectivityStatus = KEYSPACE_NOMASTER;
 		
+		if (!IsSafe())
+			return;
+		
 		for (it = result->commands.Head(); it != NULL; it = result->commands.Next(it))
 		{
 			cmd = *it;
+			cmd->cmdID = NextCommandID();
+			Log_Trace("new command ID: %" PRIu64 "", cmd->cmdID);
 			if (cmd->status == KEYSPACE_NOSERVICE && cmd->nodeID == nodeID)
 			{
+				Log_Trace("appending to safecommands");
 				cmd->nodeID = -1;
 				cmd->ClearResponse();
 				if (!cmd->IsDirty())
 					safeCommands.Append(cmd);
+			}
+			else
+			{
+				Log_Trace("NOT appending to safecommands: %d %d",
+				cmd->status, cmd->nodeID);	
 			}
 		}
 
@@ -830,4 +825,19 @@ void Client::OnMasterTimeout()
 {
 	Log_Trace();
 	timeoutStatus = KEYSPACE_MASTER_TIMEOUT;
+}
+
+bool Client::IsSafe()
+{
+	Command**	it;
+	Command*	cmd;
+
+	it = result->commands.Head();
+	if (!it)
+		return false;
+	cmd = *it;
+	if (cmd->IsDirty())
+		return false; 
+
+	return true;
 }
