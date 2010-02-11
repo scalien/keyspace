@@ -54,9 +54,17 @@ keyspace_result_t keyspace_client_result(keyspace_client_t kc);
  */
 void keyspace_result_close(keyspace_result_t kr);
 
-// TODO: write comments
+/*
+ * Set the result cursor to the beginning of the resultset.
+ */
 void keyspace_result_begin(keyspace_result_t kr);
 
+/*
+ * Check if the result cursor is at the end of the resultset.
+ *
+ * Parameters:
+ *
+ */
 int keyspace_result_is_end(keyspace_result_t kr);
 
 /*
@@ -146,6 +154,13 @@ int keyspace_client_set_master_timeout(keyspace_client_t kc, uint64_t timeout);
 uint64_t keyspace_client_get_global_timeout(keyspace_client_t kc);
 
 uint64_t keyspace_client_get_master_timeout(keyspace_client_t kc);
+
+
+int	keyspace_client_transport_status(keyspace_client_t kc);
+
+int keyspace_client_connectivity_status(keyspace_client_t kc);
+int keyspace_client_timeout_status(keyspace_client_t kc);
+int keyspace_client_command_status(keyspace_client_t kc);
 
 /*
  * Get the master node.

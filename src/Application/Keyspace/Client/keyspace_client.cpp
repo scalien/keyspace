@@ -221,9 +221,57 @@ keyspace_client_get_master_timeout(keyspace_client_t kc)
 }
 
 int
+keyspace_client_transport_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->TransportStatus();
+}
+
+int
+keyspace_client_connectivity_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->ConnectivityStatus();
+}
+
+int
+keyspace_client_timeout_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->TimeoutStatus();
+}
+
+int
+keyspace_client_command_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->CommandStatus();
+}
+
+
+int
 keyspace_client_get_master(keyspace_client_t kc)
 {
 	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
 	
 	return client->GetMaster();
 }

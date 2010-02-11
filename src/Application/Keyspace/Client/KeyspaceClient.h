@@ -33,9 +33,11 @@ public:
 	void			SetAutoFailover(bool fo);
 	
 	Result*			GetResult();
+
 	int				TransportStatus();
 	int				ConnectivityStatus();
 	int				TimeoutStatus();
+	int				CommandStatus();
 				
 	// simple get commands with preallocated value
 	int				Get(const ByteString &key, ByteString &value,

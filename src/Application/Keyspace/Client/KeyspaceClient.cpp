@@ -405,6 +405,11 @@ int Client::TimeoutStatus()
 	return timeoutStatus;
 }
 
+int Client::CommandStatus()
+{
+	return result->CommandStatus();
+}
+
 int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 {
 	Command*	cmd;
