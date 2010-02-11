@@ -1114,37 +1114,6 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		
 		Log_Message("CancelTest succeeded");
 	}
-
-	// timeout test
-	{
-		key.Writef("test:0");
-		status = client.Set(key, key);
-		if (status != KEYSPACE_SUCCESS)
-		{
-			Log_Message("TimeoutTest Set failed, status = %s", Status(status));
-			return 1;
-		}
-		
-		status = client.Get(key);
-		if (status != KEYSPACE_SUCCESS)
-		{
-			Log_Message("TimeoutTest failed, status = %s", Status(status));
-			return 1;
-		}
-
-		Log_Message("TimeoutTest: waiting for %d msecs",
-		client.GetGlobalTimeout() + 1000);
-		MSleep(client.GetGlobalTimeout() + 1000);
-		
-		status = client.Get(key);
-		if (status != KEYSPACE_SUCCESS)
-		{
-			Log_Message("TimeoutTest failed, status = %s", Status(status));
-			return 1;
-		}
-		
-		Log_Message("TimeoutTest succeeded");
-	}
 	
 	// limit SET test
 	{
@@ -1155,7 +1124,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		value.Fill('v', KEYSPACE_VAL_SIZE + d);
 
 		int n = 0;
-		int numTest = (d * 2 + 1) * (d * 2 + 1);
+		//int numTest = (d * 2 + 1) * (d * 2 + 1);
 		for (int i = -d; i <= d; i++)
 		{
 			for (int j = -d; j <= d; j++)
@@ -1188,10 +1157,102 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 				}
 			}
 		}
-		
 		//client.SetTimeout(timeout);
 		Log_Message("SET/limit succeeded");
 	}
+
+
+	// dirty/safe test 1
+	{
+		key.Writef("test:0");
+		status = client.Begin();
+		if (status != KEYSPACE_SUCCESS)
+		{
+			Log_Message("DirtySafeTest1 failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		// dirty = false, submit = false
+		status = client.Get(key, false, false);
+		if (status != KEYSPACE_SUCCESS)
+		{
+			Log_Message("DirtySafeTest1 failed, status = %s", Status(status));
+			return 1;
+		}
+
+		// dirty = true, submit = false
+		status = client.Get(key, true, false);
+		if (status != KEYSPACE_API_ERROR)
+		{
+			Log_Message("DirtySafeTest1 failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		client.Cancel();
+		Log_Message("DirtySafeTest1 succeeded");
+	}
+
+	// dirty/safe test 2
+	{
+		key.Writef("test:0");
+		status = client.Begin();
+		if (status != KEYSPACE_SUCCESS)
+		{
+			Log_Message("DirtySafeTest2 failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		// dirty = true, submit = false
+		status = client.Get(key, true, false);
+		if (status != KEYSPACE_SUCCESS)
+		{
+			Log_Message("DirtySafeTest2 failed, status = %s", Status(status));
+			return 1;
+		}
+
+		// dirty = false, submit = false
+		status = client.Get(key, false, false);
+		if (status != KEYSPACE_API_ERROR)
+		{
+			Log_Message("DirtySafeTest2 failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		client.Cancel();
+		Log_Message("DirtySafeTest2 succeeded");
+	}
+
+	// timeout test
+	{
+		key.Writef("test:0");
+		status = client.Set(key, key);
+		if (status != KEYSPACE_SUCCESS)
+		{
+			Log_Message("TimeoutTest Set failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		status = client.Get(key);
+		if (status != KEYSPACE_SUCCESS)
+		{
+			Log_Message("TimeoutTest failed, status = %s", Status(status));
+			return 1;
+		}
+
+		Log_Message("TimeoutTest: waiting for %d msecs",
+		client.GetGlobalTimeout() + 1000);
+		MSleep(client.GetGlobalTimeout() + 1000);
+		
+		status = client.Get(key);
+		if (status != KEYSPACE_SUCCESS)
+		{
+			Log_Message("TimeoutTest failed, status = %s", Status(status));
+			return 1;
+		}
+		
+		Log_Message("TimeoutTest succeeded");
+	}
+		
 
 	return 0;
 }

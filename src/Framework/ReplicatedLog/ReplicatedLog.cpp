@@ -446,7 +446,7 @@ void ReplicatedLog::NewPaxosRound()
 	now = EventLoop::Now();
 	lastTook = ABS(now - lastStarted);
 	lastLength = learner.state.value.length;
-	thruput = (lastLength / (lastTook / 1000.0));
+	thruput = (uint64_t)(lastLength / (lastTook / 1000.0));
 	lastStarted = now;
 	
 	EventLoop::Remove(&(proposer.prepareTimeout));

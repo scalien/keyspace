@@ -14,6 +14,7 @@
 using namespace Keyspace;
 
 ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_) :
+
 client(client),
 endpoint(endpoint_),
 onGetMasterTimeout(this, &ClientConn::OnGetMaster),
