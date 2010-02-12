@@ -775,10 +775,9 @@ Command* Client::CreateCommand(char type, int msgc, ByteString *msgv)
 	Command*		cmd;
 	int				len;
 	char			tmp[20];
-	int				keyOffs;
-	int				keyLen;
+	int				keyOffs = 0;
+	int				keyLen = 0;
 	
-
 	cmd = new Command;
 	cmd->type = type;
 	cmd->nodeID = -1;
