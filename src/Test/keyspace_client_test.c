@@ -292,7 +292,6 @@ int keyspace_client_basic_test()
 		for (i = 0; i < 100; i++)
 		{
 			keylen = snprintf(key, sizeof(key), "user:%d", i);
-			vallen = snprintf(val, sizeof(val), "User %d", i);
 			status = keyspace_client_get(kc, key, keylen, 0, 0);
 			if (status != KEYSPACE_SUCCESS)
 				return TEST_FAILURE;
