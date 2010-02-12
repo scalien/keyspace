@@ -35,7 +35,7 @@ static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
 const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
 static volatile bool terminated = false;
-static bool		wsaInited = false;
+static unsigned		numIOProcClients = 0;
 
 static LPFN_CONNECTEX	ConnectEx;
 
@@ -161,7 +161,7 @@ bool IOProcessor::Init(int maxfd)
 	DWORD		bytesReturned;
 
 	if (iocp)
-		Shutdown();
+		return true;
 
 	// initialize a Console Control Handler routine
 #ifndef KEYSPACE_CLIENTLIB
@@ -197,19 +197,23 @@ bool IOProcessor::Init(int maxfd)
 	iods[maxfd - 1].next = NULL;
 	freeIods = iods;
 
+	numIOProcClients++;
+
 	return true;
 }
 
 void IOProcessor::Shutdown()
 {
-	if (iocp == NULL)
+	numIOProcClients--;
+
+	if (iocp == NULL || numIOProcClients > 0)
 		return;
 
 	delete[] iods;
 	freeIods = NULL;
 	CloseHandle(iocp);
 	iocp = NULL;
-	//WSACleanup();
+
 }
 
 static bool RequestReadNotification(IOOperation* ioop)

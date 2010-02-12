@@ -21,6 +21,8 @@ public:
 	~Client();
 	
 	int				Init(int nodec, const char* nodev[]);
+	void			Shutdown();
+
 	void			SetGlobalTimeout(uint64_t timeout);
 	void			SetMasterTimeout(uint64_t timeout);
 	uint64_t		GetGlobalTimeout();

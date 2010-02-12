@@ -29,14 +29,8 @@ masterTimeout(&onMasterTimeout)
 
 Client::~Client()
 {
-	delete result;
-	for (int i = 0; i < numConns; i++)
-	{
-		delete conns[i];
-		conns[i] = NULL;
-	}
-	delete[] conns;
-	IOProcessor::Shutdown();
+	if (conns)
+		Shutdown();
 }
 
 int Client::Init(int nodec, const char* nodev[])
@@ -45,14 +39,15 @@ int Client::Init(int nodec, const char* nodev[])
 	if (nodec <= 0 || nodev == NULL)
 		return KEYSPACE_API_ERROR;
 
+	if (!IOProcessor::Init(nodec + 64))
+		return KEYSPACE_API_ERROR;
+
 	masterTimeout.SetDelay(3 * MAX_LEASE_TIME);
 	globalTimeout.SetDelay(KEYSPACE_DEFAULT_TIMEOUT);
 
 	connectivityStatus = KEYSPACE_NOCONNECTION;
 	timeoutStatus = KEYSPACE_SUCCESS;
 
-	if (!IOProcessor::Init(nodec + 64))
-		return KEYSPACE_API_ERROR;
 
 	conns = new ClientConn*[nodec];
 	
@@ -75,6 +70,19 @@ int Client::Init(int nodec, const char* nodev[])
 	currentConn = 0;
 	
 	return KEYSPACE_SUCCESS;
+}
+
+void Client::Shutdown()
+{
+	delete result;
+	for (int i = 0; i < numConns; i++)
+	{
+		delete conns[i];
+		conns[i] = NULL;
+	}
+	delete[] conns;
+	conns = NULL;
+	IOProcessor::Shutdown();
 }
 
 void Client::SetGlobalTimeout(uint64_t timeout)

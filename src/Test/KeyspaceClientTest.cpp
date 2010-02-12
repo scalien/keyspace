@@ -354,6 +354,7 @@ int KeyspaceClientTest(int argc, char **argv)
 		return KeyspaceClientFailoverTest(client, testConf);
 	if (testConf.type == TestConfig::API)
 	{
+		client.Shutdown();
 		return keyspace_client_test();
 	}
 
@@ -670,7 +671,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
-			status = client.Get(key, true, false);
+			status = client.Get(key, false, false);
 			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("GET/batched failed, status = %s", Status(status));
