@@ -279,7 +279,40 @@ int keyspace_client_basic_test()
 			vallen = snprintf(val, sizeof(val), "User %d", i);
 			keyspace_client_set(kc, key, keylen, val, vallen, 0);
 		}
-		keyspace_client_submit(kc);
+		
+		status = keyspace_client_submit(kc);
+		if (status != KEYSPACE_SUCCESS)
+			return TEST_FAILURE;
+	}
+	
+	status = keyspace_client_begin(kc);
+	if (status == KEYSPACE_SUCCESS)
+	{
+		int i;
+		for (i = 0; i < 100; i++)
+		{
+			keylen = snprintf(key, sizeof(key), "user:%d", i);
+			vallen = snprintf(val, sizeof(val), "User %d", i);
+			status = keyspace_client_get(kc, key, keylen, 0, 0);
+			if (status != KEYSPACE_SUCCESS)
+				return TEST_FAILURE;
+		}
+
+		status = keyspace_client_submit(kc);
+		if (status != KEYSPACE_SUCCESS)
+			return TEST_FAILURE;
+			
+		kr = keyspace_client_result(kc);
+		if (kr == KEYSPACE_INVALID_RESULT)
+			return TEST_FAILURE;
+		
+		for (keyspace_result_begin(kr); !keyspace_result_is_end(kr); keyspace_result_next(kr))
+		{
+			status = keyspace_result_value(kr, &pval, &vallen);
+			Log_Trace("%.*s", vallen, (char*) pval);
+		}
+		
+		keyspace_result_close(kr);
 	}
 
 	// get a key named "counter"
@@ -332,7 +365,7 @@ int keyspace_client_basic_test()
 
 int keyspace_client_test()
 {
-//	TEST_CALL(keyspace_client_basic_test());
+	TEST_CALL(keyspace_client_basic_test());
 	TEST_CALL(test_invalid_result());
 	TEST_CALL(test_init());
 	TEST_CALL(test_badconnect());

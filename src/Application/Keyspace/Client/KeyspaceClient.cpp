@@ -705,6 +705,8 @@ void Client::EventLoop()
 	dirtyCommands.Clear();
 
 	result->FreeCommandMap();
+	result->connectivityStatus = connectivityStatus;
+	result->timeoutStatus = timeoutStatus;
 
 	result->Begin();
 }
