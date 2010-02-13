@@ -14,6 +14,12 @@
 #define VALIDATE_DIRTY() if (safeCommands.Length() > 0) return KEYSPACE_API_ERROR
 #define VALIDATE_SAFE() if (dirtyCommands.Length() > 0) return KEYSPACE_API_ERROR
 
+#define VALIDATE_BATCHED(submit) \ 
+	if (result == NULL || (result->isBatched && submit == true) || (!result->isBatched && submit == false)) \
+		return KEYSPACE_API_ERROR
+
+#define VALIDATE_NOT_BATCHED() if (result == NULL || result->isBatched) return KEYSPACE_API_ERROR
+
 using namespace Keyspace;
 
 Client::Client() :
@@ -179,10 +185,8 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	int				status;
 	unsigned		nread;
 	ByteString		value;
-	
-	if (result->isBatched)
-		return KEYSPACE_API_ERROR;
 
+	VALIDATE_NOT_BATCHED();
 	VALIDATE_KEY_LEN(prefix);
 	
 	countString.Writef("%U", count);
@@ -249,9 +253,7 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 	Command*	cmd;
 	ByteString	args[1];
 
-	if (result->isBatched && submit)
-		return KEYSPACE_API_ERROR;
-
+	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 
 	args[0] = key;
@@ -322,9 +324,7 @@ bool next, bool forward, bool dirty, bool values)
 	DynArray<10>	backString;
 	ByteString		sk;
 
-	if (result->isBatched)
-		return KEYSPACE_API_ERROR;
-	
+	VALIDATE_NOT_BATCHED();
 	VALIDATE_KEY_LEN(prefix);
 
 	countString.Writef("%U", count);
@@ -427,9 +427,7 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	ByteString	args[2];
 	int			status;
 	
-	if (result->isBatched && submit)
-		return KEYSPACE_API_ERROR;	
-	
+	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_VAL_LEN(value);
 	VALIDATE_SAFE();
@@ -461,10 +459,8 @@ const ByteString &test, const ByteString &value, bool submit)
 	Command*	cmd;
 	ByteString	args[3];
 	int			status;
-	
-	if (result->isBatched && submit)
-		return KEYSPACE_API_ERROR;
 
+	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_VAL_LEN(test);
 	VALIDATE_VAL_LEN(value);
@@ -501,9 +497,7 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	int			status;
 	ByteString	value;
 
-	if (result->isBatched && submit)
-		return KEYSPACE_API_ERROR;
-
+	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
 
@@ -545,9 +539,7 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	Command*	cmd;
 	ByteString	args[1];
 
-	if (result->isBatched && submit)
-		return KEYSPACE_API_ERROR;
-
+	VALIDATE_SUBMIT(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
 
@@ -587,9 +579,7 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	Command*	cmd;
 	ByteString	args[2];
 
-	if (result->isBatched && submit)
-		return KEYSPACE_API_ERROR;
-
+	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(from);
 	VALIDATE_KEY_LEN(to);
 	VALIDATE_SAFE();
@@ -620,10 +610,8 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	int			status;
 	Command*	cmd;
 	ByteString	args[1];
-	
-	if (result->isBatched && submit)
-		return KEYSPACE_API_ERROR;
 
+	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(prefix);
 	VALIDATE_SAFE();
 
@@ -665,6 +653,9 @@ int Client::Submit()
 {
 	if (!conns)
 		return KEYSPACE_API_ERROR;
+
+	if (!result->isBatched)
+		return KEYSPACE_API_ERROR;
 	
 	EventLoop();
 	result->isBatched = false;
@@ -675,6 +666,9 @@ int Client::Submit()
 int Client::Cancel()
 {
 	if (!conns)
+		return KEYSPACE_API_ERROR;
+	
+	if (!result->isBatched)
 		return KEYSPACE_API_ERROR;
 	
 	safeCommands.Clear();
