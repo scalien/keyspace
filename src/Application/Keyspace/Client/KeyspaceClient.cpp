@@ -24,13 +24,12 @@ masterTimeout(&onMasterTimeout)
 {
 	numConns = 0;
 	conns = NULL;
-	result = new Result;
+	result = NULL;
 }
 
 Client::~Client()
 {
-	if (conns)
-		Shutdown();
+	Shutdown();
 }
 
 int Client::Init(int nodec, const char* nodev[])
@@ -48,6 +47,7 @@ int Client::Init(int nodec, const char* nodev[])
 	connectivityStatus = KEYSPACE_NOCONNECTION;
 	timeoutStatus = KEYSPACE_SUCCESS;
 
+	result = new Result;
 
 	conns = new ClientConn*[nodec];
 	
@@ -74,6 +74,9 @@ int Client::Init(int nodec, const char* nodev[])
 
 void Client::Shutdown()
 {
+	if (!conns)
+		return;
+
 	delete result;
 	for (int i = 0; i < numConns; i++)
 	{
