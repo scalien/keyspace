@@ -185,6 +185,8 @@ bool IOProcessor::Init(int maxfd_)
 void IOProcessor::Shutdown()
 {
 	close(epollfd);
+	epollfd = 0;
+	delete[] epollOps;
 	asyncPipeOp.Close();
 }
 

@@ -14,11 +14,13 @@
 #define VALIDATE_DIRTY() if (safeCommands.Length() > 0) return KEYSPACE_API_ERROR
 #define VALIDATE_SAFE() if (dirtyCommands.Length() > 0) return KEYSPACE_API_ERROR
 
-#define VALIDATE_BATCHED(submit) \ 
+#define VALIDATE_BATCHED(submit) \
 	if (result == NULL || (result->isBatched && submit == true) || (!result->isBatched && submit == false)) \
 		return KEYSPACE_API_ERROR
 
 #define VALIDATE_NOT_BATCHED() if (result == NULL || result->isBatched) return KEYSPACE_API_ERROR
+
+#define VALIDATE_CLIENT() if (conns == NULL) return KEYSPACE_API_ERROR
 
 using namespace Keyspace;
 
@@ -186,6 +188,7 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	unsigned		nread;
 	ByteString		value;
 
+	VALIDATE_CLIENT();
 	VALIDATE_NOT_BATCHED();
 	VALIDATE_KEY_LEN(prefix);
 	
@@ -253,6 +256,7 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 	Command*	cmd;
 	ByteString	args[1];
 
+	VALIDATE_CLIENT();
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 
@@ -324,6 +328,7 @@ bool next, bool forward, bool dirty, bool values)
 	DynArray<10>	backString;
 	ByteString		sk;
 
+	VALIDATE_CLIENT();
 	VALIDATE_NOT_BATCHED();
 	VALIDATE_KEY_LEN(prefix);
 
@@ -427,6 +432,7 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	ByteString	args[2];
 	int			status;
 	
+	VALIDATE_CLIENT();
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_VAL_LEN(value);
@@ -460,6 +466,7 @@ const ByteString &test, const ByteString &value, bool submit)
 	ByteString	args[3];
 	int			status;
 
+	VALIDATE_CLIENT();
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_VAL_LEN(test);
@@ -497,6 +504,7 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	int			status;
 	ByteString	value;
 
+	VALIDATE_CLIENT();
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
@@ -539,7 +547,8 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	Command*	cmd;
 	ByteString	args[1];
 
-	VALIDATE_SUBMIT(submit);
+	VALIDATE_CLIENT();
+	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
 
@@ -579,6 +588,7 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	Command*	cmd;
 	ByteString	args[2];
 
+	VALIDATE_CLIENT();
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(from);
 	VALIDATE_KEY_LEN(to);
@@ -611,6 +621,7 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	Command*	cmd;
 	ByteString	args[1];
 
+	VALIDATE_CLIENT();
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(prefix);
 	VALIDATE_SAFE();

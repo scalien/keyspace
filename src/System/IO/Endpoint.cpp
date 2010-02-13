@@ -168,9 +168,16 @@ const char* Endpoint::ToString()
 const char* Endpoint::ToString(char s[ENDPOINT_STRING_SIZE])
 {
 	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+	unsigned long s_addr;
 
-	snprintf(s, ENDPOINT_STRING_SIZE, "%s:%u",
-		inet_ntoa(sa->sin_addr), ntohs(sa->sin_port));
+	// inet_ntoa is not thread-safe and have a memory-leak issue on Linux
+	s_addr = ntohl(sa->sin_addr.s_addr);
+	snprintf(s, ENDPOINT_STRING_SIZE, "%lu.%lu.%lu.%lu:%u",
+		(s_addr & 0xFF000000UL) >> 24,
+		(s_addr & 0x00FF0000UL) >> 16,
+		(s_addr & 0x0000FF00UL) >> 8,
+		(s_addr & 0x000000FFUL),
+		ntohs(sa->sin_port));
 	
 	return s;
 }

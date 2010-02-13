@@ -177,6 +177,22 @@ static int test_init()
 	return TEST_SUCCESS;
 }
 
+// run this test with valgrind -v --leak-check=full
+static int test_invalid_init_memleak()
+{
+	keyspace_client_t	kc;
+	int					status;
+	
+	kc = keyspace_client_create();
+	keyspace_client_set_global_timeout(kc, 10000);
+	keyspace_client_set_master_timeout(kc, 10000);
+	
+	status = keyspace_client_begin(kc);
+	keyspace_client_destroy(kc);
+
+	return TEST_SUCCESS;
+}
+
 static int test_badconnect()
 {
 	keyspace_client_t	kc;
@@ -240,6 +256,7 @@ static int test_invalid_result()
 	
 	return TEST_SUCCESS;
 }
+
 
 
 int keyspace_client_basic_test()
@@ -364,9 +381,10 @@ int keyspace_client_basic_test()
 
 int keyspace_client_test()
 {
-	TEST_CALL(keyspace_client_basic_test());
+	//TEST_CALL(keyspace_client_basic_test());
 	TEST_CALL(test_invalid_result());
 	TEST_CALL(test_init());
+	TEST_CALL(test_invalid_init_memleak());
 	TEST_CALL(test_badconnect());
 	
 	return TEST_SUCCESS;
