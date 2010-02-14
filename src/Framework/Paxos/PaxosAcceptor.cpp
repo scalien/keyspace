@@ -197,7 +197,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	if (mdbop.IsActive())
 		return;
-	
+
 	msg = msg_;
 	
 	senderID = msg.nodeID;

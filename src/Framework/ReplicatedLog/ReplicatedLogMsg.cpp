@@ -6,7 +6,7 @@ bool ReplicatedLogMsg::Init(unsigned nodeID_, uint64_t restartCounter_,
 	nodeID = nodeID_;
 	restartCounter = restartCounter_;
 	leaseEpoch = leaseEpoch_;
-	value = value_;
+	value.Set(value_);
 		
 	return true;
 }

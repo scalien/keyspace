@@ -221,7 +221,7 @@ void TCPConn<bufSize>::AsyncRead(bool start)
 	Log_Trace();
 	
 	tcpread.fd = socket.fd;
-	tcpread.data = readBuffer;
+	tcpread.data.Set(readBuffer);
 	tcpread.onComplete = &onRead;
 	tcpread.onClose = &onClose;
 	tcpread.requested = IO_READ_ANY;
@@ -278,7 +278,7 @@ void TCPConn<bufSize>::WritePending()
 	
 	if (buf && buf->length > 0)
 	{
-		tcpwrite.data = *buf;
+		tcpwrite.data.Set(*buf);
 		tcpwrite.transferred = 0;
 		
 		IOProcessor::Add(&tcpwrite);

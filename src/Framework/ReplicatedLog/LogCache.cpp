@@ -54,7 +54,7 @@ bool LogCache::Get(uint64_t paxosID, ByteString& value_)
 	buf.Writef("@@round:%U", paxosID);
 	if (table->Get(NULL, buf, value))
 	{
-		value_ = value;
+		value_.Set(value);
 		return true;
 	}
 	return false;

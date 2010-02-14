@@ -80,7 +80,9 @@ void MessageConn<bufSize>::OnRead()
 			break;
 		}
 
-		msg = ByteString(msglength, msglength, tcpread.data.buffer + msgbegin);
+		msg.length = msglength;
+		msg.size = msglength;
+		msg.buffer = tcpread.data.buffer + msgbegin;
 		OnMessageRead(msg);
 		
 		pos = msgend;

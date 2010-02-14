@@ -35,7 +35,7 @@ uint64_t acceptedProposalID_, ByteString value_)
 	Init(paxosID_, PAXOS_PREPARE_PREVIOUSLY_ACCEPTED, nodeID_);
 	proposalID = proposalID_;
 	acceptedProposalID = acceptedProposalID_;
-	value = value_;
+	value.Set(value_);
 	
 	return true;
 }
@@ -54,7 +54,7 @@ unsigned nodeID_, uint64_t proposalID_, ByteString value_)
 {
 	Init(paxosID_, PAXOS_PROPOSE_REQUEST, nodeID_);
 	proposalID = proposalID_;
-	value = value_;
+	value.Set(value_);
 	
 	return true;
 }
@@ -81,7 +81,7 @@ bool PaxosMsg::LearnValue(uint64_t paxosID_,
 unsigned nodeID_, ByteString value_)
 {
 	Init(paxosID_, PAXOS_LEARN_VALUE, nodeID_);
-	value = value_;
+	value.Set(value_);
 	
 	return true;
 }

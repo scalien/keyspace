@@ -24,7 +24,6 @@ class ReplicatedLog
 	typedef TransportTCPWriter**	Writers;
 	typedef MFunc<ReplicatedLog>	Func;
 public:
-	ReplicatedLog();
 
 	static ReplicatedLog* Get();
 	
@@ -55,6 +54,8 @@ public:
 	uint64_t			GetLastRound_Thruput();
 
 private:
+	ReplicatedLog();
+
 	void				InitTransport();
 	void				ProcessMsg();
 	void				OnPrepareRequest();

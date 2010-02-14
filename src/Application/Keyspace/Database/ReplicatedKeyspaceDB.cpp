@@ -168,7 +168,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	ByteString		value;
 	Stopwatch		sw;
 
-	value = valueBuffer;
+	value.Set(valueBuffer);
 	Log_Trace("length: %d", value.length);
 	
 	numOps = 0;
@@ -334,7 +334,7 @@ void ReplicatedKeyspaceDB::Append()
 	KeyspaceOp**it;
 
 	pvalue.length = 0;
-	bs = pvalue;
+	bs.Set(pvalue);
 
 	unsigned numAppended = 0;
 	

@@ -20,7 +20,7 @@ bool TransportUDPReader::Init(int port)
 		return false;
 	
 	udpread.fd = socket.fd;
-	udpread.data = data;
+	udpread.data.Set(data);
 	udpread.onComplete = &onRead;
 	
 	return IOProcessor::Add(&udpread);
@@ -33,7 +33,7 @@ void TransportUDPReader::SetOnRead(Callable* onRead_)
 
 void TransportUDPReader::GetMessage(ByteString& bs)
 {
-	bs = udpread.data;
+	bs.Set(udpread.data);
 }
 
 void TransportUDPReader::GetEndpoint(Endpoint& endpoint)

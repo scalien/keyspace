@@ -29,8 +29,8 @@ bool MultiDatabaseOp::Get(Table* table, const ByteString &key, ByteString& value
 	op = &ops[numop];
 	op->type = DatabaseOp::GET;
 	op->table = table;
-	op->key = key;
-	op->value = value;
+	op->key.Set(key);
+	op->value.Set(value);
 	
 	numop++;
 	
@@ -47,8 +47,8 @@ bool MultiDatabaseOp::Set(Table* table, const ByteString& key, ByteString& value
 	op = &ops[numop];
 	op->type = DatabaseOp::SET;
 	op->table = table;
-	op->key = key;
-	op->value = value;
+	op->key.Set(key);
+	op->value.Set(value);
 	
 	numop++;
 	

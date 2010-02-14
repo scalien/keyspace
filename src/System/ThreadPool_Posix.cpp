@@ -40,6 +40,9 @@ void* ThreadPool_Pthread::thread_function(void* param)
 	BlockSignals();
 	tp->ThreadFunction();
 	
+	// pthread_exit should be called for cleanup, instead it creates more reachable
+	// bytes with valgrind.
+	//pthread_exit(NULL);
 	return NULL;
 }
 
@@ -126,7 +129,10 @@ void ThreadPool_Pthread::Stop()
 	pthread_mutex_unlock(&mutex);
 
 	for (i = 0; i < numThread; i++)
+	{
 		pthread_join(threads[i], NULL);
+		pthread_detach(threads[i]);
+	}
 	
 	numActive = 0;
 }

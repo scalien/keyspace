@@ -86,6 +86,7 @@ void ReplicatedLog::InitTransport()
 void ReplicatedLog::Shutdown()
 {
 	acceptor.Shutdown();
+	delete this;
 }
 
 void ReplicatedLog::StopPaxos()

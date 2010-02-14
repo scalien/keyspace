@@ -1,10 +1,10 @@
 #include "LogQueue.h"
 
-bool LogQueue::Push(ByteString value)
+bool LogQueue::Push(ByteString& value)
 {
 	ByteString* bs = new ByteString();
 
-	*bs = value;
+	bs->Set(value);
 
 	queue.Add(bs);
 	

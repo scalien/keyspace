@@ -19,7 +19,7 @@ void CatchupWriter::Init(CatchupServer* server_)
 	transaction.Set(table);
 	transaction.Begin();
 	table->Iterate(&transaction, cursor);
-	tcpwrite.data = writeBuffer;
+	tcpwrite.data.Set(writeBuffer);
 
 	// this is not good, I'm not seeing the currently active transaction
 	if (!table->Get(&transaction, "@@paxosID", paxosID))

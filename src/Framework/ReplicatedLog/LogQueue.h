@@ -7,7 +7,7 @@
 class LogQueue
 {
 public:
-	bool				Push(ByteString value);
+	bool				Push(ByteString& value);
 	ByteString*			Next();
 	ByteString*			Pop();
 	int					Length();

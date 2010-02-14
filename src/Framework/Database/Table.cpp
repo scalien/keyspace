@@ -39,6 +39,7 @@ database(database)
 Table::~Table()
 {
 	db->close(0);
+	delete db;
 }
 
 bool Table::Iterate(Transaction* tx, Cursor& cursor)
@@ -263,13 +264,13 @@ bool Table::Visit(TableVisitor &tv)
 	
 	while (cursor->get(&key, &value, flags) == 0)
 	{
-		bsKey = ByteString(key.get_size(),
-						   key.get_size(),
-						   (char*) key.get_data());
+		bsKey.size = key.get_size();
+		bsKey.length = key.get_size();
+		bsKey.buffer = (char*) key.get_data();
 		
-		bsValue = ByteString(value.get_size(),
-							 value.get_size(),
-							 (char*) value.get_data());
+		bsValue.size = value.get_size();
+		bsValue.length = value.get_size();
+		bsValue.buffer = (char*) value.get_data();
 
 		ret = tv.Accept(bsKey, bsValue);
 		if (!ret)
@@ -326,13 +327,13 @@ bool Table::VisitBackward(TableVisitor &tv)
 			if (memcmp(tv.GetStartKey()->buffer, key.get_data(),
 				MIN(tv.GetStartKey()->length, key.get_size())) == 0)
 			{
-				bsKey = ByteString(key.get_size(),
-								   key.get_size(),
-								   (char*) key.get_data());
+				bsKey.size = key.get_size();
+				bsKey.length = key.get_size();
+				bsKey.buffer = (char*) key.get_data();
 				
-				bsValue = ByteString(value.get_size(),
-									 value.get_size(),
-									 (char*) value.get_data());
+				bsValue.size = value.get_size();
+				bsValue.length = value.get_size();
+				bsValue.buffer = (char*) value.get_data();
 
 				ret = tv.Accept(bsKey, bsValue);
 			}
@@ -342,13 +343,13 @@ bool Table::VisitBackward(TableVisitor &tv)
 	flags = DB_PREV;
 	while (ret && cursor->get(&key, &value, flags) == 0)
 	{
-		bsKey = ByteString(key.get_size(),
-						   key.get_size(),
-						   (char*) key.get_data());
+		bsKey.size = key.get_size();
+		bsKey.length = key.get_size();
+		bsKey.buffer = (char*) key.get_data();
 		
-		bsValue = ByteString(value.get_size(),
-							 value.get_size(),
-							 (char*) value.get_data());
+		bsValue.size = value.get_size();
+		bsValue.length = value.get_size();
+		bsValue.buffer = (char*) value.get_data();
 
 		ret = tv.Accept(bsKey, bsValue);
 		if (!ret)

@@ -47,7 +47,7 @@ bool PaxosLearner::SendChosen(unsigned nodeID,
 void PaxosLearner::OnLearnChosen(PaxosMsg& msg_)
 {
 	Log_Trace();
-	
+
 	msg = msg_;
 
 	state.learned = true;

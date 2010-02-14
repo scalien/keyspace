@@ -39,12 +39,12 @@ void TransportTCPReader::SetOnRead(Callable* onRead_)
 
 void TransportTCPReader::SetMessage(ByteString msg_)
 {
-	msg = msg_;
+	msg.Set(msg_);
 }
 
 void TransportTCPReader::GetMessage(ByteString& msg_)
 {
-	msg_ = msg;
+	msg_.Set(msg);
 }
 
 bool TransportTCPReader::IsActive()

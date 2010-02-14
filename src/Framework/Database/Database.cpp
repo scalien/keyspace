@@ -122,6 +122,7 @@ void Database::Shutdown()
 
 	running = false;
 	cpThread->Stop();
+	delete cpThread;
 	delete keyspace;	
 	env.close(0);
 }

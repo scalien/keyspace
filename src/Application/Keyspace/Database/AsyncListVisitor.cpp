@@ -127,6 +127,11 @@ prefix(op_->prefix)
 	offset = op->offset;
 	startKey.Append(prefix);
 	startKey.Append(op->key);
+
+	// TODO: as in AsyncVisitorCallback we reuse keys and values we need to Free them here
+	op->key.Free();
+	op->value.Free();
+
 	num = 0;
 	Init();
 }

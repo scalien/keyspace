@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "IMF.h"
@@ -12,19 +13,21 @@
 #define strncasecmp _strnicmp
 #endif
 
-static char* SkipWhitespace(char* p)
-{
-	while (p && *p && *p <= ' ') p++;
-	
-	return p;	
-}
-
-static char* SeekWhitespace(char* p)
+static char* SkipWhitespace(char* p, int len)
 {
 	if (!p)
 		return NULL;
-	
-	while (p && *p && *p != ' ') p++;
+
+	if (len <= 0)
+		return NULL;
+
+	while (p && *p && *p <= ' ')
+	{
+		if (--len == 0)
+			return NULL;
+
+		p++;
+	}
 	
 	if (!*p)
 		return NULL;
@@ -32,12 +35,21 @@ static char* SeekWhitespace(char* p)
 	return p;	
 }
 
-static char* SkipCrlf(char* p)
+static char* SeekWhitespace(char* p, int len)
 {
 	if (!p)
 		return NULL;
 	
-	while (*p && (*p == CS_CR[0] || *p == CS_LF[0])) p++;
+	if (len <= 0)
+		return NULL;
+	
+	while (p && *p && *p != ' ')
+	{
+		if (--len == 0)
+			return NULL;
+
+		p++;
+	}
 	
 	if (!*p)
 		return NULL;
@@ -45,12 +57,21 @@ static char* SkipCrlf(char* p)
 	return p;	
 }
 
-static char* SeekCrlf(char* p)
+static char* SkipCrlf(char* p, int len)
 {
 	if (!p)
 		return NULL;
 	
-	while (*p && (p[0] != CS_CR[0] && p[1] != CS_LF[0])) p++;
+	if (len < 2)
+		return NULL;
+	
+	while (*p && (*p == CS_CR[0] || *p == CS_LF[0]))
+	{
+		if (--len == 0)
+			return NULL;
+
+		p++;
+	}
 	
 	if (!*p)
 		return NULL;
@@ -58,34 +79,85 @@ static char* SeekCrlf(char* p)
 	return p;	
 }
 
-static int LineParse(char* buf, int /*len*/, int offs, const char** values[3])
+static char* SeekCrlf(char* p, int len)
+{
+	if (!p)
+		return NULL;
+	
+	if (len < 2)
+		return NULL;
+	
+	while (*p && (p[0] != CS_CR[0] && p[1] != CS_LF[0]))
+	{
+		if (--len == 0)
+			return NULL;
+
+		p++;
+	}
+	
+	if (!*p)
+		return NULL;
+	
+	return p;	
+}
+
+static char* SeekChar(char* p, int len, char c)
+{
+	if (!p)
+		return NULL;
+	
+	if (len < 1)
+		return NULL;
+	
+	while (*p && *p != c)
+	{
+		if (--len == 0)
+			return NULL;
+		
+		p++;
+	}
+	
+	if (!*p)
+		return NULL;
+	
+	return p;
+}
+
+static int LineParse(char* buf, int len, int offs, const char** values[3])
 {
 	char* p;
-	
-	p = SkipWhitespace(buf + offs);
+
+#define remlen (len - (p - buf))
+	// p is set so that in remlen it won't be uninitialized
+	p = buf;	
+	p = SkipWhitespace(buf + offs, remlen);
 	
 	*values[0] = p;
-	p = SeekWhitespace(p);
+	p = SeekWhitespace(p, remlen);
 	if (!p) return -1;
 	
 	*p++ = '\0';
-	p = SkipWhitespace(p);
+	p = SkipWhitespace(p, remlen);
+	if (!p) return -1;
 	
 	*values[1] = p;
-	p = SeekWhitespace(p);
+	p = SeekWhitespace(p, remlen);
 	if (!p) return -1;
 	
 	*p++ = '\0';
-	p = SkipWhitespace(p);
+	p = SkipWhitespace(p, remlen);
+	if (!p) return -1;
 	
 	*values[2] = p;
-	p = SeekCrlf(p);
+	p = SeekCrlf(p, remlen);
 	if (!p) return -1;
 	
 	*p = '\0';
 	p += 2;
 	
 	return (int) (p - buf);	
+
+#undef remlen
 }
 
 int IMFHeader::RequestLine::Parse(char* buf, int len, int offs)
@@ -144,26 +216,29 @@ int IMFHeader::Parse(char* buf, int len, int offs)
 	KeyValue* keyvalue;
 	int keylen;
 
+// macro for calculating remaining length
+#define remlen ((int) printf("remlen = %d, %.*s\n", len - (p-buf), (len - (p-buf)), p), (len - (p - buf)))
+
 	data = buf;
 	
 	p = buf + offs;
-	p = SkipCrlf(p);
+	p = SkipCrlf(p, remlen);
 	if (!p)
 		return -1;
 	
 	while (p < buf + len) {
 		key = p;
-		p = strchr(p, ':');
+		p = SeekChar(p, remlen, ':');
 		
 		if (p)
 		{
 			keylen = (int) (p - key);
 			
 			*p++ = '\0';
-			p = SkipWhitespace(p);
+			p = SkipWhitespace(p, remlen);
 			
 			value = p;
-			p = SeekCrlf(p);
+			p = SeekCrlf(p, remlen);
 			if (p)
 			{
 				keyvalue = GetKeyValues(nkv);
@@ -193,7 +268,8 @@ int IMFHeader::Parse(char* buf, int len, int offs)
 	numKeyval = nkv;
 	
 	return (int) (p - buf);
-	
+
+#undef remlen	
 }
 
 const char* IMFHeader::GetField(const char* key)
