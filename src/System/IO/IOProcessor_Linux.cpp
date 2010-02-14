@@ -149,6 +149,14 @@ bool IOProcessor::Init(int maxfd_)
 	if (epollfd > 0)
 		return true;
 
+	maxfd = maxfd_;
+	rl.rlim_cur = maxfd;
+	rl.rlim_max = maxfd;
+	if (setrlimit(RLIMIT_NOFILE, &rl) < 0)
+	{
+		Log_Errno();
+	}
+	
 	epollfd = epoll_create(maxfd);
 	if (epollfd < 0)
 	{
@@ -160,14 +168,6 @@ bool IOProcessor::Init(int maxfd_)
 	SetupSignals();
 #endif	
 
-	maxfd = maxfd_;
-	rl.rlim_cur = maxfd;
-	rl.rlim_max = maxfd;
-	if (setrlimit(RLIMIT_NOFILE, &rl) < 0)
-	{
-		Log_Errno();
-	}
-	
 	epollOps = new EpollOp[maxfd];
 	for (i = 0; i < maxfd; i++)
 	{
