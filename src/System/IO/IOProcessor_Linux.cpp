@@ -149,6 +149,12 @@ bool IOProcessor::Init(int maxfd_)
 	if (epollfd > 0)
 		return true;
 
+	if (maxfd_ < 0)
+	{
+		Log_Message("Invalid maxfd value!");
+		return false;
+	}
+
 	maxfd = maxfd_;
 	rl.rlim_cur = maxfd;
 	rl.rlim_max = maxfd;
