@@ -22,6 +22,9 @@
 
 #define VALIDATE_CLIENT() if (conns == NULL) return KEYSPACE_API_ERROR
 
+#define VALIDATE_READ() if (safeCommands.Length() > 0 && !(*safeCommands.Head())->IsRead()) return KEYSPACE_API_ERROR
+#define VALIDATE_WRITE() if (safeCommands.Length() > 0 && (*safeCommands.Head())->IsRead()) return KEYSPACE_API_ERROR
+
 using namespace Keyspace;
 
 Client::Client() :
@@ -258,6 +261,7 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 
 	VALIDATE_CLIENT();
 	VALIDATE_BATCHED(submit);
+	VALIDATE_READ();
 	VALIDATE_KEY_LEN(key);
 
 	args[0] = key;
@@ -437,6 +441,7 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_VAL_LEN(value);
 	VALIDATE_SAFE();
+	VALIDATE_WRITE();
 
 	args[0] = key;
 	args[1] = value;
@@ -472,6 +477,7 @@ const ByteString &test, const ByteString &value, bool submit)
 	VALIDATE_VAL_LEN(test);
 	VALIDATE_VAL_LEN(value);
 	VALIDATE_SAFE();
+	VALIDATE_WRITE();
 	
 	args[0] = key;
 	args[1] = test;
@@ -508,6 +514,7 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
+	VALIDATE_WRITE();
 
 	numString.Writef("%U", num);
 	
@@ -551,6 +558,7 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
+	VALIDATE_WRITE();
 
 	args[0] = key;
 	
@@ -593,6 +601,7 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	VALIDATE_KEY_LEN(from);
 	VALIDATE_KEY_LEN(to);
 	VALIDATE_SAFE();
+	VALIDATE_WRITE();
 
 	args[0] = from;
 	args[1] = to;
@@ -625,6 +634,7 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(prefix);
 	VALIDATE_SAFE();
+	VALIDATE_WRITE();
 
 	args[0] = prefix;
 	

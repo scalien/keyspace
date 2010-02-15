@@ -46,6 +46,20 @@ bool Command::IsList() const
 	return false;
 }
 
+bool Command::IsRead() const
+{
+	if (type == KEYSPACECLIENT_GET ||
+		type == KEYSPACECLIENT_DIRTY_GET ||
+		type == KEYSPACECLIENT_COUNT ||
+		type == KEYSPACECLIENT_DIRTY_COUNT ||
+		IsList())
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void Command::ClearResponse()
 {
 	Response**	it;

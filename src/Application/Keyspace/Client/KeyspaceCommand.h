@@ -18,6 +18,7 @@ public:
 	
 	bool				IsDirty() const;
 	bool				IsList() const;
+	bool				IsRead() const;
 
 	void				ClearResponse();
 
