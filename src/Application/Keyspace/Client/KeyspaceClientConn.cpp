@@ -261,13 +261,18 @@ void ClientConn::OnMessageRead(const ByteString& msg)
 void ClientConn::OnWrite()
 {
 	TCPConn<KEYSPACE_BUF_SIZE>::OnWrite();
+	Command** it;
 
 	if (client.master == nodeID)
 	{
 		while(client.safeCommands.Length() > 0 && BytesQueued() < 1*MB)
 			client.SendCommand(this, client.safeCommands);
 		if (client.safeCommands.Length() == 0)
-			SendSubmit();
+		{
+			it = client.result->commands.Head();
+			if (it && (*it)->IsWrite())
+				SendSubmit();
+		}
 	}
 	
 	if (client.dirtyCommands.Length() > 0)

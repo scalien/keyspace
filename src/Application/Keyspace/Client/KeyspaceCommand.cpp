@@ -60,6 +60,11 @@ bool Command::IsRead() const
 	return false;
 }
 
+bool Command::IsWrite() const
+{
+	return !IsRead();
+}
+
 void Command::ClearResponse()
 {
 	Response**	it;

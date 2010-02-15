@@ -122,8 +122,8 @@ bool Socket::SetNodelay()
 	}
 	
 	// Nagle algorithm is disabled if TCP_NODELAY is enabled.
-	nondelay = 1;
-	if (setsockopt(fd.sock, IPPROTO_TCP, TCP_NODELAY, &nodelay, sizeof(nodelay)) == SOCKET_ERROR)
+	nodelay = 1;
+	if (setsockopt(fd.sock, IPPROTO_TCP, TCP_NODELAY, (char *) &nodelay, sizeof(nodelay)) == SOCKET_ERROR)
 		return false;
 		
 	return true;
