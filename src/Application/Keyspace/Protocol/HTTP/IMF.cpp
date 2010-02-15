@@ -217,7 +217,7 @@ int IMFHeader::Parse(char* buf, int len, int offs)
 	int keylen;
 
 // macro for calculating remaining length
-#define remlen ((int) printf("remlen = %d, %.*s\n", len - (p-buf), (len - (p-buf)), p), (len - (p - buf)))
+#define remlen ((int) (len - (p - buf)))
 
 	data = buf;
 	
