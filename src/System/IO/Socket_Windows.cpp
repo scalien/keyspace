@@ -111,6 +111,25 @@ bool Socket::SetNonblocking()
 	return true;
 }
 
+bool Socket::SetNodelay()
+{
+	BOOL	nodelay;
+	
+	if (fd.sock == INVALID_SOCKET)
+	{
+		Log_Trace("SetNonblocking on invalid file descriptor");
+		return false;
+	}
+	
+	// Nagle algorithm is disabled if TCP_NODELAY is enabled.
+	nondelay = 1;
+	if (setsockopt(fd.sock, IPPROTO_TCP, TCP_NODELAY, &nodelay, sizeof(nodelay)) == SOCKET_ERROR)
+		return false;
+		
+	return true;
+	
+}
+
 
 bool Socket::Listen(int port, int backlog)
 {
