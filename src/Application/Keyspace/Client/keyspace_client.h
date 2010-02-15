@@ -139,6 +139,16 @@ int keyspace_result_timeout_status(keyspace_result_t kr);
 int keyspace_result_command_status(keyspace_result_t kr);
 
 /*
+ * Get the the id of the node that replied to the command
+ *
+ * Parameters:
+ *	kr:		result object
+ *
+ * Return value: node id or negative if there was an error
+ */
+int keyspace_result_node_id(keyspace_result_t kr);
+
+/*
  * Get the key data of the result (if any)
  *
  * Parameters:

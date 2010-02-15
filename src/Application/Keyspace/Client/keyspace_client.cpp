@@ -103,6 +103,17 @@ keyspace_result_command_status(keyspace_result_t kr)
 }
 
 int
+keyspace_result_node_id(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	return result->GetNodeID();
+}
+
+int
 keyspace_result_key(keyspace_result_t kr, const void** key, unsigned *keylen)
 {
 	Result *result = (Result *) kr;
