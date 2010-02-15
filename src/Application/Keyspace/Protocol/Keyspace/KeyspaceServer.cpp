@@ -37,37 +37,37 @@ void KeyspaceServer::DeleteConn(KeyspaceConn* conn)
 
 void KeyspaceServer::OnThruputTimeout()
 {
-	KeyspaceConn** it;
-
-	if (!kdb->IsReplicated())
-		return;
-
-	bytesRead = 0;
-	
-	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
-	{
-		(*it)->bytesRead = 0;
-		(*it)->Continue();
-	}
-		
-	EventLoop::Reset(&thruputTimeout);
+//	KeyspaceConn** it;
+//
+//	if (!kdb->IsReplicated())
+//		return;
+//
+//	bytesRead = 0;
+//	
+//	for (it = activeConns.Head(); it != NULL; it = activeConns.Next(it))
+//	{
+//		(*it)->bytesRead = 0;
+//		(*it)->Continue();
+//	}
+//		
+//	EventLoop::Reset(&thruputTimeout);
 }
 
 void KeyspaceServer::OnDataRead(KeyspaceConn* conn, unsigned bytes)
 {
-	unsigned t;
-
-	if (!kdb->IsReplicated())
-		return;
-	
-	bytesRead += bytes;
-
-	t = MAX(2 * RLOG->GetLastRound_Thruput(), KEYSPACE_POOL_MIN_THRUPUT);
-
-	if (bytesRead > t &&
-	conn->bytesRead > KEYSPACE_CONN_MIN_THRUPUT)
-	{
-		Log_Trace("Throttling connection; bytesRead: %d", bytesRead);
-		conn->Stop();
-	}
+//	uint64_t t;
+//
+//	if (!kdb->IsReplicated())
+//		return;
+//	
+//	bytesRead += bytes;
+//
+//	t = MAX(2 * RLOG->GetLastRound_Thruput(), KEYSPACE_POOL_MIN_THRUPUT);
+//
+//	if (bytesRead > t &&
+//	conn->bytesRead > KEYSPACE_CONN_MIN_THRUPUT)
+//	{
+//		Log_Trace("Throttling connection; bytesRead: %d", bytesRead);
+//		conn->Stop();
+//	}
 }

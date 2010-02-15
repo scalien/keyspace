@@ -9,6 +9,10 @@
 #define DATABASE_CONFIG_CHECKPOINT_TIMEOUT	60000
 #define DATABASE_CONFIG_VERBOSE				false
 
+#define DATABASE_CONFIG_DIRECT_DB			false
+#define	DATABASE_CONFIG_TXN_NOSYNC			false
+#define DATABASE_CONFIG_TXN_WRITE_NOSYNC	false
+
 class DatabaseConfig
 {
 public:
@@ -21,6 +25,10 @@ public:
 		logMaxFile = DATABASE_CONFIG_LOG_MAX_FILE;
 		checkpointTimeout = DATABASE_CONFIG_CHECKPOINT_TIMEOUT;
 		verbose = DATABASE_CONFIG_VERBOSE;
+		
+		directDB = DATABASE_CONFIG_DIRECT_DB;
+		txnNoSync = DATABASE_CONFIG_TXN_NOSYNC;
+		txnWriteNoSync = DATABASE_CONFIG_TXN_WRITE_NOSYNC;
 	}
 	
 	const char*	dir;
@@ -30,6 +38,10 @@ public:
 	int			logMaxFile;
 	int			checkpointTimeout;
 	bool		verbose;
+
+	bool		directDB;
+	bool		txnNoSync;
+	bool		txnWriteNoSync;
 };
 
 #endif

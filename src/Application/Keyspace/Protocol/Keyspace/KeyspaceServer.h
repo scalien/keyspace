@@ -25,7 +25,7 @@ public:
 	void				OnThruputTimeout();
 	void				OnDataRead(KeyspaceConn* conn, unsigned bytes);
 
-	unsigned			bytesRead;
+	uint64_t			bytesRead;
 
 private:
 	KeyspaceDB*			kdb;

@@ -79,6 +79,9 @@ int main(int argc, char* argv[])
 	dbConfig.logBufferSize = Config::GetIntValue("database.logBufferSize", DATABASE_CONFIG_LOG_BUFFER_SIZE);
 	dbConfig.checkpointTimeout = Config::GetIntValue("database.checkpointTimeout", DATABASE_CONFIG_CHECKPOINT_TIMEOUT);
 	dbConfig.verbose = Config::GetBoolValue("database.verbose", DATABASE_CONFIG_VERBOSE);
+	dbConfig.directDB = Config::GetBoolValue("database.directDB", DATABASE_CONFIG_DIRECT_DB);
+	dbConfig.txnNoSync = Config::GetBoolValue("database.txnNoSync", DATABASE_CONFIG_TXN_NOSYNC);
+	dbConfig.txnWriteNoSync = Config::GetBoolValue("database.txnWriteNoSync", DATABASE_CONFIG_TXN_WRITE_NOSYNC);
 
 	if (!database.Init(dbConfig))
 		STOP_FAIL("Cannot initialize database!", 1);
