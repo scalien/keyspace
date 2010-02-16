@@ -85,6 +85,7 @@ void ReplicatedLog::InitTransport()
 
 void ReplicatedLog::Shutdown()
 {
+	masterLease.Shutdown();
 	acceptor.Shutdown();
 
 	delete reader;
