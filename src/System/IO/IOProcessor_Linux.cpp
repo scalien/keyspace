@@ -293,7 +293,7 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		return false;
 	}
 	
-	epollOp = &epollOps[ioop->fd];	
+	epollOp = &epollOps[ioop->fd];
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 	{
 		epollOp->read = NULL;

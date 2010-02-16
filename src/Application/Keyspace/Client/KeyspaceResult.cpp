@@ -95,7 +95,7 @@ int Result::Key(ByteString& key) const
 	if (cmd->IsList())
 		return ListKey(cmd, key);
 	
-	key = cmd->key;
+	key.Set(cmd->key);
 	
 	return cmd->status;
 }

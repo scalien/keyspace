@@ -363,6 +363,7 @@ int KeyspaceClientTest(int argc, char **argv)
 		Log_Message("no such test: %s", testConf.typeString);
 	}
 	
+	delete[] nodes;
 	Config::Shutdown();
 	Log_Shutdown();
 		
