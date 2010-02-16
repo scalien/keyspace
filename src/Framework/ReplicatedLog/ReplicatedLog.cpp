@@ -22,6 +22,8 @@ ReplicatedLog::ReplicatedLog()
 	onLearnLease(this, &ReplicatedLog::OnLearnLease),
 	onLeaseTimeout(this, &ReplicatedLog::OnLeaseTimeout)
 {
+	reader = NULL;
+	writers = NULL;
 }
 
 bool ReplicatedLog::Init(bool useSoftClock)
@@ -89,10 +91,13 @@ void ReplicatedLog::Shutdown()
 	acceptor.Shutdown();
 
 	delete reader;
-	for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
-		delete writers[i];
-	
-	free(writers);
+	if (writers)
+	{
+		for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
+			delete writers[i];
+		
+		free(writers);
+	}
 
 	delete this;
 }
