@@ -37,7 +37,6 @@ public:
 
 	~TCPServerT()
 	{
-		Log_Message("");
 		Conn* conn;
 		while ((conn = dynamic_cast<Conn*>(conns.Get())) != NULL)
 			delete conn;

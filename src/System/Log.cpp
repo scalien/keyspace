@@ -116,6 +116,27 @@ bool Log_SetOutputFile(const char* filename, bool truncate)
 	return true;
 }
 
+void Log_Shutdown()
+{
+	if (logfilename)
+	{
+		free(logfilename);
+		logfilename = NULL;
+	}
+	
+	if (logfile)
+	{
+		fclose(logfile);
+		logfile = NULL;
+	}
+	
+	fflush(stdout);
+	fflush(stderr);
+	
+	trace = false;
+	timestamping = false;
+}
+
 static void Log_Append(char*& p, int& remaining, const char* s, int len)
 {
 	if (len > remaining)

@@ -121,4 +121,6 @@ int main(int argc, char* argv[])
 	RLOG->Shutdown();
 	database.Shutdown();
 	IOProcessor::Shutdown();
+	Config::Shutdown();
+	Log_Shutdown();
 }

@@ -223,7 +223,15 @@ bool Config::Init(const char* filename)
 	return true;
 }
 
-ConfigVar* GetVar(const char* name)
+void Config::Shutdown()
+{
+	ConfigVar*	var;
+
+	while ((var = vars.Get()) != NULL)
+		delete var;
+}
+
+static ConfigVar* GetVar(const char* name)
 {
 	ConfigVar* var;
 	
