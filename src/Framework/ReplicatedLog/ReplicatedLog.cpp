@@ -246,7 +246,7 @@ void ReplicatedLog::ProcessMsg()
 		OnLearnChosen();
 	else if (pmsg.type == PAXOS_REQUEST_CHOSEN)
 		OnRequestChosen();
-	else if (pmsg.type = PAXOS_START_CATCHUP)
+	else if (pmsg.type == PAXOS_START_CATCHUP)
 		OnStartCatchup();
 	else
 		ASSERT_FAIL();
