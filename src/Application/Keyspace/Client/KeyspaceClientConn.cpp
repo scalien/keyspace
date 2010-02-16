@@ -146,6 +146,7 @@ bool ClientConn::ProcessCommand(Response* resp)
 		{
 			client.result->numCompleted++;
 			cmd->status = KEYSPACE_SUCCESS;
+			return true;
 		}
 		else
 			client.result->AppendCommandResponse(cmd, resp);

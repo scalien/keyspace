@@ -282,6 +282,7 @@ int KeyspaceClientTest(int argc, char **argv)
 	uint64_t			masterTimeout;
 	const char			*LOCAL_NODES[] = {"127.0.0.1:7080", "127.0.0.1:7081", "127.0.01:7082"};
 	int					logTargets;
+	int					ret;
 
 
 	if (argc < 3)
@@ -345,24 +346,30 @@ int KeyspaceClientTest(int argc, char **argv)
 	testConf.argc = argc;
 	testConf.argv = argv;
 	testConf.SetType(argv[2]);
-		
+
+	ret = 1;
 	if (testConf.type == TestConfig::SET)
-		return KeyspaceClientSetTest(client, testConf);
+		ret = KeyspaceClientSetTest(client, testConf);
 	if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)
-		return KeyspaceClientListTest(client, testConf);
+		ret = KeyspaceClientListTest(client, testConf);
 	if (testConf.type == TestConfig::GET || testConf.type == TestConfig::DIRTYGET)
-		return KeyspaceClientGetTest(client, testConf);
+		ret = KeyspaceClientGetTest(client, testConf);
 	if (testConf.type == TestConfig::FAILOVER)
-		return KeyspaceClientFailoverTest(client, testConf);
+		ret = KeyspaceClientFailoverTest(client, testConf);
 	if (testConf.type == TestConfig::API)
 	{
 		client.Shutdown();
-		return keyspace_client_test();
+		ret = keyspace_client_test();
 	}
-
-	Log_Message("no such test: %s", testConf.typeString);
+	else
+	{
+		Log_Message("no such test: %s", testConf.typeString);
+	}
+	
+	Config::Shutdown();
+	Log_Shutdown();
 		
-	return 1;
+	return ret;
 }
 
 
