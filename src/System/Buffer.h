@@ -247,7 +247,7 @@ public:
 
 	bool Set(const char* str, int len) { return ByteString::Set(str, len); }
 
-	bool Set(ByteString bs)	{ return ByteString::Set(bs); }
+	bool Set(ByteString bs)	{ return ByteString::Set(bs.buffer, bs.length); }
 };
 
 template<int n>
