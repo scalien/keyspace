@@ -11,6 +11,7 @@ public:
 		SET,
 		LIST,
 		LISTP,
+		SUITE,
 		API,
 		FAILOVER
 	};
@@ -93,6 +94,11 @@ public:
 		if (strcmp(s, "listp") == 0)
 		{
 			type = LISTP;
+			return;
+		}
+		if (strcmp(s, "suite") == 0)
+		{
+			type = SUITE;
 			return;
 		}
 		if (strcmp(s, "api") == 0)

@@ -338,25 +338,22 @@ int KeyspaceClientTest(int argc, char **argv)
 	if (status < 0)
 		return 1;
 
-	if (strcmp(argv[2], "suite") == 0)
-	{
-		return KeyspaceClientTestSuite(client);
-	} 
-	
+	ret = 1;
 	testConf.argc = argc;
 	testConf.argv = argv;
 	testConf.SetType(argv[2]);
 
-	ret = 1;
-	if (testConf.type == TestConfig::SET)
+	if (testConf.type == TestConfig::SUITE)
+		ret = KeyspaceClientTestSuite(client);
+	else if (testConf.type == TestConfig::SET)
 		ret = KeyspaceClientSetTest(client, testConf);
-	if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)
+	else if (testConf.type == TestConfig::LIST || testConf.type == TestConfig::LISTP)
 		ret = KeyspaceClientListTest(client, testConf);
-	if (testConf.type == TestConfig::GET || testConf.type == TestConfig::DIRTYGET)
+	else if (testConf.type == TestConfig::GET || testConf.type == TestConfig::DIRTYGET)
 		ret = KeyspaceClientGetTest(client, testConf);
-	if (testConf.type == TestConfig::FAILOVER)
+	else if (testConf.type == TestConfig::FAILOVER)
 		ret = KeyspaceClientFailoverTest(client, testConf);
-	if (testConf.type == TestConfig::API)
+	else if (testConf.type == TestConfig::API)
 	{
 		client.Shutdown();
 		ret = keyspace_client_test();
