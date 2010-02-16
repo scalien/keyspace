@@ -29,6 +29,8 @@ friend class TransportTCPConn;
 typedef List<TransportTCPConn*> ConnsList;
 
 public:
+	~TransportTCPReader();
+	
 	bool		Init(int port);
 
 	void		SetOnRead(Callable* onRead);
