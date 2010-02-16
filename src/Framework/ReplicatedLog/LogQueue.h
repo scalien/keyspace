@@ -7,6 +7,8 @@
 class LogQueue
 {
 public:
+	~LogQueue();
+
 	bool				Push(ByteString& value);
 	ByteString*			Next();
 	ByteString*			Pop();
