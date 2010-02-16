@@ -24,6 +24,7 @@ typedef List<ProtocolServer*>			ServerList;
 
 public:
 	ReplicatedKeyspaceDB();
+	~ReplicatedKeyspaceDB();
 	
 	bool			Init();
 	void			Shutdown();

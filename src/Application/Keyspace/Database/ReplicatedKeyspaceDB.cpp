@@ -16,6 +16,11 @@ ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
 	catchingUp = false;
 }
 
+ReplicatedKeyspaceDB::~ReplicatedKeyspaceDB()
+{
+	delete asyncAppender;
+}
+
 bool ReplicatedKeyspaceDB::Init()
 {
 	Log_Trace();
