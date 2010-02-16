@@ -46,12 +46,8 @@ void ClientConn::Send(Command &cmd)
 	
 	head.Writef("%d:%c:%U", length, cmd.type, cmd.cmdID);
 	Write(head.buffer, head.length, false);
-	
-	Write(cmd.args.buffer, cmd.args.length, false);
 
-	if (BytesQueued() >= 1*MB || cmd.type == KEYSPACECLIENT_GET_MASTER ||
-		client.result->commands.Length() <= 1)
-			WritePending();
+	Write(cmd.args.buffer, cmd.args.length, true);
 
 	submit = false;
 }
@@ -262,7 +258,7 @@ void ClientConn::OnWrite()
 {
 	TCPConn<KEYSPACE_BUF_SIZE>::OnWrite();
 	Command** it;
-
+	
 	if (client.master == nodeID)
 	{
 		while(client.safeCommands.Length() > 0 && BytesQueued() < 1*MB)
