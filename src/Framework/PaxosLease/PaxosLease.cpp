@@ -11,6 +11,8 @@ onLeaseTimeout(this, &PaxosLease::OnLeaseTimeout),
 onStartupTimeout(this, &PaxosLease::OnStartupTimeout),
 startupTimeout(MAX_LEASE_TIME, &onStartupTimeout)
 {
+	reader = NULL;
+	writers = NULL;
 }
 
 void PaxosLease::Init(bool useSoftClock)
