@@ -102,7 +102,7 @@ bool ClientConn::ProcessCommand(Response* resp)
 	{
 		Log_Trace("NOTMASTER");
 		client.SetMaster(-1, nodeID);
-		return true;
+		return false;
 	}
 	
 	if (client.result->commands.Head() == NULL)
@@ -146,7 +146,7 @@ bool ClientConn::ProcessCommand(Response* resp)
 		{
 			client.result->numCompleted++;
 			cmd->status = KEYSPACE_SUCCESS;
-			return true;
+			return false;
 		}
 		else
 			client.result->AppendCommandResponse(cmd, resp);

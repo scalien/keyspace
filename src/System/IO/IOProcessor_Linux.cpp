@@ -241,7 +241,7 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	if (epollOp->write)
 		event |= EPOLLOUT;
 	
-	// this is here to initalize the whole structure
+	// this is here to initalize the whole ev structure and suppress warnings
 	ev.data.u64 = 0;
 	ev.events = event;
 	ev.data.ptr = epollOp;
@@ -293,22 +293,24 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		return false;
 	}
 	
+	// this is here to initalize the whole ev structure and suppress warnings
+	ev.data.u64 = 0;
+	ev.events = EPOLLONESHOT;
+	ev.data.ptr = ioop;
+
 	epollOp = &epollOps[ioop->fd];
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 	{
 		epollOp->read = NULL;
 		if (epollOp->write)
-			ev.events = EPOLLOUT;
+			ev.events |= EPOLLOUT;
 	}
 	else
 	{
 		epollOp->write = NULL;
 		if (epollOp->read)
-			ev.events = EPOLLIN;
+			ev.events |= EPOLLIN;
 	}
-
-	ev.events |= EPOLLONESHOT;
-	ev.data.ptr = ioop;
 
 	if (epollOp->read || epollOp->write)
 		nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, ioop->fd, &ev);
