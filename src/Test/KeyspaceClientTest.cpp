@@ -205,6 +205,8 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 	Log_Message("Test type = %s, keySize = %d, valueSize = %d",
 			conf.typeString, conf.keySize, conf.valueSize);
 	
+	client.Begin();
+	
 	numTest = conf.datasetTotal / conf.valueSize;
 	for (int i = 0; i < numTest; i++)
 	{
