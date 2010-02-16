@@ -31,10 +31,14 @@ void PaxosLease::Init(bool useSoftClock)
 void PaxosLease::Shutdown()
 {
 	delete reader;
-	for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
-		delete writers[i];
-	
-	free(writers);
+
+	if (writers)
+	{
+		for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
+			delete writers[i];
+		
+		free(writers);
+	}
 }
 
 void PaxosLease::InitTransport()
