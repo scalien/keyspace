@@ -652,7 +652,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	
 	// discrete SET test
 	{
-		num = 100;
+		num = NUM_TEST_KEYS;
 		value.Writef("0123456789012345678901234567890123456789");
 		sw.Reset();
 		for (int i = 0; i < num; i++)
@@ -673,6 +673,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	
 	// discrete GET test
 	{
+		num = NUM_TEST_KEYS;
 		sw.Reset();
 		client.DistributeDirty(true);
 		for (int i = 0; i < num; i++)
@@ -693,6 +694,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 	
 	// batched GET test
 	{
+		num = NUM_TEST_KEYS;
 		sw.Reset();
 		client.Begin();
 		
@@ -721,6 +723,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 	// batched DIRTYGET test
 	{
+		num = NUM_TEST_KEYS;
 		client.DistributeDirty(true);
 		sw.Reset();
 		client.Begin();
@@ -750,6 +753,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 
 	// batched DIRTYGET test #2 without distributing dirty reads between clients
 	{
+		num = NUM_TEST_KEYS;
 		client.DistributeDirty(false);
 		sw.Reset();
 		client.Begin();
