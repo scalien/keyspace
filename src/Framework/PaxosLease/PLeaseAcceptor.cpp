@@ -47,7 +47,7 @@ void PLeaseAcceptor::OnPrepareRequest()
 	Log_Trace("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "",
 	msg.paxosID, RLOG->GetPaxosID());
 
-	if (msg.paxosID < RLOG->GetPaxosID())
+	if (msg.paxosID < RLOG->GetPaxosID() && msg.nodeID != RLOG->GetMaster())
 		return; // only up-to-date nodes can become masters
 
 	RLOG->OnPaxosLeaseMsg(msg.paxosID, msg.nodeID);

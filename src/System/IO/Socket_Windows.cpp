@@ -117,15 +117,18 @@ bool Socket::SetNodelay()
 	
 	if (fd.sock == INVALID_SOCKET)
 	{
-		Log_Trace("SetNonblocking on invalid file descriptor");
+		Log_Trace("SetNodelay on invalid file descriptor");
 		return false;
 	}
 	
 	// Nagle algorithm is disabled if TCP_NODELAY is enabled.
-	nodelay = 1;
+	nodelay = TRUE;
 	if (setsockopt(fd.sock, IPPROTO_TCP, TCP_NODELAY, (char *) &nodelay, sizeof(nodelay)) == SOCKET_ERROR)
+	{
+		Log_Trace("setsockopt() failed");
 		return false;
-		
+	}
+
 	return true;
 	
 }

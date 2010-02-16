@@ -54,10 +54,10 @@ void PLeaseProposer::OnNewPaxosRound()
 	// PaxosLease round, if it's active
 	// only restart if we're masters
 	
-	Log_Trace();
-	
-	if (acquireLeaseTimeout.IsActive() && RLOG->IsMaster())
-		StartPreparing();
+	//Log_Trace();
+	//
+	//if (acquireLeaseTimeout.IsActive() && RLOG->IsMaster())
+	//	StartPreparing();
 }
 
 void PLeaseProposer::BroadcastMessage()

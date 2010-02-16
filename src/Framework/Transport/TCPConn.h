@@ -201,6 +201,8 @@ template<int bufSize>
 void TCPConn<bufSize>::OnConnect()
 {
 	Log_Trace();
+
+	socket.SetNodelay();
 	
 	state = CONNECTED;
 	tcpwrite.onComplete = &onWrite;
