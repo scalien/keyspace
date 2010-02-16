@@ -86,6 +86,13 @@ void ReplicatedLog::InitTransport()
 void ReplicatedLog::Shutdown()
 {
 	acceptor.Shutdown();
+
+	delete reader;
+	for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
+		delete writers[i];
+	
+	free(writers);
+
 	delete this;
 }
 

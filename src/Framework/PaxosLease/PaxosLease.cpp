@@ -26,6 +26,15 @@ void PaxosLease::Init(bool useSoftClock)
 	acquireLease = false;
 }
 
+void PaxosLease::Shutdown()
+{
+	delete reader;
+	for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
+		delete writers[i];
+	
+	free(writers);
+}
+
 void PaxosLease::InitTransport()
 {
 	unsigned	i;
@@ -39,7 +48,7 @@ void PaxosLease::InitTransport()
 	reader->SetOnRead(&onRead);
 	
 	writers = (Writers)
-	Alloc(sizeof(TransportTCPWriter*) * RCONF->GetNumNodes());
+		Alloc(sizeof(TransportTCPWriter*) * RCONF->GetNumNodes());
 	
 	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{

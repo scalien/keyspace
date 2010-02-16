@@ -22,6 +22,7 @@ public:
 	PaxosLease();
 
 	void			Init(bool useSoftClock);
+	void			Shutdown();
 	void			OnRead();
 	void			AcquireLease();
 	bool			IsLeaseOwner();
