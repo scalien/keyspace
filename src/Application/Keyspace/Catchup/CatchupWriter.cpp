@@ -64,8 +64,6 @@ void CatchupWriter::WriteNext()
 {
 //	Log_Trace();
 
-	static ByteArray<32> prefix; // for the "length:" header
-	static ByteArray<MAX_TCP_MESSAGE_SIZE> msgData;
 	bool kv;
 	
 	kv = false;
@@ -81,7 +79,15 @@ void CatchupWriter::WriteNext()
 		}
 		
 		if (key.length > 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
+		{
+			if (strncmp(key.buffer, "@@round:", MIN(key.length, sizeof("@@round:") - 1)) == 0)
+			{
+				msg.KeyValue(key, value);
+				break;
+
+			}
 			continue;
+		}
 		else
 		{
 			msg.KeyValue(key, value);

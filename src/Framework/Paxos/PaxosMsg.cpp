@@ -102,6 +102,13 @@ bool PaxosMsg::RequestChosen(uint64_t paxosID_, unsigned nodeID_)
 	return true;
 }
 
+bool PaxosMsg::StartCatchup(uint64_t paxosID_, unsigned nodeID_)
+{
+	Init(paxosID_, PAXOS_START_CATCHUP, nodeID_);
+	
+	return true;
+}
+
 bool PaxosMsg::IsRequest()
 {
 	return (type == PAXOS_PROPOSE_REQUEST ||
@@ -183,6 +190,10 @@ bool PaxosMsg::Read(const ByteString& data)
 			read = snreadf(data.buffer, data.length, "%c:%U:%u",
 						   &type, &paxosID, &nodeID);
 			break;
+		case PAXOS_START_CATCHUP:
+			read = snreadf(data.buffer, data.length, "%c:%U:%u",
+						   &type, &paxosID, &nodeID);
+			break;
 		default:
 			return false;
 	}
@@ -234,6 +245,10 @@ bool PaxosMsg::Write(ByteString& data)
 							   type, paxosID, nodeID, &value);
 			break;
 		case PAXOS_REQUEST_CHOSEN:
+			return data.Writef("%c:%U:%u",
+							   type, paxosID, nodeID);
+			break;
+		case PAXOS_START_CATCHUP:
 			return data.Writef("%c:%U:%u",
 							   type, paxosID, nodeID);
 			break;

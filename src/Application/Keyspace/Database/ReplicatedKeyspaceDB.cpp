@@ -64,6 +64,11 @@ bool ReplicatedKeyspaceDB::IsMaster()
 	return RLOG->IsMaster();
 }
 
+bool ReplicatedKeyspaceDB::IsCatchingUp()
+{
+	return catchingUp;
+}
+
 bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 {
 	// don't allow writes for @@ keys
@@ -414,6 +419,8 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 {
 	Log_Trace();
 
+	Log_Message("Catchup started from node %d", nodeID);
+
 	// this is a workaround because BDB truncate is way too slow for any
 	// database bigger than 1Gb
 	if (RLOG->GetPaxosID() != 0)
@@ -428,7 +435,9 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 void ReplicatedKeyspaceDB::OnCatchupComplete()
 {
 	Log_Trace();
-	
+
+	Log_Message("Catchup complete");
+
 	catchingUp = false;
 	RLOG->ContinuePaxos();
 	RLOG->ContinueMasterLease();
@@ -437,6 +446,8 @@ void ReplicatedKeyspaceDB::OnCatchupComplete()
 void ReplicatedKeyspaceDB::OnCatchupFailed()
 {
 	Log_Trace();
+
+	Log_Message("Catchup failed");
 
 	catchingUp = false;
 	RLOG->ContinuePaxos();

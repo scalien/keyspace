@@ -16,6 +16,8 @@ public:
 	virtual void OnMasterLease(unsigned nodeID) = 0;
 	virtual void OnMasterLeaseExpired() = 0;
 	virtual void OnDoCatchup(unsigned nodeID) = 0;
+
+	virtual bool IsCatchingUp() = 0;
 	
 //	virtual void Stop() = 0;
 //	virtual void Continue() = 0;

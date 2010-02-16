@@ -24,6 +24,8 @@ protected:
 	bool		SendChosen(unsigned nodeID,
 						   uint64_t paxosID,
 						   ByteString& value);	
+	bool		SendStartCatchup(unsigned nodeID,
+								 uint64_t paxosID);	
 	bool		Learned();
 	ByteString	Value();
 

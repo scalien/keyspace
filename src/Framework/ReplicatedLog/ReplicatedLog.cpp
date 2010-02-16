@@ -241,6 +241,8 @@ void ReplicatedLog::ProcessMsg()
 		OnLearnChosen();
 	else if (pmsg.type == PAXOS_REQUEST_CHOSEN)
 		OnRequestChosen();
+	else if (pmsg.type = PAXOS_START_CATCHUP)
+		OnStartCatchup();
 	else
 		ASSERT_FAIL();
 }
@@ -397,10 +399,7 @@ void ReplicatedLog::OnLearnChosen()
 	{
 		//	I am lagging and need to catch-up
 		
-		if ((pmsg.paxosID - learner.paxosID) < (LOGCACHE_SIZE - 1))
-			learner.RequestChosen(pmsg.nodeID);
-		else if (replicatedDB != NULL && masterLease.IsLeaseKnown())
-			replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
+		learner.RequestChosen(pmsg.nodeID);
 	}
 }
 
@@ -422,6 +421,22 @@ void ReplicatedLog::OnRequestChosen()
 			Log_Trace("Sending paxosID %d to node %d", pmsg.paxosID, pmsg.nodeID);
 			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value_);
 		}
+		else
+		{
+			Log_Trace("Node requested a paxosID I no longer have");
+			learner.SendStartCatchup(pmsg.nodeID, pmsg.paxosID);
+		}
+	}
+}
+
+void ReplicatedLog::OnStartCatchup()
+{
+	Log_Trace();
+
+	if (pmsg.paxosID == learner.paxosID)
+	{
+		if (replicatedDB != NULL && !replicatedDB->IsCatchingUp() && masterLease.IsLeaseKnown())
+			replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 	}
 }
 
@@ -441,10 +456,7 @@ void ReplicatedLog::OnRequest()
 	{
 		//	I am lagging and need to catch-up
 		
-		if ((pmsg.paxosID - learner.paxosID) < (LOGCACHE_SIZE - 1))
-			learner.RequestChosen(pmsg.nodeID);
-		else if (replicatedDB != NULL && masterLease.IsLeaseKnown())
-			replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
+		learner.RequestChosen(pmsg.nodeID);
 	}
 }
 
@@ -522,12 +534,7 @@ void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
 		// I am lagging and need to catch-up
 		
 		if (IsPaxosActive())
-		{
-			if ((paxosID - learner.paxosID) < (LOGCACHE_SIZE - 1))
-				learner.RequestChosen(nodeID);
-			else if (replicatedDB != NULL && masterLease.IsLeaseKnown())
-				replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
-		}
+			learner.RequestChosen(nodeID);
 	}
 }
 

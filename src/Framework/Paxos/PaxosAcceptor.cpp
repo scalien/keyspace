@@ -26,8 +26,8 @@ void PaxosAcceptor::Init(Writers writers_)
 	state.Init();
 
 	if (!ReadState())
-		Log_Message("*** No Keyspace database found. "
-					"Starting from scratch... *** ");
+		Log_Message("No Keyspace database found. "
+					"Starting from scratch...");
 }
 
 void PaxosAcceptor::Shutdown()

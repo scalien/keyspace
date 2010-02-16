@@ -49,6 +49,8 @@ public:
 	
 	void			AsyncOnAppend();
 	void			OnAppendComplete();
+
+	bool			IsCatchingUp();
 	
 private:
 	bool			AddWithoutReplicatedLog(KeyspaceOp* op);

@@ -64,6 +64,7 @@ private:
 	void				OnProposeResponse();
 	void				OnLearnChosen();
 	void				OnRequestChosen();
+	void				OnStartCatchup();
 	void				OnRequest();
 	void				OnLearnLease();
 	void				OnLeaseTimeout();
