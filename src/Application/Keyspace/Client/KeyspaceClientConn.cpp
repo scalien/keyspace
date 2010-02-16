@@ -212,7 +212,7 @@ bool ClientConn::ProcessGetMaster(Response* resp)
 		getMasterCommands.Remove(it);
 		delete cmd;
 		
-		return true;
+		return false;
 	}
 	
 	return false;
