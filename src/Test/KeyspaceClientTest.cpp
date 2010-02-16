@@ -645,6 +645,27 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		Log_Message("SET/batched succeeded, set/sec = %lf", num / (sw.elapsed / 1000.0));
 	}
 	
+	// discrete SET test
+	{
+		num = 100;
+		value.Writef("0123456789012345678901234567890123456789");
+		sw.Reset();
+		for (int i = 0; i < num; i++)
+		{
+			key.Writef("test:%d", i);
+			sw.Start();
+			status = client.Set(key, value);
+			sw.Stop();
+			if (status != KEYSPACE_SUCCESS)
+			{
+				Log_Message("SET/batched failed after %d, status = %s", i, Status(status));
+				return 1;
+			}
+		}
+
+		Log_Message("SET/discrete succeeded, set/sec = %lf", num / (sw.elapsed / 1000.0));
+	}
+	
 	// discrete GET test
 	{
 		sw.Reset();
