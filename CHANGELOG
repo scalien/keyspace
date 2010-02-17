@@ -1,3 +1,38 @@
+1.4.1
+=====
+
+- Windows performance improvements
+
+- Fixed bugs and memory leak issues
+
+
+1.4
+===
+
+- New and improved C++ client library
+
+- Changed the C API interface to match the C++ library
+
+- Changed PaxosLease protocol from UDP to TCP
+
+
+1.3.2
+=====
+
+- Added library project to Visual Studio solution file
+
+
+1.3.1
+=====
+
+- Minor fixes to Windows version
+
+
+1.3
+===
+
+- Windows version
+
 
 1.2
 ===
