@@ -653,6 +653,8 @@ bool ProcessTCPWrite(TCPWrite* tcpwrite)
 	{
 		// handle tcp write partial writes
 		wsabuf.buf = (char*) tcpwrite->data.buffer + tcpwrite->transferred;
+		// the -1 is actually a windows bug, for more info see:
+		// http://support.microsoft.com/kb/823764/EN-US/
 		wsabuf.len = MIN(tcpwrite->data.length - tcpwrite->transferred, SEND_BUFFER_SIZE - 1);
 
 		// perform non-blocking write
