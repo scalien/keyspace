@@ -1,4 +1,5 @@
 #include "Endpoint.h"
+#include "System/Buffer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -101,15 +102,13 @@ bool Endpoint::Set(const char* ip, int port, bool resolv)
 	return true;
 }
 
-#define MAX_IP 16
-
 bool Endpoint::Set(const char* ip_port, bool resolv)
 {
-	const char*	p;
-	int			port;
-	bool		ret;
-	char		ip[MAX_IP];
-	
+	const char*		p;
+	int				port;
+	bool			ret;
+	DynArray<32>	ipbuf;
+
 	p = ip_port;
 	
 	while (*p != '\0' && *p != ':')
@@ -120,9 +119,9 @@ bool Endpoint::Set(const char* ip_port, bool resolv)
 		Log_Trace("No ':' in host specification");
 		return false;
 	}
-	
-	memcpy(ip, ip_port, p - ip_port);
-	ip[p - ip_port] = '\0';
+
+	ipbuf.Append(ip_port, p - ip_port);
+	ipbuf.Append("", 1);
 	p++;
 	
 	port = -1;
@@ -133,7 +132,7 @@ bool Endpoint::Set(const char* ip_port, bool resolv)
 		return false;
 	}
 
-	ret = Set(ip, port, resolv);
+	ret = Set(ipbuf.buffer, port, resolv);
 	
 	return ret;
 }

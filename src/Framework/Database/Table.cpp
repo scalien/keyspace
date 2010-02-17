@@ -39,7 +39,12 @@ database(database)
 Table::~Table()
 {
 	db->close(0);
+
+	// Bug #222: On Windows deleting the BDB database object causes crash
+	// On other platforms it works and causes a memleak if not deleted.
+#ifndef PLATFORM_WINDOWS
 	delete db;
+#endif
 }
 
 bool Table::Iterate(Transaction* tx, Cursor& cursor)
