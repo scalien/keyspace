@@ -97,6 +97,7 @@ protected:
 		if (listener.Accept(&(conn->GetSocket())))
 		{
 			conn->GetSocket().SetNonblocking();
+			conn->GetSocket().SetNodelay();
 			pT->InitConn(conn);
 		}
 		else
