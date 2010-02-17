@@ -35,7 +35,7 @@ bool Transaction::IsActive()
 
 bool Transaction::Begin()
 {
-	if (database->env.txn_begin(NULL, &txn, NULL) != 0)
+	if (database->env.txn_begin(NULL, &txn, 0) != 0)
 		return false;
 	
 	active = true;
@@ -46,7 +46,7 @@ bool Transaction::Commit()
 {
 	active = false;
 	
-	if (txn->commit(NULL) != 0)
+	if (txn->commit(0) != 0)
 		return false;
 	
 	return true;
