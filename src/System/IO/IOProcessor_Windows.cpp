@@ -652,7 +652,7 @@ bool ProcessTCPWrite(TCPWrite* tcpwrite)
 	{
 		// handle tcp write partial writes
 		wsabuf.buf = (char*) tcpwrite->data.buffer + tcpwrite->transferred;
-		wsabuf.len = tcpwrite->data.length - tcpwrite->transferred;
+		wsabuf.len = MIN(tcpwrite->data.length - tcpwrite->transferred, 8000);
 
 		// perform non-blocking write
 		ret = WSASend(tcpwrite->fd.sock, &wsabuf, 1, &numBytes, 0, NULL, NULL);
