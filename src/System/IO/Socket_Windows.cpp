@@ -22,6 +22,7 @@ bool IOProcessorRegisterSocket(FD& fd);
 bool IOProcessorUnregisterSocket(FD& fd);
 bool IOProcessorAccept(const FD& listeningFd, FD& fd);
 bool IOProcessorConnect(FD& fd, Endpoint& endpoint);
+extern unsigned SEND_BUFFER_SIZE;
 
 Socket::Socket()
 {
@@ -66,6 +67,15 @@ bool Socket::Create(Proto proto)
 		Close();
 		return false;
 	}
+
+	if (setsockopt(fd.sock, SOL_SOCKET, SO_SNDBUF, (char *) &SEND_BUFFER_SIZE, sizeof(SEND_BUFFER_SIZE)))
+	{
+		ret = WSAGetLastError();
+		Log_Trace("error = %d", ret);
+		Close();
+		return false;
+	}
+
 
 	// TODO set FD index too!
 	IOProcessorRegisterSocket(fd);

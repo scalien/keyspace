@@ -34,6 +34,7 @@ static IODesc*	iods;					// pointer to allocated array of IODesc's
 static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
 const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
+unsigned		SEND_BUFFER_SIZE = 65537;
 static volatile bool terminated = false;
 static unsigned		numIOProcClients = 0;
 
@@ -652,7 +653,7 @@ bool ProcessTCPWrite(TCPWrite* tcpwrite)
 	{
 		// handle tcp write partial writes
 		wsabuf.buf = (char*) tcpwrite->data.buffer + tcpwrite->transferred;
-		wsabuf.len = MIN(tcpwrite->data.length - tcpwrite->transferred, 8000);
+		wsabuf.len = MIN(tcpwrite->data.length - tcpwrite->transferred, SEND_BUFFER_SIZE - 1);
 
 		// perform non-blocking write
 		ret = WSASend(tcpwrite->fd.sock, &wsabuf, 1, &numBytes, 0, NULL, NULL);
