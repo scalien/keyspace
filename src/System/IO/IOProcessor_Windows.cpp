@@ -34,7 +34,7 @@ static IODesc*	iods;					// pointer to allocated array of IODesc's
 static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
 const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
-unsigned		SEND_BUFFER_SIZE = 65537;
+unsigned		SEND_BUFFER_SIZE = 8001;
 static volatile bool terminated = false;
 static unsigned		numIOProcClients = 0;
 
