@@ -4,6 +4,7 @@
 #include "Framework/Transport/TCPConn.h"
 #include "Framework/Database/Transaction.h"
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
+#include "Framework/Paxos/PaxosConsts.h"
 #include "CatchupMsg.h"
 
 class CatchupServer;
@@ -11,7 +12,7 @@ class CatchupServer;
 class CatchupWriter : public TCPConn<>
 {
 typedef ByteArray<KEYSPACE_KEY_SIZE> KeyBuffer;
-typedef ByteArray<KEYSPACE_VAL_SIZE> ValBuffer;
+typedef ByteArray<PAXOS_SIZE> ValBuffer;
 
 public:
 	CatchupWriter();
@@ -33,6 +34,9 @@ private:
 	KeyBuffer		key;
 	ValBuffer		value;
 	CatchupServer*	server;
+	ByteArray<32>	prefix;
+	ByteArray<MAX_TCP_MESSAGE_SIZE> msgData;
+
 };
 
 #endif

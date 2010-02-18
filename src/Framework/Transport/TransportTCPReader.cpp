@@ -25,6 +25,20 @@ void TransportTCPConn::OnClose()
 
 /* class TransportTCPReader */
 
+TransportTCPReader::~TransportTCPReader()
+{
+	TransportTCPConn**	it;
+	TransportTCPConn*	conn;
+	
+	for (it = conns.Head(); it != NULL; )
+	{
+		conn = *it;
+		it = conns.Next(it);
+		
+		delete conn;
+	}
+}
+
 bool TransportTCPReader::Init(int port)
 {
 	onRead = NULL;
@@ -39,12 +53,12 @@ void TransportTCPReader::SetOnRead(Callable* onRead_)
 
 void TransportTCPReader::SetMessage(ByteString msg_)
 {
-	msg = msg_;
+	msg.Set(msg_);
 }
 
 void TransportTCPReader::GetMessage(ByteString& msg_)
 {
-	msg_ = msg;
+	msg_.Set(msg);
 }
 
 bool TransportTCPReader::IsActive()

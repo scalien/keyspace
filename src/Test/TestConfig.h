@@ -11,9 +11,9 @@ public:
 		SET,
 		LIST,
 		LISTP,
-		GETLATENCY,
-		DIRTYGETLATENCY,
-		SETLATENCY
+		SUITE,
+		API,
+		FAILOVER
 	};
 	
 	int					type;
@@ -96,19 +96,19 @@ public:
 			type = LISTP;
 			return;
 		}
-		if (strcmp(s, "getlatency") == 0)
+		if (strcmp(s, "suite") == 0)
 		{
-			type = GETLATENCY;
+			type = SUITE;
 			return;
 		}
-		if (strcmp(s, "dirtygetlatency") == 0)
+		if (strcmp(s, "api") == 0)
 		{
-			type = DIRTYGETLATENCY;
+			type = API;
 			return;
 		}
-		if (strcmp(s, "setlatency") == 0)
+		if (strcmp(s, "failover") == 0)
 		{
-			type = SETLATENCY;
+			type = FAILOVER;
 			return;
 		}
 	}

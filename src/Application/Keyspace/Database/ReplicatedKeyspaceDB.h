@@ -16,7 +16,7 @@
 
 class ReplicatedKeyspaceDB : public ReplicatedDB, public KeyspaceDB
 {
-typedef ByteArray<KEYSPACE_BUF_SIZE>	BufBuffer;
+typedef ByteArray<PAXOS_SIZE>			PaxosBuffer;
 typedef ByteArray<KEYSPACE_VAL_SIZE>	ValBuffer;
 typedef MFunc<ReplicatedKeyspaceDB>		Func;
 typedef List<KeyspaceOp*>				OpList;
@@ -24,6 +24,7 @@ typedef List<ProtocolServer*>			ServerList;
 
 public:
 	ReplicatedKeyspaceDB();
+	~ReplicatedKeyspaceDB();
 	
 	bool			Init();
 	void			Shutdown();
@@ -33,6 +34,7 @@ public:
 	bool			IsMasterKnown();
 	int				GetMaster();
 	bool			IsMaster();
+	bool			IsReplicated() { return true; }
 	void			SetProtocolServer(ProtocolServer* pserver);
 	
 	void			OnCatchupComplete();	// called by CatchupClient
@@ -44,11 +46,11 @@ public:
 	virtual void	OnMasterLease(unsigned nodeID);
 	virtual void	OnMasterLeaseExpired();
 	virtual void	OnDoCatchup(unsigned nodeID);
-//	virtual void	Stop();
-//	virtual void	Continue();
 	
 	void			AsyncOnAppend();
 	void			OnAppendComplete();
+
+	bool			IsCatchingUp();
 	
 private:
 	bool			AddWithoutReplicatedLog(KeyspaceOp* op);
@@ -61,19 +63,22 @@ private:
 	OpList			ops;
 	Table*			table;
 	KeyspaceMsg		msg;
-	BufBuffer		pvalue;
+	KeyspaceMsg		tmp;
+	PaxosBuffer		pvalue;
 	ValBuffer		data;
 	CatchupServer	catchupServer;
 	CatchupReader	catchupClient;
 	
 	Transaction*	transaction;
 	ByteBuffer		valueBuffer;
+	ByteBuffer		tmpBuffer;
 	bool			ownAppend;
 	Func			asyncOnAppend;
 	Func			onAppendComplete;
 	ThreadPool*		asyncAppender;
 	unsigned		numOps;
 	ServerList		pservers;
+	unsigned		estimatedLength;
 };
 
 #endif

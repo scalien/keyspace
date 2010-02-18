@@ -2,6 +2,7 @@
 #define MESSAGECONN_H
 
 #include "TCPConn.h"
+#include "System/Stopwatch.h"
 
 template<int bufSize = MAX_TCP_MESSAGE_SIZE>
 class MessageConn : public TCPConn<bufSize>
@@ -12,6 +13,7 @@ public:
 		running = true;
 	}
 	
+	virtual void	Init(bool startRead = true);
 	virtual void	OnMessageRead(const ByteString& msg) = 0;
 	virtual void	OnClose() = 0;
 	virtual void	OnRead();
@@ -24,8 +26,19 @@ protected:
 };
 
 template<int bufSize>
+void MessageConn<bufSize>::Init(bool startRead)
+{
+	running = true;
+	TCPConn<bufSize>::Init(startRead);
+}
+
+
+template<int bufSize>
 void MessageConn<bufSize>::OnRead()
 {
+	Stopwatch		sw;
+	sw.Start();
+
 	TCPRead& tcpread = TCPConn<bufSize>::tcpread;
 	unsigned pos, msglength, nread, msgbegin, msgend;
 	ByteString msg;
@@ -67,7 +80,9 @@ void MessageConn<bufSize>::OnRead()
 			break;
 		}
 
-		msg = ByteString(msglength, msglength, tcpread.data.buffer + msgbegin);
+		msg.length = msglength;
+		msg.size = msglength;
+		msg.buffer = tcpread.data.buffer + msgbegin;
 		OnMessageRead(msg);
 		
 		pos = msgend;
@@ -89,8 +104,12 @@ void MessageConn<bufSize>::OnRead()
 		tcpread.data.length -= pos;
 	}
 	
-	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED && running && !tcpread.active)
+	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED &&
+	running && !tcpread.active)
 		IOProcessor::Add(&tcpread);
+
+	sw.Stop();
+	Log_Trace("time spent in OnRead(): %ld", sw.elapsed);
 }
 
 template<int bufSize>

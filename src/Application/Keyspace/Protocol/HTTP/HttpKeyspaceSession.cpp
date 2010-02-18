@@ -72,6 +72,7 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 	}
 	
 	// parse the command part of the request uri
+	IF_PREFIX("/getmaster",				ProcessGetMaster()) else
 	IF_PREFIX("/get?",					ProcessGet(params, op, false)) else
 	IF_PREFIX("/dirtyget?",				ProcessGet(params, op, true)) else
 	IF_PREFIX("/set?",					ProcessSet(params, op)) else
@@ -124,6 +125,18 @@ if (bs.length > KEYSPACE_KEY_SIZE) { ResponseFail(); return false; }
 
 #define VALIDATE_VALLEN(bs)\
 if (bs.length > KEYSPACE_VAL_SIZE) { ResponseFail(); return false; }
+
+bool HttpKeyspaceSession::ProcessGetMaster()
+{
+	ByteArray<10> text;
+	if (kdb->IsReplicated())
+		text.length = snprintf(text.buffer, text.size, "%d", kdb->GetMaster());
+	else
+		text.length = snprintf(text.buffer, text.size, "0");
+	
+	conn->Response(200, text.buffer, text.length);
+	return false;
+}
 
 bool HttpKeyspaceSession::ProcessGet(const UrlParam& params, KeyspaceOp* op,
 bool dirty)

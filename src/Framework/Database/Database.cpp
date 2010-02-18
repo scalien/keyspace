@@ -99,7 +99,19 @@ bool Database::Init(const DatabaseConfig& config_)
 #else
 	env.log_set_config(DB_LOG_AUTO_REMOVE, 1);
 #endif
-	
+
+#ifdef DB_DIRECT_DB	
+	ret = env.set_flags(DB_DIRECT_DB, config.directDB);
+#endif
+
+#ifdef DB_TXN_NOSYNC
+	ret = env.set_flags(DB_TXN_NOSYNC, config.txnNoSync);
+#endif
+
+#ifdef DB_TXN_WRITE_NOSYNC
+	ret = env.set_flags(DB_TXN_WRITE_NOSYNC, config.txnWriteNoSync);
+#endif
+
 	keyspace = new Table(this, "keyspace", config.pageSize);
 
 	Checkpoint();
@@ -122,6 +134,7 @@ void Database::Shutdown()
 
 	running = false;
 	cpThread->Stop();
+	delete cpThread;
 	delete keyspace;	
 	env.close(0);
 }

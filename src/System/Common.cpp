@@ -33,7 +33,7 @@ int64_t strntoint64(const char* buffer, int length, unsigned* nread)
 	else
 		neg = false;
 	
-	while(c >= '0' && c <= '9' && i < length)
+	while (i < length && c >= '0' && c <= '9')
 	{
 		digit = c - '0';
 		n = n * 10 + digit;
@@ -74,7 +74,7 @@ uint64_t strntouint64(const char* buffer, int length, unsigned* nread)
 	i = 0;
 	c = *buffer;
 	
-	while(c >= '0' && c <= '9' && i < length)
+	while (i < length && c >= '0' && c <= '9')
 	{
 		digit = c - '0';
 		n = n * 10 + digit;

@@ -113,7 +113,24 @@ var keyspace =
 				keyspace.printPaginatedList(data, funcname, prefix, startkey, count, next, forward);
 			}
 			json.rpc(keyspace.dbUrl, listCallback, funcname, prefix, startkey, count, next, forward);			
-		},
+		}
+	},
+	
+	test: {
+		percent: function() {
+			var img;
+			var perc = 0;
+			
+			function nextPercent() {
+				img.style.width = perc;
+				perc = perc + 2;
+				if (perc < 100)
+				setTimeout(nextPercent, 20);
+			}
+			
+			img = util.elem("percent_img");
+			nextPercent();
+		}
 	},
                         
 	print: function(s)

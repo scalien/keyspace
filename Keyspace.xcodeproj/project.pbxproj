@@ -75,6 +75,16 @@
 		54F16BD510233C3F00614C2D /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
 		8DD76FB00486AB0100D96B5E /* Keyspace.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6A0FF2C0290799A04C91782 /* Keyspace.1 */; };
 		9A05218B0F78633D0066338D /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481472F0F31B6B200F3D2B6 /* Common.cpp */; };
+		9A0DD86E112DAB3600D057D2 /* KeyspaceClientConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD865112DAB3600D057D2 /* KeyspaceClientConn.cpp */; };
+		9A0DD86F112DAB3600D057D2 /* KeyspaceCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD868112DAB3600D057D2 /* KeyspaceCommand.cpp */; };
+		9A0DD870112DAB3600D057D2 /* KeyspaceResponse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD86A112DAB3600D057D2 /* KeyspaceResponse.cpp */; };
+		9A0DD871112DAB3600D057D2 /* KeyspaceResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD86C112DAB3600D057D2 /* KeyspaceResult.cpp */; };
+		9A0DD872112DAB3600D057D2 /* KeyspaceClientConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD865112DAB3600D057D2 /* KeyspaceClientConn.cpp */; };
+		9A0DD873112DAB3600D057D2 /* KeyspaceCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD868112DAB3600D057D2 /* KeyspaceCommand.cpp */; };
+		9A0DD874112DAB3600D057D2 /* KeyspaceResponse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD86A112DAB3600D057D2 /* KeyspaceResponse.cpp */; };
+		9A0DD875112DAB3600D057D2 /* KeyspaceResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD86C112DAB3600D057D2 /* KeyspaceResult.cpp */; };
+		9A0DD87A112DABD700D057D2 /* MetaDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD879112DABD700D057D2 /* MetaDatabase.cpp */; };
+		9A0DD87B112DABD700D057D2 /* MetaDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A0DD879112DABD700D057D2 /* MetaDatabase.cpp */; };
 		9A22A3FD0F40AD59002648C6 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		9A22A4F60F518FFB002648C6 /* MultiDatabaseOp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */; };
 		9A27231C0F5F9BBE00EE25E2 /* TableVisitorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */; };
@@ -135,6 +145,9 @@
 		9AE5F0871119B2D700F8A555 /* JSONSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5F07C1119B2D600F8A555 /* JSONSession.cpp */; };
 		9AE5F0881119B2D700F8A555 /* Mime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5F07E1119B2D600F8A555 /* Mime.cpp */; };
 		9AE5F0891119B2D700F8A555 /* UrlParam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5F0801119B2D600F8A555 /* UrlParam.cpp */; };
+		9AE5F0D31119C9B600F8A555 /* BackupClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5F0CD1119C9B600F8A555 /* BackupClient.cpp */; };
+		9AE5F0D41119C9B600F8A555 /* BackupConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5F0CF1119C9B600F8A555 /* BackupConn.cpp */; };
+		9AE5F0D51119C9B600F8A555 /* BackupServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5F0D11119C9B600F8A555 /* BackupServer.cpp */; };
 		9AE7CC4A0FEE3697000B8774 /* keyspace_client_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41E50FA760EE003EA36E /* keyspace_client_test.c */; };
 		9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */; };
 		9AEA56AA110DD88800E466C9 /* HttpKeyspaceHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AEA56A8110DD88800E466C9 /* HttpKeyspaceHandler.cpp */; };
@@ -296,6 +309,17 @@
 		54E3FC8410F2142A004EF4A4 /* IOProcessor_Windows.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOProcessor_Windows.cpp; sourceTree = "<group>"; };
 		54E3FC8B10F214B2004EF4A4 /* FD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FD.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* Keyspace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Keyspace; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0DD865112DAB3600D057D2 /* KeyspaceClientConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientConn.cpp; sourceTree = "<group>"; };
+		9A0DD866112DAB3600D057D2 /* KeyspaceClientConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientConn.h; sourceTree = "<group>"; };
+		9A0DD867112DAB3600D057D2 /* KeyspaceClientConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientConsts.h; sourceTree = "<group>"; };
+		9A0DD868112DAB3600D057D2 /* KeyspaceCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceCommand.cpp; sourceTree = "<group>"; };
+		9A0DD869112DAB3600D057D2 /* KeyspaceCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceCommand.h; sourceTree = "<group>"; };
+		9A0DD86A112DAB3600D057D2 /* KeyspaceResponse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceResponse.cpp; sourceTree = "<group>"; };
+		9A0DD86B112DAB3600D057D2 /* KeyspaceResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceResponse.h; sourceTree = "<group>"; };
+		9A0DD86C112DAB3600D057D2 /* KeyspaceResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceResult.cpp; sourceTree = "<group>"; };
+		9A0DD86D112DAB3600D057D2 /* KeyspaceResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceResult.h; sourceTree = "<group>"; };
+		9A0DD878112DABD700D057D2 /* MetaDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetaDatabase.h; path = MetaDatabase/MetaDatabase.h; sourceTree = "<group>"; };
+		9A0DD879112DABD700D057D2 /* MetaDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MetaDatabase.cpp; path = MetaDatabase/MetaDatabase.cpp; sourceTree = "<group>"; };
 		9A22A3FB0F40AD59002648C6 /* AsyncDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncDatabase.h; path = AsyncDatabase/AsyncDatabase.h; sourceTree = "<group>"; };
 		9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncDatabase.cpp; path = AsyncDatabase/AsyncDatabase.cpp; sourceTree = "<group>"; };
 		9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiDatabaseOp.cpp; path = AsyncDatabase/MultiDatabaseOp.cpp; sourceTree = "<group>"; };
@@ -364,6 +388,12 @@
 		9AE5F07F1119B2D600F8A555 /* Mime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mime.h; path = HTTP/Mime.h; sourceTree = "<group>"; };
 		9AE5F0801119B2D600F8A555 /* UrlParam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UrlParam.cpp; path = HTTP/UrlParam.cpp; sourceTree = "<group>"; };
 		9AE5F0811119B2D600F8A555 /* UrlParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UrlParam.h; path = HTTP/UrlParam.h; sourceTree = "<group>"; };
+		9AE5F0CD1119C9B600F8A555 /* BackupClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BackupClient.cpp; path = PrimaryBackup/BackupClient.cpp; sourceTree = "<group>"; };
+		9AE5F0CE1119C9B600F8A555 /* BackupClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackupClient.h; path = PrimaryBackup/BackupClient.h; sourceTree = "<group>"; };
+		9AE5F0CF1119C9B600F8A555 /* BackupConn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BackupConn.cpp; path = PrimaryBackup/BackupConn.cpp; sourceTree = "<group>"; };
+		9AE5F0D01119C9B600F8A555 /* BackupConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackupConn.h; path = PrimaryBackup/BackupConn.h; sourceTree = "<group>"; };
+		9AE5F0D11119C9B600F8A555 /* BackupServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BackupServer.cpp; path = PrimaryBackup/BackupServer.cpp; sourceTree = "<group>"; };
+		9AE5F0D21119C9B600F8A555 /* BackupServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackupServer.h; path = PrimaryBackup/BackupServer.h; sourceTree = "<group>"; };
 		9AEA56A8110DD88800E466C9 /* HttpKeyspaceHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpKeyspaceHandler.cpp; sourceTree = "<group>"; };
 		9AEA56A9110DD88800E466C9 /* HttpKeyspaceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpKeyspaceHandler.h; sourceTree = "<group>"; };
 		9AEA56AB110DD89900E466C9 /* InList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InList.h; sourceTree = "<group>"; };
@@ -555,6 +585,7 @@
 		5446122A0F53488D00EFBBDE /* Keyspace */ = {
 			isa = PBXGroup;
 			children = (
+				9AE5F0961119C54400F8A555 /* PrimaryBackup */,
 				54507DB10FCD6B43009D9B99 /* Catchup */,
 				9AC69B0D0F9D213D003C631E /* Client */,
 				5446122B0F53488D00EFBBDE /* Database */,
@@ -639,6 +670,7 @@
 		548147140F31B6B200F3D2B6 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				9AE5F0901119BEFD00F8A555 /* MetaDatabase */,
 				5421E3440F6C130E004BBDB4 /* Transport */,
 				9A22A3FA0F40AD2C002648C6 /* AsyncDatabase */,
 				548147150F31B6B200F3D2B6 /* Database */,
@@ -859,6 +891,15 @@
 		9AC69B0D0F9D213D003C631E /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				9A0DD865112DAB3600D057D2 /* KeyspaceClientConn.cpp */,
+				9A0DD866112DAB3600D057D2 /* KeyspaceClientConn.h */,
+				9A0DD867112DAB3600D057D2 /* KeyspaceClientConsts.h */,
+				9A0DD868112DAB3600D057D2 /* KeyspaceCommand.cpp */,
+				9A0DD869112DAB3600D057D2 /* KeyspaceCommand.h */,
+				9A0DD86A112DAB3600D057D2 /* KeyspaceResponse.cpp */,
+				9A0DD86B112DAB3600D057D2 /* KeyspaceResponse.h */,
+				9A0DD86C112DAB3600D057D2 /* KeyspaceResult.cpp */,
+				9A0DD86D112DAB3600D057D2 /* KeyspaceResult.h */,
 				9AC32CFF105824D300FE0A6F /* KeyspaceClient.cpp */,
 				9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */,
 				9A8B41CC0FA74EE1003EA36E /* keyspace_client.cpp */,
@@ -902,6 +943,28 @@
 				9AE5F0811119B2D600F8A555 /* UrlParam.h */,
 			);
 			name = HTTP;
+			sourceTree = "<group>";
+		};
+		9AE5F0901119BEFD00F8A555 /* MetaDatabase */ = {
+			isa = PBXGroup;
+			children = (
+				9A0DD878112DABD700D057D2 /* MetaDatabase.h */,
+				9A0DD879112DABD700D057D2 /* MetaDatabase.cpp */,
+			);
+			name = MetaDatabase;
+			sourceTree = "<group>";
+		};
+		9AE5F0961119C54400F8A555 /* PrimaryBackup */ = {
+			isa = PBXGroup;
+			children = (
+				9AE5F0CD1119C9B600F8A555 /* BackupClient.cpp */,
+				9AE5F0CE1119C9B600F8A555 /* BackupClient.h */,
+				9AE5F0CF1119C9B600F8A555 /* BackupConn.cpp */,
+				9AE5F0D01119C9B600F8A555 /* BackupConn.h */,
+				9AE5F0D11119C9B600F8A555 /* BackupServer.cpp */,
+				9AE5F0D21119C9B600F8A555 /* BackupServer.h */,
+			);
+			name = PrimaryBackup;
 			sourceTree = "<group>";
 		};
 		9AF501EF0F88223C00F7F49E /* Tools */ = {
@@ -1195,6 +1258,14 @@
 				9AE5F0871119B2D700F8A555 /* JSONSession.cpp in Sources */,
 				9AE5F0881119B2D700F8A555 /* Mime.cpp in Sources */,
 				9AE5F0891119B2D700F8A555 /* UrlParam.cpp in Sources */,
+				9AE5F0D31119C9B600F8A555 /* BackupClient.cpp in Sources */,
+				9AE5F0D41119C9B600F8A555 /* BackupConn.cpp in Sources */,
+				9AE5F0D51119C9B600F8A555 /* BackupServer.cpp in Sources */,
+				9A0DD86E112DAB3600D057D2 /* KeyspaceClientConn.cpp in Sources */,
+				9A0DD86F112DAB3600D057D2 /* KeyspaceCommand.cpp in Sources */,
+				9A0DD870112DAB3600D057D2 /* KeyspaceResponse.cpp in Sources */,
+				9A0DD871112DAB3600D057D2 /* KeyspaceResult.cpp in Sources */,
+				9A0DD87A112DABD700D057D2 /* MetaDatabase.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1241,6 +1312,11 @@
 				9AE7CC4C0FEE36A9000B8774 /* keyspace_client.cpp in Sources */,
 				9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */,
 				9AC32D00105824D300FE0A6F /* KeyspaceClient.cpp in Sources */,
+				9A0DD872112DAB3600D057D2 /* KeyspaceClientConn.cpp in Sources */,
+				9A0DD873112DAB3600D057D2 /* KeyspaceCommand.cpp in Sources */,
+				9A0DD874112DAB3600D057D2 /* KeyspaceResponse.cpp in Sources */,
+				9A0DD875112DAB3600D057D2 /* KeyspaceResult.cpp in Sources */,
+				9A0DD87B112DABD700D057D2 /* MetaDatabase.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

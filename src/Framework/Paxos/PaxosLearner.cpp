@@ -44,10 +44,24 @@ bool PaxosLearner::SendChosen(unsigned nodeID,
 	return true;
 }
 
-void PaxosLearner::OnLearnChosen(PaxosMsg& msg_)
+bool PaxosLearner::SendStartCatchup(unsigned nodeID,
+									uint64_t paxosID)
 {
 	Log_Trace();
 	
+	msg.StartCatchup(paxosID, RCONF->GetNodeID());
+	
+	msg.Write(wdata);
+
+	writers[nodeID]->Write(wdata);
+	
+	return true;
+}
+
+void PaxosLearner::OnLearnChosen(PaxosMsg& msg_)
+{
+	Log_Trace();
+
 	msg = msg_;
 
 	state.learned = true;

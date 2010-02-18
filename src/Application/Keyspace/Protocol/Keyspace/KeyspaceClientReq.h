@@ -42,6 +42,10 @@ public:
 	void			Init();
 	bool			Read(const ByteString& data);	
 	bool			ToKeyspaceOp(KeyspaceOp* op);
+
+	bool			IsRead();
+	bool			IsWrite();
+	bool			IsDirty();
 };
 
 #endif

@@ -20,6 +20,8 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 	int			read;
 	unsigned	dummy;
 	
+	Init();
+	
 	if (data.length < 1)
 		return false;
 	
@@ -79,6 +81,18 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 		default:
 			return false;
 	}
+	
+#define VALIDATE_KEYLEN(bs) { if (bs.length > KEYSPACE_KEY_SIZE) return false; }
+#define VALIDATE_VALLEN(bs) { if (bs.length > KEYSPACE_VAL_SIZE) return false; }
+
+	VALIDATE_KEYLEN(key);
+	VALIDATE_KEYLEN(newKey);
+	VALIDATE_KEYLEN(prefix);
+	VALIDATE_VALLEN(test);
+	VALIDATE_VALLEN(value);
+
+#undef VALIDATE_KEYLEN
+#undef VALIDATE_VALLEN
 			
 	return (read == (signed)data.length ? true : false);
 }
@@ -165,6 +179,9 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 	VALIDATE_KEYLEN(prefix);
 	VALIDATE_VALLEN(test);
 	VALIDATE_VALLEN(value);
+
+#undef VALIDATE_KEYLEN
+#undef VALIDATE_VALLEN
 	
 	if (!op->key.Set(key)) return false;
 	if (!op->newKey.Set(newKey)) return false;
@@ -173,4 +190,37 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 	if (!op->prefix.Set(prefix)) return false;
 
 	return true;
+}
+
+bool KeyspaceClientReq::IsRead()
+{
+	if (type == KEYSPACECLIENT_GET_MASTER ||
+	type == KEYSPACECLIENT_GET ||
+	type == KEYSPACECLIENT_DIRTY_GET ||
+	type == KEYSPACECLIENT_LIST ||
+	type == KEYSPACECLIENT_DIRTY_LIST ||
+	type == KEYSPACECLIENT_LISTP ||
+	type == KEYSPACECLIENT_DIRTY_LISTP ||
+	type == KEYSPACECLIENT_COUNT ||
+	type == KEYSPACECLIENT_DIRTY_COUNT)
+		return true;
+
+	return false;
+}
+
+
+bool KeyspaceClientReq::IsWrite()
+{
+	return !IsRead();
+}
+
+bool KeyspaceClientReq::IsDirty()
+{
+	if (type == KEYSPACECLIENT_DIRTY_GET ||
+	type == KEYSPACECLIENT_DIRTY_LIST ||
+	type == KEYSPACECLIENT_DIRTY_LISTP ||
+	type == KEYSPACECLIENT_DIRTY_COUNT)
+		return true;
+	
+	return false;
 }

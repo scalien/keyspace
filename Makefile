@@ -125,6 +125,7 @@ OBJECTS = \
 	$(BUILD_DIR)/Main.o
 
 TEST_OBJECTS = \
+	$(BUILD_DIR)/Test/keyspace_client_test.o \
 	$(BUILD_DIR)/Test/KeyspaceClientTest.o
 
 CLIENTLIBS = \

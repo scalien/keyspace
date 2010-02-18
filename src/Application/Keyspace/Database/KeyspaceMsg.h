@@ -38,10 +38,10 @@ public:
 	void		Remove(ByteString key_);
 	void		Prune(ByteString prefix_);
 
-	bool		Read(ByteString& data, unsigned &nread);
-	bool		Write(ByteString& data);
+	bool		Read(const ByteString& data, unsigned &nread);
+	bool		Write(ByteString& data) const;
 
-	bool		FromKeyspaceOp(KeyspaceOp* op);
+	bool		FromKeyspaceOp(const KeyspaceOp* op);
 };
 
 #endif

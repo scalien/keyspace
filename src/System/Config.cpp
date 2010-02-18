@@ -42,11 +42,11 @@ public:
 		{
 			last = value.buffer[value.length - 2];
 			if (last == 'K')
-				return ret * 1024;
+				return ret * 1000;
 			if (last == 'M')
-				return ret * 1024 * 1024;
+				return ret * 1000 * 1000;
 			if (last == 'G')
-				return ret * 1024 * 1024 * 1024;
+				return ret * 1000 * 1000 * 1000;
 		}
 
 		return ret;
@@ -201,6 +201,7 @@ bool Config::Init(const char* filename)
 		{
 			// syntax error
 			Log_Message("syntax error at %s, line %d", filename, nline);
+			fclose(fp);
 			return false;
 		}
 		
@@ -222,7 +223,15 @@ bool Config::Init(const char* filename)
 	return true;
 }
 
-ConfigVar* GetVar(const char* name)
+void Config::Shutdown()
+{
+	ConfigVar*	var;
+
+	while ((var = vars.Get()) != NULL)
+		delete var;
+}
+
+static ConfigVar* GetVar(const char* name)
 {
 	ConfigVar* var;
 	

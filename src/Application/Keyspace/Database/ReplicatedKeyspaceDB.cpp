@@ -16,6 +16,11 @@ ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
 	catchingUp = false;
 }
 
+ReplicatedKeyspaceDB::~ReplicatedKeyspaceDB()
+{
+	delete asyncAppender;
+}
+
 bool ReplicatedKeyspaceDB::Init()
 {
 	Log_Trace();
@@ -26,6 +31,8 @@ bool ReplicatedKeyspaceDB::Init()
 	
 	catchupServer.Init(RCONF->GetPort() + CATCHUP_PORT_OFFSET);
 	catchupClient.Init(this, table);
+
+	estimatedLength = 0;
 
 	asyncAppender->Start();
 	asyncAppenderActive = false;
@@ -57,10 +64,13 @@ bool ReplicatedKeyspaceDB::IsMaster()
 	return RLOG->IsMaster();
 }
 
+bool ReplicatedKeyspaceDB::IsCatchingUp()
+{
+	return catchingUp;
+}
+
 bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 {
-	Transaction* transaction;
-
 	// don't allow writes for @@ keys
 	if (op->IsWrite() && op->key.length > 2 &&
 		op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
@@ -78,13 +88,9 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 		if (op->type == KeyspaceOp::GET &&
 		   (!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
-		
-		if ((transaction = RLOG->GetTransaction()) != NULL)
-			if (!transaction->IsActive())
-				transaction = NULL;
-		
+				
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status = table->Get(transaction, op->key, op->value);
+		op->status = table->Get(NULL, op->key, op->value);
 		op->service->OnComplete(op);
 		return true;
 	}
@@ -110,9 +116,16 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	
 	ops.Append(op);
 
-#ifdef SUBMIT_HACK
-	Submit();
-#endif
+	// TODO: huge hack
+	if (estimatedLength < PAXOS_SIZE)
+	{
+		tmp.FromKeyspaceOp(op);
+		if (tmp.Write(tmpBuffer))
+			estimatedLength += tmpBuffer.length;
+	}
+	
+	if (estimatedLength >= PAXOS_SIZE)
+		Submit();
 	
 	return true;
 }
@@ -165,7 +178,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	ByteString		value;
 	Stopwatch		sw;
 
-	value = valueBuffer;
+	value.Set(valueBuffer);
 	Log_Trace("length: %d", value.length);
 	
 	numOps = 0;
@@ -297,6 +310,7 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 	
 	if (ownAppend)
 	{
+		Log_Trace("my append");
 		for (i = 0; i < numOps; i++)
 		{
 			it = ops.Head();
@@ -305,6 +319,8 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 			op->service->OnComplete(op);
 		}
 	}
+	else
+		Log_Trace("not my append");
 
 	asyncAppenderActive = false;
 	
@@ -312,7 +328,6 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 		FailKeyspaceOps();
 
 	RLOG->ContinuePaxos();
-//	RLOG->ContinueReplicatedDB();
 	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
 		Append();
 }
@@ -329,7 +344,7 @@ void ReplicatedKeyspaceDB::Append()
 	KeyspaceOp**it;
 
 	pvalue.length = 0;
-	bs = pvalue;
+	bs.Set(pvalue);
 
 	unsigned numAppended = 0;
 	
@@ -354,6 +369,8 @@ void ReplicatedKeyspaceDB::Append()
 	
 	if (pvalue.length > 0)
 	{
+		estimatedLength -= pvalue.length;
+		if (estimatedLength < 0) estimatedLength = 0;
 		RLOG->Append(pvalue);
 		Log_Trace("appending %d ops (length: %d)", numAppended, pvalue.length);
 	}
@@ -370,6 +387,7 @@ void ReplicatedKeyspaceDB::FailKeyspaceOps()
 		op = *it;
 		
 		it = ops.Remove(it);
+		op->status = false;
 		op->service->OnComplete(op);
 	}
 	
@@ -401,6 +419,8 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 {
 	Log_Trace();
 
+	Log_Message("Catchup started from node %d", nodeID);
+
 	// this is a workaround because BDB truncate is way too slow for any
 	// database bigger than 1Gb
 	if (RLOG->GetPaxosID() != 0)
@@ -415,7 +435,9 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 void ReplicatedKeyspaceDB::OnCatchupComplete()
 {
 	Log_Trace();
-	
+
+	Log_Message("Catchup complete");
+
 	catchingUp = false;
 	RLOG->ContinuePaxos();
 	RLOG->ContinueMasterLease();
@@ -424,6 +446,8 @@ void ReplicatedKeyspaceDB::OnCatchupComplete()
 void ReplicatedKeyspaceDB::OnCatchupFailed()
 {
 	Log_Trace();
+
+	Log_Message("Catchup failed");
 
 	catchingUp = false;
 	RLOG->ContinuePaxos();
@@ -434,27 +458,3 @@ void ReplicatedKeyspaceDB::SetProtocolServer(ProtocolServer* pserver)
 {
 	pservers.Append(pserver);
 }
-
-//void ReplicatedKeyspaceDB::Stop()
-//{
-//	ProtocolServer** it;
-//	ProtocolServer*	 pserver;
-//	
-//	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
-//	{
-//		pserver = *it;
-//		pserver->Stop();
-//	}
-//}
-//
-//void ReplicatedKeyspaceDB::Continue()
-//{
-//	ProtocolServer** it;
-//	ProtocolServer*	 pserver;
-//	
-//	for (it = pservers.Head(); it != NULL; it = pservers.Next(it))
-//	{
-//		pserver = *it;
-//		pserver->Continue();
-//	}
-//}

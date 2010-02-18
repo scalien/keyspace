@@ -13,6 +13,7 @@
 #define PAXOS_LEARN_PROPOSAL				'8'
 #define PAXOS_LEARN_VALUE					'9'
 #define PAXOS_REQUEST_CHOSEN				'0'
+#define PAXOS_START_CATCHUP					'c'
 
 class PaxosMsg
 {
@@ -47,6 +48,7 @@ public:
 	bool		LearnValue(uint64_t paxosID_, unsigned nodeID_,
 				ByteString value_);
 	bool		RequestChosen(uint64_t paxosID_, unsigned nodeID_);
+	bool		StartCatchup(uint64_t paxosID_, unsigned nodeID_);
 
 	bool		IsRequest();
 	bool		IsPrepareResponse();

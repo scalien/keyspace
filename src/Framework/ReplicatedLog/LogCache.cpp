@@ -1,81 +1,61 @@
-#include <stdlib.h>
 #include "LogCache.h"
-#include "System/Config.h"
-
-#define INDEX(n) (((n) + size) % size)
+#include "ReplicatedLog.h"
+#include "Framework/Database/Transaction.h"
+#include "System/Platform.h"
 
 LogCache::LogCache()
 {
-	count = 0;
-	next = 0;
-	size = Config::GetIntValue("logCache.size", DEFAULT_CACHE_SIZE);
-	logItems = new ByteBuffer[size];
-	
-	maxmem = Config::GetIntValue("logCache.maxMem", DEFAULT_MAX_MEM_USE);
-	allocated = 0;
 }
 
 LogCache::~LogCache()
 {
-	for (int i = 0; i < size; i++)
-		logItems[i].Free();
-	free(logItems);
 }
 
-bool LogCache::Push(uint64_t paxosID_, ByteString value)
+bool LogCache::Init()
 {
-	int tail, head, i;
+	table = database.GetTable("keyspace");
 	
-	tail = INDEX(next - count);
-	head = INDEX(next - 1);
+	return true;
+}
 
-	if (allocated - logItems[next].size + value.length > maxmem)
+bool LogCache::Push(uint64_t paxosID, ByteString value, bool commit)
+{
+	ByteArray<128> buf;
+	Transaction* transaction;
+	
+	Log_Trace("Storing paxosID %" PRIu64 " with length %d", paxosID, value.length);
+	
+	transaction = RLOG->GetTransaction();
+	
+	if (!transaction->IsActive())
+		transaction->Begin();
+	
+	buf.Writef("@@round:%U", paxosID);	
+	table->Set(transaction, buf, value);
+	
+	// delete old
+	paxosID -= LOGCACHE_SIZE;
+	if (paxosID >= 0)
 	{
-		// start freeing up at the tail
-		for (i = tail; i <= head; i = INDEX(i+1))
-		{
-			allocated -= logItems[i].size;
-			logItems[i].Free();
-			count--;
-			if (allocated + value.length <= maxmem)
-				break;
-		}
+		buf.Writef("@@round:%U", paxosID);	
+		table->Delete(transaction, buf);
 	}
 	
-	allocated -= logItems[next].size;
-	logItems[next].Free();
-	if (!logItems[next].Allocate(value.length))
-		ASSERT_FAIL();
-	allocated += logItems[next].size;
-	logItems[next].Set(value);
-	next = INDEX(next + 1);
-	
-	if (count < size)
-		count++;
-	
-	paxosID = paxosID_;
+	if (commit)
+		transaction->Commit();
 	
 	return true;
 }
 
-bool LogCache::Get(uint64_t paxosID_, ByteString& value)
+bool LogCache::Get(uint64_t paxosID, ByteString& value_)
 {
-	int tail, head, offset;
-	
-	if (count == 0)
-		return false;
-	
-	tail = INDEX(next - count);
-	head = INDEX(next - 1);
-	
-	if ((int64_t)paxosID_ <= (int64_t)(paxosID - count))
-		return false;
-	
-	if (paxosID < paxosID_)
-		return false;
-	
-	offset = paxosID_ - (paxosID - count + 1);
+	ByteArray<128> buf;
 
-	value = logItems[INDEX(tail + offset)];
-	return true;
+	buf.Writef("@@round:%U", paxosID);
+	if (table->Get(NULL, buf, value))
+	{
+		value_.Set(value);
+		return true;
+	}
+	return false;
 }

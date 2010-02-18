@@ -1,10 +1,23 @@
 #include "LogQueue.h"
 
-bool LogQueue::Push(ByteString value)
+LogQueue::~LogQueue()
+{
+	ByteString**	it;
+	ByteString*		bs;
+	
+	for (it = queue.Head(); it; )
+	{
+		bs = *it;
+		it = queue.Next(it);
+		delete bs;
+	}
+}
+
+bool LogQueue::Push(ByteString& value)
 {
 	ByteString* bs = new ByteString();
 
-	*bs = value;
+	bs->Set(value);
 
 	queue.Add(bs);
 	

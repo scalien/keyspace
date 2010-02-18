@@ -4,6 +4,7 @@
 #include "System/Log.h"
 #include "System/Common.h"
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -68,6 +69,28 @@ bool Socket::SetNonblocking()
 	}
 
 	ret = fcntl(fd, F_SETFL, ret | O_NONBLOCK);
+	if (ret < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+	
+	return true;
+}
+
+bool Socket::SetNodelay()
+{
+	int		ret;
+	int		sockopt;
+
+	if (fd < 0)
+	{
+		Log_Trace("SetNodelay on invalid file descriptor");
+		return false;
+	}
+	
+	sockopt = 1;
+	ret = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &sockopt, sizeof(sockopt));
 	if (ret < 0)
 	{
 		Log_Errno();
@@ -190,7 +213,8 @@ const char* Socket::ToString(char s[ENDPOINT_STRING_SIZE])
 bool Socket::SendTo(void *data, int count, const Endpoint &endpoint)
 {
 	int ret;
-	const struct sockaddr* sa = (const struct sockaddr*) ((Endpoint&) endpoint).GetSockAddr();
+	const struct sockaddr* sa =
+	(const struct sockaddr*) ((Endpoint&) endpoint).GetSockAddr();
 	
 	ret = sendto(fd, data, count, 0, sa, ENDPOINT_SOCKADDR_SIZE);
 	

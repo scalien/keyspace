@@ -15,7 +15,7 @@ void KeyspaceClientResp::Ok(uint64_t cmdID_, ByteString value_)
 	sendValue = true;
 	cmdID = cmdID_;
 	key.length = 0;
-	value = value_;
+	value.Set(value_);
 }
 
 void KeyspaceClientResp::Failed(uint64_t cmdID_)
@@ -41,7 +41,7 @@ void KeyspaceClientResp::ListItem(uint64_t cmdID_, ByteString key_)
 	type = KEYSPACECLIENT_LIST_ITEM;
 	sendValue = false;
 	cmdID = cmdID_;
-	key = key_;
+	key.Set(key_);
 	value.length = 0;
 }
 
@@ -51,8 +51,8 @@ ByteString key_, ByteString value_)
 	type = KEYSPACECLIENT_LISTP_ITEM;
 	sendValue = true;
 	cmdID = cmdID_;
-	key = key_;
-	value = value_;
+	key.Set(key_);
+	value.Set(value_);
 }
 
 void KeyspaceClientResp::ListEnd(uint64_t cmdID_)

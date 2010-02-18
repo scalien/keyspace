@@ -22,6 +22,7 @@ bool IOProcessorRegisterSocket(FD& fd);
 bool IOProcessorUnregisterSocket(FD& fd);
 bool IOProcessorAccept(const FD& listeningFd, FD& fd);
 bool IOProcessorConnect(FD& fd, Endpoint& endpoint);
+extern unsigned SEND_BUFFER_SIZE;
 
 Socket::Socket()
 {
@@ -67,6 +68,15 @@ bool Socket::Create(Proto proto)
 		return false;
 	}
 
+	if (setsockopt(fd.sock, SOL_SOCKET, SO_SNDBUF, (char *) &SEND_BUFFER_SIZE, sizeof(SEND_BUFFER_SIZE)))
+	{
+		ret = WSAGetLastError();
+		Log_Trace("error = %d", ret);
+		Close();
+		return false;
+	}
+
+
 	// TODO set FD index too!
 	IOProcessorRegisterSocket(fd);
 
@@ -109,6 +119,28 @@ bool Socket::SetNonblocking()
 		return false;
 		
 	return true;
+}
+
+bool Socket::SetNodelay()
+{
+	BOOL	nodelay;
+	
+	if (fd.sock == INVALID_SOCKET)
+	{
+		Log_Trace("SetNodelay on invalid file descriptor");
+		return false;
+	}
+	
+	// Nagle algorithm is disabled if TCP_NODELAY is enabled.
+	nodelay = TRUE;
+	if (setsockopt(fd.sock, IPPROTO_TCP, TCP_NODELAY, (char *) &nodelay, sizeof(nodelay)) == SOCKET_ERROR)
+	{
+		Log_Trace("setsockopt() failed");
+		return false;
+	}
+
+	return true;
+	
 }
 
 

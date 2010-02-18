@@ -54,7 +54,7 @@ void KeyspaceMsg::Prune(ByteString prefix_)
 	prefix.Set(prefix_);
 }
 	
-bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
+bool KeyspaceMsg::Read(const ByteString& data, unsigned &n)
 {
 	int read;
 	
@@ -100,7 +100,7 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 	return true;
 }
 
-bool KeyspaceMsg::Write(ByteString& data)
+bool KeyspaceMsg::Write(ByteString& data) const
 {
 	switch (type)
 	{
@@ -134,7 +134,7 @@ bool KeyspaceMsg::Write(ByteString& data)
 	}
 }
 
-bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
+bool KeyspaceMsg::FromKeyspaceOp(const KeyspaceOp* op)
 {
 	bool ret;
 	

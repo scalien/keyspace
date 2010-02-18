@@ -44,6 +44,8 @@ public:
 
 	Socket&			GetSocket() { return socket; }
 	const State		GetState() { return state; }
+	
+	unsigned		BytesQueued();
 
 	void			AsyncRead(bool start = true);
 	void			Write(const char* data, int count, bool flush = true);
@@ -73,7 +75,8 @@ protected:
 	virtual void	OnConnect();
 	virtual void	OnConnectTimeout();
 	
-	void			Append(const char* data, int count);
+//	void			Append(const char* data, int count);
+	Buffer*			EnsureBuffer(int size);
 	void			WritePending();
 };
 
@@ -88,6 +91,7 @@ onConnect(this, &TCPConn::OnConnect),
 onConnectTimeout(this, &TCPConn::OnConnectTimeout)
 {
 	state = DISCONNECTED;
+	next = NULL;
 }
 
 
@@ -121,6 +125,21 @@ void TCPConn<bufSize>::Init(bool startRead)
 
 	AsyncRead(startRead);
 }
+
+template<int bufSize>
+unsigned TCPConn<bufSize>::BytesQueued()
+{
+	unsigned bytes;
+	Buffer* buf;
+	
+	bytes = 0;
+	
+	for (buf = writeQueue.Head(); buf != NULL; buf = buf->next)
+		bytes += buf->length;
+	
+	return bytes;
+}
+
 
 template<int bufSize>
 void TCPConn<bufSize>::Connect(Endpoint &endpoint_, unsigned timeout)
@@ -168,7 +187,10 @@ void TCPConn<bufSize>::OnWrite()
 	tcpwrite.data.Clear();
 	
 	if (writeQueue.Size() == 0)
+	{
+		Log_Trace("not posting write");
 		writeQueue.Append(buf);
+	}
 	else
 	{
 		delete buf;
@@ -180,6 +202,8 @@ template<int bufSize>
 void TCPConn<bufSize>::OnConnect()
 {
 	Log_Trace();
+
+	socket.SetNodelay();
 	
 	state = CONNECTED;
 	tcpwrite.onComplete = &onWrite;
@@ -200,7 +224,7 @@ void TCPConn<bufSize>::AsyncRead(bool start)
 	Log_Trace();
 	
 	tcpread.fd = socket.fd;
-	tcpread.data = readBuffer;
+	tcpread.data.Set(readBuffer);
 	tcpread.onComplete = &onRead;
 	tcpread.onClose = &onClose;
 	tcpread.requested = IO_READ_ANY;
@@ -240,6 +264,26 @@ void TCPConn<bufSize>::Write(const char *data, int count, bool flush)
 }
 
 template<int bufSize>
+DynArray<bufSize>* TCPConn<bufSize>::EnsureBuffer(int size)
+{
+	Buffer*	buf;
+	
+	if (size > bufSize)
+		return false;
+	
+	buf = writeQueue.Tail();
+	if (!buf ||
+		(tcpwrite.active && writeQueue.Size() == 1) || 
+		(buf->length > 0 && buf->Remaining() < size))
+	{
+		buf = new Buffer;
+		writeQueue.Append(buf);
+	}
+	
+	return buf;
+}
+
+template<int bufSize>
 void TCPConn<bufSize>::WritePending()
 {
 //	Log_Trace();
@@ -257,7 +301,7 @@ void TCPConn<bufSize>::WritePending()
 	
 	if (buf && buf->length > 0)
 	{
-		tcpwrite.data = *buf;
+		tcpwrite.data.Set(*buf);
 		tcpwrite.transferred = 0;
 		
 		IOProcessor::Add(&tcpwrite);

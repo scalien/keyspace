@@ -35,7 +35,7 @@ uint64_t acceptedProposalID_, ByteString value_)
 	Init(paxosID_, PAXOS_PREPARE_PREVIOUSLY_ACCEPTED, nodeID_);
 	proposalID = proposalID_;
 	acceptedProposalID = acceptedProposalID_;
-	value = value_;
+	value.Set(value_);
 	
 	return true;
 }
@@ -54,7 +54,7 @@ unsigned nodeID_, uint64_t proposalID_, ByteString value_)
 {
 	Init(paxosID_, PAXOS_PROPOSE_REQUEST, nodeID_);
 	proposalID = proposalID_;
-	value = value_;
+	value.Set(value_);
 	
 	return true;
 }
@@ -81,7 +81,7 @@ bool PaxosMsg::LearnValue(uint64_t paxosID_,
 unsigned nodeID_, ByteString value_)
 {
 	Init(paxosID_, PAXOS_LEARN_VALUE, nodeID_);
-	value = value_;
+	value.Set(value_);
 	
 	return true;
 }
@@ -98,6 +98,13 @@ unsigned nodeID_, uint64_t proposalID_)
 bool PaxosMsg::RequestChosen(uint64_t paxosID_, unsigned nodeID_)
 {
 	Init(paxosID_, PAXOS_REQUEST_CHOSEN, nodeID_);
+	
+	return true;
+}
+
+bool PaxosMsg::StartCatchup(uint64_t paxosID_, unsigned nodeID_)
+{
+	Init(paxosID_, PAXOS_START_CATCHUP, nodeID_);
 	
 	return true;
 }
@@ -183,6 +190,10 @@ bool PaxosMsg::Read(const ByteString& data)
 			read = snreadf(data.buffer, data.length, "%c:%U:%u",
 						   &type, &paxosID, &nodeID);
 			break;
+		case PAXOS_START_CATCHUP:
+			read = snreadf(data.buffer, data.length, "%c:%U:%u",
+						   &type, &paxosID, &nodeID);
+			break;
 		default:
 			return false;
 	}
@@ -234,6 +245,10 @@ bool PaxosMsg::Write(ByteString& data)
 							   type, paxosID, nodeID, &value);
 			break;
 		case PAXOS_REQUEST_CHOSEN:
+			return data.Writef("%c:%U:%u",
+							   type, paxosID, nodeID);
+			break;
+		case PAXOS_START_CATCHUP:
 			return data.Writef("%c:%U:%u",
 							   type, paxosID, nodeID);
 			break;

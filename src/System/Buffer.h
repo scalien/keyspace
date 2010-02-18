@@ -29,14 +29,6 @@ public:
 	
 	virtual void Init() { size = 0; length = 0; buffer = 0; }
 
-	ByteString& operator=(const ByteString &bs)
-	{
-		size = bs.size;
-		length = bs.length;
-		buffer = bs.buffer;
-		
-		return *this;
-	}
 	
 	virtual bool Set(const char* str)
 	{
@@ -64,7 +56,11 @@ public:
 	
 	virtual bool Set(const ByteString& other)
 	{
-		return Set(other.buffer, other.length);
+		buffer = other.buffer;
+		length = other.length;
+		size = other.size;
+		
+		return true;
 	}
 
 	bool operator==(const ByteString& other) const
@@ -111,6 +107,12 @@ public:
 	int Remaining() const
 	{
 		return size - length;
+	}
+
+	ByteString& operator=(const ByteString &bs)
+	{
+		Set(bs);
+		return *this;
 	}
 };
 
@@ -245,7 +247,7 @@ public:
 
 	bool Set(const char* str, int len) { return ByteString::Set(str, len); }
 
-	bool Set(ByteString bs)	{ return ByteString::Set(bs); }
+	bool Set(const ByteString& bs)	{ return ByteString::Set(bs.buffer, bs.length); }
 };
 
 template<int n>
@@ -279,6 +281,12 @@ public:
 	{
 		Clear();
 		return Append(bs);
+	}
+	
+	bool Set(const void* buf, unsigned len)
+	{
+		Clear();
+		return Append(buf, len);		
 	}
 	
 	bool Append(const ByteString &bs)

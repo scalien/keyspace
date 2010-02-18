@@ -2,10 +2,10 @@
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 
 PaxosProposer::PaxosProposer() :
-	onPrepareTimeout(this, &PaxosProposer::OnPrepareTimeout),
-	onProposeTimeout(this, &PaxosProposer::OnProposeTimeout),
-	prepareTimeout(PAXOS_TIMEOUT, &onPrepareTimeout),
-	proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout)
+onPrepareTimeout(this, &PaxosProposer::OnPrepareTimeout),
+onProposeTimeout(this, &PaxosProposer::OnProposeTimeout),
+prepareTimeout(PAXOS_TIMEOUT, &onPrepareTimeout),
+proposeTimeout(PAXOS_TIMEOUT, &onProposeTimeout)
 {
 }
 
@@ -164,7 +164,7 @@ void PaxosProposer::StartPreparing()
 	state.numProposals++;
 	
 	state.proposalID = RCONF->NextHighest(
-		max(state.proposalID, state.highestPromisedProposalID));
+		MAX(state.proposalID, state.highestPromisedProposalID));
 	
 	state.highestReceivedProposalID = 0;
 	

@@ -11,8 +11,10 @@
 
 class KeyspaceServer;
 
-class KeyspaceConn : public MessageConn<>, public KeyspaceService
+class KeyspaceConn : public MessageConn<KEYSPACE_BUF_SIZE>,
+public KeyspaceService
 {
+friend class KeyspaceServer;
 typedef MFunc<KeyspaceConn>				Func;
 typedef ByteArray<KEYSPACE_BUF_SIZE>	Buffer;
 public:
@@ -28,21 +30,19 @@ private:
 	// TCPConn interface
 	virtual void		OnClose();
 	virtual void		OnWrite();
-	virtual void		OnConnectionTimeout();
 	virtual void		OnMessageRead(const ByteString& message);
 
 	void				Write(ByteString &bs);
 	void				ProcessMsg();
 	void				AppendOps();
 
-	Func				onConnectionTimeout;
-	CdownTimer			connectionTimeout;
 	Buffer				data;
 	KeyspaceServer*		server;
 	KeyspaceClientReq	req;
 	KeyspaceClientResp	resp;
 	bool				closeAfterSend;
 	char				endpointString[ENDPOINT_STRING_SIZE];
+	unsigned			bytesRead;
 };
 
 #endif

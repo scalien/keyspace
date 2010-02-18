@@ -1,4 +1,5 @@
 #include "Endpoint.h"
+#include "System/Buffer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -101,15 +102,13 @@ bool Endpoint::Set(const char* ip, int port, bool resolv)
 	return true;
 }
 
-#define MAX_IP 16
-
 bool Endpoint::Set(const char* ip_port, bool resolv)
 {
-	const char*	p;
-	int			port;
-	bool		ret;
-	char		ip[MAX_IP];
-	
+	const char*		p;
+	int				port;
+	bool			ret;
+	DynArray<32>	ipbuf;
+
 	p = ip_port;
 	
 	while (*p != '\0' && *p != ':')
@@ -120,9 +119,9 @@ bool Endpoint::Set(const char* ip_port, bool resolv)
 		Log_Trace("No ':' in host specification");
 		return false;
 	}
-	
-	memcpy(ip, ip_port, p - ip_port);
-	ip[p - ip_port] = '\0';
+
+	ipbuf.Append(ip_port, p - ip_port);
+	ipbuf.Append("", 1);
 	p++;
 	
 	port = -1;
@@ -133,7 +132,7 @@ bool Endpoint::Set(const char* ip_port, bool resolv)
 		return false;
 	}
 
-	ret = Set(ip, port, resolv);
+	ret = Set(ipbuf.buffer, port, resolv);
 	
 	return ret;
 }
@@ -168,9 +167,16 @@ const char* Endpoint::ToString()
 const char* Endpoint::ToString(char s[ENDPOINT_STRING_SIZE])
 {
 	struct sockaddr_in *sa = (struct sockaddr_in *) &saBuffer;
+	unsigned long addr;
 
-	snprintf(s, ENDPOINT_STRING_SIZE, "%s:%u",
-		inet_ntoa(sa->sin_addr), ntohs(sa->sin_port));
+	// inet_ntoa is not thread-safe and have a memory-leak issue on Linux
+	addr = ntohl(sa->sin_addr.s_addr);
+	snprintf(s, ENDPOINT_STRING_SIZE, "%lu.%lu.%lu.%lu:%u",
+		(addr & 0xFF000000UL) >> 24,
+		(addr & 0x00FF0000UL) >> 16,
+		(addr & 0x0000FF00UL) >> 8,
+		(addr & 0x000000FFUL),
+		ntohs(sa->sin_port));
 	
 	return s;
 }

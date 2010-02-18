@@ -26,6 +26,7 @@
 			<a href="#" class="adummy" onclick="keyspace.db.get('hol'); return false"><div class="left_moused"><span class="left_filter">Control</span></div></a>
 			<a href="#" class="adummy" onclick="keyspace.db.get('hol'); return false"><div class="left_moused"><span class="left_filter">Shell</span></div></a>
 			<a href="#" class="adummy" onclick="keyspace.admin.status(); return false"><div class="left_moused"><span class="left_filter">Status</span></div></a>
+			<a href="#" class="adummy" onclick="keyspace.test.percent(); return false"><div class="left_moused"><span class="left_filter">Percent</span></div></a>			
 			<br/>
 		<div class="left_title">Database</div>
  			<a href="#" class="adummy" onclick="keyspace.db.get('hol'); return false"><div class="left_moused"><span class="left_filter">Get</span></div></a>
@@ -43,7 +44,11 @@
 			<a href="#" class="adummy" onclick="keyspace.db.count(); return false"><div class="left_moused"><span class="left_filter">Count</span></div></a>
 		
 	</div>
-	<div class="right" id="right"></div>
+	<div class="right" id="right">
+		<div style="width: 100px">
+			<img src="1x1.gif" width="0" height="16" id="percent_img" />
+		</div>
+	</div>
 </div>
 <div id="fade" class="black_overlay"></div>
 <div class="img_preloads">

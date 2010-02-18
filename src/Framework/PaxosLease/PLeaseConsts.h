@@ -3,7 +3,7 @@
 
 #include "System/Common.h"
 
-#define ACQUIRELEASE_TIMEOUT	2500	// msec
+#define ACQUIRELEASE_TIMEOUT	2000	// msec
 #define MAX_LEASE_TIME			7000	// msec
 #define PLEASE_PORT_OFFSET		1
 

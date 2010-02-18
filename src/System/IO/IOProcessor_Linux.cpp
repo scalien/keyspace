@@ -67,7 +67,7 @@ public:
 	IOOperation*	write;
 };
 
-static int			epollfd;
+static int			epollfd = 0;
 static int			maxfd;
 static PipeOp		asyncPipeOp;
 static EpollOp*		epollOps;
@@ -146,8 +146,15 @@ bool IOProcessor::Init(int maxfd_)
 	int i;
 	rlimit rl;
 
-	SetupSignals();
-	
+	if (epollfd > 0)
+		return true;
+
+	if (maxfd_ < 0)
+	{
+		Log_Message("Invalid maxfd value!");
+		return false;
+	}
+
 	maxfd = maxfd_;
 	rl.rlim_cur = maxfd;
 	rl.rlim_max = maxfd;
@@ -156,6 +163,17 @@ bool IOProcessor::Init(int maxfd_)
 		Log_Errno();
 	}
 	
+	epollfd = epoll_create(maxfd);
+	if (epollfd < 0)
+	{
+		Log_Errno();
+		return false;
+	}
+
+#ifndef KEYSPACE_CLIENTLIB
+	SetupSignals();
+#endif	
+
 	epollOps = new EpollOp[maxfd];
 	for (i = 0; i < maxfd; i++)
 	{
@@ -163,12 +181,6 @@ bool IOProcessor::Init(int maxfd_)
 		epollOps[i].write = NULL;
 	}
 
-	epollfd = epoll_create(maxfd);
-	if (epollfd < 0)
-	{
-		Log_Errno();
-		return false;
-	}
 	
 	if (!InitPipe(asyncPipeOp, ProcessAsyncOp))
 		return false;
@@ -179,6 +191,8 @@ bool IOProcessor::Init(int maxfd_)
 void IOProcessor::Shutdown()
 {
 	close(epollfd);
+	epollfd = 0;
+	delete[] epollOps;
 	asyncPipeOp.Close();
 }
 
@@ -227,7 +241,7 @@ bool AddEvent(int fd, uint32_t event, IOOperation* ioop)
 	if (epollOp->write)
 		event |= EPOLLOUT;
 	
-	// this is here to initalize the whole structure
+	// this is here to initalize the whole ev structure and suppress warnings
 	ev.data.u64 = 0;
 	ev.events = event;
 	ev.data.ptr = epollOp;
@@ -279,22 +293,24 @@ bool IOProcessor::Remove(IOOperation* ioop)
 		return false;
 	}
 	
-	epollOp = &epollOps[ioop->fd];	
+	// this is here to initalize the whole ev structure and suppress warnings
+	ev.data.u64 = 0;
+	ev.events = EPOLLONESHOT;
+	ev.data.ptr = ioop;
+
+	epollOp = &epollOps[ioop->fd];
 	if (ioop->type == TCP_READ || ioop->type == UDP_READ)
 	{
 		epollOp->read = NULL;
 		if (epollOp->write)
-			ev.events = EPOLLOUT;
+			ev.events |= EPOLLOUT;
 	}
 	else
 	{
 		epollOp->write = NULL;
 		if (epollOp->read)
-			ev.events = EPOLLIN;
+			ev.events |= EPOLLIN;
 	}
-
-	ev.events |= EPOLLONESHOT;
-	ev.data.ptr = ioop;
 
 	if (epollOp->read || epollOp->write)
 		nev = epoll_ctl(epollfd, EPOLL_CTL_MOD, ioop->fd, &ev);

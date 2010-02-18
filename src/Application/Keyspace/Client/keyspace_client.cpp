@@ -4,11 +4,14 @@
 using namespace Keyspace;
 
 keyspace_result_t
-keyspace_client_result(keyspace_client_t kc, int *status)
+keyspace_client_result(keyspace_client_t kc)
 {
 	Client *client = (Client *) kc;
 	
-	return (keyspace_result_t) client->GetResult(*status);
+	if (client == NULL)
+		return KEYSPACE_INVALID_RESULT;
+
+	return (keyspace_result_t) client->GetResult();
 }
 
 void
@@ -16,43 +19,144 @@ keyspace_result_close(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
 
+	if (result == NULL)
+		return;
+		
 	result->Close();
 }
 
-keyspace_result_t
-keyspace_result_next(keyspace_result_t kr, int *status)
+int
+keyspace_result_is_end(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
 	
-	return (keyspace_result_t) result->Next(*status);
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return result->IsEnd() ? 1 : 0;	
+}
+
+void
+keyspace_result_begin(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+	
+	if (result == NULL)
+		return;
+	
+	result->Begin();	
+}
+
+void
+keyspace_result_next(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+	
+	if (result == NULL)
+		return;
+	
+	result->Next();
 }
 
 int
-keyspace_result_status(keyspace_result_t kr)
+keyspace_result_transport_status(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
 
-	return result->Status();
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	return result->TransportStatus();
 }
 
-const void *
-keyspace_result_key(keyspace_result_t kr, unsigned *keylen)
+int
+keyspace_result_connectivity_status(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
-	const ByteString &key = result->Key();
 
-	*keylen = key.length;
-	return key.buffer;
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	return result->ConnectivityStatus();
 }
 
-const void *
-keyspace_result_value(keyspace_result_t kr, unsigned *vallen)
+int
+keyspace_result_timeout_status(keyspace_result_t kr)
 {
 	Result *result = (Result *) kr;
-	const ByteString &val = result->Value();
 
-	*vallen = val.length;
-	return val.buffer;
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	return result->TimeoutStatus();
+}
+
+int
+keyspace_result_command_status(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	return result->CommandStatus();
+}
+
+int
+keyspace_result_node_id(keyspace_result_t kr)
+{
+	Result *result = (Result *) kr;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	return result->GetNodeID();
+}
+
+int
+keyspace_result_key(keyspace_result_t kr, const void** key, unsigned *keylen)
+{
+	Result *result = (Result *) kr;
+	ByteString bs;
+	int status;
+		
+	if (keylen == NULL || key == NULL)
+		return KEYSPACE_API_ERROR;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	status = result->Key(bs);
+	if (status != KEYSPACE_SUCCESS)
+		return status;
+
+	*key = bs.buffer;
+	*keylen = bs.length;
+
+	return status;
+}
+
+int
+keyspace_result_value(keyspace_result_t kr, const void **val, unsigned *vallen)
+{
+	Result *result = (Result *) kr;
+	ByteString bs;
+	int status;
+		
+	if (vallen == NULL || val == NULL)
+		return KEYSPACE_API_ERROR;
+
+	if (result == NULL)
+		return KEYSPACE_API_ERROR;
+
+	status = result->Value(bs);
+	if (status != KEYSPACE_SUCCESS)
+		return status;
+
+	*val = bs.buffer;
+	*vallen = bs.length;
+
+	return status;
 }
 
 
@@ -71,18 +175,114 @@ keyspace_client_destroy(keyspace_client_t kc)
 }
 
 int
-keyspace_client_init(keyspace_client_t kc, int nodec,
-const char* nodev[], uint64_t timeout)
+keyspace_client_init(keyspace_client_t kc, int nodec, const char* nodev[])
 {
 	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
 	
-	return client->Init(nodec, nodev, timeout);
+	return client->Init(nodec, nodev);
 }
+
+int
+keyspace_client_set_global_timeout(keyspace_client_t kc, uint64_t timeout)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+
+	client->SetGlobalTimeout(timeout);
+	return KEYSPACE_SUCCESS;
+}
+
+int
+keyspace_client_set_master_timeout(keyspace_client_t kc, uint64_t timeout)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+
+	client->SetMasterTimeout(timeout);
+	return KEYSPACE_SUCCESS;
+}
+
+uint64_t
+keyspace_client_get_global_timeout(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return 0;
+	
+	return client->GetGlobalTimeout();
+}
+
+uint64_t
+keyspace_client_get_master_timeout(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return 0;
+	
+	return client->GetMasterTimeout();
+}
+
+int
+keyspace_client_transport_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->TransportStatus();
+}
+
+int
+keyspace_client_connectivity_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->ConnectivityStatus();
+}
+
+int
+keyspace_client_timeout_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->TimeoutStatus();
+}
+
+int
+keyspace_client_command_status(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
+	
+	return client->CommandStatus();
+}
+
 
 int
 keyspace_client_get_master(keyspace_client_t kc)
 {
 	Client *client = (Client *) kc;
+
+	if (client == NULL)
+		return KEYSPACE_API_ERROR;
 	
 	return client->GetMaster();
 }
@@ -103,12 +303,12 @@ keyspace_client_get_simple(keyspace_client_t kc,
 int
 keyspace_client_get(keyspace_client_t kc, 
 		const void *key_, unsigned keylen, 
-		int dirty)
+		int dirty, int submit)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 	
-	return client->Get(key, dirty ? true : false);
+	return client->Get(key, dirty ? true : false, submit ? true : false);
 }
 
 int
@@ -273,4 +473,11 @@ keyspace_client_submit(keyspace_client_t kc)
 	return client->Submit();
 }
 
+int
+keyspace_client_cancel(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+	
+	return client->Cancel();
+}
 

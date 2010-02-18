@@ -26,8 +26,8 @@ void PaxosAcceptor::Init(Writers writers_)
 	state.Init();
 
 	if (!ReadState())
-		Log_Message("*** No Keyspace database found. "
-					"Starting from scratch... *** ");
+		Log_Message("No Keyspace database found. "
+					"Starting from scratch...");
 }
 
 void PaxosAcceptor::Shutdown()
@@ -82,7 +82,7 @@ bool PaxosAcceptor::ReadState()
 	if (table == NULL)
 		return false;
 		
-	state.acceptedValue.Allocate(2*MB + 10*KB);
+	state.acceptedValue.Allocate(PAXOS_SIZE + 10*KB);
 
 	ret = table->Get(NULL, "@@paxosID", buffers[0]);
 	if (!ret)
@@ -197,7 +197,7 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 	
 	if (mdbop.IsActive())
 		return;
-	
+
 	msg = msg_;
 	
 	senderID = msg.nodeID;
@@ -246,7 +246,7 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 	
 	senderID = msg.nodeID;
 
-	Log_Trace("state.promisedProposalID: %" PRIu64 ""
+	Log_Trace("state.promisedProposalID: %" PRIu64 " "
 				"msg.proposalID: %" PRIu64 "",
 				state.promisedProposalID, msg.proposalID);
 	

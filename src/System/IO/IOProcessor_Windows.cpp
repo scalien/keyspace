@@ -29,12 +29,14 @@ struct IODesc
 	IODesc*			next;				// pointer for free list handling
 };
 
-static HANDLE	iocp;					// global completion port handle
+static HANDLE	iocp = NULL;			// global completion port handle
 static IODesc*	iods;					// pointer to allocated array of IODesc's
 static IODesc*	freeIods;				// pointer to the free list of IODesc's
 static IODesc	callback;				// special IODesc for handling IOProcessor::Complete events
 const FD		INVALID_FD = {-1, INVALID_SOCKET};	// special FD to indicate invalid value
+unsigned		SEND_BUFFER_SIZE = 65537;
 static volatile bool terminated = false;
+static unsigned		numIOProcClients = 0;
 
 static LPFN_CONNECTEX	ConnectEx;
 
@@ -159,8 +161,13 @@ bool IOProcessor::Init(int maxfd)
 	GUID		guid = WSAID_CONNECTEX;
 	DWORD		bytesReturned;
 
+	if (iocp)
+		return true;
+
 	// initialize a Console Control Handler routine
+#ifndef KEYSPACE_CLIENTLIB
 	SetConsoleCtrlHandler(ConsoleCtrlHandler, TRUE);
+#endif
 
 	// initialize Winsock2 library
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData))
@@ -191,13 +198,23 @@ bool IOProcessor::Init(int maxfd)
 	iods[maxfd - 1].next = NULL;
 	freeIods = iods;
 
+	numIOProcClients++;
+
 	return true;
 }
 
 void IOProcessor::Shutdown()
 {
+	numIOProcClients--;
+
+	if (iocp == NULL || numIOProcClients > 0)
+		return;
+
+	delete[] iods;
+	freeIods = NULL;
 	CloseHandle(iocp);
-	WSACleanup();
+	iocp = NULL;
+
 }
 
 static bool RequestReadNotification(IOOperation* ioop)
@@ -207,7 +224,7 @@ static bool RequestReadNotification(IOOperation* ioop)
 	IODesc*	iod;
 	int		ret;
 
-	Log_Trace("fd.index = %d", ioop->fd.index);
+//	Log_Trace("fd.index = %d", ioop->fd.index);
 
 	iod = GetIODesc(ioop->fd);
 
@@ -247,7 +264,7 @@ static bool RequestWriteNotification(IOOperation* ioop)
 	IODesc*	iod;
 	int		ret;
 
-	Log_Trace("fd.index = %d", ioop->fd.index);
+//	Log_Trace("fd.index = %d", ioop->fd.index);
 
 	iod = GetIODesc(ioop->fd);
 
@@ -386,8 +403,10 @@ bool IOProcessor::Remove(IOOperation *ioop)
 		if (iod->write != NULL)
 		{
 			assert(iod->write->active);
-			iod->write->active = false;
-			IOProcessor::Add(iod->write);
+			ioop = iod->write;
+			iod->write = NULL;
+			ioop->active = false;
+			IOProcessor::Add(ioop);
 		}
 	}
 	else
@@ -396,8 +415,10 @@ bool IOProcessor::Remove(IOOperation *ioop)
 		if (iod->read != NULL)
 		{
 			assert(iod->read->active);
-			iod->read->active = false;
-			IOProcessor::Add(iod->read);
+			ioop = iod->read;
+			iod->read = NULL;
+			ioop->active = false;
+			IOProcessor::Add(ioop);
 		}
 	}
 
@@ -622,6 +643,7 @@ bool ProcessTCPWrite(TCPWrite* tcpwrite)
 	WSABUF		wsabuf;
 	Callable*	callable;
 	DWORD		numBytes;
+	DWORD		error;
 
 	callable = NULL;
 
@@ -631,11 +653,24 @@ bool ProcessTCPWrite(TCPWrite* tcpwrite)
 	{
 		// handle tcp write partial writes
 		wsabuf.buf = (char*) tcpwrite->data.buffer + tcpwrite->transferred;
-		wsabuf.len = tcpwrite->data.length - tcpwrite->transferred;
+		// the -1 is actually a windows bug, for more info see:
+		// http://support.microsoft.com/kb/823764/EN-US/
+		wsabuf.len = MIN(tcpwrite->data.length - tcpwrite->transferred, SEND_BUFFER_SIZE - 1);
 
 		// perform non-blocking write
 		ret = WSASend(tcpwrite->fd.sock, &wsabuf, 1, &numBytes, 0, NULL, NULL);
-		if (numBytes == 0)
+		if (ret != 0)
+		{
+			error = GetLastError();
+			if (error == WSAEWOULDBLOCK)
+			{
+				tcpwrite->active = false; // otherwise Add() returns
+				IOProcessor::Add(tcpwrite);
+			}
+			else
+				callable = tcpwrite->onClose;
+		}
+		else if (numBytes == 0)
 			callable = tcpwrite->onClose;
 		else
 		{

@@ -18,6 +18,7 @@ public:
 	bool		Create(Proto proto);
 
 	bool		SetNonblocking();
+	bool		SetNodelay();
 
 	bool		Bind(int port);
 	bool		Bind(const Endpoint& endpoint);

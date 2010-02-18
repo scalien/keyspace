@@ -19,11 +19,11 @@ ReplicatedLog* ReplicatedLog::Get()
 
 ReplicatedLog::ReplicatedLog()
 :	onRead(this, &ReplicatedLog::OnRead),
-	onCatchupTimeout(this, &ReplicatedLog::OnCatchupTimeout),
-	catchupTimeout(CATCHUP_TIMEOUT, &onCatchupTimeout),
 	onLearnLease(this, &ReplicatedLog::OnLearnLease),
 	onLeaseTimeout(this, &ReplicatedLog::OnLeaseTimeout)
 {
+	reader = NULL;
+	writers = NULL;
 }
 
 bool ReplicatedLog::Init(bool useSoftClock)
@@ -39,6 +39,10 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	learner.Init(writers);
 	
 	highestPaxosID = 0;
+	lastStarted = EventLoop::Now();
+	lastLength = 0;
+	lastTook = 0;
+	thruput = 0;
 	
 	proposer.paxosID = acceptor.paxosID;
 	learner.paxosID = acceptor.paxosID;
@@ -46,8 +50,9 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	masterLease.Init(useSoftClock);
 	masterLease.SetOnLearnLease(&onLearnLease);
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
-	//if (RCONF->GetNodeID() == 0) // TODO: FOR DEBUGGING
-		masterLease.AcquireLease();
+	masterLease.AcquireLease();
+	
+	logCache.Init();
 	
 	safeDB = false;
 	
@@ -82,14 +87,25 @@ void ReplicatedLog::InitTransport()
 
 void ReplicatedLog::Shutdown()
 {
+	masterLease.Shutdown();
 	acceptor.Shutdown();
+
+	delete reader;
+	if (writers)
+	{
+		for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
+			delete writers[i];
+		
+		free(writers);
+	}
+
+	delete this;
 }
 
 void ReplicatedLog::StopPaxos()
 {
 	Log_Trace();
 	
-	EventLoop::Remove(&catchupTimeout);
 	reader->Stop();
 }
 
@@ -97,12 +113,6 @@ void ReplicatedLog::StopMasterLease()
 {
 	masterLease.Stop();
 }
-
-//void ReplicatedLog::StopReplicatedDB()
-//{
-//	if (replicatedDB)
-//		replicatedDB->Stop();
-//}
 
 void ReplicatedLog::ContinuePaxos()
 {
@@ -115,12 +125,6 @@ void ReplicatedLog::ContinueMasterLease()
 {
 	masterLease.Continue();
 }
-
-//void ReplicatedLog::ContinueReplicatedDB()
-//{
-//	if (replicatedDB)
-//		replicatedDB->Continue();
-//}
 
 bool ReplicatedLog::IsPaxosActive()
 {
@@ -172,11 +176,6 @@ void ReplicatedLog::SetReplicatedDB(ReplicatedDB* replicatedDB_)
 	replicatedDB = replicatedDB_;
 }
 
-bool ReplicatedLog::GetLogItem(uint64_t paxosID, ByteString& value)
-{
-	return logCache.Get(paxosID, value);
-}
-
 uint64_t ReplicatedLog::GetPaxosID()
 {
 	return proposer.paxosID;
@@ -205,6 +204,11 @@ bool ReplicatedLog::IsMaster()
 int ReplicatedLog::GetMaster()
 {
 	return masterLease.GetLeaseOwner();
+}
+
+unsigned ReplicatedLog::GetNumNodes()
+{
+	return RCONF->GetNumNodes();
 }
 
 unsigned ReplicatedLog::GetNodeID()
@@ -242,6 +246,8 @@ void ReplicatedLog::ProcessMsg()
 		OnLearnChosen();
 	else if (pmsg.type == PAXOS_REQUEST_CHOSEN)
 		OnRequestChosen();
+	else if (pmsg.type == PAXOS_START_CATCHUP)
+		OnStartCatchup();
 	else
 		ASSERT_FAIL();
 }
@@ -287,13 +293,10 @@ void ReplicatedLog::OnLearnChosen()
 	Log_Trace();
 
 	uint64_t paxosID;
-	bool	ownAppend, clientAppend;
+	bool	ownAppend, clientAppend, commit;
 
 	if (pmsg.paxosID == learner.paxosID)
 	{
-		if (catchupTimeout.IsActive())
-			EventLoop::Remove(&catchupTimeout);
-
 		if (pmsg.type == PAXOS_LEARN_PROPOSAL && acceptor.state.accepted &&
 			acceptor.state.acceptedProposalID == pmsg.proposalID)
 				pmsg.LearnValue(pmsg.paxosID,
@@ -309,7 +312,8 @@ void ReplicatedLog::OnLearnChosen()
 		}
 		
 		// save it in the logCache (includes the epoch info)
-		logCache.Push(learner.paxosID, learner.state.value);
+		commit = learner.paxosID == (highestPaxosID - 1);
+		logCache.Push(learner.paxosID, learner.state.value, commit);
 		
 		rmsg.Read(learner.state.value);	// rmsg.value holds the 'user value'
 		paxosID = learner.paxosID;		// this is the value we
@@ -321,7 +325,6 @@ void ReplicatedLog::OnLearnChosen()
 		if (highestPaxosID > paxosID)
 		{
 			learner.RequestChosen(pmsg.nodeID);
-			return;
 		}
 
 		Log_Trace("%d %d %" PRIu64 " %" PRIu64 "",
@@ -369,16 +372,16 @@ void ReplicatedLog::OnLearnChosen()
 				 rmsg.value.length > 0 &&
 				 !(rmsg.value == BS_MSG_NOP))
 		{
-			if (!acceptor.transaction.IsActive())
+			if (!GetTransaction()->IsActive())
 			{
 				Log_Trace("starting new transaction");
-				acceptor.transaction.Begin();
+				GetTransaction()->Begin();
 			}
 			clientAppend = ownAppend &&
 						   rmsg.leaseEpoch == masterLease.GetLeaseEpoch() &&
 						   IsMaster();
 			
-			replicatedDB->OnAppend(&acceptor.transaction,
+			replicatedDB->OnAppend(GetTransaction(),
 				paxosID,
 				rmsg.value,
 				clientAppend);
@@ -401,15 +404,14 @@ void ReplicatedLog::OnLearnChosen()
 	{
 		//	I am lagging and need to catch-up
 		
-		if (!catchupTimeout.IsActive())
-			EventLoop::Add(&catchupTimeout);
-		
 		learner.RequestChosen(pmsg.nodeID);
 	}
 }
 
 void ReplicatedLog::OnRequestChosen()
 {
+	Log_Trace();
+
 	ByteString value_;
 	
 	if (pmsg.paxosID == learner.paxosID)
@@ -420,7 +422,26 @@ void ReplicatedLog::OnRequestChosen()
 	{
 		// the node is lagging and needs to catch-up
 		if (logCache.Get(pmsg.paxosID, value_))
+		{
+			Log_Trace("Sending paxosID %d to node %d", pmsg.paxosID, pmsg.nodeID);
 			learner.SendChosen(pmsg.nodeID, pmsg.paxosID, value_);
+		}
+		else
+		{
+			Log_Trace("Node requested a paxosID I no longer have");
+			learner.SendStartCatchup(pmsg.nodeID, pmsg.paxosID);
+		}
+	}
+}
+
+void ReplicatedLog::OnStartCatchup()
+{
+	Log_Trace();
+
+	if (pmsg.paxosID == learner.paxosID)
+	{
+		if (replicatedDB != NULL && !replicatedDB->IsCatchingUp() && masterLease.IsLeaseKnown())
+			replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 	}
 }
 
@@ -440,15 +461,20 @@ void ReplicatedLog::OnRequest()
 	{
 		//	I am lagging and need to catch-up
 		
-		if (!catchupTimeout.IsActive())
-			EventLoop::Add(&catchupTimeout);
-		
 		learner.RequestChosen(pmsg.nodeID);
 	}
 }
 
 void ReplicatedLog::NewPaxosRound()
 {
+	uint64_t now;
+
+	now = EventLoop::Now();
+	lastTook = ABS(now - lastStarted);
+	lastLength = learner.state.value.length;
+	thruput = (uint64_t)(lastLength / (lastTook / 1000.0));
+	lastStarted = now;
+	
 	EventLoop::Remove(&(proposer.prepareTimeout));
 	EventLoop::Remove(&(proposer.proposeTimeout));
 	proposer.paxosID++;
@@ -461,14 +487,6 @@ void ReplicatedLog::NewPaxosRound()
 	learner.state.Init();
 	
 	masterLease.OnNewPaxosRound();
-}
-
-void ReplicatedLog::OnCatchupTimeout()
-{
-	Log_Trace();
-
-	if (replicatedDB != NULL && masterLease.IsLeaseKnown())
-		replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 }
 
 void ReplicatedLog::OnLearnLease()
@@ -515,14 +533,28 @@ void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)
 {
 	if (paxosID > learner.paxosID)
 	{
+		if (paxosID > highestPaxosID)
+			highestPaxosID = paxosID;
+
 		// I am lagging and need to catch-up
 		
 		if (IsPaxosActive())
-		{
-			if (!catchupTimeout.IsActive())
-				EventLoop::Add(&catchupTimeout);
 			learner.RequestChosen(nodeID);
-		}
 	}
+}
+
+uint64_t ReplicatedLog::GetLastRound_Length()
+{
+	return lastLength;
+}
+
+uint64_t ReplicatedLog::GetLastRound_Time()
+{
+	return lastTook;
+}
+
+uint64_t ReplicatedLog::GetLastRound_Thruput()
+{
+	return thruput;
 }
 

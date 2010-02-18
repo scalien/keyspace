@@ -54,10 +54,10 @@ void PLeaseProposer::OnNewPaxosRound()
 	// PaxosLease round, if it's active
 	// only restart if we're masters
 	
-	Log_Trace();
-	
-	if (acquireLeaseTimeout.IsActive() && RLOG->IsMaster())
-		StartPreparing();
+	//Log_Trace();
+	//
+	//if (acquireLeaseTimeout.IsActive() && RLOG->IsMaster())
+	//	StartPreparing();
 }
 
 void PLeaseProposer::BroadcastMessage()
@@ -122,15 +122,23 @@ void PLeaseProposer::OnProposeResponse()
 	Log_Trace();
 
 	if (state.expireTime < Now())
+	{
+		Log_Trace("already expired, wait for timer");
 		return; // already expired, wait for timer
+	}
 	
 	if (!state.proposing || msg.proposalID != state.proposalID)
+	{
+		Log_Trace("not my proposal");
 		return;
+	}
 	
 	numReceived++;
 	
 	if (msg.type == PLEASE_PROPOSE_ACCEPTED)
 		numAccepted++;
+	
+	Log_Trace("numAccepted: %d", numAccepted);
 
 	// see if we have enough positive replies to advance
 	if (numAccepted >= RCONF->MinMajority() &&

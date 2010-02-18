@@ -89,6 +89,7 @@ public:
 	void Free()
 	{
 		key.Free();
+		newKey.Free();
 		value.Free();
 		test.Free();
 		prefix.Free();

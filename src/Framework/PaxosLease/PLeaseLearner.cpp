@@ -62,7 +62,8 @@ void PLeaseLearner::OnLearnChosen()
 void PLeaseLearner::OnLeaseTimeout()
 {
 	if (state.learned)
-		Log_Message("+++ Node %d lost its mastership +++", state.leaseOwner);
+		Log_Message("PaxosLease: Node %d is no longer the master",
+		state.leaseOwner);
 
 	EventLoop::Remove(&leaseTimeout);
 

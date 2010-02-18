@@ -24,7 +24,6 @@ class ReplicatedLog
 	typedef TransportTCPWriter**	Writers;
 	typedef MFunc<ReplicatedLog>	Func;
 public:
-	ReplicatedLog();
 
 	static ReplicatedLog* Get();
 	
@@ -35,25 +34,28 @@ public:
 	bool				Append(ByteString &value);
 	void				SetReplicatedDB(ReplicatedDB* replicatedDB_);
 	Transaction*		GetTransaction();
-	bool				GetLogItem(uint64_t paxosID, ByteString& value);
 	uint64_t			GetPaxosID();
 	void				SetPaxosID(Transaction* transaction, uint64_t paxosID);
 	bool				IsMaster();
 	int					GetMaster();
+	unsigned			GetNumNodes();
 	unsigned 			GetNodeID();
 	void				StopPaxos();
 	void				StopMasterLease();
-//	void				StopReplicatedDB();
 	void				ContinuePaxos();
 	void				ContinueMasterLease();
-//	void				ContinueReplicatedDB();
 	bool				IsPaxosActive();
 	bool				IsMasterLeaseActive();
 	bool				IsAppending();
 	bool				IsSafeDB();
 	void				OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID);
+	uint64_t			GetLastRound_Length();
+	uint64_t			GetLastRound_Time();
+	uint64_t			GetLastRound_Thruput();
 
 private:
+	ReplicatedLog();
+
 	void				InitTransport();
 	void				ProcessMsg();
 	void				OnPrepareRequest();
@@ -62,8 +64,8 @@ private:
 	void				OnProposeResponse();
 	void				OnLearnChosen();
 	void				OnRequestChosen();
+	void				OnStartCatchup();
 	void				OnRequest();
-	void				OnCatchupTimeout();
 	void				OnLearnLease();
 	void				OnLeaseTimeout();
 	void				NewPaxosRound();
@@ -81,12 +83,15 @@ private:
 	uint64_t			highestPaxosID;
 	LogCache			logCache;
 	LogQueue			logQueue;
-	Func				onCatchupTimeout;
-	CdownTimer			catchupTimeout;
 	Func				onLearnLease;
 	Func				onLeaseTimeout;
 	ReplicatedDB*		replicatedDB;
 	bool				safeDB;
+	
+	uint64_t			lastStarted;
+	uint64_t			lastLength;
+	uint64_t			lastTook;
+	uint64_t			thruput;
 };
 
 #endif

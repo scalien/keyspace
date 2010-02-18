@@ -21,7 +21,7 @@
 
 #define	MAX_KEVENTS 1024
 
-static int				kq;			// the kqueue
+static int				kq = 0;			// the kqueue
 static int				asyncOpPipe[2];
 static volatile bool	terminated;
 
@@ -83,6 +83,9 @@ bool IOProcessor::Init(int maxfd_)
 {
 	rlimit rl;
 
+	if (kq != 0)
+		return true;
+
 	terminated = false;
 	
 	kq = kqueue();
@@ -121,6 +124,7 @@ bool IOProcessor::Init(int maxfd_)
 void IOProcessor::Shutdown()
 {
 	close(kq);
+	kq = 0;
 	close(asyncOpPipe[0]);
 	close(asyncOpPipe[1]);
 }
@@ -205,6 +209,8 @@ bool IOProcessor::Remove(IOOperation* ioop)
 	if (nev < 0)
 	{
 		Log_Errno();
+		// HACK:
+		ioop->active = false;
 		return false;
 	}
 	
@@ -340,7 +346,7 @@ void ProcessTCPRead(struct kevent* ev)
 			readlen = tcpread->data.size - tcpread->data.length;
 		else
 			readlen = tcpread->requested - tcpread->data.length;
-		readlen = min(ev->data, readlen);
+		readlen = MIN(ev->data, readlen);
 		if (readlen > 0)
 		{
 			nread = read(tcpread->fd,
@@ -394,7 +400,7 @@ void ProcessTCPWrite(struct kevent* ev)
 	}
 
 	writelen = tcpwrite->data.length - tcpwrite->transferred;
-	writelen = min(ev->data, writelen);
+	writelen = MIN(ev->data, writelen);
 	
 	if (writelen > 0)
 	{

@@ -34,6 +34,13 @@ public:
 	{
 		numActive = 0;
 	}
+
+	~TCPServerT()
+	{
+		Conn* conn;
+		while ((conn = dynamic_cast<Conn*>(conns.Get())) != NULL)
+			delete conn;
+	}
 	
 	bool Init(int port_, int backlog_)
 	{
@@ -69,7 +76,7 @@ public:
 		if (conns.Size() >= backlog)
 			delete conn;
 		else
-			conns.Append(conn);
+			conns.Append((TCPConn<bufSize>*)conn);
 	}
 
 protected:
@@ -90,6 +97,7 @@ protected:
 		if (listener.Accept(&(conn->GetSocket())))
 		{
 			conn->GetSocket().SetNonblocking();
+			conn->GetSocket().SetNodelay();
 			pT->InitConn(conn);
 		}
 		else
@@ -104,7 +112,7 @@ protected:
 	Conn* GetConn()
 	{
 		if (conns.Size() > 0)
-			return static_cast<Conn*>(conns.Get());
+			return dynamic_cast<Conn*>(conns.Get());
 		
 		return new Conn;
 	}

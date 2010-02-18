@@ -14,6 +14,7 @@
 #include "Application/Keyspace/Protocol/HTTP/HttpApiHandler.h"
 #include "Application/Keyspace/Protocol/HTTP/HttpKeyspaceHandler.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
+#include "Application/Keyspace/PrimaryBackup/BackupServer.h"
 
 #ifdef DEBUG
 #define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s (DEBUG build date " __DATE__ " " __TIME__ ")"
@@ -83,10 +84,15 @@ int main(int argc, char* argv[])
 	dbConfig.logBufferSize = Config::GetIntValue("database.logBufferSize", DATABASE_CONFIG_LOG_BUFFER_SIZE);
 	dbConfig.checkpointTimeout = Config::GetIntValue("database.checkpointTimeout", DATABASE_CONFIG_CHECKPOINT_TIMEOUT);
 	dbConfig.verbose = Config::GetBoolValue("database.verbose", DATABASE_CONFIG_VERBOSE);
+	dbConfig.directDB = Config::GetBoolValue("database.directDB", DATABASE_CONFIG_DIRECT_DB);
+	dbConfig.txnNoSync = Config::GetBoolValue("database.txnNoSync", DATABASE_CONFIG_TXN_NOSYNC);
+	dbConfig.txnWriteNoSync = Config::GetBoolValue("database.txnWriteNoSync", DATABASE_CONFIG_TXN_WRITE_NOSYNC);
 
+	Log_Message("Opening database...");
 	if (!database.Init(dbConfig))
 		STOP_FAIL("Cannot initialize database!", 1);
-	
+	Log_Message("Database opened");
+
  	dbWriter.Init(1);
 	dbReader.Init(Config::GetIntValue("database.numReaders", 20));
 	
@@ -105,6 +111,9 @@ int main(int argc, char* argv[])
 	}
 
 	kdb->Init();
+
+	BackupServer backupServer;
+	backupServer.InitServer(kdb, 9080);
 	
 	HttpServer protoHttp;
 	int httpPort = Config::GetIntValue("http.port", 8080);
@@ -112,10 +121,10 @@ int main(int argc, char* argv[])
 	{
 		protoHttp.Init(httpPort);
 	
-		HttpApiHandler httpApiHandler(kdb);
+		HttpApiHandler httpApiHandler(&backupServer);
 		protoHttp.RegisterHandler(&httpApiHandler);
 
-		HttpKeyspaceHandler httpKeyspaceHandler(kdb);
+		HttpKeyspaceHandler httpKeyspaceHandler(&backupServer);
 		protoHttp.RegisterHandler(&httpKeyspaceHandler);
 
 		HttpFileHandler httpFileHandler(
@@ -125,14 +134,18 @@ int main(int argc, char* argv[])
 	}
 
 	KeyspaceServer protoKeyspace;
-	protoKeyspace.Init(kdb, Config::GetIntValue("keyspace.port", 7080));
+	protoKeyspace.Init(&backupServer, Config::GetIntValue("keyspace.port", 7080));
 
 	EventLoop::Run();
 	
 	Log_Message("Keyspace shutting down.");
 	kdb->Shutdown();
-	RLOG->Shutdown();
+	delete kdb;
 	dbReader.Shutdown();
 	dbWriter.Shutdown();
+	RLOG->Shutdown();
 	database.Shutdown();
+	IOProcessor::Shutdown();
+	Config::Shutdown();
+	Log_Shutdown();
 }

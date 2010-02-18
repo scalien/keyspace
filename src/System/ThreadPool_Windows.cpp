@@ -40,9 +40,18 @@ ThreadPool* ThreadPool::Create(int numThread)
 
 ThreadPool_Windows::ThreadPool_Windows(int numThread_)
 {
+	numThread = numThread_;
+}
+
+ThreadPool_Windows::~ThreadPool_Windows()
+{
+	Stop();
+}
+
+void ThreadPool_Windows::Start()
+{
 	int		i;
 
-	numThread = numThread_;
 	numPending = 0;
 	numActive = 0;
 	running = false;
@@ -53,16 +62,17 @@ ThreadPool_Windows::ThreadPool_Windows(int numThread_)
 	threads = new HANDLE[numThread];
 
 	for (i = 0; i < numThread; i++)
-	{
 		threads[i] = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, 0, NULL);
-		this->numThread = i;
-	}
+	
 	running = true;
 }
 
-ThreadPool_Windows::~ThreadPool_Windows()
+void ThreadPool_Windows::Stop()
 {
 	int		i;
+
+	if (!running)
+		return;
 
 	running = false;
 	if (threads)
@@ -81,14 +91,6 @@ ThreadPool_Windows::~ThreadPool_Windows()
 		CloseHandle(event);
 
 	DeleteCriticalSection(&critsec);
-}
-
-void ThreadPool_Windows::Start()
-{
-}
-
-void ThreadPool_Windows::Stop()
-{
 }
 
 void ThreadPool_Windows::Execute(Callable *callable)
@@ -111,6 +113,7 @@ void ThreadPool_Windows::ThreadPoolFunc()
 	callable = NULL;
 	while (running)
 	{
+		// TODO simplify the logic here & make it similar to Posix implementation
 		if (!callable && running)
 			WaitForSingleObject(event, INFINITE);
 
@@ -118,6 +121,8 @@ void ThreadPool_Windows::ThreadPoolFunc()
 		{
 			callable = NULL;
 			EnterCriticalSection(&critsec);
+
+			numActive--;
 			
 			it = callables.Head();
 			if (it)
@@ -126,7 +131,7 @@ void ThreadPool_Windows::ThreadPoolFunc()
 				callables.Remove(it);
 				numPending--;
 			}
-				
+			
 			numActive++;
 
 			LeaveCriticalSection(&critsec);

@@ -4,11 +4,15 @@
 #include "Framework/Transport/TransportUDPReader.h"
 #include "Framework/Transport/TransportUDPWriter.h"
 
-PaxosLease::PaxosLease()
-: onRead(this, &PaxosLease::OnRead),
-  onLearnLease(this, &PaxosLease::OnLearnLease),
-  onLeaseTimeout(this, &PaxosLease::OnLeaseTimeout)
+PaxosLease::PaxosLease() :
+onRead(this, &PaxosLease::OnRead),
+onLearnLease(this, &PaxosLease::OnLearnLease),
+onLeaseTimeout(this, &PaxosLease::OnLeaseTimeout),
+onStartupTimeout(this, &PaxosLease::OnStartupTimeout),
+startupTimeout(MAX_LEASE_TIME, &onStartupTimeout)
 {
+	reader = NULL;
+	writers = NULL;
 }
 
 void PaxosLease::Init(bool useSoftClock)
@@ -24,24 +28,39 @@ void PaxosLease::Init(bool useSoftClock)
 	acquireLease = false;
 }
 
+void PaxosLease::Shutdown()
+{
+	delete reader;
+
+	if (writers)
+	{
+		for (unsigned i = 0; i < RCONF->GetNumNodes(); i++)
+			delete writers[i];
+		
+		free(writers);
+	}
+}
+
 void PaxosLease::InitTransport()
 {
 	unsigned	i;
 	Endpoint	endpoint;
 	
-	reader = new TransportUDPReader;
+	reader = new TransportTCPReader;
 	if (!reader->Init(RCONF->GetPort() + PLEASE_PORT_OFFSET))
 		STOP_FAIL("cannot bind PaxosLease port", 1);
+	reader->Stop();
+	EventLoop::Reset(&startupTimeout);
 	reader->SetOnRead(&onRead);
 	
 	writers = (Writers)
-	Alloc(sizeof(TransportUDPWriter*) * RCONF->GetNumNodes());
+		Alloc(sizeof(TransportTCPWriter*) * RCONF->GetNumNodes());
 	
 	for (i = 0; i < RCONF->GetNumNodes(); i++)
 	{
 		endpoint = RCONF->GetEndpoint(i);
 		endpoint.SetPort(endpoint.GetPort() + PLEASE_PORT_OFFSET);
-		writers[i] = new TransportUDPWriter;
+		writers[i] = new TransportTCPWriter;
 		if (!writers[i]->Init(endpoint))
 			STOP_FAIL("cannot bind PaxosLease port", 1);
 	}	
@@ -53,7 +72,6 @@ void PaxosLease::OnRead()
 	reader->GetMessage(bs);
 	if (!msg.Read(bs))
 		return;	
-	CheckNodeIdentity();
 	
 	if ((msg.IsRequest()) &&
 		msg.proposalID > proposer.highestProposalID)
@@ -143,15 +161,9 @@ void PaxosLease::OnLeaseTimeout()
 		proposer.StartAcquireLease();
 }
 
-void PaxosLease::CheckNodeIdentity()
+void PaxosLease::OnStartupTimeout()
 {
-	Endpoint a, b;
-	reader->GetEndpoint(a);
+	Log_Trace();
 	
-	b = RCONF->GetEndpoint(msg.nodeID);
-	
-	if (a.GetAddress() != ENDPOINT_ANY_ADDRESS && 
-		b.GetAddress() != ENDPOINT_ANY_ADDRESS && 
-		a.GetAddress() != b.GetAddress())
-		STOP_FAIL("Node identity mismatch. Check all configuration files!", 0);
+	reader->Continue();
 }

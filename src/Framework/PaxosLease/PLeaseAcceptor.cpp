@@ -18,13 +18,6 @@ PLeaseAcceptor::PLeaseAcceptor() :
 
 void PLeaseAcceptor::Init(Writers writers_)
 {
-	Log_Message("*** Sleeping %d milliseconds... (this is normal) ***",
-	MAX_LEASE_TIME);
-
-	USleep(MAX_LEASE_TIME);
-
-	Log_Message("*** Done sleeping ***");
-	
 	writers = writers_;
 	
 	state.Init();
@@ -54,7 +47,7 @@ void PLeaseAcceptor::OnPrepareRequest()
 	Log_Trace("msg.paxosID: %" PRIu64 ", my.paxosID: %" PRIu64 "",
 	msg.paxosID, RLOG->GetPaxosID());
 
-	if (msg.paxosID < RLOG->GetPaxosID())
+	if (msg.paxosID < RLOG->GetPaxosID() && (int) msg.nodeID != RLOG->GetMaster())
 		return; // only up-to-date nodes can become masters
 
 	RLOG->OnPaxosLeaseMsg(msg.paxosID, msg.nodeID);
