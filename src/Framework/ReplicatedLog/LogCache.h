@@ -5,7 +5,7 @@
 #include "Framework/Database/Table.h"
 #include "Framework/Paxos/PaxosConsts.h"
 
-#define LOGCACHE_SIZE	(100*1000)	// # of Paxos rounds cached in db
+#define LOGCACHE_DEFAULT_SIZE	(100*1000)	// # of Paxos rounds cached in db
 
 class LogCache
 {
@@ -20,6 +20,7 @@ public:
 private:
 	Table*			table;
 	ByteArray<PAXOS_SIZE + 10*KB> value;
+	uint64_t		logCacheSize;
 };
 
 #endif

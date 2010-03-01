@@ -438,10 +438,12 @@ void ReplicatedLog::OnStartCatchup()
 {
 	Log_Trace();
 
-	if (pmsg.paxosID == learner.paxosID)
+	if (pmsg.paxosID == learner.paxosID &&
+		replicatedDB != NULL &&
+		!replicatedDB->IsCatchingUp() &&
+		masterLease.IsLeaseKnown())
 	{
-		if (replicatedDB != NULL && !replicatedDB->IsCatchingUp() && masterLease.IsLeaseKnown())
-			replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
+		replicatedDB->OnDoCatchup(masterLease.GetLeaseOwner());
 	}
 }
 

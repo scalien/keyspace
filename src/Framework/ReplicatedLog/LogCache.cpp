@@ -1,5 +1,6 @@
 #include "LogCache.h"
 #include "ReplicatedLog.h"
+#include "System/Config.h"
 #include "Framework/Database/Transaction.h"
 #include "System/Platform.h"
 
@@ -14,6 +15,8 @@ LogCache::~LogCache()
 bool LogCache::Init()
 {
 	table = database.GetTable("keyspace");
+	
+	logCacheSize = Config::GetIntValue("rlog.cacheSize", LOGCACHE_DEFAULT_SIZE);
 	
 	return true;
 }
@@ -34,7 +37,7 @@ bool LogCache::Push(uint64_t paxosID, ByteString value, bool commit)
 	table->Set(transaction, buf, value);
 	
 	// delete old
-	paxosID -= LOGCACHE_SIZE;
+	paxosID -= logCacheSize;
 	if (paxosID >= 0)
 	{
 		buf.Writef("@@round:%U", paxosID);	
