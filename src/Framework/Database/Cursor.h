@@ -11,7 +11,12 @@ class Cursor
 friend class Table;
 
 public:
+	bool	Start(const ByteString &key);
+	bool	Delete();
+
 	bool	Next(ByteString &key, ByteString &value);
+	bool	Prev(ByteString &key, ByteString &value);
+
 	bool	Close();
 
 private:
