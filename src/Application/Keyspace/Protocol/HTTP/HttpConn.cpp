@@ -820,7 +820,7 @@ int len, bool close, const char* header)
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
 
-	Log_Message("[%s] HTTP: %s %s %d %d", endpoint.ToString(),
+	Log_Trace("[%s] HTTP: %s %s %d %d", endpoint.ToString(),
 				request.line.method, request.line.uri, code, len);
 
 	do {
@@ -853,7 +853,7 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
 
-	Log_Message("[%s] HTTP: %s %s %d ?",
+	Log_Trace("[%s] HTTP: %s %s %d ?",
 				endpoint.ToString(), request.line.method,
 				request.line.uri, code);
 
