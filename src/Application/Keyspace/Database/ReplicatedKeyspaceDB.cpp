@@ -87,8 +87,11 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 				
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		op->status = table->Get(NULL, op->key, data);
-		ReadValue(data, storedPaxosID, storedCommandID, userValue);
-		op->value.Set(userValue);
+		if (op->status)
+		{
+			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			op->value.Set(userValue);
+		}
 		op->service->OnComplete(op);
 		return true;
 	}
@@ -233,9 +236,9 @@ uint64_t paxosID, ByteString value_, bool ownAppend)
 bool ReplicatedKeyspaceDB::Execute(
 Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 {
-#define CHECK_CMD() \
-	if (storedPaxosID > paxosID || \
-	(storedPaxosID == paxosID && storedCommandID > commandID)) \
+#define CHECK_CMD()												\
+	if (storedPaxosID > paxosID ||								\
+	(storedPaxosID == paxosID && storedCommandID >= commandID))	\
 		return true;
 
 
@@ -253,6 +256,7 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 	case KEYSPACE_SET:
 		WriteValue(data, paxosID, commandID, msg.value);
 		ret &= table->Set(transaction, msg.key, data);
+		data.Set(msg.value);
 		break;
 
 	case KEYSPACE_TEST_AND_SET:
