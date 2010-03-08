@@ -52,7 +52,7 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	masterLease.SetOnLeaseTimeout(&onLeaseTimeout);
 	masterLease.AcquireLease();
 	
-	logCache.Init();
+	logCache.Init(acceptor.paxosID);
 	
 	safeDB = false;
 	
@@ -165,8 +165,8 @@ bool ReplicatedLog::Append(ByteString &value_)
 		
 		return proposer.Propose(value);
 	}
-	else
-		ASSERT_FAIL();
+	//else
+	//	ASSERT_FAIL();
 	
 	return true;
 }
@@ -190,7 +190,7 @@ void ReplicatedLog::SetPaxosID(Transaction* transaction, uint64_t paxosID)
 
 	acceptor.paxosID = paxosID;
 	acceptor.state.Init();
-	acceptor.Persist(transaction);
+	acceptor.WriteState(transaction);
 
 	learner.paxosID = paxosID;
 	learner.state.Init();

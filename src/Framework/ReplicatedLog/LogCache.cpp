@@ -11,25 +11,39 @@ static void WriteRoundID(ByteString& bs, uint64_t paxosID)
 	bs.length = snprintf(bs.buffer, bs.size, "@@pround:%020" PRIu64 "", paxosID);
 }
 
-static void DeleteOldRounds(uint64_t paxosID, Table* table, Transaction* transaction)
+void LogCache::DeleteOldRounds(uint64_t paxosID)
 {
 	Cursor			cursor;
 	ByteArray<128>	buf;
 	DynArray<128>	key;
 	DynArray<128>	value;
+	Transaction*	transaction;
+	
+	transaction = RLOG->GetTransaction();
+	
+	transaction->Begin();
 	
 	WriteRoundID(buf, paxosID);
 	table->Iterate(transaction, cursor);
 	if (!cursor.Start(buf))
 	{
 		cursor.Close();
+		transaction->Rollback();
 		return;
 	}
 		
 	while (cursor.Prev(key, value))
-		cursor.Delete();
+	{
+		if (key.length > sizeof("@@pround:") &&
+		strncmp(key.buffer, "@@pround:", sizeof("@@pround")) == 0)
+			cursor.Delete();
+		else
+			break;
+	}
 	
 	cursor.Close();
+
+	transaction->Commit();
 }
 
 LogCache::LogCache()
@@ -40,12 +54,14 @@ LogCache::~LogCache()
 {
 }
 
-bool LogCache::Init()
+bool LogCache::Init(uint64_t paxosID)
 {
 	table = database.GetTable("keyspace");
 	
 	logCacheSize = Config::GetIntValue("rlog.cacheSize", LOGCACHE_DEFAULT_SIZE);
-	
+
+	DeleteOldRounds(paxosID - logCacheSize);
+
 	return true;
 }
 
@@ -61,19 +77,15 @@ bool LogCache::Push(uint64_t paxosID, ByteString value, bool commit)
 	if (!transaction->IsActive())
 		transaction->Begin();
 	
-	//buf.Writef("@@round:%U", paxosID);
 	WriteRoundID(buf, paxosID);
 	table->Set(transaction, buf, value);
 	
 	// delete old
-	paxosID -= logCacheSize;
-	if (paxosID >= 0)
+	if ((int64_t)(paxosID - logCacheSize) >= 0)
 	{
-		//buf.Writef("@@round:%U", paxosID);	
-		//WriteRoundID(buf, paxosID);
-		//table->Delete(transaction, buf);
-		
-		DeleteOldRounds(paxosID, table, transaction);
+		paxosID -= logCacheSize;
+		WriteRoundID(buf, paxosID);
+		table->Delete(transaction, buf);
 	}
 	
 	if (commit)

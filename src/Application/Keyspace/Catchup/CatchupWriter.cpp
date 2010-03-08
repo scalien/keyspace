@@ -14,6 +14,8 @@ void CatchupWriter::Init(CatchupServer* server_)
 
 	TCPConn<>::Init(true);
 	
+//	RLOG->StopPaxos();
+
 	server = server_;
 	table = database.GetTable("keyspace");
 	transaction.Set(table);
@@ -35,16 +37,8 @@ void CatchupWriter::OnRead()
 
 void CatchupWriter::OnWrite()
 {
-//	Log_Trace();
-	
 	if (msg.type == CATCHUP_COMMIT)
-	{
-		cursor.Close();
-		if (transaction.IsActive())
-			transaction.Rollback();
-		Close();
-		server->DeleteConn(this);
-	}
+		OnClose();
 	else
 		WriteNext();
 }
@@ -52,6 +46,8 @@ void CatchupWriter::OnWrite()
 void CatchupWriter::OnClose()
 {
 	Log_Trace();
+
+//	RLOG->ContinuePaxos();
 
 	cursor.Close();
 	if (transaction.IsActive())
@@ -62,8 +58,6 @@ void CatchupWriter::OnClose()
 
 void CatchupWriter::WriteNext()
 {
-//	Log_Trace();
-
 	bool kv;
 	
 	kv = false;

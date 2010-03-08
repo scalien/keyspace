@@ -45,7 +45,7 @@ void PLeaseLearner::OnLearnChosen()
 		return;
 	
 	if (!state.learned)
-		Log_Message("PaxosLease: Node %d is the master", msg.leaseOwner);
+		Log_Message("Node %d is the master", msg.leaseOwner);
 	
 	state.learned = true;
 	state.leaseOwner = msg.leaseOwner;
@@ -61,8 +61,8 @@ void PLeaseLearner::OnLearnChosen()
 
 void PLeaseLearner::OnLeaseTimeout()
 {
-	if (state.learned)
-		Log_Message("PaxosLease: Node %d is no longer the master",
+	if (state.learned && RLOG->IsMasterLeaseActive())
+		Log_Message("Node %d is no longer the master",
 		state.leaseOwner);
 
 	EventLoop::Remove(&leaseTimeout);

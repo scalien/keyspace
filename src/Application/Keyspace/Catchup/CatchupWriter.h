@@ -12,7 +12,7 @@ class CatchupServer;
 class CatchupWriter : public TCPConn<>
 {
 typedef ByteArray<KEYSPACE_KEY_SIZE> KeyBuffer;
-typedef ByteArray<PAXOS_SIZE> ValBuffer;
+typedef ByteArray<RLOG_SIZE> ValBuffer;
 
 public:
 	CatchupWriter();

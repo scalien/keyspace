@@ -13,13 +13,15 @@ public:
 	LogCache();
 	~LogCache();
 
-	bool			Init();
+	bool			Init(uint64_t paxosID);
 	bool			Push(uint64_t paxosID, ByteString value, bool commit);
 	bool			Get(uint64_t paxosID, ByteString& value);
 
 private:
+	void			DeleteOldRounds(uint64_t paxosID);
+
 	Table*			table;
-	ByteArray<PAXOS_SIZE + 10*KB> value;
+	ByteArray<RLOG_SIZE> value;
 	uint64_t		logCacheSize;
 };
 

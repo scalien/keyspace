@@ -9,16 +9,12 @@
 #include "System/Stopwatch.h"
 
 ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
-:	asyncOnAppend(this, &ReplicatedKeyspaceDB::AsyncOnAppend),
-	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete)
 {
-	asyncAppender = ThreadPool::Create(1);
 	catchingUp = false;
 }
 
 ReplicatedKeyspaceDB::~ReplicatedKeyspaceDB()
 {
-	delete asyncAppender;
 }
 
 bool ReplicatedKeyspaceDB::Init()
@@ -34,14 +30,11 @@ bool ReplicatedKeyspaceDB::Init()
 
 	estimatedLength = 0;
 
-	asyncAppender->Start();
-	asyncAppenderActive = false;
 	return true;
 }
 
 void ReplicatedKeyspaceDB::Shutdown()
 {
-	asyncAppender->Stop();
 }
 
 unsigned ReplicatedKeyspaceDB::GetNodeID()
@@ -138,9 +131,7 @@ bool ReplicatedKeyspaceDB::Submit()
 	if (!RLOG->IsMaster())
 		return false;
 
-	if (!RLOG->IsAppending() &&
-		RLOG->IsMaster() &&
-		!asyncAppenderActive)
+	if (!RLOG->IsAppending() && RLOG->IsMaster())
 	{
 		Log_Trace("ops.size() = %d", ops.Length());	
 		Append();
@@ -150,35 +141,19 @@ bool ReplicatedKeyspaceDB::Submit()
 	return true;
 }
 
-void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction_,
-uint64_t /*paxosID*/, ByteString value_, bool ownAppend_)
+void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction,
+uint64_t /*paxosID*/, ByteString value_, bool ownAppend)
 {
 	Log_Trace();
 	
-	transaction = transaction_;
-	valueBuffer.Set(value_);
-	ownAppend = ownAppend_;
-	
-	RLOG->StopPaxos();
-//	RLOG->StopReplicatedDB();
-
-	assert(asyncAppenderActive == false);
-	asyncAppenderActive = true;
-	asyncAppender->Execute(&asyncOnAppend);
-}
-
-void ReplicatedKeyspaceDB::AsyncOnAppend()
-{
-	Log_Trace();
-	
-	unsigned		nread;
+	unsigned		i, nread;
 	bool			ret;
 	KeyspaceOp*		op;
 	KeyspaceOp**	it;
 	ByteString		value;
 	Stopwatch		sw;
 
-	value.Set(valueBuffer);
+	value.Set(value_);
 	Log_Trace("length: %d", value.length);
 	
 	numOps = 0;
@@ -226,8 +201,25 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	Log_Trace("time spent in Execute(): %ld", sw.elapsed);
 	Log_Trace("numOps = %u", numOps);
 	Log_Trace("ops/sec = %f", (double)1000*numOps/sw.elapsed);
+	
+	if (ownAppend)
+	{
+		for (i = 0; i < numOps; i++)
+		{
+			it = ops.Head();
+			op = *it;
+			ops.Remove(op);
+			op->service->OnComplete(op);
+		}
+	}
+	else
+		Log_Trace("not my append");
 
-	IOProcessor::Complete(&onAppendComplete);
+	if (!RLOG->IsMaster())
+		FailKeyspaceOps();
+
+	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
+		Append();
 }
 
 bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
@@ -298,38 +290,6 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 	}
 	
 	return ret;
-}
-
-void ReplicatedKeyspaceDB::OnAppendComplete()
-{
-	Log_Trace();
-	
-	unsigned		i;
-	KeyspaceOp*		op;
-	KeyspaceOp**	it;
-	
-	if (ownAppend)
-	{
-		Log_Trace("my append");
-		for (i = 0; i < numOps; i++)
-		{
-			it = ops.Head();
-			op = *it;
-			ops.Remove(op);
-			op->service->OnComplete(op);
-		}
-	}
-	else
-		Log_Trace("not my append");
-
-	asyncAppenderActive = false;
-	
-	if (!RLOG->IsMaster())
-		FailKeyspaceOps();
-
-	RLOG->ContinuePaxos();
-	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
-		Append();
 }
 
 void ReplicatedKeyspaceDB::Append()
@@ -409,7 +369,7 @@ void ReplicatedKeyspaceDB::OnMasterLeaseExpired()
 {
 	Log_Trace("ops.size() = %d", ops.Length());
 	
-	if (!RLOG->IsMaster() && !asyncAppenderActive)
+	if (!RLOG->IsMaster())
 		FailKeyspaceOps();
 		
 	Log_Trace("ops.size() = %d", ops.Length());
@@ -422,7 +382,7 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 	Log_Message("Catchup started from node %d", nodeID);
 
 	// this is a workaround because BDB truncate is way too slow for any
-	// database bigger than 1Gb
+	// database bigger than 1Gb, as confirmed by BDB workers on forums
 	if (RLOG->GetPaxosID() != 0)
 		RESTART("exiting to truncate database");
 

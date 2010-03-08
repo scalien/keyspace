@@ -47,9 +47,6 @@ public:
 	virtual void	OnMasterLeaseExpired();
 	virtual void	OnDoCatchup(unsigned nodeID);
 	
-	void			AsyncOnAppend();
-	void			OnAppendComplete();
-
 	bool			IsCatchingUp();
 	
 private:
@@ -58,7 +55,6 @@ private:
 	void			Append();
 	void			FailKeyspaceOps();
 	
-	bool			asyncAppenderActive;
 	bool			catchingUp;
 	OpList			ops;
 	Table*			table;
@@ -69,13 +65,7 @@ private:
 	CatchupServer	catchupServer;
 	CatchupReader	catchupClient;
 	
-	Transaction*	transaction;
-	ByteBuffer		valueBuffer;
 	ByteBuffer		tmpBuffer;
-	bool			ownAppend;
-	Func			asyncOnAppend;
-	Func			onAppendComplete;
-	ThreadPool*		asyncAppender;
 	unsigned		numOps;
 	ServerList		pservers;
 	unsigned		estimatedLength;
