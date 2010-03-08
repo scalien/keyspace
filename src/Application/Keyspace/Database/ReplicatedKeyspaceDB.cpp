@@ -64,6 +64,8 @@ bool ReplicatedKeyspaceDB::IsCatchingUp()
 
 bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 {
+	uint64_t storedPaxosID, storedCommandID;
+	
 	// don't allow writes for @@ keys
 	if (op->IsWrite() && op->key.length > 2 &&
 		op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
@@ -83,7 +85,8 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 			return false;
 				
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status = table->Get(NULL, op->key, op->value);
+		op->status = table->Get(NULL, op->key, data);
+		ReadValue(data, storedPaxosID, storedCommandID, op->value);
 		op->service->OnComplete(op);
 		return true;
 	}
@@ -142,12 +145,13 @@ bool ReplicatedKeyspaceDB::Submit()
 }
 
 void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction,
-uint64_t /*paxosID*/, ByteString value_, bool ownAppend)
+uint64_t paxosID, ByteString value_, bool ownAppend)
 {
 	Log_Trace();
 	
 	unsigned		i, nread;
 	bool			ret;
+	uint64_t		commandID;
 	KeyspaceOp*		op;
 	KeyspaceOp**	it;
 	ByteString		value;
@@ -162,12 +166,14 @@ uint64_t /*paxosID*/, ByteString value_, bool ownAppend)
 	else
 		it = NULL;
 	
+	commandID = 0;	
 	while (true)
 	{
 		if (msg.Read(value, nread))
 		{
 			sw.Start();
-			ret = Execute(transaction);
+			ret = Execute(transaction, paxosID, commandID);
+			commandID++;
 			sw.Stop();
 			value.Advance(nread);
 			numOps++;
@@ -222,24 +228,41 @@ uint64_t /*paxosID*/, ByteString value_, bool ownAppend)
 		Append();
 }
 
-bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
+bool ReplicatedKeyspaceDB::Execute(
+Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 {
+#define CHECK_CMD() \
+	if (storedPaxosID > paxosID || \
+	(storedPaxosID == paxosID && storedCommandID > commandID)) \
+		return true;
+
+
 	bool		ret;
-	int64_t		num;
 	unsigned	nread;
+	int64_t		num;
+	uint64_t	storedPaxosID;
+	uint64_t	storedCommandID;
+	ByteString	userValue;
+	ValBuffer	tmp;
 	
 	ret = true;
 	switch (msg.type)
 	{
 	case KEYSPACE_SET:
-		ret &= table->Set(transaction, msg.key, msg.value);
+		WriteValue(data, paxosID, commandID, msg.value);
+		ret &= table->Set(transaction, msg.key, data);
 		break;
 
 	case KEYSPACE_TEST_AND_SET:
 		ret &= table->Get(transaction, msg.key, data);
+		if (!ret) break;
+		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		CHECK_CMD();
+		data.Set(userValue);
 		if (data == msg.test)
 		{
-			ret &= table->Set(transaction, msg.key, msg.value);
+			WriteValue(data, paxosID, commandID, msg.value);
+			ret &= table->Set(transaction, msg.key, data);
 			if (ret)
 				data.Set(msg.value);
 		}
@@ -248,17 +271,21 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 	case KEYSPACE_ADD:
 		// read number:
 		ret &= table->Get(transaction, msg.key, data);
-		if (!ret)
-			break;
+		if (!ret) break;
+		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		CHECK_CMD();
 		// parse number:
-		num = strntoint64(data.buffer, data.length, &nread);
-		if (nread == (unsigned) data.length)
+		num = strntoint64(userValue.buffer, userValue.length, &nread);
+		if (nread == (unsigned) userValue.length)
 		{
 			num = num + msg.num;
 			// print number:
-			data.length = snwritef(data.buffer, data.size, "%I", num);
+			data.length = snwritef(data.buffer, data.size, "%U:%U:%I",
+								   paxosID, commandID, num);
 			// write number:
 			ret &= table->Set(transaction, msg.key, data);
+			// data is returned to the user
+			data.length = snwritef(data.buffer, data.size, "%I", num);
 		}
 		else
 			ret = false;
@@ -267,6 +294,10 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 	case KEYSPACE_RENAME:
 		ret &= table->Get(transaction, msg.key, data);
 		if (!ret) break;
+		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		CHECK_CMD();
+		tmp.Set(userValue);
+		WriteValue(data, paxosID, commandID, tmp);
 		ret &= table->Set(transaction, msg.newKey, data);
 		if (!ret) break;
 		ret &= table->Delete(transaction, msg.key);
@@ -277,7 +308,11 @@ bool ReplicatedKeyspaceDB::Execute(Transaction* transaction)
 		break;
 		
 	case KEYSPACE_REMOVE:
-		ret &= table->Get(transaction, msg.key, data);
+		ret &= table->Get(transaction, msg.key, tmp);
+		if (!ret) break;
+		ReadValue(tmp, storedPaxosID, storedCommandID, userValue);
+		CHECK_CMD();
+		data.Set(userValue);
 		ret &= table->Delete(transaction, msg.key);
 		break;
 

@@ -7,7 +7,7 @@
 
 class SingleKeyspaceDB : public KeyspaceDB
 {
-typedef ByteArray<KEYSPACE_VAL_SIZE> Buffer;
+typedef ByteArray<KEYSPACE_VAL_META_SIZE> Buffer;
 public:
 	bool				Init();
 	void				Shutdown();

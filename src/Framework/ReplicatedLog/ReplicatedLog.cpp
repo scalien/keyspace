@@ -292,8 +292,8 @@ void ReplicatedLog::OnLearnChosen()
 {
 	Log_Trace();
 
-	uint64_t paxosID;
-	bool	ownAppend, clientAppend, commit;
+	uint64_t	paxosID;
+	bool		ownAppend, clientAppend, commit;
 
 	if (pmsg.paxosID == learner.paxosID)
 	{

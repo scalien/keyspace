@@ -48,7 +48,10 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	bool			isWrite;
 	int64_t			num;
 	unsigned		nread;
-	
+	uint64_t		storedPaxosID;
+	uint64_t		storedCommandID;
+	ByteString		userValue;
+		
 	isWrite = op->IsWrite();
 	
 	if (isWrite && !transaction.IsActive())
@@ -67,7 +70,9 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	if (op->IsGet())
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status &= table->Get(NULL, op->key, op->value);
+		op->status &= table->Get(NULL, op->key, data);
+		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		op->value.Set(userValue);
 		op->service->OnComplete(op);
 	}
 	else if (op->IsList() || op->IsCount())
@@ -79,34 +84,44 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
-		op->status &= table->Set(&transaction, op->key, op->value);
+		WriteValue(data, 1, 0, op->value);
+		op->status &= table->Set(&transaction, op->key, data);
 		ops.Append(op);
 	}
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 	{
 		op->status &= table->Get(&transaction, op->key, data);
-		if (data == op->test)
-			op->status &= table->Set(&transaction, op->key, op->value);
-		else
-			op->value.Set(data);		
+		if (op->status)
+		{
+			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			if (userValue == op->test)
+			{
+				WriteValue(data, 1, 0, op->value);
+				op->status &= table->Set(&transaction, op->key, data);
+			}
+			else
+				op->value.Set(userValue);
+		}
 		ops.Append(op);
 	}
 	else if (op->type == KeyspaceOp::ADD)
 	{
 		// read number:
 		op->status = table->Get(&transaction, op->key, data);
-		
 		if (op->status)
 		{
+			ReadValue(data, storedPaxosID, storedCommandID, userValue);
 			// parse number:
-			num = strntoint64(data.buffer, data.length, &nread);
-			if (nread == (unsigned) data.length)
+			num = strntoint64(userValue.buffer, userValue.length, &nread);
+			if (nread == (unsigned) userValue.length)
 			{
 				num = num + op->num;
 				 // print number:
-				data.length = snwritef(data.buffer, data.size, "%I", num);
+				data.length = snwritef(data.buffer, data.size, "1:0:%I", num);
 				 // write number:
 				op->status &= table->Set(&transaction, op->key, data);
+				// returned to the user:
+				data.length = snwritef(data.buffer, data.size, "%I", num);
 				op->value.Allocate(data.length);
 				op->value.Set(data);
 			}
@@ -120,6 +135,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		op->status &= table->Get(&transaction, op->key, data);
 		if (op->status)
 		{
+			// value doesn't change
 			op->status &= table->Set(&transaction, op->newKey, data);
 			if (op->status)
 				op->status &= table->Delete(&transaction, op->key);
@@ -134,8 +150,13 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	else if (op->type == KeyspaceOp::REMOVE)
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status &= table->Get(&transaction, op->key, op->value);
-		op->status &= table->Delete(&transaction, op->key);
+		op->status &= table->Get(&transaction, op->key, data);
+		if (op->status)
+		{
+			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			op->value.Set(userValue);
+			op->status &= table->Delete(&transaction, op->key);
+		}
 		ops.Append(op);
 	}
 

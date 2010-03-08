@@ -1,5 +1,6 @@
 #include "AsyncListVisitor.h"
 #include "System/IO/IOProcessor.h"
+#include "KeyspaceDB.h"
 
 AsyncVisitorCallback::AsyncVisitorCallback()
 {
@@ -63,6 +64,10 @@ const ByteString &value)
 void AsyncVisitorCallback::Execute()
 {
 	Log_Trace();
+	
+	uint64_t storedPaxosID, storedCommandID;
+	ByteString tmp;
+	ByteString userValue;
 
 	op->status = true;
 	
@@ -84,11 +89,16 @@ void AsyncVisitorCallback::Execute()
 			
 			if (op->IsListKeyValues())
 			{
+				tmp.buffer = valuebuf.buffer + valuepos[i];
+				tmp.size = valuelen[i];
+				tmp.length = valuelen[i];
+				KeyspaceDB::ReadValue(tmp, storedPaxosID,
+									  storedCommandID, userValue);
 				// this is a huge hack, since op->value is a ByteBuffer!
 				// if it were allocated, this would result in memleak
-				op->value.buffer = valuebuf.buffer + valuepos[i];
-				op->value.size = valuelen[i];
-				op->value.length = valuelen[i];
+				op->value.buffer = userValue.buffer;
+				op->value.size = userValue.length;
+				op->value.length = userValue.length;
 			}
 			
 			op->service->OnComplete(op, false);
