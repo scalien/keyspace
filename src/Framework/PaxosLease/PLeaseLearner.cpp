@@ -3,6 +3,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "PLeaseConsts.h"
 
 PLeaseLearner::PLeaseLearner() :
