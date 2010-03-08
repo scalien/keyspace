@@ -65,6 +65,7 @@ bool ReplicatedKeyspaceDB::IsCatchingUp()
 bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 {
 	uint64_t storedPaxosID, storedCommandID;
+	ByteString userValue;
 	
 	// don't allow writes for @@ keys
 	if (op->IsWrite() && op->key.length > 2 &&
@@ -86,7 +87,8 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 				
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		op->status = table->Get(NULL, op->key, data);
-		ReadValue(data, storedPaxosID, storedCommandID, op->value);
+		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		op->value.Set(userValue);
 		op->service->OnComplete(op);
 		return true;
 	}
