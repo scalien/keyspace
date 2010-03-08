@@ -25,8 +25,8 @@ public:
 	static void WriteValue(
 	ByteString &target, uint64_t paxosID, uint64_t commandID, ByteString value)
 	{
-		if (target.Writef("%U:%U:%B", paxosID, commandID,
-		value.length, value.buffer) < 0)
+		if (!target.Writef("%U:%U:%B", paxosID, commandID,
+		value.length, value.buffer))
 			ASSERT_FAIL();
 	}
 
