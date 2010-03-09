@@ -29,7 +29,7 @@ int	Init(Client client_, std::list<std::string> nodes)
 	return status;
 }
 
-ReturnValue Get(Client client_, std::string &key_)
+ReturnValue Get(Client client_, std::string key_)
 {
 	Keyspace::Client *client = (Keyspace::Client *) client_;
 	ByteString key;
