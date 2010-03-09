@@ -71,8 +71,11 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		op->status &= table->Get(NULL, op->key, data);
-		ReadValue(data, storedPaxosID, storedCommandID, userValue);
-		op->value.Set(userValue);
+		if (op->status)
+		{
+			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			op->value.Set(userValue);
+		}
 		op->service->OnComplete(op);
 	}
 	else if (op->IsList() || op->IsCount())
