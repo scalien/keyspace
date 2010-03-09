@@ -14,16 +14,14 @@
 #define VALIDATE_DIRTY() if (safeCommands.Length() > 0) return KEYSPACE_API_ERROR
 #define VALIDATE_SAFE() if (dirtyCommands.Length() > 0) return KEYSPACE_API_ERROR
 
-#define VALIDATE_BATCHED(submit) \
-	if (result == NULL || (result->isBatched && submit == true) || (!result->isBatched && submit == false)) \
-		return KEYSPACE_API_ERROR
-
 #define VALIDATE_NOT_BATCHED() if (result == NULL || result->isBatched) return KEYSPACE_API_ERROR
 
 #define VALIDATE_CLIENT() if (conns == NULL) return KEYSPACE_API_ERROR
 
 #define VALIDATE_READ() if (safeCommands.Length() > 0 && !(*safeCommands.Head())->IsRead()) return KEYSPACE_API_ERROR
 #define VALIDATE_WRITE() if (safeCommands.Length() > 0 && (*safeCommands.Head())->IsRead()) return KEYSPACE_API_ERROR
+
+#define IS_BATCHED() (result != NULL && result->isBatched) ? true : false
 
 using namespace Keyspace;
 
@@ -254,13 +252,12 @@ uint64_t count = 0, bool next = false, bool forward = false, bool dirty = false)
 	return status;
 }
 
-int Client::Get(const ByteString &key, bool dirty, bool submit)
+int Client::Get(const ByteString &key, bool dirty)
 {
 	Command*	cmd;
 	ByteString	args[1];
 
 	VALIDATE_CLIENT();
-	VALIDATE_BATCHED(submit);
 	VALIDATE_READ();
 	VALIDATE_KEY_LEN(key);
 
@@ -279,7 +276,7 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 		safeCommands.Append(cmd);
 	}
 
-	if (!submit)
+	if (IS_BATCHED())
 	{
 		result->AppendCommand(cmd);
 		return KEYSPACE_SUCCESS;
@@ -292,9 +289,9 @@ int Client::Get(const ByteString &key, bool dirty, bool submit)
 	return result->CommandStatus();
 }
 
-int Client::DirtyGet(const ByteString &key, bool submit)
+int Client::DirtyGet(const ByteString &key)
 {
-	return Get(key, true, submit);
+	return Get(key, true);
 }
 
 int	Client::ListKeys(const ByteString &prefix,
@@ -430,14 +427,13 @@ int Client::CommandStatus()
 	return result->CommandStatus();
 }
 
-int Client::Set(const ByteString& key, const ByteString& value, bool submit)
+int Client::Set(const ByteString& key, const ByteString& value)
 {
 	Command*	cmd;
 	ByteString	args[2];
 	int			status;
 	
 	VALIDATE_CLIENT();
-	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_VAL_LEN(value);
 	VALIDATE_SAFE();
@@ -449,7 +445,7 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 	cmd = CreateCommand(KEYSPACECLIENT_SET, 2, args);
 	safeCommands.Append(cmd);
 	
-	if (!submit)
+	if (IS_BATCHED())
 	{
 		result->AppendCommand(cmd);
 		return KEYSPACE_SUCCESS;
@@ -465,14 +461,13 @@ int Client::Set(const ByteString& key, const ByteString& value, bool submit)
 }
 
 int Client::TestAndSet(const ByteString &key,
-const ByteString &test, const ByteString &value, bool submit)
+const ByteString &test, const ByteString &value)
 {
 	Command*	cmd;
 	ByteString	args[3];
 	int			status;
 
 	VALIDATE_CLIENT();
-	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_VAL_LEN(test);
 	VALIDATE_VAL_LEN(value);
@@ -486,7 +481,7 @@ const ByteString &test, const ByteString &value, bool submit)
 	cmd = CreateCommand(KEYSPACECLIENT_TEST_AND_SET, 3, args);
 	safeCommands.Append(cmd);
 	
-	if (!submit)
+	if (IS_BATCHED())
 	{
 		result->AppendCommand(cmd);
 		return KEYSPACE_SUCCESS;
@@ -501,7 +496,7 @@ const ByteString &test, const ByteString &value, bool submit)
 	return status;
 }
 
-int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
+int Client::Add(const ByteString &key, int64_t num, int64_t &res)
 {
 	Command*	cmd;
 	ByteString	args[2];
@@ -511,7 +506,6 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	ByteString	value;
 
 	VALIDATE_CLIENT();
-	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
 	VALIDATE_WRITE();
@@ -524,7 +518,7 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	cmd = CreateCommand(KEYSPACECLIENT_ADD, 2, args);
 	safeCommands.Append(cmd);
 	
-	if (!submit)
+	if (IS_BATCHED())
 	{
 		result->AppendCommand(cmd);
 		return KEYSPACE_SUCCESS;
@@ -547,7 +541,7 @@ int Client::Add(const ByteString &key, int64_t num, int64_t &res, bool submit)
 	return status;
 }
 
-int Client::Delete(const ByteString &key, bool submit, bool remove)
+int Client::Delete(const ByteString &key, bool remove)
 {
 	int			status;
 	char		c;
@@ -555,7 +549,6 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	ByteString	args[1];
 
 	VALIDATE_CLIENT();
-	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(key);
 	VALIDATE_SAFE();
 	VALIDATE_WRITE();
@@ -570,7 +563,7 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	cmd = CreateCommand(c, SIZE(args), args);
 	safeCommands.Append(cmd);
 	
-	if (!submit)
+	if (IS_BATCHED())
 	{
 		result->AppendCommand(cmd);
 		return KEYSPACE_SUCCESS;
@@ -585,19 +578,18 @@ int Client::Delete(const ByteString &key, bool submit, bool remove)
 	return status;
 }
 
-int Client::Remove(const ByteString &key, bool submit)
+int Client::Remove(const ByteString &key)
 {
-	return Delete(key, submit, true);
+	return Delete(key, true);
 }
 
-int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
+int Client::Rename(const ByteString &from, const ByteString &to)
 {
 	int			status;
 	Command*	cmd;
 	ByteString	args[2];
 
 	VALIDATE_CLIENT();
-	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(from);
 	VALIDATE_KEY_LEN(to);
 	VALIDATE_SAFE();
@@ -609,7 +601,7 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	cmd = CreateCommand(KEYSPACECLIENT_RENAME, SIZE(args), args);
 	safeCommands.Append(cmd);
 	
-	if (!submit)
+	if (IS_BATCHED())
 	{
 		result->AppendCommand(cmd);
 		return KEYSPACE_SUCCESS;
@@ -624,14 +616,13 @@ int Client::Rename(const ByteString &from, const ByteString &to, bool submit)
 	return status;
 }
 
-int Client::Prune(const ByteString &prefix, bool submit)
+int Client::Prune(const ByteString &prefix)
 {
 	int			status;
 	Command*	cmd;
 	ByteString	args[1];
 
 	VALIDATE_CLIENT();
-	VALIDATE_BATCHED(submit);
 	VALIDATE_KEY_LEN(prefix);
 	VALIDATE_SAFE();
 	VALIDATE_WRITE();
@@ -641,7 +632,7 @@ int Client::Prune(const ByteString &prefix, bool submit)
 	cmd = CreateCommand(KEYSPACECLIENT_PRUNE, SIZE(args), args);
 	safeCommands.Append(cmd);
 	
-	if (!submit)
+	if (IS_BATCHED())
 	{
 		result->AppendCommand(cmd);
 		return KEYSPACE_SUCCESS;

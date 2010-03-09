@@ -57,9 +57,8 @@ public:
 							    bool next = false, bool forward = true);
 
 	// commands that return a Result
-	int				Get(const ByteString &key, bool dirty = false,
-						bool submit = true);
-	int				DirtyGet(const ByteString &key, bool submit = true);
+	int				Get(const ByteString &key, bool dirty = false);
+	int				DirtyGet(const ByteString &key);
 
 	int				ListKeys(const ByteString &prefix,
 							 const ByteString &startKey,
@@ -80,20 +79,15 @@ public:
 
 	// write commands
 	int				Set(const ByteString &key,
-						const ByteString &value,
-						bool sumbit = true);
+						const ByteString &value);
 	int				TestAndSet(const ByteString &key,
 							   const ByteString &test,
-							   const ByteString &value, 
-							   bool submit = true);
-	int				Add(const ByteString &key, int64_t num,
-						int64_t &result, bool submit = true);
-	int				Delete(const ByteString &key, bool submit = true,
-						   bool remove = false);
-	int				Remove(const ByteString &key, bool submit = true);
-	int				Rename(const ByteString &from, const ByteString &to,
-						   bool submit = true);
-	int				Prune(const ByteString &prefix, bool submit = true);
+							   const ByteString &value);
+	int				Add(const ByteString &key, int64_t num, int64_t &result);
+	int				Delete(const ByteString &key, bool remove = false);
+	int				Remove(const ByteString &key);
+	int				Rename(const ByteString &from, const ByteString &to);
+	int				Prune(const ByteString &prefix);
 
 	// grouping write commands
 	int				Begin();

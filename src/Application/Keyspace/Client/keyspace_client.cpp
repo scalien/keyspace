@@ -303,12 +303,12 @@ keyspace_client_get_simple(keyspace_client_t kc,
 int
 keyspace_client_get(keyspace_client_t kc, 
 		const void *key_, unsigned keylen, 
-		int dirty, int submit)
+		int dirty)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 	
-	return client->Get(key, dirty ? true : false, submit ? true : false);
+	return client->Get(key, dirty ? true : false);
 }
 
 int
@@ -373,88 +373,81 @@ keyspace_client_list_keyvalues(keyspace_client_t kc,
 int
 keyspace_client_set(keyspace_client_t kc,
 		const void *key_, unsigned keylen,
-		const void *val_, unsigned vallen,
-		int submit)
+		const void *val_, unsigned vallen)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 	const ByteString value(vallen, vallen, val_);
 	
-	return client->Set(key, value, submit ? true : false);
+	return client->Set(key, value);
 }
 
 int
 keyspace_client_test_and_set(keyspace_client_t kc,
 		const void *key_, unsigned keylen,
 		const void *test_, unsigned testlen,
-		const void *val_, unsigned vallen,
-		int submit)
+		const void *val_, unsigned vallen)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 	const ByteString test(testlen, testlen, test_);
 	const ByteString val(vallen, vallen, val_);
 	
-	return client->TestAndSet(key, test, val, submit ? true : false);
+	return client->TestAndSet(key, test, val);
 }
 
 int
 keyspace_client_add(keyspace_client_t kc,
 		const void *key_, unsigned keylen,
 		int64_t num,
-		int64_t *result,
-		int submit)
+		int64_t *result)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 
-	return client->Add(key, num, *result, submit ? true : false);
+	return client->Add(key, num, *result);
 }
 
 int
 keyspace_client_delete(keyspace_client_t kc,
-		const void *key_, unsigned keylen,
-		int submit)
+		const void *key_, unsigned keylen)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 
-	return client->Delete(key, submit ? true : false);
+	return client->Delete(key);
 }
 
 int
 keyspace_client_remove(keyspace_client_t kc,
-		const void *key_, unsigned keylen,
-		int submit)
+		const void *key_, unsigned keylen)
 {
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
 	
-	return client->Remove(key, submit ? true : false);
+	return client->Remove(key);
 }
 
 int
 keyspace_client_rename(keyspace_client_t kc,
 		const void *from_, unsigned fromlen,
-		const void *to_, unsigned tolen,
-		int submit)
+		const void *to_, unsigned tolen)
 {
 	Client *client = (Client *) kc;
 	const ByteString from(fromlen, fromlen, from_);
 	const ByteString to(tolen, tolen, to_);
 	
-	return client->Rename(from, to, submit ? true : false);
+	return client->Rename(from, to);
 }
 
 int
 keyspace_client_prune(keyspace_client_t kc,
-		const void *prefix_, unsigned prefixlen,
-		int submit)
+		const void *prefix_, unsigned prefixlen)
 {
 	Client *client = (Client *) kc;
 	const ByteString prefix(prefixlen, prefixlen, prefix_);
 	
-	return client->Prune(prefix, submit ? true : false);
+	return client->Prune(prefix);
 }
 
 int

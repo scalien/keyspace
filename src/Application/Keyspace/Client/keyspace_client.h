@@ -353,13 +353,12 @@ int	keyspace_client_get_simple(keyspace_client_t kc,
  *	key:	buffer to the key data
  *	keylen:	length of the key
  *	dirty:	nonzero value denotes dirty operation
- *  submit:	nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int	keyspace_client_get(keyspace_client_t kc, 
 		const void *key, unsigned keylen, 
-		int dirty, int submit);
+		int dirty);
 
 /*
  * COUNT operation
@@ -458,14 +457,12 @@ int keyspace_client_list_keyvalues(keyspace_client_t kc,
  *	keylen:		length of the key
  *	val:		buffer to the value data
  *	vallen:		length of the value
- *	submit:		nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int	keyspace_client_set(keyspace_client_t kc,
 		const void *key, unsigned keylen,
-		const void *val, unsigned vallen,
-		int submit);
+		const void *val, unsigned vallen);
 
 
 /*
@@ -481,15 +478,13 @@ int	keyspace_client_set(keyspace_client_t kc,
  *	testlen:	length of the test
  *	val:		buffer to the value data
  *	vallen:		length of the value
- *	submit:		nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int	keyspace_client_test_and_set(keyspace_client_t kc,
 		const void *key, unsigned keylen,
 		const void *test, unsigned testlen,
-		const void *val, unsigned vallen,
-		int submit);
+		const void *val, unsigned vallen);
 
 /*
  * ADD operation.
@@ -503,15 +498,13 @@ int	keyspace_client_test_and_set(keyspace_client_t kc,
  *	keylen:		length of the key
  *	num:		increment the value by this number
  *	result:		return the resulting value
- *	submit:		nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int	keyspace_client_add(keyspace_client_t kc,
 		const void *key, unsigned keylen,
 		int64_t num,
-		int64_t *result,
-		int submit);
+		int64_t *result);
 
 /*
  * DELETE operation.
@@ -522,13 +515,11 @@ int	keyspace_client_add(keyspace_client_t kc,
  *	kc:			client object
  *	key:		buffer to the key data
  *	keylen:		length of the key
- *	submit:		nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int	keyspace_client_delete(keyspace_client_t kc,
-		const void *key, unsigned keylen,
-		int submit);
+		const void *key, unsigned keylen);
 
 /*
  * REMOVE operation.
@@ -539,13 +530,11 @@ int	keyspace_client_delete(keyspace_client_t kc,
  *	kc:			client object
  *	key:		buffer to the key data
  *	keylen:		length of the key
- *	submit:		nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int keyspace_client_remove(keyspace_client_t kc,
-		const void *key, unsigned keylen,
-		int submit);
+		const void *key, unsigned keylen);
 
 /*
  * RENAME operation.
@@ -558,14 +547,12 @@ int keyspace_client_remove(keyspace_client_t kc,
  *	keylen:		length of the from
  *  to:			buffer to the name
  *  tolen:		length of the to
- *	submit:		nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int keyspace_client_rename(keyspace_client_t kc,
 		const void *from, unsigned fromlen,
-		const void *to, unsigned tolen,
-		int submit);
+		const void *to, unsigned tolen);
 
 
 /*
@@ -577,13 +564,11 @@ int keyspace_client_rename(keyspace_client_t kc,
  *  kc:			client object
  *  prefix:		buffer to the prefix
  *  prefixlen:	length of the prefix
- *	submit:		nonzero value submits the operation automatically
  *
  * Return value: the command status of the operation
  */
 int keyspace_client_prune(keyspace_client_t kc,
-		const void *prefix, unsigned prefixlen,
-		int submit);
+		const void *prefix, unsigned prefixlen);
 
 /*
  * Begin grouping commands.
