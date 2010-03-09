@@ -137,9 +137,9 @@ int KeyspaceClientGetTest(Keyspace::Client& client, TestConfig& conf)
 		//sw.Start();
 
 		if (conf.type == TestConfig::GET)
-			status = client.Get(conf.key, false, false);
+			status = client.Get(conf.key);
 		else
-			status = client.DirtyGet(conf.key, false);
+			status = client.DirtyGet(conf.key);
 		
 		//sw.Stop();
 
@@ -216,7 +216,7 @@ int KeyspaceClientSetTest(Keyspace::Client& client, TestConfig& conf)
 		else
 			conf.key.Writef("key%B:%d", conf.padding.length, conf.padding.buffer, i);
 		
-		status = client.Set(conf.key, conf.value, false);
+		status = client.Set(conf.key, conf.value);
 		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("Test failed, status = %s (%s failed after %d)", Status(status), conf.typeString, i);
@@ -626,7 +626,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
-			status = client.Set(key, value, false);
+			status = client.Set(key, value);
 			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("SET/batched failed after %d, status = %s", i, Status(status));
@@ -701,7 +701,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
-			status = client.Get(key, false, false);
+			status = client.Get(key);
 			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("GET/batched failed, status = %s", Status(status));
@@ -731,7 +731,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
-			status = client.DirtyGet(key, false);
+			status = client.DirtyGet(key);
 			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("DIRTYGET/batched failed, status = %s", Status(status));
@@ -761,7 +761,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
-			status = client.DirtyGet(key, false);
+			status = client.DirtyGet(key);
 			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("DIRTYGET/batched2 failed, status = %s", Status(status));
@@ -1130,7 +1130,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		for (int i = 0; i < num; i++)
 		{
 			key.Writef("test:%d", i);
-			status = client.Get(key, true, false);
+			status = client.Get(key);
 			if (status != KEYSPACE_SUCCESS)
 			{
 				Log_Message("CancelTest Get failed, status = %s", Status(status));
@@ -1206,7 +1206,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		// dirty = false, submit = false
-		status = client.Get(key, false, false);
+		status = client.Get(key, false);
 		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("DirtySafeTest1 failed, status = %s", Status(status));
@@ -1214,7 +1214,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 
 		// dirty = true, submit = false
-		status = client.Get(key, true, false);
+		status = client.Get(key, true);
 		if (status != KEYSPACE_API_ERROR)
 		{
 			Log_Message("DirtySafeTest1 failed, status = %s", Status(status));
@@ -1236,7 +1236,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 		
 		// dirty = true, submit = false
-		status = client.Get(key, true, false);
+		status = client.Get(key, true);
 		if (status != KEYSPACE_SUCCESS)
 		{
 			Log_Message("DirtySafeTest2 failed, status = %s", Status(status));
@@ -1244,7 +1244,7 @@ int KeyspaceClientTestSuite(Keyspace::Client& client)
 		}
 
 		// dirty = false, submit = false
-		status = client.Get(key, false, false);
+		status = client.Get(key, false);
 		if (status != KEYSPACE_API_ERROR)
 		{
 			Log_Message("DirtySafeTest2 failed, status = %s", Status(status));
