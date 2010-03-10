@@ -5,7 +5,7 @@ safe_keyspace()
 	while (:); do
 		$1 $2 2>&1 >> /dev/null
 		EXITSTATUS=$?
-		if [ "$EXITSTATUS" = "0" -o "$EXITSTATUS" = "1" -o "$EXITSTATUS" = "143" ]; then
+		if [ "$EXITSTATUS" = "0" -o "$EXITSTATUS" = "1" -o "$EXITSTATUS" = "143" -o "$EXITSTATUS" = "127" ]; then
 			exit 0
 		fi
 		if [ "$EXITSTATUS" = "2" ]; then
