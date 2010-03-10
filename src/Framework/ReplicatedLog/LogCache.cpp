@@ -34,8 +34,8 @@ void LogCache::DeleteOldRounds(uint64_t paxosID)
 		
 	while (cursor.Prev(key, value))
 	{
-		if (key.length > sizeof("@@pround:") &&
-		strncmp(key.buffer, "@@pround:", sizeof("@@pround")) == 0)
+		if (key.length > sizeof("@@pround:") - 1 &&
+		strncmp(key.buffer, "@@pround:", sizeof("@@pround:") - 1) == 0)
 			cursor.Delete();
 		else
 			break;
@@ -60,7 +60,8 @@ bool LogCache::Init(uint64_t paxosID)
 	
 	logCacheSize = Config::GetIntValue("rlog.cacheSize", LOGCACHE_DEFAULT_SIZE);
 
-	DeleteOldRounds(paxosID - logCacheSize);
+	if ((int64_t)(paxosID - logCacheSize) >= 0)
+		DeleteOldRounds(paxosID - logCacheSize);
 
 	return true;
 }
