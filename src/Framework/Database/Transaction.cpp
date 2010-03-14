@@ -35,7 +35,9 @@ bool Transaction::IsActive()
 
 bool Transaction::Begin()
 {
-	if (database->env.txn_begin(NULL, &txn, 0) != 0)
+	Log_Trace();
+	
+	if (database->env->txn_begin(NULL, &txn, 0) != 0)
 		return false;
 	
 	active = true;
@@ -44,6 +46,8 @@ bool Transaction::Begin()
 
 bool Transaction::Commit()
 {
+	Log_Trace();
+	
 	active = false;
 	
 	if (txn->commit(0) != 0)
@@ -54,6 +58,8 @@ bool Transaction::Commit()
 
 bool Transaction::Rollback()
 {
+	Log_Trace();
+	
 	active = false;
 	
 	if (txn->abort() != 0)

@@ -16,7 +16,7 @@ database(database)
 	DB_NOMMAP | DB_READ_UNCOMMITTED;
 	int mode = 0;
 	
-	db = new Db(&database->env, 0);
+	db = new Db(database->env, 0);
 	if (pageSize != 0)
 		db->set_pagesize(pageSize);
 		

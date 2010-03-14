@@ -31,7 +31,7 @@ public:
 
 private:
 	DatabaseConfig	config;
-	DbEnv			env;
+	DbEnv*			env;
 	Table*			keyspace;
 	ThreadPool*		cpThread;
 	bool			running;

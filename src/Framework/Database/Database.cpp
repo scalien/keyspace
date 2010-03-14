@@ -25,12 +25,10 @@ static void DatabaseTrace(const DbEnv* /*dbenv*/, const char* msg)
 }
 
 Database::Database() :
-env(DB_CXX_NO_EXCEPTIONS),
 checkpoint(this, &Database::Checkpoint),
 checkpointTimeout(&onCheckpointTimeout),
 onCheckpointTimeout(this, &Database::OnCheckpointTimeout)
 {
-	cpThread = ThreadPool::Create(1);
 }
 
 Database::~Database()
@@ -44,9 +42,11 @@ bool Database::Init(const DatabaseConfig& config_)
 	DB_INIT_TXN | DB_RECOVER | DB_THREAD | DB_PRIVATE;
 	int mode = 0;
 	int ret;
+
+	env = new DbEnv(DB_CXX_NO_EXCEPTIONS);
 	
-	env.set_errcall(DatabaseError);
-	env.set_msgcall(DatabaseTrace);
+	env->set_errcall(DatabaseError);
+	env->set_msgcall(DatabaseTrace);
 	
 	config = config_;
 	
@@ -56,60 +56,60 @@ bool Database::Init(const DatabaseConfig& config_)
 		u_int32_t bytes = config.cacheSize % (1024 * 1024 * 1024);
 		
 		//env.set_cache_max(gbytes, bytes);
-		env.set_cachesize(gbytes, bytes, 4);
+		env->set_cachesize(gbytes, bytes, 4);
 	}
 
 	if (config.logBufferSize != 0)
-		env.set_lg_bsize(config.logBufferSize);
+		env->set_lg_bsize(config.logBufferSize);
 	
 	if (config.logMaxFile != 0)
-		env.set_lg_max(config.logMaxFile);
+		env->set_lg_max(config.logMaxFile);
 		
 	if (config.verbose)
 	{
-		env.set_msgcall(DatabaseTrace);
+		env->set_msgcall(DatabaseTrace);
 #ifdef DB_VERB_FILEOPS
-		env.set_verbose(DB_VERB_FILEOPS, 1);
+		env->set_verbose(DB_VERB_FILEOPS, 1);
 #endif
 #ifdef DB_VERB_FILEOPS_ALL
-		env.set_verbose(DB_VERB_FILEOPS_ALL, 1);
+		env->set_verbose(DB_VERB_FILEOPS_ALL, 1);
 #endif
 #ifdef DB_VERB_RECOVERY
-		env.set_verbose(DB_VERB_RECOVERY, 1);
+		env->set_verbose(DB_VERB_RECOVERY, 1);
 #endif
 #ifdef DB_VERB_REGISTER
-		env.set_verbose(DB_VERB_REGISTER, 1);
+		env->set_verbose(DB_VERB_REGISTER, 1);
 #endif
 #ifdef DB_VERB_REPLICATION
-		env.set_verbose(DB_VERB_REPLICATION, 1);
+		env->set_verbose(DB_VERB_REPLICATION, 1);
 #endif
 #ifdef DB_VERB_WAITSFOR
-		env.set_verbose(DB_VERB_WAITSFOR, 1);
+		env->set_verbose(DB_VERB_WAITSFOR, 1);
 #endif
 	}
 	
 	Log_Trace();
-	ret = env.open(config.dir, flags, mode);
+	ret = env->open(config.dir, flags, mode);
 	Log_Trace();
 	if (ret != 0)
 		return false;
 
 #ifdef DB_LOG_AUTOREMOVE
-	env.set_flags(DB_LOG_AUTOREMOVE, 1);
+	env->set_flags(DB_LOG_AUTOREMOVE, 1);
 #else
-	env.log_set_config(DB_LOG_AUTO_REMOVE, 1);
+	env->log_set_config(DB_LOG_AUTO_REMOVE, 1);
 #endif
 
 #ifdef DB_DIRECT_DB	
-	ret = env.set_flags(DB_DIRECT_DB, config.directDB);
+	ret = env->set_flags(DB_DIRECT_DB, config.directDB);
 #endif
 
 #ifdef DB_TXN_NOSYNC
-	ret = env.set_flags(DB_TXN_NOSYNC, config.txnNoSync);
+	ret = env->set_flags(DB_TXN_NOSYNC, config.txnNoSync);
 #endif
 
 #ifdef DB_TXN_WRITE_NOSYNC
-	ret = env.set_flags(DB_TXN_WRITE_NOSYNC, config.txnWriteNoSync);
+	ret = env->set_flags(DB_TXN_WRITE_NOSYNC, config.txnWriteNoSync);
 #endif
 
 	keyspace = new Table(this, "keyspace", config.pageSize);
@@ -122,6 +122,7 @@ bool Database::Init(const DatabaseConfig& config_)
 		checkpointTimeout.SetDelay(config.checkpointTimeout);
 		EventLoop::Add(&checkpointTimeout);
 	}
+	cpThread = ThreadPool::Create(1);
 	cpThread->Start();
 	
 	return true;
@@ -136,7 +137,8 @@ void Database::Shutdown()
 	cpThread->Stop();
 	delete cpThread;
 	delete keyspace;	
-	env.close(0);
+	env->close(0);
+	delete env;
 }
 
 Table* Database::GetTable(const char* name)
@@ -159,7 +161,7 @@ void Database::Checkpoint()
 	int ret;
 
 	Log_Trace("started");
-	ret = env.txn_checkpoint(100*1000 /* in kilobytes */, 0, 0);
+	ret = env->txn_checkpoint(100*1000 /* in kilobytes */, 0, 0);
 	if (ret < 0)
 		ASSERT_FAIL();
 	Log_Trace("finished");
