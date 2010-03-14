@@ -10,6 +10,12 @@ void CatchupReader::Init(ReplicatedKeyspaceDB* keyspaceDB_, Table* table_)
 	transaction.Set(table);
 }
 
+void CatchupReader::Shutdown()
+{
+	if (state != DISCONNECTED)
+		OnClose();
+}
+
 void CatchupReader::Start(unsigned nodeID)
 {
 	Log_Trace();

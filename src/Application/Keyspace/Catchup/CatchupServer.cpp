@@ -7,6 +7,11 @@ void CatchupServer::Init(int port_)
 		STOP_FAIL("Cannot initialize CatchupServer", 1);
 }
 
+void CatchupServer::Shutdown()
+{
+	Close();
+}
+
 void CatchupServer::InitConn(CatchupWriter* conn)
 {
 	if (numActive > 1)
