@@ -98,7 +98,7 @@ void ReplicatedLog::Shutdown()
 		
 		free(writers);
 	}
-
+	replicatedLog = NULL;
 	delete this;
 }
 
