@@ -1,6 +1,8 @@
 #include "EventLoop.h"
 
 static uint64_t now;
+static bool		running;
+
 
 long EventLoop::RunTimers()
 {
@@ -38,9 +40,14 @@ bool EventLoop::RunOnce()
 
 void EventLoop::Run()
 {
-	while(true)
+	running = true;
+	while(running)
 		if (!RunOnce())
 			break;
+}
+
+void EventLoop::Init()
+{
 }
 
 void EventLoop::Shutdown()
@@ -60,3 +67,9 @@ void EventLoop::UpdateTime()
 {
 	now = ::Now();
 }
+
+void EventLoop::Stop()
+{
+	running = false;
+}
+

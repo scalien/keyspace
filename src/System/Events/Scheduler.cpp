@@ -23,4 +23,5 @@ void Scheduler::Reset(Timer* timer)
 
 void Scheduler::Shutdown()
 {
+	timers.Clear();
 }
