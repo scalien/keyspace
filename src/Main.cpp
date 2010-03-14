@@ -150,8 +150,8 @@ int main(int argc, char* argv[])
 		
 		if (mode == replicated && deleteDB)
 		{
-			snprintf(buf, SIZE(buf), "rm %s/__*", dbConfig.dir);
-			system(buf);
+//			snprintf(buf, SIZE(buf), "rm %s/__*", dbConfig.dir);
+//			system(buf);
 			snprintf(buf, SIZE(buf), "rm %s/log*", dbConfig.dir);
 			system(buf);
 			snprintf(buf, SIZE(buf), "rm %s/keyspace", dbConfig.dir);
