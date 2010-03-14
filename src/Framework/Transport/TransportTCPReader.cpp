@@ -34,9 +34,11 @@ TransportTCPReader::~TransportTCPReader()
 	{
 		conn = *it;
 		it = conns.Next(it);
-		
+		conn->Close();
 		delete conn;
 	}
+	
+	Close();
 }
 
 bool TransportTCPReader::Init(int port)

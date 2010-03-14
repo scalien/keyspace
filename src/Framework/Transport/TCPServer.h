@@ -15,6 +15,7 @@ public:
 	virtual ~TCPServer() {}
 	
 	bool				Init(int port);
+	void				Close();
 	
 protected:
 	TCPRead				tcpread;
@@ -64,6 +65,12 @@ public:
 		tcpread.onComplete = &onConnect;
 		
 		return IOProcessor::Add(&tcpread);	
+	}
+	
+	void Close()
+	{
+		IOProcessor::Remove(&tcpread);
+		listener.Close();
 	}
 
 	void DeleteConn(Conn* conn)

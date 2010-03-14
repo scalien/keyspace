@@ -26,5 +26,12 @@ bool TCPServer::Init(int port)
 	tcpread.listening = true;
 	tcpread.onComplete = &onConnect;
 	
-	return IOProcessor::Add(&tcpread);	
+	return IOProcessor::Add(&tcpread);
+}
+
+
+void TCPServer::Close()
+{
+	IOProcessor::Remove(&tcpread);
+	listener.Close();
 }
