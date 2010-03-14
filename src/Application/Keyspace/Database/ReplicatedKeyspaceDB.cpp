@@ -432,6 +432,7 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 //		RESTART("exiting to truncate database");
 	if (RLOG->GetPaxosID() > 0)
 	{
+		Log_Message("Truncating database");
 		deleteDB = true;
 		EventLoop::Stop();
 		return;
