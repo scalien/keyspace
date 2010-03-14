@@ -11,6 +11,8 @@ class HttpServer : public TCPServerT<HttpServer, HttpConn>
 {
 public:
 	void			Init(KeyspaceDB* kdb, int port);
+	void			Shutdown();
+	
 	void			InitConn(HttpConn* conn);
 
 private:

@@ -22,6 +22,11 @@ void KeyspaceServer::Init(KeyspaceDB* kdb_, int port_)
 	bytesRead = 0;
 }
 
+void KeyspaceServer::Shutdown()
+{
+	Close();
+}
+
 void KeyspaceServer::InitConn(KeyspaceConn* conn)
 {
 	conn->Init(kdb, this);

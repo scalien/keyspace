@@ -10,6 +10,11 @@ void HttpServer::Init(KeyspaceDB* kdb_, int port)
 	kdb = kdb_;
 }
 
+void HttpServer::Shutdown()
+{
+	Close();
+}
+
 void HttpServer::InitConn(HttpConn* conn)
 {
 	conn->Init(kdb, this);

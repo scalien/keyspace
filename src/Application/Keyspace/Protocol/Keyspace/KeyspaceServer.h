@@ -20,6 +20,8 @@ public:
 	KeyspaceServer();
 	
 	void				Init(KeyspaceDB* kdb, int port);
+	void				Shutdown();
+	
 	void				InitConn(KeyspaceConn* conn);
 	void				DeleteConn(KeyspaceConn* conn);
 	void				OnThruputTimeout();
