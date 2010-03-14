@@ -71,7 +71,7 @@ static int			epollfd = 0;
 static int			maxfd;
 static PipeOp		asyncPipeOp;
 static EpollOp*		epollOps;
-static volatile bool terminated;
+static volatile bool terminated = false;
 
 static bool			AddEvent(int fd, uint32_t filter, IOOperation* ioop);
 
@@ -145,6 +145,8 @@ bool IOProcessor::Init(int maxfd_)
 {
 	int i;
 	rlimit rl;
+
+	terminated = false;
 
 	if (epollfd > 0)
 		return true;

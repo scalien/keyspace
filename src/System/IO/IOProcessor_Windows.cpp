@@ -161,6 +161,8 @@ bool IOProcessor::Init(int maxfd)
 	GUID		guid = WSAID_CONNECTEX;
 	DWORD		bytesReturned;
 
+	terminated = false;
+
 	if (iocp)
 		return true;
 
