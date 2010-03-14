@@ -3,7 +3,6 @@
 #include "Log.h"
 #include "Containers/Queue.h"
 
-
 class ConfigVar
 {
 public:

@@ -69,7 +69,7 @@ public:
 	
 	void Close()
 	{
-		IOProcessor::Remove(&tcpread);
+//		IOProcessor::Remove(&tcpread);
 		listener.Close();
 	}
 

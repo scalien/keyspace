@@ -138,7 +138,7 @@ void Database::Shutdown()
 	delete cpThread;
 	delete keyspace;	
 	env->close(0);
-	delete env;
+//	delete env;
 }
 
 Table* Database::GetTable(const char* name)

@@ -150,12 +150,15 @@ int main(int argc, char* argv[])
 		
 		if (mode == replicated && deleteDB)
 		{
-//			snprintf(buf, SIZE(buf), "rm %s/__*", dbConfig.dir);
-//			system(buf);
-			snprintf(buf, SIZE(buf), "rm %s/log*", dbConfig.dir);
-			system(buf);
-			snprintf(buf, SIZE(buf), "rm %s/keyspace", dbConfig.dir);
-			system(buf);
+//			snprintf(buf, SIZE(buf), "%s/__*", dbConfig.dir);
+//			DeleteWC(buf);
+			snprintf(buf, SIZE(buf), "%s/log*", dbConfig.dir);
+			DeleteWC(buf);
+			snprintf(buf, SIZE(buf), "%s/keyspace", dbConfig.dir);
+			DeleteWC(buf);
+#ifdef _WIN32
+			MSleep(3000); // otherwise Windows won't let use reuse the same ports
+#endif
 			goto run;
 		}
 	}

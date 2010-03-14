@@ -36,6 +36,10 @@ uint64_t strntouint64(const char* buffer, int length, unsigned* nread);
 
 char* strnchr(const char* s, int c, size_t len);
 
+char* strrep(char* s, char src, char dst);
+
+bool DeleteWC(const char* wc); // wildcard support
+
 const char* rprintf(const char* format, ...);
 
 void* Alloc(int num, int size = 1);

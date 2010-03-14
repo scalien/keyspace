@@ -5,6 +5,9 @@
 #include <sys/stat.h>
 #include <signal.h>
 #include "Buffer.h"
+#ifdef _WIN32
+#include "process.h"
+#endif
 
 int64_t strntoint64(const char* buffer, int length, unsigned* nread)
 {
@@ -99,6 +102,34 @@ char* strnchr(const char* s, int c, size_t len)
 		return (char*) (s + i);
 	
 	return NULL;
+}
+
+char* strrep(char* s, char src, char dst)
+{
+	unsigned len;
+	unsigned i;
+
+	len = strlen(s);
+	for (i = 0; i < len; i++)
+		if (s[i] == src)
+			s[i] = dst;
+
+	return s;
+}
+
+bool DeleteWC(const char* wc)
+{
+	char buf[4096];
+	
+	strcpy(buf, wc);
+#ifdef _WIN32
+	strrep(buf, '/', '\\');
+//	return DeleteFile((LPCSTR)buf);
+	return (_spawnlp(_P_WAIT, "cmd", "/c" "del", buf, NULL) == 0);
+#elif
+	snprint(buf, SIZE(buf), "rm %s", wc);
+	return (system(buf) == 0);
+#endif
 }
 
 int randint(int min, int max)

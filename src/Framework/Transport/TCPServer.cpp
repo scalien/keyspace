@@ -32,6 +32,6 @@ bool TCPServer::Init(int port)
 
 void TCPServer::Close()
 {
-	IOProcessor::Remove(&tcpread);
+//	IOProcessor::Remove(&tcpread);
 	listener.Close();
 }
