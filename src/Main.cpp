@@ -20,8 +20,11 @@
 
 int main(int argc, char* argv[])
 {
+	enum		{ single, replicated, missing } mode;
 	int			logTargets;
 	const char*	user;
+	char		buf[4096];
+	bool		deleteDB;
 	
 	if (argc == 1)
 	{
@@ -39,7 +42,18 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "usage: %s <config-file>\n", argv[0]);
 		STOP_FAIL("invalid arguments", 1);
 	}
-	 	
+	
+	mode = missing;
+	if (strcmp("single", Config::GetValue("mode", "")) == 0)
+		mode = single;
+	else if (strcmp("replicated", Config::GetValue("mode", "")) == 0)
+		mode = replicated;
+	else
+	{
+		fprintf(stderr, "specify mode = single or mode = replicated\n");
+		STOP_FAIL("invalid configuration file", 1);
+	}
+	
 	logTargets = 0;
 	if (Config::GetListNum("log.targets") == 0)
 		logTargets = LOG_TARGET_STDOUT;
@@ -58,71 +72,96 @@ int main(int argc, char* argv[])
 	}
 	Log_SetTarget(logTargets);
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
-	//Log_SetTrace(Config::GetBoolValue("log.trace", true));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
 
 	Log_Message(VERSION_FMT_STRING " started",
 		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
 
-	if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
-		STOP_FAIL("Cannot initalize IOProcessor!", 1);
-
-	// after io is initialized, drop root rights
-	user = Config::GetValue("daemon.user", NULL);
-	if (!ChangeUser(user))
-		STOP_FAIL(rprintf("Cannot setuid to %s", user), 1);
-	
-	DatabaseConfig dbConfig;
-	dbConfig.dir = Config::GetValue("database.dir", DATABASE_CONFIG_DIR);
-	dbConfig.pageSize = Config::GetIntValue("database.pageSize", DATABASE_CONFIG_PAGE_SIZE);
-	dbConfig.cacheSize = Config::GetIntValue("database.cacheSize", DATABASE_CONFIG_CACHE_SIZE);
-	dbConfig.logBufferSize = Config::GetIntValue("database.logBufferSize", DATABASE_CONFIG_LOG_BUFFER_SIZE);
-	dbConfig.checkpointTimeout = Config::GetIntValue("database.checkpointTimeout", DATABASE_CONFIG_CHECKPOINT_TIMEOUT);
-	dbConfig.verbose = Config::GetBoolValue("database.verbose", DATABASE_CONFIG_VERBOSE);
-	dbConfig.directDB = Config::GetBoolValue("database.directDB", DATABASE_CONFIG_DIRECT_DB);
-	dbConfig.txnNoSync = Config::GetBoolValue("database.txnNoSync", DATABASE_CONFIG_TXN_NOSYNC);
-	dbConfig.txnWriteNoSync = Config::GetBoolValue("database.txnWriteNoSync", DATABASE_CONFIG_TXN_WRITE_NOSYNC);
-
-	Log_Message("Opening database...");
-	if (!database.Init(dbConfig))
-		STOP_FAIL("Cannot initialize database!", 1);
-	Log_Message("Database opened");
-
- 	dbWriter.Init(1);
-	dbReader.Init(Config::GetIntValue("database.numReaders", 20));
-	
-	if (!RCONF->Init())
-		STOP_FAIL("Cannot initialize paxos!", 1);
-
-	KeyspaceDB* kdb;
-	if (RCONF->GetNumNodes() > 1)
+	run:
 	{
-		RLOG->Init(Config::GetBoolValue("paxos.useSoftClock", true));
-		kdb = new ReplicatedKeyspaceDB;
+		if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
+			STOP_FAIL("Cannot initalize IOProcessor!", 1);
+
+		// after io is initialized, drop root rights
+		user = Config::GetValue("daemon.user", NULL);
+		if (!ChangeUser(user))
+			STOP_FAIL(rprintf("Cannot setuid to %s", user), 1);
+
+		DatabaseConfig dbConfig;
+		dbConfig.dir = Config::GetValue("database.dir", DATABASE_CONFIG_DIR);
+		dbConfig.pageSize = Config::GetIntValue("database.pageSize", DATABASE_CONFIG_PAGE_SIZE);
+		dbConfig.cacheSize = Config::GetIntValue("database.cacheSize", DATABASE_CONFIG_CACHE_SIZE);
+		dbConfig.logBufferSize = Config::GetIntValue("database.logBufferSize", DATABASE_CONFIG_LOG_BUFFER_SIZE);
+		dbConfig.checkpointTimeout = Config::GetIntValue("database.checkpointTimeout", DATABASE_CONFIG_CHECKPOINT_TIMEOUT);
+		dbConfig.verbose = Config::GetBoolValue("database.verbose", DATABASE_CONFIG_VERBOSE);
+		dbConfig.directDB = Config::GetBoolValue("database.directDB", DATABASE_CONFIG_DIRECT_DB);
+		dbConfig.txnNoSync = Config::GetBoolValue("database.txnNoSync", DATABASE_CONFIG_TXN_NOSYNC);
+		dbConfig.txnWriteNoSync = Config::GetBoolValue("database.txnWriteNoSync", DATABASE_CONFIG_TXN_WRITE_NOSYNC);
+
+		Log_Message("Opening database...");
+		if (!database.Init(dbConfig))
+			STOP_FAIL("Cannot initialize database!", 1);
+		Log_Message("Database opened");
+
+		dbWriter.Init(1);
+		dbReader.Init(Config::GetIntValue("database.numReaders", 20));
+		
+		if (!RCONF->Init())
+			STOP_FAIL("Cannot initialize paxos!", 1);
+
+		KeyspaceDB* kdb;
+		if (mode == replicated)
+		{
+			RLOG->Init(Config::GetBoolValue("paxos.useSoftClock", true));
+			kdb = new ReplicatedKeyspaceDB;
+		}
+		else
+		{
+			kdb = new SingleKeyspaceDB;
+		}
+
+		kdb->Init();
+		
+		HttpServer protoHttp;
+		protoHttp.Init(kdb, Config::GetIntValue("http.port", 8080));
+
+		KeyspaceServer protoKeyspace;
+		protoKeyspace.Init(kdb, Config::GetIntValue("keyspace.port", 7080));
+		
+		EventLoop::Init();
+		EventLoop::Run();
+		EventLoop::Shutdown();
+			
+		if (mode == replicated)
+			deleteDB = ((ReplicatedKeyspaceDB*)kdb)->DeleteDB();
+		else
+			deleteDB = false;
+		
+		protoKeyspace.Shutdown();
+		protoHttp.Shutdown();
+		
+		kdb->Shutdown();
+		delete kdb;
+		dbReader.Shutdown();
+		dbWriter.Shutdown();
+		RLOG->Shutdown();
+		database.Shutdown();
+		IOProcessor::Shutdown();
+		
+		if (mode == replicated && deleteDB)
+		{
+			snprintf(buf, SIZE(buf), "rm %s/__*", dbConfig.dir);
+			system(buf);
+			snprintf(buf, SIZE(buf), "rm %s/log*", dbConfig.dir);
+			system(buf);
+			snprintf(buf, SIZE(buf), "rm %s/keyspace", dbConfig.dir);
+			system(buf);
+			goto run;
+		}
 	}
-	else
-	{
-		kdb = new SingleKeyspaceDB;
-	}
 
-	kdb->Init();
-	
-	HttpServer protoHttp;
-	protoHttp.Init(kdb, Config::GetIntValue("http.port", 8080));
-
-	KeyspaceServer protoKeyspace;
-	protoKeyspace.Init(kdb, Config::GetIntValue("keyspace.port", 7080));
-
-	EventLoop::Run();
-	
-	Log_Message("Keyspace shutting down.");
-	kdb->Shutdown();
-	delete kdb;
-	dbReader.Shutdown();
-	dbWriter.Shutdown();
-	RLOG->Shutdown();
-	database.Shutdown();
-	IOProcessor::Shutdown();
+	Log_Message("Keyspace shutting down.");	
 	Config::Shutdown();
 	Log_Shutdown();
+
 }

@@ -49,6 +49,8 @@ public:
 	
 	bool			IsCatchingUp();
 	
+	bool			DeleteDB();
+	
 private:
 	bool			AddWithoutReplicatedLog(KeyspaceOp* op);
 	bool			Execute(Transaction* transaction,
@@ -70,6 +72,7 @@ private:
 	unsigned		numOps;
 	ServerList		pservers;
 	unsigned		estimatedLength;
+	bool			deleteDB;
 };
 
 #endif

@@ -29,12 +29,16 @@ bool ReplicatedKeyspaceDB::Init()
 	catchupClient.Init(this, table);
 
 	estimatedLength = 0;
+	
+	deleteDB = false;
 
 	return true;
 }
 
 void ReplicatedKeyspaceDB::Shutdown()
 {
+	catchupServer.Shutdown();
+	catchupClient.Shutdown();
 }
 
 unsigned ReplicatedKeyspaceDB::GetNodeID()
@@ -424,9 +428,15 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 
 	// this is a workaround because BDB truncate is way too slow for any
 	// database bigger than 1Gb, as confirmed by BDB workers on forums
-	if (RLOG->GetPaxosID() != 0)
-		RESTART("exiting to truncate database");
-
+//	if (RLOG->GetPaxosID() != 0)
+//		RESTART("exiting to truncate database");
+	if (RLOG->GetPaxosID() > 0)
+	{
+		deleteDB = true;
+		EventLoop::Stop();
+		return;
+	}
+	
 	catchingUp = true;
 	RLOG->StopPaxos();
 	RLOG->StopMasterLease();
@@ -458,4 +468,9 @@ void ReplicatedKeyspaceDB::OnCatchupFailed()
 void ReplicatedKeyspaceDB::SetProtocolServer(ProtocolServer* pserver)
 {
 	pservers.Append(pserver);
+}
+
+bool ReplicatedKeyspaceDB::DeleteDB()
+{
+	return deleteDB;
 }
