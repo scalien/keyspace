@@ -72,6 +72,6 @@ Keyspace differentiates *safe* and *dirty* read commands. Safe commands are only
 Additional reading
 ==================
 
-For more details see the Keyspace and PaxosLease whitepapers available for download at http://scalien.com/whitepapers.
+For more details see the Keyspace and PaxosLease whitepapers available at http://scalien.com/whitepapers.
 
 Paxos is explained in Leslie Lamport's paper `Paxos made simple <http://www.google.com/search?client=opera&rls=en&q=paxos+made+simple&sourceid=opera&ie=utf-8&oe=utf-8>`_.

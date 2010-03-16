@@ -21,7 +21,7 @@ To configure Keyspace to run in single mode, put::
 
 as the first line in your keyspace.conf file.
 
-Replicated sample configuration
+Single sample configuration
 -------------------------------
 
 Here is a sample configuration file for a single Keyspace node::
