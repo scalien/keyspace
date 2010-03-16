@@ -106,6 +106,18 @@ class Client:
 			self.result.next()
 		return keys
 	
+	def list_key_values(self, prefix = "", start_key = "", count = 0, next = False, forward = True):
+		status = ListKeyValues(self.co, prefix, start_key, count, next, forward)
+		self.result = Client.Result(GetResult(self.co))
+		if status < 0:
+			return None
+		keyvals = {}
+		self.result.begin()
+		while not self.result.is_end():
+			keyvals[self.result.key()] = self.result.value()
+			self.result.next()
+		return keyvals
+
 	def dirty_list_key_values(self, prefix = "", start_key = "", count = 0, next = False, forward = True):
 		status = DirtyListKeyValues(self.co, prefix, start_key, count, next, forward)
 		self.result = Client.Result(GetResult(self.co))
