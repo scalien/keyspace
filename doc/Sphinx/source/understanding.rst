@@ -8,7 +8,7 @@ Understanding Keyspace
 Replication
 ===========
 
-In Keyspace all write commands (``SET``, ``TESTANDSET``, ``ADD``, ``DELETE``, ``REMOVE``, ``PRUNE``, ``RENAME``) are appended into a *replicated log*. To guarantee that all nodes end up with the same database, all nodes have to execute the commands in the same order. In other words, the local copies of the replicated log have to be identical. This is called **consistent replication**.
+In Keyspace all write commands (``set``, ``test_and_set``, ``add``, ``rename``, ``delete``, ``remove``, ``prune``) are appended into a *replicated log*. To guarantee that all nodes end up with the same database, all nodes have to execute the commands in the same order. In other words, the local copies of the replicated log have to be identical. This is called **consistent replication**.
 
 The replicated log is made up of replication rounds. Each round is no more than 500KB in size and can contain several write commands. Keyspace uses a distributed algorithm called *Paxos* in each replication round. For increased performance, several commands, possibly from different clients are batched and replicated together.
 
