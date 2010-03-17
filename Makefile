@@ -139,13 +139,16 @@ PYTHON_CLIENT_WRAPPER = \
 
 CLIENTLIBS = \
 	$(BIN_DIR)/$(ALIB) \
-	$(BIN_DIR)/$(SOLIB) \
+	$(BIN_DIR)/$(SOLIB)
+
+PYTHONLIB = \
 	$(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB)
 
 EXECUTABLES = \
 	$(BIN_DIR)/keyspaced \
 	$(BIN_DIR)/clienttest \
 	$(BIN_DIR)/bdbtool \
+	$(BIN_DIR)/$(PYTHON_DIR)/*
 	
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -202,6 +205,8 @@ clienttest:
 
 clientlib:
 	$(MAKE) clientlibs BUILD="debug"
+
+pythonlib: $(BUILD_DIR) $(CLIENTLIBS) $(PYTHONLIB)
 
 targets: $(BUILD_DIR) executables clientlibs
 
