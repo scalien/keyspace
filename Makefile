@@ -87,6 +87,7 @@ ALIB = $(LIBNAME).a
 
 PYTHON_DIR = python
 PYTHON_LIB = _keyspace_client.so
+PYTHON_CONFIG = python-config
 
 ifneq ($(BUILD), release)
 BUILD_DIR = $(BUILD_DEBUG_DIR)
@@ -169,11 +170,11 @@ $(BIN_DIR)/$(SOLIB): $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
 
 # python wrapper
 $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o: $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) `python-config --includes` -o $@ -c $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
+	$(CXX) $(CXXFLAGS) `$(PYTHON_CONFIG) --includes` -o $@ -c $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
 
 $(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o
 	-mkdir -p $(BIN_DIR)/$(PYTHON_DIR)
-	$(LD) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
+	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
 	-cp -rf $(SRC_DIR)/Application/Keyspace/Client/Python/keyspace.py $(BIN_DIR)/$(PYTHON_DIR)
 	-cp -rf $(SRC_DIR)/Application/Keyspace/Client/Python/keyspace_client.py $(BIN_DIR)/$(PYTHON_DIR)
 

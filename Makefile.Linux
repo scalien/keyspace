@@ -13,3 +13,4 @@ BASE_CXXFLAGS = $(BASE_CFLAGS)
 BASE_LDFLAGS = -lpthread -ldb_cxx -lrt $(LDPATH)
 SOLINK = -shared -fPIC -Wl,-soname,$(SONAME)
 SOEXT = so
+SWIG_LDFLAGS = -shared -fPIC 
