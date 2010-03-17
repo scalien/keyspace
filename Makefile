@@ -171,7 +171,7 @@ $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o: $(BUILD_DIR)
 
 $(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o
 	-mkdir -p $(BIN_DIR)/$(PYTHON_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB) $(SWIG_LDFLAGS)
+	$(LD) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
 	-cp -rf $(SRC_DIR)/Application/Keyspace/Client/Python/keyspace.py $(BIN_DIR)/$(PYTHON_DIR)
 	-cp -rf $(SRC_DIR)/Application/Keyspace/Client/Python/keyspace_client.py $(BIN_DIR)/$(PYTHON_DIR)
 
