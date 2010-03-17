@@ -89,7 +89,7 @@ PYTHON_DIR = python
 PYTHON_LIB = _keyspace_client.so
 PYTHON_CONFIG = python-config
 
-ifneq ($(BUILD), release)
+ifeq ($(BUILD), debug)
 BUILD_DIR = $(BUILD_DEBUG_DIR)
 CFLAGS = $(BASE_CFLAGS) $(DEBUG_CFLAGS)
 CXXFLAGS = $(BASE_CXXFLAGS) $(DEBUG_CFLAGS)
@@ -201,10 +201,10 @@ release:
 	$(MAKE) targets BUILD="release"
 
 clienttest:
-	$(MAKE) targets BUILD="debug"
+	$(MAKE) targets BUILD="release"
 
 clientlib:
-	$(MAKE) clientlibs BUILD="debug"
+	$(MAKE) clientlibs BUILD="release"
 
 pythonlib: $(BUILD_DIR) $(CLIENTLIBS) $(PYTHONLIB)
 
