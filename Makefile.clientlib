@@ -15,4 +15,9 @@ CLIENTLIB_OBJECTS = \
 	$(BUILD_DIR)/System/IO/Endpoint.o \
 	$(BUILD_DIR)/System/IO/Socket_Posix.o \
 	$(BUILD_DIR)/System/IO/IOProcessor_$(PLATFORM).o \
-	
+
+SWIG_LIB_OBJECT = \
+	$(BUILD_DIR)/Application/Keyspace/Client/KeyspaceClientWrap.o
+
+PYTHON_CLIENT_OBJECT = \
+	$(BUILD_DIR)/Application/Keyspace/Client/Python/keyspace_client_python.o

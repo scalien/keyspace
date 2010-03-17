@@ -8,6 +8,7 @@ $(BUILD_DIR):
 		$(BUILD_DIR)/Application/Keyspace/ \
 		$(BUILD_DIR)/Application/Keyspace/Catchup \
 		$(BUILD_DIR)/Application/Keyspace/Client/ \
+		$(BUILD_DIR)/Application/Keyspace/Client/Python \
 		$(BUILD_DIR)/Application/Keyspace/Database/ \
 		$(BUILD_DIR)/Application/Keyspace/Protocol/ \
 		$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP \
