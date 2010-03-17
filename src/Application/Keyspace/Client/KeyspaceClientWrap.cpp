@@ -127,7 +127,7 @@ int	Init(ClientObj client_, const NodeParams& params)
 
 	Log_SetTrace(true);
 	Log_SetTarget(LOG_TARGET_STDOUT);
-	status = client->Init(params.nodec, params.nodes);
+	status = client->Init(params.nodec, (const char**)params.nodes);
 	
 	return status;
 }
