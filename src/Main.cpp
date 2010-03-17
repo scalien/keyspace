@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 		mode = single;
 	else if (strcmp("replicated", Config::GetValue("mode", "")) == 0)
 		mode = replicated;
-	else if (strcmp("missing", mode) == 0)
+	else if (mode == missing)
 	{
 		fprintf(stderr, "specify mode = single or mode = replicated\n");
 		STOP_FAIL("invalid configuration file", 1);
