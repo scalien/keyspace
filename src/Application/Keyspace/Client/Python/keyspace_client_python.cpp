@@ -4569,10 +4569,10 @@ SWIGINTERN PyObject *_wrap_NodeParams_nodes_set(PyObject *SWIGUNUSEDPARM(self), 
   arg1 = reinterpret_cast< NodeParams * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_p_char, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "NodeParams_nodes_set" "', argument " "2"" of type '" "char const **""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "NodeParams_nodes_set" "', argument " "2"" of type '" "char **""'"); 
   }
   arg2 = reinterpret_cast< char ** >(argp2);
-  if (arg1) (arg1)->nodes = (char const **)arg2;
+  if (arg1) (arg1)->nodes = arg2;
   
   resultobj = SWIG_Py_Void();
   return resultobj;
@@ -4603,7 +4603,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_i_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_NodeParams_num_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   NodeParams *arg1 = (NodeParams *) 0 ;
   int arg2 ;
@@ -4614,18 +4614,18 @@ SWIGINTERN PyObject *_wrap_NodeParams_i_set(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:NodeParams_i_set",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:NodeParams_num_set",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_i_set" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_num_set" "', argument " "1"" of type '" "NodeParams *""'"); 
   }
   arg1 = reinterpret_cast< NodeParams * >(argp1);
   ecode2 = SWIG_AsVal_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "NodeParams_i_set" "', argument " "2"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "NodeParams_num_set" "', argument " "2"" of type '" "int""'");
   } 
   arg2 = static_cast< int >(val2);
-  if (arg1) (arg1)->i = arg2;
+  if (arg1) (arg1)->num = arg2;
   
   resultobj = SWIG_Py_Void();
   return resultobj;
@@ -4634,7 +4634,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_i_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_NodeParams_num_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   NodeParams *arg1 = (NodeParams *) 0 ;
   int result;
@@ -4642,13 +4642,13 @@ SWIGINTERN PyObject *_wrap_NodeParams_i_get(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:NodeParams_i_get",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:NodeParams_num_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_i_get" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_num_get" "', argument " "1"" of type '" "NodeParams *""'"); 
   }
   arg1 = reinterpret_cast< NodeParams * >(argp1);
-  result = (int) ((arg1)->i);
+  result = (int) ((arg1)->num);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -5915,8 +5915,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"NodeParams_nodec_get", _wrap_NodeParams_nodec_get, METH_VARARGS, NULL},
 	 { (char *)"NodeParams_nodes_set", _wrap_NodeParams_nodes_set, METH_VARARGS, NULL},
 	 { (char *)"NodeParams_nodes_get", _wrap_NodeParams_nodes_get, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_i_set", _wrap_NodeParams_i_set, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_i_get", _wrap_NodeParams_i_get, METH_VARARGS, NULL},
+	 { (char *)"NodeParams_num_set", _wrap_NodeParams_num_set, METH_VARARGS, NULL},
+	 { (char *)"NodeParams_num_get", _wrap_NodeParams_num_get, METH_VARARGS, NULL},
 	 { (char *)"NodeParams_swigregister", NodeParams_swigregister, METH_VARARGS, NULL},
 	 { (char *)"ResultBegin", _wrap_ResultBegin, METH_VARARGS, NULL},
 	 { (char *)"ResultNext", _wrap_ResultNext, METH_VARARGS, NULL},

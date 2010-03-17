@@ -123,9 +123,9 @@ class NodeParams(_object):
     __swig_setmethods__["nodes"] = _keyspace_client.NodeParams_nodes_set
     __swig_getmethods__["nodes"] = _keyspace_client.NodeParams_nodes_get
     if _newclass:nodes = _swig_property(_keyspace_client.NodeParams_nodes_get, _keyspace_client.NodeParams_nodes_set)
-    __swig_setmethods__["i"] = _keyspace_client.NodeParams_i_set
-    __swig_getmethods__["i"] = _keyspace_client.NodeParams_i_get
-    if _newclass:i = _swig_property(_keyspace_client.NodeParams_i_get, _keyspace_client.NodeParams_i_set)
+    __swig_setmethods__["num"] = _keyspace_client.NodeParams_num_set
+    __swig_getmethods__["num"] = _keyspace_client.NodeParams_num_get
+    if _newclass:num = _swig_property(_keyspace_client.NodeParams_num_get, _keyspace_client.NodeParams_num_set)
 NodeParams_swigregister = _keyspace_client.NodeParams_swigregister
 NodeParams_swigregister(NodeParams)
 
