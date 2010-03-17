@@ -147,8 +147,7 @@ PYTHONLIB = \
 EXECUTABLES = \
 	$(BIN_DIR)/keyspaced \
 	$(BIN_DIR)/clienttest \
-	$(BIN_DIR)/bdbtool \
-	$(BIN_DIR)/$(PYTHON_DIR)/*
+	$(BIN_DIR)/bdbtool
 	
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -251,6 +250,7 @@ clean-release:
 	
 clean-libs:
 	-rm $(CLIENTLIBS)
+	-rm $(BIN_DIR)/$(PYTHON_DIR)/*
 
 clean-executables:
 	-rm $(EXECUTABLES)
