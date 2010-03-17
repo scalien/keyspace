@@ -12,9 +12,11 @@ struct NodeParams
 {
 	NodeParams(int nodec_)
 	{
-		i = 0;
+		num = 0;
 		nodec = nodec_;
-		nodes = new const char*[nodec];
+		nodes = new char*[nodec];
+		for (int i = 0; i < nodec; i++)
+			nodes[i] = NULL;
 	}
 	
 	~NodeParams()
@@ -24,21 +26,23 @@ struct NodeParams
 	
 	void Close()
 	{
+		for (int i = 0; i < num; i++)
+			free(nodes[i]);
 		delete[] nodes;
 		nodes = NULL;
-		i = 0;
+		num = 0;
 	}
 	
 	void AddNode(const std::string& node)
 	{
-		if (i > nodec)
+		if (num > nodec)
 			return;
-		nodes[i++] = node.c_str();
+		nodes[num++] = strdup(node.c_str());
 	}
 
 	int				nodec;
-	const char**	nodes;
-	int				i;
+	char**			nodes;
+	int				num;
 };
 
 void		ResultBegin(ResultObj result);
