@@ -10,7 +10,7 @@ Installing from source on Linux and other UNIX platforms
 
 In order to use the Keyspace C libraries, you need to first build it. The standard ``make`` command also builds the client libraries, or use::
 
-  make clientlibs
+  $ make clientlibs
 
 in the Keyspace folder to explicitly build it. This will place the static library ``libkeyspaceclient.a`` and the dynamic library ``libkeyspaceclient.so`` (``.dylib`` under Darwin) in the ``bin`` folder. The header file ``keyspace_client.h`` is located in ``src/Application/Keyspace/Client``.
 
@@ -219,7 +219,7 @@ The ``list_keys`` command retrieves all keys from the Keyspace cluster which sta
 - listing can skip the first key
 - the last parameter specifies whether the command is dirty (``0`` for safe, ``1`` for dirty)
 
-Then the signature of the function is::
+The signature of the function is::
 
   int keyspace_client_list_keys(keyspace_client_t kc, 
 		const void *prefix, unsigned prefixlen,
@@ -278,7 +278,7 @@ The ``list_keyvalues`` command retrieves all keys and values from the Keyspace c
 - listing can skip the first key
 - the last parameter specifies whether the command is dirty (``0`` for safe, ``1`` for dirty)
 
-Then the signature of the function is::
+The signature of the function is::
 
   int keyspace_client_list_keyvalues(keyspace_client_t kc, 
 		const void *prefix, unsigned prefixlen,

@@ -88,9 +88,15 @@ BDB related. The directory where the BerkeleyDB files are stored. If you run  mu
 
 ::
 
-  database.cacheSize = 100M
+  database.cacheSize = 500M
 
 Set the cache size in backend database. Keyspace performance will degrade once the size of your database exceeds the cache size. Ideally, you should set this to a little less than the amount of RAM in your machine.
+
+::
+
+  database.logBufferSize = 250M
+
+Sets the buffer size for transaction logs.
 
 ::
 
@@ -149,12 +155,6 @@ Set the page size (in bytes) in the backend database. Leave this alone unless yo
 
 ::
 
-  database.logBufferSize = 2M
-
-Sets the buffer size for transaction logs.
-
-::
-
   database.checkpointTimeout = 60
 
 Database checkpointing occurs this often in seconds. Checkpointing is when the storage engine compacts the transaction log files into the main database file. You will see the ``log*`` files disappearing and the file called ``keyspace``, which is the main database, increasing in size.
@@ -205,6 +205,13 @@ Here is a sample configuration file for running a 3-way replicated cluster::
   log.targets = stdout, file
   log.file = keyspace.log
   log.timestamping = false
+
+Comments
+========
+
+Lines beginning with ``#`` are treated as comments::
+
+  # this is a comment
 
 Client configuration
 ====================
