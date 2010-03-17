@@ -85,10 +85,6 @@ SONAME = $(LIBNAME).$(SOEXT).$(VERSION_MAJOR)
 SOLIB = $(LIBNAME).$(SOEXT)
 ALIB = $(LIBNAME).a
 
-PYTHON_DIR = python
-PYTHON_LIB = _keyspace_client.so
-PYTHON_CONFIG = python-config
-
 ifeq ($(BUILD), debug)
 BUILD_DIR = $(BUILD_DEBUG_DIR)
 CFLAGS = $(BASE_CFLAGS) $(DEBUG_CFLAGS)
@@ -135,15 +131,18 @@ TEST_OBJECTS = \
 SWIG_WRAPPER_OBJECT = \
 	$(BUILD_DIR)/Application/Keyspace/Client/KeyspaceClientWrap.o
 
-PYTHON_CLIENT_WRAPPER = \
-	Application/Keyspace/Client/Python/keyspace_client_python
+CLIENT_DIR = \
+	Application/Keyspace/Client
 
+CLIENT_WRAPPER_FILES = \
+	$(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i \
+	$(SRC_DIR)/$(CLIENT_DIR)/KeyspaceClientWrap.h \
+	$(SRC_DIR)/$(CLIENT_DIR)/KeyspaceClientWrap.cpp
+	
 CLIENTLIBS = \
 	$(BIN_DIR)/$(ALIB) \
 	$(BIN_DIR)/$(SOLIB)
 
-PYTHONLIB = \
-	$(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB)
 
 EXECUTABLES = \
 	$(BIN_DIR)/keyspaced \
@@ -169,14 +168,55 @@ $(BIN_DIR)/$(SOLIB): $(BUILD_DIR) $(CLIENTLIB_OBJECTS)
 	$(CC) $(SOLINK) -o $@ $(CLIENTLIB_OBJECTS) $(LDFLAGS)
 
 # python wrapper
-$(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o: $(BUILD_DIR)
+PYTHON_DIR = python
+PYTHON_LIB = _keyspace_client.so
+PYTHON_CONFIG = python-config
+
+PYTHON_CLIENT_DIR = \
+	$(CLIENT_DIR)/Python
+
+PYTHON_CLIENT_WRAPPER = \
+	$(PYTHON_CLIENT_DIR)/keyspace_client_python
+
+PYTHONLIB = \
+	$(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB)
+
+$(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
+	-swig -python -c++ -outdir $(SRC_DIR)/$(CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PYTHON_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+
+$(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
 	$(CXX) $(CXXFLAGS) `$(PYTHON_CONFIG) --includes` -o $@ -c $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
 
 $(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o
 	-mkdir -p $(BIN_DIR)/$(PYTHON_DIR)
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
-	-cp -rf $(SRC_DIR)/Application/Keyspace/Client/Python/keyspace.py $(BIN_DIR)/$(PYTHON_DIR)
-	-cp -rf $(SRC_DIR)/Application/Keyspace/Client/Python/keyspace_client.py $(BIN_DIR)/$(PYTHON_DIR)
+	-cp -rf $(SRC_DIR)/$(PYTHON_CLIENT_DIR)/keyspace.py $(BIN_DIR)/$(PYTHON_DIR)
+	-cp -rf $(SRC_DIR)/$(PYTHON_CLIENT_DIR)/keyspace_client.py $(BIN_DIR)/$(PYTHON_DIR)
+
+# java wrapper
+JAVA_DIR = java
+JAVA_LIB = libkeyspace_client.$(SOEXT)
+JAVA_INCLUDE = 
+
+JAVA_CLIENT_DIR = \
+	$(CLIENT_DIR)/Java
+
+JAVA_CLIENT_WRAPPER = \
+	$(JAVA_CLIENT_DIR)/keyspace_client_java
+
+JAVALIB = \
+	$(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB)
+
+$(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
+	-swig -java -c++ -outdir $(SRC_DIR)/$(CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(JAVA_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+
+$(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
+	$(CXX) $(CXXFLAGS) $(JAVA_INCLUDE) -o $@ -c $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
+
+$(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o
+	-mkdir -p $(BIN_DIR)/$(JAVA_DIR)
+	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
+	
 
 # executables	
 $(BIN_DIR)/keyspaced: $(BUILD_DIR) $(LIBS) $(OBJECTS)
@@ -207,6 +247,8 @@ clientlib:
 	$(MAKE) clientlibs BUILD="release"
 
 pythonlib: $(BUILD_DIR) $(CLIENTLIBS) $(PYTHONLIB)
+
+javalib: $(BUILD_DIR) $(CLIENTLIBS) $(JAVALIB)
 
 targets: $(BUILD_DIR) executables clientlibs
 

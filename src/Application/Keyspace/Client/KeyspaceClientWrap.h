@@ -108,5 +108,4 @@ bool		IsBatched(ClientObj client);
 // debugging command
 void		SetTrace(bool trace);
 
-
 #endif
