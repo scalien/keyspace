@@ -4,5 +4,6 @@
 #define PAXOS_SIZE (500*KB)
 #define RLOG_SIZE (PAXOS_SIZE + 10*KB)
 
+#define REQUEST_CHOSEN_TIMEOUT 7000
 
 #endif

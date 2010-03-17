@@ -5,6 +5,7 @@
 #include "System/Log.h"
 #include "System/Events/EventLoop.h"
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
+#include "PaxosConsts.h"
 
 PaxosLearner::PaxosLearner()
 {
@@ -12,13 +13,22 @@ PaxosLearner::PaxosLearner()
 
 void PaxosLearner::Init(Writers writers_)
 {
-	writers = writers_;	
+	writers = writers_;
+	lastRequestChosenTime = 0;
+	lastRequestChosenPaxosID = 0;
 	state.Init();
 }
 
 bool PaxosLearner::RequestChosen(unsigned nodeID)
 {
 	Log_Trace();
+	
+	if (lastRequestChosenPaxosID == paxosID &&
+	EventLoop::Now() - lastRequestChosenTime < REQUEST_CHOSEN_TIMEOUT)
+		return true;
+	
+	lastRequestChosenPaxosID = paxosID;
+	lastRequestChosenTime = EventLoop::Now();
 	
 	msg.RequestChosen(paxosID, RCONF->GetNodeID());
 	

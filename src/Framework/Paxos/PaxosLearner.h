@@ -38,6 +38,8 @@ protected:
 	uint64_t	paxosID;
 	PaxosMsg	msg;
 	State		state;
+	uint64_t	lastRequestChosenTime;
+	uint64_t	lastRequestChosenPaxosID;
 };
 
 #endif
