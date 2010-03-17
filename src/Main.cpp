@@ -26,11 +26,13 @@ int main(int argc, char* argv[])
 	char		buf[4096];
 	bool		deleteDB;
 	
+	mode = missing;
 	if (argc == 1)
 	{
 		fprintf(stderr, "You did not specify a config file!\n");
 		fprintf(stderr, "Starting in single mode with defaults...\n");
 		fprintf(stderr, "Using database.dir = '%s'\n", DATABASE_CONFIG_DIR);
+		mode = single;
 	}
 	else if (argc == 2)	
 	{
@@ -43,7 +45,6 @@ int main(int argc, char* argv[])
 		STOP_FAIL("invalid arguments", 1);
 	}
 	
-	mode = missing;
 	if (strcmp("single", Config::GetValue("mode", "")) == 0)
 		mode = single;
 	else if (strcmp("replicated", Config::GetValue("mode", "")) == 0)
