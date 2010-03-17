@@ -692,6 +692,14 @@ int Client::Cancel()
 	return KEYSPACE_SUCCESS;
 }
 
+bool Client::IsBatched()
+{
+	if (result)
+		return result->isBatched;
+	
+	return false;
+}
+
 void Client::EventLoop()
 {
 	if (!conns)

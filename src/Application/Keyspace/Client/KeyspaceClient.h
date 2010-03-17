@@ -93,6 +93,7 @@ public:
 	int				Begin();
 	int				Submit();
 	int				Cancel();
+	bool			IsBatched();
 
 private:
 	friend class ClientConn;
