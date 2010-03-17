@@ -204,7 +204,9 @@ class Client:
 		return Begin(self.co)
 	
 	def submit(self):
-		return Submit(self.co)
+		status = Submit(self.co)
+		self.result = Client.Result(GetResult(self.co))
+		return status
 	
 	def cancel(self):
 		return Cancel(self.co)
