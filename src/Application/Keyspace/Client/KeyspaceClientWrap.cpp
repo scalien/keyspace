@@ -1,6 +1,47 @@
 #include "KeyspaceClientWrap.h"
 #include "KeyspaceClient.h"
+#include "System/Platform.h"
 
+/////////////////////////////////////////////////////////////////////
+//
+// NodeParams implementation
+//
+/////////////////////////////////////////////////////////////////////
+NodeParams::NodeParams(int nodec_)
+{
+	num = 0;
+	nodec = nodec_;
+	nodes = new char*[nodec];
+	for (int i = 0; i < nodec; i++)
+		nodes[i] = NULL;
+}
+	
+NodeParams::~NodeParams()
+{
+	Close();
+}
+	
+void NodeParams::Close()
+{
+	for (int i = 0; i < num; i++)
+		free(nodes[i]);
+	delete[] nodes;
+	nodes = NULL;
+	num = 0;
+}
+	
+void NodeParams::AddNode(const std::string& node)
+{
+	if (num > nodec)
+		return;
+	nodes[num++] = strdup(node.c_str());
+}
+
+/////////////////////////////////////////////////////////////////////
+//
+// Result functions
+//
+/////////////////////////////////////////////////////////////////////
 void ResultBegin(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
@@ -114,7 +155,11 @@ int ResultCommandStatus(ResultObj result_)
 	return result->CommandStatus();
 }
 
-
+/////////////////////////////////////////////////////////////////////
+//
+// Client functions
+//
+/////////////////////////////////////////////////////////////////////
 ClientObj Create()
 {
 	return new Keyspace::Client();
@@ -125,11 +170,16 @@ int	Init(ClientObj client_, const NodeParams& params)
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	int					status;
 
-	Log_SetTrace(true);
-	Log_SetTarget(LOG_TARGET_STDOUT);
 	status = client->Init(params.nodec, (const char**)params.nodes);
 	
 	return status;
+}
+
+void Destroy(ClientObj client_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+
+	delete client;
 }
 
 ResultObj GetResult(ClientObj client_)
@@ -137,6 +187,48 @@ ResultObj GetResult(ClientObj client_)
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 		
 	return client->GetResult();
+}
+
+void SetGlobalTimeout(ClientObj client_, uint64_t timeout)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+
+	client->SetGlobalTimeout(timeout);
+}
+
+void SetMasterTimeout(ClientObj client_, uint64_t timeout)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+
+	client->SetMasterTimeout(timeout);
+}
+
+uint64_t GetGlobalTimeout(ClientObj client_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	
+	return client->GetGlobalTimeout();
+}
+
+uint64_t GetMasterTimeout(ClientObj client_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	
+	return client->GetMasterTimeout();
+}
+
+int GetMaster(ClientObj client_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	
+	return client->GetMaster();
+}
+
+void DistributeDirty(ClientObj client_, bool dd)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+
+	client->DistributeDirty(dd);
 }
 
 int Get(ClientObj client_, const std::string& key_)
@@ -332,3 +424,18 @@ bool IsBatched(ClientObj client_)
 	
 	return client->IsBatched();
 }
+
+void SetTrace(bool trace)
+{
+	if (trace)
+	{
+		Log_SetTrace(true);
+		Log_SetTarget(LOG_TARGET_STDOUT);
+	}
+	else
+	{
+		Log_SetTrace(false);
+		Log_SetTarget(LOG_TARGET_NOWHERE);
+	}
+}
+

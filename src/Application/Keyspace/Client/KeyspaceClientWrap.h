@@ -8,37 +8,14 @@
 typedef void * ClientObj;
 typedef void * ResultObj;
 
+// helper class for converting node array to Init argument
 struct NodeParams
 {
-	NodeParams(int nodec_)
-	{
-		num = 0;
-		nodec = nodec_;
-		nodes = new char*[nodec];
-		for (int i = 0; i < nodec; i++)
-			nodes[i] = NULL;
-	}
-	
-	~NodeParams()
-	{
-		Close();
-	}
-	
-	void Close()
-	{
-		for (int i = 0; i < num; i++)
-			free(nodes[i]);
-		delete[] nodes;
-		nodes = NULL;
-		num = 0;
-	}
-	
-	void AddNode(const std::string& node)
-	{
-		if (num > nodec)
-			return;
-		nodes[num++] = strdup(node.c_str());
-	}
+	NodeParams(int nodec_);
+	~NodeParams();
+
+	void Close();
+	void AddNode(const std::string& node);
 
 	int				nodec;
 	char**			nodes;
@@ -58,7 +35,17 @@ int			ResultCommandStatus(ResultObj result);
 
 ClientObj	Create();
 int			Init(ClientObj client, const NodeParams &params);
+void		Destroy(ClientObj client);
 ResultObj	GetResult(ClientObj);
+
+void		SetGlobalTimeout(ClientObj client, uint64_t timeout);
+void		SetMasterTimeout(ClientObj client, uint64_t timeout);
+uint64_t	GetGlobalTimeout(ClientObj client);
+uint64_t	GetMasterTimeout(ClientObj client);
+
+// connection state related commands
+int			GetMaster(ClientObj client);
+void		DistributeDirty(ClientObj client, bool dd);
 
 int			Get(ClientObj client, const std::string& key);
 int			DirtyGet(ClientObj client, const std::string& key);
@@ -117,5 +104,9 @@ int			Begin(ClientObj client);
 int			Submit(ClientObj client);
 int			Cancel(ClientObj client);
 bool		IsBatched(ClientObj client);
+
+// debugging command
+void		SetTrace(bool trace);
+
 
 #endif

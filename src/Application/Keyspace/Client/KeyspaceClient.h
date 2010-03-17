@@ -30,9 +30,7 @@ public:
 	
 	// connection state related commands
 	int				GetMaster();
-	int				GetState(int node);
 	void			DistributeDirty(bool dd);
-	void			SetAutoFailover(bool fo);
 	
 	Result*			GetResult();
 
@@ -132,7 +130,6 @@ private:
 	Result*			result;
 	bool			masterQuery;
 	bool			distributeDirty;
-	bool			autoFailover;
 	int				currentConn;
 	int				connectivityStatus;
 	int				timeoutStatus;

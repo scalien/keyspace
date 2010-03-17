@@ -75,7 +75,6 @@ int Client::Init(int nodec, const char* nodev[])
 	masterCmdID = 1;
 	masterQuery = false;
 	distributeDirty = false;
-	autoFailover = true;
 	currentConn = 0;
 	
 	return KEYSPACE_SUCCESS;
@@ -134,11 +133,6 @@ int Client::GetMaster()
 void Client::DistributeDirty(bool dd)
 {
 	distributeDirty = dd;
-}
-
-void Client::SetAutoFailover(bool fo)
-{
-	autoFailover = fo;
 }
 
 int Client::Get(const ByteString &key, ByteString &value, bool dirty)

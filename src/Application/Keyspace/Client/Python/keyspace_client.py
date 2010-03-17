@@ -141,7 +141,14 @@ ResultTimeoutStatus = _keyspace_client.ResultTimeoutStatus
 ResultCommandStatus = _keyspace_client.ResultCommandStatus
 Create = _keyspace_client.Create
 Init = _keyspace_client.Init
+Destroy = _keyspace_client.Destroy
 GetResult = _keyspace_client.GetResult
+SetGlobalTimeout = _keyspace_client.SetGlobalTimeout
+SetMasterTimeout = _keyspace_client.SetMasterTimeout
+GetGlobalTimeout = _keyspace_client.GetGlobalTimeout
+GetMasterTimeout = _keyspace_client.GetMasterTimeout
+GetMaster = _keyspace_client.GetMaster
+DistributeDirty = _keyspace_client.DistributeDirty
 Get = _keyspace_client.Get
 DirtyGet = _keyspace_client.DirtyGet
 Count = _keyspace_client.Count
@@ -161,5 +168,6 @@ Begin = _keyspace_client.Begin
 Submit = _keyspace_client.Submit
 Cancel = _keyspace_client.Cancel
 IsBatched = _keyspace_client.IsBatched
+SetTrace = _keyspace_client.SetTrace
 
 
