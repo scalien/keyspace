@@ -12,6 +12,7 @@ public:
 	bool				Push(ByteString& value);
 	ByteString*			Next();
 	ByteString*			Pop();
+	void				Clear();
 	int					Length();
 	
 private:

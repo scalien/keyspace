@@ -28,7 +28,6 @@ private:
 	Buffer			writeBuffer;
 	Table*			table;
 	Cursor			cursor;
-	Transaction		transaction;
 	CatchupMsg		msg;
 	uint64_t		paxosID;
 	KeyBuffer		key;

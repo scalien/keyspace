@@ -86,7 +86,6 @@ private:
 	Func				onLearnLease;
 	Func				onLeaseTimeout;
 	ReplicatedDB*		replicatedDB;
-	bool				safeDB;
 	
 	uint64_t			lastStarted;
 	uint64_t			lastLength;

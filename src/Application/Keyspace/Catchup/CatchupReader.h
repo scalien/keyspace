@@ -7,7 +7,8 @@
 #include "Application/Keyspace/Database/KeyspaceConsts.h"
 #include "CatchupMsg.h"
 
-#define CATCHUP_CONNECT_TIMEOUT	2000
+#define CATCHUP_CONNECT_TIMEOUT		2000
+#define CATCHUP_COMMIT_GRANULARITY	1000
 
 class ReplicatedKeyspaceDB;
 
@@ -32,6 +33,7 @@ private:
 	CatchupMsg		msg;
 	uint64_t		paxosID;
 	Transaction		transaction;
+	uint64_t		count; // experimental
 	ReplicatedKeyspaceDB*	keyspaceDB;
 };
 

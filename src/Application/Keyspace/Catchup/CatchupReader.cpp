@@ -24,6 +24,7 @@ void CatchupReader::Start(unsigned nodeID)
 	Endpoint endpoint;
 
 	ret = true;
+	count = 0;
 	ret &= transaction.Begin();
 	if (!ret)
 		ASSERT_FAIL();
@@ -87,6 +88,12 @@ void CatchupReader::OnKeyValue()
 //	Log_Trace();
 
 	table->Set(&transaction, msg.key, msg.value);
+	count++;
+	if (count % CATCHUP_COMMIT_GRANULARITY == 0)
+	{
+		transaction.Commit();
+		transaction.Begin();
+	}
 }
 
 void CatchupReader::OnCommit()

@@ -99,7 +99,6 @@ bool LogCache::Get(uint64_t paxosID, ByteString& value_)
 {
 	ByteArray<128> buf;
 
-	//buf.Writef("@@round:%U", paxosID);
 	WriteRoundID(buf, paxosID);
 	if (table->Get(NULL, buf, value))
 	{

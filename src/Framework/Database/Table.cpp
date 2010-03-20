@@ -50,11 +50,30 @@ Table::~Table()
 bool Table::Iterate(Transaction* tx, Cursor& cursor)
 {
 	DbTxn* txn = NULL;
-	
+	u_int32_t flags;
+
+	flags = 0;
+
 	if (tx)
 		txn = tx->txn;
 	
-	if (db->cursor(txn, &cursor.cursor, 0) == 0)
+	if (db->cursor(txn, &cursor.cursor, flags) == 0)
+		return true;
+	else
+		return false;
+}
+
+bool Table::IterateBulk(Transaction* tx, CursorBulk& cursor)
+{
+	DbTxn* txn = NULL;
+	u_int32_t flags;
+
+	flags = DB_CURSOR_BULK;
+
+	if (tx)
+		txn = tx->txn;
+	
+	if (db->cursor(txn, &cursor.cursor, flags) == 0)
 		return true;
 	else
 		return false;

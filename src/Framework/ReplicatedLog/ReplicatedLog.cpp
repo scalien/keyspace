@@ -54,8 +54,6 @@ bool ReplicatedLog::Init(bool useSoftClock)
 	
 	logCache.Init(acceptor.paxosID);
 	
-	safeDB = false;
-	
 	return true;
 }
 
@@ -151,7 +149,7 @@ bool ReplicatedLog::Append(ByteString &value_)
 	{
 		if (!rmsg.Init(RCONF->GetNodeID(),
 					   RCONF->GetRestartCounter(),
-					   masterLease.GetLeaseEpoch(), value_))
+					   masterLease.GetLeaseEpoch(), *logQueue.Next()))
 		{	
 			ASSERT_FAIL();
 			return false;
@@ -165,8 +163,6 @@ bool ReplicatedLog::Append(ByteString &value_)
 		
 		return proposer.Propose(value);
 	}
-	//else
-	//	ASSERT_FAIL();
 	
 	return true;
 }
@@ -295,116 +291,91 @@ void ReplicatedLog::OnLearnChosen()
 	uint64_t	paxosID;
 	bool		ownAppend, clientAppend, commit;
 
-	if (pmsg.paxosID == learner.paxosID)
-	{
-		if (pmsg.type == PAXOS_LEARN_PROPOSAL && acceptor.state.accepted &&
-			acceptor.state.acceptedProposalID == pmsg.proposalID)
-				pmsg.LearnValue(pmsg.paxosID,
-				GetNodeID(),
-				acceptor.state.acceptedValue);
-		
-		if (pmsg.type == PAXOS_LEARN_VALUE)
-			learner.OnLearnChosen(pmsg);
-		else
-		{
-			learner.RequestChosen(pmsg.nodeID);
-			return;
-		}
-		
-		// save it in the logCache (includes the epoch info)
-		commit = learner.paxosID == (highestPaxosID - 1);
-		logCache.Push(learner.paxosID, learner.state.value, commit);
-		
-		rmsg.Read(learner.state.value);	// rmsg.value holds the 'user value'
-		paxosID = learner.paxosID;		// this is the value we
-										// pass to the ReplicatedDB
-		
-		NewPaxosRound();
-		// increments paxosID, clears proposer, acceptor, learner
-		
-		if (highestPaxosID > paxosID)
-		{
-			learner.RequestChosen(pmsg.nodeID);
-		}
-
-		Log_Trace("%d %d %" PRIu64 " %" PRIu64 "",
-			rmsg.nodeID, GetNodeID(),
-			rmsg.restartCounter, RCONF->GetRestartCounter());
-		
-		if (rmsg.nodeID == GetNodeID() &&
-			rmsg.restartCounter == RCONF->GetRestartCounter())
-		{
-			logQueue.Pop(); // we just appended this
-		}
-
-		if (rmsg.nodeID == GetNodeID() &&
-			rmsg.restartCounter == RCONF->GetRestartCounter() &&
-			rmsg.leaseEpoch == masterLease.GetLeaseEpoch() &&
-			masterLease.IsLeaseOwner())
-		{
-			proposer.state.leader = true;
-			Log_Trace("Multi paxos enabled");
-		}
-		else
-		{
-			proposer.state.leader = false;
-			Log_Trace("Multi paxos disabled");
-		}
-		
-		if (rmsg.nodeID == GetNodeID() &&
-		rmsg.restartCounter == RCONF->GetRestartCounter())
-		{
-			ownAppend = true;
-		}
-		else
-		{
-			ownAppend = false;
-		}
-		
-		// commit chaining
-		if (ownAppend && rmsg.value == BS_MSG_NOP)
-		{
-			safeDB = true;
-			if (replicatedDB != NULL && IsMaster())
-				replicatedDB->OnMasterLease(masterLease.IsLeaseOwner());
-		}
-		else if (replicatedDB != NULL &&
-				 rmsg.value.length > 0 &&
-				 !(rmsg.value == BS_MSG_NOP))
-		{
-			if (!GetTransaction()->IsActive())
-			{
-				Log_Trace("starting new transaction");
-				GetTransaction()->Begin();
-			}
-			clientAppend = ownAppend &&
-						   rmsg.leaseEpoch == masterLease.GetLeaseEpoch() &&
-						   IsMaster();
-			
-			replicatedDB->OnAppend(GetTransaction(),
-				paxosID,
-				rmsg.value,
-				clientAppend);
-			// client will stop Paxos here
-		}
-		
-		if (!proposer.IsActive() && logQueue.Length() > 0)
-		{
-			if (!rmsg.Init(RCONF->GetNodeID(), RCONF->GetRestartCounter(),
-						   masterLease.GetLeaseEpoch(), *(logQueue.Next())))
-				ASSERT_FAIL();
-			
-			if (!rmsg.Write(value))
-				ASSERT_FAIL();
-			
-			proposer.Propose(value);
-		}
-	}
-	else if (pmsg.paxosID > learner.paxosID)
+	if (pmsg.paxosID > learner.paxosID)
 	{
 		//	I am lagging and need to catch-up
-		
 		learner.RequestChosen(pmsg.nodeID);
+		return;
+	}
+
+	if (pmsg.paxosID < learner.paxosID)
+		return;
+	
+	// copy from acceptor
+	if (pmsg.type == PAXOS_LEARN_PROPOSAL && acceptor.state.accepted
+	 && acceptor.state.acceptedProposalID == pmsg.proposalID)
+		pmsg.LearnValue(pmsg.paxosID, GetNodeID(),
+		acceptor.state.acceptedValue);
+	
+	if (pmsg.type == PAXOS_LEARN_VALUE)
+		learner.OnLearnChosen(pmsg);
+	else
+	{
+		learner.RequestChosen(pmsg.nodeID);
+		return;
+	}
+	
+	// save it in the logCache (includes the epoch info)
+	commit = learner.paxosID == (highestPaxosID - 1);
+	logCache.Push(learner.paxosID, learner.state.value, commit);
+	
+	rmsg.Read(learner.state.value);	// rmsg.value holds the 'user value'
+	paxosID = learner.paxosID;		// this is the value we
+									// pass to the ReplicatedDB
+	
+	NewPaxosRound();
+	// increments paxosID, clears proposer, acceptor, learner
+	
+	if (highestPaxosID > paxosID)
+		learner.RequestChosen(pmsg.nodeID);
+
+	Log_Trace("%d %d %" PRIu64 " %" PRIu64 "",
+		rmsg.nodeID, GetNodeID(),
+		rmsg.restartCounter, RCONF->GetRestartCounter());
+	
+	if (rmsg.nodeID == GetNodeID()
+	 && rmsg.restartCounter == RCONF->GetRestartCounter()
+	 && rmsg.leaseEpoch == masterLease.GetLeaseEpoch()
+	 && IsMaster())
+	{
+		logQueue.Pop(); // we just appended this
+		proposer.state.leader = true;
+		ownAppend = true;
+		Log_Trace("Multi paxos enabled");
+	}
+	else
+	{
+		proposer.state.leader = false;
+		ownAppend = false;
+		Log_Trace("Multi paxos disabled");
+	}
+	
+	if (!GetTransaction()->IsActive())
+	{
+		Log_Trace("starting new transaction");
+		GetTransaction()->Begin();
+	}
+
+	if (!(rmsg.value == BS_MSG_NOP))
+	{
+		clientAppend = ownAppend
+					&& rmsg.leaseEpoch == masterLease.GetLeaseEpoch()
+					&& IsMaster();
+		
+		replicatedDB->OnAppend(GetTransaction(), paxosID, 
+							   rmsg.value, clientAppend);
+	}
+
+	if (!proposer.IsActive() && logQueue.Length() > 0)
+	{
+		if (!rmsg.Init(RCONF->GetNodeID(), RCONF->GetRestartCounter(),
+		masterLease.GetLeaseEpoch(), *(logQueue.Next())))
+			ASSERT_FAIL();
+		
+		if (!rmsg.Write(value))
+			ASSERT_FAIL();
+		
+		proposer.Propose(value);
 	}
 }
 
@@ -494,7 +465,7 @@ void ReplicatedLog::NewPaxosRound()
 void ReplicatedLog::OnLearnLease()
 {
 	if (masterLease.IsLeaseOwner() &&
-		!safeDB &&
+		!proposer.state.leader &&
 		!(proposer.IsActive() &&
 		rmsg.value == BS_MSG_NOP))
 	{
@@ -507,10 +478,11 @@ void ReplicatedLog::OnLearnLease()
 
 void ReplicatedLog::OnLeaseTimeout()
 {
-	safeDB = false;
+	proposer.state.leader = false;
 	
 	if (replicatedDB)
 	{
+		logQueue.Clear();
 		proposer.Stop();
 		replicatedDB->OnMasterLeaseExpired();
 	}
@@ -528,7 +500,7 @@ Transaction* ReplicatedLog::GetTransaction()
 
 bool ReplicatedLog::IsSafeDB()
 {
-	return safeDB;
+	return proposer.state.leader;
 }
 
 void ReplicatedLog::OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID)

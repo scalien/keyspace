@@ -11,20 +11,15 @@ CatchupWriter::CatchupWriter()
 void CatchupWriter::Init(CatchupServer* server_)
 {
 	Log_Trace();
+	Log_Message("Started");
 
 	TCPConn<>::Init(true);
 	
-//	RLOG->StopPaxos();
-
 	server = server_;
 	table = database.GetTable("keyspace");
-	transaction.Set(table);
-	transaction.Begin();
-	table->Iterate(&transaction, cursor);
-	tcpwrite.data.Set(writeBuffer);
+	table->Iterate(NULL, cursor);
 
-	// this is not good, I'm not seeing the currently active transaction
-	if (!table->Get(&transaction, "@@paxosID", paxosID))
+	if (!table->Get(NULL, "@@paxosID", paxosID))
 		ASSERT_FAIL();
 	
 	WriteNext();
@@ -37,21 +32,26 @@ void CatchupWriter::OnRead()
 
 void CatchupWriter::OnWrite()
 {
+	TCPConn<>::OnWrite();
+
 	if (msg.type == CATCHUP_COMMIT)
-		OnClose();
+	{
+		if (BytesQueued() == 0)
+			OnClose();
+	}
 	else
-		WriteNext();
+	{
+		if (BytesQueued() < MAX_TCP_MESSAGE_SIZE)
+			WriteNext();
+	}
 }
 
 void CatchupWriter::OnClose()
 {
 	Log_Trace();
 
-//	RLOG->ContinuePaxos();
-
 	cursor.Close();
-	if (transaction.IsActive())
-		transaction.Rollback();
+
 	Close();
 	server->DeleteConn(this);
 }
@@ -59,42 +59,36 @@ void CatchupWriter::OnClose()
 void CatchupWriter::WriteNext()
 {
 	bool kv;
-	
+
 	kv = false;
 	while(true)
 	{
 		kv = cursor.Next(key, value);
-		
 		if (!kv)
 		{
 			Log_Trace("Sending commit!");
 			msg.Commit(paxosID);
-			break;
-		}
-		
-		if (key.length > 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
-		{
-			if (strncmp(key.buffer, "@@round:", MIN(key.length, sizeof("@@round:") - 1)) == 0)
-			{
-				msg.KeyValue(key, value);
-				break;
-
-			}
-			continue;
 		}
 		else
 		{
-			msg.KeyValue(key, value);
-			break;
+			if (key.length > 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
+			{
+				if (strncmp(key.buffer, "@@pround:", MIN(key.length, sizeof("@@pround:") - 1)) == 0)
+					msg.KeyValue(key, value);
+				else
+					continue;
+			}
+			else
+				msg.KeyValue(key, value);
 		}
-	}
-	
-	msg.Write(msgData);
-	
-	// prepend with the "length:" header
-	tcpwrite.data.length = snwritef(tcpwrite.data.buffer, tcpwrite.data.size,
-									"%M", &msgData);
-	tcpwrite.transferred = 0;
 
-	IOProcessor::Add(&tcpwrite);
+		msg.Write(msgData);
+		writeBuffer.Writef("%M", &msgData);
+		Write(writeBuffer.buffer, writeBuffer.length, false);
+		if (BytesQueued() < MAX_TCP_MESSAGE_SIZE && msg.type != CATCHUP_COMMIT)
+			continue;
+		else
+			break;
+	}
+	WritePending();	
 }

@@ -3,6 +3,7 @@
 
 #include "Database.h"
 #include "Cursor.h"
+#include "CursorBulk.h"
 #include "System/Buffer.h"
 
 class TableVisitor
@@ -24,6 +25,7 @@ public:
 	~Table();
 	
 	bool		Iterate(Transaction* tx, Cursor& cursor);
+	bool		IterateBulk(Transaction* tx, CursorBulk& cursor);
 	
 	bool		Get(Transaction* tx, const ByteString &key, ByteString &value);
 	bool		Get(Transaction* tx, const char* key, ByteString &value);

@@ -54,6 +54,11 @@ ByteString* LogQueue::Pop()
 	return bs;
 }
 
+void LogQueue::Clear()
+{
+	queue.Clear();
+}
+
 int LogQueue::Length()
 {
 	return queue.Length();
