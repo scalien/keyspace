@@ -9,12 +9,16 @@
 #include "System/Stopwatch.h"
 
 ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
+:	asyncOnAppend(this, &ReplicatedKeyspaceDB::AsyncOnAppend),
+	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete)
 {
+	asyncAppender = ThreadPool::Create(1);
 	catchingUp = false;
 }
 
 ReplicatedKeyspaceDB::~ReplicatedKeyspaceDB()
 {
+	delete asyncAppender;
 }
 
 bool ReplicatedKeyspaceDB::Init()
@@ -29,6 +33,9 @@ bool ReplicatedKeyspaceDB::Init()
 	catchupClient.Init(this, table);
 
 	estimatedLength = 0;
+
+	asyncAppender->Start();
+	asyncAppenderActive = false;
 	
 	deleteDB = false;
 
@@ -37,6 +44,7 @@ bool ReplicatedKeyspaceDB::Init()
 
 void ReplicatedKeyspaceDB::Shutdown()
 {
+	asyncAppender->Stop();
 	catchupServer.Shutdown();
 	catchupClient.Shutdown();
 }
@@ -143,7 +151,9 @@ bool ReplicatedKeyspaceDB::Submit()
 	if (!RLOG->IsMaster())
 		return false;
 
-	if (!RLOG->IsAppending() && RLOG->IsMaster())
+	if (!RLOG->IsAppending() &&
+		RLOG->IsMaster() &&
+		!asyncAppenderActive)
 	{
 		Log_Trace("ops.size() = %d", ops.Length());	
 		Append();
@@ -153,12 +163,29 @@ bool ReplicatedKeyspaceDB::Submit()
 	return true;
 }
 
-void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction,
-uint64_t paxosID, ByteString value_, bool ownAppend)
+void ReplicatedKeyspaceDB::OnAppend(Transaction* transaction_,
+uint64_t paxosID_, ByteString value_, bool ownAppend_)
 {
 	Log_Trace();
 	
-	unsigned		i, nread;
+	paxosID = paxosID_;
+	transaction = transaction_;
+	valueBuffer.Set(value_);
+	ownAppend = ownAppend_;
+	
+	RLOG->StopPaxos();
+
+	assert(asyncAppenderActive == false);
+	asyncAppenderActive = true;
+	asyncAppender->Execute(&asyncOnAppend);
+}
+
+
+void ReplicatedKeyspaceDB::AsyncOnAppend()
+{
+	Log_Trace();
+	
+	unsigned		nread;
 	bool			ret;
 	uint64_t		commandID;
 	KeyspaceOp*		op;
@@ -166,7 +193,7 @@ uint64_t paxosID, ByteString value_, bool ownAppend)
 	ByteString		value;
 	Stopwatch		sw;
 
-	value.Set(value_);
+	value.Set(valueBuffer);
 	Log_Trace("length: %d", value.length);
 	
 	numOps = 0;
@@ -217,24 +244,7 @@ uint64_t paxosID, ByteString value_, bool ownAppend)
 	Log_Trace("numOps = %u", numOps);
 	Log_Trace("ops/sec = %f", (double)1000*numOps/sw.elapsed);
 	
-	if (ownAppend)
-	{
-		for (i = 0; i < numOps; i++)
-		{
-			it = ops.Head();
-			op = *it;
-			ops.Remove(op);
-			op->service->OnComplete(op);
-		}
-	}
-	else
-		Log_Trace("not my append");
-
-	if (!RLOG->IsMaster())
-		FailKeyspaceOps();
-
-	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
-		Append();
+	IOProcessor::Complete(&onAppendComplete);
 }
 
 bool ReplicatedKeyspaceDB::Execute(
@@ -335,6 +345,38 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 	}
 	
 	return ret;
+}
+
+void ReplicatedKeyspaceDB::OnAppendComplete()
+{
+	Log_Trace();
+	
+	unsigned		i;
+	KeyspaceOp*		op;
+	KeyspaceOp**	it;
+	
+	if (ownAppend)
+	{
+		Log_Trace("my append");
+		for (i = 0; i < numOps; i++)
+		{
+			it = ops.Head();
+			op = *it;
+			ops.Remove(op);
+			op->service->OnComplete(op);
+		}
+	}
+	else
+		Log_Trace("not my append");
+
+	asyncAppenderActive = false;
+	
+	if (!RLOG->IsMaster())
+		FailKeyspaceOps();
+
+	RLOG->ContinuePaxos();
+	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
+		Append();
 }
 
 void ReplicatedKeyspaceDB::Append()

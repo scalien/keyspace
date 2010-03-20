@@ -186,7 +186,7 @@ void ReplicatedLog::SetPaxosID(Transaction* transaction, uint64_t paxosID)
 
 	acceptor.paxosID = paxosID;
 	acceptor.state.Init();
-	acceptor.WriteState(transaction);
+	acceptor.Persist(transaction);
 
 	learner.paxosID = paxosID;
 	learner.state.Init();

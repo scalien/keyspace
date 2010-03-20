@@ -8,6 +8,11 @@
 #include "Framework/ReplicatedLog/ReplicatedConfig.h"
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 
+PaxosAcceptor::PaxosAcceptor() :
+	onDBComplete(this, &PaxosAcceptor::OnDBComplete)
+{
+}
+
 void PaxosAcceptor::Init(Writers writers_)
 {
 	writers = writers_;
@@ -31,14 +36,14 @@ void PaxosAcceptor::Shutdown()
 		transaction.Rollback();
 }
 
-void PaxosAcceptor::WriteState(Transaction* transaction)
+bool PaxosAcceptor::Persist(Transaction* transaction)
 {
 	Log_Trace();
 
 	bool ret;
 	
 	if (table == NULL)
-		ASSERT_FAIL();
+		return false;
 	
 	ret = true;
 	ret &= table->Set(transaction,
@@ -60,9 +65,11 @@ void PaxosAcceptor::WriteState(Transaction* transaction)
 	ret &= table->Set(transaction,
 					  "@@acceptedValue",
 					  state.acceptedValue);
-
+	
 	if (!ret)
-		ASSERT_FAIL();	
+		return false;
+	
+	return true;
 }
 
 bool PaxosAcceptor::ReadState()
@@ -75,7 +82,7 @@ bool PaxosAcceptor::ReadState()
 	if (table == NULL)
 		return false;
 		
-	state.acceptedValue.Allocate(RLOG_SIZE);
+	state.acceptedValue.Allocate(PAXOS_SIZE + 10*KB);
 
 	ret = table->Get(NULL, "@@paxosID", buffers[0]);
 	if (!ret)
@@ -141,6 +148,42 @@ bool PaxosAcceptor::ReadState()
 	return (paxosID > 0);
 }
 
+bool PaxosAcceptor::WriteState()
+{
+	Log_Trace();
+
+	bool ret;
+	
+	if (table == NULL)
+		return false;
+	
+	writtenPaxosID = paxosID;
+	
+	buffers[0].Set(rprintf("%" PRIu64 "",	paxosID));
+	buffers[1].Set(rprintf("%d",			state.accepted));
+	buffers[2].Set(rprintf("%" PRIu64 "",	state.promisedProposalID));
+	buffers[3].Set(rprintf("%" PRIu64 "",	state.acceptedProposalID));
+	
+	mdbop.Init();
+	mdbop.SetCallback(&onDBComplete);
+	
+	ret = true;
+	ret &= mdbop.Set(table, "@@paxosID",			buffers[0]);
+	ret &= mdbop.Set(table, "@@accepted",			buffers[1]);
+	ret &= mdbop.Set(table, "@@promisedProposalID",	buffers[2]);
+	ret &= mdbop.Set(table, "@@acceptedProposalID",	buffers[3]);
+	ret &= mdbop.Set(table, "@@acceptedValue",		state.acceptedValue);
+
+	if (!ret)
+		return false;
+	
+	mdbop.SetTransaction(&transaction);
+	
+	dbWriter.Add(&mdbop);
+
+	return true;
+}
+
 void PaxosAcceptor::SendReply(unsigned nodeID)
 {
 	msg.Write(msgbuf);
@@ -151,10 +194,12 @@ void PaxosAcceptor::SendReply(unsigned nodeID)
 void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 {
 	Log_Trace();
-
-	unsigned senderID;
 	
+	if (mdbop.IsActive())
+		return;
+
 	msg = msg_;
+	
 	senderID = msg.nodeID;
 	
 	Log_Trace("state.promisedProposalID: %" PRIu64 " "
@@ -185,20 +230,19 @@ void PaxosAcceptor::OnPrepareRequest(PaxosMsg& msg_)
 			state.acceptedProposalID,
 			state.acceptedValue);
 	
-	if (!transaction.IsActive())
-		transaction.Begin();
-	WriteState(&transaction);
-	transaction.Commit();
-	SendReply(senderID);
+	WriteState();
+	RLOG->StopPaxos();
 }
 
 void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 {
 	Log_Trace();
-
-	unsigned senderID;
+	
+	if (mdbop.IsActive())
+		return;
 	
 	msg = msg_;
+	
 	senderID = msg.nodeID;
 
 	Log_Trace("state.promisedProposalID: %" PRIu64 " "
@@ -223,9 +267,16 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 		RCONF->GetNodeID(),
 		msg.proposalID);
 	
-	if (!transaction.IsActive())
-		transaction.Begin();
-	WriteState(&transaction);
-	transaction.Commit();
-	SendReply(senderID);
+	WriteState();
+	RLOG->StopPaxos();
+}
+
+void PaxosAcceptor::OnDBComplete()
+{
+	Log_Trace();
+
+	RLOG->ContinuePaxos();
+
+	if (writtenPaxosID == paxosID)
+		SendReply(senderID); // TODO: check that the transaction commited
 }
