@@ -122,7 +122,7 @@ bool Database::Init(const DatabaseConfig& config_)
 	running = true;
 	if (config.checkpointTimeout)
 	{
-		checkpointTimeout.SetDelay(config.checkpointTimeout);
+		checkpointTimeout.SetDelay(config.checkpointTimeout * 1000);
 		EventLoop::Add(&checkpointTimeout);
 	}
 	cpThread = ThreadPool::Create(1);
@@ -220,7 +220,7 @@ static void WarmLogCache(char* dbPath)
 	}
 	FindClose(hFind);
 #else
-	snprintf(buf, SIZE(buf), "cat $s/log.* > /dev/null", dbPath);
+	snprintf(buf, SIZE(buf), "cat %s/log.* > /dev/null 2> /dev/null", dbPath);
 	system(buf);
 #endif
 }
