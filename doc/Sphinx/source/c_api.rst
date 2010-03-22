@@ -266,7 +266,7 @@ Since the ``list_keys`` command may return many keys, the result object must be 
   keyspace_client_destroy(client);
 
 ``list_keyvalues`` command
----------------------
+--------------------------
 
 The ``list_keyvalues`` command in nearly identical to ``list_keys``, except it also returns the values. Hence in the result iteration, ``keyspace_result_key`` and ``keyspace_result_value`` may be called.
 

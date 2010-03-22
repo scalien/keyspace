@@ -183,7 +183,7 @@ The result of a list operation in iterated using the ``client``'s result object:
 You can also issue the identical ``dirty_list_keys`` command, which will be serviced by all nodes, not just the master.
 
 ``list_keyvalues`` command
----------------------
+--------------------------
 
 The ``list_keyvalues`` command in nearly identical to ``list_keys``, except it also returns the values. Hence in the result iteration, ``key`` and ``value`` may be called.
 

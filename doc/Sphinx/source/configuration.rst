@@ -84,7 +84,7 @@ The port of the Keyspace HTTP server.  If you run multiple instances on the same
 
   database.dir = .
 
-BDB related. The directory where the BerkeleyDB files are stored. If you run  multiple instances on the same host, this must be different for all nodes.
+The directory where the BerkeleyDB files are stored. If you run  multiple instances on the same host, this must be different for all nodes.
 
 ::
 
@@ -97,6 +97,12 @@ Set the cache size in backend database. Keyspace performance will degrade once t
   database.logBufferSize = 250M
 
 Sets the buffer size for transaction logs.
+
+::
+
+  database.warmCache = true
+
+Warm the operating system's file cache by pre-reading the database files. First pre-reads all ``log.*`` files and then the main ``keyspace`` database file up to ``database.cacheSize`` bytes.
 
 ::
 
@@ -220,3 +226,31 @@ When a client connects to a Keyspace cluster, you have to tell the Keyspace clie
 
   192.168.1.50:7080, 192.168.1.51:7080, 192.168.1.52:7080
   # not the same as paxos.endpoints - note the ports!
+
+Tuning
+======
+
+Version 1.x of Keyspace uses `Oracle's BerkeleyDB <http://www.oracle.com/technology/products/berkeley-db/index.html>`_ transactional b-tree as its disk-based datastore. Configuration options that start with ``database.`` are all BDB related.
+
+Cache sizes
+-----------
+
+As a rule of thumb, BDB will be much faster if the entire database fits into RAM. Under heavy, non-localized database load you will see performance degrade if your database does not fit into the amount of memory specified in ``database.cacheSize`` (default is 500MB).
+
+Checkpointing and log cache sizes
+---------------------------------
+
+When performing writes, BDB puts them in the transaction log (these are the files that start with ``log.``. Every once in a while checkpointing occurs, at which point the modifications in the transaction log are merged into the main database file (called ``keyspace``). The checkpoint interval is specified by ``database.checkpointTimeout``, the default is 60 seconds. Note that checkpointing will not happen if at least 100MB of logs have not accumulated. Hence the default value of ``database.logBufferSize`` if a safe 250MB.
+
+Page sizes
+----------
+
+Page sizes affect the granularity of database operations, and matter mostly when pages are read from and written to disk. The page size is specified by ``database.pageSize`` and ranges from 4096 (4K) to 65536 (64K). Be default, Keyspace uses ``database.pageSize = 65536``.
+
+Page size won't matter much until your database fits into the cache specified by ``database.cacheSize``. Once you go past the cache size, non-local operations will be hurt by larger page sizes, while local operations will be faster.
+
+There is one use-case in Keyspace where having a large page size is important: iteration. Since BDB is only able to iterate the database in-order, and the pages may be spread out on the physical disk, iteration will be slow if the page size is low. For example, with a random write pattern it is easy to produce a database file where iteration is no faster than 250K/sec if the page size is 4K. The same pattern, with the maximal 64K page size produces a database file where iteration is 16x times faster, an acceptable 4MB/s.
+
+Why should you care about iteration? Due to the way BerkeleyDB is structured, iteration happens when you issue, list, count and prune commands. Most importantly, when a node is lagging behind and it copies over the entire database from the master (see Understanding Keyspace for more), the master uses an iterator to write out its database to the lagging node. This needs to be fast, otherwise the lagging node will never catch up!
+
+We recommend you use the default ``database.`` settings unless you have a highly specific I/O pattern.
