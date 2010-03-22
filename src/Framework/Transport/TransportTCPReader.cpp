@@ -65,7 +65,7 @@ void TransportTCPReader::GetMessage(ByteString& msg_)
 
 bool TransportTCPReader::IsActive()
 {
-	return tcpread.active;
+	return running;
 }
 
 void TransportTCPReader::Stop()

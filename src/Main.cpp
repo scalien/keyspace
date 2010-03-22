@@ -25,6 +25,9 @@ int main(int argc, char* argv[])
 	const char*	user;
 	char		buf[4096];
 	bool		deleteDB;
+	bool		firstRun;
+
+	firstRun = true;
 	
 	mode = missing;
 	if (argc == 1)
@@ -100,7 +103,8 @@ int main(int argc, char* argv[])
 		dbConfig.txnWriteNoSync = Config::GetBoolValue("database.txnWriteNoSync", DATABASE_CONFIG_TXN_WRITE_NOSYNC);
 
 		if (Config::GetBoolValue("database.warmCache", true))
-			WarmCache((char*)dbConfig.dir, dbConfig.cacheSize);
+			if (firstRun)
+				WarmCache((char*)dbConfig.dir, dbConfig.cacheSize);
 
 		Log_Message("Opening database...");
 		if (!database.Init(dbConfig))
@@ -163,6 +167,7 @@ int main(int argc, char* argv[])
 #ifdef _WIN32
 			MSleep(3000); // otherwise Windows won't let use reuse the same ports
 #endif
+			firstRun = false;
 			goto run;
 		}
 	}

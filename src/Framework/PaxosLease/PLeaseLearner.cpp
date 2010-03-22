@@ -45,7 +45,7 @@ void PLeaseLearner::OnLearnChosen()
 	if (expireTime < Now())
 		return;
 	
-	if (!state.learned)
+	if (!state.learned && RLOG->IsMasterLeaseActive())
 		Log_Message("Node %d is the master", msg.leaseOwner);
 	
 	state.learned = true;
