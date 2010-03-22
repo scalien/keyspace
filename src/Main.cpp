@@ -105,10 +105,12 @@ int main(int argc, char* argv[])
 		if (Config::GetBoolValue("database.warmCache", true) && firstRun)
 			WarmCache((char*)dbConfig.dir, dbConfig.cacheSize);
 
-		Log_Message("Opening database...");
+		if (firstRun)
+			Log_Message("Opening database...");
 		if (!database.Init(dbConfig))
 			STOP_FAIL("Cannot initialize database!", 1);
-		Log_Message("Database opened");
+		if (firstRun)
+			Log_Message("Database opened");
 
 		dbWriter.Init(1);
 		dbReader.Init(Config::GetIntValue("database.numReaders", 20));

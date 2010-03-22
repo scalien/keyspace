@@ -503,9 +503,13 @@ void ReplicatedKeyspaceDB::OnCatchupFailed()
 
 	Log_Message("Catchup failed");
 
-	catchingUp = false;
-	RLOG->ContinuePaxos();
-	RLOG->ContinueMasterLease();
+	Log_Message("Truncating database");
+	deleteDB = true;
+	EventLoop::Stop();
+
+	//catchingUp = false;
+	//RLOG->ContinuePaxos();
+	//RLOG->ContinueMasterLease();
 }
 
 void ReplicatedKeyspaceDB::SetProtocolServer(ProtocolServer* pserver)

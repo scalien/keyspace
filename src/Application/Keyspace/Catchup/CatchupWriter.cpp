@@ -11,7 +11,6 @@ CatchupWriter::CatchupWriter()
 void CatchupWriter::Init(CatchupServer* server_)
 {
 	Log_Trace();
-	Log_Message("Started");
 
 	TCPConn<>::Init(true);
 	
