@@ -69,7 +69,11 @@ public:
 	
 	void Close()
 	{
-//		IOProcessor::Remove(&tcpread);
+		Conn** it;
+	
+		for (it = activeConns.Head(); it != NULL; it = activeConns.Head())
+			(*it)->OnClose();
+
 		listener.Close();
 	}
 
@@ -80,6 +84,8 @@ public:
 		numActive--;
 		assert(numActive >= 0);
 		
+		activeConns.Remove(conn);
+
 		if (conns.Size() >= backlog)
 			delete conn;
 		else
@@ -95,6 +101,7 @@ protected:
 	int					backlog;
 	ConnList			conns;
 	int					numActive;
+	List<Conn*>			activeConns;
 	
 	void OnConnect()
 	{
@@ -105,6 +112,7 @@ protected:
 		{
 			conn->GetSocket().SetNonblocking();
 			conn->GetSocket().SetNodelay();
+			activeConns.Append(conn);
 			pT->InitConn(conn);
 		}
 		else

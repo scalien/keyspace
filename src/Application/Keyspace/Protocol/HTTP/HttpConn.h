@@ -20,6 +20,11 @@ public:
 	virtual void	OnComplete(KeyspaceOp* op, bool final);
 	virtual bool	IsAborted();
 
+	// TCPConn interface
+	virtual void	OnRead();
+	virtual void	OnClose();
+	virtual void	OnWrite();
+
 private:
 	enum Type
 	{
@@ -36,11 +41,6 @@ private:
 	Type			type;
 	ByteString		jsonCallback;
 	bool			rowp;
-
-	// TCPConn interface
-	virtual void	OnRead();
-	virtual void	OnClose();
-	virtual void	OnWrite();
 	
 	void			Print(const char* s);
 	void			PrintJSONString(const char* s, unsigned len);

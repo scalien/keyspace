@@ -31,7 +31,6 @@ public:
 
 private:
 	KeyspaceDB*			kdb;
-	List<KeyspaceConn*>	activeConns;
 	Func				onThruputTimeout;
 	CdownTimer			thruputTimeout;
 };

@@ -30,14 +30,12 @@ void KeyspaceServer::Shutdown()
 void KeyspaceServer::InitConn(KeyspaceConn* conn)
 {
 	conn->Init(kdb, this);
-	activeConns.Append(conn);
 }
 
 void KeyspaceServer::DeleteConn(KeyspaceConn* conn)
 {
 	TCPServerT<KeyspaceServer, KeyspaceConn, KEYSPACE_BUF_SIZE>
 	::DeleteConn(conn);
-	activeConns.Remove(conn);
 }
 
 void KeyspaceServer::OnThruputTimeout()

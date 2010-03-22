@@ -27,11 +27,12 @@ public:
 	virtual void		OnComplete(KeyspaceOp* op, bool final);
 	virtual bool		IsAborted();
 
-private:
 	// TCPConn interface
 	virtual void		OnClose();
 	virtual void		OnWrite();
 	virtual void		OnMessageRead(const ByteString& message);
+
+private:
 
 	void				Write(ByteString &bs);
 	void				ProcessMsg();
