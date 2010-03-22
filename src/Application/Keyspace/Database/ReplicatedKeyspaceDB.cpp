@@ -466,8 +466,6 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 {
 	Log_Trace();
 
-	Log_Message("Catchup started from node %d", nodeID);
-
 	// this is a workaround because BDB truncate is way too slow for any
 	// database bigger than 1Gb, as confirmed by BDB workers on forums
 //	if (RLOG->GetPaxosID() != 0)
@@ -479,7 +477,9 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 		EventLoop::Stop();
 		return;
 	}
-	
+
+	Log_Message("Catchup started from node %d", nodeID);
+
 	catchingUp = true;
 	RLOG->StopPaxos();
 	RLOG->StopMasterLease();

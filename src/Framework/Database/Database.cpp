@@ -6,6 +6,9 @@
 #include "System/Log.h"
 #include "Database.h"
 #include "Table.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #define DATABASE_DEFAULT_CACHESIZE	(256*1024)
 
@@ -165,4 +168,67 @@ void Database::Checkpoint()
 	if (ret < 0)
 		ASSERT_FAIL();
 	Log_Trace("finished");
+}
+
+static void WarmFileCache(char* filepath, unsigned cacheSize)
+{
+	int i, num;
+	char buf[1*MB];
+	FILE* f;
+
+	f = fopen(filepath, "rb");
+	if (f == NULL)
+		return;
+
+	num = ceil((double)cacheSize / SIZE(buf));
+	for (i = 0; i < num; i++)
+		fread(buf, 1, SIZE(buf), f);
+
+	fclose(f);
+}
+
+static void WarmDatabaseCache(char* dbPath, unsigned cacheSize)
+{
+	char filepath[4096];
+
+	snprintf(filepath, SIZE(filepath), "%s/keyspace", dbPath);
+
+	WarmFileCache(filepath, cacheSize);
+}
+
+static void WarmLogCache(char* dbPath)
+{
+	char buf[4096];
+	
+#ifdef _WIN32
+	BOOL next;
+	WIN32_FIND_DATA FindFileData;
+	HANDLE hFind;
+
+	snprintf(buf, SIZE(buf), "%s/log.*", dbPath);
+	strrep(buf, '/', '\\');
+	hFind = FindFirstFile(buf, &FindFileData);
+	if (hFind == INVALID_HANDLE_VALUE)
+		return;
+	next = true;
+	while (next)
+	{
+		snprintf(buf, SIZE(buf), "%s/%s", dbPath, FindFileData.cFileName);
+		strrep(buf, '/', '\\');
+		WarmFileCache(buf, 11000000);
+		next = FindNextFile(hFind, &FindFileData);
+	}
+	FindClose(hFind);
+#else
+	snprintf(buf, SIZE(buf), "cat $s/log.* > /dev/null", dbPath);
+	system(buf);
+#endif
+}
+
+void WarmCache(char* dbPath, unsigned cacheSize)
+{
+	Log_Message("Warming O/S file cache...");
+	WarmLogCache(dbPath);
+	WarmDatabaseCache(dbPath, cacheSize);
+	Log_Message("Cache warmed");
 }

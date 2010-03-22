@@ -7,8 +7,11 @@
 template<int bufSize = MAX_TCP_MESSAGE_SIZE>
 class MessageConn : public TCPConn<bufSize>
 {
+	typedef MFunc<MessageConn>	Func;
 public:
-	MessageConn()
+	MessageConn() :
+	onResumeRead(this, &MessageConn::OnResumeRead),
+	resumeRead(1, &onResumeRead)
 	{
 		running = true;
 	}
@@ -17,12 +20,18 @@ public:
 	virtual void	OnMessageRead(const ByteString& msg) = 0;
 	virtual void	OnClose() = 0;
 	virtual void	OnRead();
+	void			OnResumeRead();
 	
 	virtual void	Stop();
 	virtual void	Continue();
 
+	virtual void	Close();
+
 protected:
 	bool			running;
+	Func			onResumeRead;
+	CdownTimer		resumeRead;
+
 };
 
 template<int bufSize>
@@ -36,7 +45,10 @@ void MessageConn<bufSize>::Init(bool startRead)
 template<int bufSize>
 void MessageConn<bufSize>::OnRead()
 {
+	bool			yield;
+	uint64_t		start;
 	Stopwatch		sw;
+
 	sw.Start();
 
 	TCPRead& tcpread = TCPConn<bufSize>::tcpread;
@@ -48,6 +60,9 @@ void MessageConn<bufSize>::OnRead()
 	tcpread.requested = IO_READ_ANY;
 
 	pos = 0;
+
+	start = Now();
+	yield = false;
 
 	while(running)
 	{
@@ -93,6 +108,16 @@ void MessageConn<bufSize>::OnRead()
 		
 		if (tcpread.data.length == msgend)
 			break;
+
+		if (Now() - start > 10 && running)
+		{
+			// let other code run every 10 msec
+			yield = true;
+			if (resumeRead.IsActive())
+				ASSERT_FAIL();
+			EventLoop::Add(&resumeRead);
+			break;
+		}
 	}
 	
 	if (pos > 0)
@@ -104,12 +129,20 @@ void MessageConn<bufSize>::OnRead()
 		tcpread.data.length -= pos;
 	}
 	
-	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED &&
-	running && !tcpread.active)
+	if (TCPConn<bufSize>::state == TCPConn<bufSize>::CONNECTED
+	 && running && !tcpread.active && !yield)
 		IOProcessor::Add(&tcpread);
 
 	sw.Stop();
 	Log_Trace("time spent in OnRead(): %ld", sw.elapsed);
+}
+
+template<int bufSize>
+void MessageConn<bufSize>::OnResumeRead()
+{
+	Log_Trace();
+
+	OnRead();
 }
 
 template<int bufSize>
@@ -125,6 +158,13 @@ void MessageConn<bufSize>::Continue()
 	Log_Trace();
 	running = true;
 	OnRead();
+}
+
+template<int bufSize>
+void MessageConn<bufSize>::Close()
+{
+	EventLoop::Remove(&resumeRead);
+	TCPConn<bufSize>::Close();
 }
 
 #endif

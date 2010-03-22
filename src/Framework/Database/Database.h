@@ -40,6 +40,8 @@ private:
 	Func			onCheckpointTimeout;
 };
 
+void WarmCache(char* dbPath, unsigned cacheSize);
+
 // global
 extern Database database;
 

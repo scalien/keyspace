@@ -99,6 +99,9 @@ int main(int argc, char* argv[])
 		dbConfig.txnNoSync = Config::GetBoolValue("database.txnNoSync", DATABASE_CONFIG_TXN_NOSYNC);
 		dbConfig.txnWriteNoSync = Config::GetBoolValue("database.txnWriteNoSync", DATABASE_CONFIG_TXN_WRITE_NOSYNC);
 
+		if (Config::GetBoolValue("database.warmCache", true))
+			WarmCache((char*)dbConfig.dir, dbConfig.cacheSize);
+
 		Log_Message("Opening database...");
 		if (!database.Init(dbConfig))
 			STOP_FAIL("Cannot initialize database!", 1);

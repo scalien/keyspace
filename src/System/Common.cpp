@@ -124,8 +124,7 @@ bool DeleteWC(const char* wc)
 	strcpy(buf, wc);
 #ifdef _WIN32
 	strrep(buf, '/', '\\');
-//	return DeleteFile((LPCSTR)buf);
-	return (_spawnlp(_P_WAIT, "cmd", "/c" "del", buf, NULL) == 0);
+	return (_spawnlp(_P_WAIT, "cmd", "/c", "del", buf, NULL) == 0);
 #else
 	snprintf(buf, SIZE(buf), "rm %s", wc);
 	return (system(buf) == 0);
