@@ -17,5 +17,3 @@ If you are experiencing difficulties please visit our Google Groups page:
 
 - group home page:      http://groups.google.com/group/keyspace
 - group email address:  keyspace@googlegroups.com
-
-The official Keyspace homepage is at http://scalien.com
