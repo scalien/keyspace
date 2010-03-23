@@ -451,8 +451,10 @@ To send batched ``get`` commands, first call ``keyspace_client_begin()`` functio
     char* key;
     char* val;
     unsigned keylen, vallen;
-    if (keyspace_result_key(result, (const void**) &key, &keylen) != KEYSPACE_SUCCESS ||
-        keyspace_result_value(result, (const void**) &val, &vallen) != KEYSPACE_SUCCESS)
+    if (keyspace_result_key(result, (const void**) &key,
+                            &keylen) != KEYSPACE_SUCCESS ||
+        keyspace_result_value(result, (const void**) &val,
+                              &vallen) != KEYSPACE_SUCCESS)
     {
       fprintf(stderr, "result failed");
 	  ...
