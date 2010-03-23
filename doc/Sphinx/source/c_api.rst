@@ -264,7 +264,8 @@ Since the ``list_keys`` command may return many keys, the result object must be 
   {
     char* key;
     unsigned keylen;
-    if (keyspace_result_value(result, (const void**) &key, &keylen) != KEYSPACE_SUCCESS)
+    if (keyspace_result_value(result, (const void**) &key,
+        &keylen) != KEYSPACE_SUCCESS)
     {
       fprintf(stderr, "list_keys failed");
 	  ...
@@ -319,13 +320,17 @@ Since the ``list_keyvalues`` command may return many key-value pairs, the result
     fprintf(stderr, "list_keyvalues failed");
     ...
   }
-  for (keyspace_result_begin(result); !keyspace_result_is_end(result); keyspace_result_next(result))
+  for (keyspace_result_begin(result);
+       !keyspace_result_is_end(result);
+       keyspace_result_next(result))
   {
     char* key;
 	char* val;
     unsigned keylen, vallen;
-    if (keyspace_result_key(result, (const void**) &key, &keylen) != KEYSPACE_SUCCESS ||
-        keyspace_result_value(result, (const void**) &val, &vallen) != KEYSPACE_SUCCESS)
+    if (keyspace_result_key(result, (const void**) &key,
+                            &keylen) != KEYSPACE_SUCCESS ||
+        keyspace_result_value(result, (const void**) &val,
+                              &vallen) != KEYSPACE_SUCCESS)
     {
       fprintf(stderr, "list_keyvalues failed");
 	  ...
