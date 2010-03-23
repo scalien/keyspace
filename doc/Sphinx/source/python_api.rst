@@ -42,7 +42,9 @@ First, import the keyspace client library::
 
 Then, create a client object by specifying the Keyspace cluster::
 
-  client = keyspace.Client(["192.168.1.50:7080", "192.168.1.51:7080", "192.168.1.52:7080"])
+  client = keyspace.Client(["192.168.1.50:7080",
+                            "192.168.1.51:7080",
+                            "192.168.1.52:7080"])
   # use client here
   del client # closes the connections
 
