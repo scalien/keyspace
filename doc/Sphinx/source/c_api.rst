@@ -85,7 +85,9 @@ The ``set`` command sets a ``key => value`` pair, creating a new pair if ``key``
 
 The ``test_and_set`` command conditionally and atomically sets a ``key => value`` pair, but only if the current ``value`` matches the user specified value ``test``::
 
-  int status = keyspace_client_test_and_set(client, "key", strlen("key"), "test", strlen("test"), "value" strlen("value"));
+  int status = keyspace_client_test_and_set(client, "key", strlen("key"),
+                                                    "test", strlen("test"),
+                                                    "value" strlen("value"));
   if (status != KEYSPACE_SUCCESS)
   {
     fprintf(stderr, "test_and_set failed");

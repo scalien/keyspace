@@ -14,7 +14,7 @@ You should see something like this::
   Keyspace v1.5.1 r1231 started
   Opening database...
   Database opened
-  No Keyspace database found. Starting from scratch...
+  Database is empty
   Node 0 is the master
 
 Note that for master election to be successful a majority of nodes have to be up and running.

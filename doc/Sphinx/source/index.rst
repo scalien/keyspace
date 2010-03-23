@@ -3,13 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Keyspace's documentation!
-====================================
+Keyspace documentation
+======================
 
 Contents:
 
 .. toctree::
    :maxdepth: 3
+   :numbered:
 
    about.rst
    installation.rst
@@ -20,10 +21,10 @@ Contents:
    c_api.rst
    python_api.rst
 
-Indices and tables
-==================
+.. Indices and tables
+   ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+  * :ref:`genindex`
+  * :ref:`modindex`
+  * :ref:`search`
 
