@@ -214,7 +214,8 @@ You can also issue the identical ``dirty_list_keyvalues`` command, which will be
 
 The ``count`` command has the same parameters as ``list_keys`` or ``list_keyvalues``, but returns the number of keys (or key-value pairs) that they would return. The signature of the function is::
 
-  def count(self, prefix = "", start_key = "", count = 0, skip = False, forward = True)
+  def count(self, prefix = "", start_key = "",
+            count = 0, skip = False, forward = True)
 
   client.count(prefix="prefix")
 
@@ -275,7 +276,8 @@ To print the constant name of the status, use::
 ``transport_status`` tells the application the portion of commands that were sent to the Keyspace cluster::
 
   KEYSPACE_SUCCESS: all commands were sent
-  KEYSPACE_PARTIAL: only a portion of the commands could be sent before a timeout occured
+  KEYSPACE_PARTIAL: only a portion of the commands
+                    could be sent before a timeout occured
   KEYSPACE_FAILURE: no commands could be sent
 
 To retrieve the ``transport_status``, use::
@@ -288,8 +290,9 @@ To retrieve the ``transport_status``, use::
 
 ``connectivity_status`` tells the application the network conditions between the client and the Keyspace cluster::
 
-  KEYSPACE_SUCCESS: the master could be found
-  KEYSPACE_NOMASTER: some nodes were reachable, but there was no master or it went down
+  KEYSPACE_SUCCESS:      the master could be found
+  KEYSPACE_NOMASTER:     some nodes were reachable,
+                         but there was no master or it went down
   KEYSPACE_NOCONNECTION: the entire grid was unreachable within timeouts
 
 To retrieve the ``connectivity_status``, use::
@@ -302,9 +305,12 @@ To retrieve the ``connectivity_status``, use::
 
 ``timeout_status`` tells the application what timeouts occured, if any::
 
-  KEYSPACE_SUCCESS: no timeout occured, everything went fine
-  KEYSPACE_MASTER_TIMEOUT: a master could not be found within the master timeout
-  KEYSPACE_GLOBAL_TIMEOUT: the blocking client library call returned because the global timeout has expired
+  KEYSPACE_SUCCESS:        no timeout occured, everything went fine
+  KEYSPACE_MASTER_TIMEOUT: a master could not be found
+                           within the master timeout
+  KEYSPACE_GLOBAL_TIMEOUT: the blocking client library call
+                           returned because the global timeout
+                           has expired
 
 To retrieve the ``timeout_status``, use::
 
@@ -316,9 +322,11 @@ To retrieve the ``timeout_status``, use::
 
 ``command_status`` is the actual return value of a command::
 
-  KEYSPACE_SUCCESS: command succeeded
-  KEYSPACE_FAILED: the command was executed, but its return value was FAILED;
-    eg. can happen for test_and_set if the test value does not match or for get if the key does not exist
+  KEYSPACE_SUCCESS:   command succeeded
+  KEYSPACE_FAILED:    the command was executed, but
+                      its return value was FAILED;
+                      eg. can happen for test_and_set if the test value
+                      does not match or for get if the key does not exist
   KEYSPACE_NOSERVICE: the command was not executed
 
 When using single or batched commands, retrieve the ``command_status`` like::

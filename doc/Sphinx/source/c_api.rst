@@ -40,7 +40,9 @@ First create a ``keyspace_client_t object``::
 
 Next, connect to a Keyspace cluster::
 
-  const char* nodes = { "192.168.1.50:7080", "192.168.1.51:7080", "192.168.1.52:7080" };
+  const char* nodes = { "192.168.1.50:7080",
+                        "192.168.1.51:7080",
+                        "192.168.1.52:7080" };
   int status = keyspace_client_init(client, 3, nodes);
   if (status != KEYSPACE_SUCCESS)
   {
@@ -72,7 +74,8 @@ The Keyspace write commands are: ``set``, ``test_and_set``, ``rename``, ``add``,
 
 The ``set`` command sets a ``key => value`` pair, creating a new pair if ``key`` did not previously exist, overwriting the old value if it did::
 
-  int status = keyspace_client_set(client, "key", strlen("key"), "value", strlen("value"));
+  int status = keyspace_client_set(client, "key", strlen("key"),
+                                           "value", strlen("value"));
   if (status != KEYSPACE_SUCCESS)
   {
     fprintf(stderr, "set failed");
@@ -100,7 +103,8 @@ The ``test_and_set`` command conditionally and atomically sets a ``key => value`
 
 The ``rename`` command atomically renames a ``key``, leaving its ``value`` alone::
 
-  int status = keyspace_client_rename(client, "from", strlen("from"), "to", strlen("to"));
+  int status = keyspace_client_rename(client, "from", strlen("from"),
+                                               "to", strlen("to"));
   if (status != KEYSPACE_SUCCESS)
   {
     fprintf(stderr, "rename failed");
@@ -161,7 +165,8 @@ The ``delete`` command deletes a ``key => value`` pair by its ``key`` and return
   keyspace_result_begin(result);
   char* val;
   unsigned len;
-  if (keyspace_result_value(result, (const void**) &val, &len) != KEYSPACE_SUCCESS)
+  if (keyspace_result_value(result, (const void**) &val, &len)
+      != KEYSPACE_SUCCESS)
   {
     fprintf(stderr, "remove failed");
     ...
@@ -195,7 +200,8 @@ The only Keyspace single read commands is ``get_simple``.
 The ``get_simple`` command retrieves a single value from the Keyspace cluster. Unlike all other operations, it only works if the returned value is NULL-terminated or its length is otherwise known. The last parameter specifies whether the command is dirty (``0`` for safe, ``1`` for dirty)::
 
   char buf[1024];
-  int status = keyspace_client_get_simple(client, "key", strlen("key"), buf, 1024, 0); // safe
+  int status = keyspace_client_get_simple(client, "key", strlen("key"),
+                                          buf, 1024, 0); // safe
   if (status != KEYSPACE_SUCCESS)
   {
     fprintf(stderr, "get_simple failed");
@@ -252,7 +258,9 @@ Since the ``list_keys`` command may return many keys, the result object must be 
     fprintf(stderr, "list_keys failed");
     ...
   }
-  for (keyspace_result_begin(result); !keyspace_result_is_end(result); keyspace_result_next(result))
+  for (keyspace_result_begin(result);
+       !keyspace_result_is_end(result);
+       keyspace_result_next(result))
   {
     char* key;
     unsigned keylen;
@@ -395,7 +403,9 @@ To send batched write commands, first call ``keyspace_client_begin()`` function,
       fprintf(stderr, "result failed");
       ...
     }
-    for (keyspace_result_begin(result); !keyspace_result_is_end(result); keyspace_result_next(result))
+    for (keyspace_result_begin(result);
+        !keyspace_result_is_end(result);
+        keyspace_result_next(result))
     {
       status = keyspace_result_command_status(result);
       // status now holds the status of the ith command
@@ -429,7 +439,9 @@ To send batched ``get`` commands, first call ``keyspace_client_begin()`` functio
     fprintf(stderr, "result failed");
     ...
   }
-  for (keyspace_result_begin(result); !keyspace_result_is_end(result); keyspace_result_next(result))
+  for (keyspace_result_begin(result);
+      !keyspace_result_is_end(result);
+      keyspace_result_next(result))
   {
     char* key;
     char* val;
@@ -458,7 +470,8 @@ Keyspace exposes a rich set of status codes through the client library. These ar
 ``transport_status`` tells the application the portion of commands that were sent to the Keyspace cluster::
 
   KEYSPACE_SUCCESS: all commands were sent
-  KEYSPACE_PARTIAL: only a portion of the commands could be sent before a timeout occured
+  KEYSPACE_PARTIAL: only a portion of the commands
+                    could be sent before a timeout occured
   KEYSPACE_FAILURE: no commands could be sent
 
 To retrieve the ``transport_status``, use::
@@ -470,8 +483,9 @@ To retrieve the ``transport_status``, use::
 
 ``connectivity_status`` tells the application the network conditions between the client and the Keyspace cluster::
 
-  KEYSPACE_SUCCESS: the master could be found
-  KEYSPACE_NOMASTER: some nodes were reachable, but there was no master or it went down
+  KEYSPACE_SUCCESS:      the master could be found
+  KEYSPACE_NOMASTER:     some nodes were reachable,
+                         but there was no master or it went down
   KEYSPACE_NOCONNECTION: the entire grid was unreachable within timeouts
 
 To retrieve the ``connectivity_status``, use::
@@ -483,9 +497,12 @@ To retrieve the ``connectivity_status``, use::
 
 ``timeout_status`` tells the application what timeouts occured, if any::
 
-  KEYSPACE_SUCCESS: no timeout occured, everything went fine
-  KEYSPACE_MASTER_TIMEOUT: a master could not be found within the master timeout
-  KEYSPACE_GLOBAL_TIMEOUT: the blocking client library call returned because the global timeout has expired
+  KEYSPACE_SUCCESS:        no timeout occured, everything went fine
+  KEYSPACE_MASTER_TIMEOUT: a master could not be found
+                           within the master timeout
+  KEYSPACE_GLOBAL_TIMEOUT: the blocking client library call
+                           returned because the global timeout
+                           has expired
 
 To retrieve the ``timeout_status``, use::
 
@@ -496,9 +513,11 @@ To retrieve the ``timeout_status``, use::
 
 ``command_status`` is the actual return value of a command::
 
-  KEYSPACE_SUCCESS: command succeeded
-  KEYSPACE_FAILED: the command was executed, but its return value was FAILED;
-    eg. can happen for test_and_set if the test value does not match or for get if the key does not exist
+  KEYSPACE_SUCCESS:   command succeeded
+  KEYSPACE_FAILED:    the command was executed, but
+                      its return value was FAILED;
+                      eg. can happen for test_and_set if the test value
+                      does not match or for get if the key does not exist
   KEYSPACE_NOSERVICE: the command was not executed
 
 When using single commands, retrieve the ``command_status`` like::
