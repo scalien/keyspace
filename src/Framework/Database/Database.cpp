@@ -59,11 +59,16 @@ bool Database::Init(const DatabaseConfig& config_)
 		u_int32_t bytes = config.cacheSize % (1024 * 1024 * 1024);
 		
 		//env.set_cache_max(gbytes, bytes);
-		env->set_cachesize(gbytes, bytes, 4);
+		if (env->set_cachesize(gbytes, bytes, 4) != 0)
+			STOP_FAIL("Not enough memory to allocate cache!", 1);
 	}
 
 	if (config.logBufferSize != 0)
-		env->set_lg_bsize(config.logBufferSize);
+	{
+		if (env->set_lg_bsize(config.logBufferSize) != 0)
+			STOP_FAIL("Not enough memory to allocate log buffer memory!", 1);
+		
+	}
 	
 	if (config.logMaxFile != 0)
 		env->set_lg_max(config.logMaxFile);
