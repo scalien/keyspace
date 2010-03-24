@@ -24,7 +24,7 @@ static void DatabaseError(const DbEnv* /*dbenv*/,
 	if (strcmp(msg, LOG_BUFFER_ALLOC_ERROR) == 0)
 		STOP_FAIL("Not enough memory to allocate cache!\nChange database.logBufferSize in the config file.", 1);
 	
-	Log_Trace("%s", msg);
+	Log_Trace("\"%s\"", msg);
 }
 
 static void DatabaseTrace(const DbEnv* /*dbenv*/, const char* msg)
