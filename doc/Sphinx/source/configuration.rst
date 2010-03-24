@@ -46,7 +46,7 @@ To configure Keyspace to run in replicated mode, put::
 
   mode = replicated
 
-as the first line in your keyspace.conf file.
+as the first line in your ``keyspace.conf`` file.
 
 Next, identify this node in the replication unit. Numbering starts at 0, so for the zeroth node put::
 
@@ -60,12 +60,12 @@ Next, specify the nodes making up the replication unit. This is given by a list 
 
 In this example each node is receiving the replication traffic on port 10000. It's a good idea to use the same ports on the different nodes for simplicity. Of course, if you're testing Keyspace on ``localhost``, you will use different ports here.
 
-Very important: Keyspace also uses the 2 ports above the ones specified in ``paxos.endpoints``, +1 for the master lease and +2 for catchup. So in the example above, Keyspace is listening on ports 10000-10002 on all three servers. Note that Keyspace uses TCP for all traffic.
+**Important:** Keyspace also uses the 2 ports above the ones specified in ``paxos.endpoints``, +1 for the master lease and +2 for catchup. So in the example above, Keyspace is listening on ports 10000-10002 on all three servers. Note that Keyspace uses TCP for all traffic.
 
 Optional lines
 ==============
 
-The optional lines only affect performance, allow you to change default port values and logging behaviour. In the examples above the default values are shown. We have listed the option in order of decreasing importance.
+The optional lines only affect performance, allow you to change default port values and logging behaviour. In the examples below the default values are shown. We have listed the options in order of decreasing importance.
 
 ::
 
@@ -90,7 +90,7 @@ The directory where the BerkeleyDB files are stored. If you run  multiple instan
 
   database.cacheSize = 500M
 
-Set the cache size in backend database. Keyspace performance will degrade once the size of your database exceeds the cache size. Ideally, you should set this to a little less than the amount of RAM in your machine.
+Set the cache size of the backend database. Keyspace performance will degrade once the size of your database exceeds the cache size. Ideally, you should set this to a little less than the amount of RAM in your machine.
 
 ::
 
@@ -108,7 +108,7 @@ Warm the operating system's file cache by pre-reading the database files. First 
 
   log.trace = false
 
-Whether to print out debug traces. Only change with this if Keyspace is crashing and you want to send us a log file for debugging.
+Whether to print out debug traces. Only fiddle with this if Keyspace is crashing and you want to send us a log file for debugging.
 	
 
 ::
@@ -155,7 +155,7 @@ If set, Berkeley DB will write, but will not synchronously flush, the log on tra
 
 ::
 
-  database.pageSize = 4096
+  database.pageSize = 65536
 
 Set the page size (in bytes) in the backend database. Leave this alone unless you know what you're doing. Must be a number less than or equal to 65536.
 
