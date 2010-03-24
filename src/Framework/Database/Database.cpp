@@ -185,7 +185,7 @@ static void WarmFileCache(char* filepath, unsigned cacheSize)
 	if (f == NULL)
 		return;
 
-	num = ceil((double)cacheSize / SIZE(buf));
+	num = (int) ceil((double)cacheSize / SIZE(buf));
 	for (i = 0; i < num; i++)
 		fread(buf, 1, SIZE(buf), f);
 
