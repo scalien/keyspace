@@ -15,10 +15,15 @@
 // the global database
 Database database;
 
+#define LOG_BUFFER_ALLOC_ERROR "Unable to allocate memory for the log buffer"
+
 static void DatabaseError(const DbEnv* /*dbenv*/,
 						  const char* /*errpfx*/,
 						  const char* msg)
 {
+	if (strcmp(msg, LOG_BUFFER_ALLOC_ERROR) == 0)
+		STOP_FAIL("Not enough memory to allocate cache!\nChange database.logBufferSize in the config file.", 1);
+	
 	Log_Trace("%s", msg);
 }
 
@@ -59,16 +64,11 @@ bool Database::Init(const DatabaseConfig& config_)
 		u_int32_t bytes = config.cacheSize % (1024 * 1024 * 1024);
 		
 		//env.set_cache_max(gbytes, bytes);
-		if (env->set_cachesize(gbytes, bytes, 4) != 0)
-			STOP_FAIL("Not enough memory to allocate cache!", 1);
+		env->set_cachesize(gbytes, bytes, 4);
 	}
 
 	if (config.logBufferSize != 0)
-	{
-		if (env->set_lg_bsize(config.logBufferSize) != 0)
-			STOP_FAIL("Not enough memory to allocate log buffer memory!", 1);
-		
-	}
+		env->set_lg_bsize(config.logBufferSize);
 	
 	if (config.logMaxFile != 0)
 		env->set_lg_max(config.logMaxFile);
