@@ -98,7 +98,7 @@ bool Database::Init(const DatabaseConfig& config_)
 	
 	Log_Trace();
 	ret = env->open(config.dir, flags, mode);
-	Log_Trace();
+	Log_Trace("ret = %d");
 	if (ret != 0)
 		return false;
 
