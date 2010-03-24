@@ -174,13 +174,12 @@ The recommended method to use ``list_keys`` is named arguments::
 
   client.list_keys(prefix="j")
 
-The result of a list operation in iterated using the ``client``'s result object::
+The result of a list operation is a standard python list::
 
-  client.list_keys(prefix="prefix")
-  while not client.result.is_end():
-    # client.result.key() is a key!
-    print(client.result.key())
-    client.result.next()
+  client.set("/user:mtrencseni", "mtrencseni_data")
+  client.set("/user:agazso",     "agazso_data")
+  client.list_keys("/user:")
+  => ['/user:agazso', '/user:mtrencseni']
 
 You can also issue the identical ``dirty_list_keys`` command, which will be serviced by all nodes, not just the master.
 
@@ -200,14 +199,12 @@ The signature of the function is::
 
   def list_key_values(self, prefix = "", start_key = "", count = 0, skip = False, forward = True)
 
-The result of a list operation in iterated using the ``client``'s result object::
+The result of a list operation is a standard python dictionary::
 
-  client.list_keys(prefix="prefix")
-  while not client.result.is_end():
-    # client.result.key() is a key!
-    # client.result.value() is a value!
-    print(client.result.key() + " => " + client.result.value())
-    client.result.next()
+  client.set("/user:mtrencseni", "mtrencseni_data")
+  client.set("/user:agazso",     "agazso_data")
+  client.list_key_values("/user:")
+  => {'/user:mtrencseni': 'mtrencseni_data', '/user:agazso': 'agazso_data'}
 
 You can also issue the identical ``dirty_list_keyvalues`` command, which will be serviced by all nodes, not just the master.
 
@@ -247,21 +244,18 @@ Issuing batched read commands
 
 It is only possible to issue ``get`` read commands in a batched fashion. Since ``get`` commands are not replicated, only the round-trip time is saved. Nevertheless, batched ``get`` can achieve 3-5x higher throughput than single ``get``.
 
-To send batched ``get`` commands, first call ``begin()`` function, then issue the ``get`` commands, and finally call ``submit()``. The commands are sent on ``submit()``. After the commands complete, the result object must be fetched and iterated to retrieve the individual key-value pairs::
+To send batched ``get`` commands, first call ``begin()`` function, then issue the ``get`` commands, and finally call ``submit()``. The commands are sent on ``submit()``. After the commands complete, the results are returned as a standard python dictionary ::
 
+  client.set("/user:mtrencseni", "mtrencseni_data")
+  client.set("/user:agazso",     "agazso_data")
   client.begin();
-  client.get("a1")
-  client.get("a2")
-  ...
-  client.get("a99")
+  client.get("/user:mtrencseni")
+  client.get("/user:agazso")
   client.submit()
 
-  # now iterate results
-  while not client.result.is_end():
-    # client.result.key() is a key!
-    # client.result.value() is a value!
-    print(client.result.key() + " => " + client.result.value())
-    client.result.next()
+  # fetch result
+  client.result.key_values()
+  => {'/user:mtrencseni': 'mtrencseni_data', '/user:agazso': 'agazso_data'}
 
 Understanding Keyspace status codes
 ===================================

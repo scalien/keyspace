@@ -65,7 +65,7 @@ Very important: Keyspace also uses the 2 ports above the ones specified in ``pax
 Optional lines
 ==============
 
-The optional lines only affect performance, allow you to change default port values and logging behaviour. In the examples above the default values are shown. We have listen the option in order of decreasing importance.
+The optional lines only affect performance, allow you to change default port values and logging behaviour. In the examples above the default values are shown. We have listed the option in order of decreasing importance.
 
 ::
 
