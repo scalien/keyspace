@@ -28,7 +28,7 @@ Here is a sample configuration file for a single Keyspace node::
 
   mode = single
   
-  database.dir = .
+  database.dir = /var/keyspace
   
   http.port = 8080
   keyspace.port = 7080
@@ -175,7 +175,7 @@ Number of threads used for ``LIST`` and ``COUNT`` operations. Only fiddle with t
 
   database.verbose = false
 
-Turns on BDB verbosity for debugging. Only change with this if Keyspace is crashing and you want to send us a log file for debugging.
+Turns on BDB verbosity for debugging. Only fiddle with this if Keyspace is crashing and you want to send us a log file for debugging.
 
 ::
 
@@ -202,7 +202,7 @@ Here is a sample configuration file for running a 3-way replicated cluster::
   paxos.endpoints = 192.168.1.50:10000, 192.168.1.51:10000, 192.168.1.52:10000
   # paxos.endpoints must be the same on the other nodes
   
-  database.dir = .
+  database.dir = /var/keyspace
   
   http.port = 8080
   keyspace.port = 7080
@@ -240,7 +240,7 @@ As a rule of thumb, BDB will be much faster if the entire database fits into RAM
 Checkpointing and log cache sizes
 ---------------------------------
 
-When performing writes, BDB puts them in the transaction log (these are the files that start with ``log.``. Every once in a while checkpointing occurs, at which point the modifications in the transaction log are merged into the main database file (called ``keyspace``). The checkpoint interval is specified by ``database.checkpointTimeout``, the default is 60 seconds. Note that checkpointing will not happen if at least 100MB of logs have not accumulated. Hence the default value of ``database.logBufferSize`` if a safe 250MB.
+When performing writes, BDB puts them in the transaction log (these are the files that start with ``log.``). Every once in a while checkpointing occurs, at which point the modifications in the transaction log are merged into the main database file (called ``keyspace``). The checkpoint interval is specified by ``database.checkpointTimeout``, the default is 60 seconds. Note that checkpointing will not happen if at least 100MB of logs have not accumulated. Hence the default value of ``database.logBufferSize`` if a safe 250MB.
 
 Page sizes
 ----------
