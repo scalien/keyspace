@@ -4,6 +4,7 @@
 // SWIG compatible wrapper interface for generating client wrappers
 
 #include <string>
+#include "System/Platform.h"
 
 typedef void * ClientObj;
 typedef void * ResultObj;

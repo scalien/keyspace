@@ -1,6 +1,5 @@
 #include "KeyspaceClientWrap.h"
 #include "KeyspaceClient.h"
-#include "System/Platform.h"
 
 /////////////////////////////////////////////////////////////////////
 //
