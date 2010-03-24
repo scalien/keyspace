@@ -41,9 +41,9 @@ Keyspace uses the *PaxosLease* algorithm for master leases. Like Paxos, PaxosLea
 
 When the master node goes down or becomes disconnected from the rest, its lease expires and another node will be elected master. If the old master rejoins the cluster, its lease will have expired and it will participate as a non-master node.
 
-A node that is lagging behind in the replication rounds can never become the master. This is not a limitation but a feature, because if a majority of nodes are available at least on is always up-to-date!
+A node that is lagging behind in the replication rounds can never become the master. This is not a limitation but a feature, because if a majority of nodes are available at least one is always up-to-date!
 
-To see master election, find the master node and shut it down using ``Control+C``. While doing so, keep refreshing another node's HTTP status. You wil see the ``Master is node x`` message change to ``Master is node -1 (unknown)`` and then a few tenth of a second later to ``Master is node y`` after the new node is elected.
+To see master election in action, find the master node and shut it down using ``Control+C``. While doing so, keep refreshing another node's HTTP status. You wil see the ``Master is node x`` message change to ``Master is node -1 (unknown)`` and then a few tenth of a second later to ``Master is node y`` after the new node is elected.
 
 Catchup
 =======

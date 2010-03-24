@@ -369,15 +369,15 @@ dl.glossary dt {
 /* -- code displays --------------------------------------------------------- */
 
 span.pre {
-    background-color: #F5F6CE;
+	display:-moz-inline-box;
+	display:inline-block;
+/*    background-color: #F5F6CE;*/
+	font-weight: bold;
 	padding: 1px;
 }
 
 pre {
     overflow: auto;
-}
-
-pre {
 	margin: 0px;
 	padding: 0px;
 }

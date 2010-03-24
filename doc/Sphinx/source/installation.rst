@@ -14,7 +14,7 @@ Download the latest Debian package of Keyspace from http://scalien.com/downloads
 
 Once you have downloaded the ``.deb`` file, issue the following command to install Keyspace::
 
-  $ dpkg -i keyspace-server_1.5.1_i386.deb
+  $ dpkg -i keyspace-server_XXX_i386.deb
 
 This will install the server and the proper ``init.d`` scripts. Launch Keyspace using::
 
@@ -25,13 +25,13 @@ The usual ``start``, ``stop``, ``restart`` commands are available.
 Installing from source on Linux and other UNIX platforms
 ========================================================
 
-Download the latest tarbal of Keyspace from http://scalien.com/downloads or directly from the commnad line (replace XXX with the latest version of Keyspace)::
+Download the latest tarball of Keyspace from http://scalien.com/downloads or directly from the commnad line (replace XXX with the latest version of Keyspace)::
 
   $ wget http://scalien.com/releases/keyspace/keyspace-XXX.tgz
 
 Once you have downloaded the ``tgz`` file, issue the following command to extract it::
 
-  $ tar xvf keyspace-1.5.1.tgz
+  $ tar xvf keyspace-XXX.tgz
 
 This will create a directory called ``keyspace``, which contains the source code and make files::
 
