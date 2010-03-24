@@ -1,3 +1,33 @@
+1.6.0
+=====
+
+- New SWIG based client libraries, starting with Python
+
+- New and improved documentation
+
+- Safe script no longer necessary for proper catchup
+
+- Changes in configuration file
+
+
+1.5.1
+=====
+
+- Fixed catchup bug.
+
+
+1.5.0
+=====
+
+- Fixed many small issues, ready for production use
+
+
+1.4.2
+=====
+
+- Fixed Windows IOProcessor bug
+
+
 1.4.1
 =====
 
