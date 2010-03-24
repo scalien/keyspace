@@ -36,6 +36,7 @@ First create a ``keyspace_client_t object``::
       return 1;
     }
     ...
+    keyspace_client_destroy(client);
   }
 
 Next, connect to a Keyspace cluster::
@@ -81,7 +82,6 @@ The ``set`` command sets a ``key => value`` pair, creating a new pair if ``key``
     fprintf(stderr, "set failed");
     ...
   }
-  keyspace_client_destroy(client);
 
 ``test_and_set`` command
 ------------------------
@@ -96,7 +96,6 @@ The ``test_and_set`` command conditionally and atomically sets a ``key => value`
     fprintf(stderr, "test_and_set failed");
     ...
   }
-  keyspace_client_destroy(client);
 
 ``rename`` command
 ------------------
@@ -110,7 +109,6 @@ The ``rename`` command atomically renames a ``key``, leaving its ``value`` alone
     fprintf(stderr, "rename failed");
     ...
   }
-  keyspace_client_destroy(client);
 
 If the database was looked like ``from => value`` at the beginning, then it changed to ``to => value`` after the successfull ``rename`` operation.
 
@@ -126,7 +124,6 @@ The ``add`` command takes the value of the key, parses it as a number and atomic
     fprintf(stderr, "add failed");
     ...
   }
-  keyspace_client_destroy(client);
 
 If the database was looked like ``key => 10`` at the beginning, then it changed to ``key => 13`` after the successfull ``add`` operation and the variable ``result`` holds the value 13.
 
@@ -141,7 +138,6 @@ The ``delete`` command deletes a ``key => value`` pair by its ``key``::
     fprintf(stderr, "delete failed");
     ...
   }
-  keyspace_client_destroy(client);
 
 ``remove`` command
 ------------------
@@ -174,7 +170,6 @@ The ``delete`` command deletes a ``key => value`` pair by its ``key`` and return
   // val and len now hold the old value
   ...
   keyspace_result_close(result);
-  keyspace_client_destroy(client);
 
 ``prune`` command
 -----------------
@@ -187,7 +182,6 @@ The ``prune`` command deletes all ``key => value`` pairs where the ``key`` start
     fprintf(stderr, "prune failed");
     ...
   }
-  keyspace_client_destroy(client);
 
 Issuing single read commands
 ============================
@@ -207,9 +201,7 @@ The ``get_simple`` command retrieves a single value from the Keyspace cluster. U
     fprintf(stderr, "get_simple failed");
     ...
   }
-  // buf now hold the value
-  ...
-  keyspace_client_destroy(client);
+  // buf now holds the value
 
 Issuing list commands
 =====================
@@ -274,7 +266,6 @@ Since the ``list_keys`` command may return many keys, the result object must be 
     ...
   }
   keyspace_result_close(result);
-  keyspace_client_destroy(client);
 
 ``list_keyvalues`` command
 --------------------------
@@ -339,7 +330,6 @@ Since the ``list_keyvalues`` command may return many key-value pairs, the result
     ...
   }
   keyspace_result_close(result);
-  keyspace_client_destroy(client);
 
 ``count`` command
 -----------------
@@ -371,8 +361,6 @@ The second ``res`` parameter will hold the number of rows::
     ...
   }
   // num holds the number of keys
-  ...
-  keyspace_client_destroy(client);
 
 Issuing batched write commands
 ==============================
@@ -418,7 +406,6 @@ To send batched write commands, first call ``keyspace_client_begin()`` function,
     }
     keyspace_result_close(result);
   }
-  keyspace_client_destroy(client);
 
 Issuing batched read commands
 =============================
@@ -463,8 +450,6 @@ To send batched ``get`` commands, first call ``keyspace_client_begin()`` functio
     ...
   }
   keyspace_result_close(result);
-  keyspace_client_destroy(client);
-
 
 Understanding Keyspace status codes
 ===================================
