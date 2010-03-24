@@ -75,6 +75,14 @@ class Client:
 		
 		def timeout_status(self):
 			return ResultTimeoutStatus(self.cptr)
+		
+		def key_values(self):
+			kv = {}
+			self.begin()
+			while not self.is_end():
+				kv[self.key()] = self.value()
+				self.next()
+			return kv
 	
 	def __init__(self, nodes):
 		self.co = Create()
