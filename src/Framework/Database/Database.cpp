@@ -146,7 +146,12 @@ void Database::Shutdown()
 	delete cpThread;
 	delete keyspace;	
 	env->close(0);
-//	delete env;
+
+	// Bug #222: On Windows deleting the BDB environment object causes crash
+	// On other platforms it works and causes a memleak if not deleted.
+#ifndef PLATFORM_WINDOWS
+	delete env;
+#endif
 }
 
 Table* Database::GetTable(const char* name)
