@@ -218,6 +218,30 @@ $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
 	
 
+# php wrapper
+PHP_DIR = php
+PHP_LIB = keyspace_client.so
+PHP_INCLUDE = 
+PHP_CONFIG = php-config
+
+PHP_CLIENT_DIR = $(CLIENT_DIR)/PHP
+PHP_CLIENT_WRAPPER = $(PHP_CLIENT_DIR)/keyspace_client_php
+PHPLIB = $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB)
+
+$(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
+	-swig -php5 -c++  -outdir $(SRC_DIR)/$(PHP_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PHP_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+	-script/fix_swig_php.sh $(SRC_DIR)/$(PHP_CLIENT_DIR)
+
+$(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
+	$(CXX) $(CXXFLAGS) $(PHP_INCLUDE) `$(PHP_CONFIG) --includes` -o $@ -c $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
+
+$(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o
+	-mkdir -p $(BIN_DIR)/$(PHP_DIR)
+	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
+	-cp $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace.php $(BIN_DIR)/$(PHP_DIR)
+	-cp $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace_client.php $(BIN_DIR)/$(PHP_DIR)
+	
+
 # executables	
 $(BIN_DIR)/keyspaced: $(BUILD_DIR) $(LIBS) $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
@@ -249,6 +273,8 @@ clientlib:
 pythonlib: $(BUILD_DIR) $(CLIENTLIBS) $(PYTHONLIB)
 
 javalib: $(BUILD_DIR) $(CLIENTLIBS) $(JAVALIB)
+
+phplib: $(BUILD_DIR) $(CLIENTLIBS) $(PHPLIB)
 
 targets: $(BUILD_DIR) executables clientlibs
 
