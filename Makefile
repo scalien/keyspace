@@ -182,7 +182,7 @@ PYTHONLIB = \
 	$(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB)
 
 $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
-	-swig -python -c++ -outdir $(SRC_DIR)/$(CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PYTHON_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+	-swig -python -c++ -outdir $(BUILD_DIR)/$(PYTHON_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PYTHON_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
 
 $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
 	$(CXX) $(CXXFLAGS) `$(PYTHON_CONFIG) --includes` -o $@ -c $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
@@ -191,7 +191,7 @@ $(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT
 	-mkdir -p $(BIN_DIR)/$(PYTHON_DIR)
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PYTHON_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
 	-cp -rf $(SRC_DIR)/$(PYTHON_CLIENT_DIR)/keyspace.py $(BIN_DIR)/$(PYTHON_DIR)
-	-cp -rf $(SRC_DIR)/$(PYTHON_CLIENT_DIR)/keyspace_client.py $(BIN_DIR)/$(PYTHON_DIR)
+	-cp -rf $(BUILD_DIR)/$(PYTHON_CLIENT_DIR)/keyspace_client.py $(BIN_DIR)/$(PYTHON_DIR)
 
 # java wrapper
 JAVA_DIR = java
@@ -208,7 +208,7 @@ JAVALIB = \
 	$(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB)
 
 $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
-	-swig -java -c++ -outdir $(SRC_DIR)/$(CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(JAVA_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+	-swig -java -c++ -outdir $(BUILD_DIR)/$(JAVA_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(JAVA_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
 
 $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
 	$(CXX) $(CXXFLAGS) $(JAVA_INCLUDE) -o $@ -c $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
@@ -216,6 +216,8 @@ $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(JAVA_CLIENT_WRA
 $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o
 	-mkdir -p $(BIN_DIR)/$(JAVA_DIR)
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
+	-cp -rf $(SRC_DIR)/$(JAVA_CLIENT_DIR)/Client.java $(BIN_DIR)/$(JAVA_DIR)
+	-cp -rf $(BUILD_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)
 	
 
 # php wrapper
@@ -229,17 +231,17 @@ PHP_CLIENT_WRAPPER = $(PHP_CLIENT_DIR)/keyspace_client_php
 PHPLIB = $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB)
 
 $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
-	-swig -php5 -c++  -outdir $(SRC_DIR)/$(PHP_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PHP_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
-	-script/fix_swig_php.sh $(SRC_DIR)/$(PHP_CLIENT_DIR)
+	-swig -php5 -c++  -outdir $(BUILD_DIR)/$(PHP_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PHP_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+	-script/fix_swig_php.sh $(BUILD_DIR)/$(PHP_CLIENT_DIR)
 
 $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
-	$(CXX) $(CXXFLAGS) $(PHP_INCLUDE) `$(PHP_CONFIG) --includes` -o $@ -c $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
+	$(CXX) $(CXXFLAGS) $(PHP_INCLUDE) `$(PHP_CONFIG) --includes` -I$(BUILD_DIR)/$(PHP_CLIENT_DIR) -o $@ -c $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
 
 $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o
 	-mkdir -p $(BIN_DIR)/$(PHP_DIR)
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
-	-cp $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace.php $(BIN_DIR)/$(PHP_DIR)
-	-cp $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace_client.php $(BIN_DIR)/$(PHP_DIR)
+	-cp -rf $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace.php $(BIN_DIR)/$(PHP_DIR)
+	-cp -rf $(BUILD_DIR)/$(PHP_CLIENT_DIR)/keyspace_client.php $(BIN_DIR)/$(PHP_DIR)
 	
 
 # executables	
@@ -317,9 +319,30 @@ clean-release:
 	-rm -f $(BASE_DIR)/keyspace
 	-rm -r -f $(BUILD_RELEASE_DIR)
 	
-clean-libs:
+clean-libs: clean-pythonlib clean-phplib clean-javalib
 	-rm $(CLIENTLIBS)
+
+clean-pythonlib:
 	-rm $(BIN_DIR)/$(PYTHON_DIR)/*
+
+clean-javalib:
+	-rm $(BUILD_DIR)/$(JAVA_CLIENT_DIR)/*
+	-rm $(BIN_DIR)/$(JAVA_DIR)/*
+
+clean-phplib:
+	-rm $(BUILD_DIR)/$(PHP_CLIENT_DIR)/*
+	-rm $(BIN_DIR)/$(PHP_DIR)/*
+
+clean-pythonlib-swig:
+	-rm $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
+	
+clean-javalib-swig:
+	-rm $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
+
+clean-phplib-swig:
+	-rm $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
+
+clean-swig: clean-pythonlib-swig clean-javalib-swig clean-phplib-swig
 
 clean-executables:
 	-rm $(EXECUTABLES)

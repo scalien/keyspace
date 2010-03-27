@@ -1,7 +1,6 @@
 <?php
 
-include("keyspace_client.php");
-//dl("/Users/attila/Projects/Scalien/Keyspace.trunk/src/Application/Keyspace/Client/PHP/keyspace_client.so");
+include_once("keyspace_client.php");
 
 class Result {
 	private $cPtr;
@@ -65,6 +64,7 @@ class Result {
 		$this->begin();
 		while (! $this->isEnd()) {
 			$keys[] = $this->key();
+			$this->next();
 		}
 
 		return $keys;
@@ -367,11 +367,4 @@ class Keyspace {
 	}
 }
 
-keyspace_client::Keyspace_SetTrace(TRUE);
-$ks = new Keyspace(array("localhost:7080"));
-print($ks->get("hol"));
-print($ks->count(array("count" => 10)));
-$ks->set("c", 2147483647);
-print($ks->add("c", 1) . "\n");
-print($ks->result->transportStatus() . "\n");
 ?>

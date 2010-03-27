@@ -59,43 +59,43 @@ class Result
 	}
 	
 	public void finalize() {
-		keyspace_client.ResultClose(cptr);
+		keyspace_client.Keyspace_ResultClose(cptr);
 	}
 	
 	public String getKey() {
-		return keyspace_client.ResultKey(cptr);
+		return keyspace_client.Keyspace_ResultKey(cptr);
 	}
 	
 	public String getValue() {
-		return keyspace_client.ResultValue(cptr);
+		return keyspace_client.Keyspace_ResultValue(cptr);
 	}
 	
 	public void begin() {
-		keyspace_client.ResultBegin(cptr);
+		keyspace_client.Keyspace_ResultBegin(cptr);
 	}
 	
 	public void next() {
-		keyspace_client.ResultNext(cptr);
+		keyspace_client.Keyspace_ResultNext(cptr);
 	}
 	
 	public boolean isEnd() {
-		return keyspace_client.ResultIsEnd(cptr);
+		return keyspace_client.Keyspace_ResultIsEnd(cptr);
 	}
 	
 	public int transportStatus() {
-		return keyspace_client.ResultTransportStatus(cptr);
+		return keyspace_client.Keyspace_ResultTransportStatus(cptr);
 	}
 	
 	public int connectivityStatus() {
-		return keyspace_client.ResultConnectivityStatus(cptr);
+		return keyspace_client.Keyspace_ResultConnectivityStatus(cptr);
 	}
 	
 	public int timeoutStatus() {
-		return keyspace_client.ResultTimeoutStatus(cptr);
+		return keyspace_client.Keyspace_ResultTimeoutStatus(cptr);
 	}
 	
 	public int commandStatus() {
-		return keyspace_client.ResultCommandStatus(cptr);
+		return keyspace_client.Keyspace_ResultCommandStatus(cptr);
 	}
 	
 }
@@ -152,47 +152,46 @@ public class Client
 	private Result result;
 	
 	public Client(String[] nodes) {
-		cptr = keyspace_client.Create();
+		cptr = keyspace_client.Keyspace_Create();
 		result = null;
 		
-		NodeParams nodeParams = new NodeParams(nodes.length);
+		Keyspace_NodeParams nodeParams = new Keyspace_NodeParams(nodes.length);
 		for (int i = 0; i < nodes.length; i++) {
 			nodeParams.AddNode(nodes[i]);
 		}
 		
-		int status = keyspace_client.Init(cptr, nodeParams);
-		System.out.println("status = " + status);
+		int status = keyspace_client.Keyspace_Init(cptr, nodeParams);
 		nodeParams.Close();
 	}
 
 	public void finalize() {
-		keyspace_client.Destroy(cptr);
+		keyspace_client.Keyspace_Destroy(cptr);
 	}
 	
 	public void setGlobalTimeout(long timeout) {
-		keyspace_client.SetGlobalTimeout(cptr, BigInteger.valueOf(timeout));
+		keyspace_client.Keyspace_SetGlobalTimeout(cptr, BigInteger.valueOf(timeout));
 	}
 	
 	public void setMasterTimeout(long timeout) {
-		keyspace_client.SetMasterTimeout(cptr, BigInteger.valueOf(timeout));
+		keyspace_client.Keyspace_SetMasterTimeout(cptr, BigInteger.valueOf(timeout));
 	}
 	
 	public long getGlobalTimeout() {
-		BigInteger bi = keyspace_client.GetGlobalTimeout(cptr);
+		BigInteger bi = keyspace_client.Keyspace_GetGlobalTimeout(cptr);
 		return bi.longValue();
 	}
 	
 	public long getMasterTimeout() {
-		BigInteger bi = keyspace_client.GetMasterTimeout(cptr);
+		BigInteger bi = keyspace_client.Keyspace_GetMasterTimeout(cptr);
 		return bi.longValue();
 	}
 	
 	public int getMaster() {
-		return keyspace_client.GetMaster(cptr);
+		return keyspace_client.Keyspace_GetMaster(cptr);
 	}
 	
 	public void distributeDirty(boolean dd) {
-		keyspace_client.DistributeDirty(cptr, dd);
+		keyspace_client.Keyspace_DistributeDirty(cptr, dd);
 	}
 	
 	public Result getResult() {
@@ -200,30 +199,30 @@ public class Client
 	}
 	
 	public String get(String key) {
-		int status = keyspace_client.Get(cptr, key);
+		int status = keyspace_client.Keyspace_Get(cptr, key);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return null;
 		}
 		
 		if (isBatched())
 			return null;
 				
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return result.getValue();
 	}
 	
 	public String dirtyGet(String key) {
-		int status = keyspace_client.DirtyGet(cptr, key);
+		int status = keyspace_client.Keyspace_DirtyGet(cptr, key);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return null;
 		}
 		
 		if (isBatched())
 			return null;
 				
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return result.getValue();
 	}
 	
@@ -232,8 +231,8 @@ public class Client
 	}
 	
 	public long count(String prefix, String startKey, long limit, boolean skip, boolean forward) {
-		int status = keyspace_client.Count(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
-		result = new Result(keyspace_client.GetResult(cptr));
+		int status = keyspace_client.Keyspace_Count(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			return -1;
 		
@@ -249,8 +248,8 @@ public class Client
 	}
 	
 	public long dirtyCount(String prefix, String startKey, long limit, boolean skip, boolean forward) {
-		int status = keyspace_client.DirtyCount(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
-		result = new Result(keyspace_client.GetResult(cptr));
+		int status = keyspace_client.Keyspace_DirtyCount(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			return -1;
 		
@@ -266,8 +265,8 @@ public class Client
 	}
 	
 	public ArrayList<String> listKeys(String prefix, String startKey, long limit, boolean skip, boolean forward) {
-		int status = keyspace_client.ListKeys(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
-		result = new Result(keyspace_client.GetResult(cptr));
+		int status = keyspace_client.Keyspace_ListKeys(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			return null;
 		
@@ -283,8 +282,8 @@ public class Client
 	}
 
 	public HashMap<String, String> listKeyValues(String prefix, String startKey, long limit, boolean skip, boolean forward) {
-		int status = keyspace_client.ListKeyValues(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
-		result = new Result(keyspace_client.GetResult(cptr));
+		int status = keyspace_client.Keyspace_ListKeyValues(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			return null;
 		
@@ -297,44 +296,44 @@ public class Client
 	
 	
 	public int set(String key, String value) {
-		int status = keyspace_client.Set(cptr, key, value);
+		int status = keyspace_client.Keyspace_Set(cptr, key, value);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return status;
 		}
 		
 		if (isBatched())
 			return status;
 				
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return status;
 	}
 	
 	public String testAndSet(String key, String test, String value) {
-		int status = keyspace_client.TestAndSet(cptr, key, test, value);
+		int status = keyspace_client.Keyspace_TestAndSet(cptr, key, test, value);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return null;
 		}
 		
 		if (isBatched())
 			return null;
 				
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return result.getValue();		
 	}
 	
 	public long add(String key, long num) {
-		int status = keyspace_client.Add(cptr, key, num);
+		int status = keyspace_client.Keyspace_Add(cptr, key, num);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return -1;
 		}
 		
 		if (isBatched())
 			return -1;
 		
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 
 		try {
 			return Long.parseLong(result.getValue());
@@ -344,86 +343,86 @@ public class Client
 	}
 	
 	public int delete(String key) {
-		int status = keyspace_client.Delete(cptr, key);
+		int status = keyspace_client.Keyspace_Delete(cptr, key);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return status;
 		}
 		
 		if (isBatched())
 			return status;
 		
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return status;
 	}
 	
 	public String remove(String key) {
-		int status = keyspace_client.Remove(cptr, key);
+		int status = keyspace_client.Keyspace_Remove(cptr, key);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return null;
 		}
 		
 		if (isBatched())
 			return null;
 		
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return result.getValue();
 	}
 	
 	public int rename(String src, String dst) {
-		int status = keyspace_client.Rename(cptr, src, dst);
+		int status = keyspace_client.Keyspace_Rename(cptr, src, dst);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return status;
 		}
 		
 		if (isBatched())
 			return status;
 		
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return status;
 	}
 	
 	public int prune(String prefix) {
-		int status = keyspace_client.Prune(cptr, prefix);
+		int status = keyspace_client.Keyspace_Prune(cptr, prefix);
 		if (status < 0) {
-			result = new Result(keyspace_client.GetResult(cptr));
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 			return status;
 		}
 		
 		if (isBatched())
 			return status;
 		
-		result = new Result(keyspace_client.GetResult(cptr));
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return status;
 	}
 
 	public int begin() {
-		return keyspace_client.Begin(cptr);
+		return keyspace_client.Keyspace_Begin(cptr);
 	}
 	
 	public int submit() {
-		int status = keyspace_client.Submit(cptr);
-		result = new Result(keyspace_client.GetResult(cptr));
+		int status = keyspace_client.Keyspace_Submit(cptr);
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		return status;
 	}
 	
 	public int cancel() {
-		return keyspace_client.Cancel(cptr);
+		return keyspace_client.Keyspace_Cancel(cptr);
 	}
 
 	private boolean isBatched() {
-		return keyspace_client.IsBatched(cptr);
+		return keyspace_client.Keyspace_IsBatched(cptr);
 	}
 	
 	private static void setTrace(boolean trace) {
-		keyspace_client.SetTrace(trace);
+		keyspace_client.Keyspace_SetTrace(trace);
 	}
 	
 	public static void main(String[] args) {
 		String[] nodes = {"127.0.0.1:7080"};
-		setTrace(true);
+		//setTrace(true);
 		Client ks = new Client(nodes);
 		String hol = ks.get("hol");
 		System.out.println(hol);

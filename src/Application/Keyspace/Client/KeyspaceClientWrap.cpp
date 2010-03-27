@@ -6,7 +6,7 @@
 // NodeParams implementation
 //
 /////////////////////////////////////////////////////////////////////
-NodeParams::NodeParams(int nodec_)
+Keyspace_NodeParams::Keyspace_NodeParams(int nodec_)
 {
 	num = 0;
 	nodec = nodec_;
@@ -15,12 +15,12 @@ NodeParams::NodeParams(int nodec_)
 		nodes[i] = NULL;
 }
 	
-NodeParams::~NodeParams()
+Keyspace_NodeParams::~Keyspace_NodeParams()
 {
 	Close();
 }
 	
-void NodeParams::Close()
+void Keyspace_NodeParams::Close()
 {
 	for (int i = 0; i < num; i++)
 		free(nodes[i]);
@@ -29,7 +29,7 @@ void NodeParams::Close()
 	num = 0;
 }
 	
-void NodeParams::AddNode(const std::string& node)
+void Keyspace_NodeParams::AddNode(const std::string& node)
 {
 	if (num > nodec)
 		return;
@@ -41,7 +41,7 @@ void NodeParams::AddNode(const std::string& node)
 // Result functions
 //
 /////////////////////////////////////////////////////////////////////
-void ResultBegin(ResultObj result_)
+void Keyspace_ResultBegin(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 
@@ -49,7 +49,7 @@ void ResultBegin(ResultObj result_)
 		result->Begin();
 }
 
-void ResultNext(ResultObj result_)
+void Keyspace_ResultNext(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 	
@@ -57,7 +57,7 @@ void ResultNext(ResultObj result_)
 		result->Next();	
 }
 
-bool ResultIsEnd(ResultObj result_)
+bool Keyspace_ResultIsEnd(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 	
@@ -67,7 +67,7 @@ bool ResultIsEnd(ResultObj result_)
 	return result->IsEnd();
 }
 
-void ResultClose(ResultObj result_)
+void Keyspace_ResultClose(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 	
@@ -75,7 +75,7 @@ void ResultClose(ResultObj result_)
 		result->Close();
 }
 
-std::string ResultKey(ResultObj result_)
+std::string Keyspace_ResultKey(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 	ByteString			key;
@@ -94,7 +94,7 @@ std::string ResultKey(ResultObj result_)
 	return ret;
 }
 
-std::string ResultValue(ResultObj result_)
+std::string Keyspace_ResultValue(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 	ByteString			value;
@@ -113,7 +113,7 @@ std::string ResultValue(ResultObj result_)
 	return ret;
 }
 
-int	ResultTransportStatus(ResultObj result_)
+int	Keyspace_ResultTransportStatus(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 
@@ -123,7 +123,7 @@ int	ResultTransportStatus(ResultObj result_)
 	return result->TransportStatus();
 }
 
-int	ResultConnectivityStatus(ResultObj result_)
+int	Keyspace_ResultConnectivityStatus(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 
@@ -133,7 +133,7 @@ int	ResultConnectivityStatus(ResultObj result_)
 	return result->ConnectivityStatus();
 }
 
-int ResultTimeoutStatus(ResultObj result_)
+int Keyspace_ResultTimeoutStatus(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 
@@ -144,7 +144,7 @@ int ResultTimeoutStatus(ResultObj result_)
 
 }
 
-int ResultCommandStatus(ResultObj result_)
+int Keyspace_ResultCommandStatus(ResultObj result_)
 {
 	Keyspace::Result*	result = (Keyspace::Result*) result_;
 
@@ -159,12 +159,12 @@ int ResultCommandStatus(ResultObj result_)
 // Client functions
 //
 /////////////////////////////////////////////////////////////////////
-ClientObj Create()
+ClientObj Keyspace_Create()
 {
 	return new Keyspace::Client();
 }
 
-int	Init(ClientObj client_, const NodeParams& params)
+int	Keyspace_Init(ClientObj client_, const Keyspace_NodeParams& params)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	int					status;
@@ -174,63 +174,63 @@ int	Init(ClientObj client_, const NodeParams& params)
 	return status;
 }
 
-void Destroy(ClientObj client_)
+void Keyspace_Destroy(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 
 	delete client;
 }
 
-ResultObj GetResult(ClientObj client_)
+ResultObj Keyspace_GetResult(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 		
 	return client->GetResult();
 }
 
-void SetGlobalTimeout(ClientObj client_, uint64_t timeout)
+void Keyspace_SetGlobalTimeout(ClientObj client_, uint64_t timeout)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 
 	client->SetGlobalTimeout(timeout);
 }
 
-void SetMasterTimeout(ClientObj client_, uint64_t timeout)
+void Keyspace_SetMasterTimeout(ClientObj client_, uint64_t timeout)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 
 	client->SetMasterTimeout(timeout);
 }
 
-uint64_t GetGlobalTimeout(ClientObj client_)
+uint64_t Keyspace_GetGlobalTimeout(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	
 	return client->GetGlobalTimeout();
 }
 
-uint64_t GetMasterTimeout(ClientObj client_)
+uint64_t Keyspace_GetMasterTimeout(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	
 	return client->GetMasterTimeout();
 }
 
-int GetMaster(ClientObj client_)
+int Keyspace_GetMaster(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	
 	return client->GetMaster();
 }
 
-void DistributeDirty(ClientObj client_, bool dd)
+void Keyspace_DistributeDirty(ClientObj client_, bool dd)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 
 	client->DistributeDirty(dd);
 }
 
-int Get(ClientObj client_, const std::string& key_)
+int Keyspace_Get(ClientObj client_, const std::string& key_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			key(key_.length(), key_.length(), key_.c_str());
@@ -238,7 +238,7 @@ int Get(ClientObj client_, const std::string& key_)
 	return client->Get(key);
 }
 
-int DirtyGet(ClientObj client_, const std::string& key_)
+int Keyspace_DirtyGet(ClientObj client_, const std::string& key_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			key(key_.length(), key_.length(), key_.c_str());
@@ -246,7 +246,7 @@ int DirtyGet(ClientObj client_, const std::string& key_)
 	return client->DirtyGet(key);
 }
 
-int Count(ClientObj client_, 
+int Keyspace_Count(ClientObj client_, 
 				  const std::string& prefix_,
 				  const std::string& startKey_,
 				  uint64_t count_,
@@ -261,7 +261,28 @@ int Count(ClientObj client_,
 	return client->Count(res, prefix, startKey, count_, next_, forward_);
 }
 
-int DirtyCount(ClientObj client_, 
+int Keyspace_CountStr(ClientObj client_, 
+				  const std::string& prefix_,
+				  const std::string& startKey_,
+				  const std::string& count_,
+				  bool next_,
+				  bool forward_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			prefix(prefix_.length(), prefix_.length(), prefix_.c_str());
+	ByteString			startKey(startKey_.length(), startKey_.length(), startKey_.c_str());
+	uint64_t			res;
+	unsigned			read;
+	uint64_t			count;
+
+	count = strntouint64(count_.c_str(), count_.length(), &read);
+	if (read != count_.length())
+		return KEYSPACE_API_ERROR;
+		
+	return client->Count(res, prefix, startKey, count, next_, forward_);
+}
+
+int Keyspace_DirtyCount(ClientObj client_, 
 				  const std::string& prefix_,
 				  const std::string& startKey_,
 				  uint64_t count_,
@@ -276,7 +297,28 @@ int DirtyCount(ClientObj client_,
 	return client->DirtyCount(res, prefix, startKey, count_, next_, forward_);
 }
 
-int	ListKeys(ClientObj client_, 
+int Keyspace_DirtyCountStr(ClientObj client_, 
+				  const std::string& prefix_,
+				  const std::string& startKey_,
+				  const std::string& count_,
+				  bool next_,
+				  bool forward_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			prefix(prefix_.length(), prefix_.length(), prefix_.c_str());
+	ByteString			startKey(startKey_.length(), startKey_.length(), startKey_.c_str());
+	uint64_t			res;
+	unsigned			read;
+	uint64_t			count;
+
+	count = strntouint64(count_.c_str(), count_.length(), &read);
+	if (read != count_.length())
+		return KEYSPACE_API_ERROR;
+		
+	return client->DirtyCount(res, prefix, startKey, count, next_, forward_);
+}
+
+int	Keyspace_ListKeys(ClientObj client_, 
 			 const std::string& prefix_,
 			 const std::string& startKey_,
 			 uint64_t count_,
@@ -290,7 +332,27 @@ int	ListKeys(ClientObj client_,
 	return client->ListKeys(prefix, startKey, count_, next_, forward_);
 }
 
-int	DirtyListKeys(ClientObj client_, 
+int Keyspace_ListKeysStr(ClientObj client_, 
+				  const std::string& prefix_,
+				  const std::string& startKey_,
+				  const std::string& count_,
+				  bool next_,
+				  bool forward_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			prefix(prefix_.length(), prefix_.length(), prefix_.c_str());
+	ByteString			startKey(startKey_.length(), startKey_.length(), startKey_.c_str());
+	unsigned			read;
+	uint64_t			count;
+
+	count = strntouint64(count_.c_str(), count_.length(), &read);
+	if (read != count_.length())
+		return KEYSPACE_API_ERROR;
+		
+	return client->ListKeys(prefix, startKey, count, next_, forward_);
+}
+
+int	Keyspace_DirtyListKeys(ClientObj client_, 
 			 const std::string& prefix_,
 			 const std::string& startKey_,
 			 uint64_t count_,
@@ -304,7 +366,27 @@ int	DirtyListKeys(ClientObj client_,
 	return client->DirtyListKeys(prefix, startKey, count_, next_, forward_);
 }
 
-int	ListKeyValues(ClientObj client_, 
+int Keyspace_DirtyListKeysStr(ClientObj client_, 
+				  const std::string& prefix_,
+				  const std::string& startKey_,
+				  const std::string& count_,
+				  bool next_,
+				  bool forward_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			prefix(prefix_.length(), prefix_.length(), prefix_.c_str());
+	ByteString			startKey(startKey_.length(), startKey_.length(), startKey_.c_str());
+	unsigned			read;
+	uint64_t			count;
+
+	count = strntouint64(count_.c_str(), count_.length(), &read);
+	if (read != count_.length())
+		return KEYSPACE_API_ERROR;
+		
+	return client->DirtyListKeys(prefix, startKey, count, next_, forward_);
+}
+
+int	Keyspace_ListKeyValues(ClientObj client_, 
 			 const std::string& prefix_,
 			 const std::string& startKey_,
 			 uint64_t count_,
@@ -318,7 +400,27 @@ int	ListKeyValues(ClientObj client_,
 	return client->ListKeyValues(prefix, startKey, count_, next_, forward_);
 }
 
-int	DirtyListKeyValues(ClientObj client_, 
+int Keyspace_ListKeyValuesStr(ClientObj client_, 
+				  const std::string& prefix_,
+				  const std::string& startKey_,
+				  const std::string& count_,
+				  bool next_,
+				  bool forward_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			prefix(prefix_.length(), prefix_.length(), prefix_.c_str());
+	ByteString			startKey(startKey_.length(), startKey_.length(), startKey_.c_str());
+	unsigned			read;
+	uint64_t			count;
+
+	count = strntouint64(count_.c_str(), count_.length(), &read);
+	if (read != count_.length())
+		return KEYSPACE_API_ERROR;
+		
+	return client->ListKeyValues(prefix, startKey, count, next_, forward_);
+}
+
+int	Keyspace_DirtyListKeyValues(ClientObj client_, 
 			 const std::string& prefix_,
 			 const std::string& startKey_,
 			 uint64_t count_,
@@ -332,7 +434,28 @@ int	DirtyListKeyValues(ClientObj client_,
 	return client->DirtyListKeyValues(prefix, startKey, count_, next_, forward_);
 }
 
-int Set(ClientObj client_, const std::string& key_, const std::string& value_)
+int Keyspace_DirtyListKeyValuesStr(ClientObj client_, 
+				  const std::string& prefix_,
+				  const std::string& startKey_,
+				  const std::string& count_,
+				  bool next_,
+				  bool forward_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			prefix(prefix_.length(), prefix_.length(), prefix_.c_str());
+	ByteString			startKey(startKey_.length(), startKey_.length(), startKey_.c_str());
+	unsigned			read;
+	uint64_t			count;
+
+	count = strntouint64(count_.c_str(), count_.length(), &read);
+	if (read != count_.length())
+		return KEYSPACE_API_ERROR;
+		
+	return client->DirtyListKeyValues(prefix, startKey, count, next_, forward_);
+}
+
+
+int Keyspace_Set(ClientObj client_, const std::string& key_, const std::string& value_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			key(key_.length(), key_.length(), key_.c_str());
@@ -341,7 +464,7 @@ int Set(ClientObj client_, const std::string& key_, const std::string& value_)
 	return client->Set(key, value);
 }
 
-int TestAndSet(ClientObj client_, 
+int Keyspace_TestAndSet(ClientObj client_, 
 			   const std::string& key_,
 			   const std::string& test_,
 			   const std::string& value_)
@@ -354,7 +477,7 @@ int TestAndSet(ClientObj client_,
 	return client->TestAndSet(key, test, value);
 }
 
-int Add(ClientObj client_, const std::string& key_, int64_t num_)
+int Keyspace_Add(ClientObj client_, const std::string& key_, int64_t num_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			key(key_.length(), key_.length(), key_.c_str());
@@ -363,7 +486,22 @@ int Add(ClientObj client_, const std::string& key_, int64_t num_)
 	return client->Add(key, num_, result);
 }
 
-int Delete(ClientObj client_, const std::string& key_)
+int Keyspace_AddStr(ClientObj client_, const std::string& key_, const std::string& num_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			key(key_.length(), key_.length(), key_.c_str());
+	int64_t				result;
+	unsigned			read;
+	int64_t				num;
+
+	num = strntoint64(num_.c_str(), num_.length(), &read);
+	if (read != num_.length())
+		return KEYSPACE_API_ERROR;
+	
+	return client->Add(key, num, result);
+}
+
+int Keyspace_Delete(ClientObj client_, const std::string& key_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			key(key_.length(), key_.length(), key_.c_str());
@@ -371,7 +509,7 @@ int Delete(ClientObj client_, const std::string& key_)
 	return client->Delete(key); 
 }
 
-int Remove(ClientObj client_, const std::string& key_)
+int Keyspace_Remove(ClientObj client_, const std::string& key_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			key(key_.length(), key_.length(), key_.c_str());
@@ -379,7 +517,7 @@ int Remove(ClientObj client_, const std::string& key_)
 	return client->Remove(key); 
 }
 
-int	Rename(ClientObj client_, const std::string& from_, const std::string& to_)
+int	Keyspace_Rename(ClientObj client_, const std::string& from_, const std::string& to_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			from(from_.length(), from_.length(), from_.c_str());
@@ -388,7 +526,7 @@ int	Rename(ClientObj client_, const std::string& from_, const std::string& to_)
 	return client->Rename(from, to); 
 }
 
-int Prune(ClientObj client_, const std::string& prefix_)
+int Keyspace_Prune(ClientObj client_, const std::string& prefix_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	ByteString			prefix(prefix_.length(), prefix_.length(), prefix_.c_str());
@@ -396,35 +534,35 @@ int Prune(ClientObj client_, const std::string& prefix_)
 	return client->Prune(prefix);
 }
 
-int Begin(ClientObj client_)
+int Keyspace_Begin(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	
 	return client->Begin();
 }
 
-int Submit(ClientObj client_)
+int Keyspace_Submit(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	
 	return client->Submit();
 }
 
-int Cancel(ClientObj client_)
+int Keyspace_Cancel(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	
 	return client->Cancel();
 }
 
-bool IsBatched(ClientObj client_)
+bool Keyspace_IsBatched(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;
 	
 	return client->IsBatched();
 }
 
-void SetTrace(bool trace)
+void Keyspace_SetTrace(bool trace)
 {
 	if (trace)
 	{

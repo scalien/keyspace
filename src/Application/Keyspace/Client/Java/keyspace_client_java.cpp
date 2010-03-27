@@ -449,50 +449,50 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_strtoumax(JNIEnv *jenv, jcla
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_new_1NodeParams(JNIEnv *jenv, jclass jcls, jint jarg1) {
+SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_new_1Keyspace_1NodeParams(JNIEnv *jenv, jclass jcls, jint jarg1) {
   jlong jresult = 0 ;
   int arg1 ;
-  NodeParams *result = 0 ;
+  Keyspace_NodeParams *result = 0 ;
   
   (void)jenv;
   (void)jcls;
   arg1 = (int)jarg1; 
-  result = (NodeParams *)new NodeParams(arg1);
-  *(NodeParams **)&jresult = result; 
+  result = (Keyspace_NodeParams *)new Keyspace_NodeParams(arg1);
+  *(Keyspace_NodeParams **)&jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_delete_1NodeParams(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-  NodeParams *arg1 = (NodeParams *) 0 ;
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_delete_1Keyspace_1NodeParams(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   
   (void)jenv;
   (void)jcls;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   delete arg1;
   
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_NodeParams_1Close(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
-  NodeParams *arg1 = (NodeParams *) 0 ;
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1Close(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   (arg1)->Close();
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_NodeParams_1AddNode(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
-  NodeParams *arg1 = (NodeParams *) 0 ;
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1AddNode(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   std::string *arg2 = 0 ;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   if(!jarg2) {
     SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
     return ;
@@ -506,114 +506,114 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_NodeParams_1AddNode(JNIEnv *jen
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_NodeParams_1nodec_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
-  NodeParams *arg1 = (NodeParams *) 0 ;
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int arg2 ;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   arg2 = (int)jarg2; 
   if (arg1) (arg1)->nodec = arg2;
   
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_NodeParams_1nodec_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jint jresult = 0 ;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int result;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   result = (int) ((arg1)->nodec);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_NodeParams_1nodes_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
-  NodeParams *arg1 = (NodeParams *) 0 ;
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   char **arg2 = (char **) 0 ;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   arg2 = *(char ***)&jarg2; 
   if (arg1) (arg1)->nodes = arg2;
   
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_NodeParams_1nodes_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jlong jresult = 0 ;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   char **result = 0 ;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   result = (char **) ((arg1)->nodes);
   *(char ***)&jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_NodeParams_1num_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
-  NodeParams *arg1 = (NodeParams *) 0 ;
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int arg2 ;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   arg2 = (int)jarg2; 
   if (arg1) (arg1)->num = arg2;
   
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_NodeParams_1num_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jint jresult = 0 ;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int result;
   
   (void)jenv;
   (void)jcls;
   (void)jarg1_;
-  arg1 = *(NodeParams **)&jarg1; 
+  arg1 = *(Keyspace_NodeParams **)&jarg1; 
   result = (int) ((arg1)->num);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_ResultBegin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultBegin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ResultObj arg1 = (ResultObj) 0 ;
   
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  ResultBegin(arg1);
+  Keyspace_ResultBegin(arg1);
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_ResultNext(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultNext(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ResultObj arg1 = (ResultObj) 0 ;
   
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  ResultNext(arg1);
+  Keyspace_ResultNext(arg1);
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_ResultIsEnd(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultIsEnd(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jboolean jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   bool result;
@@ -621,23 +621,23 @@ SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_ResultIsEnd(JNIEnv *jenv, j
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  result = (bool)ResultIsEnd(arg1);
+  result = (bool)Keyspace_ResultIsEnd(arg1);
   jresult = (jboolean)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_ResultClose(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultClose(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ResultObj arg1 = (ResultObj) 0 ;
   
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  ResultClose(arg1);
+  Keyspace_ResultClose(arg1);
 }
 
 
-SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_ResultKey(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultKey(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jstring jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   std::string result;
@@ -645,13 +645,13 @@ SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_ResultKey(JNIEnv *jenv, jcla
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  result = ResultKey(arg1);
+  result = Keyspace_ResultKey(arg1);
   jresult = jenv->NewStringUTF((&result)->c_str()); 
   return jresult;
 }
 
 
-SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_ResultValue(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultValue(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jstring jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   std::string result;
@@ -659,13 +659,13 @@ SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_ResultValue(JNIEnv *jenv, jc
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  result = ResultValue(arg1);
+  result = Keyspace_ResultValue(arg1);
   jresult = jenv->NewStringUTF((&result)->c_str()); 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultTransportStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultTransportStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -673,13 +673,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultTransportStatus(JNIEnv *j
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  result = (int)ResultTransportStatus(arg1);
+  result = (int)Keyspace_ResultTransportStatus(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultConnectivityStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultConnectivityStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -687,13 +687,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultConnectivityStatus(JNIEnv
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  result = (int)ResultConnectivityStatus(arg1);
+  result = (int)Keyspace_ResultConnectivityStatus(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultTimeoutStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultTimeoutStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -701,13 +701,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultTimeoutStatus(JNIEnv *jen
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  result = (int)ResultTimeoutStatus(arg1);
+  result = (int)Keyspace_ResultTimeoutStatus(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultCommandStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultCommandStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -715,56 +715,56 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ResultCommandStatus(JNIEnv *jen
   (void)jenv;
   (void)jcls;
   arg1 = *(ResultObj *)&jarg1; 
-  result = (int)ResultCommandStatus(arg1);
+  result = (int)Keyspace_ResultCommandStatus(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Create(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1Create(JNIEnv *jenv, jclass jcls) {
   jlong jresult = 0 ;
   ClientObj result;
   
   (void)jenv;
   (void)jcls;
-  result = (ClientObj)Create();
+  result = (ClientObj)Keyspace_Create();
   *(ClientObj *)&jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Init(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg2_) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Init(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg2_) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
-  NodeParams *arg2 = 0 ;
+  Keyspace_NodeParams *arg2 = 0 ;
   int result;
   
   (void)jenv;
   (void)jcls;
   (void)jarg2_;
   arg1 = *(ClientObj *)&jarg1; 
-  arg2 = *(NodeParams **)&jarg2;
+  arg2 = *(Keyspace_NodeParams **)&jarg2;
   if(!arg2) {
-    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "NodeParams const & reference is null");
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Keyspace_NodeParams const & reference is null");
     return 0;
   } 
-  result = (int)Init(arg1,(NodeParams const &)*arg2);
+  result = (int)Keyspace_Init(arg1,(Keyspace_NodeParams const &)*arg2);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Destroy(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1Destroy(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ClientObj arg1 = (ClientObj) 0 ;
   
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  Destroy(arg1);
+  Keyspace_Destroy(arg1);
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_GetResult(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1GetResult(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jlong jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   ResultObj result;
@@ -772,13 +772,13 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_GetResult(JNIEnv *jenv, jclass
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (ResultObj)GetResult(arg1);
+  result = (ResultObj)Keyspace_GetResult(arg1);
   *(ResultObj *)&jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_SetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t arg2 ;
   
@@ -808,11 +808,11 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_SetGlobalTimeout(JNIEnv *jenv, 
     }
     jenv->ReleaseByteArrayElements(ba, bae, 0);
   }
-  SetGlobalTimeout(arg1,arg2);
+  Keyspace_SetGlobalTimeout(arg1,arg2);
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_SetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t arg2 ;
   
@@ -842,11 +842,11 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_SetMasterTimeout(JNIEnv *jenv, 
     }
     jenv->ReleaseByteArrayElements(ba, bae, 0);
   }
-  SetMasterTimeout(arg1,arg2);
+  Keyspace_SetMasterTimeout(arg1,arg2);
 }
 
 
-SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_GetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_Keyspace_1GetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jobject jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t result;
@@ -854,7 +854,7 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_GetGlobalTimeout(JNIEnv *jen
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (uint64_t)GetGlobalTimeout(arg1);
+  result = (uint64_t)Keyspace_GetGlobalTimeout(arg1);
   {
     jbyteArray ba = jenv->NewByteArray(9);
     jbyte* bae = jenv->GetByteArrayElements(ba, 0);
@@ -876,7 +876,7 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_GetGlobalTimeout(JNIEnv *jen
 }
 
 
-SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_GetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_Keyspace_1GetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jobject jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t result;
@@ -884,7 +884,7 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_GetMasterTimeout(JNIEnv *jen
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (uint64_t)GetMasterTimeout(arg1);
+  result = (uint64_t)Keyspace_GetMasterTimeout(arg1);
   {
     jbyteArray ba = jenv->NewByteArray(9);
     jbyte* bae = jenv->GetByteArrayElements(ba, 0);
@@ -906,7 +906,7 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_GetMasterTimeout(JNIEnv *jen
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_GetMaster(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1GetMaster(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -914,13 +914,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_GetMaster(JNIEnv *jenv, jclass 
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (int)GetMaster(arg1);
+  result = (int)Keyspace_GetMaster(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_DistributeDirty(JNIEnv *jenv, jclass jcls, jlong jarg1, jboolean jarg2) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1DistributeDirty(JNIEnv *jenv, jclass jcls, jlong jarg1, jboolean jarg2) {
   ClientObj arg1 = (ClientObj) 0 ;
   bool arg2 ;
   
@@ -928,11 +928,11 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_DistributeDirty(JNIEnv *jenv, j
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
   arg2 = jarg2 ? true : false; 
-  DistributeDirty(arg1,arg2);
+  Keyspace_DistributeDirty(arg1,arg2);
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Get(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Get(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -950,13 +950,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Get(JNIEnv *jenv, jclass jcls, 
   std::string arg2_str(arg2_pstr);
   arg2 = &arg2_str;
   jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
-  result = (int)Get(arg1,(std::string const &)*arg2);
+  result = (int)Keyspace_Get(arg1,(std::string const &)*arg2);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyGet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyGet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -974,75 +974,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyGet(JNIEnv *jenv, jclass j
   std::string arg2_str(arg2_pstr);
   arg2 = &arg2_str;
   jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
-  result = (int)DirtyGet(arg1,(std::string const &)*arg2);
+  result = (int)Keyspace_DirtyGet(arg1,(std::string const &)*arg2);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Count(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
-  jint jresult = 0 ;
-  ClientObj arg1 = (ClientObj) 0 ;
-  std::string *arg2 = 0 ;
-  std::string *arg3 = 0 ;
-  uint64_t arg4 ;
-  bool arg5 ;
-  bool arg6 ;
-  int result;
-  
-  (void)jenv;
-  (void)jcls;
-  arg1 = *(ClientObj *)&jarg1; 
-  if(!jarg2) {
-    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
-    return 0;
-  }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
-  if (!arg2_pstr) return 0;
-  std::string arg2_str(arg2_pstr);
-  arg2 = &arg2_str;
-  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
-  if(!jarg3) {
-    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
-    return 0;
-  }
-  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
-  if (!arg3_pstr) return 0;
-  std::string arg3_str(arg3_pstr);
-  arg3 = &arg3_str;
-  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
-  {
-    jclass clazz;
-    jmethodID mid;
-    jbyteArray ba;
-    jbyte* bae;
-    jsize sz;
-    int i;
-    
-    if (!jarg4) {
-      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "BigInteger null");
-      return 0;
-    }
-    clazz = jenv->GetObjectClass(jarg4);
-    mid = jenv->GetMethodID(clazz, "toByteArray", "()[B");
-    ba = (jbyteArray)jenv->CallObjectMethod(jarg4, mid);
-    bae = jenv->GetByteArrayElements(ba, 0);
-    sz = jenv->GetArrayLength(ba);
-    arg4 = 0;
-    for(i=0; i<sz; i++) {
-      arg4 = (arg4 << 8) | (uint64_t)(unsigned char)bae[i];
-    }
-    jenv->ReleaseByteArrayElements(ba, bae, 0);
-  }
-  arg5 = jarg5 ? true : false; 
-  arg6 = jarg6 ? true : false; 
-  result = (int)Count(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
-  jresult = (jint)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyCount(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Count(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1098,13 +1036,61 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyCount(JNIEnv *jenv, jclass
   }
   arg5 = jarg5 ? true : false; 
   arg6 = jarg6 ? true : false; 
-  result = (int)DirtyCount(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_Count(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1CountStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  arg5 = jarg5 ? true : false; 
+  arg6 = jarg6 ? true : false; 
+  result = (int)Keyspace_CountStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyCount(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1160,13 +1146,61 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ListKeys(JNIEnv *jenv, jclass j
   }
   arg5 = jarg5 ? true : false; 
   arg6 = jarg6 ? true : false; 
-  result = (int)ListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_DirtyCount(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyCountStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  arg5 = jarg5 ? true : false; 
+  arg6 = jarg6 ? true : false; 
+  result = (int)Keyspace_DirtyCountStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1222,13 +1256,61 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyListKeys(JNIEnv *jenv, jcl
   }
   arg5 = jarg5 ? true : false; 
   arg6 = jarg6 ? true : false; 
-  result = (int)DirtyListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_ListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeysStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  arg5 = jarg5 ? true : false; 
+  arg6 = jarg6 ? true : false; 
+  result = (int)Keyspace_ListKeysStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1284,13 +1366,61 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_ListKeyValues(JNIEnv *jenv, jcl
   }
   arg5 = jarg5 ? true : false; 
   arg6 = jarg6 ? true : false; 
-  result = (int)ListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_DirtyListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeysStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  arg5 = jarg5 ? true : false; 
+  arg6 = jarg6 ? true : false; 
+  result = (int)Keyspace_DirtyListKeysStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1346,13 +1476,171 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_DirtyListKeyValues(JNIEnv *jenv
   }
   arg5 = jarg5 ? true : false; 
   arg6 = jarg6 ? true : false; 
-  result = (int)DirtyListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_ListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Set(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeyValuesStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  arg5 = jarg5 ? true : false; 
+  arg6 = jarg6 ? true : false; 
+  result = (int)Keyspace_ListKeyValuesStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  uint64_t arg4 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  {
+    jclass clazz;
+    jmethodID mid;
+    jbyteArray ba;
+    jbyte* bae;
+    jsize sz;
+    int i;
+    
+    if (!jarg4) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "BigInteger null");
+      return 0;
+    }
+    clazz = jenv->GetObjectClass(jarg4);
+    mid = jenv->GetMethodID(clazz, "toByteArray", "()[B");
+    ba = (jbyteArray)jenv->CallObjectMethod(jarg4, mid);
+    bae = jenv->GetByteArrayElements(ba, 0);
+    sz = jenv->GetArrayLength(ba);
+    arg4 = 0;
+    for(i=0; i<sz; i++) {
+      arg4 = (arg4 << 8) | (uint64_t)(unsigned char)bae[i];
+    }
+    jenv->ReleaseByteArrayElements(ba, bae, 0);
+  }
+  arg5 = jarg5 ? true : false; 
+  arg6 = jarg6 ? true : false; 
+  result = (int)Keyspace_DirtyListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeyValuesStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  if(!jarg4) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg4_pstr = (const char *)jenv->GetStringUTFChars(jarg4, 0); 
+  if (!arg4_pstr) return 0;
+  std::string arg4_str(arg4_pstr);
+  arg4 = &arg4_str;
+  jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
+  arg5 = jarg5 ? true : false; 
+  arg6 = jarg6 ? true : false; 
+  result = (int)Keyspace_DirtyListKeyValuesStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Set(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1380,13 +1668,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Set(JNIEnv *jenv, jclass jcls, 
   std::string arg3_str(arg3_pstr);
   arg3 = &arg3_str;
   jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
-  result = (int)Set(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
+  result = (int)Keyspace_Set(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_TestAndSet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1TestAndSet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1424,13 +1712,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_TestAndSet(JNIEnv *jenv, jclass
   std::string arg4_str(arg4_pstr);
   arg4 = &arg4_str;
   jenv->ReleaseStringUTFChars(jarg4, arg4_pstr); 
-  result = (int)TestAndSet(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4);
+  result = (int)Keyspace_TestAndSet(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Add(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Add(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1450,61 +1738,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Add(JNIEnv *jenv, jclass jcls, 
   arg2 = &arg2_str;
   jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
   arg3 = (int64_t)jarg3; 
-  result = (int)Add(arg1,(std::string const &)*arg2,arg3);
+  result = (int)Keyspace_Add(arg1,(std::string const &)*arg2,arg3);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Delete(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
-  jint jresult = 0 ;
-  ClientObj arg1 = (ClientObj) 0 ;
-  std::string *arg2 = 0 ;
-  int result;
-  
-  (void)jenv;
-  (void)jcls;
-  arg1 = *(ClientObj *)&jarg1; 
-  if(!jarg2) {
-    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
-    return 0;
-  }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
-  if (!arg2_pstr) return 0;
-  std::string arg2_str(arg2_pstr);
-  arg2 = &arg2_str;
-  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
-  result = (int)Delete(arg1,(std::string const &)*arg2);
-  jresult = (jint)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
-  jint jresult = 0 ;
-  ClientObj arg1 = (ClientObj) 0 ;
-  std::string *arg2 = 0 ;
-  int result;
-  
-  (void)jenv;
-  (void)jcls;
-  arg1 = *(ClientObj *)&jarg1; 
-  if(!jarg2) {
-    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
-    return 0;
-  }
-  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
-  if (!arg2_pstr) return 0;
-  std::string arg2_str(arg2_pstr);
-  arg2 = &arg2_str;
-  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
-  result = (int)Remove(arg1,(std::string const &)*arg2);
-  jresult = (jint)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Rename(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1AddStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1532,13 +1772,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Rename(JNIEnv *jenv, jclass jcl
   std::string arg3_str(arg3_pstr);
   arg3 = &arg3_str;
   jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
-  result = (int)Rename(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
+  result = (int)Keyspace_AddStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Prune(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Delete(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1556,13 +1796,95 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Prune(JNIEnv *jenv, jclass jcls
   std::string arg2_str(arg2_pstr);
   arg2 = &arg2_str;
   jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
-  result = (int)Prune(arg1,(std::string const &)*arg2);
+  result = (int)Keyspace_Delete(arg1,(std::string const &)*arg2);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Begin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  result = (int)Keyspace_Remove(arg1,(std::string const &)*arg2);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Rename(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  if(!jarg3) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg3_pstr = (const char *)jenv->GetStringUTFChars(jarg3, 0); 
+  if (!arg3_pstr) return 0;
+  std::string arg3_str(arg3_pstr);
+  arg3 = &arg3_str;
+  jenv->ReleaseStringUTFChars(jarg3, arg3_pstr); 
+  result = (int)Keyspace_Rename(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Prune(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+  jint jresult = 0 ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  arg1 = *(ClientObj *)&jarg1; 
+  if(!jarg2) {
+    SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "null std::string");
+    return 0;
+  }
+  const char *arg2_pstr = (const char *)jenv->GetStringUTFChars(jarg2, 0); 
+  if (!arg2_pstr) return 0;
+  std::string arg2_str(arg2_pstr);
+  arg2 = &arg2_str;
+  jenv->ReleaseStringUTFChars(jarg2, arg2_pstr); 
+  result = (int)Keyspace_Prune(arg1,(std::string const &)*arg2);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Begin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -1570,13 +1892,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Begin(JNIEnv *jenv, jclass jcls
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (int)Begin(arg1);
+  result = (int)Keyspace_Begin(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Submit(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Submit(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -1584,13 +1906,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Submit(JNIEnv *jenv, jclass jcl
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (int)Submit(arg1);
+  result = (int)Keyspace_Submit(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Cancel(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Cancel(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -1598,13 +1920,13 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Cancel(JNIEnv *jenv, jclass jcl
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (int)Cancel(arg1);
+  result = (int)Keyspace_Cancel(arg1);
   jresult = (jint)result; 
   return jresult;
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_IsBatched(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_Keyspace_1IsBatched(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jboolean jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   bool result;
@@ -1612,19 +1934,19 @@ SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_IsBatched(JNIEnv *jenv, jcl
   (void)jenv;
   (void)jcls;
   arg1 = *(ClientObj *)&jarg1; 
-  result = (bool)IsBatched(arg1);
+  result = (bool)Keyspace_IsBatched(arg1);
   jresult = (jboolean)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_SetTrace(JNIEnv *jenv, jclass jcls, jboolean jarg1) {
+SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetTrace(JNIEnv *jenv, jclass jcls, jboolean jarg1) {
   bool arg1 ;
   
   (void)jenv;
   (void)jcls;
   arg1 = jarg1 ? true : false; 
-  SetTrace(arg1);
+  Keyspace_SetTrace(arg1);
 }
 
 
