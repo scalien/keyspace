@@ -2468,7 +2468,7 @@ SWIG_Python_MustGetPtr(PyObject *obj, swig_type_info *ty, int argnum, int flags)
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_NodeParams swig_types[0]
+#define SWIGTYPE_p_Keyspace_NodeParams swig_types[0]
 #define SWIGTYPE_p_char swig_types[1]
 #define SWIGTYPE_p_imaxdiv_t swig_types[2]
 #define SWIGTYPE_p_int swig_types[3]
@@ -4395,41 +4395,41 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_new_NodeParams(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_Keyspace_NodeParams(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
-  NodeParams *result = 0 ;
+  Keyspace_NodeParams *result = 0 ;
   int val1 ;
   int ecode1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_NodeParams",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:new_Keyspace_NodeParams",&obj0)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_NodeParams" "', argument " "1"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Keyspace_NodeParams" "', argument " "1"" of type '" "int""'");
   } 
   arg1 = static_cast< int >(val1);
-  result = (NodeParams *)new NodeParams(arg1);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_NodeParams, SWIG_POINTER_NEW |  0 );
+  result = (Keyspace_NodeParams *)new Keyspace_NodeParams(arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Keyspace_NodeParams, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_NodeParams(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_Keyspace_NodeParams(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_NodeParams",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, SWIG_POINTER_DISOWN |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Keyspace_NodeParams",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_NodeParams" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Keyspace_NodeParams" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   delete arg1;
   
   resultobj = SWIG_Py_Void();
@@ -4439,19 +4439,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_Close(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_Close(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:NodeParams_Close",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_NodeParams_Close",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_Close" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_Close" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   (arg1)->Close();
   resultobj = SWIG_Py_Void();
   return resultobj;
@@ -4460,9 +4460,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_AddNode(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_AddNode(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   std::string *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -4470,20 +4470,20 @@ SWIGINTERN PyObject *_wrap_NodeParams_AddNode(PyObject *SWIGUNUSEDPARM(self), Py
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:NodeParams_AddNode",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_NodeParams_AddNode",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_AddNode" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_AddNode" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "NodeParams_AddNode" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_NodeParams_AddNode" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "NodeParams_AddNode" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_NodeParams_AddNode" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -4497,9 +4497,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_nodec_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_nodec_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -4508,15 +4508,15 @@ SWIGINTERN PyObject *_wrap_NodeParams_nodec_set(PyObject *SWIGUNUSEDPARM(self), 
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:NodeParams_nodec_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_NodeParams_nodec_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_nodec_set" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_nodec_set" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   ecode2 = SWIG_AsVal_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "NodeParams_nodec_set" "', argument " "2"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyspace_NodeParams_nodec_set" "', argument " "2"" of type '" "int""'");
   } 
   arg2 = static_cast< int >(val2);
   if (arg1) (arg1)->nodec = arg2;
@@ -4528,20 +4528,20 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_nodec_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_nodec_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:NodeParams_nodec_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_NodeParams_nodec_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_nodec_get" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_nodec_get" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   result = (int) ((arg1)->nodec);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
@@ -4550,9 +4550,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_nodes_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_nodes_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   char **arg2 = (char **) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -4561,15 +4561,15 @@ SWIGINTERN PyObject *_wrap_NodeParams_nodes_set(PyObject *SWIGUNUSEDPARM(self), 
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:NodeParams_nodes_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_NodeParams_nodes_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_nodes_set" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_nodes_set" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_p_char, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "NodeParams_nodes_set" "', argument " "2"" of type '" "char **""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_NodeParams_nodes_set" "', argument " "2"" of type '" "char **""'"); 
   }
   arg2 = reinterpret_cast< char ** >(argp2);
   if (arg1) (arg1)->nodes = arg2;
@@ -4581,20 +4581,20 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_nodes_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_nodes_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   char **result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:NodeParams_nodes_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_NodeParams_nodes_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_nodes_get" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_nodes_get" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   result = (char **) ((arg1)->nodes);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_char, 0 |  0 );
   return resultobj;
@@ -4603,9 +4603,9 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_num_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_num_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -4614,15 +4614,15 @@ SWIGINTERN PyObject *_wrap_NodeParams_num_set(PyObject *SWIGUNUSEDPARM(self), Py
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:NodeParams_num_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_NodeParams_num_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_num_set" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_num_set" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   ecode2 = SWIG_AsVal_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "NodeParams_num_set" "', argument " "2"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyspace_NodeParams_num_set" "', argument " "2"" of type '" "int""'");
   } 
   arg2 = static_cast< int >(val2);
   if (arg1) (arg1)->num = arg2;
@@ -4634,20 +4634,20 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_NodeParams_num_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_NodeParams_num_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  NodeParams *arg1 = (NodeParams *) 0 ;
+  Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:NodeParams_num_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NodeParams, 0 |  0 );
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_NodeParams_num_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Keyspace_NodeParams, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NodeParams_num_get" "', argument " "1"" of type '" "NodeParams *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_NodeParams_num_get" "', argument " "1"" of type '" "Keyspace_NodeParams *""'"); 
   }
-  arg1 = reinterpret_cast< NodeParams * >(argp1);
+  arg1 = reinterpret_cast< Keyspace_NodeParams * >(argp1);
   result = (int) ((arg1)->num);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
@@ -4656,25 +4656,25 @@ fail:
 }
 
 
-SWIGINTERN PyObject *NodeParams_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *Keyspace_NodeParams_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O|swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_NodeParams, SWIG_NewClientData(obj));
+  SWIG_TypeNewClientData(SWIGTYPE_p_Keyspace_NodeParams, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_ResultBegin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultBegin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultBegin",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultBegin",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultBegin" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultBegin" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  ResultBegin(arg1);
+  Keyspace_ResultBegin(arg1);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -4682,18 +4682,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultNext(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultNext(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultNext",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultNext",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultNext" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultNext" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  ResultNext(arg1);
+  Keyspace_ResultNext(arg1);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -4701,19 +4701,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultIsEnd(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultIsEnd(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   bool result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultIsEnd",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultIsEnd",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultIsEnd" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultIsEnd" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  result = (bool)ResultIsEnd(arg1);
+  result = (bool)Keyspace_ResultIsEnd(arg1);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   return resultobj;
 fail:
@@ -4721,18 +4721,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultClose(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultClose(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultClose",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultClose",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultClose" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultClose" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  ResultClose(arg1);
+  Keyspace_ResultClose(arg1);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -4740,19 +4740,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultKey(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultKey(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   std::string result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultKey",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultKey",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultKey" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultKey" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  result = ResultKey(arg1);
+  result = Keyspace_ResultKey(arg1);
   resultobj = SWIG_From_std_string(static_cast< std::string >(result));
   return resultobj;
 fail:
@@ -4760,19 +4760,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultValue(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultValue(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   std::string result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultValue",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultValue",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultValue" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultValue" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  result = ResultValue(arg1);
+  result = Keyspace_ResultValue(arg1);
   resultobj = SWIG_From_std_string(static_cast< std::string >(result));
   return resultobj;
 fail:
@@ -4780,19 +4780,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultTransportStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultTransportStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultTransportStatus",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultTransportStatus",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultTransportStatus" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultTransportStatus" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  result = (int)ResultTransportStatus(arg1);
+  result = (int)Keyspace_ResultTransportStatus(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -4800,19 +4800,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultConnectivityStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultConnectivityStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultConnectivityStatus",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultConnectivityStatus",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultConnectivityStatus" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultConnectivityStatus" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  result = (int)ResultConnectivityStatus(arg1);
+  result = (int)Keyspace_ResultConnectivityStatus(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -4820,19 +4820,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultTimeoutStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultTimeoutStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultTimeoutStatus",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultTimeoutStatus",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultTimeoutStatus" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultTimeoutStatus" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  result = (int)ResultTimeoutStatus(arg1);
+  result = (int)Keyspace_ResultTimeoutStatus(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -4840,19 +4840,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ResultCommandStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ResultCommandStatus(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:ResultCommandStatus",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ResultCommandStatus",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ResultCommandStatus" "', argument " "1"" of type '" "ResultObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ResultCommandStatus" "', argument " "1"" of type '" "ResultObj""'"); 
   }
-  result = (int)ResultCommandStatus(arg1);
+  result = (int)Keyspace_ResultCommandStatus(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -4860,12 +4860,12 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Create(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Create(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj result;
   
-  if (!PyArg_ParseTuple(args,(char *)":Create")) SWIG_fail;
-  result = (ClientObj)Create();
+  if (!PyArg_ParseTuple(args,(char *)":Keyspace_Create")) SWIG_fail;
+  result = (ClientObj)Keyspace_Create();
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 |  0 );
   return resultobj;
 fail:
@@ -4873,10 +4873,10 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
-  NodeParams *arg2 = 0 ;
+  Keyspace_NodeParams *arg2 = 0 ;
   int result;
   int res1 ;
   void *argp2 = 0 ;
@@ -4884,20 +4884,20 @@ SWIGINTERN PyObject *_wrap_Init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) 
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Init",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_Init",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Init" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Init" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_NodeParams,  0  | 0);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Keyspace_NodeParams,  0  | 0);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Init" "', argument " "2"" of type '" "NodeParams const &""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Init" "', argument " "2"" of type '" "Keyspace_NodeParams const &""'"); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Init" "', argument " "2"" of type '" "NodeParams const &""'"); 
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Init" "', argument " "2"" of type '" "Keyspace_NodeParams const &""'"); 
   }
-  arg2 = reinterpret_cast< NodeParams * >(argp2);
-  result = (int)Init(arg1,(NodeParams const &)*arg2);
+  arg2 = reinterpret_cast< Keyspace_NodeParams * >(argp2);
+  result = (int)Keyspace_Init(arg1,(Keyspace_NodeParams const &)*arg2);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -4905,18 +4905,18 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Destroy(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Destroy(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Destroy",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_Destroy",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Destroy" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Destroy" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  Destroy(arg1);
+  Keyspace_Destroy(arg1);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -4924,19 +4924,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_GetResult(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_GetResult(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   ResultObj result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:GetResult",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_GetResult",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetResult" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_GetResult" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (ResultObj)GetResult(arg1);
+  result = (ResultObj)Keyspace_GetResult(arg1);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 |  0 );
   return resultobj;
 fail:
@@ -4944,7 +4944,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SetGlobalTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_SetGlobalTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t arg2 ;
@@ -4954,17 +4954,17 @@ SWIGINTERN PyObject *_wrap_SetGlobalTimeout(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SetGlobalTimeout",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_SetGlobalTimeout",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetGlobalTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_SetGlobalTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetGlobalTimeout" "', argument " "2"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyspace_SetGlobalTimeout" "', argument " "2"" of type '" "uint64_t""'");
   } 
   arg2 = static_cast< uint64_t >(val2);
-  SetGlobalTimeout(arg1,arg2);
+  Keyspace_SetGlobalTimeout(arg1,arg2);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -4972,7 +4972,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SetMasterTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_SetMasterTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t arg2 ;
@@ -4982,17 +4982,17 @@ SWIGINTERN PyObject *_wrap_SetMasterTimeout(PyObject *SWIGUNUSEDPARM(self), PyOb
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:SetMasterTimeout",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_SetMasterTimeout",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetMasterTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_SetMasterTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetMasterTimeout" "', argument " "2"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyspace_SetMasterTimeout" "', argument " "2"" of type '" "uint64_t""'");
   } 
   arg2 = static_cast< uint64_t >(val2);
-  SetMasterTimeout(arg1,arg2);
+  Keyspace_SetMasterTimeout(arg1,arg2);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -5000,19 +5000,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_GetGlobalTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_GetGlobalTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:GetGlobalTimeout",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_GetGlobalTimeout",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetGlobalTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_GetGlobalTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (uint64_t)GetGlobalTimeout(arg1);
+  result = (uint64_t)Keyspace_GetGlobalTimeout(arg1);
   resultobj = SWIG_From_unsigned_SS_long_SS_long(static_cast< unsigned long long >(result));
   return resultobj;
 fail:
@@ -5020,19 +5020,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_GetMasterTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_GetMasterTimeout(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:GetMasterTimeout",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_GetMasterTimeout",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetMasterTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_GetMasterTimeout" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (uint64_t)GetMasterTimeout(arg1);
+  result = (uint64_t)Keyspace_GetMasterTimeout(arg1);
   resultobj = SWIG_From_unsigned_SS_long_SS_long(static_cast< unsigned long long >(result));
   return resultobj;
 fail:
@@ -5040,19 +5040,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_GetMaster(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_GetMaster(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:GetMaster",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_GetMaster",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetMaster" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_GetMaster" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (int)GetMaster(arg1);
+  result = (int)Keyspace_GetMaster(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -5060,7 +5060,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_DistributeDirty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_DistributeDirty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   bool arg2 ;
@@ -5070,17 +5070,17 @@ SWIGINTERN PyObject *_wrap_DistributeDirty(PyObject *SWIGUNUSEDPARM(self), PyObj
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:DistributeDirty",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_DistributeDirty",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DistributeDirty" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DistributeDirty" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   ecode2 = SWIG_AsVal_bool(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DistributeDirty" "', argument " "2"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyspace_DistributeDirty" "', argument " "2"" of type '" "bool""'");
   } 
   arg2 = static_cast< bool >(val2);
-  DistributeDirty(arg1,arg2);
+  Keyspace_DistributeDirty(arg1,arg2);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -5088,7 +5088,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5098,23 +5098,23 @@ SWIGINTERN PyObject *_wrap_Get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Get",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_Get",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Get" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Get" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Get" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Get" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Get" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Get" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
-  result = (int)Get(arg1,(std::string const &)*arg2);
+  result = (int)Keyspace_Get(arg1,(std::string const &)*arg2);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -5124,7 +5124,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_DirtyGet(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_DirtyGet(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5134,23 +5134,23 @@ SWIGINTERN PyObject *_wrap_DirtyGet(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:DirtyGet",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_DirtyGet",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DirtyGet" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DirtyGet" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DirtyGet" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_DirtyGet" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DirtyGet" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyGet" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
-  result = (int)DirtyGet(arg1,(std::string const &)*arg2);
+  result = (int)Keyspace_DirtyGet(arg1,(std::string const &)*arg2);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -5160,86 +5160,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Count(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ClientObj arg1 = (ClientObj) 0 ;
-  std::string *arg2 = 0 ;
-  std::string *arg3 = 0 ;
-  uint64_t arg4 ;
-  bool arg5 ;
-  bool arg6 ;
-  int result;
-  int res1 ;
-  int res2 = SWIG_OLDOBJ ;
-  int res3 = SWIG_OLDOBJ ;
-  unsigned long long val4 ;
-  int ecode4 = 0 ;
-  bool val5 ;
-  int ecode5 = 0 ;
-  bool val6 ;
-  int ecode6 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
-  PyObject * obj3 = 0 ;
-  PyObject * obj4 = 0 ;
-  PyObject * obj5 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Count",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Count" "', argument " "1"" of type '" "ClientObj""'"); 
-  }
-  {
-    std::string *ptr = (std::string *)0;
-    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Count" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Count" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    arg2 = ptr;
-  }
-  {
-    std::string *ptr = (std::string *)0;
-    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Count" "', argument " "3"" of type '" "std::string const &""'"); 
-    }
-    if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Count" "', argument " "3"" of type '" "std::string const &""'"); 
-    }
-    arg3 = ptr;
-  }
-  ecode4 = SWIG_AsVal_unsigned_SS_long_SS_long(obj3, &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Count" "', argument " "4"" of type '" "uint64_t""'");
-  } 
-  arg4 = static_cast< uint64_t >(val4);
-  ecode5 = SWIG_AsVal_bool(obj4, &val5);
-  if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Count" "', argument " "5"" of type '" "bool""'");
-  } 
-  arg5 = static_cast< bool >(val5);
-  ecode6 = SWIG_AsVal_bool(obj5, &val6);
-  if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Count" "', argument " "6"" of type '" "bool""'");
-  } 
-  arg6 = static_cast< bool >(val6);
-  result = (int)Count(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  if (SWIG_IsNewObj(res3)) delete arg3;
-  return resultobj;
-fail:
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  if (SWIG_IsNewObj(res3)) delete arg3;
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_DirtyCount(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Count(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5264,19 +5185,19 @@ SWIGINTERN PyObject *_wrap_DirtyCount(PyObject *SWIGUNUSEDPARM(self), PyObject *
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:DirtyCount",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_Count",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DirtyCount" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Count" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DirtyCount" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Count" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DirtyCount" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Count" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5284,29 +5205,29 @@ SWIGINTERN PyObject *_wrap_DirtyCount(PyObject *SWIGUNUSEDPARM(self), PyObject *
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DirtyCount" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_Count" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DirtyCount" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Count" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
   ecode4 = SWIG_AsVal_unsigned_SS_long_SS_long(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "DirtyCount" "', argument " "4"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyspace_Count" "', argument " "4"" of type '" "uint64_t""'");
   } 
   arg4 = static_cast< uint64_t >(val4);
   ecode5 = SWIG_AsVal_bool(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "DirtyCount" "', argument " "5"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_Count" "', argument " "5"" of type '" "bool""'");
   } 
   arg5 = static_cast< bool >(val5);
   ecode6 = SWIG_AsVal_bool(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "DirtyCount" "', argument " "6"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_Count" "', argument " "6"" of type '" "bool""'");
   } 
   arg6 = static_cast< bool >(val6);
-  result = (int)DirtyCount(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_Count(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5318,7 +5239,93 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ListKeys(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_CountStr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  int res4 = SWIG_OLDOBJ ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_CountStr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_CountStr" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_CountStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_CountStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_CountStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_CountStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res4 = SWIG_AsPtr_std_string(obj3, &ptr);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Keyspace_CountStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_CountStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    arg4 = ptr;
+  }
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_CountStr" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_CountStr" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  result = (int)Keyspace_CountStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_DirtyCount(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5343,19 +5350,19 @@ SWIGINTERN PyObject *_wrap_ListKeys(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:ListKeys",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_DirtyCount",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ListKeys" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DirtyCount" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_DirtyCount" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyCount" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5363,29 +5370,29 @@ SWIGINTERN PyObject *_wrap_ListKeys(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "ListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_DirtyCount" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyCount" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
   ecode4 = SWIG_AsVal_unsigned_SS_long_SS_long(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ListKeys" "', argument " "4"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyspace_DirtyCount" "', argument " "4"" of type '" "uint64_t""'");
   } 
   arg4 = static_cast< uint64_t >(val4);
   ecode5 = SWIG_AsVal_bool(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ListKeys" "', argument " "5"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_DirtyCount" "', argument " "5"" of type '" "bool""'");
   } 
   arg5 = static_cast< bool >(val5);
   ecode6 = SWIG_AsVal_bool(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ListKeys" "', argument " "6"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_DirtyCount" "', argument " "6"" of type '" "bool""'");
   } 
   arg6 = static_cast< bool >(val6);
-  result = (int)ListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_DirtyCount(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5397,7 +5404,93 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_DirtyListKeys(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_DirtyCountStr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  int res4 = SWIG_OLDOBJ ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_DirtyCountStr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DirtyCountStr" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_DirtyCountStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyCountStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_DirtyCountStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyCountStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res4 = SWIG_AsPtr_std_string(obj3, &ptr);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Keyspace_DirtyCountStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyCountStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    arg4 = ptr;
+  }
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_DirtyCountStr" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_DirtyCountStr" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  result = (int)Keyspace_DirtyCountStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_ListKeys(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5422,19 +5515,19 @@ SWIGINTERN PyObject *_wrap_DirtyListKeys(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:DirtyListKeys",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_ListKeys",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DirtyListKeys" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ListKeys" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DirtyListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_ListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DirtyListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5442,29 +5535,29 @@ SWIGINTERN PyObject *_wrap_DirtyListKeys(PyObject *SWIGUNUSEDPARM(self), PyObjec
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DirtyListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_ListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DirtyListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
   ecode4 = SWIG_AsVal_unsigned_SS_long_SS_long(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "DirtyListKeys" "', argument " "4"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyspace_ListKeys" "', argument " "4"" of type '" "uint64_t""'");
   } 
   arg4 = static_cast< uint64_t >(val4);
   ecode5 = SWIG_AsVal_bool(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "DirtyListKeys" "', argument " "5"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_ListKeys" "', argument " "5"" of type '" "bool""'");
   } 
   arg5 = static_cast< bool >(val5);
   ecode6 = SWIG_AsVal_bool(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "DirtyListKeys" "', argument " "6"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_ListKeys" "', argument " "6"" of type '" "bool""'");
   } 
   arg6 = static_cast< bool >(val6);
-  result = (int)DirtyListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_ListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5476,7 +5569,93 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ListKeyValues(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ListKeysStr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  int res4 = SWIG_OLDOBJ ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_ListKeysStr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ListKeysStr" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_ListKeysStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeysStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_ListKeysStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeysStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res4 = SWIG_AsPtr_std_string(obj3, &ptr);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Keyspace_ListKeysStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeysStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    arg4 = ptr;
+  }
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_ListKeysStr" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_ListKeysStr" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  result = (int)Keyspace_ListKeysStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_DirtyListKeys(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5501,19 +5680,19 @@ SWIGINTERN PyObject *_wrap_ListKeyValues(PyObject *SWIGUNUSEDPARM(self), PyObjec
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:ListKeyValues",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_DirtyListKeys",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ListKeyValues" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DirtyListKeys" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_DirtyListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeys" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5521,29 +5700,29 @@ SWIGINTERN PyObject *_wrap_ListKeyValues(PyObject *SWIGUNUSEDPARM(self), PyObjec
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "ListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_DirtyListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeys" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
   ecode4 = SWIG_AsVal_unsigned_SS_long_SS_long(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ListKeyValues" "', argument " "4"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyspace_DirtyListKeys" "', argument " "4"" of type '" "uint64_t""'");
   } 
   arg4 = static_cast< uint64_t >(val4);
   ecode5 = SWIG_AsVal_bool(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ListKeyValues" "', argument " "5"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_DirtyListKeys" "', argument " "5"" of type '" "bool""'");
   } 
   arg5 = static_cast< bool >(val5);
   ecode6 = SWIG_AsVal_bool(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "ListKeyValues" "', argument " "6"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_DirtyListKeys" "', argument " "6"" of type '" "bool""'");
   } 
   arg6 = static_cast< bool >(val6);
-  result = (int)ListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_DirtyListKeys(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5555,7 +5734,93 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_DirtyListKeyValues(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_DirtyListKeysStr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  int res4 = SWIG_OLDOBJ ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_DirtyListKeysStr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DirtyListKeysStr" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_DirtyListKeysStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeysStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_DirtyListKeysStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeysStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res4 = SWIG_AsPtr_std_string(obj3, &ptr);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Keyspace_DirtyListKeysStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeysStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    arg4 = ptr;
+  }
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_DirtyListKeysStr" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_DirtyListKeysStr" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  result = (int)Keyspace_DirtyListKeysStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_ListKeyValues(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5580,19 +5845,19 @@ SWIGINTERN PyObject *_wrap_DirtyListKeyValues(PyObject *SWIGUNUSEDPARM(self), Py
   PyObject * obj4 = 0 ;
   PyObject * obj5 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:DirtyListKeyValues",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_ListKeyValues",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DirtyListKeyValues" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ListKeyValues" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DirtyListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_ListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DirtyListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5600,29 +5865,29 @@ SWIGINTERN PyObject *_wrap_DirtyListKeyValues(PyObject *SWIGUNUSEDPARM(self), Py
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DirtyListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_ListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DirtyListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
   ecode4 = SWIG_AsVal_unsigned_SS_long_SS_long(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "DirtyListKeyValues" "', argument " "4"" of type '" "uint64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyspace_ListKeyValues" "', argument " "4"" of type '" "uint64_t""'");
   } 
   arg4 = static_cast< uint64_t >(val4);
   ecode5 = SWIG_AsVal_bool(obj4, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "DirtyListKeyValues" "', argument " "5"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_ListKeyValues" "', argument " "5"" of type '" "bool""'");
   } 
   arg5 = static_cast< bool >(val5);
   ecode6 = SWIG_AsVal_bool(obj5, &val6);
   if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "DirtyListKeyValues" "', argument " "6"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_ListKeyValues" "', argument " "6"" of type '" "bool""'");
   } 
   arg6 = static_cast< bool >(val6);
-  result = (int)DirtyListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  result = (int)Keyspace_ListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5634,7 +5899,258 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_ListKeyValuesStr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  int res4 = SWIG_OLDOBJ ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_ListKeyValuesStr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ListKeyValuesStr" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_ListKeyValuesStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeyValuesStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_ListKeyValuesStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeyValuesStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res4 = SWIG_AsPtr_std_string(obj3, &ptr);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Keyspace_ListKeyValuesStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_ListKeyValuesStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    arg4 = ptr;
+  }
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_ListKeyValuesStr" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_ListKeyValuesStr" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  result = (int)Keyspace_ListKeyValuesStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_DirtyListKeyValues(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  uint64_t arg4 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  unsigned long long val4 ;
+  int ecode4 = 0 ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_DirtyListKeyValues",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DirtyListKeyValues" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_DirtyListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeyValues" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_DirtyListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeyValues" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  ecode4 = SWIG_AsVal_unsigned_SS_long_SS_long(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyspace_DirtyListKeyValues" "', argument " "4"" of type '" "uint64_t""'");
+  } 
+  arg4 = static_cast< uint64_t >(val4);
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_DirtyListKeyValues" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_DirtyListKeyValues" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  result = (int)Keyspace_DirtyListKeyValues(arg1,(std::string const &)*arg2,(std::string const &)*arg3,arg4,arg5,arg6);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_DirtyListKeyValuesStr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  std::string *arg4 = 0 ;
+  bool arg5 ;
+  bool arg6 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  int res4 = SWIG_OLDOBJ ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:Keyspace_DirtyListKeyValuesStr",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res4 = SWIG_AsPtr_std_string(obj3, &ptr);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "4"" of type '" "std::string const &""'"); 
+    }
+    arg4 = ptr;
+  }
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Keyspace_DirtyListKeyValuesStr" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
+  result = (int)Keyspace_DirtyListKeyValuesStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4,arg5,arg6);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  if (SWIG_IsNewObj(res4)) delete arg4;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_Set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5647,19 +6163,19 @@ SWIGINTERN PyObject *_wrap_Set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Set",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Keyspace_Set",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Set" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Set" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5667,14 +6183,14 @@ SWIGINTERN PyObject *_wrap_Set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Set" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_Set" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Set" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Set" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
-  result = (int)Set(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
+  result = (int)Keyspace_Set(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5686,7 +6202,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_TestAndSet(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_TestAndSet(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5702,19 +6218,19 @@ SWIGINTERN PyObject *_wrap_TestAndSet(PyObject *SWIGUNUSEDPARM(self), PyObject *
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:TestAndSet",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:Keyspace_TestAndSet",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "TestAndSet" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_TestAndSet" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "TestAndSet" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_TestAndSet" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "TestAndSet" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_TestAndSet" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5722,10 +6238,10 @@ SWIGINTERN PyObject *_wrap_TestAndSet(PyObject *SWIGUNUSEDPARM(self), PyObject *
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "TestAndSet" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_TestAndSet" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "TestAndSet" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_TestAndSet" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
@@ -5733,14 +6249,14 @@ SWIGINTERN PyObject *_wrap_TestAndSet(PyObject *SWIGUNUSEDPARM(self), PyObject *
     std::string *ptr = (std::string *)0;
     res4 = SWIG_AsPtr_std_string(obj3, &ptr);
     if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "TestAndSet" "', argument " "4"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Keyspace_TestAndSet" "', argument " "4"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "TestAndSet" "', argument " "4"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_TestAndSet" "', argument " "4"" of type '" "std::string const &""'"); 
     }
     arg4 = ptr;
   }
-  result = (int)TestAndSet(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4);
+  result = (int)Keyspace_TestAndSet(arg1,(std::string const &)*arg2,(std::string const &)*arg3,(std::string const &)*arg4);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5754,7 +6270,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Add(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Add(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5768,28 +6284,28 @@ SWIGINTERN PyObject *_wrap_Add(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Add",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Keyspace_Add",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Add" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Add" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Add" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Add" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Add" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Add" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
   ecode3 = SWIG_AsVal_long_SS_long(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Add" "', argument " "3"" of type '" "int64_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyspace_Add" "', argument " "3"" of type '" "int64_t""'");
   } 
   arg3 = static_cast< int64_t >(val3);
-  result = (int)Add(arg1,(std::string const &)*arg2,arg3);
+  result = (int)Keyspace_Add(arg1,(std::string const &)*arg2,arg3);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -5799,79 +6315,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Delete(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ClientObj arg1 = (ClientObj) 0 ;
-  std::string *arg2 = 0 ;
-  int result;
-  int res1 ;
-  int res2 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:Delete",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delete" "', argument " "1"" of type '" "ClientObj""'"); 
-  }
-  {
-    std::string *ptr = (std::string *)0;
-    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Delete" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Delete" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    arg2 = ptr;
-  }
-  result = (int)Delete(arg1,(std::string const &)*arg2);
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  return resultobj;
-fail:
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Remove(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ClientObj arg1 = (ClientObj) 0 ;
-  std::string *arg2 = 0 ;
-  int result;
-  int res1 ;
-  int res2 = SWIG_OLDOBJ ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:Remove",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Remove" "', argument " "1"" of type '" "ClientObj""'"); 
-  }
-  {
-    std::string *ptr = (std::string *)0;
-    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Remove" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Remove" "', argument " "2"" of type '" "std::string const &""'"); 
-    }
-    arg2 = ptr;
-  }
-  result = (int)Remove(arg1,(std::string const &)*arg2);
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  return resultobj;
-fail:
-  if (SWIG_IsNewObj(res2)) delete arg2;
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Rename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_AddStr(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5884,19 +6328,19 @@ SWIGINTERN PyObject *_wrap_Rename(PyObject *SWIGUNUSEDPARM(self), PyObject *args
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:Rename",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Keyspace_AddStr",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Rename" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_AddStr" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Rename" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_AddStr" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Rename" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_AddStr" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -5904,14 +6348,14 @@ SWIGINTERN PyObject *_wrap_Rename(PyObject *SWIGUNUSEDPARM(self), PyObject *args
     std::string *ptr = (std::string *)0;
     res3 = SWIG_AsPtr_std_string(obj2, &ptr);
     if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Rename" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_AddStr" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Rename" "', argument " "3"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_AddStr" "', argument " "3"" of type '" "std::string const &""'"); 
     }
     arg3 = ptr;
   }
-  result = (int)Rename(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
+  result = (int)Keyspace_AddStr(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   if (SWIG_IsNewObj(res3)) delete arg3;
@@ -5923,7 +6367,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Prune(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Delete(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -5933,23 +6377,23 @@ SWIGINTERN PyObject *_wrap_Prune(PyObject *SWIGUNUSEDPARM(self), PyObject *args)
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:Prune",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_Delete",&obj0,&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Prune" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Delete" "', argument " "1"" of type '" "ClientObj""'"); 
   }
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Prune" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Delete" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Prune" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Delete" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
-  result = (int)Prune(arg1,(std::string const &)*arg2);
+  result = (int)Keyspace_Delete(arg1,(std::string const &)*arg2);
   resultobj = SWIG_From_int(static_cast< int >(result));
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -5959,19 +6403,143 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Remove(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_Remove",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Remove" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Remove" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Remove" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (int)Keyspace_Remove(arg1,(std::string const &)*arg2);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_Rename(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  std::string *arg3 = 0 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Keyspace_Rename",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Rename" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Rename" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Rename" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res3 = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Keyspace_Rename" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Rename" "', argument " "3"" of type '" "std::string const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  result = (int)Keyspace_Rename(arg1,(std::string const &)*arg2,(std::string const &)*arg3);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_Prune(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_Prune",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Prune" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_Prune" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_Prune" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (int)Keyspace_Prune(arg1,(std::string const &)*arg2);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_Begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Begin",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_Begin",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Begin" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Begin" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (int)Begin(arg1);
+  result = (int)Keyspace_Begin(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -5979,19 +6547,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Submit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Submit(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Submit",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_Submit",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Submit" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Submit" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (int)Submit(arg1);
+  result = (int)Keyspace_Submit(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -5999,19 +6567,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Cancel(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_Cancel(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:Cancel",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_Cancel",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Cancel" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_Cancel" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (int)Cancel(arg1);
+  result = (int)Keyspace_Cancel(arg1);
   resultobj = SWIG_From_int(static_cast< int >(result));
   return resultobj;
 fail:
@@ -6019,19 +6587,19 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_IsBatched(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_IsBatched(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
   bool result;
   int res1 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:IsBatched",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_IsBatched",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IsBatched" "', argument " "1"" of type '" "ClientObj""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_IsBatched" "', argument " "1"" of type '" "ClientObj""'"); 
   }
-  result = (bool)IsBatched(arg1);
+  result = (bool)Keyspace_IsBatched(arg1);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   return resultobj;
 fail:
@@ -6039,20 +6607,20 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_SetTrace(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Keyspace_SetTrace(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   bool arg1 ;
   bool val1 ;
   int ecode1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:SetTrace",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_SetTrace",&obj0)) SWIG_fail;
   ecode1 = SWIG_AsVal_bool(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "SetTrace" "', argument " "1"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Keyspace_SetTrace" "', argument " "1"" of type '" "bool""'");
   } 
   arg1 = static_cast< bool >(val1);
-  SetTrace(arg1);
+  Keyspace_SetTrace(arg1);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -6091,64 +6659,71 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"strtoumax", _wrap_strtoumax, METH_VARARGS, NULL},
 	 { (char *)"wcstoimax", _wrap_wcstoimax, METH_VARARGS, NULL},
 	 { (char *)"wcstoumax", _wrap_wcstoumax, METH_VARARGS, NULL},
-	 { (char *)"new_NodeParams", _wrap_new_NodeParams, METH_VARARGS, NULL},
-	 { (char *)"delete_NodeParams", _wrap_delete_NodeParams, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_Close", _wrap_NodeParams_Close, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_AddNode", _wrap_NodeParams_AddNode, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_nodec_set", _wrap_NodeParams_nodec_set, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_nodec_get", _wrap_NodeParams_nodec_get, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_nodes_set", _wrap_NodeParams_nodes_set, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_nodes_get", _wrap_NodeParams_nodes_get, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_num_set", _wrap_NodeParams_num_set, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_num_get", _wrap_NodeParams_num_get, METH_VARARGS, NULL},
-	 { (char *)"NodeParams_swigregister", NodeParams_swigregister, METH_VARARGS, NULL},
-	 { (char *)"ResultBegin", _wrap_ResultBegin, METH_VARARGS, NULL},
-	 { (char *)"ResultNext", _wrap_ResultNext, METH_VARARGS, NULL},
-	 { (char *)"ResultIsEnd", _wrap_ResultIsEnd, METH_VARARGS, NULL},
-	 { (char *)"ResultClose", _wrap_ResultClose, METH_VARARGS, NULL},
-	 { (char *)"ResultKey", _wrap_ResultKey, METH_VARARGS, NULL},
-	 { (char *)"ResultValue", _wrap_ResultValue, METH_VARARGS, NULL},
-	 { (char *)"ResultTransportStatus", _wrap_ResultTransportStatus, METH_VARARGS, NULL},
-	 { (char *)"ResultConnectivityStatus", _wrap_ResultConnectivityStatus, METH_VARARGS, NULL},
-	 { (char *)"ResultTimeoutStatus", _wrap_ResultTimeoutStatus, METH_VARARGS, NULL},
-	 { (char *)"ResultCommandStatus", _wrap_ResultCommandStatus, METH_VARARGS, NULL},
-	 { (char *)"Create", _wrap_Create, METH_VARARGS, NULL},
-	 { (char *)"Init", _wrap_Init, METH_VARARGS, NULL},
-	 { (char *)"Destroy", _wrap_Destroy, METH_VARARGS, NULL},
-	 { (char *)"GetResult", _wrap_GetResult, METH_VARARGS, NULL},
-	 { (char *)"SetGlobalTimeout", _wrap_SetGlobalTimeout, METH_VARARGS, NULL},
-	 { (char *)"SetMasterTimeout", _wrap_SetMasterTimeout, METH_VARARGS, NULL},
-	 { (char *)"GetGlobalTimeout", _wrap_GetGlobalTimeout, METH_VARARGS, NULL},
-	 { (char *)"GetMasterTimeout", _wrap_GetMasterTimeout, METH_VARARGS, NULL},
-	 { (char *)"GetMaster", _wrap_GetMaster, METH_VARARGS, NULL},
-	 { (char *)"DistributeDirty", _wrap_DistributeDirty, METH_VARARGS, NULL},
-	 { (char *)"Get", _wrap_Get, METH_VARARGS, NULL},
-	 { (char *)"DirtyGet", _wrap_DirtyGet, METH_VARARGS, NULL},
-	 { (char *)"Count", _wrap_Count, METH_VARARGS, NULL},
-	 { (char *)"DirtyCount", _wrap_DirtyCount, METH_VARARGS, NULL},
-	 { (char *)"ListKeys", _wrap_ListKeys, METH_VARARGS, NULL},
-	 { (char *)"DirtyListKeys", _wrap_DirtyListKeys, METH_VARARGS, NULL},
-	 { (char *)"ListKeyValues", _wrap_ListKeyValues, METH_VARARGS, NULL},
-	 { (char *)"DirtyListKeyValues", _wrap_DirtyListKeyValues, METH_VARARGS, NULL},
-	 { (char *)"Set", _wrap_Set, METH_VARARGS, NULL},
-	 { (char *)"TestAndSet", _wrap_TestAndSet, METH_VARARGS, NULL},
-	 { (char *)"Add", _wrap_Add, METH_VARARGS, NULL},
-	 { (char *)"Delete", _wrap_Delete, METH_VARARGS, NULL},
-	 { (char *)"Remove", _wrap_Remove, METH_VARARGS, NULL},
-	 { (char *)"Rename", _wrap_Rename, METH_VARARGS, NULL},
-	 { (char *)"Prune", _wrap_Prune, METH_VARARGS, NULL},
-	 { (char *)"Begin", _wrap_Begin, METH_VARARGS, NULL},
-	 { (char *)"Submit", _wrap_Submit, METH_VARARGS, NULL},
-	 { (char *)"Cancel", _wrap_Cancel, METH_VARARGS, NULL},
-	 { (char *)"IsBatched", _wrap_IsBatched, METH_VARARGS, NULL},
-	 { (char *)"SetTrace", _wrap_SetTrace, METH_VARARGS, NULL},
+	 { (char *)"new_Keyspace_NodeParams", _wrap_new_Keyspace_NodeParams, METH_VARARGS, NULL},
+	 { (char *)"delete_Keyspace_NodeParams", _wrap_delete_Keyspace_NodeParams, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_Close", _wrap_Keyspace_NodeParams_Close, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_AddNode", _wrap_Keyspace_NodeParams_AddNode, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_nodec_set", _wrap_Keyspace_NodeParams_nodec_set, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_nodec_get", _wrap_Keyspace_NodeParams_nodec_get, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_nodes_set", _wrap_Keyspace_NodeParams_nodes_set, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_nodes_get", _wrap_Keyspace_NodeParams_nodes_get, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_num_set", _wrap_Keyspace_NodeParams_num_set, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_num_get", _wrap_Keyspace_NodeParams_num_get, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_NodeParams_swigregister", Keyspace_NodeParams_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultBegin", _wrap_Keyspace_ResultBegin, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultNext", _wrap_Keyspace_ResultNext, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultIsEnd", _wrap_Keyspace_ResultIsEnd, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultClose", _wrap_Keyspace_ResultClose, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultKey", _wrap_Keyspace_ResultKey, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultValue", _wrap_Keyspace_ResultValue, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultTransportStatus", _wrap_Keyspace_ResultTransportStatus, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultConnectivityStatus", _wrap_Keyspace_ResultConnectivityStatus, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultTimeoutStatus", _wrap_Keyspace_ResultTimeoutStatus, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ResultCommandStatus", _wrap_Keyspace_ResultCommandStatus, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Create", _wrap_Keyspace_Create, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Init", _wrap_Keyspace_Init, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Destroy", _wrap_Keyspace_Destroy, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_GetResult", _wrap_Keyspace_GetResult, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_SetGlobalTimeout", _wrap_Keyspace_SetGlobalTimeout, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_SetMasterTimeout", _wrap_Keyspace_SetMasterTimeout, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_GetGlobalTimeout", _wrap_Keyspace_GetGlobalTimeout, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_GetMasterTimeout", _wrap_Keyspace_GetMasterTimeout, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_GetMaster", _wrap_Keyspace_GetMaster, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DistributeDirty", _wrap_Keyspace_DistributeDirty, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Get", _wrap_Keyspace_Get, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DirtyGet", _wrap_Keyspace_DirtyGet, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Count", _wrap_Keyspace_Count, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_CountStr", _wrap_Keyspace_CountStr, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DirtyCount", _wrap_Keyspace_DirtyCount, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DirtyCountStr", _wrap_Keyspace_DirtyCountStr, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ListKeys", _wrap_Keyspace_ListKeys, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ListKeysStr", _wrap_Keyspace_ListKeysStr, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DirtyListKeys", _wrap_Keyspace_DirtyListKeys, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DirtyListKeysStr", _wrap_Keyspace_DirtyListKeysStr, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ListKeyValues", _wrap_Keyspace_ListKeyValues, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ListKeyValuesStr", _wrap_Keyspace_ListKeyValuesStr, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DirtyListKeyValues", _wrap_Keyspace_DirtyListKeyValues, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_DirtyListKeyValuesStr", _wrap_Keyspace_DirtyListKeyValuesStr, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Set", _wrap_Keyspace_Set, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_TestAndSet", _wrap_Keyspace_TestAndSet, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Add", _wrap_Keyspace_Add, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_AddStr", _wrap_Keyspace_AddStr, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Delete", _wrap_Keyspace_Delete, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Remove", _wrap_Keyspace_Remove, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Rename", _wrap_Keyspace_Rename, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Prune", _wrap_Keyspace_Prune, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Begin", _wrap_Keyspace_Begin, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Submit", _wrap_Keyspace_Submit, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_Cancel", _wrap_Keyspace_Cancel, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_IsBatched", _wrap_Keyspace_IsBatched, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_SetTrace", _wrap_Keyspace_SetTrace, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static swig_type_info _swigt__p_NodeParams = {"_p_NodeParams", "NodeParams *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Keyspace_NodeParams = {"_p_Keyspace_NodeParams", "Keyspace_NodeParams *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_imaxdiv_t = {"_p_imaxdiv_t", "imaxdiv_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *|intptr_t *", 0, 0, (void*)0, 0};
@@ -6167,7 +6742,7 @@ static swig_type_info _swigt__p_void = {"_p_void", "void *|ResultObj", 0, 0, (vo
 static swig_type_info _swigt__p_wchar_t = {"_p_wchar_t", "wchar_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
-  &_swigt__p_NodeParams,
+  &_swigt__p_Keyspace_NodeParams,
   &_swigt__p_char,
   &_swigt__p_imaxdiv_t,
   &_swigt__p_int,
@@ -6186,7 +6761,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_wchar_t,
 };
 
-static swig_cast_info _swigc__p_NodeParams[] = {  {&_swigt__p_NodeParams, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Keyspace_NodeParams[] = {  {&_swigt__p_Keyspace_NodeParams, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_imaxdiv_t[] = {  {&_swigt__p_imaxdiv_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
@@ -6205,7 +6780,7 @@ static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_wchar_t[] = {  {&_swigt__p_wchar_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
-  _swigc__p_NodeParams,
+  _swigc__p_Keyspace_NodeParams,
   _swigc__p_char,
   _swigc__p_imaxdiv_t,
   _swigc__p_int,
