@@ -33,6 +33,7 @@
 		54507DFD0FCD6CF7009D9B99 /* CatchupReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DFA0FCD6CF7009D9B99 /* CatchupReader.cpp */; };
 		54507DFE0FCD6CF7009D9B99 /* CatchupWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54507DFC0FCD6CF7009D9B99 /* CatchupWriter.cpp */; };
 		545C60590F797BA3006540BC /* KeyspaceMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545C60580F797BA3006540BC /* KeyspaceMsg.cpp */; };
+		545EFDCB1151091800B81A5D /* KeyspaceClientWrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545EFDBB115107B700B81A5D /* KeyspaceClientWrap.cpp */; };
 		547A76600F7680D6003084C9 /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 547A765F0F7680D6003084C9 /* Cursor.cpp */; };
 		5481474A0F31B6B200F3D2B6 /* TCPEchoConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147000F31B6B200F3D2B6 /* TCPEchoConn.cpp */; };
 		5481474B0F31B6B200F3D2B6 /* TCPEchoServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147020F31B6B200F3D2B6 /* TCPEchoServer.cpp */; };
@@ -55,6 +56,7 @@
 		54D6A482111D7F63008573AA /* Time_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FB9610EE6285004EF4A4 /* Time_Posix.cpp */; };
 		54D6A491111D7F8E008573AA /* ThreadPool_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FB9E10EE62A2004EF4A4 /* ThreadPool_Posix.cpp */; };
 		54D6A49E111D7FC6008573AA /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54E3FBC110EE6351004EF4A4 /* Platform.cpp */; };
+		54D6ABA611240739008573AA /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		54D96E9B0F9B332C005658C9 /* KeyspaceConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8D0F9B332C005658C9 /* KeyspaceConn.cpp */; };
 		54D96E9C0F9B332C005658C9 /* KeyspaceServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96E8F0F9B332C005658C9 /* KeyspaceServer.cpp */; };
 		54D96EC00F9B35CB005658C9 /* HttpConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54D96EB80F9B35CB005658C9 /* HttpConn.cpp */; };
@@ -78,7 +80,6 @@
 		9A2724680F6550FB00EE25E2 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147180F31B6B200F3D2B6 /* Table.cpp */; };
 		9A2724690F6550FB00EE25E2 /* Transaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54814BFF0F35084500F3D2B6 /* Transaction.cpp */; };
 		9A27246A0F6550FB00EE25E2 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147160F31B6B200F3D2B6 /* Database.cpp */; };
-		9A27246C0F65517100EE25E2 /* libdb_cxx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 548147740F31B8BE00F3D2B6 /* libdb_cxx.dylib */; };
 		9A27246D0F65517100EE25E2 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147430F31B6B200F3D2B6 /* Log.cpp */; };
 		9A27246F0F6551B100EE25E2 /* AsyncDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22A3FC0F40AD59002648C6 /* AsyncDatabase.cpp */; };
 		9A2724700F6551B100EE25E2 /* Scheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 548147370F31B6B200F3D2B6 /* Scheduler.cpp */; };
@@ -87,7 +88,6 @@
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
-		9A6FBAA911466C08007721B9 /* KeyspaceClientWrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6FBAA811466C08007721B9 /* KeyspaceClientWrap.cpp */; };
 		9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */; };
 		9A8B4DEC0FC8589E003EA36E /* AsyncListVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */; };
 		9A8B4DEE0FC858B4003EA36E /* ReplicatedConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */; };
@@ -181,6 +181,9 @@
 		545C60330F7979B4006540BC /* KeyspaceService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceService.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
 		545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceMsg.cpp; sourceTree = "<group>"; };
+		545EF84A113C0EC800B81A5D /* PrefixTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixTree.h; sourceTree = "<group>"; };
+		545EFDBA115107B700B81A5D /* KeyspaceClientWrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientWrap.h; sourceTree = "<group>"; };
+		545EFDBB115107B700B81A5D /* KeyspaceClientWrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientWrap.cpp; sourceTree = "<group>"; };
 		547166910FFB5E1C0097B387 /* ReplicatedDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedDB.h; sourceTree = "<group>"; };
 		547166B30FFB62E30097B387 /* ProtocolServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtocolServer.h; sourceTree = "<group>"; };
 		547A75AC0F756FA1003084C9 /* KeyspaceConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceConsts.h; sourceTree = "<group>"; };
@@ -263,7 +266,7 @@
 		9A22A4F40F518FFB002648C6 /* MultiDatabaseOp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiDatabaseOp.cpp; path = AsyncDatabase/MultiDatabaseOp.cpp; sourceTree = "<group>"; };
 		9A22A4F50F518FFB002648C6 /* MultiDatabaseOp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiDatabaseOp.h; path = AsyncDatabase/MultiDatabaseOp.h; sourceTree = "<group>"; };
 		9A27231B0F5F9BBE00EE25E2 /* TableVisitorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableVisitorTest.cpp; sourceTree = "<group>"; };
-		9A27242A0F65480E00EE25E2 /* Test.agazso */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Test.agazso; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A27242A0F65480E00EE25E2 /* KeyspaceClientTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = KeyspaceClientTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A2724300F654C5400EE25E2 /* Test.agazso.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Test.agazso.cpp; sourceTree = "<group>"; };
 		9A2727000F692B4800EE25E2 /* UDPTestClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPTestClient.c; sourceTree = "<group>"; };
 		9A4894330FF24AC100A586FB /* Console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Console.h; path = Console/Console.h; sourceTree = "<group>"; };
@@ -280,8 +283,6 @@
 		9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportTCPWriter.cpp; sourceTree = "<group>"; };
 		9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportUDPWriter.h; sourceTree = "<group>"; };
 		9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportUDPWriter.cpp; sourceTree = "<group>"; };
-		9A6FBAA711466C08007721B9 /* KeyspaceClientWrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientWrap.h; sourceTree = "<group>"; };
-		9A6FBAA811466C08007721B9 /* KeyspaceClientWrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientWrap.cpp; sourceTree = "<group>"; };
 		9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabaseStressTest.cpp; sourceTree = "<group>"; };
 		9A81C2E10FFBB2BD00116662 /* TestConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestConfig.h; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
@@ -333,7 +334,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A27246C0F65517100EE25E2 /* libdb_cxx.dylib in Frameworks */,
+				54D6ABA611240739008573AA /* libdb_cxx.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,7 +364,7 @@
 			isa = PBXGroup;
 			children = (
 				8DD76FB20486AB0100D96B5E /* Keyspace */,
-				9A27242A0F65480E00EE25E2 /* Test.agazso */,
+				9A27242A0F65480E00EE25E2 /* KeyspaceClientTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -615,6 +616,7 @@
 				548147330F31B6B200F3D2B6 /* SortedList.h */,
 				9ADC98040F7BFBA50025A7AB /* Queue.h */,
 				9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */,
+				545EF84A113C0EC800B81A5D /* PrefixTree.h */,
 			);
 			path = Containers;
 			sourceTree = "<group>";
@@ -743,6 +745,8 @@
 		9AC69B0D0F9D213D003C631E /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				545EFDBA115107B700B81A5D /* KeyspaceClientWrap.h */,
+				545EFDBB115107B700B81A5D /* KeyspaceClientWrap.cpp */,
 				9A8B4A890FC080DC003EA36E /* KeyspaceClient.h */,
 				9AC32CFF105824D300FE0A6F /* KeyspaceClient.cpp */,
 				9A8B41CB0FA74EE1003EA36E /* keyspace_client.h */,
@@ -756,8 +760,6 @@
 				9ADA095B11233F5D00D9CA2B /* KeyspaceClientConn.cpp */,
 				9ADA0979112340DB00D9CA2B /* KeyspaceResult.h */,
 				9ADA097A112340DB00D9CA2B /* KeyspaceResult.cpp */,
-				9A6FBAA711466C08007721B9 /* KeyspaceClientWrap.h */,
-				9A6FBAA811466C08007721B9 /* KeyspaceClientWrap.cpp */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -833,7 +835,7 @@
 			);
 			name = KeyspaceClientTest;
 			productName = Test.agazso;
-			productReference = 9A27242A0F65480E00EE25E2 /* Test.agazso */;
+			productReference = 9A27242A0F65480E00EE25E2 /* KeyspaceClientTest */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -961,7 +963,7 @@
 				9ADA094911233DAF00D9CA2B /* KeyspaceResponse.cpp in Sources */,
 				9ADA095C11233F5D00D9CA2B /* KeyspaceClientConn.cpp in Sources */,
 				9ADA097B112340DB00D9CA2B /* KeyspaceResult.cpp in Sources */,
-				9A6FBAA911466C08007721B9 /* KeyspaceClientWrap.cpp in Sources */,
+				545EFDCB1151091800B81A5D /* KeyspaceClientWrap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1087,7 +1089,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -1105,7 +1108,7 @@
 					"-D__STDC_FORMAT_MACROS",
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = Test.agazso;
+				PRODUCT_NAME = KeyspaceClientTest;
 			};
 			name = Debug;
 		};
@@ -1113,6 +1116,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -1123,7 +1128,7 @@
 					/opt/local/lib/db46,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = Test.agazso;
+				PRODUCT_NAME = KeyspaceClientTest;
 				ZERO_LINK = NO;
 			};
 			name = Release;
