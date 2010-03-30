@@ -82,7 +82,7 @@ class Result {
 	}
 }
 
-class Keyspace {	
+class KeyspaceClient {	
 	private $co = NULL;
 	public $result = NULL;
 	
