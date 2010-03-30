@@ -8,7 +8,7 @@ public class Test {
         public static void main(String[] args) {
                 try {
                         String[] nodes = {"127.0.0.1:7080"};
-                        //setTrace(true);
+                        //Client.setTrace(true);
                         Client ks = new Client(nodes);
                         String hol = ks.get("hol");
                         System.out.println(hol);

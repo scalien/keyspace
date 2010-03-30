@@ -282,7 +282,7 @@ public class Client
 		return keyspace_client.Keyspace_IsBatched(cptr);
 	}
 	
-	private static void setTrace(boolean trace) {
+	public static void setTrace(boolean trace) {
 		keyspace_client.Keyspace_SetTrace(trace);
 	}
 	
