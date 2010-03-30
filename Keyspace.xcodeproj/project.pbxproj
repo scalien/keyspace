@@ -87,6 +87,7 @@
 		9A62050C0F6C1789009576A1 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A62050A0F6C1789009576A1 /* TCPServer.cpp */; };
 		9A6206240F6C30A3009576A1 /* TransportTCPWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */; };
 		9A6206290F6C3583009576A1 /* Endpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5481473B0F31B6B200F3D2B6 /* Endpoint.cpp */; };
+		9A6FBAA911466C08007721B9 /* KeyspaceClientWrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6FBAA811466C08007721B9 /* KeyspaceClientWrap.cpp */; };
 		9A81C2DC0FFBB03800116662 /* DatabaseStressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */; };
 		9A8B4DEC0FC8589E003EA36E /* AsyncListVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */; };
 		9A8B4DEE0FC858B4003EA36E /* ReplicatedConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5430A67E0FC0581D00AA8EC9 /* ReplicatedConfig.cpp */; };
@@ -267,7 +268,6 @@
 		9A2727000F692B4800EE25E2 /* UDPTestClient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UDPTestClient.c; sourceTree = "<group>"; };
 		9A4894330FF24AC100A586FB /* Console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Console.h; path = Console/Console.h; sourceTree = "<group>"; };
 		9A4894340FF24AC100A586FB /* Console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Console.cpp; path = Console/Console.cpp; sourceTree = "<group>"; };
-		9A4D2B68108DEC2E000A88C0 /* PTreeTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PTreeTest.cpp; sourceTree = "<group>"; };
 		9A6204DB0F6C09B0009576A1 /* HubSim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HubSim.cpp; path = HubSim/HubSim.cpp; sourceTree = "<group>"; };
 		9A6204DC0F6C09B0009576A1 /* HubSim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HubSim.h; path = HubSim/HubSim.h; sourceTree = "<group>"; };
 		9A6204DD0F6C09B0009576A1 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Link.h; path = HubSim/Link.h; sourceTree = "<group>"; };
@@ -280,6 +280,8 @@
 		9A6206230F6C30A3009576A1 /* TransportTCPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportTCPWriter.cpp; sourceTree = "<group>"; };
 		9A62072D0F6C3FE2009576A1 /* TransportUDPWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransportUDPWriter.h; sourceTree = "<group>"; };
 		9A62072E0F6C3FE2009576A1 /* TransportUDPWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransportUDPWriter.cpp; sourceTree = "<group>"; };
+		9A6FBAA711466C08007721B9 /* KeyspaceClientWrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientWrap.h; sourceTree = "<group>"; };
+		9A6FBAA811466C08007721B9 /* KeyspaceClientWrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientWrap.cpp; sourceTree = "<group>"; };
 		9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabaseStressTest.cpp; sourceTree = "<group>"; };
 		9A81C2E10FFBB2BD00116662 /* TestConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestConfig.h; sourceTree = "<group>"; };
 		9A89F5860F3F444C0041D4A1 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
@@ -428,7 +430,6 @@
 				549D467B0FDFB74C005B92D3 /* TimeCheckTest.cpp */,
 				9A81C2DB0FFBB03800116662 /* DatabaseStressTest.cpp */,
 				9A81C2E10FFBB2BD00116662 /* TestConfig.h */,
-				9A4D2B68108DEC2E000A88C0 /* PTreeTest.cpp */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -755,6 +756,8 @@
 				9ADA095B11233F5D00D9CA2B /* KeyspaceClientConn.cpp */,
 				9ADA0979112340DB00D9CA2B /* KeyspaceResult.h */,
 				9ADA097A112340DB00D9CA2B /* KeyspaceResult.cpp */,
+				9A6FBAA711466C08007721B9 /* KeyspaceClientWrap.h */,
+				9A6FBAA811466C08007721B9 /* KeyspaceClientWrap.cpp */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -958,6 +961,7 @@
 				9ADA094911233DAF00D9CA2B /* KeyspaceResponse.cpp in Sources */,
 				9ADA095C11233F5D00D9CA2B /* KeyspaceClientConn.cpp in Sources */,
 				9ADA097B112340DB00D9CA2B /* KeyspaceResult.cpp in Sources */,
+				9A6FBAA911466C08007721B9 /* KeyspaceClientWrap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
