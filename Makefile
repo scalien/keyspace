@@ -195,7 +195,10 @@ $(BIN_DIR)/$(PYTHON_DIR)/$(PYTHON_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT
 
 # java wrapper
 JAVA_DIR = java
+JAVA_PACKAGE_DIR = com/scalien/keyspace
+JAVA_PACKAGE = com.scalien.keyspace
 JAVA_LIB = libkeyspace_client.$(SOEXT)
+JAVA_JAR_FILE = keyspace.jar
 JAVA_INCLUDE = 
 
 JAVA_CLIENT_DIR = \
@@ -205,10 +208,10 @@ JAVA_CLIENT_WRAPPER = \
 	$(JAVA_CLIENT_DIR)/keyspace_client_java
 
 JAVALIB = \
-	$(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB)
+	$(BIN_DIR)/$(JAVA_DIR)/$(JAVA_JAR_FILE) $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB)
 
 $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
-	-swig -java -c++ -outdir $(BUILD_DIR)/$(JAVA_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(JAVA_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+	-swig -java -c++ -package $(JAVA_PACKAGE) -outdir $(SRC_DIR)/$(JAVA_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(JAVA_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
 
 $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
 	$(CXX) $(CXXFLAGS) $(JAVA_INCLUDE) -o $@ -c $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
@@ -216,8 +219,12 @@ $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(JAVA_CLIENT_WRA
 $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o
 	-mkdir -p $(BIN_DIR)/$(JAVA_DIR)
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(JAVA_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
-	-cp -rf $(SRC_DIR)/$(JAVA_CLIENT_DIR)/Client.java $(BIN_DIR)/$(JAVA_DIR)
-	-cp -rf $(BUILD_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)
+
+$(BIN_DIR)/$(JAVA_DIR)/$(JAVA_JAR_FILE): $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
+	-mkdir -p $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
+	-cp -rf $(SRC_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
+	-cd $(BIN_DIR)/$(JAVA_DIR) ; javac $(JAVA_PACKAGE_DIR)/Client.java ; jar cf $(JAVA_JAR_FILE) $(JAVA_PACKAGE_DIR)/*.class
+#	-cp -rf $(BUILD_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)
 	
 
 # php wrapper
@@ -327,7 +334,7 @@ clean-pythonlib:
 
 clean-javalib:
 	-rm $(BUILD_DIR)/$(JAVA_CLIENT_DIR)/*
-	-rm $(BIN_DIR)/$(JAVA_DIR)/*
+	-rm -rf $(BIN_DIR)/$(JAVA_DIR)/*
 
 clean-phplib:
 	-rm $(BUILD_DIR)/$(PHP_CLIENT_DIR)/*

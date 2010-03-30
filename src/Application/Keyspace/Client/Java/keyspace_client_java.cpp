@@ -276,7 +276,7 @@ SWIGINTERN void SWIG_JavaException(JNIEnv *jenv, int code, const char *msg) {
 extern "C" {
 #endif
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1quot_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_imaxdiv_1t_1quot_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
   imaxdiv_t *arg1 = (imaxdiv_t *) 0 ;
   long long arg2 ;
   
@@ -290,7 +290,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1quot_1set(JNIEnv *j
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1quot_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_imaxdiv_1t_1quot_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jlong jresult = 0 ;
   imaxdiv_t *arg1 = (imaxdiv_t *) 0 ;
   long long result;
@@ -305,7 +305,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1quot_1get(JNIEnv *
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1rem_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_imaxdiv_1t_1rem_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
   imaxdiv_t *arg1 = (imaxdiv_t *) 0 ;
   long long arg2 ;
   
@@ -319,7 +319,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1rem_1set(JNIEnv *je
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1rem_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_imaxdiv_1t_1rem_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jlong jresult = 0 ;
   imaxdiv_t *arg1 = (imaxdiv_t *) 0 ;
   long long result;
@@ -334,7 +334,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxdiv_1t_1rem_1get(JNIEnv *j
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_new_1imaxdiv_1t(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_new_1imaxdiv_1t(JNIEnv *jenv, jclass jcls) {
   jlong jresult = 0 ;
   imaxdiv_t *result = 0 ;
   
@@ -346,7 +346,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_new_1imaxdiv_1t(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_delete_1imaxdiv_1t(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_delete_1imaxdiv_1t(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   imaxdiv_t *arg1 = (imaxdiv_t *) 0 ;
   
   (void)jenv;
@@ -357,7 +357,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_delete_1imaxdiv_1t(JNIEnv *jenv
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxabs(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_imaxabs(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jlong jresult = 0 ;
   intmax_t arg1 ;
   intmax_t result;
@@ -371,7 +371,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxabs(JNIEnv *jenv, jclass j
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxdiv(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_imaxdiv(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
   jlong jresult = 0 ;
   intmax_t arg1 ;
   intmax_t arg2 ;
@@ -387,7 +387,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_imaxdiv(JNIEnv *jenv, jclass j
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_strtoimax(JNIEnv *jenv, jclass jcls, jstring jarg1, jlong jarg2, jint jarg3) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_strtoimax(JNIEnv *jenv, jclass jcls, jstring jarg1, jlong jarg2, jint jarg3) {
   jlong jresult = 0 ;
   char *arg1 = (char *) 0 ;
   char **arg2 = (char **) 0 ;
@@ -410,7 +410,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_strtoimax(JNIEnv *jenv, jclass
 }
 
 
-SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_strtoumax(JNIEnv *jenv, jclass jcls, jstring jarg1, jlong jarg2, jint jarg3) {
+SWIGEXPORT jobject JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_strtoumax(JNIEnv *jenv, jclass jcls, jstring jarg1, jlong jarg2, jint jarg3) {
   jobject jresult = 0 ;
   char *arg1 = (char *) 0 ;
   char **arg2 = (char **) 0 ;
@@ -449,7 +449,7 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_strtoumax(JNIEnv *jenv, jcla
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_new_1Keyspace_1NodeParams(JNIEnv *jenv, jclass jcls, jint jarg1) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_new_1Keyspace_1NodeParams(JNIEnv *jenv, jclass jcls, jint jarg1) {
   jlong jresult = 0 ;
   int arg1 ;
   Keyspace_NodeParams *result = 0 ;
@@ -463,7 +463,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_new_1Keyspace_1NodeParams(JNIE
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_delete_1Keyspace_1NodeParams(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_delete_1Keyspace_1NodeParams(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   
   (void)jenv;
@@ -474,7 +474,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_delete_1Keyspace_1NodeParams(JN
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1Close(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1Close(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   
   (void)jenv;
@@ -485,7 +485,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1Close(JNI
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1AddNode(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1AddNode(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2) {
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   std::string *arg2 = 0 ;
   
@@ -506,7 +506,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1AddNode(J
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int arg2 ;
   
@@ -520,7 +520,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1se
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jint jresult = 0 ;
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int result;
@@ -535,7 +535,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodec_1ge
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   char **arg2 = (char **) 0 ;
   
@@ -549,7 +549,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1se
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jlong jresult = 0 ;
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   char **result = 0 ;
@@ -564,7 +564,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1nodes_1g
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2) {
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int arg2 ;
   
@@ -578,7 +578,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1set(
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
   jint jresult = 0 ;
   Keyspace_NodeParams *arg1 = (Keyspace_NodeParams *) 0 ;
   int result;
@@ -593,7 +593,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1NodeParams_1num_1get(
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultBegin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultBegin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ResultObj arg1 = (ResultObj) 0 ;
   
   (void)jenv;
@@ -603,7 +603,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultBegin(JNIEnv *j
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultNext(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultNext(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ResultObj arg1 = (ResultObj) 0 ;
   
   (void)jenv;
@@ -613,7 +613,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultNext(JNIEnv *je
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultIsEnd(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jboolean JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultIsEnd(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jboolean jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   bool result;
@@ -627,7 +627,7 @@ SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultIsEnd(JNIEn
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultClose(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultClose(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ResultObj arg1 = (ResultObj) 0 ;
   
   (void)jenv;
@@ -637,7 +637,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultClose(JNIEnv *j
 }
 
 
-SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultKey(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jstring JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultKey(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jstring jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   std::string result;
@@ -651,7 +651,7 @@ SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultKey(JNIEnv *
 }
 
 
-SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultValue(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jstring JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultValue(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jstring jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   std::string result;
@@ -665,7 +665,7 @@ SWIGEXPORT jstring JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultValue(JNIEnv
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultTransportStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultTransportStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -679,7 +679,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultTransportStatus
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultConnectivityStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultConnectivityStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -693,7 +693,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultConnectivitySta
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultTimeoutStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultTimeoutStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -707,7 +707,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultTimeoutStatus(J
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultCommandStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ResultCommandStatus(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ResultObj arg1 = (ResultObj) 0 ;
   int result;
@@ -721,7 +721,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ResultCommandStatus(J
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1Create(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Create(JNIEnv *jenv, jclass jcls) {
   jlong jresult = 0 ;
   ClientObj result;
   
@@ -733,7 +733,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1Create(JNIEnv *jenv,
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Init(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg2_) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Init(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg2_) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   Keyspace_NodeParams *arg2 = 0 ;
@@ -754,7 +754,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Init(JNIEnv *jenv, jc
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1Destroy(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Destroy(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   ClientObj arg1 = (ClientObj) 0 ;
   
   (void)jenv;
@@ -764,7 +764,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1Destroy(JNIEnv *jenv,
 }
 
 
-SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1GetResult(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jlong JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1GetResult(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jlong jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   ResultObj result;
@@ -778,7 +778,7 @@ SWIGEXPORT jlong JNICALL Java_keyspace_1clientJNI_Keyspace_1GetResult(JNIEnv *je
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1SetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t arg2 ;
   
@@ -812,7 +812,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetGlobalTimeout(JNIE
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1SetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t arg2 ;
   
@@ -846,7 +846,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetMasterTimeout(JNIE
 }
 
 
-SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_Keyspace_1GetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jobject JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1GetGlobalTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jobject jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t result;
@@ -876,7 +876,7 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_Keyspace_1GetGlobalTimeout(J
 }
 
 
-SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_Keyspace_1GetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jobject JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1GetMasterTimeout(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jobject jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   uint64_t result;
@@ -906,7 +906,7 @@ SWIGEXPORT jobject JNICALL Java_keyspace_1clientJNI_Keyspace_1GetMasterTimeout(J
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1GetMaster(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1GetMaster(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -920,7 +920,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1GetMaster(JNIEnv *jen
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1DistributeDirty(JNIEnv *jenv, jclass jcls, jlong jarg1, jboolean jarg2) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DistributeDirty(JNIEnv *jenv, jclass jcls, jlong jarg1, jboolean jarg2) {
   ClientObj arg1 = (ClientObj) 0 ;
   bool arg2 ;
   
@@ -932,7 +932,7 @@ SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1DistributeDirty(JNIEn
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Get(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Get(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -956,7 +956,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Get(JNIEnv *jenv, jcl
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyGet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DirtyGet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -980,7 +980,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyGet(JNIEnv *jenv
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Count(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Count(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1042,7 +1042,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Count(JNIEnv *jenv, j
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1CountStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1CountStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1090,7 +1090,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1CountStr(JNIEnv *jenv
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyCount(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DirtyCount(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1152,7 +1152,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyCount(JNIEnv *je
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyCountStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DirtyCountStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1200,7 +1200,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyCountStr(JNIEnv 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1262,7 +1262,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeys(JNIEnv *jenv
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeysStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ListKeysStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1310,7 +1310,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeysStr(JNIEnv *j
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DirtyListKeys(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1372,7 +1372,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeys(JNIEnv 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeysStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DirtyListKeysStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1420,7 +1420,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeysStr(JNIE
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1482,7 +1482,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeyValues(JNIEnv 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeyValuesStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1ListKeyValuesStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1530,7 +1530,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1ListKeyValuesStr(JNIE
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DirtyListKeyValues(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jobject jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1592,7 +1592,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeyValues(JN
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeyValuesStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1DirtyListKeyValuesStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4, jboolean jarg5, jboolean jarg6) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1640,7 +1640,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1DirtyListKeyValuesStr
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Set(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Set(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1674,7 +1674,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Set(JNIEnv *jenv, jcl
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1TestAndSet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1TestAndSet(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jstring jarg4) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1718,7 +1718,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1TestAndSet(JNIEnv *je
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Add(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Add(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1744,7 +1744,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Add(JNIEnv *jenv, jcl
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1AddStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1AddStr(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1778,7 +1778,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1AddStr(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Delete(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Delete(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1802,7 +1802,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Delete(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1826,7 +1826,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Remove(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Rename(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Rename(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1860,7 +1860,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Rename(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Prune(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Prune(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   std::string *arg2 = 0 ;
@@ -1884,7 +1884,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Prune(JNIEnv *jenv, j
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Begin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Begin(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -1898,7 +1898,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Begin(JNIEnv *jenv, j
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Submit(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Submit(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -1912,7 +1912,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Submit(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Cancel(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jint JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1Cancel(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jint jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -1926,7 +1926,7 @@ SWIGEXPORT jint JNICALL Java_keyspace_1clientJNI_Keyspace_1Cancel(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_Keyspace_1IsBatched(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+SWIGEXPORT jboolean JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1IsBatched(JNIEnv *jenv, jclass jcls, jlong jarg1) {
   jboolean jresult = 0 ;
   ClientObj arg1 = (ClientObj) 0 ;
   bool result;
@@ -1940,7 +1940,7 @@ SWIGEXPORT jboolean JNICALL Java_keyspace_1clientJNI_Keyspace_1IsBatched(JNIEnv 
 }
 
 
-SWIGEXPORT void JNICALL Java_keyspace_1clientJNI_Keyspace_1SetTrace(JNIEnv *jenv, jclass jcls, jboolean jarg1) {
+SWIGEXPORT void JNICALL Java_com_scalien_keyspace_keyspace_1clientJNI_Keyspace_1SetTrace(JNIEnv *jenv, jclass jcls, jboolean jarg1) {
   bool arg1 ;
   
   (void)jenv;

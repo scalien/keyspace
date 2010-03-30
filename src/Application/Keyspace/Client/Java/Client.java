@@ -1,146 +1,12 @@
+package com.scalien.keyspace;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
-class Status
-{
-	public final static int KEYSPACE_SUCCESS		= 0;
-	public final static int KEYSPACE_API_ERROR		= -1;
-
-	public final static int KEYSPACE_PARTIAL		= -101;
-	public final static int KEYSPACE_FAILURE		= -102;
-
-	public final static int KEYSPACE_NOMASTER		= -201;
-	public final static int KEYSPACE_NOCONNECTION		= -202;
-
-	public final static int KEYSPACE_MASTER_TIMEOUT		= -301;
-	public final static int KEYSPACE_GLOBAL_TIMEOUT		= -302;
-
-	public final static int KEYSPACE_NOSERVICE		= -401;
-	public final static int KEYSPACE_FAILED			= -402;
-	
-	public static String toString(int status)
-	{
-		switch (status) {
-		case KEYSPACE_SUCCESS:
-			return "KEYSPACE_SUCCESS";
-		case KEYSPACE_API_ERROR:
-			return "KEYSPACE_API_ERROR";
-		case KEYSPACE_PARTIAL:
-			return "KEYSPACE_PARTIAL";
-		case KEYSPACE_FAILURE:
-			return "KEYSPACE_FAILURE";
-		case KEYSPACE_NOMASTER:
-			return "KEYSPACE_NOMASTER";
-		case KEYSPACE_NOCONNECTION:
-			return "KEYSPACE_NOCONNECTION";
-		case KEYSPACE_MASTER_TIMEOUT:
-			return "KEYSPACE_MASTER_TIMEOUT";
-		case KEYSPACE_GLOBAL_TIMEOUT:
-			return "KEYSPACE_GLOBAL_TIMEOUT";
-		case KEYSPACE_NOSERVICE:
-			return "KEYSPACE_NOSERVICE";
-		case KEYSPACE_FAILED:
-			return "KEYSPACE_FAILED";
-		}
-
-		return "<UNKNOWN>";		
-	}
-}
-
-class Result
-{
-	private SWIGTYPE_p_void cptr;
-	
-	public Result(SWIGTYPE_p_void cptr) {
-		this.cptr = cptr;
-	}
-	
-	public void finalize() {
-		keyspace_client.Keyspace_ResultClose(cptr);
-	}
-	
-	public String getKey() {
-		return keyspace_client.Keyspace_ResultKey(cptr);
-	}
-	
-	public String getValue() {
-		return keyspace_client.Keyspace_ResultValue(cptr);
-	}
-	
-	public void begin() {
-		keyspace_client.Keyspace_ResultBegin(cptr);
-	}
-	
-	public void next() {
-		keyspace_client.Keyspace_ResultNext(cptr);
-	}
-	
-	public boolean isEnd() {
-		return keyspace_client.Keyspace_ResultIsEnd(cptr);
-	}
-	
-	public int transportStatus() {
-		return keyspace_client.Keyspace_ResultTransportStatus(cptr);
-	}
-	
-	public int connectivityStatus() {
-		return keyspace_client.Keyspace_ResultConnectivityStatus(cptr);
-	}
-	
-	public int timeoutStatus() {
-		return keyspace_client.Keyspace_ResultTimeoutStatus(cptr);
-	}
-	
-	public int commandStatus() {
-		return keyspace_client.Keyspace_ResultCommandStatus(cptr);
-	}
-	
-}
-
-class ListParams
-{
-	ListParams() {
-		prefix = "";
-		startKey = "";
-		limit = 0;
-		skip = false;
-		forward = true;
-	}
-	
-	public ListParams setPrefix(String prefix) {
-		this.prefix = prefix;
-		return this;
-	}
-	
-	public ListParams setStartKey(String startKey) {
-		this.startKey = startKey;
-		return this;
-	}
-	
-	public ListParams setLimit(long limit) {
-		this.limit = limit;
-		return this;
-	}
-	
-	public ListParams setSkip(boolean skip) {
-		this.skip = skip;
-		return this;
-	}
-	
-	public ListParams setForward(boolean forward) {
-		this.forward = forward;
-		return this;
-	}
-	
-	public String prefix;
-	public String startKey;
-	public long limit;
-	public boolean skip;
-	public boolean forward;
-}
 
 public class Client
 {
@@ -198,11 +64,11 @@ public class Client
 		return result;
 	}
 	
-	public String get(String key) {
+	public String get(String key) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Get(cptr, key);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return null;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -212,11 +78,11 @@ public class Client
 		return result.getValue();
 	}
 	
-	public String dirtyGet(String key) {
+	public String dirtyGet(String key) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_DirtyGet(cptr, key);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return null;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -226,49 +92,49 @@ public class Client
 		return result.getValue();
 	}
 	
-	public long count(ListParams params) {
+	public long count(ListParams params) throws KeyspaceException {
 		return count(params.prefix, params.startKey, params.limit, params.skip, params.forward);
 	}
 	
-	public long count(String prefix, String startKey, long limit, boolean skip, boolean forward) {
+	public long count(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Count(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
-			return -1;
+			throw new KeyspaceException(Status.toString(status));
 		
 		try {
 			return Long.parseLong(result.getValue());
 		} catch (NumberFormatException nfe) {
-			return -1;
+			throw new KeyspaceException(Status.toString(Status.KEYSPACE_API_ERROR));
 		}
 	}
 
-	public long dirtyCount(ListParams params) {
+	public long dirtyCount(ListParams params) throws KeyspaceException {
 		return dirtyCount(params.prefix, params.startKey, params.limit, params.skip, params.forward);
 	}
 	
-	public long dirtyCount(String prefix, String startKey, long limit, boolean skip, boolean forward) {
+	public long dirtyCount(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_DirtyCount(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
-			return -1;
+			throw new KeyspaceException(Status.toString(status));
 		
 		try {
 			return Long.parseLong(result.getValue());
 		} catch (NumberFormatException nfe) {
-			return -1;
+			throw new KeyspaceException(Status.toString(Status.KEYSPACE_API_ERROR));
 		}
 	}
 
-	public ArrayList<String> listKeys(ListParams params) {
+	public ArrayList<String> listKeys(ListParams params) throws KeyspaceException {
 		return listKeys(params.prefix, params.startKey, params.limit, params.skip, params.forward);
 	}
 	
-	public ArrayList<String> listKeys(String prefix, String startKey, long limit, boolean skip, boolean forward) {
+	public ArrayList<String> listKeys(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_ListKeys(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
-			return null;
+			throw new KeyspaceException(Status.toString(status));
 		
 		ArrayList<String> keys = new ArrayList<String>();
 		for (result.begin(); !result.isEnd(); result.next())
@@ -277,17 +143,17 @@ public class Client
 		return keys;
 	}
 
-	public HashMap<String, String> listKeyValues(ListParams params) {
+	public TreeMap<String, String> listKeyValues(ListParams params) throws KeyspaceException {
 		return listKeyValues(params.prefix, params.startKey, params.limit, params.skip, params.forward);
 	}
 
-	public HashMap<String, String> listKeyValues(String prefix, String startKey, long limit, boolean skip, boolean forward) {
+	public TreeMap<String, String> listKeyValues(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_ListKeyValues(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
-			return null;
+			throw new KeyspaceException(Status.toString(status));
 		
-		HashMap<String, String> keyvals = new HashMap<String, String>();
+		TreeMap<String, String> keyvals = new TreeMap<String, String>();
 		for (result.begin(); !result.isEnd(); result.next())
 			keyvals.put(result.getKey(), result.getValue());
 		
@@ -295,11 +161,11 @@ public class Client
 	}
 	
 	
-	public int set(String key, String value) {
+	public int set(String key, String value) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Set(cptr, key, value);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return status;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -309,11 +175,11 @@ public class Client
 		return status;
 	}
 	
-	public String testAndSet(String key, String test, String value) {
+	public String testAndSet(String key, String test, String value) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_TestAndSet(cptr, key, test, value);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return null;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -323,30 +189,30 @@ public class Client
 		return result.getValue();		
 	}
 	
-	public long add(String key, long num) {
+	public long add(String key, long num) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Add(cptr, key, num);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return -1;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
-			return -1;
+			return 0;
 		
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 
 		try {
 			return Long.parseLong(result.getValue());
 		} catch (NumberFormatException nfe) {
-			return -1;
+			throw new KeyspaceException(Status.toString(Status.KEYSPACE_API_ERROR));
 		}
 	}
 	
-	public int delete(String key) {
+	public int delete(String key) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Delete(cptr, key);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return status;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -356,11 +222,11 @@ public class Client
 		return status;
 	}
 	
-	public String remove(String key) {
+	public String remove(String key) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Remove(cptr, key);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return null;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -370,11 +236,11 @@ public class Client
 		return result.getValue();
 	}
 	
-	public int rename(String src, String dst) {
+	public int rename(String src, String dst) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Rename(cptr, src, dst);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return status;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -384,11 +250,11 @@ public class Client
 		return status;
 	}
 	
-	public int prune(String prefix) {
+	public int prune(String prefix) throws KeyspaceException {
 		int status = keyspace_client.Keyspace_Prune(cptr, prefix);
 		if (status < 0) {
 			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
-			return status;
+			throw new KeyspaceException(Status.toString(status));
 		}
 		
 		if (isBatched())
@@ -421,26 +287,30 @@ public class Client
 	}
 	
 	public static void main(String[] args) {
-		String[] nodes = {"127.0.0.1:7080"};
-		//setTrace(true);
-		Client ks = new Client(nodes);
-		String hol = ks.get("hol");
-		System.out.println(hol);
-		
-		ArrayList<String> keys = ks.listKeys("", "", 0, false, true);
-		for (String key : keys)
-			System.out.println(key);
-		
-		HashMap<String, String> keyvals = ks.listKeyValues("", "", 0, false, true);
-		Collection c = keyvals.keySet();
-		Iterator it = c.iterator();
-		while (it.hasNext()) {
-			Object key = it.next();
-			String value = keyvals.get(key);
-			System.out.println(key + " => " + value);
+		try {
+			String[] nodes = {"127.0.0.1:7080"};
+			//setTrace(true);
+			Client ks = new Client(nodes);
+			String hol = ks.get("hol");
+			System.out.println(hol);
+			
+			ArrayList<String> keys = ks.listKeys("", "", 0, false, true);
+			for (String key : keys)
+				System.out.println(key);
+			
+			Map<String, String> keyvals = ks.listKeyValues("", "", 0, false, true);
+			Collection c = keyvals.keySet();
+			Iterator it = c.iterator();
+			while (it.hasNext()) {
+				Object key = it.next();
+				String value = keyvals.get(key);
+				System.out.println(key + " => " + value);
+			}
+			
+			long cnt = ks.count(new ListParams().setLimit(100));
+			System.out.println(cnt);
+		} catch (KeyspaceException e) {
+			System.out.println(e.getMessage());
 		}
-		
-		long cnt = ks.count(new ListParams().setLimit(100));
-		System.out.println(cnt);
 	}
 }
