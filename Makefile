@@ -223,7 +223,7 @@ $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(
 $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_JAR_FILE): $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
 	-mkdir -p $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
 	-cp -rf $(SRC_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
-	-cd $(BIN_DIR)/$(JAVA_DIR) ; javac $(JAVA_PACKAGE_DIR)/Client.java ; jar cf $(JAVA_JAR_FILE) $(JAVA_PACKAGE_DIR)/*.class
+	-cd $(BIN_DIR)/$(JAVA_DIR) && javac $(JAVA_PACKAGE_DIR)/Client.java && jar cf $(JAVA_JAR_FILE) $(JAVA_PACKAGE_DIR)/*.class && rm -rf com
 #	-cp -rf $(BUILD_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)
 	
 
@@ -238,17 +238,17 @@ PHP_CLIENT_WRAPPER = $(PHP_CLIENT_DIR)/keyspace_client_php
 PHPLIB = $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB)
 
 $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
-	-swig -php5 -c++  -outdir $(BUILD_DIR)/$(PHP_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PHP_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
-	-script/fix_swig_php.sh $(BUILD_DIR)/$(PHP_CLIENT_DIR)
+	-swig -php5 -c++  -outdir $(SRC_DIR)/$(PHP_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PHP_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+	-script/fix_swig_php.sh $(SRC_DIR)/$(PHP_CLIENT_DIR)
 
 $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
-	$(CXX) $(CXXFLAGS) $(PHP_INCLUDE) `$(PHP_CONFIG) --includes` -I$(BUILD_DIR)/$(PHP_CLIENT_DIR) -o $@ -c $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
+	$(CXX) $(CXXFLAGS) $(PHP_INCLUDE) `$(PHP_CONFIG) --includes` -I$(SRC_DIR)/$(PHP_CLIENT_DIR) -o $@ -c $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
 
 $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o
 	-mkdir -p $(BIN_DIR)/$(PHP_DIR)
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
 	-cp -rf $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace.php $(BIN_DIR)/$(PHP_DIR)
-	-cp -rf $(BUILD_DIR)/$(PHP_CLIENT_DIR)/keyspace_client.php $(BIN_DIR)/$(PHP_DIR)
+	-cp -rf $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace_client.php $(BIN_DIR)/$(PHP_DIR)
 	
 
 # executables	
