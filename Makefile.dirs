@@ -11,6 +11,7 @@ $(BUILD_DIR):
 		$(BUILD_DIR)/Application/Keyspace/Client/Java \
 		$(BUILD_DIR)/Application/Keyspace/Client/PHP \
 		$(BUILD_DIR)/Application/Keyspace/Client/Python \
+		$(BUILD_DIR)/Application/Keyspace/Client/Ruby \
 		$(BUILD_DIR)/Application/Keyspace/Database/ \
 		$(BUILD_DIR)/Application/Keyspace/Protocol/ \
 		$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP \

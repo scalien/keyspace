@@ -5,8 +5,8 @@ include_once("keyspace_client.php");
 class Result {
 	private $cPtr;
 	
-	public function __construct() {
-		$this->cPtr = NULL;
+	public function __construct($cptr) {
+		$this->cPtr = $cptr;
 	}
 	
 	public function __destruct() {
@@ -16,11 +16,6 @@ class Result {
 	public function close() {
 		keyspace_client::Keyspace_ResultClose($this->cPtr);
 		$this->cPtr = NULL;
-	}
-	
-	public function set($cPtr) {
-		$this->close();
-		$this->cPtr = $cPtr;
 	}
 	
 	public function key() {
@@ -88,7 +83,6 @@ class KeyspaceClient {
 	
 	public function __construct($nodes) {
 		$this->co = keyspace_client::Keyspace_Create();
-		$this->result = new Result();
 		$nodeParams = new Keyspace_NodeParams(count($nodes));
 		foreach ($nodes as $node) {
 			$nodeParams->AddNode($node);
@@ -132,30 +126,30 @@ class KeyspaceClient {
 	public function get($key) {
 		$status = keyspace_client::Keyspace_Get($this->co, $key);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		return $this->result->value();
 	}
 
 	public function dirtyGet($key) {
 		$status = keyspace_client::Keyspace_DirtyGet($this->co, $key);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		return $this->result->value();
 	}
 
 	public function count_($prefix = "", $start_key = "", $count = 0, $skip = FALSE, $forward = TRUE) {
 		$status = keyspace_client::Keyspace_CountStr($this->co, $prefix, $start_key, $count, $skip, $forward);
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		if ($status < 0)
 			return NULL;
 		return $this->result->value();
@@ -172,7 +166,7 @@ class KeyspaceClient {
 	
 	public function dirtyCount_($prefix = "", $start_key = "", $count = 0, $skip = FALSE, $forward = TRUE) {
 		$status = keyspace_client::Keyspace_DirtyCountStr($this->co, $prefix, $start_key, $count, $skip, $forward);
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		if ($status < 0)
 			return NULL;
 		return $this->result->value();
@@ -189,7 +183,7 @@ class KeyspaceClient {
 
 	public function listKeys_($prefix = "", $start_key = "", $count = 0, $skip = FALSE, $forward = TRUE) {
 		$status = keyspace_client::Keyspace_ListKeysStr($this->co, $prefix, $start_key, $count, $skip, $forward);
-                $this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+                $this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
                 if ($status < 0)
                 	return NULL;
 		return $this->result->keys();
@@ -206,7 +200,7 @@ class KeyspaceClient {
 
 	public function dirtyListKeys_($prefix = "", $start_key = "", $count = 0, $skip = FALSE, $forward = TRUE) {
 		$status = keyspace_client::Keyspace_DirtyListKeysStr($this->co, $prefix, $start_key, $count, $skip, $forward);
-                $this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+                $this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
                 if ($status < 0)
                 	return NULL;
 		return $this->result->keys();
@@ -223,7 +217,7 @@ class KeyspaceClient {
 
 	public function listKeyValues_($prefix = "", $start_key = "", $count = 0, $skip = FALSE, $forward = TRUE) {
 		$status = keyspace_client::Keyspace_ListKeyValuesStr($this->co, $prefix, $start_key, $count, $skip, $forward);
-                $this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+                $this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
                 if ($status < 0)
                 	return NULL;
 		return $this->result->keyValues();
@@ -240,7 +234,7 @@ class KeyspaceClient {
 	
 	public function dirtyListKeyValues_($prefix = "", $start_key = "", $count = 0, $skip = FALSE, $forward = TRUE) {
 		$status = keyspace_client::Keyspace_DirtyListKeyValues($this->co, $prefix, $start_key, $count, $skip, $forward);
-                $this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+                $this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
                 if ($status < 0)
                 	return NULL;
 		return $this->result->keyValues();
@@ -258,81 +252,81 @@ class KeyspaceClient {
 	public function set($key, $value) {
 		$status = keyspace_client::Keyspace_Set($this->co, $key, $value);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 	}
 
 	public function testAndSet($key, $test, $value) {
 		$status = keyspace_client::Keyspace_TestAndSet($this->co, $key, $test, $value);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		return $this->result->value();
 	}
 
 	public function add($key, $num) {
 		$status = keyspace_client::Keyspace_AddStr($this->co, $key, $num);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		return $this->result->value();
 	}
 	
 	public function delete($key) {
 		$status = keyspace_client::Keyspace_Delete($this->co, $key);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 	}
 	
 	public function remove($key) {
 		$status = keyspace_client::Keyspace_Remove($this->co, $key);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		return $this->result->value();
 	}
 	
 	public function rename($src, $dst) {
 		$status = keyspace_client::Keyspace_Rename($this->co, $src, $dst);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 	}
 
 	public function prune($prefix) {
 		$status = keyspace_client::Keyspace_Prefix($this->co, $prefix);
 		if ($status < 0) {
-			$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;
 		}
 		if ($this->isBatched())
 			return NULL;
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 	}	
 
 	public function begin() {
@@ -341,7 +335,7 @@ class KeyspaceClient {
 	
 	public function submit() {
 		$status = keyspace_client::Keyspace_Submit($this->co);
-		$this->result->set(keyspace_client::Keyspace_GetResult($this->co));
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 		return $status;
 	}
 	
