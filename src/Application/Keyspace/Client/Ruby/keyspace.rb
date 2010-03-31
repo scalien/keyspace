@@ -1,6 +1,6 @@
 require 'keyspace_client'
 
-class Keyspace
+class KeyspaceClient
 	class Result
 		def initialize(cptr)
 			@keys = []
@@ -77,6 +77,11 @@ class Keyspace
 		end
 		Keyspace_client.Keyspace_Init(@cptr, node_params)
 		node_params.Close()
+		ObjectSpace.define_finalizer(self, KeyspaceClient.finalize(@cptr))
+	end
+
+	def self.finalize(cptr)		
+		lambda { Keyspace_client.Keyspace_Close(cptr) }
 	end
 
 	public

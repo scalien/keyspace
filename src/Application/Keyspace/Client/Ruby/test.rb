@@ -1,6 +1,6 @@
 require 'keyspace'
 
-ks = Keyspace.new(["localhost:7080"])
+ks = KeyspaceClient.new(["localhost:7080"])
 ks.get("hol")
 print(ks.result.value)
 print(ks.count() + "\n")
