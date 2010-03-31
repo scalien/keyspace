@@ -224,7 +224,6 @@ $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_JAR_FILE): $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
 	-mkdir -p $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
 	-cp -rf $(SRC_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
 	-cd $(BIN_DIR)/$(JAVA_DIR) && javac $(JAVA_PACKAGE_DIR)/Client.java && jar cf $(JAVA_JAR_FILE) $(JAVA_PACKAGE_DIR)/*.class && rm -rf com
-#	-cp -rf $(BUILD_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)
 	
 
 # php wrapper
@@ -249,7 +248,27 @@ $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BU
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PHP_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
 	-cp -rf $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace.php $(BIN_DIR)/$(PHP_DIR)
 	-cp -rf $(SRC_DIR)/$(PHP_CLIENT_DIR)/keyspace_client.php $(BIN_DIR)/$(PHP_DIR)
-	
+
+# ruby wrapper
+RUBY_DIR = ruby
+RUBY_LIB = keyspace_client.bundle
+RUBY_INCLUDE = 
+RUBY_CONFIG = 
+
+RUBY_CLIENT_DIR = $(CLIENT_DIR)/Ruby
+RUBY_CLIENT_WRAPPER = $(RUBY_CLIENT_DIR)/keyspace_client_ruby
+RUBYLIB = $(BIN_DIR)/$(RUBY_DIR)/$(RUBY_LIB)
+
+$(SRC_DIR)/$(RUBY_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
+	-swig -ruby -c++  -outdir $(SRC_DIR)/$(RUBY_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(RUBY_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+
+$(BUILD_DIR)/$(RUBY_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(RUBY_CLIENT_WRAPPER).cpp
+	$(CXX) $(CXXFLAGS) $(RUBY_INCLUDE) -I$(SRC_DIR)/$(RUBY_CLIENT_DIR) -o $@ -c $(SRC_DIR)/$(RUBY_CLIENT_WRAPPER).cpp
+
+$(BIN_DIR)/$(RUBY_DIR)/$(RUBY_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(RUBY_CLIENT_WRAPPER).o
+	-mkdir -p $(BIN_DIR)/$(RUBY_DIR)
+	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(RUBY_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
+	-cp -rf $(SRC_DIR)/$(RUBY_CLIENT_DIR)/keyspace.rb $(BIN_DIR)/$(RUBY_DIR)
 
 # executables	
 $(BIN_DIR)/keyspaced: $(BUILD_DIR) $(LIBS) $(OBJECTS)
@@ -284,6 +303,8 @@ pythonlib: $(BUILD_DIR) $(CLIENTLIBS) $(PYTHONLIB)
 javalib: $(BUILD_DIR) $(CLIENTLIBS) $(JAVALIB)
 
 phplib: $(BUILD_DIR) $(CLIENTLIBS) $(PHPLIB)
+
+rubylib: $(BUILD_DIR) $(CLIENTLIBS) $(RUBYLIB)
 
 targets: $(BUILD_DIR) executables clientlibs
 
@@ -326,7 +347,7 @@ clean-release:
 	-rm -f $(BASE_DIR)/keyspace
 	-rm -r -f $(BUILD_RELEASE_DIR)
 	
-clean-libs: clean-pythonlib clean-phplib clean-javalib
+clean-libs: clean-pythonlib clean-phplib clean-javalib clean-rubylib
 	-rm $(CLIENTLIBS)
 
 clean-pythonlib:
@@ -340,6 +361,10 @@ clean-phplib:
 	-rm $(BUILD_DIR)/$(PHP_CLIENT_DIR)/*
 	-rm $(BIN_DIR)/$(PHP_DIR)/*
 
+clean-rubylib:
+	-rm $(BUILD_DIR)/$(RUBY_CLIENT_DIR)/*
+	-rm $(BIN_DIR)/$(RUBY_DIR)/*
+
 clean-pythonlib-swig:
 	-rm $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
 	
@@ -349,7 +374,10 @@ clean-javalib-swig:
 clean-phplib-swig:
 	-rm $(SRC_DIR)/$(PHP_CLIENT_WRAPPER).cpp
 
-clean-swig: clean-pythonlib-swig clean-javalib-swig clean-phplib-swig
+clean-rubylib-swig:
+	-rm $(SRC_DIR)/$(RUBY_CLIENT_WRAPPER).cpp
+
+clean-swig: clean-pythonlib-swig clean-javalib-swig clean-phplib-swig clean-rubylib-swig
 
 clean-executables:
 	-rm $(EXECUTABLES)
