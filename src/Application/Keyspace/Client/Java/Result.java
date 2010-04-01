@@ -34,19 +34,19 @@ public class Result
 		return keyspace_client.Keyspace_ResultIsEnd(cptr);
 	}
 	
-	public int transportStatus() {
+	public int getTransportStatus() {
 		return keyspace_client.Keyspace_ResultTransportStatus(cptr);
 	}
 	
-	public int connectivityStatus() {
+	public int getConnectivityStatus() {
 		return keyspace_client.Keyspace_ResultConnectivityStatus(cptr);
 	}
 	
-	public int timeoutStatus() {
+	public int getTimeoutStatus() {
 		return keyspace_client.Keyspace_ResultTimeoutStatus(cptr);
 	}
 	
-	public int commandStatus() {
+	public int getCommandStatus() {
 		return keyspace_client.Keyspace_ResultCommandStatus(cptr);
 	}	
 	
