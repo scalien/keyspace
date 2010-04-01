@@ -99,7 +99,7 @@ class KeyspaceClient
 		lambda { Keyspace_client.Keyspace_Close(cptr) }
 	end
 
-	def self.statusString(status)
+	def self.status_string(status)
 		case status
 			when KEYSPACE_SUCCESS:
 		                return "KEYSPACE_SUCCESS"
