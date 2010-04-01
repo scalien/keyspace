@@ -1,6 +1,21 @@
 require 'keyspace_client'
 
 class KeyspaceClient
+	KEYSPACE_SUCCESS = 0
+	KEYSPACE_API_ERROR = -1
+
+	KEYSPACE_PARTIAL = -101
+	KEYSPACE_FAILURE = -102
+
+	KEYSPACE_NOMASTER = -201
+	KEYSPACE_NOCONNECTION = -202
+
+	KEYSPACE_MASTER_TIMEOUT = -301
+	KEYSPACE_GLOBAL_TIMEOUT = -302
+
+	KEYSPACE_NOSERVICE = -401
+	KEYSPACE_FAILED = -402
+	
 	class Result
 		def initialize(cptr)
 			@keys = []
@@ -82,6 +97,33 @@ class KeyspaceClient
 
 	def self.finalize(cptr)		
 		lambda { Keyspace_client.Keyspace_Close(cptr) }
+	end
+
+	def self.statusString(status)
+		case status
+			when KEYSPACE_SUCCESS:
+		                return "KEYSPACE_SUCCESS"
+			when KEYSPACE_API_ERROR:
+		                return "KEYSPACE_API_ERROR"
+			when KEYSPACE_PARTIAL:
+		                return "KEYSPACE_PARTIAL"
+			when KEYSPACE_FAILURE:
+		                return "KEYSPACE_FAILURE"
+			when KEYSPACE_NOMASTER:
+		                return "KEYSPACE_NOMASTER"
+			when KEYSPACE_NOCONNECTION:
+		                return "KEYSPACE_NOCONNECTION"
+			when KEYSPACE_MASTER_TIMEOUT:
+		                return "KEYSPACE_MASTER_TIMEOUT"
+			when KEYSPACE_GLOBAL_TIMEOUT:
+				return "KEYSPACE_GLOBAL_TIMEOUT"
+			when KEYSPACE_NOSERVICE:
+		                return "KEYSPACE_NOSERVICE"
+			when KEYSPACE_FAILED:
+		                return "KEYSPACE_FAILED"
+			else
+				return "<UNKNOWN>"
+		end
 	end
 
 	public
