@@ -59,7 +59,7 @@ Next, if you would like to, change the global timeout. The global timeout specif
 
   keyspace_client_set_global_timeout(client, 120*1000);
 
-Next, if you would like to, change the maser timeout timeout. The master timeout specifies the maximum time, in msec, that the library will spend trying to find the master node. The default is 21 seconds::
+Next, if you would like to, change the master timeout. The master timeout specifies the maximum time, in msec, that the library will spend trying to find the master node. The default is 21 seconds::
 
   keyspace_client_set_master_timeout(client, 21*1000);
 
@@ -110,7 +110,7 @@ The ``rename`` command atomically renames a ``key``, leaving its ``value`` alone
     ...
   }
 
-If the database was looked like ``from => value`` at the beginning, then it changed to ``to => value`` after the successfull ``rename`` operation.
+If the database looked like ``from => value`` at the beginning, then it changed to ``to => value`` after the successfull ``rename`` operation.
 
 ``add`` command
 ---------------
@@ -125,7 +125,7 @@ The ``add`` command takes the value of the key, parses it as a number and atomic
     ...
   }
 
-If the database was looked like ``key => 10`` at the beginning, then it changed to ``key => 13`` after the successfull ``add`` operation and the variable ``result`` holds the value 13.
+If the database looked like ``key => 10`` at the beginning, then it changed to ``key => 13`` after the successfull ``add`` operation and the variable ``result`` holds the value 13.
 
 ``delete`` command
 ------------------
@@ -186,7 +186,7 @@ The ``prune`` command deletes all ``key => value`` pairs where the ``key`` start
 Issuing single read commands
 ============================
 
-The only Keyspace single read commands is ``get_simple``.
+The only Keyspace single read command is ``get_simple``.
 
 ``get_simple`` command
 ----------------------
@@ -410,7 +410,7 @@ To send batched write commands, first call ``keyspace_client_begin()`` function,
 Issuing batched read commands
 =============================
 
-It is only possible to issue ``get`` read commands in a batched fashion. Since ``get`` commands are not replicated, only the round-trip time is saved. Nevertheless, batched ``get`` can achieve 3-5x higher throughput than single ``get``.
+It is possible to issue ``get`` read commands in a batched fashion. Since ``get`` commands are not replicated, only the round-trip time is saved. Nevertheless, batched ``get`` can achieve 3-5x higher throughput than single ``get``.
 
 To send batched ``get`` commands, first call ``keyspace_client_begin()`` function, then issue the ``get`` commands, and finally call ``keyspace_client_submit()``. The commands are sent on ``keyspace_client_submit()``. After the commands complete, the result object must be fetched and iterated to retrieve the individual key-value pairs::
 

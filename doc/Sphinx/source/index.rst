@@ -20,6 +20,9 @@ Contents:
    http_api.rst
    c_api.rst
    python_api.rst
+   java_api.rst
+   php_api.rst
+   ruby_api.rst
 
 .. Indices and tables
    ==================

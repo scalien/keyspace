@@ -1,32 +1,24 @@
-.. _python_api:
+.. _ruby_api:
 
 
-**********
-Python API
-**********
+********
+Ruby API
+********
 
 Installing from source on Linux and other UNIX platforms
 ========================================================
 
-You will need the ``python-config`` program to make the Python libraries. To check if you have it, type::
+You will need the Ruby runtime sources to install the Ruby libraries. If you don't already have it, download it from the http://java.sun.com website. To make sure you have the JDK installed, type::
 
-  $ which python-config
+  find / -name ruby.h
 
-If not, you must install the Pyhton dev packages. On Debian, type::
+This command will also tell you where the header files are located on your system. Suppose ``ruby.h`` is  located in ``/usr/include/ruby``, then the ``make`` command to build the Keyspace Ruby libraries becomes::
 
-  $ sudo apt-get install python-dev
+  make rubylib RUBY_INCLUDE=-I/usr/include/ruby
 
-On Redhat-like systems, type::
+This will create the file ``keyspace.rb`` and ``keyspace_client.ruby`` in ``bin/ruby``. Put both files into your project directory, and you are ready to use Keyspace!
 
-  $ sudo yum install python-devel
-
-Note that on some systems, the name of the package may have the Python version number appended. In this case you can specify it as an argument to make eg. ``make pythonlib PYTHON_CONFIG=python2.4-config``.
-
-Once you have verified you have ``python-config`` installed, make the Python client libraries::
-
-  $ make pythonlib
-
-in the Keyspace folder. This will create the files ``_keyspace_client.so``, ``keyspace_client.py`` and ``keyspace.py`` in ``bin/python``. Copy these to your Python project, and you are ready to use Keyspace!
+Note: On MacOS, you need to install the `Developer Tools <http://developer.apple.com/technologies/tools/>`_, and the headers are in ``/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/Ruby.framework/Versions/1.8/Headers``
 
 Installing from source on Windows
 =================================
@@ -38,18 +30,18 @@ Connecting to the Keyspace cluster
 
 First, import the keyspace client library::
 
-  import keyspace
+  require 'keyspace'
 
 Then, create a client object by specifying the Keyspace cluster::
 
-  client = keyspace.Client(["192.168.1.50:7080",
-                            "192.168.1.51:7080",
-                            "192.168.1.52:7080"])
+  client = KeyspaceClient.new(["192.168.1.50:7080",
+                               "192.168.1.51:7080",
+                               "192.168.1.52:7080"])
 
 Return values
 =============
 
-All Keyspace functions return ``None`` on failure.
+All Keyspace functions return ``nil`` on failure.
 
 Setting timeout values
 ======================
@@ -149,72 +141,76 @@ You can also issue the identical ``dirty_get`` command, which will be serviced b
   client.set("key", "value")
   client.dirty_get("key") # may return "value"
 
+
 Issuing list commands
 =====================
 
 There are two list commands: ``list_keys`` and ``list_key_values`` and one ``count`` command, all have the same set of parameters.
 
+A list operation retrieves all keys from the Keyspace cluster which start with a given ``prefix``. Optionally:
+
+- listing can start at a specified ``startKey``
+- the maximum number of keys to return can be specified with the ``count`` parameter
+- listing can proceed forward or backward
+- listing can skip the first key
+
+List type functions take an associative array as their arguemnts, which can contain the following parameters: ``prefix, start_key, count, skip, forward``.
+
+The default values are::
+
+  "prefix" : ""
+
+  "start_key" : ""
+
+  "count" : 0 // no limit
+
+  "skip" : false
+
+  "forward" : true
+
 ``list_keys`` command
 ---------------------
 
-The ``list_keys`` command retrieves all keys from the Keyspace cluster which start with a given ``prefix``. Optionally:
-
-- listing can start at a specified ``start_key``
-- the maximum number of keys to return can be specified with the ``count`` parameter
-- listing can proceed forward or backward
-- listing can skip the first key
-
 The signature of the function is::
 
-  def list_keys(self, prefix = "", start_key = "", count = 0, skip = False, forward = True)
+  def list_keys(args = {}) # returns an array
 
-The recommended method to use ``list_keys`` is named arguments::
-
-  client.list_keys(prefix="j")
-
-The result of a list operation is a standard python list::
+The result of a list operation is a standard ``array``::
 
   client.set("/user:mtrencseni", "mtrencseni_data")
   client.set("/user:agazso",     "agazso_data")
-  client.list_keys("/user:")
-  => ['/user:agazso', '/user:mtrencseni']
+  client.list_keys({"prefix": "/user:"})
+  // ["/user:agazso", "/user:mtrencseni"]
 
 You can also issue the identical ``dirty_list_keys`` command, which will be serviced by all nodes, not just the master.
 
-``list_keyvalues`` command
---------------------------
+``list_key_values`` command
+---------------------------
 
-The ``list_keyvalues`` command in nearly identical to ``list_keys``, except it also returns the values.
+The ``list_key_values`` command in nearly identical to ``list_keys``, except it also returns the values.
 
-The ``list_keyvalues`` command retrieves all keys and values from the Keyspace cluster which start with a given ``prefix``. Optionally:
+The ``list_key_values`` command retrieves all keys and values from the Keyspace cluster which start with a given ``prefix``. The signature of the function is::
 
-- listing can start at a specified ``start_key``
-- the maximum number of keys to return can be specified with the ``count`` parameter
-- listing can proceed forward or backward
-- listing can skip the first key
+  def list_key_values(args = {}) # returns a hash
 
-The signature of the function is::
+The result of a list operation is a standard ``array``::
 
-  def list_key_values(self, prefix = "", start_key = "", count = 0, skip = False, forward = True)
+  client.set("/user:mtrencseni", "mtrencseni_data");
+  client.set("/user:agazso",     "agazso_data");
+  client.list_key_values({"prefix": "/user:"});
+  // { "/user:mtrencseni": "mtrencseni_data",
+  //   "/user:agazso"    : "agazso_data"}
 
-The result of a list operation is a standard python dictionary::
-
-  client.set("/user:mtrencseni", "mtrencseni_data")
-  client.set("/user:agazso",     "agazso_data")
-  client.list_key_values("/user:")
-  => {'/user:mtrencseni': 'mtrencseni_data', '/user:agazso': 'agazso_data'}
-
-You can also issue the identical ``dirty_list_keyvalues`` command, which will be serviced by all nodes, not just the master.
+You can also issue the identical ``dirty_list_key_values`` command, which will be serviced by all nodes, not just the master.
 
 ``count`` command
 -----------------
 
-The ``count`` command has the same parameters as ``list_keys`` or ``list_keyvalues``, but returns the number of keys (or key-value pairs) that they would return. The signature of the function is::
+The ``count`` command has the same parameters as ``list_keys`` or ``list_key_values``, but returns the number of keys (or key-value pairs) that they would return. The signature of the function is::
 
-  def count(self, prefix = "", start_key = "",
-            count = 0, skip = False, forward = True)
+  def count(args = {}) # returns an int
 
-  client.count(prefix="prefix")
+  client.count({"prefix": "/user:"});
 
 You can also issue the identical ``dirty_count`` command, which will be serviced by all nodes, not just the master.
 
@@ -253,7 +249,7 @@ To send batched ``get`` commands, first call ``begin()`` function, then issue th
 
   # fetch result
   client.result.key_values()
-  => {'/user:mtrencseni': 'mtrencseni_data', '/user:agazso': 'agazso_data'}
+  # => {'/user:mtrencseni': 'mtrencseni_data', '/user:agazso': 'agazso_data'}
 
 Understanding Keyspace status codes
 ===================================
@@ -262,10 +258,7 @@ Keyspace exposes a rich set of status codes through the client library. These ar
 
 To print the constant name of the status, use::
 
-  keyspace.str_status(status)
-
-``transport_status`` code
--------------------------
+  KeyspaceClient :: status_string(status)
 
 ``transport_status`` tells the application the portion of commands that were sent to the Keyspace cluster::
 
@@ -277,7 +270,7 @@ To print the constant name of the status, use::
 To retrieve the ``transport_status``, use::
 
   status = client.result.transport_status()
-  print(keyspace.str_status(status))
+  print(KeyspaceClient::status_string(status))
 
 ``connectivity_status`` code
 ----------------------------
@@ -292,7 +285,7 @@ To retrieve the ``transport_status``, use::
 To retrieve the ``connectivity_status``, use::
 
   status = client.result.connectivity_status()
-  print(keyspace.str_status(status))
+  print(KeyspaceClient::status_string(status))
 
 ``timeout_status`` code
 ----------------------------
@@ -309,7 +302,7 @@ To retrieve the ``connectivity_status``, use::
 To retrieve the ``timeout_status``, use::
 
   status = client.result.timeout_status()
-  print(keyspace.str_status(status))
+  print(KeyspaceClient::status_string(status))
 
 ``command_status`` code
 -----------------------
@@ -326,10 +319,9 @@ To retrieve the ``timeout_status``, use::
 When using single or batched commands, retrieve the ``command_status`` like::
 
   status = client.result.command_status()
-  print(keyspace.str_status(status))
+  print(KeyspaceClient::status_string(status))
 
 Header files
 ============
 
-Check out ``src/Application/Keyspace/Client/Python/keyspace.py`` for a full reference!
-
+Check out ``src/Application/Keyspace/Client/Ruby/keyspace.rb`` for a full reference!
