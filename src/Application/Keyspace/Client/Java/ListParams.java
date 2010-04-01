@@ -5,7 +5,7 @@ public class ListParams
 	public ListParams() {
 		prefix = "";
 		startKey = "";
-		limit = 0;
+		count = 0;
 		skip = false;
 		forward = true;
 	}
@@ -20,8 +20,8 @@ public class ListParams
 		return this;
 	}
 	
-	public ListParams setLimit(long limit) {
-		this.limit = limit;
+	public ListParams setCount(long count) {
+		this.count = count;
 		return this;
 	}
 	
@@ -37,7 +37,7 @@ public class ListParams
 	
 	public String prefix;
 	public String startKey;
-	public long limit;
+	public long count;
 	public boolean skip;
 	public boolean forward;
 }

@@ -93,11 +93,11 @@ public class Client
 	}
 	
 	public long count(ListParams params) throws KeyspaceException {
-		return count(params.prefix, params.startKey, params.limit, params.skip, params.forward);
+		return count(params.prefix, params.startKey, params.count, params.skip, params.forward);
 	}
 	
-	public long count(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
-		int status = keyspace_client.Keyspace_Count(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+	public long count(String prefix, String startKey, long count, boolean skip, boolean forward) throws KeyspaceException {
+		int status = keyspace_client.Keyspace_Count(cptr, prefix, startKey, BigInteger.valueOf(count), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			throw new KeyspaceException(Status.toString(status));
@@ -110,11 +110,11 @@ public class Client
 	}
 
 	public long dirtyCount(ListParams params) throws KeyspaceException {
-		return dirtyCount(params.prefix, params.startKey, params.limit, params.skip, params.forward);
+		return dirtyCount(params.prefix, params.startKey, params.count, params.skip, params.forward);
 	}
 	
-	public long dirtyCount(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
-		int status = keyspace_client.Keyspace_DirtyCount(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+	public long dirtyCount(String prefix, String startKey, long count, boolean skip, boolean forward) throws KeyspaceException {
+		int status = keyspace_client.Keyspace_DirtyCount(cptr, prefix, startKey, BigInteger.valueOf(count), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			throw new KeyspaceException(Status.toString(status));
@@ -127,11 +127,11 @@ public class Client
 	}
 
 	public ArrayList<String> listKeys(ListParams params) throws KeyspaceException {
-		return listKeys(params.prefix, params.startKey, params.limit, params.skip, params.forward);
+		return listKeys(params.prefix, params.startKey, params.count, params.skip, params.forward);
 	}
 	
-	public ArrayList<String> listKeys(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
-		int status = keyspace_client.Keyspace_ListKeys(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+	public ArrayList<String> listKeys(String prefix, String startKey, long count, boolean skip, boolean forward) throws KeyspaceException {
+		int status = keyspace_client.Keyspace_ListKeys(cptr, prefix, startKey, BigInteger.valueOf(count), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			throw new KeyspaceException(Status.toString(status));
@@ -144,11 +144,11 @@ public class Client
 	}
 
 	public TreeMap<String, String> listKeyValues(ListParams params) throws KeyspaceException {
-		return listKeyValues(params.prefix, params.startKey, params.limit, params.skip, params.forward);
+		return listKeyValues(params.prefix, params.startKey, params.count, params.skip, params.forward);
 	}
 
-	public TreeMap<String, String> listKeyValues(String prefix, String startKey, long limit, boolean skip, boolean forward) throws KeyspaceException {
-		int status = keyspace_client.Keyspace_ListKeyValues(cptr, prefix, startKey, BigInteger.valueOf(limit), skip, forward);
+	public TreeMap<String, String> listKeyValues(String prefix, String startKey, long count, boolean skip, boolean forward) throws KeyspaceException {
+		int status = keyspace_client.Keyspace_ListKeyValues(cptr, prefix, startKey, BigInteger.valueOf(count), skip, forward);
 		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
 		if (status < 0)
 			throw new KeyspaceException(Status.toString(status));
@@ -307,7 +307,7 @@ public class Client
 				System.out.println(key + " => " + value);
 			}
 			
-			long cnt = ks.count(new ListParams().setLimit(100));
+			long cnt = ks.count(new ListParams().setCount(100));
 			System.out.println(cnt);
 		} catch (KeyspaceException e) {
 			System.out.println(e.getMessage());

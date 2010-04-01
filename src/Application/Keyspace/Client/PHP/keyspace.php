@@ -2,6 +2,22 @@
 
 include_once("keyspace_client.php");
 
+define("KEYSPACE_SUCCESS", 0);
+define("KEYSPACE_API_ERROR", -1);
+
+define("KEYSPACE_PARTIAL", -101);
+define("KEYSPACE_FAILURE", -102);
+
+define("KEYSPACE_NOMASTER", -201);
+define("KEYSPACE_NOCONNECTION", -202);
+
+define("KEYSPACE_MASTER_TIMEOUT", -301);
+define("KEYSPACE_GLOBAL_TIMEOUT", -302);
+
+define("KEYSPACE_NOSERVICE", -401);
+define("KEYSPACE_FAILED", -402);
+
+
 class Result {
 	private $cPtr;
 	
@@ -93,6 +109,33 @@ class KeyspaceClient {
 	
 	public function __destruct() {
 		keyspace_client::Keyspace_Destroy($this->co);
+	}
+	
+	public static function statusToString($status) {
+		switch ($status) {
+		case KEYSPACE_SUCCESS:
+	                return "KEYSPACE_SUCCESS";
+        	case KEYSPACE_API_ERROR:
+	                return "KEYSPACE_API_ERROR";
+        	case KEYSPACE_PARTIAL:
+	                return "KEYSPACE_PARTIAL";
+        	case KEYSPACE_FAILURE:
+	                return "KEYSPACE_FAILURE";
+        	case KEYSPACE_NOMASTER:
+	                return "KEYSPACE_NOMASTER";
+		case KEYSPACE_NOCONNECTION:
+	                return "KEYSPACE_NOCONNECTION";
+        	case KEYSPACE_MASTER_TIMEOUT:
+                	return "KEYSPACE_MASTER_TIMEOUT";
+        	case KEYSPACE_GLOBAL_TIMEOUT:
+	                return "KEYSPACE_GLOBAL_TIMEOUT";
+        	case KEYSPACE_NOSERVICE:
+                	return "KEYSPACE_NOSERVICE";
+        	case KEYSPACE_FAILED:
+	                return "KEYSPACE_FAILED";
+		}
+
+		return "<UNKNOWN>";
 	}
 	
 	public function setGlobalTimeout($timeout) {
