@@ -221,7 +221,7 @@ sub dirty_count {
 	my $count;
 	my $skip;
 	my $forward;
-	($start_key, $prefix, $count, $skip, $forward) = list_args(@_);
+	($start_key, $prefix, $count, $skip, $forward) = _list_args(@_);
 	my $status = keyspace_client::Keyspace_DirtyCount($self->{cptr}, $prefix, $start_key, $count, $skip, $forward);
 	$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
 	if ($status < 0) {
