@@ -85,77 +85,77 @@ class Client:
 			return kv
 	
 	def __init__(self, nodes):
-		self.co = Keyspace_Create()
+		self.cptr = Keyspace_Create()
 		self.result = None
 		node_params = Keyspace_NodeParams(len(nodes))
 		for node in nodes:
 			node_params.AddNode(node)
-		Keyspace_Init(self.co, node_params)
+		Keyspace_Init(self.cptr, node_params)
 		node_params.Close()
 
 	def __del__(self):
 		del self.result
-		Keyspace_Destroy(self.co)
+		Keyspace_Destroy(self.cptr)
 
 
 	def set_global_timeout(self, timeout):
-		Keyspace_SetGlobalTimeout(self.co, long(timeout))
+		Keyspace_SetGlobalTimeout(self.cptr, long(timeout))
 	
 	def get_global_timeout(self):
-		return long(Keyspace_GetGlobalTimeout(self.co))
+		return long(Keyspace_GetGlobalTimeout(self.cptr))
 	
 	def set_master_timeout(self, timeout):
-		Keyspace_SetMasterTimeout(self.co, long(timeout))
+		Keyspace_SetMasterTimeout(self.cptr, long(timeout))
 	
 	def get_master_timeout(self):
-		return long(Keyspace_GetMasterTimeout(self.co))
+		return long(Keyspace_GetMasterTimeout(self.cptr))
 	
 	def get_master(self):
-		return Keyspace_GetMaster(self.co)
+		return Keyspace_GetMaster(self.cptr)
 	
 	def get_state(self, node):
-		return Keyspace_GetState(self.co, int(node))
+		return Keyspace_GetState(self.cptr, int(node))
 	
 	def distribute_dirty(self):
-		return Keyspace_DistributeDirty(self.co)
+		return Keyspace_DistributeDirty(self.cptr)
 
 	def get(self, key):
-		status = Keyspace_Get(self.co, key)
+		status = Keyspace_Get(self.cptr, key)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return self.result.value()
 
 	def dirty_get(self, key):
-		status = Keyspace_DirtyGet(self.co, key)
+		status = Keyspace_DirtyGet(self.cptr, key)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return self.result.value()
 
 	def count(self, prefix = "", start_key = "", count = 0, skip = False, forward = True):
-		status = Keyspace_Count(self.co, prefix, start_key, count, skip, forward)
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		status = Keyspace_Count(self.cptr, prefix, start_key, count, skip, forward)
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		if status < 0:
 			return None
 		return int(self.result.value())
 
 	def dirty_count(self, prefix = "", start_key = "", count = 0, skip = False, forward = True):
-		status = Keyspace_DirtyCount(self.co, prefix, start_key, count, skip, forward)
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		status = Keyspace_DirtyCount(self.cptr, prefix, start_key, count, skip, forward)
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		if status < 0:
 			return None
 		return int(self.result.value())
 	
 	def list_keys(self, prefix = "", start_key = "", count = 0, skip = False, forward = True):
-		status = Keyspace_ListKeys(self.co, prefix, start_key, count, skip, forward)
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		status = Keyspace_ListKeys(self.cptr, prefix, start_key, count, skip, forward)
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		if status < 0:
 			return None
 		keys = []
@@ -166,8 +166,8 @@ class Client:
 		return keys
 	
 	def dirty_list_keys(self, prefix = "", start_key = "", count = 0, skip = False, forward = True):
-		status = Keyspace_DirtyListKeys(self.co, prefix, start_key, count, skip, forward)
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		status = Keyspace_DirtyListKeys(self.cptr, prefix, start_key, count, skip, forward)
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		if status < 0:
 			return None
 		keys = []
@@ -178,8 +178,8 @@ class Client:
 		return keys
 	
 	def list_key_values(self, prefix = "", start_key = "", count = 0, skip = False, forward = True):
-		status = Keyspace_ListKeyValues(self.co, prefix, start_key, count, skip, forward)
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		status = Keyspace_ListKeyValues(self.cptr, prefix, start_key, count, skip, forward)
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		if status < 0:
 			return None
 		keyvals = {}
@@ -190,8 +190,8 @@ class Client:
 		return keyvals
 
 	def dirty_list_key_values(self, prefix = "", start_key = "", count = 0, skip = False, forward = True):
-		status = Keyspace_DirtyListKeyValues(self.co, prefix, start_key, count, skip, forward)
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		status = Keyspace_DirtyListKeyValues(self.cptr, prefix, start_key, count, skip, forward)
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		if status < 0:
 			return None
 		keyvals = {}
@@ -202,85 +202,85 @@ class Client:
 		return keyvals
 	
 	def set(self, key, value):
-		status = Keyspace_Set(self.co, key, value)
+		status = Keyspace_Set(self.cptr, key, value)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return status
 
 	def test_and_set(self, key, test, value):
-		status = Keyspace_TestAndSet(self.co, key, test, value)
+		status = Keyspace_TestAndSet(self.cptr, key, test, value)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return self.result.value()
 	
 	def add(self, key, num):
-		status = Keyspace_Add(self.co, key, long(num))
+		status = Keyspace_Add(self.cptr, key, long(num))
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return int(self.result.value())
 	
 	def delete(self, key):
-		status = Keyspace_Delete(self.co, key)
+		status = Keyspace_Delete(self.cptr, key)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return status
 	
 	def remove(self, key):
-		status = Keyspace_Remove(self.co, key)
+		status = Keyspace_Remove(self.cptr, key)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return self.result.value()
 	
 	def rename(self, src, dst):
-		status = Keyspace_Rename(self.co, src, dst)
+		status = Keyspace_Rename(self.cptr, src, dst)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return status
 	
 	def prune(self, prefix):
-		status = Keyspace_Prune(self.co, prefix)
+		status = Keyspace_Prune(self.cptr, prefix)
 		if status < 0:
-			self.result = Client.Result(Keyspace_GetResult(self.co))
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
 			return
-		if Keyspace_IsBatched(self.co):
+		if Keyspace_IsBatched(self.cptr):
 			return
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return status
 	
 	def begin(self):
-		return Keyspace_Begin(self.co)
+		return Keyspace_Begin(self.cptr)
 	
 	def submit(self):
-		status = Keyspace_Submit(self.co)
-		self.result = Client.Result(Keyspace_GetResult(self.co))
+		status = Keyspace_Submit(self.cptr)
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return status
 	
 	def cancel(self):
-		return Keyspace_Cancel(self.co)
+		return Keyspace_Cancel(self.cptr)
 		
 	def _set_trace(self, trace):
 		Keyspace_SetTrace(trace)
