@@ -15,3 +15,4 @@ BASE_LDFLAGS = -L/opt/local/lib/db46 -L/usr/local/lib/db4 -lpthread -ldb_cxx $(L
 SOLINK = -Xlinker -x -fPIC -dylib -undefined dynamic_lookup -bundle
 SOEXT = dylib
 SWIG_LDFLAGS = -bundle -flat_namespace -undefined suppress
+BUNDLEEXT = bundle

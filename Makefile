@@ -251,9 +251,8 @@ $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BU
 
 # ruby wrapper
 RUBY_DIR = ruby
-RUBY_LIB = keyspace_client.bundle
+RUBY_LIB = keyspace_client.$(BUNDLEEXT)
 RUBY_INCLUDE = 
-RUBY_CONFIG = 
 
 RUBY_CLIENT_DIR = $(CLIENT_DIR)/Ruby
 RUBY_CLIENT_WRAPPER = $(RUBY_CLIENT_DIR)/keyspace_client_ruby
@@ -269,6 +268,27 @@ $(BIN_DIR)/$(RUBY_DIR)/$(RUBY_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(
 	-mkdir -p $(BIN_DIR)/$(RUBY_DIR)
 	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(RUBY_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
 	-cp -rf $(SRC_DIR)/$(RUBY_CLIENT_DIR)/keyspace.rb $(BIN_DIR)/$(RUBY_DIR)
+
+# perl wrapper
+PERL_DIR = perl
+PERL_LIB = keyspace_client.$(BUNDLEEXT)
+PERL_INCLUDE = -I/opt/local/lib/perl5/5.8.9/darwin-2level/CORE/ -I/usr/lib/perl/5.10/CORE/
+
+PERL_CLIENT_DIR = $(CLIENT_DIR)/Perl
+PERL_CLIENT_WRAPPER = $(PERL_CLIENT_DIR)/keyspace_client_perl
+PERLLIB = $(BIN_DIR)/$(PERL_DIR)/$(PERL_LIB)
+
+$(SRC_DIR)/$(PERL_CLIENT_WRAPPER).cpp: $(CLIENT_WRAPPER_FILES)
+	-swig -perl -c++  -outdir $(SRC_DIR)/$(PERL_CLIENT_DIR) -o $@ -I$(SRC_DIR)/$(PERL_CLIENT_DIR) $(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i
+
+$(BUILD_DIR)/$(PERL_CLIENT_WRAPPER).o: $(BUILD_DIR) $(SRC_DIR)/$(PERL_CLIENT_WRAPPER).cpp
+	$(CXX) $(CXXFLAGS) $(PERL_INCLUDE) -I$(SRC_DIR)/$(PERL_CLIENT_DIR) -o $@ -c $(SRC_DIR)/$(PERL_CLIENT_WRAPPER).cpp
+
+$(BIN_DIR)/$(PERL_DIR)/$(PERL_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BUILD_DIR)/$(PERL_CLIENT_WRAPPER).o
+	-mkdir -p $(BIN_DIR)/$(PERL_DIR)
+	$(CXX) $(SWIG_LDFLAGS) -o $@ $(BUILD_DIR)/$(PERL_CLIENT_WRAPPER).o $(SWIG_WRAPPER_OBJECT) $(BIN_DIR)/$(ALIB)
+	-cp -rf $(SRC_DIR)/$(PERL_CLIENT_DIR)/keyspace.pm $(BIN_DIR)/$(PERL_DIR)
+	-cp -rf $(SRC_DIR)/$(PERL_CLIENT_DIR)/keyspace_client.pm $(BIN_DIR)/$(PERL_DIR)
 
 # executables	
 $(BIN_DIR)/keyspaced: $(BUILD_DIR) $(LIBS) $(OBJECTS)
@@ -305,6 +325,8 @@ javalib: $(BUILD_DIR) $(CLIENTLIBS) $(JAVALIB)
 phplib: $(BUILD_DIR) $(CLIENTLIBS) $(PHPLIB)
 
 rubylib: $(BUILD_DIR) $(CLIENTLIBS) $(RUBYLIB)
+
+perllib: $(BUILD_DIR) $(CLIENTLIBS) $(PERLLIB)
 
 targets: $(BUILD_DIR) executables clientlibs
 
@@ -347,7 +369,7 @@ clean-release:
 	-rm -f $(BASE_DIR)/keyspace
 	-rm -r -f $(BUILD_RELEASE_DIR)
 	
-clean-libs: clean-pythonlib clean-phplib clean-javalib clean-rubylib
+clean-libs: clean-pythonlib clean-phplib clean-javalib clean-rubylib clean-perllib
 	-rm $(CLIENTLIBS)
 
 clean-pythonlib:
@@ -365,6 +387,10 @@ clean-rubylib:
 	-rm $(BUILD_DIR)/$(RUBY_CLIENT_DIR)/*
 	-rm $(BIN_DIR)/$(RUBY_DIR)/*
 
+clean-perllib:
+	-rm $(BUILD_DIR)/$(PERL_CLIENT_DIR)/*
+	-rm $(BIN_DIR)/$(PERL_DIR)/*
+
 clean-pythonlib-swig:
 	-rm $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
 	
@@ -377,7 +403,10 @@ clean-phplib-swig:
 clean-rubylib-swig:
 	-rm $(SRC_DIR)/$(RUBY_CLIENT_WRAPPER).cpp
 
-clean-swig: clean-pythonlib-swig clean-javalib-swig clean-phplib-swig clean-rubylib-swig
+clean-perllib-swig:
+	-rm $(SRC_DIR)/$(PERL_CLIENT_WRAPPER).cpp
+
+clean-swig: clean-pythonlib-swig clean-javalib-swig clean-phplib-swig clean-rubylib-swig clean-perllib-swig
 
 clean-executables:
 	-rm $(EXECUTABLES)
