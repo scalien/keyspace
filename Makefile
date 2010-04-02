@@ -252,7 +252,7 @@ $(BIN_DIR)/$(PHP_DIR)/$(PHP_LIB): $(BIN_DIR)/$(ALIB) $(SWIG_WRAPPER_OBJECT) $(BU
 # ruby wrapper
 RUBY_DIR = ruby
 RUBY_LIB = keyspace_client.$(BUNDLEEXT)
-RUBY_INCLUDE = 
+RUBY_INCLUDE = -I/System/Library/Frameworks/Ruby.framework/Versions/1.8/Headers/ -I/usr/include/ruby-1.9.0/ruby/ruby.h
 
 RUBY_CLIENT_DIR = $(CLIENT_DIR)/Ruby
 RUBY_CLIENT_WRAPPER = $(RUBY_CLIENT_DIR)/keyspace_client_ruby
