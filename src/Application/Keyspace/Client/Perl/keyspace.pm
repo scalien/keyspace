@@ -131,6 +131,43 @@ sub DESTROY {
 	keyspace_client::Keyspace_Destroy($self->{cptr});
 }
 
+sub set_global_timeout {
+	my $self = $_[0];
+	my $timeout = $_[1];
+	keyspace_client::Keyspace_SetGlobalTimeout($self->{cptr});
+}
+
+sub get_global_timeout {
+	my $self = $_[0];
+	return keyspace_client::Keyspace_GetGlobalTimeout($self->{cptr});
+}
+
+sub set_master_timeout {
+	my $self = $_[0];
+	keyspace_client::Keyspace_SetMasterTimeout($self->{cptr});
+}
+
+sub get_master_timeout {
+	my $self = $_[0];
+	return keyspace_client::Keyspace_GetMasterTimeout($self->{cptr});
+}
+
+sub get_master {
+	my $self = $_[0];
+	return keyspace_client::Keyspace_GetMaster($self->{cptr});
+}
+
+sub get_state {
+	my $self = $_[0];
+	return keyspace_client::Keyspace_GetState($self->{cptr});
+}
+
+sub distribute_diry {
+	my $self = $_[0];
+	my $dd = $_[1];
+	return keyspace_client::Keyspace_DistributeDirty($self->{cptr}, $dd);
+}
+
 sub get {
 	my $self = $_[0];
 	my $key = $_[1];
@@ -382,6 +419,21 @@ sub cancel {
 	return keyspace_client::Keyspace_Cancel($self->{cptr});
 }
 
+sub status_string {
+	my $status = $_[0];
+	if ($status == KEYSPACE_SUCCESS) { return "KEYSPACE_SUCCESS"; }
+	elsif ($status == KEYSPACE_API_ERROR) { return "KEYSPACE_API_ERROR"; }
+	elsif ($status == KEYSPACE_PARTIAL) { return "KEYSPACE_PARTIAL"; }
+	elsif ($status == KEYSPACE_FAILURE) { return "KEYSPACE_FAILURE"; }
+	elsif ($status == KEYSPACE_NOMASTER) { return "KEYSPACE_NOMASTER"; }
+	elsif ($status == KEYSPACE_NOCONNECTION) { return "KEYSPACE_NOCONNECTION"; }
+	elsif ($status == KEYSPACE_MASTER_TIMEOUT) { return "KEYSPACE_MASTER_TIMEOUT"; }
+	elsif ($status == KEYSPACE_GLOBAL_TIMEOUT) { return "KEYSPACE_GLOBAL_TIMEOUT"; } 
+	elsif ($status == KEYSPACE_NOSERVICE) { return "KEYSPACE_NOSERVICE"; }
+	elsif ($status == KEYSPACE_FAILED) { return "KEYSPACE_FAILED"; } 
+	else { return "<UNKNOWN>"; }
+}
+
 sub _list_args {
 	my $args = {@_};
 	my $prefix = $args->{prefix} || "";
@@ -391,5 +443,6 @@ sub _list_args {
 	my $forward = $args->{forward} || 1;
 	return ($prefix, $start_key, $count, $skip, $forward);
 }
+
 
 1;
