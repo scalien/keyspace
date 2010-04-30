@@ -13,7 +13,12 @@ database(database)
 	const char *dbname = NULL;
 	DBTYPE type = DB_BTREE;
 	u_int32_t flags = DB_CREATE | DB_AUTO_COMMIT |
-	DB_NOMMAP | DB_READ_UNCOMMITTED;
+	DB_NOMMAP 
+#ifdef DB_READ_UNCOMMITTED
+	| DB_READ_UNCOMMITTED
+#endif
+	;
+
 	int mode = 0;
 	
 	db = new Db(database->env, 0);
