@@ -197,7 +197,7 @@ Here is a sample configuration file for running a 3-way replicated cluster::
   mode = replicated
   
   paxos.nodeID = 0
-  # paxos.nodeID must 1 and 2 on the other nodes
+  # paxos.nodeID must be 1 and 2 on the other nodes
   
   paxos.endpoints = 192.168.1.50:10000, 192.168.1.51:10000, 192.168.1.52:10000
   # paxos.endpoints must be the same on the other nodes
