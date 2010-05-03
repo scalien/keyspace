@@ -13,9 +13,9 @@
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 
 #ifdef DEBUG
-#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s (DEBUG build date " __DATE__ " " __TIME__ ")"
+#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " (DEBUG build date " __DATE__ " " __TIME__ ")"
 #else
-#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING " r%.*s"
+#define VERSION_FMT_STRING "Keyspace v" VERSION_STRING 
 #endif
 
 int main(int argc, char* argv[])
@@ -78,8 +78,7 @@ int main(int argc, char* argv[])
 	Log_SetTrace(Config::GetBoolValue("log.trace", false));
 	Log_SetTimestamping(Config::GetBoolValue("log.timestamping", false));
 
-	Log_Message(VERSION_FMT_STRING " started",
-		VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+	Log_Message(VERSION_FMT_STRING " started");
 
 	run:
 	{

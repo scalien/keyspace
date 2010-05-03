@@ -763,13 +763,12 @@ bool HttpConn::PrintHello()
 	{
 		// TODO: print catching up, highest paxosID seen here
 		text.length = snprintf(text.buffer, text.size,
-			"Keyspace v" VERSION_STRING " r%.*s\n\n"
-			"Running in replicated mode with %d nodes\n\n" \
-			"I am node %d\n\n" \
-			"Master is node %d%s%s\n\n" \
-			"I am in replication round %" PRIu64 "\n\n" \
+			"Keyspace v" VERSION_STRING "\n\n"
+			"Running in replicated mode with %d nodes\n\n"
+			"I am node %d\n\n"
+			"Master is node %d%s%s\n\n"
+			"I am in replication round %" PRIu64 "\n\n"
 			"Last replication round was %d bytes, took %d msec, thruput was %d KB/sec\n",
-			(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
 			RLOG->GetNumNodes(),
 			RLOG->GetNodeID(),
 			kdb->GetMaster(),
@@ -783,9 +782,8 @@ bool HttpConn::PrintHello()
 	else
 	{
 		text.length = snprintf(text.buffer, text.size,
-			"Keyspace v" VERSION_STRING " r%.*s running\n\n" \
-			"Running in single mode",
-			(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER);
+			"Keyspace v" VERSION_STRING " running\n\n" \
+			"Running in single mode");
 	}
 	
 	Response(200, text.buffer, text.length);
