@@ -68,7 +68,8 @@ private:
 	KeyspaceMsg		msg;
 	KeyspaceMsg		tmp;
 	PaxosBuffer		pvalue;
-	ValBuffer		data;
+	ValBuffer		rdata;
+	ValBuffer		wdata;
 	CatchupServer	catchupServer;
 	CatchupReader	catchupClient;
 	

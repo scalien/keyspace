@@ -98,10 +98,10 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 			return false;
 				
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status = table->Get(NULL, op->key, data);
+		op->status = table->Get(NULL, op->key, rdata);
 		if (op->status)
 		{
-			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			ReadValue(rdata, storedPaxosID, storedCommandID, userValue);
 			op->value.Set(userValue);
 		}
 		op->service->OnComplete(op);
@@ -223,7 +223,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 				if ((op->type == KeyspaceOp::ADD ||
 					 op->type == KeyspaceOp::TEST_AND_SET ||
 					 op->type == KeyspaceOp::REMOVE) && ret)
-						op->value.Set(data);
+						op->value.Set(wdata);
 				op->status = ret;
 				it = ops.Next(it);
 			}
@@ -268,31 +268,31 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 	switch (msg.type)
 	{
 	case KEYSPACE_SET:
-		WriteValue(data, paxosID, commandID, msg.value);
-		ret &= table->Set(transaction, msg.key, data);
-		data.Set(msg.value);
+		WriteValue(wdata, paxosID, commandID, msg.value);
+		ret &= table->Set(transaction, msg.key, wdata);
+		wdata.Set(msg.value);
 		break;
 
 	case KEYSPACE_TEST_AND_SET:
-		ret &= table->Get(transaction, msg.key, data);
+		ret &= table->Get(transaction, msg.key, wdata);
 		if (!ret) break;
-		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		ReadValue(wdata, storedPaxosID, storedCommandID, userValue);
 		CHECK_CMD();
-		data.Set(userValue);
-		if (data == msg.test)
+		wdata.Set(userValue);
+		if (wdata == msg.test)
 		{
-			WriteValue(data, paxosID, commandID, msg.value);
-			ret &= table->Set(transaction, msg.key, data);
+			WriteValue(wdata, paxosID, commandID, msg.value);
+			ret &= table->Set(transaction, msg.key, wdata);
 			if (ret)
-				data.Set(msg.value);
+				wdata.Set(msg.value);
 		}
 		break;
 
 	case KEYSPACE_ADD:
 		// read number:
-		ret &= table->Get(transaction, msg.key, data);
+		ret &= table->Get(transaction, msg.key, wdata);
 		if (!ret) break;
-		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		ReadValue(wdata, storedPaxosID, storedCommandID, userValue);
 		CHECK_CMD();
 		// parse number:
 		num = strntoint64(userValue.buffer, userValue.length, &nread);
@@ -300,25 +300,25 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		{
 			num = num + msg.num;
 			// print number:
-			data.length = snwritef(data.buffer, data.size, "%U:%U:%I",
+			wdata.length = snwritef(wdata.buffer, wdata.size, "%U:%U:%I",
 								   paxosID, commandID, num);
 			// write number:
-			ret &= table->Set(transaction, msg.key, data);
+			ret &= table->Set(transaction, msg.key, wdata);
 			// data is returned to the user
-			data.length = snwritef(data.buffer, data.size, "%I", num);
+			wdata.length = snwritef(wdata.buffer, wdata.size, "%I", num);
 		}
 		else
 			ret = false;
 		break;
 		
 	case KEYSPACE_RENAME:
-		ret &= table->Get(transaction, msg.key, data);
+		ret &= table->Get(transaction, msg.key, wdata);
 		if (!ret) break;
-		ReadValue(data, storedPaxosID, storedCommandID, userValue);
+		ReadValue(wdata, storedPaxosID, storedCommandID, userValue);
 		CHECK_CMD();
 		tmp.Set(userValue);
-		WriteValue(data, paxosID, commandID, tmp);
-		ret &= table->Set(transaction, msg.newKey, data);
+		WriteValue(wdata, paxosID, commandID, tmp);
+		ret &= table->Set(transaction, msg.newKey, wdata);
 		if (!ret) break;
 		ret &= table->Delete(transaction, msg.key);
 		break;
@@ -332,7 +332,7 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		if (!ret) break;
 		ReadValue(tmp, storedPaxosID, storedCommandID, userValue);
 		CHECK_CMD();
-		data.Set(userValue);
+		wdata.Set(userValue);
 		ret &= table->Delete(transaction, msg.key);
 		break;
 
