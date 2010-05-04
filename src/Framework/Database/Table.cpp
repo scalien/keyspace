@@ -106,7 +106,10 @@ bool Table::Get(Transaction* tx,
 	dbtValue.set_ulen(value.size);
 	
 	ret = db->get(txn, &dbtKey, &dbtValue, 0);
-	if (ret == DB_KEYEMPTY || ret == DB_NOTFOUND)
+
+	// DB_PAGE_NOTFOUND can occur with parallel PRUNE and GET operations
+	// probably because we have DB_READ_UNCOMMITED turned on
+	if (ret == DB_KEYEMPTY || ret == DB_NOTFOUND || ret == DB_PAGE_NOTFOUND)
 		return false;
 	
 	if (dbtValue.get_size() > (size_t) value.size)
