@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>source/conf.py</string>
+	<string>source/python_api.rst</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -17,8 +17,6 @@
 			<date>2010-03-23T17:14:16Z</date>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>build</string>
 			<key>regexFolderFilter</key>
@@ -71,34 +69,6 @@
 				<integer>49</integer>
 			</dict>
 		</dict>
-		<key>build/html/c_api.html</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>build/html/index.html</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>33</integer>
-				<key>line</key>
-				<integer>7</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>source/about.rst</key>
 		<dict>
 			<key>caret</key>
@@ -132,7 +102,7 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>16</integer>
+				<integer>15</integer>
 				<key>line</key>
 				<integer>47</integer>
 			</dict>
@@ -140,20 +110,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>9</integer>
-		</dict>
-		<key>source/configuration.rst</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>30</integer>
-				<key>line</key>
-				<integer>30</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
 		</dict>
 		<key>source/http_api.rst</key>
 		<dict>
@@ -362,14 +318,11 @@
 		<string>source/c_api.rst</string>
 		<string>source/http_api.rst</string>
 		<string>source/python_api.rst</string>
-		<string>source/configuration.rst</string>
-		<string>build/html/c_api.html</string>
 		<string>source/running.rst</string>
 		<string>source/conf.py</string>
 		<string>source/index.rst</string>
 		<string>source/installation.rst</string>
 		<string>source/understanding.rst</string>
-		<string>build/html/index.html</string>
 		<string>source/keyspace/theme.conf</string>
 		<string>source/keyspace/layout.html</string>
 		<string>Makefile</string>
@@ -380,6 +333,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{1100, 600}, {1273, 578}}</string>
+	<string>{{518, 432}, {1273, 578}}</string>
 </dict>
 </plist>
