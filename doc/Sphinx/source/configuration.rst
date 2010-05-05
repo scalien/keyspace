@@ -5,6 +5,17 @@
 Configuration
 *************
 
+keyspace-config shell script
+============================
+
+They Keyspace distribution includes a shell script which will help you configure your first Keyspace cluster. To start it, type::
+
+  ./keyspace-config
+
+Note that the script requires Python to run.
+
+The rest of this chapter explains the options in the Keyspace configuration file.
+
 Required lines
 ==============
 
