@@ -42,7 +42,7 @@ def node_ascii(id, host, database_dir, keyspace_port, http_port, paxos_port):
 	rules.append(["EEEEE", http_port, string.rjust])
 	rules.append(["FFFFF", paxos_port, string.rjust])
 	rules.append(["GGGGG", str(int(paxos_port)+0), string.rjust])
-	rules.append(["HHHHH", str(int(paxos_port)+2), string.rjust])
+	rules.append(["HHHHH", str(int(paxos_port)+1), string.rjust])
 	rules.append(["IIIII", str(int(paxos_port)+2), string.rjust])
 	return replace(txt, rules)
 
