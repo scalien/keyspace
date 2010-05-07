@@ -9,6 +9,10 @@ If you are experiencing difficulties please visit our Google Groups page:
 
 The official Keyspace homepage is at http://scalien.com
 
+For complete API reference, see: 
+
+http://scalien.com/documentation
+
 
 Keyspace Client Application Programming Interface (API)
 =======================================================
@@ -94,53 +98,10 @@ For the list and count commands:
 - if <next> is x, the first x elements are skipped (<next> is optional)
 - if <forward> is not 'f', list backwards (<forward> is optional)
 
-Keyspace protocol
-=================
 
-The Keyspace client protocol is what the programmatic API uses.
+Other protocols
+===============
 
-This part is unfinished. If you'd like to write a client library
-for a new platform, please contact us and we'll push it to the
-top of our priority queue.
+There are client libraries in other langauges, for complete reference, see:
 
-
-Keyspace C API
-==============
-
-Building the C API from the Keyspace source tree:
-
-	$ make clientlib
-	
-This will create the client library (libkeyspaceclient.a and .so)
-in the 'bin' directory.
-
-In order to compile your program with the Keyspace C API, you have
-to add $KEYSPACE_SOURCE/Application/Keyspace/KeyspaceClient to the
-include directory and include keyspace_client.h from your program.
-
-For more information regarding the C API, see the file
-keyspace_client.h file, which includes plenty of documentation.
-
-For sample code, see Test/keyspace_client_test.c.
-
-
-Python API
-==========
-
-We're working on it. If you'd like to use Keyspace from Python,
-please contact us and we'll push it to the top of our priority queue.
-
-
-PHP API
-==========
-
-We're working on it. If you'd like to use Keyspace from PHP,
-please contact us and we'll push it to the top of our priority queue.
-
-
-Java API
-==========
-
-We're working on it. If you'd like to use Keyspace from Java,
-please contact us and we'll push it to the top of our priority queue.
-
+http://scalien.com/documentation
