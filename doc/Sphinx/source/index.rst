@@ -23,6 +23,7 @@ Contents:
    java_api.rst
    php_api.rst
    ruby_api.rst
+   perl_api.rst
 
 .. Indices and tables
    ==================

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>source/python_api.rst</string>
+	<string>source/configuration.rst</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -110,6 +110,20 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>9</integer>
+		</dict>
+		<key>source/configuration.rst</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>12</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>source/http_api.rst</key>
 		<dict>
@@ -272,9 +286,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>17</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>250</integer>
+				<integer>211</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -318,6 +332,7 @@
 		<string>source/c_api.rst</string>
 		<string>source/http_api.rst</string>
 		<string>source/python_api.rst</string>
+		<string>source/configuration.rst</string>
 		<string>source/running.rst</string>
 		<string>source/conf.py</string>
 		<string>source/index.rst</string>
@@ -333,6 +348,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{518, 432}, {1273, 578}}</string>
+	<string>{{494, 317}, {1306, 861}}</string>
 </dict>
 </plist>
