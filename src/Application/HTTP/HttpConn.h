@@ -25,6 +25,11 @@ public:
 
 	HttpServer*		GetServer() { return server; }
 
+	// TCPConn interface
+	virtual void	OnRead();
+	virtual void	OnClose();
+	virtual void	OnWrite();	
+
 protected:
 	Callable*		onCloseCallback;
 	HttpServer*		server;
@@ -32,11 +37,6 @@ protected:
 	Endpoint		endpoint;
 	bool			closeAfterSend;
 
-	// TCPConn interface
-	virtual void	OnRead();
-	virtual void	OnClose();
-	virtual void	OnWrite();
-	
 	int				Parse(char* buf, int len);
 	int				ProcessGetRequest();
 	const char*		Status(int code);	

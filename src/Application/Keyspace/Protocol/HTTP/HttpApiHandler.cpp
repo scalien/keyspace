@@ -104,6 +104,10 @@ bool HttpApiHandler::GetConfigVar(JSONSession* jsonSession, const UrlParam& para
 		text.Writef("%s: %s", p, Config::GetValue(p, ""));
 		jsonSession->PrintStatus(text.buffer);
 	}
+	else
+	{
+		jsonSession->PrintStatus("ERROR");
+	}
 	
 	return true;
 }
@@ -146,8 +150,7 @@ bool HttpApiHandler::Status(JSONSession* jsonSession, const UrlParam&)
 	ByteArray<128> text;
 	
 	text.length = snprintf(text.buffer, text.size,
-		"Keyspace v" VERSION_STRING " r%.*s (%s) running,Master: %d%s%s",
-		(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
+		"Keyspace v" VERSION_STRING " (%s) running,Master: %d%s%s",
 		PLATFORM_STRING,
 		kdb->GetMaster(),
 		kdb->IsMaster() ? " (me)" : "",

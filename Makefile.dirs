@@ -4,6 +4,7 @@ $(BUILD_DIR):
 		$(BUILD_DIR)/Application/ \
 		$(BUILD_DIR)/Application/Console/ \
 		$(BUILD_DIR)/Application/EchoServer/ \
+		$(BUILD_DIR)/Application/HTTP/ \
 		$(BUILD_DIR)/Application/HubSim/ \
 		$(BUILD_DIR)/Application/TestDB/ \
 		$(BUILD_DIR)/Application/Keyspace/ \

@@ -21,6 +21,8 @@ class HttpServer : public TCPServerT<HttpServer, HttpConn>
 {
 public:
 	void			Init(int port);
+	void			Shutdown();
+	
 	void			InitConn(HttpConn* conn);
 
 	void			RegisterHandler(HttpHandler* handler);

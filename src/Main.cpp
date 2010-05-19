@@ -9,7 +9,10 @@
 #include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Application/Keyspace/Database/SingleKeyspaceDB.h"
 #include "Application/Keyspace/Database/ReplicatedKeyspaceDB.h"
-#include "Application/Keyspace/Protocol/HTTP/HttpServer.h"
+#include "Application/HTTP/HttpServer.h"
+#include "Application/HTTP/HttpFileHandler.h"
+#include "Application/Keyspace/Protocol/HTTP/HttpApiHandler.h"
+#include "Application/Keyspace/Protocol/HTTP/HttpKeyspaceHandler.h"
 #include "Application/Keyspace/Protocol/Keyspace/KeyspaceServer.h"
 
 #ifdef DEBUG
@@ -131,7 +134,22 @@ int main(int argc, char* argv[])
 		kdb->Init();
 		
 		HttpServer protoHttp;
-		protoHttp.Init(kdb, Config::GetIntValue("http.port", 8080));
+		int httpPort = Config::GetIntValue("http.port", 8080);
+		if (httpPort)
+		{
+			protoHttp.Init(httpPort);
+		
+			HttpApiHandler httpApiHandler(kdb);
+			protoHttp.RegisterHandler(&httpApiHandler);
+
+			HttpKeyspaceHandler httpKeyspaceHandler(kdb);
+			protoHttp.RegisterHandler(&httpKeyspaceHandler);
+
+			HttpFileHandler httpFileHandler(
+								Config::GetValue("http.documentRoot", "admin"),
+								Config::GetValue("http.prefix", "/"));
+			protoHttp.RegisterHandler(&httpFileHandler);	
+		}
 
 		KeyspaceServer protoKeyspace;
 		protoKeyspace.Init(kdb, Config::GetIntValue("keyspace.port", 7080));

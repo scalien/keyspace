@@ -1,5 +1,13 @@
 ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Console/Console.o \
+	$(BUILD_DIR)/Application/HTTP/HttpConn.o \
+	$(BUILD_DIR)/Application/HTTP/HttpFileHandler.o \
+	$(BUILD_DIR)/Application/HTTP/HttpRequest.o \
+	$(BUILD_DIR)/Application/HTTP/HttpServer.o \
+	$(BUILD_DIR)/Application/HTTP/IMF.o \
+	$(BUILD_DIR)/Application/HTTP/JSONSession.o \
+	$(BUILD_DIR)/Application/HTTP/Mime.o \
+	$(BUILD_DIR)/Application/HTTP/UrlParam.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupMsg.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupReader.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupServer.o \
@@ -8,10 +16,9 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Database/SingleKeyspaceDB.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/ReplicatedKeyspaceDB.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/KeyspaceMsg.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpConn.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpRequest.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpServer.o \
-	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/IMF.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpApiHandler.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpKeyspaceHandler.o \
+	$(BUILD_DIR)/Application/Keyspace/Protocol/HTTP/HttpKeyspaceSession.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceClientReq.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceClientResp.o \
 	$(BUILD_DIR)/Application/Keyspace/Protocol/Keyspace/KeyspaceServer.o \

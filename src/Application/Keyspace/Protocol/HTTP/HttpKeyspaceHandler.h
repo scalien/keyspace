@@ -1,7 +1,7 @@
 #ifndef KEYSPACE_HTTP_HANDLER_H
 #define KEYSPACE_HTTP_HANDLER_H
 
-#include "HttpServer.h"
+#include "Application/HTTP/HttpServer.h"
 
 class HttpConn;
 

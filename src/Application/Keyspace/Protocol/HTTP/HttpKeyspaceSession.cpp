@@ -370,8 +370,7 @@ bool HttpKeyspaceSession::PrintHello()
 {
 	ByteArray<128> text;
 	text.length = snprintf(text.buffer, text.size,
-		"Keyspace v" VERSION_STRING " r%.*s running\n\nMaster: %d%s%s",
-		(int)VERSION_REVISION_LENGTH, VERSION_REVISION_NUMBER,
+		"Keyspace v" VERSION_STRING " running\n\nMaster: %d%s%s",
 		kdb->GetMaster(),
 		kdb->IsMaster() ? " (me)" : "",
 		kdb->IsMasterKnown() ? "" : " (unknown)");

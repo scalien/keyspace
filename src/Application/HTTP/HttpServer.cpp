@@ -10,6 +10,11 @@ void HttpServer::Init(int port)
 	handlers = NULL;
 }
 
+void HttpServer::Shutdown()
+{
+	Close();
+}
+
 void HttpServer::InitConn(HttpConn* conn)
 {
 	conn->Init(this);
