@@ -89,7 +89,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	{
 		WriteValue(data, 1, 0, op->value);
 		op->status &= table->Set(&transaction, op->key, data);
-		ops.Append(op);
+		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 	{
@@ -105,7 +105,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 			else
 				op->value.Set(userValue);
 		}
-		ops.Append(op);
+		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::ADD)
 	{
@@ -131,7 +131,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 			else
 				op->status = false;
 		}
-		ops.Append(op);
+		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::RENAME)
 	{
@@ -143,12 +143,12 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 			if (op->status)
 				op->status &= table->Delete(&transaction, op->key);
 		}
-		ops.Append(op);
+		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::DELETE)
 	{
 		op->status &= table->Delete(&transaction, op->key);
-		ops.Append(op);
+		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::REMOVE)
 	{
@@ -160,13 +160,13 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 			op->value.Set(userValue);
 			op->status &= table->Delete(&transaction, op->key);
 		}
-		ops.Append(op);
+		op->service->OnComplete(op);
 	}
 
 	else if (op->type == KeyspaceOp::PRUNE)
 	{
 		op->status &= table->Prune(&transaction, op->prefix);
-		ops.Append(op);
+		op->service->OnComplete(op);
 	}
 	else
 		ASSERT_FAIL();
@@ -178,21 +178,8 @@ bool SingleKeyspaceDB::Submit()
 {
 	Log_Trace();
 
-	int i, numOps;
-	KeyspaceOp* op;
-	KeyspaceOp** it;
-	
 	if (transaction.IsActive())
 		transaction.Commit();
-
-	numOps = ops.Length();
-	for (i = 0; i < numOps; i++)
-	{
-		it = ops.Head();
-		op = *it;
-		ops.Remove(op);
-		op->service->OnComplete(op);
-	}
 		
 	return true;
 }

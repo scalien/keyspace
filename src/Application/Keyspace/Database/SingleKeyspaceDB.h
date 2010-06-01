@@ -27,7 +27,6 @@ private:
 	Buffer				data;
 	Table*				table;
 	Transaction			transaction;
-	List<KeyspaceOp*>	ops;
 };
 
 #endif
