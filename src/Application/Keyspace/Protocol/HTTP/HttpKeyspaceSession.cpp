@@ -38,18 +38,23 @@ void HttpKeyspaceSession::Init(HttpConn* conn_)
 
 bool HttpKeyspaceSession::HandleRequest(const HttpRequest& request)
 {
+// FIXME this is a hack
 #define IF_PREFIX(prefix, func) \
 if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 { \
 	pars += strlen(prefix); \
-	params.Init(pars, '&'); \
+	if (*pars == '?') { \
+		pars++; \
+		params.Init(pars, '&'); \
+	} \
+	op = new KeyspaceOp; \
+	op->service = this; \
 	ret = func; \
 }
 
+	// these variables are initialized in IF_PREFIX macro
 	UrlParam	params;
-	KeyspaceOp* op;
-	op = new KeyspaceOp;
-	op->service = this;
+	KeyspaceOp* op = NULL;
 	
 	// note that these variables are used in IF_PREFIX macro
 	char* pars = (char*) request.line.uri;
@@ -73,21 +78,21 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 	
 	// parse the command part of the request uri
 	IF_PREFIX("/getmaster",				ProcessGetMaster()) else
-	IF_PREFIX("/get?",					ProcessGet(params, op, false)) else
-	IF_PREFIX("/dirtyget?",				ProcessGet(params, op, true)) else
-	IF_PREFIX("/set?",					ProcessSet(params, op)) else
-	IF_PREFIX("/testandset?",			ProcessTestAndSet(params, op)) else
-	IF_PREFIX("/add?",					ProcessAdd(params, op)) else
-	IF_PREFIX("/rename?",				ProcessRename(params, op)) else
-	IF_PREFIX("/delete?",				ProcessDelete(params, op)) else
-	IF_PREFIX("/remove?",				ProcessRemove(params, op)) else
-	IF_PREFIX("/prune?",				ProcessPrune(params, op)) else
-	IF_PREFIX("/listkeys?",				ProcessList(params, op, false, false)) else
-	IF_PREFIX("/dirtylistkeys?",		ProcessList(params, op, false, true)) else
-	IF_PREFIX("/listkeyvalues?",		ProcessList(params, op, true, false)) else
-	IF_PREFIX("/dirtylistkeyvalues?",	ProcessList(params, op, true, true)) else
-	IF_PREFIX("/count?",				ProcessCount(params, op, false)) else
-	IF_PREFIX("/dirtycount?",			ProcessCount(params, op, true)) else
+	IF_PREFIX("/get",					ProcessGet(params, op, false)) else
+	IF_PREFIX("/dirtyget",				ProcessGet(params, op, true)) else
+	IF_PREFIX("/set",					ProcessSet(params, op)) else
+	IF_PREFIX("/testandset",			ProcessTestAndSet(params, op)) else
+	IF_PREFIX("/add",					ProcessAdd(params, op)) else
+	IF_PREFIX("/rename",				ProcessRename(params, op)) else
+	IF_PREFIX("/delete",				ProcessDelete(params, op)) else
+	IF_PREFIX("/remove",				ProcessRemove(params, op)) else
+	IF_PREFIX("/prune",					ProcessPrune(params, op)) else
+	IF_PREFIX("/listkeys",				ProcessList(params, op, false, false)) else
+	IF_PREFIX("/dirtylistkeys",			ProcessList(params, op, false, true)) else
+	IF_PREFIX("/listkeyvalues",			ProcessList(params, op, true, false)) else
+	IF_PREFIX("/dirtylistkeyvalues",	ProcessList(params, op, true, true)) else
+	IF_PREFIX("/count",					ProcessCount(params, op, false)) else
+	IF_PREFIX("/dirtycount",			ProcessCount(params, op, true)) else
 	if (ret &&
 		(request.line.uri[0] == 0 ||
 		(request.line.uri[0] == '/' && request.line.uri[1] == 0)))
@@ -96,7 +101,10 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 		ret = true;
 	}
 	else
-		return false; // did not found prefix
+	{
+		ResponseNotFound();
+		ret = false;
+	}
 
 	// here we take control of the destruction of HttpConn
 	conn->SetOnClose(&onCloseConn);
@@ -115,8 +123,7 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 		delete op;
 		return true;
 	}
-	
-	
+		
 	return true;
 }
 
