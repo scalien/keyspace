@@ -4,6 +4,7 @@
 #include "Application/HTTP/HttpConsts.h"
 #include "Application/HTTP/UrlParam.h"
 #include "Framework/Database/Database.h"
+#include "Framework/ReplicatedLog/ReplicatedLog.h"
 #include "Version.h"
 
 #define CS_CR				"\015"
@@ -375,12 +376,34 @@ bool HttpKeyspaceSession::ProcessPrune(const UrlParam& params, KeyspaceOp* op)
 
 bool HttpKeyspaceSession::PrintHello()
 {
-	ByteArray<128> text;
-	text.length = snprintf(text.buffer, text.size,
-		"Keyspace v" VERSION_STRING " running\n\nMaster: %d%s%s",
-		kdb->GetMaster(),
-		kdb->IsMaster() ? " (me)" : "",
-		kdb->IsMasterKnown() ? "" : " (unknown)");
+	ByteArray<10*KB> text;
+
+	if (kdb->IsReplicated())
+	{
+		// TODO: print catching up, highest paxosID seen here
+		text.length = snprintf(text.buffer, text.size,
+			"Keyspace v" VERSION_STRING "\n\n"
+			"Running in replicated mode with %d nodes\n\n"
+			"I am node %d\n\n"
+			"Master is node %d%s%s\n\n"
+			"I am in replication round %" PRIu64 "\n\n"
+			"Last replication round was %d bytes, took %d msec, thruput was %d KB/sec\n",
+			RLOG->GetNumNodes(),
+			RLOG->GetNodeID(),
+			kdb->GetMaster(),
+			kdb->IsMaster() ? " (me)" : "",
+			kdb->IsMasterKnown() ? "" : " (unknown)",
+			RLOG->GetPaxosID(),
+			(int)RLOG->GetLastRound_Length(),
+			(int)RLOG->GetLastRound_Time(),
+			(int)RLOG->GetLastRound_Thruput()/1000 + 1);
+	}
+	else
+	{
+		text.length = snprintf(text.buffer, text.size,
+			"Keyspace v" VERSION_STRING " running\n\n" \
+			"Running in single mode");
+	}
 
 	conn->Response(HTTP_STATUS_CODE_OK, text.buffer, text.length);
 	return true;
