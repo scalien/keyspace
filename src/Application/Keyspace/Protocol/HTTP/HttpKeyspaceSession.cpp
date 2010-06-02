@@ -109,13 +109,13 @@ if (ret && strncmp(pars, prefix, strlen(prefix)) == 0) \
 	// here we take control of the destruction of HttpConn
 	conn->SetOnClose(&onCloseConn);
 	
-	if (ret && !Add(op))
+	if (ret && op && !Add(op))
 	{
 		ResponseFail();
 		ret = true;
 	}
 
-	if (ret && op->IsWrite())
+	if (ret && op && op->IsWrite())
 		ret = kdb->Submit();
 	
 	if (!ret)
