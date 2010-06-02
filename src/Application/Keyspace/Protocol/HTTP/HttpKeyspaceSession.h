@@ -37,28 +37,32 @@ private:
 					const char* name, int namelen,
 					ByteString& arg);
 	
-	bool			ProcessGetMaster();
-	bool			ProcessGet(const UrlParam& params,
-					KeyspaceOp* op, bool dirty);
-	bool			ProcessList(const UrlParam& params,
-					KeyspaceOp* op, bool p, bool dirty);
-	bool			ProcessCount(const UrlParam& params,
-					KeyspaceOp* op, bool dirty);
-	bool			ProcessSet(const UrlParam& params, KeyspaceOp* op);
-	bool			ProcessTestAndSet(const UrlParam& params, KeyspaceOp* op);
-	bool			ProcessAdd(const UrlParam& params, KeyspaceOp* op);
-	bool			ProcessRename(const UrlParam& params, KeyspaceOp* op);
-	bool			ProcessDelete(const UrlParam& params, KeyspaceOp* op);
-	bool			ProcessRemove(const UrlParam& params, KeyspaceOp* op);
-	bool			ProcessPrune(const UrlParam& params, KeyspaceOp* op);
+	void			PrintHello();
+	void			ProcessGetMaster();
+	bool			ProcessCommand(const char* cmd, unsigned cmdlen, 
+					const UrlParam& params);
+	KeyspaceOp*		ProcessDBCommand(const char* cmd, unsigned cmdlen, 
+					const UrlParam& params);
+	KeyspaceOp*		ProcessGet(const UrlParam& params, bool dirty);
+	KeyspaceOp*		ProcessList(const UrlParam& params, bool pair, bool dirty);
+	KeyspaceOp*		ProcessCount(const UrlParam& params, bool dirty);
+	KeyspaceOp*		ProcessSet(const UrlParam& params);
+	KeyspaceOp*		ProcessTestAndSet(const UrlParam& params);
+	KeyspaceOp*		ProcessAdd(const UrlParam& params);
+	KeyspaceOp*		ProcessRename(const UrlParam& params);
+	KeyspaceOp*		ProcessDelete(const UrlParam& params);
+	KeyspaceOp* 	ProcessRemove(const UrlParam& params);
+	KeyspaceOp*		ProcessPrune(const UrlParam& params);
 
-	bool			PrintHello();
 	void			PrintStyle();
 	void			PrintJSONString(const char* s, unsigned len);
 	void			PrintJSONStatus(const char* status, const char* type = NULL);
 	void			ResponseFail();
 	void			ResponseNotFound();
 	
+	char*			ParseType(char* pos);
+	bool			MatchString(const char* s1, unsigned len1, 
+					const char* s2, unsigned len2);
 	
 	Func			onCloseConn;
 	HttpConn*		conn;
