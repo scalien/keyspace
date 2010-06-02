@@ -56,7 +56,7 @@ void KeyspaceServer::OnThruputTimeout()
 //	EventLoop::Reset(&thruputTimeout);
 }
 
-void KeyspaceServer::OnDataRead(KeyspaceConn* conn, unsigned bytes)
+void KeyspaceServer::OnDataRead(KeyspaceConn* /*conn*/, unsigned /*bytes*/)
 {
 //	uint64_t t;
 //

@@ -112,7 +112,7 @@ bool HttpApiHandler::GetConfigVar(JSONSession* jsonSession, const UrlParam& para
 	return true;
 }
 
-bool HttpApiHandler::LogTrace(JSONSession* jsonSession, const UrlParam& param)
+bool HttpApiHandler::LogTrace(JSONSession* jsonSession, const UrlParam& /*param*/)
 {
 	DynArray<128>	text;
 

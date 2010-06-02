@@ -134,21 +134,13 @@ int main(int argc, char* argv[])
 		kdb->Init();
 		
 		HttpServer protoHttp;
+		HttpKeyspaceHandler httpKeyspaceHandler(kdb);
+		
 		int httpPort = Config::GetIntValue("http.port", 8080);
 		if (httpPort)
 		{
 			protoHttp.Init(httpPort);
-		
-			HttpApiHandler httpApiHandler(kdb);
-			protoHttp.RegisterHandler(&httpApiHandler);
-
-			HttpKeyspaceHandler httpKeyspaceHandler(kdb);
 			protoHttp.RegisterHandler(&httpKeyspaceHandler);
-
-			HttpFileHandler httpFileHandler(
-								Config::GetValue("http.documentRoot", "admin"),
-								Config::GetValue("http.prefix", "/"));
-			protoHttp.RegisterHandler(&httpFileHandler);	
 		}
 
 		KeyspaceServer protoKeyspace;

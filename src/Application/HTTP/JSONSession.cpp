@@ -65,7 +65,7 @@ void JSONSession::PrintNull()
 	conn->Write("null", 4, false);
 }
 
-void JSONSession::PrintObjectStart(const char* name, unsigned len)
+void JSONSession::PrintObjectStart(const char* /*name*/, unsigned /*len*/)
 {
 	// TODO
 }
