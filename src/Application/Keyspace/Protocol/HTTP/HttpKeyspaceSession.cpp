@@ -294,6 +294,7 @@ bool p, bool dirty)
 KeyspaceOp* HttpKeyspaceSession::ProcessCount(const UrlParam& params, bool dirty)
 {
 	ByteString prefix, start, count, offset, direction;
+	ByteString startPostfix;
 	unsigned nread;
 	KeyspaceOp* op;
 	
@@ -306,6 +307,9 @@ KeyspaceOp* HttpKeyspaceSession::ProcessCount(const UrlParam& params, bool dirty
 	VALIDATE_KEYLEN(prefix);
 	VALIDATE_KEYLEN(start);
 	
+	if (start.length < prefix.length)
+		return false;
+
 	op = new KeyspaceOp;
 	
 	if (!dirty)
@@ -314,6 +318,7 @@ KeyspaceOp* HttpKeyspaceSession::ProcessCount(const UrlParam& params, bool dirty
 		op->type = KeyspaceOp::DIRTY_COUNT;
 	
 	op->prefix.Set(prefix);
+	start.Advance(prefix.length);
 	op->key.Set(start);
 	op->count = strntoint64(count.buffer, count.length, &nread);
 	if (direction.length != 1)
