@@ -235,18 +235,22 @@ KeyspaceOp* HttpKeyspaceSession::ProcessGet(const UrlParam& params, bool dirty)
 KeyspaceOp* HttpKeyspaceSession::ProcessList(const UrlParam& params,
 bool p, bool dirty)
 {
-	ByteString prefix, key, count, offset, direction;
+	ByteString prefix, start, count, offset, direction;
+	ByteString startPostfix;
 	unsigned nread;
 	KeyspaceOp* op;
 
 	GET_NAMED_OPT_PARAM(params, "prefix", prefix);
-	GET_NAMED_OPT_PARAM(params, "key", key);
+	GET_NAMED_OPT_PARAM(params, "start", start);
 	GET_NAMED_OPT_PARAM(params, "count", count);
 	GET_NAMED_OPT_PARAM(params, "offset", offset);
 	GET_NAMED_OPT_PARAM(params, "direction", direction);
 	
 	VALIDATE_KEYLEN(prefix);
-	VALIDATE_KEYLEN(key);
+	VALIDATE_KEYLEN(start);
+
+	if (start.length < prefix.length)
+		return false;
 
 	op = new KeyspaceOp;
 	if (!p)
@@ -266,7 +270,8 @@ bool p, bool dirty)
 	
 	
 	op->prefix.Set(prefix);
-	op->key.Set(key);
+	start.Advance(prefix.length);
+	op->key.Set(start);
 	op->count = strntoint64(count.buffer, count.length, &nread);
 	if (direction.length != 1)
 		op->forward = true;
@@ -288,18 +293,18 @@ bool p, bool dirty)
 
 KeyspaceOp* HttpKeyspaceSession::ProcessCount(const UrlParam& params, bool dirty)
 {
-	ByteString prefix, key, count, offset, direction;
+	ByteString prefix, start, count, offset, direction;
 	unsigned nread;
 	KeyspaceOp* op;
 	
 	GET_NAMED_OPT_PARAM(params, "prefix", prefix);
-	GET_NAMED_OPT_PARAM(params, "key", key);
+	GET_NAMED_OPT_PARAM(params, "start", start);
 	GET_NAMED_OPT_PARAM(params, "count", count);
 	GET_NAMED_OPT_PARAM(params, "offset", offset);
 	GET_NAMED_OPT_PARAM(params, "direction", direction);
 	
 	VALIDATE_KEYLEN(prefix);
-	VALIDATE_KEYLEN(key);
+	VALIDATE_KEYLEN(start);
 	
 	op = new KeyspaceOp;
 	
@@ -309,7 +314,7 @@ KeyspaceOp* HttpKeyspaceSession::ProcessCount(const UrlParam& params, bool dirty
 		op->type = KeyspaceOp::DIRTY_COUNT;
 	
 	op->prefix.Set(prefix);
-	op->key.Set(key);
+	op->key.Set(start);
 	op->count = strntoint64(count.buffer, count.length, &nread);
 	if (direction.length != 1)
 		op->forward = true;
@@ -399,8 +404,8 @@ KeyspaceOp* HttpKeyspaceSession::ProcessRename(const UrlParam& params)
 	ByteString key, newKey;
 	KeyspaceOp* op;
 	
-	GET_NAMED_PARAM(params, "key", key);
-	GET_NAMED_PARAM(params, "newkey", newKey);
+	GET_NAMED_PARAM(params, "from", key);
+	GET_NAMED_PARAM(params, "to", newKey);
 	
 	VALIDATE_KEYLEN(key);
 	VALIDATE_KEYLEN(newKey);
@@ -579,9 +584,9 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 				else
 					conn->Print("<div class='odd'>");
 				if (op->type == KeyspaceOp::LIST)
-					conn->Print("<a href='/html/get?");
+					conn->Print("<a href='/html/get?key=");
 				else
-					conn->Print("<a href='/html/dirtyget?");
+					conn->Print("<a href='/html/dirtyget?key=");
 				conn->Write(op->key.buffer, op->key.length, false);
 				conn->Print("'>");
 				conn->Write(op->key.buffer, op->key.length, false);
@@ -649,9 +654,9 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 				else
 					conn->Print("<div class='odd'>");
 				if (op->type == KeyspaceOp::LIST)
-					conn->Print("<a href='/html/get?");
+					conn->Print("<a href='/html/get?key=");
 				else
-					conn->Print("<a href='/html/dirtyget?");
+					conn->Print("<a href='/html/dirtyget?key=");
 				conn->Write(op->key.buffer, op->key.length, false);
 				conn->Print("'>");
 				conn->Write(op->key.buffer, op->key.length, false);
