@@ -250,7 +250,7 @@ bool p, bool dirty)
 	VALIDATE_KEYLEN(start);
 
 	if (start.length < prefix.length)
-		return false;
+		return NULL;
 
 	op = new KeyspaceOp;
 	if (!p)
@@ -308,7 +308,7 @@ KeyspaceOp* HttpKeyspaceSession::ProcessCount(const UrlParam& params, bool dirty
 	VALIDATE_KEYLEN(start);
 	
 	if (start.length < prefix.length)
-		return false;
+		return NULL;
 
 	op = new KeyspaceOp;
 	
