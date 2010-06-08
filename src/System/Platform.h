@@ -44,7 +44,7 @@ typedef unsigned __int64	uint64_t;
 #endif
 
 // PLATFORM_STRING selection
-#ifdef PLATFORM_WINDOW
+#ifdef PLATFORM_WINDOWS
 
 #ifdef _WIN64
 #define PLATFORM_STRING		"Windows 64bit"
