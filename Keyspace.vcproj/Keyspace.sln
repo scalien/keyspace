@@ -7,6 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyspaceClientTest", "Keysp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyspaceClientLib", "KeyspaceClientLib.vcproj", "{B1077A72-AA0E-49DA-861A-A337FF61AB90}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyspaceClientCSharpDLL", "KeyspaceClientCSharpDLL.vcproj", "{A4D4012D-0DC1-4BA6-8A1B-E0732D989EF0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B1077A72-AA0E-49DA-861A-A337FF61AB90} = {B1077A72-AA0E-49DA-861A-A337FF61AB90}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +30,10 @@ Global
 		{B1077A72-AA0E-49DA-861A-A337FF61AB90}.Debug|Win32.Build.0 = Debug|Win32
 		{B1077A72-AA0E-49DA-861A-A337FF61AB90}.Release|Win32.ActiveCfg = Release|Win32
 		{B1077A72-AA0E-49DA-861A-A337FF61AB90}.Release|Win32.Build.0 = Release|Win32
+		{A4D4012D-0DC1-4BA6-8A1B-E0732D989EF0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A4D4012D-0DC1-4BA6-8A1B-E0732D989EF0}.Debug|Win32.Build.0 = Debug|Win32
+		{A4D4012D-0DC1-4BA6-8A1B-E0732D989EF0}.Release|Win32.ActiveCfg = Release|Win32
+		{A4D4012D-0DC1-4BA6-8A1B-E0732D989EF0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

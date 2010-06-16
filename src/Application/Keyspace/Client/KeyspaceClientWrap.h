@@ -23,10 +23,10 @@ struct Keyspace_NodeParams
 	int				num;
 };
 
-void		Keyspace_ResultBegin(ResultObj result);
-void		Keyspace_ResultNext(ResultObj result);
-bool		Keyspace_ResultIsEnd(ResultObj result);
-void		Keyspace_ResultClose(ResultObj result);
+void			Keyspace_ResultBegin(ResultObj result);
+void			Keyspace_ResultNext(ResultObj result);
+bool			Keyspace_ResultIsEnd(ResultObj result);
+void			Keyspace_ResultClose(ResultObj result);
 std::string	Keyspace_ResultKey(ResultObj result);
 std::string	Keyspace_ResultValue(ResultObj result);
 int			Keyspace_ResultTransportStatus(ResultObj result);
@@ -34,15 +34,15 @@ int			Keyspace_ResultConnectivityStatus(ResultObj result);
 int			Keyspace_ResultTimeoutStatus(ResultObj result);
 int			Keyspace_ResultCommandStatus(ResultObj result);
 
-ClientObj	Keyspace_Create();
+ClientObj		Keyspace_Create();
 int			Keyspace_Init(ClientObj client, const Keyspace_NodeParams &params);
-void		Keyspace_Destroy(ClientObj client);
-ResultObj	Keyspace_GetResult(ClientObj);
+void			Keyspace_Destroy(ClientObj client);
+ResultObj		Keyspace_GetResult(ClientObj);
 
-void		Keyspace_SetGlobalTimeout(ClientObj client, uint64_t timeout);
-void		Keyspace_SetMasterTimeout(ClientObj client, uint64_t timeout);
-uint64_t	Keyspace_GetGlobalTimeout(ClientObj client);
-uint64_t	Keyspace_GetMasterTimeout(ClientObj client);
+void			Keyspace_SetGlobalTimeout(ClientObj client, uint64_t timeout);
+void			Keyspace_SetMasterTimeout(ClientObj client, uint64_t timeout);
+uint64_t		Keyspace_GetGlobalTimeout(ClientObj client);
+uint64_t		Keyspace_GetMasterTimeout(ClientObj client);
 
 // connection state related commands
 int			Keyspace_GetMaster(ClientObj client);

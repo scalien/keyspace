@@ -287,35 +287,27 @@
 							Name="HTTP"
 							>
 							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpConn.cpp"
+								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpApiHandler.cpp"
 								>
 							</File>
 							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpConn.h"
+								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpApiHandler.h"
 								>
 							</File>
 							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpRequest.cpp"
+								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpKeyspaceHandler.cpp"
 								>
 							</File>
 							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpRequest.h"
+								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpKeyspaceHandler.h"
 								>
 							</File>
 							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpServer.cpp"
+								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpKeyspaceSession.cpp"
 								>
 							</File>
 							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpServer.h"
-								>
-							</File>
-							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\IMF.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\IMF.h"
+								RelativePath="..\src\Application\Keyspace\Protocol\HTTP\HttpKeyspaceSession.h"
 								>
 							</File>
 						</Filter>
@@ -356,6 +348,78 @@
 							</File>
 						</Filter>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="HTTP"
+					>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpConn.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpConn.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpConsts.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpFileHandler.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpFileHandler.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpRequest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpRequest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpServer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\HttpServer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\IMF.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\IMF.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\JSONSession.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\JSONSession.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\Mime.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\Mime.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\UrlParam.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\Application\HTTP\UrlParam.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
