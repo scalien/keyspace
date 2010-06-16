@@ -6,9 +6,8 @@ namespace Keyspace
 {
     public class Exception : ApplicationException
     {
-        public Exception(string msg)
+        public Exception(string msg) : base(msg)
         {
-            //base(msg);   
         }
     }
 
