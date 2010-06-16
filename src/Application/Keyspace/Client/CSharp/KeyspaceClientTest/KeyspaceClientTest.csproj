@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{51A04E37-82BF-4B02-8683-F27569312A79}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -36,7 +36,7 @@
   <ItemGroup>
     <Reference Include="KeyspaceClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\KeyspaceClient\bin\Debug\KeyspaceClient.dll</HintPath>
+      <HintPath>..\KeyspaceClient\bin\Release\KeyspaceClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
