@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\bin\csharp"
 			IntermediateDirectory="$(SolutionDir)\Build\$(ProjectName)\$(Configuration"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\bin\keyspace_clientd.lib  ws2_32.lib mswsock.lib"
-				OutputFile="$(OutDir)\keyspace_client.dll"
+				OutputFile="$(OutDir)\keyspace_client_debug.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -92,7 +92,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\bin\csharp"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
