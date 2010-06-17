@@ -194,14 +194,14 @@ The only Keyspace single read command is ``get_simple``.
 The ``get_simple`` command retrieves a single value from the Keyspace cluster. Unlike all other operations, it only works if the returned value is NULL-terminated or its length is otherwise known. The last parameter specifies whether the command is dirty (``0`` for safe, ``1`` for dirty)::
 
   char buf[1024];
-  int status = keyspace_client_get_simple(client, "key", strlen("key"),
+  int vallen = keyspace_client_get_simple(client, "key", strlen("key"),
                                           buf, 1024, 0); // safe
-  if (status != KEYSPACE_SUCCESS)
+  if (vallen < 0)
   {
     fprintf(stderr, "get_simple failed");
     ...
   }
-  // buf now holds the value
+  // buf now holds the value of length vallen
 
 Issuing list commands
 =====================
