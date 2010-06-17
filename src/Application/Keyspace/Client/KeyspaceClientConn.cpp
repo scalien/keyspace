@@ -14,7 +14,6 @@
 using namespace Keyspace;
 
 ClientConn::ClientConn(Client &client, int nodeID_, const Endpoint &endpoint_) :
-
 client(client),
 endpoint(endpoint_),
 onGetMasterTimeout(this, &ClientConn::OnGetMaster),
@@ -24,6 +23,11 @@ getMasterTimeout(&onGetMasterTimeout)
 	getMasterTime = 0;
 	getMasterTimeout.SetDelay(GETMASTER_TIMEOUT);
 	Connect();
+}
+
+ClientConn::~ClientConn()
+{
+	EventLoop::Remove(&getMasterTimeout);
 }
 
 void ClientConn::Connect()

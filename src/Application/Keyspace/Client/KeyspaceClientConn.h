@@ -22,6 +22,7 @@ typedef MFunc<ClientConn> Func;
 
 public:
 	ClientConn(Client &client, int nodeID, const Endpoint &endpoint_);
+	~ClientConn();
 
 	void			Connect();
 	void			Send(Command &cmd);

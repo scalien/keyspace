@@ -376,6 +376,8 @@ int keyspace_client_basic_test()
 		keyspace_result_next(kr);
 	}
 	
+	keyspace_client_destroy(kc);
+	
 	return TEST_SUCCESS;
 }
 
