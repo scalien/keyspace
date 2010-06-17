@@ -117,6 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\src;..\src\Application\Keyspace\Client\CSharp"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;KEYSPACECLIENTSWIGDLL_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -135,6 +136,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\bin\keyspace_client.lib  ws2_32.lib mswsock.lib"
+				OutputFile="$(OutDir)\keyspace_client.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
