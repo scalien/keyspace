@@ -73,6 +73,7 @@ void Keyspace_ResultClose(ResultObj result_)
 	
 	if (result)
 		result->Close();
+	delete result;
 }
 
 std::string Keyspace_ResultKey(ResultObj result_)
