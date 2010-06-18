@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>source/configuration.rst</string>
+	<string>source/c_api.rst</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -88,14 +88,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>32</integer>
+				<integer>45</integer>
 				<key>line</key>
-				<integer>451</integer>
+				<integer>203</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>464</integer>
+			<integer>172</integer>
 		</dict>
 		<key>source/conf.py</key>
 		<dict>
@@ -123,30 +123,30 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>7</integer>
 		</dict>
 		<key>source/http_api.rst</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>12</integer>
+				<integer>159</integer>
 				<key>line</key>
-				<integer>7</integer>
+				<integer>171</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>120</integer>
 		</dict>
 		<key>source/index.rst</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>7</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>25</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -281,19 +281,63 @@
 				<integer>3</integer>
 			</dict>
 		</dict>
+		<key>source/perl_api.rst</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>15</integer>
+				<key>line</key>
+				<integer>76</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>58</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>71</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>15</integer>
+				<key>line</key>
+				<integer>76</integer>
+			</dict>
+		</dict>
+		<key>source/php_api.rst</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>22</integer>
+				<key>line</key>
+				<integer>319</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>242</integer>
+		</dict>
 		<key>source/python_api.rst</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>7</integer>
 				<key>line</key>
-				<integer>211</integer>
+				<integer>183</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>206</integer>
+			<integer>159</integer>
 		</dict>
 		<key>source/running.rst</key>
 		<dict>
@@ -321,7 +365,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>34</integer>
+			<integer>42</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -331,8 +375,10 @@
 		<string>source/keyspace/page.html</string>
 		<string>source/c_api.rst</string>
 		<string>source/http_api.rst</string>
+		<string>source/perl_api.rst</string>
 		<string>source/python_api.rst</string>
 		<string>source/configuration.rst</string>
+		<string>source/php_api.rst</string>
 		<string>source/running.rst</string>
 		<string>source/conf.py</string>
 		<string>source/index.rst</string>
@@ -348,6 +394,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{494, 317}, {1306, 861}}</string>
+	<string>{{447, 73}, {1370, 1069}}</string>
 </dict>
 </plist>

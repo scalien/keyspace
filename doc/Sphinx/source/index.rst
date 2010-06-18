@@ -18,9 +18,10 @@ Contents:
    running.rst
    understanding.rst
    http_api.rst
-   c_api.rst
    python_api.rst
    java_api.rst
+   csharp_api.rst
+   c_api.rst
    php_api.rst
    ruby_api.rst
    perl_api.rst

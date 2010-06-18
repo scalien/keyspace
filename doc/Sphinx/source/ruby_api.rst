@@ -90,7 +90,7 @@ If the database looked like ``from => value`` at the beginning, then it changed 
 The ``add`` command takes the value of the key, parses it as a number and atomically increments it by the given offset::
 
   client.set("key", str(10))
-  client.add("key", 3) # returns 13
+  result = client.add("key", 3) # returns 13
 
 If the database looked like ``key => 10`` at the beginning, then it changed to ``key => 13`` after the successfull ``add`` operation and the variable ``result`` holds the value 13.
 
@@ -104,7 +104,7 @@ The ``delete`` command deletes a ``key => value`` pair by its ``key``::
 ``remove`` command
 ------------------
 
-The ``delete`` command deletes a ``key => value`` pair by its ``key`` and returns the old ``value``::
+The ``remove`` command deletes a ``key => value`` pair by its ``key`` and returns the old ``value``::
 
   client.set("key", "value")
   client.remove("key") # returns "value"
