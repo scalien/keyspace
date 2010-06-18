@@ -94,7 +94,7 @@ int UrlParam::GetParamLen(int nparam) const
 	int length;
 	
 	if (nparam >= numParams || nparam < 0)
-		return NULL;
+		return 0;
 	
 	length = PARAM_LENGTH(nparam);
 	return length;

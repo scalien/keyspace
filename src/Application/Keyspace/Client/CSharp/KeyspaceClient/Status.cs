@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Keyspace
 {
-    class Status
+    public class Status
     {
         public const int KEYSPACE_SUCCESS = 0;
         public const int KEYSPACE_API_ERROR = -1;

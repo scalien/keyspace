@@ -23,6 +23,7 @@ keyspace_result_close(keyspace_result_t kr)
 		return;
 		
 	result->Close();
+	delete result;
 }
 
 int
