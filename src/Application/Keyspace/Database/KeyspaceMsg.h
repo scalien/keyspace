@@ -11,6 +11,8 @@
 #define KEYSPACE_PRUNE			'p'
 #define KEYSPACE_RENAME			'e'
 #define KEYSPACE_REMOVE			'r'
+#define KEYSPACE_SET_EXPIRY		'x'
+#define KEYSPACE_EXPIRE			'y'
 
 class KeyspaceOp;
 
@@ -26,6 +28,7 @@ public:
 	ValBuffer	test;
 	ValBuffer	prefix;
 	int64_t		num;
+	uint64_t	expiryTime;
 	
 	void		Init(char type_);
 	
@@ -37,6 +40,8 @@ public:
 	void		Delete(ByteString key_);
 	void		Remove(ByteString key_);
 	void		Prune(ByteString prefix_);
+	void		SetExpiry(ByteString key_, uint64_t expiryTime);
+	void		Expire(ByteString key_, uint64_t expiryTime);
 
 	bool		Read(ByteString& data, unsigned &nread);
 	bool		Write(ByteString& data);

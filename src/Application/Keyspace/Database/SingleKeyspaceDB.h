@@ -7,9 +7,15 @@
 
 class SingleKeyspaceDB : public KeyspaceDB
 {
-typedef ByteArray<KEYSPACE_VAL_META_SIZE> Buffer;
+typedef ByteArray<KEYSPACE_KEY_META_SIZE>	KBuffer;
+typedef ByteArray<KEYSPACE_VAL_META_SIZE>	VBuffer;
+typedef MFunc<SingleKeyspaceDB>				Func;
+
 public:
+	SingleKeyspaceDB();
+	
 	bool				Init();
+	void				InitExpiryTimer();
 	void				Shutdown();
 	bool				Add(KeyspaceOp* op) ;
 	bool				Submit();
@@ -21,12 +27,16 @@ public:
 	void				SetProtocolServer(ProtocolServer*) {}
 	void				Stop() {}
 	void				Continue() {}
-
+	void				OnExpiryTimer();
+	
 private:
 	bool				writePaxosID;
-	Buffer				data;
+	KBuffer				kdata;
+	VBuffer				vdata;
 	Table*				table;
 	Transaction			transaction;
+	Timer				expiryTimer;
+	Func				onExpiryTimer;
 };
 
 #endif

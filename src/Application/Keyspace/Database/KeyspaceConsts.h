@@ -3,6 +3,7 @@
 
 #define KEYSPACE_KEY_SIZE		(1*KB)
 #define KEYSPACE_VAL_SIZE		(100*KB)
+#define KEYSPACE_KEY_META_SIZE	(KEYSPACE_KEY_SIZE + 64)
 #define KEYSPACE_VAL_META_SIZE	(KEYSPACE_VAL_SIZE + 64)
 // for the paxosID:commandID part
 

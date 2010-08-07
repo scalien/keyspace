@@ -55,7 +55,9 @@ public:
 		RENAME,
 		DELETE,
 		REMOVE,
-		PRUNE
+		PRUNE,
+		SET_EXPIRY,
+		EXPIRE
 	};
 	
 	bool					appended;
@@ -70,6 +72,7 @@ public:
 	int64_t					num;
 	uint64_t				count;
 	uint64_t				offset;
+	uint64_t				expiryTime;
 	bool					forward;
 	bool					status;
 	
@@ -108,7 +111,9 @@ public:
 				type == KeyspaceOp::REMOVE ||
 				type == KeyspaceOp::ADD ||
 				type == KeyspaceOp::RENAME ||
-				type == KeyspaceOp::PRUNE);
+				type == KeyspaceOp::PRUNE ||
+				type == KeyspaceOp::SET_EXPIRY ||
+				type == KeyspaceOp::EXPIRE);
 	}
 
 	bool IsRead()

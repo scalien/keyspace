@@ -4,8 +4,15 @@
 #include <stdlib.h>
 #include "System/Log.h"
 #include "System/Common.h"
+#include "System/Events/EventLoop.h"
 #include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "AsyncListVisitor.h"
+
+SingleKeyspaceDB::SingleKeyspaceDB() :
+	onExpiryTimer(this, &SingleKeyspaceDB::OnExpiryTimer),
+	expiryTimer(&onExpiryTimer)
+{
+}
 
 bool SingleKeyspaceDB::Init()
 {
@@ -13,6 +20,8 @@ bool SingleKeyspaceDB::Init()
 	
 	table = database.GetTable("keyspace");
 	writePaxosID = true;
+	
+	InitExpiryTimer();
 	
 	return true;
 }
@@ -48,8 +57,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	bool			isWrite;
 	int64_t			num;
 	unsigned		nread;
-	uint64_t		storedPaxosID;
-	uint64_t		storedCommandID;
+	uint64_t		storedPaxosID, storedCommandID, expiryTime;
 	ByteString		userValue;
 		
 	isWrite = op->IsWrite();
@@ -70,10 +78,10 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	if (op->IsGet())
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status &= table->Get(NULL, op->key, data);
+		op->status &= table->Get(NULL, op->key, vdata);
 		if (op->status)
 		{
-			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
 			op->value.Set(userValue);
 		}
 		op->service->OnComplete(op);
@@ -87,20 +95,20 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
-		WriteValue(data, 1, 0, op->value);
-		op->status &= table->Set(&transaction, op->key, data);
+		WriteValue(vdata, 1, 0, op->value);
+		op->status &= table->Set(&transaction, op->key, vdata);
 		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::TEST_AND_SET)
 	{
-		op->status &= table->Get(&transaction, op->key, data);
+		op->status &= table->Get(&transaction, op->key, vdata);
 		if (op->status)
 		{
-			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
 			if (userValue == op->test)
 			{
-				WriteValue(data, 1, 0, op->value);
-				op->status &= table->Set(&transaction, op->key, data);
+				WriteValue(vdata, 1, 0, op->value);
+				op->status &= table->Set(&transaction, op->key, vdata);
 			}
 			else
 				op->value.Set(userValue);
@@ -110,23 +118,23 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	else if (op->type == KeyspaceOp::ADD)
 	{
 		// read number:
-		op->status = table->Get(&transaction, op->key, data);
+		op->status = table->Get(&transaction, op->key, vdata);
 		if (op->status)
 		{
-			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
 			// parse number:
 			num = strntoint64(userValue.buffer, userValue.length, &nread);
 			if (nread == (unsigned) userValue.length)
 			{
 				num = num + op->num;
 				 // print number:
-				data.length = snwritef(data.buffer, data.size, "1:0:%I", num);
+				vdata.length = snwritef(vdata.buffer, vdata.size, "1:0:%I", num);
 				 // write number:
-				op->status &= table->Set(&transaction, op->key, data);
+				op->status &= table->Set(&transaction, op->key, vdata);
 				// returned to the user:
-				data.length = snwritef(data.buffer, data.size, "%I", num);
-				op->value.Allocate(data.length);
-				op->value.Set(data);
+				vdata.length = snwritef(vdata.buffer, vdata.size, "%I", num);
+				op->value.Allocate(vdata.length);
+				op->value.Set(vdata);
 			}
 			else
 				op->status = false;
@@ -135,11 +143,11 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::RENAME)
 	{
-		op->status &= table->Get(&transaction, op->key, data);
+		op->status &= table->Get(&transaction, op->key, vdata);
 		if (op->status)
 		{
 			// value doesn't change
-			op->status &= table->Set(&transaction, op->newKey, data);
+			op->status &= table->Set(&transaction, op->newKey, vdata);
 			if (op->status)
 				op->status &= table->Delete(&transaction, op->key);
 		}
@@ -153,10 +161,10 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	else if (op->type == KeyspaceOp::REMOVE)
 	{
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
-		op->status &= table->Get(&transaction, op->key, data);
+		op->status &= table->Get(&transaction, op->key, vdata);
 		if (op->status)
 		{
-			ReadValue(data, storedPaxosID, storedCommandID, userValue);
+			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
 			op->value.Set(userValue);
 			op->status &= table->Delete(&transaction, op->key);
 		}
@@ -166,6 +174,36 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	else if (op->type == KeyspaceOp::PRUNE)
 	{
 		op->status &= table->Prune(&transaction, op->prefix);
+		op->service->OnComplete(op);
+	}
+	else if (op->type == KeyspaceOp::SET_EXPIRY)
+	{
+		// check old expiry
+		WriteExpiryKey(kdata, op->key);
+		if (table->Get(&transaction, kdata, vdata))
+		{
+			// this key already had an expiry
+			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
+			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
+			if (nread < 1)
+				ASSERT_FAIL();
+			// delete old value
+			WriteExpiryTime(kdata, expiryTime, op->key);
+			op->status &= table->Delete(&transaction, kdata);
+		}
+	
+		// write !!t:<expirytime>:<key> => NULL
+		WriteExpiryTime(kdata, op->expiryTime, op->key);
+		op->value.Clear();
+		WriteValue(vdata, 1, 0, op->value);
+		op->status &= table->Set(&transaction, kdata, vdata);
+
+		// write !!k:<key> => <expiryTime>
+		WriteExpiryKey(kdata, op->key);
+		WriteValue(vdata, 1, 0, op->expiryTime);
+		op->status &= table->Set(&transaction, kdata, vdata);
+
+		InitExpiryTimer();
 		op->service->OnComplete(op);
 	}
 	else
@@ -182,4 +220,61 @@ bool SingleKeyspaceDB::Submit()
 		transaction.Commit();
 		
 	return true;
+}
+
+void SingleKeyspaceDB::InitExpiryTimer()
+{
+	uint64_t	expiryTime;
+	Cursor		cursor;
+	ByteString	key;
+
+	Log_Trace();
+	
+	table->Iterate(NULL, cursor);
+	
+	kdata.Set("!!t:");
+	if (!cursor.Start(kdata))
+		return;
+	
+	if (kdata.length < 2)
+		return;
+	
+	if (kdata.buffer[0] != '!' || kdata.buffer[1] != '!')
+		return;
+
+	ReadExpiryTime(kdata, expiryTime, key);
+
+	expiryTimer.Set(expiryTime);
+	EventLoop::Reset(&expiryTimer);
+}
+
+void SingleKeyspaceDB::OnExpiryTimer()
+{
+	uint64_t	expiryTime;
+	Cursor		cursor;
+	ByteString	key;
+
+	Log_Trace();
+	
+	table->Iterate(NULL, cursor);	
+	kdata.Set("!!t:");
+	if (!cursor.Start(kdata))
+		ASSERT_FAIL();
+
+	if (kdata.length < 2)
+		ASSERT_FAIL();
+	
+	if (kdata.buffer[0] != '!' || kdata.buffer[1] != '!')
+		ASSERT_FAIL();
+
+	ReadExpiryTime(kdata, expiryTime, key);
+	table->Delete(NULL, kdata);
+	table->Delete(NULL, key);
+
+	WriteExpiryKey(kdata, key);
+	table->Delete(NULL, kdata);
+	
+	Log_Message("Expiring key: %.*s", key.length, key.buffer);
+
+	InitExpiryTimer();
 }

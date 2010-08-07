@@ -20,6 +20,7 @@
 #define KEYSPACECLIENT_ADD			'a'
 #define KEYSPACECLIENT_REMOVE		'r'
 #define KEYSPACECLIENT_RENAME		'e'
+#define KEYSPACECLIENT_SET_EXPIRY	'x'
 #define KEYSPACECLIENT_SUBMIT		'*'
 
 class KeyspaceOp;
@@ -37,6 +38,7 @@ public:
 	uint64_t		count;
 	uint64_t		offset;
 	int64_t			num;
+	uint64_t		expiryTime;
 	char			direction;
 	
 	void			Init();

@@ -1,17 +1,21 @@
 #include "Cursor.h"
 
-bool Cursor::Start(const ByteString &startKey)
+bool Cursor::Start(ByteString &key)
 {
 	Dbt dbkey, dbvalue;
 	int	flags;
 
-	dbkey.set_data(startKey.buffer);
-	dbkey.set_size(startKey.length);
+	dbkey.set_data(key.buffer);
+	dbkey.set_size(key.length);
 	flags = DB_SET_RANGE;
 	
 	if (cursor->get(&dbkey, &dbvalue, flags) == 0)
-		return true;
-	
+	{
+		if (key.Set((char*)dbkey.get_data(), dbkey.get_size()))
+				return true;
+		else
+			return false;
+	}
 	return false;
 }
 

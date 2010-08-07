@@ -342,6 +342,10 @@ void ReplicatedLog::OnLearnChosen()
 		proposer.state.leader = true;
 		ownAppend = true;
 		Log_Trace("Multi paxos enabled");
+		
+		if (replicatedDB && rmsg.value == BS_MSG_NOP)
+			replicatedDB->OnMasterLease();
+
 	}
 	else
 	{

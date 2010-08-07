@@ -314,6 +314,12 @@ bool Table::Visit(TableVisitor &tv)
 			key.set_size(3);
 			flags = DB_SET_RANGE;
 		}
+		if (bsKey.length > 2 && bsKey.buffer[0] == '!' && bsKey.buffer[1] == '!')
+		{
+			key.set_data((void*)"!!~");
+			key.set_size(3);
+			flags = DB_SET_RANGE;
+		}
 		else
 			flags = DB_NEXT;
 	}

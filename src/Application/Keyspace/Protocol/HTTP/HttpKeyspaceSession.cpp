@@ -92,6 +92,8 @@ KeyspaceOp* HttpKeyspaceSession::ProcessDBCommand(const char* cmd, unsigned cmdl
 		return ProcessRemove(params);
 	if (MatchString(cmd, cmdlen, STR_AND_LEN("prune")))
 		return ProcessPrune(params);
+	if (MatchString(cmd, cmdlen, STR_AND_LEN("setexpiry")))
+		return ProcessSetExpiry(params);
 	if (MatchString(cmd, cmdlen, STR_AND_LEN("listkeys")))
 		return ProcessList(params, false, false);
 	if (MatchString(cmd, cmdlen, STR_AND_LEN("dirtylistkeys")))
@@ -467,6 +469,31 @@ KeyspaceOp* HttpKeyspaceSession::ProcessPrune(const UrlParam& params)
 	return op;
 }
 
+KeyspaceOp* HttpKeyspaceSession::ProcessSetExpiry(const UrlParam& params)
+{
+	ByteString key, expiryTime;
+	unsigned nread;
+	KeyspaceOp* op;
+	
+	GET_NAMED_PARAM(params, "key", key);
+	GET_NAMED_PARAM(params, "time", expiryTime);
+	
+	VALIDATE_KEYLEN(key);
+	VALIDATE_VALLEN(expiryTime);
+	
+	op = new KeyspaceOp;
+	op->type = KeyspaceOp::SET_EXPIRY;
+	
+	op->key.Set(key);
+	op->expiryTime = Now() + 1000 * strntouint64(expiryTime.buffer, expiryTime.length, &nread);
+	if (nread != (unsigned) expiryTime.length)
+	{
+		delete op;
+		return NULL;
+	}
+	return op;
+}
+
 void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 {
 	if (op->type == KeyspaceOp::GET ||
@@ -517,7 +544,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 				ResponseFail();
 		}
 	}
-	else if (op->type == KeyspaceOp::SET)
+	else if (op->type == KeyspaceOp::SET || op->type == KeyspaceOp::SET_EXPIRY)
 	{
 		if (op->status)
 			if (type == JSON)

@@ -16,11 +16,12 @@
 
 class ReplicatedKeyspaceDB : public ReplicatedDB, public KeyspaceDB
 {
-typedef ByteArray<PAXOS_SIZE>			PaxosBuffer;
+typedef ByteArray<PAXOS_SIZE>				PaxosBuffer;
+typedef ByteArray<KEYSPACE_KEY_META_SIZE>	KeyBuffer;
 typedef ByteArray<KEYSPACE_VAL_META_SIZE>	ValBuffer;
-typedef MFunc<ReplicatedKeyspaceDB>		Func;
-typedef List<KeyspaceOp*>				OpList;
-typedef List<ProtocolServer*>			ServerList;
+typedef MFunc<ReplicatedKeyspaceDB>			Func;
+typedef List<KeyspaceOp*>					OpList;
+typedef List<ProtocolServer*>				ServerList;
 
 public:
 	ReplicatedKeyspaceDB();
@@ -39,11 +40,12 @@ public:
 	
 	void			OnCatchupComplete();	// called by CatchupClient
 	void			OnCatchupFailed();		// called by CatchupClient
+	void			OnExpiryTimer();
 	
 // ReplicatedDB interface:
 	virtual void	OnAppend(Transaction* transaction, uint64_t paxosID,
 							 ByteString value, bool ownAppend);
-	virtual void	OnMasterLease(unsigned nodeID);
+	virtual void	OnMasterLease();
 	virtual void	OnMasterLeaseExpired();
 	virtual void	OnDoCatchup(unsigned nodeID);
 	
@@ -60,6 +62,7 @@ private:
 							uint64_t paxosID, uint64_t commandID);
 	void			Append();
 	void			FailKeyspaceOps();
+	void			InitExpiryTimer();
 	
 	bool			asyncAppenderActive;
 	bool			catchingUp;
@@ -68,6 +71,7 @@ private:
 	KeyspaceMsg		msg;
 	KeyspaceMsg		tmp;
 	PaxosBuffer		pvalue;
+	KeyBuffer		kdata;
 	ValBuffer		rdata;
 	ValBuffer		wdata;
 	CatchupServer	catchupServer;
@@ -85,6 +89,9 @@ private:
 	ServerList		pservers;
 	unsigned		estimatedLength;
 	bool			deleteDB;
+	
+	Timer			expiryTimer;
+	Func			onExpiryTimer;
 };
 
 #endif

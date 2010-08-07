@@ -53,6 +53,7 @@ private:
 	KeyspaceOp*		ProcessDelete(const UrlParam& params);
 	KeyspaceOp* 	ProcessRemove(const UrlParam& params);
 	KeyspaceOp*		ProcessPrune(const UrlParam& params);
+	KeyspaceOp*		ProcessSetExpiry(const UrlParam& params);
 
 	void			PrintStyle();
 	void			PrintJSONString(const char* s, unsigned len);

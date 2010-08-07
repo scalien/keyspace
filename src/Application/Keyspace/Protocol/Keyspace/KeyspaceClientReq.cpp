@@ -12,6 +12,7 @@ void KeyspaceClientReq::Init()
 	cmdID = 0;
 	count = 0;
 	offset = 0;
+	expiryTime = 0;
 	num = 0;
 }
 	
@@ -74,6 +75,10 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 		case KEYSPACECLIENT_RENAME:
 			read = snreadf(data.buffer, data.length, "%c:%U:%N:%N",
 						   &type, &cmdID, &key, &newKey);
+			break;
+		case KEYSPACECLIENT_SET_EXPIRY:
+			read = snreadf(data.buffer, data.length, "%c:%U:%N:%u:%U",
+						   &type, &cmdID, &key, &dummy, &expiryTime);
 			break;
 		case KEYSPACECLIENT_SUBMIT:
 			read = snreadf(data.buffer, data.length, "%c", &type);
@@ -164,6 +169,10 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			break;
 		case KEYSPACECLIENT_RENAME:
 			op->type = KeyspaceOp::RENAME;
+			break;
+		case KEYSPACECLIENT_SET_EXPIRY:
+			op->type = KeyspaceOp::SET_EXPIRY;
+			op->expiryTime = expiryTime;
 			break;
 		default:
 			return false;

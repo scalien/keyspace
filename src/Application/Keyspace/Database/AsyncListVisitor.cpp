@@ -184,6 +184,8 @@ bool AsyncListVisitor::Accept(const ByteString &key,
 	// don't list system keys
 	if (key.length >= 2 && key.buffer[0] == '@' && key.buffer[1] == '@')
 		return true;
+	if (key.length >= 2 && key.buffer[0] == '!' && key.buffer[1] == '!')
+		return true;
 	
 	if (num == 0 && startKey != key && offset > 0)
 	{

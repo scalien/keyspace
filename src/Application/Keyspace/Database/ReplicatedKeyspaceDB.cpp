@@ -10,10 +10,13 @@
 
 ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
 :	asyncOnAppend(this, &ReplicatedKeyspaceDB::AsyncOnAppend),
-	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete)
+	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete),
+	onExpiryTimer(this, &ReplicatedKeyspaceDB::OnExpiryTimer),
+	expiryTimer(&onExpiryTimer)
 {
 	asyncAppender = ThreadPool::Create(1);
 	catchingUp = false;
+	transaction = NULL;
 }
 
 ReplicatedKeyspaceDB::~ReplicatedKeyspaceDB()
@@ -82,6 +85,10 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	// don't allow writes for @@ keys
 	if (op->IsWrite() && op->key.length > 2 &&
 		op->key.buffer[0] == '@' && op->key.buffer[1] == '@')
+			return false;
+	// don't allow writes for !! keys
+	if (op->IsWrite() && op->key.length > 2 &&
+		op->key.buffer[0] == '!' && op->key.buffer[1] == '!')
 			return false;
 
 	if (catchingUp)
@@ -255,14 +262,14 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 	(storedPaxosID == paxosID && storedCommandID >= commandID))	\
 		return true;
 
-
 	bool		ret;
 	unsigned	nread;
 	int64_t		num;
-	uint64_t	storedPaxosID;
-	uint64_t	storedCommandID;
+	uint64_t	storedPaxosID, storedCommandID, expiryTime;
 	ByteString	userValue;
 	ValBuffer	tmp;
+	Cursor		cursor;
+	ByteString	key;
 	
 	ret = true;
 	switch (msg.type)
@@ -340,6 +347,73 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		ret &= table->Prune(transaction, msg.prefix);
 		break;
 
+	case KEYSPACE_SET_EXPIRY:
+		// TODO: catchup semantics
+	
+		// check old expiry
+		WriteExpiryKey(kdata, msg.key);
+		if (table->Get(transaction, kdata, rdata))
+		{
+			// this key already had an expiry
+			ReadValue(rdata, storedPaxosID, storedCommandID, userValue);
+			CHECK_CMD();
+			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
+			if (nread < 1)
+				ASSERT_FAIL();
+			// delete old value
+			WriteExpiryTime(kdata, expiryTime, msg.key);
+			ret &= table->Delete(transaction, kdata);
+		}
+	
+		// write !!t:<expirytime>:<key> => NULL
+		WriteExpiryTime(kdata, msg.expiryTime, msg.key);
+		rdata.Clear();
+		WriteValue(wdata, paxosID, storedPaxosID, rdata);
+		ret &= table->Set(transaction, kdata, wdata);
+
+		// write !!k:<key> => <expiryTime>
+		WriteExpiryKey(kdata, msg.key);
+		WriteValue(wdata, paxosID, commandID, msg.expiryTime);
+		ret &= table->Set(transaction, kdata, wdata);
+
+		if (RLOG->IsSafeDB())
+			InitExpiryTimer();
+		break;
+
+	case KEYSPACE_EXPIRE:
+		// TODO: catchup semantics
+
+		Log_Trace();
+		
+		table->Iterate(transaction, cursor);	
+		kdata.Set("!!t:");
+		if (!cursor.Start(kdata))
+			ASSERT_FAIL();
+		cursor.Close();
+
+		if (kdata.length < 2)
+			ASSERT_FAIL();
+		
+		if (kdata.buffer[0] != '!' || kdata.buffer[1] != '!')
+			ASSERT_FAIL();
+
+		ReadExpiryTime(kdata, expiryTime, key);
+
+		assert(msg.key == key); // the first to be expired matches the command
+
+		table->Delete(transaction, kdata);
+		table->Delete(transaction, key);
+
+		WriteExpiryKey(kdata, key);
+		table->Delete(transaction, kdata);
+		
+		Log_Message("Expiring key: %.*s", key.length, key.buffer);
+
+		if (RLOG->IsSafeDB())
+			InitExpiryTimer();
+
+		break;
+
 	default:
 		ASSERT_FAIL();
 	}
@@ -363,7 +437,13 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 			it = ops.Head();
 			op = *it;
 			ops.Remove(op);
-			op->service->OnComplete(op);
+			if (op->service)
+				op->service->OnComplete(op);
+			else
+			{
+				assert(op->type == KeyspaceOp::EXPIRE);
+				delete op;
+			}
 		}
 	}
 	else
@@ -435,31 +515,41 @@ void ReplicatedKeyspaceDB::FailKeyspaceOps()
 		
 		it = ops.Remove(it);
 		op->status = false;
-		op->service->OnComplete(op);
+		if (op->service)
+			op->service->OnComplete(op);
+		else
+		{
+			assert(op->type == KeyspaceOp::EXPIRE);
+			delete op;
+		}
 	}
-	
+
 	if (ops.Length() > 0)
 		ASSERT_FAIL();
 }
 
-void ReplicatedKeyspaceDB::OnMasterLease(unsigned)
+void ReplicatedKeyspaceDB::OnMasterLease()
 {
-	Log_Trace("ops.size() = %d", ops.Length());
-
-	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
-		Append();
-
-	Log_Trace("ops.size() = %d", ops.Length());
+//	Log_Trace("ops.size() = %d", ops.Length());
+//
+//	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
+//		Append();
+//
+//	Log_Trace("ops.size() = %d", ops.Length());
+	
+	InitExpiryTimer();
 }
 
 void ReplicatedKeyspaceDB::OnMasterLeaseExpired()
 {
 	Log_Trace("ops.size() = %d", ops.Length());
 	
-	if (!RLOG->IsMaster())
+	if (!RLOG->IsMaster() && !asyncAppenderActive)
 		FailKeyspaceOps();
 		
 	Log_Trace("ops.size() = %d", ops.Length());
+	
+	EventLoop::Remove(&expiryTimer);
 }
 
 void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
@@ -468,8 +558,8 @@ void ReplicatedKeyspaceDB::OnDoCatchup(unsigned nodeID)
 
 	// this is a workaround because BDB truncate is way too slow for any
 	// database bigger than 1Gb, as confirmed by BDB workers on forums
-//	if (RLOG->GetPaxosID() != 0)
-//		RESTART("exiting to truncate database");
+	//	if (RLOG->GetPaxosID() != 0)
+	//		RESTART("exiting to truncate database");
 	if (RLOG->GetPaxosID() > 0)
 	{
 		Log_Message("Truncating database");
@@ -506,10 +596,6 @@ void ReplicatedKeyspaceDB::OnCatchupFailed()
 	Log_Message("Truncating database");
 	deleteDB = true;
 	EventLoop::Stop();
-
-	//catchingUp = false;
-	//RLOG->ContinuePaxos();
-	//RLOG->ContinueMasterLease();
 }
 
 void ReplicatedKeyspaceDB::SetProtocolServer(ProtocolServer* pserver)
@@ -521,3 +607,78 @@ bool ReplicatedKeyspaceDB::DeleteDB()
 {
 	return deleteDB;
 }
+
+void ReplicatedKeyspaceDB::OnExpiryTimer()
+{
+	assert(RLOG->IsMaster());
+	
+	uint64_t	expiryTime;
+	Cursor		cursor;
+	ByteString	key;
+	KeyspaceOp*	op;
+
+	Log_Trace();
+	
+	transaction = RLOG->GetTransaction();
+	if (!transaction->IsActive())
+		transaction->Begin();
+	
+	table->Iterate(transaction, cursor);	
+	kdata.Set("!!t:");
+	if (!cursor.Start(kdata))
+		ASSERT_FAIL();
+	cursor.Close();
+	
+	if (kdata.length < 2)
+		ASSERT_FAIL();
+	
+	if (kdata.buffer[0] != '!' || kdata.buffer[1] != '!')
+		ASSERT_FAIL();
+
+	ReadExpiryTime(kdata, expiryTime, key);
+	
+	op = new KeyspaceOp;
+	op->cmdID = 0;
+	op->type = KeyspaceOp::EXPIRE;
+	op->key.Allocate(key.length);
+	op->key.Set(key);
+	op->expiryTime = expiryTime;
+	op->service = NULL;
+	Add(op);
+	Submit();
+}
+
+void ReplicatedKeyspaceDB::InitExpiryTimer()
+{
+	uint64_t	expiryTime;
+	Cursor		cursor;
+	ByteString	key;
+
+	Log_Trace();
+	
+	transaction = RLOG->GetTransaction();
+	if (!transaction->IsActive())
+		transaction->Begin();
+
+	table->Iterate(transaction, cursor);
+	
+	kdata.Set("!!t:");
+	if (!cursor.Start(kdata))
+	{
+		cursor.Close();
+		return;
+	}
+	cursor.Close();
+	
+	if (kdata.length < 2)
+		return;
+	
+	if (kdata.buffer[0] != '!' || kdata.buffer[1] != '!')
+		return;
+
+	ReadExpiryTime(kdata, expiryTime, key);
+
+	expiryTimer.Set(expiryTime);
+	EventLoop::Reset(&expiryTimer);
+}
+

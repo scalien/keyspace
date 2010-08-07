@@ -77,6 +77,7 @@ void CatchupWriter::WriteNext()
 				else
 					continue;
 			}
+			// but write keys starting with !!
 			else
 				msg.KeyValue(key, value);
 		}
