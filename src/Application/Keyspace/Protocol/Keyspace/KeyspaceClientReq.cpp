@@ -1,4 +1,5 @@
 #include "KeyspaceClientReq.h"
+#include "System/Time.h"
 #include "Application/Keyspace/Database/KeyspaceService.h"
 
 void KeyspaceClientReq::Init()
@@ -172,7 +173,7 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			break;
 		case KEYSPACECLIENT_SET_EXPIRY:
 			op->type = KeyspaceOp::SET_EXPIRY;
-			op->expiryTime = expiryTime;
+			op->expiryTime = Now() + 1000 * expiryTime;
 			break;
 		default:
 			return false;

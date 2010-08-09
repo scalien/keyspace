@@ -188,7 +188,6 @@
 		545C60330F7979B4006540BC /* KeyspaceService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceService.h; sourceTree = "<group>"; };
 		545C60570F797BA3006540BC /* KeyspaceMsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceMsg.h; sourceTree = "<group>"; };
 		545C60580F797BA3006540BC /* KeyspaceMsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceMsg.cpp; sourceTree = "<group>"; };
-		545EF84A113C0EC800B81A5D /* PrefixTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixTree.h; sourceTree = "<group>"; };
 		545EFDBA115107B700B81A5D /* KeyspaceClientWrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyspaceClientWrap.h; sourceTree = "<group>"; };
 		545EFDBB115107B700B81A5D /* KeyspaceClientWrap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyspaceClientWrap.cpp; sourceTree = "<group>"; };
 		547166910FFB5E1C0097B387 /* ReplicatedDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplicatedDB.h; sourceTree = "<group>"; };
@@ -639,7 +638,6 @@
 				548147330F31B6B200F3D2B6 /* SortedList.h */,
 				9ADC98040F7BFBA50025A7AB /* Queue.h */,
 				9ADC98A80F7D9EFA0025A7AB /* LinkedList.h */,
-				545EF84A113C0EC800B81A5D /* PrefixTree.h */,
 			);
 			path = Containers;
 			sourceTree = "<group>";
@@ -1025,7 +1023,7 @@
 		1DEB928608733DD80010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
 				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1037,7 +1035,7 @@
 					"$(inherited)",
 					/opt/local/lib/db46,
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH)";
 				PRODUCT_NAME = Keyspace;
 				ZERO_LINK = YES;
 			};
@@ -1046,7 +1044,7 @@
 		1DEB928708733DD80010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH)";
+				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
@@ -1054,6 +1052,7 @@
 					"$(inherited)",
 					/opt/local/lib/db46,
 				);
+				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH)";
 				PRODUCT_NAME = Keyspace;
 			};
 			name = Release;
