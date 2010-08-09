@@ -407,7 +407,35 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		WriteExpiryKey(kdata, key);
 		table->Delete(transaction, kdata);
 		
+		ret = true;
 		Log_Message("Expiring key: %.*s", key.length, key.buffer);
+
+		if (RLOG->IsSafeDB())
+			InitExpiryTimer();
+
+		break;
+
+	case KEYSPACE_REMOVE_EXPIRY:
+		// TODO: catchup semantics
+
+		Log_Trace();
+		
+		WriteExpiryKey(kdata, msg.key);
+		if (table->Get(transaction, kdata, rdata))
+		{
+			// the key had an expiry
+			ReadValue(rdata, storedPaxosID, storedCommandID, userValue);
+			CHECK_CMD();
+			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
+			if (nread < 1)
+				ASSERT_FAIL();
+		}
+		table->Delete(transaction, kdata);
+		WriteExpiryTime(kdata, expiryTime, msg.key);
+		table->Delete(transaction, kdata);
+
+		ret = true;
+		Log_Message("Removing expiry for key: %.*s", key.length, key.buffer);
 
 		if (RLOG->IsSafeDB())
 			InitExpiryTimer();
@@ -656,6 +684,8 @@ void ReplicatedKeyspaceDB::InitExpiryTimer()
 
 	Log_Trace();
 	
+	EventLoop::Remove(&expiryTimer);
+	
 	transaction = RLOG->GetTransaction();
 	if (!transaction->IsActive())
 		transaction->Begin();
@@ -679,6 +709,6 @@ void ReplicatedKeyspaceDB::InitExpiryTimer()
 	ReadExpiryTime(kdata, expiryTime, key);
 
 	expiryTimer.Set(expiryTime);
-	EventLoop::Reset(&expiryTimer);
+	EventLoop::Add(&expiryTimer);
 }
 

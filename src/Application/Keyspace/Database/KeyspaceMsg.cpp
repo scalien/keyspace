@@ -68,6 +68,12 @@ void KeyspaceMsg::Expire(ByteString key_, uint64_t expiryTime_)
 	expiryTime = expiryTime_;
 }
 
+void KeyspaceMsg::RemoveExpiry(ByteString key_)
+{
+	Init(KEYSPACE_REMOVE_EXPIRY);
+	key.Set(key_);
+}
+
 bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 {
 	int read;
@@ -109,6 +115,10 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 		case KEYSPACE_EXPIRE:
 			read = snreadf(data.buffer, data.length, "%c:%M:%U",
 						   &type, &key, &expiryTime);
+			break;
+		case KEYSPACE_REMOVE_EXPIRY:
+			read = snreadf(data.buffer, data.length, "%c:%M",
+						   &type, &key);
 			break;
 		default:
 			return false;
@@ -159,6 +169,10 @@ bool KeyspaceMsg::Write(ByteString& data)
 			return data.Writef("%c:%M:%U",
 						       type, &key, expiryTime);
 			break;
+		case KEYSPACE_REMOVE_EXPIRY:
+			return data.Writef("%c:%M",
+						       type, &key);
+			break;
 		default:
 			return false;
 	}
@@ -185,7 +199,9 @@ bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
 	else if (op->type == KeyspaceOp::SET_EXPIRY)
 		Init(KEYSPACE_SET_EXPIRY);	
 	else if (op->type == KeyspaceOp::EXPIRE)
-		Init(KEYSPACE_EXPIRE);	
+		Init(KEYSPACE_EXPIRE);
+	else if (op->type == KeyspaceOp::REMOVE_EXPIRY)
+		Init(KEYSPACE_REMOVE_EXPIRY);
 	else
 		ASSERT_FAIL();
 	

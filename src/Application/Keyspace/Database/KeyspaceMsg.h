@@ -13,6 +13,7 @@
 #define KEYSPACE_REMOVE			'r'
 #define KEYSPACE_SET_EXPIRY		'x'
 #define KEYSPACE_EXPIRE			'y'
+#define KEYSPACE_REMOVE_EXPIRY	'z'
 
 class KeyspaceOp;
 
@@ -42,6 +43,7 @@ public:
 	void		Prune(ByteString prefix_);
 	void		SetExpiry(ByteString key_, uint64_t expiryTime);
 	void		Expire(ByteString key_, uint64_t expiryTime);
+	void		RemoveExpiry(ByteString key_);
 
 	bool		Read(ByteString& data, unsigned &nread);
 	bool		Write(ByteString& data);

@@ -206,6 +206,26 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		InitExpiryTimer();
 		op->service->OnComplete(op);
 	}
+	else if (op->type == KeyspaceOp::REMOVE_EXPIRY)
+	{
+		WriteExpiryKey(kdata, op->key);
+		if (table->Get(&transaction, kdata, vdata))
+		{
+			// the key had an expiry
+			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
+			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
+			if (nread < 1)
+				ASSERT_FAIL();
+		}
+		table->Delete(&transaction, kdata);
+		WriteExpiryTime(kdata, expiryTime, op->key);
+		table->Delete(&transaction, kdata);
+
+		op->status = true;
+
+		InitExpiryTimer();
+		op->service->OnComplete(op);
+	}
 	else
 		ASSERT_FAIL();
 
@@ -229,6 +249,7 @@ void SingleKeyspaceDB::InitExpiryTimer()
 	ByteString	key;
 
 	Log_Trace();
+	EventLoop::Remove(&expiryTimer);	
 	
 	table->Iterate(NULL, cursor);
 	
@@ -245,7 +266,7 @@ void SingleKeyspaceDB::InitExpiryTimer()
 	ReadExpiryTime(kdata, expiryTime, key);
 
 	expiryTimer.Set(expiryTime);
-	EventLoop::Reset(&expiryTimer);
+	EventLoop::Add(&expiryTimer);
 }
 
 void SingleKeyspaceDB::OnExpiryTimer()

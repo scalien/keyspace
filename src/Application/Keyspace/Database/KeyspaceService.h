@@ -57,7 +57,8 @@ public:
 		REMOVE,
 		PRUNE,
 		SET_EXPIRY,
-		EXPIRE
+		EXPIRE,
+		REMOVE_EXPIRY
 	};
 	
 	bool					appended;
@@ -113,7 +114,8 @@ public:
 				type == KeyspaceOp::RENAME ||
 				type == KeyspaceOp::PRUNE ||
 				type == KeyspaceOp::SET_EXPIRY ||
-				type == KeyspaceOp::EXPIRE);
+				type == KeyspaceOp::EXPIRE ||
+				type == KeyspaceOp::REMOVE_EXPIRY);
 	}
 
 	bool IsRead()
