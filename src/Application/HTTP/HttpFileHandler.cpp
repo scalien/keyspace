@@ -58,7 +58,7 @@ bool HttpFileHandler::HandleRequest(HttpConn* conn, const HttpRequest& request)
 	// zero-terminate
 	ha.Append("", 1);
 	
-	conn->ResponseHeader(HTTP_STATUS_CODE_OK, true, ha.buffer);
+	conn->ResponseHeader(HTTP_STATUS_CODE_OK, ha.buffer);
 	
 	while (true)
 	{
@@ -78,7 +78,7 @@ bool HttpFileHandler::HandleRequest(HttpConn* conn, const HttpRequest& request)
 		conn->Write(buf, nread);
 	}
 
-	conn->Flush(true);
+	conn->Flush();
 	return true;
 }
 

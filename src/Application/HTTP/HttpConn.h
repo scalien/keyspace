@@ -18,10 +18,9 @@ public:
 
 	void			Print(const char* s);
 	void			Response(int code, const char* buf,
-					int len, bool close = true, const char* header = NULL);
-	void			ResponseHeader(int code, bool close = true,
-					const char* header = NULL);
-	void			Flush(bool closeAfterSend = false);
+					int len, const char* header = NULL);
+	void			ResponseHeader(int code, const char* header = NULL);
+	void			Flush();
 
 	HttpServer*		GetServer() { return server; }
 

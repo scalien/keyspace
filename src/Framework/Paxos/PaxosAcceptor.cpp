@@ -32,7 +32,7 @@ void PaxosAcceptor::Init(Writers writers_)
 void PaxosAcceptor::Shutdown()
 {
 	if (transaction.IsActive())
-		transaction.Rollback();
+		transaction.Commit();
 }
 
 bool PaxosAcceptor::Persist(Transaction* transaction)

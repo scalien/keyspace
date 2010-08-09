@@ -508,7 +508,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 		{
 			if (type == HTML)
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/html" HTTP_CS_CRLF HTTP_CS_CRLF);
 				conn->Print("<title>");
 				conn->Print("Keyspace contents of: ");
@@ -518,7 +518,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 			}
 			else if (type == JSON)
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/plain" HTTP_CS_CRLF HTTP_CS_CRLF);
 				if (jsonCallback.length)
 				{
@@ -579,7 +579,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 		{
 			if (type == HTML)
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/html" HTTP_CS_CRLF HTTP_CS_CRLF);
 				conn->Print("<title>");
 				conn->Print("Keyspace listing of: ");
@@ -589,7 +589,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 			}
 			else if (type == JSON)
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/plain" HTTP_CS_CRLF HTTP_CS_CRLF);
 				if (jsonCallback.length)
 				{
@@ -602,7 +602,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 			}
 			else
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/plain" HTTP_CS_CRLF HTTP_CS_CRLF);
 			}
 			headerSent = true;
@@ -649,7 +649,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 		{
 			if (type == HTML)
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/html" HTTP_CS_CRLF HTTP_CS_CRLF);
 				conn->Print("<title>");
 				conn->Print("Keyspace listing of: ");
@@ -659,7 +659,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 			}
 			else if (type == JSON)
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/plain" HTTP_CS_CRLF HTTP_CS_CRLF);
 				if (jsonCallback.length)
 				{
@@ -672,7 +672,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 			}
 			else
 			{
-				conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+				conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 				"Content-type: text/plain" HTTP_CS_CRLF HTTP_CS_CRLF);
 			}
 			headerSent = true;
@@ -740,7 +740,7 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 				conn->Print(")");
 		}
 		
-		conn->Flush(true); // flush data to TCP socket
+		conn->Flush(); // flush data to TCP socket
 		numpending--;
 		delete op;
 	}
@@ -772,7 +772,7 @@ void HttpKeyspaceSession::PrintJSONString(const char *s, unsigned len)
 
 void HttpKeyspaceSession::PrintJSONStatus(const char* status, const char* type_)
 {
-	conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+	conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 	"Content-type: text/plain" HTTP_CS_CRLF HTTP_CS_CRLF);
 	if (jsonCallback.length)
 	{
@@ -823,7 +823,7 @@ void HttpKeyspaceSession::ResponseNotFound()
 	if (type == JSON)
 	{
 		PrintJSONStatus("error", MSG_NOT_FOUND);
-		conn->Flush(true);
+		conn->Flush();
 	}
 	else
 		conn->Response(HTTP_STATUS_CODE_OK, MSG_NOT_FOUND, sizeof(MSG_NOT_FOUND) - 1);

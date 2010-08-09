@@ -112,7 +112,7 @@ const char* HttpConn::Status(int code)
 }
 
 void HttpConn::Response(int code, const char* data,
-int len, bool close, const char* header)
+int len, const char* header)
 {	
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
@@ -132,7 +132,7 @@ int len, bool close, const char* header)
 					, 
 					request.line.version, code, Status(code),
 					len,
-					close ? "Connection: close" CS_CRLF : "",
+					"Connection: close" CS_CRLF,
 					header ? header : "");
 
 		if (size <= httpHeader.size)
@@ -143,9 +143,11 @@ int len, bool close, const char* header)
 			
 	Write(httpHeader.buffer, size, false);
 	Write(data, len);
+	
+	Flush();
 }
 
-void HttpConn::ResponseHeader(int code, bool close, const char* header)
+void HttpConn::ResponseHeader(int code, const char* header)
 {
 	DynArray<MAX_MESSAGE_SIZE> httpHeader;
 	unsigned size;
@@ -163,7 +165,7 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 					CS_CRLF
 					, 
 					request.line.version, code, Status(code),
-					close ? "Connection: close" CS_CRLF : "",
+					"Connection: close" CS_CRLF,
 					header ? header : "");
 
 		if (size <= httpHeader.size)
@@ -175,8 +177,8 @@ void HttpConn::ResponseHeader(int code, bool close, const char* header)
 	Write(httpHeader.buffer, size, false);
 }
 
-void HttpConn::Flush(bool closeAfterSend_)
+void HttpConn::Flush()
 {
 	WritePending();
-	closeAfterSend = closeAfterSend_;
+	closeAfterSend = true;
 }

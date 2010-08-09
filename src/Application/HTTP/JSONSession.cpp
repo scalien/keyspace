@@ -10,7 +10,7 @@ void JSONSession::Init(HttpConn* conn_, const ByteString& jsonCallback_)
 
 void JSONSession::PrintStatus(const char* status, const char* type_)
 {
-	conn->ResponseHeader(HTTP_STATUS_CODE_OK, false,
+	conn->ResponseHeader(HTTP_STATUS_CODE_OK,
 	"Content-type: application/json" HTTP_CS_CRLF);
 	if (jsonCallback.length)
 	{
@@ -29,7 +29,7 @@ void JSONSession::PrintStatus(const char* status, const char* type_)
 	if (jsonCallback.length)
 		conn->Print(")");
 	
-	conn->Flush(true);
+	conn->Flush();
 }
 
 void JSONSession::PrintString(const char *s, unsigned len)
