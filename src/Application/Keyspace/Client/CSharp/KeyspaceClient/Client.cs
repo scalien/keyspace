@@ -340,6 +340,38 @@ namespace Keyspace
             return status;
         }
 
+	public int SetExpiry(string key, int exptime)
+	{
+            int status = keyspace_client.Keyspace_SetExpiry(cptr, key, exptime);
+            if (status < 0)
+            {
+                result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+                throw new Exception(Status.ToString(status));
+            }
+
+            if (IsBatched())
+                return status;
+
+            result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+            return status;
+	}
+
+	public int RemoveExpiry(string key)
+	{
+            int status = keyspace_client.Keyspace_RemoveExpiry(cptr, key);
+            if (status < 0)
+            {
+                result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+                throw new Exception(Status.ToString(status));
+            }
+
+            if (IsBatched())
+                return status;
+
+            result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+            return status;
+	}
+
         public int Begin()
         {
             return keyspace_client.Keyspace_Begin(cptr);

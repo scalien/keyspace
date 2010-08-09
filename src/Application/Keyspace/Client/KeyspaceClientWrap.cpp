@@ -535,6 +535,23 @@ int Keyspace_Prune(ClientObj client_, const std::string& prefix_)
 	return client->Prune(prefix);
 }
 
+int Keyspace_SetExpiry(ClientObj client_, const std::string& key_, int exptime_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			key(key_.length(), key_.length(), key_.c_str());
+	uint64_t			exptime = exptime_;
+	
+	return client->SetExpiry(key, exptime);
+}
+
+int Keyspace_RemoveExpiry(ClientObj client_, const std::string& key_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	ByteString			key(key_.length(), key_.length(), key_.c_str());
+	
+	return client->RemoveExpiry(key);
+}
+
 int Keyspace_Begin(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;

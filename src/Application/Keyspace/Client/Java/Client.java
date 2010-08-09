@@ -264,6 +264,34 @@ public class Client
 		return status;
 	}
 
+	public int setExpiry(String key, int exptime) throws KeyspaceException {
+		int status = keyspace_client.Keyspace_SetExpiry(cptr, key, exptime);
+		if (status < 0) {
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+			throw new KeyspaceException(Status.toString(status));
+		}
+		
+		if (isBatched())
+			return status;
+		
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+		return status;
+	}
+
+	public int removeExpiry(String key) throws KeyspaceException {
+		int status = keyspace_client.Keyspace_RemoveExpiry(cptr, key);
+		if (status < 0) {
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+			throw new KeyspaceException(Status.toString(status));
+		}
+		
+		if (isBatched())
+			return status;
+		
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+		return status;
+	}
+
 	public int begin() {
 		return keyspace_client.Keyspace_Begin(cptr);
 	}

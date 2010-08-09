@@ -571,6 +571,37 @@ int keyspace_client_prune(keyspace_client_t kc,
 		const void *prefix, unsigned prefixlen);
 
 /*
+ * SET_EXPIRY operation
+ *
+ * Set an expiry on the given key.
+ *
+ * Parameters:
+ *  kc:			client object
+ *  key:        buffer to the key
+ *  keylen:		length of the key
+ *  exptime:	expire time in seconds
+ *
+ * Return value: the command status of the operation
+ */
+int keyspace_client_set_expiry(keyspace_client_t kc,
+		const void *key, unsigned keylen, uint64_t exptime);
+
+/*
+ * REMOVE_EXPIRY operation
+ *
+ * Remove an expiry on the given key.
+ *
+ * Parameters:
+ *  kc:			client object
+ *  key:        buffer to the key
+ *  keylen:		length of the key
+ *
+ * Return value: the command status of the operation
+ */
+int keyspace_client_remove_expiry(keyspace_client_t kc,
+		const void *key, unsigned keylen, uint64_t exptime);
+
+/*
  * Begin grouping commands.
  *
  * You can group several write operations and submit them as one. Before

@@ -402,6 +402,35 @@ sub prune {
 	$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
 }
 
+sub set_expiry {
+	my $self = $_[0];
+	my $key = $_[1];
+	my $exptime = $_[2];
+	my $status = keyspace_client::Keyspace_SetExpiry($self->{cptr}, $key, $exptime);
+	if ($status < 0) {
+		$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
+		return undef;
+	}
+	if (keyspace_client::Keyspace_IsBatched($self->{cptr})) {
+		return undef;
+	}
+	$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
+}
+
+sub remove_expiry {
+	my $self = $_[0];
+	my $key = $_[1];
+	my $status = keyspace_client::Keyspace_RemoveExpiry($self->{cptr}, $key);
+	if ($status < 0) {
+		$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
+		return undef;
+	}
+	if (keyspace_client::Keyspace_IsBatched($self->{cptr})) {
+		return undef;
+	}
+	$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
+}
+
 sub begin {
 	my $self = $_[0];
 	return keyspace_client::Keyspace_Begin($self->{cptr});

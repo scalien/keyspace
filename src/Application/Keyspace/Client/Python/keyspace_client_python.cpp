@@ -6527,6 +6527,87 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Keyspace_SetExpiry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int arg3 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Keyspace_SetExpiry",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_SetExpiry" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_SetExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_SetExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyspace_SetExpiry" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  result = (int)Keyspace_SetExpiry(arg1,(std::string const &)*arg2,arg3);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Keyspace_RemoveExpiry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Keyspace_RemoveExpiry",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_RemoveExpiry" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_RemoveExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_RemoveExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (int)Keyspace_RemoveExpiry(arg1,(std::string const &)*arg2);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Keyspace_Begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
@@ -6712,6 +6793,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Keyspace_Remove", _wrap_Keyspace_Remove, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Rename", _wrap_Keyspace_Rename, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Prune", _wrap_Keyspace_Prune, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_SetExpiry", _wrap_Keyspace_SetExpiry, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_RemoveExpiry", _wrap_Keyspace_RemoveExpiry, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Begin", _wrap_Keyspace_Begin, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Submit", _wrap_Keyspace_Submit, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Cancel", _wrap_Keyspace_Cancel, METH_VARARGS, NULL},

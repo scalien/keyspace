@@ -641,6 +641,72 @@ int Client::Prune(const ByteString &prefix)
 	return status;
 }
 
+int Client::SetExpiry(const ByteString &key, uint64_t expiryTime)
+{
+	int			status;
+	Command*	cmd;
+	ByteString	args[2];
+	DynArray<32> numString;
+
+	VALIDATE_CLIENT();
+	VALIDATE_KEY_LEN(key);
+	VALIDATE_SAFE();
+	VALIDATE_WRITE();
+
+	numString.Writef("%U", expiryTime);
+
+	args[0] = key;
+	args[1] = numString;
+	
+	cmd = CreateCommand(KEYSPACECLIENT_SET_EXPIRY, SIZE(args), args);
+	safeCommands.Append(cmd);
+	
+	if (IS_BATCHED())
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
+	
+	result->Close();
+	result->AppendCommand(cmd);
+
+	EventLoop();
+	status = result->CommandStatus();
+	
+	return status;
+}
+
+int Client::RemoveExpiry(const ByteString &key)
+{
+	int			status;
+	Command*	cmd;
+	ByteString	args[1];
+
+	VALIDATE_CLIENT();
+	VALIDATE_KEY_LEN(key);
+	VALIDATE_SAFE();
+	VALIDATE_WRITE();
+
+	args[0] = key;
+
+	cmd = CreateCommand(KEYSPACECLIENT_REMOVE_EXPIRY, SIZE(args), args);
+	safeCommands.Append(cmd);
+	
+	if (IS_BATCHED())
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
+	
+	result->Close();
+	result->AppendCommand(cmd);
+
+	EventLoop();
+	status = result->CommandStatus();
+	
+	return status;
+}
+
 int Client::Begin()
 {
 	if (!conns)

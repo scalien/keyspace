@@ -452,6 +452,26 @@ keyspace_client_prune(keyspace_client_t kc,
 }
 
 int
+keyspace_client_set_expiry(keyspace_client_t kc,
+		const void *key_, unsigned keylen, uint64_t exptime)
+{
+	Client *client = (Client *) kc;
+	const ByteString key(keylen, keylen, key_);
+	
+	return client->SetExpiry(key, exptime);
+}
+
+int
+keyspace_client_remove_expiry(keyspace_client_t kc,
+		const void *key_, unsigned keylen)
+{
+	Client *client = (Client *) kc;
+	const ByteString key(keylen, keylen, key_);
+	
+	return client->RemoveExpiry(key);
+}
+
+int
 keyspace_client_begin(keyspace_client_t kc)
 {
 	Client *client = (Client *) kc;

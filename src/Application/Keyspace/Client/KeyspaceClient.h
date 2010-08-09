@@ -86,6 +86,8 @@ public:
 	int				Remove(const ByteString &key);
 	int				Rename(const ByteString &from, const ByteString &to);
 	int				Prune(const ByteString &prefix);
+	int				SetExpiry(const ByteString &key, uint64_t expiryTime);
+	int				RemoveExpiry(const ByteString &key);
 
 	// grouping write commands
 	int				Begin();

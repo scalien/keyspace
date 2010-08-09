@@ -110,6 +110,8 @@ ZEND_NAMED_FUNCTION(_wrap_Keyspace_Delete);
 ZEND_NAMED_FUNCTION(_wrap_Keyspace_Remove);
 ZEND_NAMED_FUNCTION(_wrap_Keyspace_Rename);
 ZEND_NAMED_FUNCTION(_wrap_Keyspace_Prune);
+ZEND_NAMED_FUNCTION(_wrap_Keyspace_SetExpiry);
+ZEND_NAMED_FUNCTION(_wrap_Keyspace_RemoveExpiry);
 ZEND_NAMED_FUNCTION(_wrap_Keyspace_Begin);
 ZEND_NAMED_FUNCTION(_wrap_Keyspace_Submit);
 ZEND_NAMED_FUNCTION(_wrap_Keyspace_Cancel);

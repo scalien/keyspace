@@ -4334,6 +4334,88 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_Keyspace_SetExpiry(int argc, VALUE *argv, VALUE self) {
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int arg3 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  int val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0],SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_SetExpiry" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(argv[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_SetExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_SetExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  ecode3 = SWIG_AsVal_int(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyspace_SetExpiry" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  result = (int)Keyspace_SetExpiry(arg1,(std::string const &)*arg2,arg3);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return vresult;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Keyspace_RemoveExpiry(int argc, VALUE *argv, VALUE self) {
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  int res1 ;
+  int res2 = SWIG_OLDOBJ ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0],SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_RemoveExpiry" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(argv[1], &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Keyspace_RemoveExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Keyspace_RemoveExpiry" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (int)Keyspace_RemoveExpiry(arg1,(std::string const &)*arg2);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return vresult;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_Keyspace_Begin(int argc, VALUE *argv, VALUE self) {
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -4826,6 +4908,8 @@ SWIGEXPORT void Init_keyspace_client(void) {
   rb_define_module_function(mKeyspace_client, "Keyspace_Remove", VALUEFUNC(_wrap_Keyspace_Remove), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Rename", VALUEFUNC(_wrap_Keyspace_Rename), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Prune", VALUEFUNC(_wrap_Keyspace_Prune), -1);
+  rb_define_module_function(mKeyspace_client, "Keyspace_SetExpiry", VALUEFUNC(_wrap_Keyspace_SetExpiry), -1);
+  rb_define_module_function(mKeyspace_client, "Keyspace_RemoveExpiry", VALUEFUNC(_wrap_Keyspace_RemoveExpiry), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Begin", VALUEFUNC(_wrap_Keyspace_Begin), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Submit", VALUEFUNC(_wrap_Keyspace_Submit), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Cancel", VALUEFUNC(_wrap_Keyspace_Cancel), -1);

@@ -3417,6 +3417,83 @@ fail:
 }
 
 
+ZEND_NAMED_FUNCTION(_wrap_Keyspace_SetExpiry) {
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  unsigned int arg3 ;
+  int result;
+  std::string temp2 ;
+  zval **args[3];
+  
+  SWIG_ResetError();
+  if(ZEND_NUM_ARGS() != 3 || zend_get_parameters_array_ex(3, args) != SUCCESS) {
+    WRONG_PARAM_COUNT;
+  }
+  
+  {
+    if(SWIG_ConvertPtr(*args[0], (void **) &arg1, 0, 0) < 0) {
+      /* Allow NULL from php for void* */
+      if ((*args[0])->type==IS_NULL) arg1=0;
+      else
+      SWIG_PHP_Error(E_ERROR, "Type error in argument 1 of Keyspace_SetExpiry. Expected SWIGTYPE_p_p_void");
+    }
+  }
+  {
+    convert_to_string_ex(args[1]);
+    temp2 = std::string(Z_STRVAL_PP(args[1]),Z_STRLEN_PP(args[1]));
+    arg2 = &temp2;
+  }
+  {
+    /*@SWIG:CONVERT_INT_IN@*/
+    convert_to_long_ex(args[2]);
+    arg3 = (unsigned int) Z_LVAL_PP(args[2]);
+    /*@SWIG@*/;
+  }
+  result = (int)Keyspace_SetExpiry(arg1,(std::string const &)*arg2,arg3);
+  {
+    ZVAL_LONG(return_value,result);
+  }
+  return;
+fail:
+  zend_error(SWIG_ErrorCode(),SWIG_ErrorMsg());
+}
+
+
+ZEND_NAMED_FUNCTION(_wrap_Keyspace_RemoveExpiry) {
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  std::string temp2 ;
+  zval **args[2];
+  
+  SWIG_ResetError();
+  if(ZEND_NUM_ARGS() != 2 || zend_get_parameters_array_ex(2, args) != SUCCESS) {
+    WRONG_PARAM_COUNT;
+  }
+  
+  {
+    if(SWIG_ConvertPtr(*args[0], (void **) &arg1, 0, 0) < 0) {
+      /* Allow NULL from php for void* */
+      if ((*args[0])->type==IS_NULL) arg1=0;
+      else
+      SWIG_PHP_Error(E_ERROR, "Type error in argument 1 of Keyspace_RemoveExpiry. Expected SWIGTYPE_p_p_void");
+    }
+  }
+  {
+    convert_to_string_ex(args[1]);
+    temp2 = std::string(Z_STRVAL_PP(args[1]),Z_STRLEN_PP(args[1]));
+    arg2 = &temp2;
+  }
+  result = (int)Keyspace_RemoveExpiry(arg1,(std::string const &)*arg2);
+  {
+    ZVAL_LONG(return_value,result);
+  }
+  return;
+fail:
+  zend_error(SWIG_ErrorCode(),SWIG_ErrorMsg());
+}
+
+
 ZEND_NAMED_FUNCTION(_wrap_Keyspace_Begin) {
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -3671,6 +3748,8 @@ static function_entry keyspace_client_functions[] = {
  ZEND_NAMED_FE(keyspace_remove,_wrap_Keyspace_Remove,NULL)
  ZEND_NAMED_FE(keyspace_rename,_wrap_Keyspace_Rename,NULL)
  ZEND_NAMED_FE(keyspace_prune,_wrap_Keyspace_Prune,NULL)
+ ZEND_NAMED_FE(keyspace_setexpiry,_wrap_Keyspace_SetExpiry,NULL)
+ ZEND_NAMED_FE(keyspace_removeexpiry,_wrap_Keyspace_RemoveExpiry,NULL)
  ZEND_NAMED_FE(keyspace_begin,_wrap_Keyspace_Begin,NULL)
  ZEND_NAMED_FE(keyspace_submit,_wrap_Keyspace_Submit,NULL)
  ZEND_NAMED_FE(keyspace_cancel,_wrap_Keyspace_Cancel,NULL)

@@ -213,6 +213,14 @@ abstract class keyspace_client {
 		return Keyspace_Prune($client,$prefix);
 	}
 
+	static function Keyspace_SetExpiry($client,$key,$exptime) {
+		return Keyspace_SetExpiry($client,$key,$exptime);
+	}
+
+	static function Keyspace_RemoveExpiry($client,$key) {
+		return Keyspace_RemoveExpiry($client,$key);
+	}
+
 	static function Keyspace_Begin($client) {
 		return Keyspace_Begin($client);
 	}

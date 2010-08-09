@@ -27,15 +27,15 @@ void			Keyspace_ResultBegin(ResultObj result);
 void			Keyspace_ResultNext(ResultObj result);
 bool			Keyspace_ResultIsEnd(ResultObj result);
 void			Keyspace_ResultClose(ResultObj result);
-std::string	Keyspace_ResultKey(ResultObj result);
-std::string	Keyspace_ResultValue(ResultObj result);
-int			Keyspace_ResultTransportStatus(ResultObj result);
-int			Keyspace_ResultConnectivityStatus(ResultObj result);
-int			Keyspace_ResultTimeoutStatus(ResultObj result);
-int			Keyspace_ResultCommandStatus(ResultObj result);
+std::string		Keyspace_ResultKey(ResultObj result);
+std::string		Keyspace_ResultValue(ResultObj result);
+int				Keyspace_ResultTransportStatus(ResultObj result);
+int				Keyspace_ResultConnectivityStatus(ResultObj result);
+int				Keyspace_ResultTimeoutStatus(ResultObj result);
+int				Keyspace_ResultCommandStatus(ResultObj result);
 
 ClientObj		Keyspace_Create();
-int			Keyspace_Init(ClientObj client, const Keyspace_NodeParams &params);
+int				Keyspace_Init(ClientObj client, const Keyspace_NodeParams &params);
 void			Keyspace_Destroy(ClientObj client);
 ResultObj		Keyspace_GetResult(ClientObj);
 
@@ -45,109 +45,111 @@ uint64_t		Keyspace_GetGlobalTimeout(ClientObj client);
 uint64_t		Keyspace_GetMasterTimeout(ClientObj client);
 
 // connection state related commands
-int			Keyspace_GetMaster(ClientObj client);
-void		Keyspace_DistributeDirty(ClientObj client, bool dd);
+int				Keyspace_GetMaster(ClientObj client);
+void			Keyspace_DistributeDirty(ClientObj client, bool dd);
 
-int			Keyspace_Get(ClientObj client, const std::string& key);
-int			Keyspace_DirtyGet(ClientObj client, const std::string& key);
+int				Keyspace_Get(ClientObj client, const std::string& key);
+int				Keyspace_DirtyGet(ClientObj client, const std::string& key);
 
-int			Keyspace_Count(ClientObj client, 
+int				Keyspace_Count(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 uint64_t count,
 					 bool next,
 					 bool forward);
-int			Keyspace_CountStr(ClientObj client, 
+int				Keyspace_CountStr(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 const std::string& count,
 					 bool next,
 					 bool forward);
 
-int			Keyspace_DirtyCount(ClientObj client, 
+int				Keyspace_DirtyCount(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 uint64_t count,
 					 bool next,
 					 bool forward);
-int			Keyspace_DirtyCountStr(ClientObj client, 
+int				Keyspace_DirtyCountStr(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 const std::string& count,
 					 bool next,
 					 bool forward);
 
-int			Keyspace_ListKeys(ClientObj client, 
+int				Keyspace_ListKeys(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 uint64_t count,
 					 bool next,
 					 bool forward);
-int			Keyspace_ListKeysStr(ClientObj client, 
+int				Keyspace_ListKeysStr(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 const std::string& count,
 					 bool next,
 					 bool forward);
 
-int			Keyspace_DirtyListKeys(ClientObj client, 
+int				Keyspace_DirtyListKeys(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 uint64_t count,
 					 bool next,
 					 bool forward);
-int			Keyspace_DirtyListKeysStr(ClientObj client, 
+int				Keyspace_DirtyListKeysStr(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 const std::string& count,
 					 bool next,
 					 bool forward);
 
-int			Keyspace_ListKeyValues(ClientObj client, 
+int				Keyspace_ListKeyValues(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 uint64_t count,
 					 bool next,
 					 bool forward);
-int			Keyspace_ListKeyValuesStr(ClientObj client, 
+int				Keyspace_ListKeyValuesStr(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 const std::string& count,
 					 bool next,
 					 bool forward);
 
-int			Keyspace_DirtyListKeyValues(ClientObj client, 
+int				Keyspace_DirtyListKeyValues(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 uint64_t count,
 					 bool next,
 					 bool forward);
-int			Keyspace_DirtyListKeyValuesStr(ClientObj client, 
+int				Keyspace_DirtyListKeyValuesStr(ClientObj client, 
 					 const std::string& prefix,
 					 const std::string& startKey,
 					 const std::string& count,
 					 bool next,
 					 bool forward);
 					 
-int			Keyspace_Set(ClientObj client, const std::string& key, const std::string& value);
-int			Keyspace_TestAndSet(ClientObj client, 
+int				Keyspace_Set(ClientObj client, const std::string& key, const std::string& value);
+int				Keyspace_TestAndSet(ClientObj client, 
 					   const std::string& key,
 					   const std::string& test,
 					   const std::string& value);
-int			Keyspace_Add(ClientObj client, const std::string& key, int64_t num);
-int			Keyspace_AddStr(ClientObj client, const std::string& key, const std::string& num);
-int			Keyspace_Delete(ClientObj client, const std::string& key);
-int			Keyspace_Remove(ClientObj client, const std::string& key);
-int			Keyspace_Rename(ClientObj client, const std::string& from, const std::string& to);
-int			Keyspace_Prune(ClientObj client, const std::string& prefix);
+int				Keyspace_Add(ClientObj client, const std::string& key, int64_t num);
+int				Keyspace_AddStr(ClientObj client, const std::string& key, const std::string& num);
+int				Keyspace_Delete(ClientObj client, const std::string& key);
+int				Keyspace_Remove(ClientObj client, const std::string& key);
+int				Keyspace_Rename(ClientObj client, const std::string& from, const std::string& to);
+int				Keyspace_Prune(ClientObj client, const std::string& prefix);
+int				Keyspace_SetExpiry(ClientObj client, const std::string& key, int exptime);
+int				Keyspace_RemoveExpiry(ClientObj client, const std::string& key);
 
 // grouping write commands
-int			Keyspace_Begin(ClientObj client);
-int			Keyspace_Submit(ClientObj client);
-int			Keyspace_Cancel(ClientObj client);
-bool		Keyspace_IsBatched(ClientObj client);
+int				Keyspace_Begin(ClientObj client);
+int				Keyspace_Submit(ClientObj client);
+int				Keyspace_Cancel(ClientObj client);
+bool			Keyspace_IsBatched(ClientObj client);
 
 // debugging command
-void		Keyspace_SetTrace(bool trace);
+void			Keyspace_SetTrace(bool trace);
 
 #endif

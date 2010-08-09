@@ -362,7 +362,29 @@ class KeyspaceClient {
 	}
 
 	public function prune($prefix) {
-		$status = keyspace_client::Keyspace_Prefix($this->co, $prefix);
+		$status = keyspace_client::Keyspace_Prune($this->co, $prefix);
+		if ($status < 0) {
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
+			return NULL;
+		}
+		if ($this->isBatched())
+			return NULL;
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
+	}	
+
+	public function setExpiry($key, $exptime) {
+		$status = keyspace_client::Keyspace_SetExpiry($this->co, $key, $exptime);
+		if ($status < 0) {
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
+			return NULL;
+		}
+		if ($this->isBatched())
+			return NULL;
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
+	}	
+
+	public function removeExpiry($key) {
+		$status = keyspace_client::Keyspace_RemoveExpiry($this->co, $key);
 		if ($status < 0) {
 			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 			return NULL;

@@ -195,6 +195,14 @@ public class keyspace_client {
     return keyspace_clientJNI.Keyspace_Prune(SWIGTYPE_p_void.getCPtr(client), prefix);
   }
 
+  public static int Keyspace_SetExpiry(SWIGTYPE_p_void client, String key, long exptime) {
+    return keyspace_clientJNI.Keyspace_SetExpiry(SWIGTYPE_p_void.getCPtr(client), key, exptime);
+  }
+
+  public static int Keyspace_RemoveExpiry(SWIGTYPE_p_void client, String key) {
+    return keyspace_clientJNI.Keyspace_RemoveExpiry(SWIGTYPE_p_void.getCPtr(client), key);
+  }
+
   public static int Keyspace_Begin(SWIGTYPE_p_void client) {
     return keyspace_clientJNI.Keyspace_Begin(SWIGTYPE_p_void.getCPtr(client));
   }
