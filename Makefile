@@ -146,8 +146,7 @@ CLIENTLIBS = \
 
 EXECUTABLES = \
 	$(BIN_DIR)/keyspaced \
-	$(BIN_DIR)/clienttest \
-	$(BIN_DIR)/bdbtool
+	$(BIN_DIR)/clienttest
 	
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
