@@ -29,21 +29,22 @@ public:
 	ValBuffer	test;
 	ValBuffer	prefix;
 	int64_t		num;
-	uint64_t	expiryTime;
+	uint64_t	prevExpiryTime;
+	uint64_t	nextExpiryTime;
 	
 	void		Init(char type_);
 	
-	void		Set(ByteString key_, ByteString value_);
-	void		TestAndSet(ByteString key_, 
-				ByteString test_, ByteString value_);
-	void		Add(ByteString key_, int64_t num_);
-	void		Rename(ByteString key_, ByteString newKey_);
-	void		Delete(ByteString key_);
-	void		Remove(ByteString key_);
-	void		Prune(ByteString prefix_);
-	void		SetExpiry(ByteString key_, uint64_t expiryTime);
-	void		Expire(ByteString key_, uint64_t expiryTime);
-	void		RemoveExpiry(ByteString key_);
+//	void		Set(ByteString key_, ByteString value_);
+//	void		TestAndSet(ByteString key_, 
+//				ByteString test_, ByteString value_);
+//	void		Add(ByteString key_, int64_t num_);
+//	void		Rename(ByteString key_, ByteString newKey_);
+//	void		Delete(ByteString key_);
+//	void		Remove(ByteString key_);
+//	void		Prune(ByteString prefix_);
+//	void		SetExpiry(ByteString key_, uint64_t expiryTime_);
+//	void		Expire(ByteString key_, uint64_t expiryTime_);
+//	void		RemoveExpiry(ByteString key_, uint64_t expiryTime_);
 
 	bool		Read(ByteString& data, unsigned &nread);
 	bool		Write(ByteString& data);

@@ -177,7 +177,7 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			break;
 		case KEYSPACECLIENT_SET_EXPIRY:
 			op->type = KeyspaceOp::SET_EXPIRY;
-			op->expiryTime = Now() + 1000 * expiryTime;
+			op->nextExpiryTime = Now() + 1000 * expiryTime;
 			break;
 		case KEYSPACECLIENT_REMOVE_EXPIRY:
 			op->type = KeyspaceOp::REMOVE_EXPIRY;

@@ -34,6 +34,7 @@ public:
 	bool		Set(Transaction* tx, const ByteString &key, const ByteString &value);
 	bool		Set(Transaction* tx, const char* key, const ByteString &value);
 	bool		Set(Transaction* tx, const char* key, const char* value);
+	bool		Set(Transaction* tx, const ByteString &key, uint64_t value);
 	
 	bool		Delete(Transaction* tx, const ByteString &key);
 	bool		Prune(Transaction* tx, const ByteString &prefix);

@@ -6,73 +6,74 @@ void KeyspaceMsg::Init(char type_)
 	type = type_;
 }
 
-void KeyspaceMsg::Set(ByteString key_, ByteString value_)
-{
-	Init(KEYSPACE_SET);
-	key.Set(key_);
-	value.Set(value_);
-}
-	
-void KeyspaceMsg::TestAndSet(ByteString key_,
-ByteString test_, ByteString value_)
-{
-	Init(KEYSPACE_TEST_AND_SET);
-	key.Set(key_);
-	test.Set(test_);
-	value.Set(value_);
-}
-
-void KeyspaceMsg::Add(ByteString key_, int64_t num_)
-{
-	Init(KEYSPACE_ADD);
-	key.Set(key_);
-	num = num_;
-}
-
-void KeyspaceMsg::Rename(ByteString key_, ByteString newKey_)
-{
-	Init(KEYSPACE_RENAME);
-	key.Set(key_);
-	newKey.Set(newKey_);
-}
-
-void KeyspaceMsg::Delete(ByteString key_)
-{
-	Init(KEYSPACE_DELETE);	
-	key.Set(key_);
-}
-
-void KeyspaceMsg::Remove(ByteString key_)
-{
-	Init(KEYSPACE_REMOVE);	
-	key.Set(key_);
-}
-
-void KeyspaceMsg::Prune(ByteString prefix_)
-{
-	Init(KEYSPACE_PRUNE);
-	prefix.Set(prefix_);
-}
-
-void KeyspaceMsg::SetExpiry(ByteString key_, uint64_t expiryTime_)
-{
-	Init(KEYSPACE_SET_EXPIRY);
-	key.Set(key_);
-	expiryTime = expiryTime_;
-}
-	
-void KeyspaceMsg::Expire(ByteString key_, uint64_t expiryTime_)
-{
-	Init(KEYSPACE_EXPIRE);
-	key.Set(key_);
-	expiryTime = expiryTime_;
-}
-
-void KeyspaceMsg::RemoveExpiry(ByteString key_)
-{
-	Init(KEYSPACE_REMOVE_EXPIRY);
-	key.Set(key_);
-}
+//void KeyspaceMsg::Set(ByteString key_, ByteString value_)
+//{
+//	Init(KEYSPACE_SET);
+//	key.Set(key_);
+//	value.Set(value_);
+//}
+//	
+//void KeyspaceMsg::TestAndSet(ByteString key_,
+//ByteString test_, ByteString value_)
+//{
+//	Init(KEYSPACE_TEST_AND_SET);
+//	key.Set(key_);
+//	test.Set(test_);
+//	value.Set(value_);
+//}
+//
+//void KeyspaceMsg::Add(ByteString key_, int64_t num_)
+//{
+//	Init(KEYSPACE_ADD);
+//	key.Set(key_);
+//	num = num_;
+//}
+//
+//void KeyspaceMsg::Rename(ByteString key_, ByteString newKey_)
+//{
+//	Init(KEYSPACE_RENAME);
+//	key.Set(key_);
+//	newKey.Set(newKey_);
+//}
+//
+//void KeyspaceMsg::Delete(ByteString key_)
+//{
+//	Init(KEYSPACE_DELETE);	
+//	key.Set(key_);
+//}
+//
+//void KeyspaceMsg::Remove(ByteString key_)
+//{
+//	Init(KEYSPACE_REMOVE);	
+//	key.Set(key_);
+//}
+//
+//void KeyspaceMsg::Prune(ByteString prefix_)
+//{
+//	Init(KEYSPACE_PRUNE);
+//	prefix.Set(prefix_);
+//}
+//
+//void KeyspaceMsg::SetExpiry(ByteString key_, uint64_t expiryTime_)
+//{
+//	Init(KEYSPACE_SET_EXPIRY);
+//	key.Set(key_);
+//	expiryTime = expiryTime_;
+//}
+//	
+//void KeyspaceMsg::Expire(ByteString key_, uint64_t expiryTime_)
+//{
+//	Init(KEYSPACE_EXPIRE);
+//	key.Set(key_);
+//	expiryTime = expiryTime_;
+//}
+//
+//void KeyspaceMsg::RemoveExpiry(ByteString key_, uint64_t expiryTime_)
+//{
+//	Init(KEYSPACE_REMOVE_EXPIRY);
+//	key.Set(key_);
+//	expiryTime = expiryTime_;
+//}
 
 bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 {
@@ -109,16 +110,16 @@ bool KeyspaceMsg::Read(ByteString& data, unsigned &n)
 						   &type, &prefix);
 			break;
 		case KEYSPACE_SET_EXPIRY:
-			read = snreadf(data.buffer, data.length, "%c:%M:%U",
-						   &type, &key, &expiryTime);
+			read = snreadf(data.buffer, data.length, "%c:%M:%U:%U",
+						   &type, &key, &prevExpiryTime, &nextExpiryTime);
 			break;
 		case KEYSPACE_EXPIRE:
 			read = snreadf(data.buffer, data.length, "%c:%M:%U",
-						   &type, &key, &expiryTime);
+						   &type, &key, &prevExpiryTime);
 			break;
 		case KEYSPACE_REMOVE_EXPIRY:
-			read = snreadf(data.buffer, data.length, "%c:%M",
-						   &type, &key);
+			read = snreadf(data.buffer, data.length, "%c:%M:%U",
+						   &type, &key, &prevExpiryTime);
 			break;
 		default:
 			return false;
@@ -162,16 +163,16 @@ bool KeyspaceMsg::Write(ByteString& data)
 							   type, &prefix);
 			break;
 		case KEYSPACE_SET_EXPIRY:
-			return data.Writef("%c:%M:%U",
-						       type, &key, expiryTime);
+			return data.Writef("%c:%M:%U:%U",
+						       type, &key, prevExpiryTime, nextExpiryTime);
 			break;
 		case KEYSPACE_EXPIRE:
 			return data.Writef("%c:%M:%U",
-						       type, &key, expiryTime);
+						       type, &key, prevExpiryTime);
 			break;
 		case KEYSPACE_REMOVE_EXPIRY:
-			return data.Writef("%c:%M",
-						       type, &key);
+			return data.Writef("%c:%M:%U",
+						       type, &key, prevExpiryTime);
 			break;
 		default:
 			return false;
@@ -222,6 +223,15 @@ bool KeyspaceMsg::FromKeyspaceOp(KeyspaceOp* op)
 	if (op->type == KeyspaceOp::ADD)
 		num = op->num;
 	if (op->type == KeyspaceOp::SET_EXPIRY)
-		expiryTime = op->expiryTime;
+	{
+		prevExpiryTime = op->prevExpiryTime;
+		nextExpiryTime = op->nextExpiryTime;
+	}
+	if (op->type == KeyspaceOp::EXPIRE ||
+		op->type == KeyspaceOp::REMOVE_EXPIRY)
+	{
+		prevExpiryTime = op->prevExpiryTime;
+	}
+		
 	return ret;
 }

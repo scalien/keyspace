@@ -63,6 +63,7 @@ private:
 	void			Append();
 	void			FailKeyspaceOps();
 	void			InitExpiryTimer();
+	uint64_t		GetExpiryTime(ByteString key);
 	
 	bool			asyncAppenderActive;
 	bool			catchingUp;

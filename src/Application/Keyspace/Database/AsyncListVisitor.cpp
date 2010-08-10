@@ -92,8 +92,16 @@ void AsyncVisitorCallback::Execute()
 				tmp.buffer = valuebuf.buffer + valuepos[i];
 				tmp.size = valuelen[i];
 				tmp.length = valuelen[i];
+				if (op->key.length > 2 && op->key.buffer[0] == '!' && op->key.buffer[1] == '!')
+				{
+					// for debugging
+					userValue = tmp;
+				}
+				else
+				{
 				KeyspaceDB::ReadValue(tmp, storedPaxosID,
 									  storedCommandID, userValue);
+				}
 				// this is a huge hack, since op->value is a ByteBuffer!
 				// if it were allocated, this would result in memleak
 				op->value.buffer = userValue.buffer;

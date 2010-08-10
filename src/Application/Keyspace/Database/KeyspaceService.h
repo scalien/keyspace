@@ -73,7 +73,8 @@ public:
 	int64_t					num;
 	uint64_t				count;
 	uint64_t				offset;
-	uint64_t				expiryTime;
+	uint64_t				prevExpiryTime;
+	uint64_t				nextExpiryTime;
 	bool					forward;
 	bool					status;
 	

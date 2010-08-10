@@ -487,7 +487,7 @@ KeyspaceOp* HttpKeyspaceSession::ProcessSetExpiry(const UrlParam& params)
 	op->type = KeyspaceOp::SET_EXPIRY;
 	
 	op->key.Set(key);
-	op->expiryTime = Now() + 1000 * strntouint64(expiryTime.buffer, expiryTime.length, &nread);
+	op->nextExpiryTime = Now() + 1000 * strntouint64(expiryTime.buffer, expiryTime.length, &nread);
 	if (nread != (unsigned) expiryTime.length)
 	{
 		delete op;

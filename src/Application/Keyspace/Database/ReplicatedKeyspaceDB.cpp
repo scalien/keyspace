@@ -265,10 +265,9 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 	bool		ret;
 	unsigned	nread;
 	int64_t		num;
-	uint64_t	storedPaxosID, storedCommandID, expiryTime;
+	uint64_t	storedPaxosID, storedCommandID;
 	ByteString	userValue;
 	ValBuffer	tmp;
-	Cursor		cursor;
 	ByteString	key;
 	
 	ret = true;
@@ -348,98 +347,52 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		break;
 
 	case KEYSPACE_SET_EXPIRY:
-		// TODO: catchup semantics
-	
-		// check old expiry
-		WriteExpiryKey(kdata, msg.key);
-		if (table->Get(transaction, kdata, rdata))
+		Log_Message("Setting expiry for key: %.*s", msg.key.length, msg.key.buffer);
+		// remove old expiry
+		if (msg.prevExpiryTime > 0)
 		{
-			// this key already had an expiry
-			ReadValue(rdata, storedPaxosID, storedCommandID, userValue);
-			CHECK_CMD();
-			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
-			if (nread < 1)
-				ASSERT_FAIL();
-			// delete old value
-			WriteExpiryTime(kdata, expiryTime, msg.key);
-			ret &= table->Delete(transaction, kdata);
+			WriteExpiryTime(kdata, msg.prevExpiryTime, msg.key);
+			table->Delete(transaction, kdata);			
 		}
-	
 		// write !!t:<expirytime>:<key> => NULL
-		WriteExpiryTime(kdata, msg.expiryTime, msg.key);
+		WriteExpiryTime(kdata, msg.nextExpiryTime, msg.key);
 		rdata.Clear();
-		WriteValue(wdata, paxosID, storedPaxosID, rdata);
-		ret &= table->Set(transaction, kdata, wdata);
-
+		table->Set(transaction, kdata, rdata);
 		// write !!k:<key> => <expiryTime>
 		WriteExpiryKey(kdata, msg.key);
-		WriteValue(wdata, paxosID, commandID, msg.expiryTime);
-		ret &= table->Set(transaction, kdata, wdata);
-
+		table->Set(transaction, kdata, msg.nextExpiryTime);
 		if (RLOG->IsSafeDB())
 			InitExpiryTimer();
+		ret = true;
 		break;
 
 	case KEYSPACE_EXPIRE:
-		// TODO: catchup semantics
-
-		Log_Trace();
-		
-		table->Iterate(transaction, cursor);	
-		kdata.Set("!!t:");
-		if (!cursor.Start(kdata))
-			ASSERT_FAIL();
-		cursor.Close();
-
-		if (kdata.length < 2)
-			ASSERT_FAIL();
-		
-		if (kdata.buffer[0] != '!' || kdata.buffer[1] != '!')
-			ASSERT_FAIL();
-
-		ReadExpiryTime(kdata, expiryTime, key);
-
-		assert(msg.key == key); // the first to be expired matches the command
-
+		Log_Message("Expiring key: %.*s", msg.key.length, msg.key.buffer);
+		// delete !!k:<key> => <expiryTime>
+		WriteExpiryKey(kdata, msg.key);
 		table->Delete(transaction, kdata);
-		table->Delete(transaction, key);
-
-		WriteExpiryKey(kdata, key);
+		// delete !!t:<expirytime>:<key> => NULL
+		WriteExpiryTime(kdata, msg.prevExpiryTime, msg.key);
 		table->Delete(transaction, kdata);
-		
-		ret = true;
-		Log_Message("Expiring key: %.*s", key.length, key.buffer);
-
+		// delete actual key
+		table->Delete(transaction, msg.key); // (*)
 		if (RLOG->IsSafeDB())
 			InitExpiryTimer();
-
+		ret = true;
 		break;
 
 	case KEYSPACE_REMOVE_EXPIRY:
-		// TODO: catchup semantics
-
-		Log_Trace();
-		
+		// same as above except (*) is missing
+		Log_Message("Removing expiry for key: %.*s", msg.key.length, msg.key.buffer);
+		// delete !!k:<key> => <expiryTime>
 		WriteExpiryKey(kdata, msg.key);
-		if (table->Get(transaction, kdata, rdata))
-		{
-			// the key had an expiry
-			ReadValue(rdata, storedPaxosID, storedCommandID, userValue);
-			CHECK_CMD();
-			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
-			if (nread < 1)
-				ASSERT_FAIL();
-		}
 		table->Delete(transaction, kdata);
-		WriteExpiryTime(kdata, expiryTime, msg.key);
+		// delete !!t:<expirytime>:<key> => NULL
+		WriteExpiryTime(kdata, msg.prevExpiryTime, msg.key);
 		table->Delete(transaction, kdata);
-
-		ret = true;
-		Log_Message("Removing expiry for key: %.*s", key.length, key.buffer);
-
 		if (RLOG->IsSafeDB())
 			InitExpiryTimer();
-
+		ret = true;
 		break;
 
 	default:
@@ -489,15 +442,16 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 
 void ReplicatedKeyspaceDB::Append()
 {
+	ByteString	bs;
+	KeyspaceOp*	op;
+	KeyspaceOp**it;
+	uint64_t expiryTime;
+
 	Log_Trace();
 	
 	if (ops.Length() == 0)
 		return;
 	
-	ByteString	bs;
-	KeyspaceOp*	op;
-	KeyspaceOp**it;
-
 	pvalue.length = 0;
 	bs.Set(pvalue);
 
@@ -509,6 +463,16 @@ void ReplicatedKeyspaceDB::Append()
 		
 		if (op->appended)
 			ASSERT_FAIL();
+		
+		if (op->type == KeyspaceOp::SET_EXPIRY ||
+			op->type == KeyspaceOp::EXPIRE ||
+			op->type == KeyspaceOp::REMOVE_EXPIRY)
+		{
+			// at this point we have up-to-date info on the expiry time
+			expiryTime = GetExpiryTime(op->key);
+			op->prevExpiryTime = expiryTime;
+		}
+
 		
 		msg.FromKeyspaceOp(op);
 		if (msg.Write(bs))
@@ -670,7 +634,7 @@ void ReplicatedKeyspaceDB::OnExpiryTimer()
 	op->type = KeyspaceOp::EXPIRE;
 	op->key.Allocate(key.length);
 	op->key.Set(key);
-	op->expiryTime = expiryTime;
+	// expiryTime is set in Append()
 	op->service = NULL;
 	Add(op);
 	Submit();
@@ -707,8 +671,30 @@ void ReplicatedKeyspaceDB::InitExpiryTimer()
 		return;
 
 	ReadExpiryTime(kdata, expiryTime, key);
+	Log_Trace("Setting expiry for %.*s at %" PRIu64 "", key.length, key.buffer, expiryTime);
 
 	expiryTimer.Set(expiryTime);
 	EventLoop::Add(&expiryTimer);
+}
+
+uint64_t ReplicatedKeyspaceDB::GetExpiryTime(ByteString key)
+{
+	uint64_t expiryTime;
+	ByteString userValue;
+	unsigned nread;
+	
+	WriteExpiryKey(kdata, key);
+	if (table->Get(RLOG->GetTransaction(), kdata, rdata))
+	{
+		Log_Trace("read %.*s => %.*s", kdata.length, kdata.buffer, rdata.length, rdata.buffer);
+		// the key has an expiry
+		expiryTime = strntouint64(rdata.buffer, rdata.length, &nread);
+		if (nread < 1)
+			ASSERT_FAIL();
+		return expiryTime;
+	}
+	else
+		return 0;
+
 }
 

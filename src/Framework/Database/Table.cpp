@@ -194,6 +194,17 @@ bool Table::Set(Transaction* tx,
 	return Table::Set(tx, bsKey, bsValue);
 }
 
+bool Table::Set(Transaction* tx,
+				const ByteString &key,
+				uint64_t value)
+{
+	ByteArray<32> ba;
+	
+	ba.Writef("%U", value);
+	
+	return Set(tx, key, ba);
+}
+
 bool Table::Delete(Transaction* tx, const ByteString &key)
 {
 	Dbt dbtKey(key.buffer, key.length);

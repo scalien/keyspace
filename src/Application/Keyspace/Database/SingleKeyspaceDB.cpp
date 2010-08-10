@@ -183,47 +183,42 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		if (table->Get(&transaction, kdata, vdata))
 		{
 			// this key already had an expiry
-			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
-			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
+			expiryTime = strntouint64(vdata.buffer, vdata.length, &nread);
 			if (nread < 1)
 				ASSERT_FAIL();
 			// delete old value
 			WriteExpiryTime(kdata, expiryTime, op->key);
-			op->status &= table->Delete(&transaction, kdata);
+			table->Delete(&transaction, kdata);
 		}
-	
 		// write !!t:<expirytime>:<key> => NULL
-		WriteExpiryTime(kdata, op->expiryTime, op->key);
+		WriteExpiryTime(kdata, op->nextExpiryTime, op->key);
 		op->value.Clear();
-		WriteValue(vdata, 1, 0, op->value);
-		op->status &= table->Set(&transaction, kdata, vdata);
-
+		table->Set(&transaction, kdata, op->value);
 		// write !!k:<key> => <expiryTime>
 		WriteExpiryKey(kdata, op->key);
-		WriteValue(vdata, 1, 0, op->expiryTime);
-		op->status &= table->Set(&transaction, kdata, vdata);
-
+		table->Set(&transaction, kdata, op->nextExpiryTime);
 		InitExpiryTimer();
+		op->status = true;
 		op->service->OnComplete(op);
 	}
 	else if (op->type == KeyspaceOp::REMOVE_EXPIRY)
 	{
+		// check old expiry
 		WriteExpiryKey(kdata, op->key);
 		if (table->Get(&transaction, kdata, vdata))
 		{
-			// the key had an expiry
-			ReadValue(vdata, storedPaxosID, storedCommandID, userValue);
-			expiryTime = strntouint64(userValue.buffer, userValue.length, &nread);
+			// this key already had an expiry
+			expiryTime = strntouint64(vdata.buffer, vdata.length, &nread);
 			if (nread < 1)
 				ASSERT_FAIL();
+			// delete old value
+			WriteExpiryTime(kdata, expiryTime, op->key);
+			table->Delete(&transaction, kdata);
 		}
+		WriteExpiryKey(kdata, op->key);
 		table->Delete(&transaction, kdata);
-		WriteExpiryTime(kdata, expiryTime, op->key);
-		table->Delete(&transaction, kdata);
-
-		op->status = true;
-
 		InitExpiryTimer();
+		op->status = true;
 		op->service->OnComplete(op);
 	}
 	else
