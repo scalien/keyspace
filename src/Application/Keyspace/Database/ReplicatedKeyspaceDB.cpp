@@ -347,7 +347,7 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		break;
 
 	case KEYSPACE_SET_EXPIRY:
-		Log_Message("Setting expiry for key: %.*s", msg.key.length, msg.key.buffer);
+		Log_Trace("Setting expiry for key: %.*s", msg.key.length, msg.key.buffer);
 		// remove old expiry
 		if (msg.prevExpiryTime > 0)
 		{
@@ -367,7 +367,7 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		break;
 
 	case KEYSPACE_EXPIRE:
-		Log_Message("Expiring key: %.*s", msg.key.length, msg.key.buffer);
+		Log_Trace("Expiring key: %.*s", msg.key.length, msg.key.buffer);
 		// delete !!k:<key> => <expiryTime>
 		WriteExpiryKey(kdata, msg.key);
 		table->Delete(transaction, kdata);
@@ -383,7 +383,7 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 
 	case KEYSPACE_REMOVE_EXPIRY:
 		// same as above except (*) is missing
-		Log_Message("Removing expiry for key: %.*s", msg.key.length, msg.key.buffer);
+		Log_Trace("Removing expiry for key: %.*s", msg.key.length, msg.key.buffer);
 		// delete !!k:<key> => <expiryTime>
 		WriteExpiryKey(kdata, msg.key);
 		table->Delete(transaction, kdata);

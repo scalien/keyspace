@@ -178,6 +178,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::SET_EXPIRY)
 	{
+		Log_Trace("Setting expiry for key: %.*s", op->key.length, op->key.buffer);
 		// check old expiry
 		WriteExpiryKey(kdata, op->key);
 		if (table->Get(&transaction, kdata, vdata))
@@ -203,6 +204,7 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->type == KeyspaceOp::REMOVE_EXPIRY)
 	{
+		Log_Trace("Removing expiry for key: %.*s", op->key.length, op->key.buffer);
 		// check old expiry
 		WriteExpiryKey(kdata, op->key);
 		if (table->Get(&transaction, kdata, vdata))
@@ -251,6 +253,7 @@ void SingleKeyspaceDB::InitExpiryTimer()
 	kdata.Set("!!t:");
 	if (!cursor.Start(kdata))
 		return;
+	cursor.Close();
 	
 	if (kdata.length < 2)
 		return;
@@ -276,7 +279,8 @@ void SingleKeyspaceDB::OnExpiryTimer()
 	kdata.Set("!!t:");
 	if (!cursor.Start(kdata))
 		ASSERT_FAIL();
-
+	cursor.Close();
+	
 	if (kdata.length < 2)
 		ASSERT_FAIL();
 	
@@ -290,7 +294,7 @@ void SingleKeyspaceDB::OnExpiryTimer()
 	WriteExpiryKey(kdata, key);
 	table->Delete(NULL, kdata);
 	
-	Log_Message("Expiring key: %.*s", key.length, key.buffer);
+	Log_Trace("Expiring key: %.*s", key.length, key.buffer);
 
 	InitExpiryTimer();
 }
