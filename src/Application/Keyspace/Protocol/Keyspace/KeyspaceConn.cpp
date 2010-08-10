@@ -57,7 +57,9 @@ void KeyspaceConn::OnComplete(KeyspaceOp* op, bool final)
 
 				resp.Write(data);
 			}
-			else if (op->type == KeyspaceOp::SET || op->type == KeyspaceOp::SET_EXPIRY)
+			else if (op->type == KeyspaceOp::SET ||
+					 op->type == KeyspaceOp::SET_EXPIRY ||
+					 op->type == KeyspaceOp::REMOVE_EXPIRY)
 			{
 				if (op->status)
 					resp.Ok(op->cmdID);
