@@ -35,8 +35,8 @@ private:
 	VBuffer				vdata;
 	Table*				table;
 	Transaction			transaction;
-	Timer				expiryTimer;
 	Func				onExpiryTimer;
+	Timer				expiryTimer;
 };
 
 #endif
