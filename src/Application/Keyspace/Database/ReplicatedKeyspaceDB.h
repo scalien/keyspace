@@ -91,8 +91,8 @@ private:
 	unsigned		estimatedLength;
 	bool			deleteDB;
 	
-	Timer			expiryTimer;
 	Func			onExpiryTimer;
+	Timer			expiryTimer;
 };
 
 #endif
