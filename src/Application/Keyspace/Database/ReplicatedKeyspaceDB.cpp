@@ -472,7 +472,7 @@ void ReplicatedKeyspaceDB::Append()
 		if (op->appended)
 			ASSERT_FAIL();
 		
-		if (op->IsExpiry())
+		if (op->IsExpiry() && op->type != KeyspaceOp::CLEAR_EXPIRIES)
 		{
 			// at this point we have up-to-date info on the expiry time
 			expiryTime = GetExpiryTime(op->key);
@@ -487,9 +487,7 @@ void ReplicatedKeyspaceDB::Append()
 			bs.Advance(bs.length);
 			op->appended = true;
 			numAppended++;
-			if (op->type == KeyspaceOp::SET_EXPIRY ||
-				op->type == KeyspaceOp::EXPIRE ||
-				op->type == KeyspaceOp::REMOVE_EXPIRY)
+			if (op->IsExpiry())
 			{
 				// one expiry command per paxos round
 				break;
