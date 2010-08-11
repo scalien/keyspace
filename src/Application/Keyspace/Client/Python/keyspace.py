@@ -290,6 +290,16 @@ class Client:
 			return
 		self.result = Client.Result(Keyspace_GetResult(self.cptr))
 		return status
+
+	def clear_expiries(self):
+		status = Keyspace_ClearExpiries(self.cptr)
+		if status < 0:
+			self.result = Client.Result(Keyspace_GetResult(self.cptr))
+			return
+		if Keyspace_IsBatched(self.cptr):
+			return
+		self.result = Client.Result(Keyspace_GetResult(self.cptr))
+		return status
 	
 	def begin(self):
 		return Keyspace_Begin(self.cptr)

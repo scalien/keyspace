@@ -1,0 +1,5 @@
+Z:\Projects\Scalien\Keyspace.github\src\Application\Keyspace\Client\CSharp\KeyspaceClient\bin\Release\KeyspaceClient.dll
+Z:\Projects\Scalien\Keyspace.github\src\Application\Keyspace\Client\CSharp\KeyspaceClient\bin\Release\KeyspaceClient.pdb
+Z:\Projects\Scalien\Keyspace.github\src\Application\Keyspace\Client\CSharp\KeyspaceClient\obj\Release\ResolveAssemblyReference.cache
+Z:\Projects\Scalien\Keyspace.github\src\Application\Keyspace\Client\CSharp\KeyspaceClient\obj\Release\KeyspaceClient.dll
+Z:\Projects\Scalien\Keyspace.github\src\Application\Keyspace\Client\CSharp\KeyspaceClient\obj\Release\KeyspaceClient.pdb

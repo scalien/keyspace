@@ -142,6 +142,7 @@ int				Keyspace_Rename(ClientObj client, const std::string& from, const std::str
 int				Keyspace_Prune(ClientObj client, const std::string& prefix);
 int				Keyspace_SetExpiry(ClientObj client, const std::string& key, int exptime);
 int				Keyspace_RemoveExpiry(ClientObj client, const std::string& key);
+int				Keyspace_ClearExpiries(ClientObj client);
 
 // grouping write commands
 int				Keyspace_Begin(ClientObj client);

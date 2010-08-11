@@ -88,6 +88,7 @@ public:
 	int				Prune(const ByteString &prefix);
 	int				SetExpiry(const ByteString &key, uint64_t expiryTime);
 	int				RemoveExpiry(const ByteString &key);
+	int				ClearExpiries();
 
 	// grouping write commands
 	int				Begin();

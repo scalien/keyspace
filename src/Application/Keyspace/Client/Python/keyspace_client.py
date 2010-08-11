@@ -173,6 +173,7 @@ Keyspace_Rename = _keyspace_client.Keyspace_Rename
 Keyspace_Prune = _keyspace_client.Keyspace_Prune
 Keyspace_SetExpiry = _keyspace_client.Keyspace_SetExpiry
 Keyspace_RemoveExpiry = _keyspace_client.Keyspace_RemoveExpiry
+Keyspace_ClearExpiries = _keyspace_client.Keyspace_ClearExpiries
 Keyspace_Begin = _keyspace_client.Keyspace_Begin
 Keyspace_Submit = _keyspace_client.Keyspace_Submit
 Keyspace_Cancel = _keyspace_client.Keyspace_Cancel

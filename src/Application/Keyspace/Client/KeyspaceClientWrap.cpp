@@ -552,6 +552,13 @@ int Keyspace_RemoveExpiry(ClientObj client_, const std::string& key_)
 	return client->RemoveExpiry(key);
 }
 
+int Keyspace_ClearExpiries(ClientObj client_)
+{
+	Keyspace::Client*	client = (Keyspace::Client *) client_;
+	
+	return client->ClearExpiries();
+}
+
 int Keyspace_Begin(ClientObj client_)
 {
 	Keyspace::Client*	client = (Keyspace::Client *) client_;

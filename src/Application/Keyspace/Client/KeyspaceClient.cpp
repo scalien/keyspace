@@ -707,6 +707,33 @@ int Client::RemoveExpiry(const ByteString &key)
 	return status;
 }
 
+int Client::ClearExpiries()
+{
+	int			status;
+	Command*	cmd;
+
+	VALIDATE_CLIENT();
+	VALIDATE_SAFE();
+	VALIDATE_WRITE();
+
+	cmd = CreateCommand(KEYSPACECLIENT_CLEAR_EXPIRIES, 0, NULL);
+	safeCommands.Append(cmd);
+	
+	if (IS_BATCHED())
+	{
+		result->AppendCommand(cmd);
+		return KEYSPACE_SUCCESS;
+	}
+	
+	result->Close();
+	result->AppendCommand(cmd);
+
+	EventLoop();
+	status = result->CommandStatus();
+	
+	return status;
+}
+
 int Client::Begin()
 {
 	if (!conns)

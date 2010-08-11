@@ -472,6 +472,14 @@ keyspace_client_remove_expiry(keyspace_client_t kc,
 }
 
 int
+keyspace_client_clear_expiries(keyspace_client_t kc)
+{
+	Client *client = (Client *) kc;
+
+	return client->ClearExpiries();
+}
+
+int
 keyspace_client_begin(keyspace_client_t kc)
 {
 	Client *client = (Client *) kc;

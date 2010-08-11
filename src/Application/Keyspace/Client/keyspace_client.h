@@ -599,7 +599,21 @@ int keyspace_client_set_expiry(keyspace_client_t kc,
  * Return value: the command status of the operation
  */
 int keyspace_client_remove_expiry(keyspace_client_t kc,
-		const void *key, unsigned keylen, uint64_t exptime);
+		const void *key, unsigned keylen);
+
+/*
+ * CLEAR_EXPIRIES operation
+ *
+ * Remove an expiry on the given key.
+ *
+ * Parameters:
+ *  kc:			client object
+ *  key:        buffer to the key
+ *  keylen:		length of the key
+ *
+ * Return value: the command status of the operation
+ */
+int keyspace_client_clear_expiries(keyspace_client_t kc);
 
 /*
  * Begin grouping commands.

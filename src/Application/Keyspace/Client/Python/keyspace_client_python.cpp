@@ -6608,6 +6608,26 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Keyspace_ClearExpiries(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClientObj arg1 = (ClientObj) 0 ;
+  int result;
+  int res1 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Keyspace_ClearExpiries",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0,SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ClearExpiries" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  result = (int)Keyspace_ClearExpiries(arg1);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Keyspace_Begin(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClientObj arg1 = (ClientObj) 0 ;
@@ -6795,6 +6815,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Keyspace_Prune", _wrap_Keyspace_Prune, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_SetExpiry", _wrap_Keyspace_SetExpiry, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_RemoveExpiry", _wrap_Keyspace_RemoveExpiry, METH_VARARGS, NULL},
+	 { (char *)"Keyspace_ClearExpiries", _wrap_Keyspace_ClearExpiries, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Begin", _wrap_Keyspace_Begin, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Submit", _wrap_Keyspace_Submit, METH_VARARGS, NULL},
 	 { (char *)"Keyspace_Cancel", _wrap_Keyspace_Cancel, METH_VARARGS, NULL},
