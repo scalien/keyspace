@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5. Understanding Keyspace</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.6',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="Keyspace documentation" href="index.html" />
+    <link rel="next" title="6. HTTP API" href="http_api.html" />
+    <link rel="prev" title="4. Running Keyspace for the first time" href="running.html" /> 
+
+<link rel="stylesheet" type="text/css" href="http://scalien.com/inside.css" />
+<link rel="shortcut icon" href="http://scalien.com/favicon.ico">
+
+  </head>
+  <body>
+
+<body onload="document.getElementById('container').style.display='block';">
+
+<div id="container" class="container" style="display:none">
+
+<div class="topbar">
+<div class="logopic"><a href="http://scalien.com"><img src="http://scalien.com/images/blocks_small.png" /></a></div>
+<div class="logotxt"><a href="http://scalien.com"><img src="http://scalien.com/images/scalien_logo.png" /></a></div>
+</div>
+
+<div class="separator"><!-- --></div>
+
+<div class="menu"><div class="rbtop"><div></div></div><div class="rbcontent">
+<ol class="menulist">
+<li style="padding-top:0px;"><a href="http://scalien.com">Home</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="http://blog.scalien.com">Blog</a></li>
+<li><a href="/keyspace">Keyspace</a></li>
+<ol class="innermenulist">
+<li><a href="/documentation">Documentation</a></li>
+<li><a href="/whitepapers">Whitepapers</a></li>
+<li><a href="/downloads">Downloads</a></li>
+<li><a href="/license">License</a></li>
+<li><a href="/help">Help</a></li>
+<li><a href="/faq">FAQ</a></li>
+</ol>
+</ol>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="main">
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="http_api.html" title="6. HTTP API"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="running.html" title="4. Running Keyspace for the first time"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="understanding-keyspace">
+<span id="understanding"></span><h1>5. Understanding Keyspace<a class="headerlink" href="#understanding-keyspace" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="replication">
+<h2>5.1. Replication<a class="headerlink" href="#replication" title="Permalink to this headline">¶</a></h2>
+<p>In Keyspace all write commands (<tt class="docutils literal"><span class="pre">set</span></tt>, <tt class="docutils literal"><span class="pre">test_and_set</span></tt>, <tt class="docutils literal"><span class="pre">add</span></tt>, <tt class="docutils literal"><span class="pre">rename</span></tt>, <tt class="docutils literal"><span class="pre">delete</span></tt>, <tt class="docutils literal"><span class="pre">remove</span></tt>, <tt class="docutils literal"><span class="pre">prune</span></tt>, <tt class="docutils literal"><span class="pre">set_expiry</span></tt>, <tt class="docutils literal"><span class="pre">remove_expiry</span></tt>, <tt class="docutils literal"><span class="pre">clear_expiries</span></tt>) are appended into a <em>replicated log</em>. To guarantee that all nodes end up with the same database, all nodes have to execute the commands in the same order. In other words, the local copies of the replicated log have to be identical. This is called <strong>consistent replication</strong>.</p>
+<p>The replicated log is made up of replication rounds. Each round is no more than 500KB in size and can contain several write commands. Keyspace uses a distributed algorithm called <em>Paxos</em> in each replication round. For increased performance, several commands, possibly from different clients are batched and replicated together.</p>
+<p>Since Paxos is majority vote algorithm, in Keyspace a majority of the nodes have to be alive for the cluster to be able to take write commands. The Paxos algorithm is run over TCP, and uses the port specified in the confuguration file&#8217;s <tt class="docutils literal"><span class="pre">paxos.endpoints</span></tt> line.</p>
+<div class="highlight-python"><pre>paxos.endpoints = 192.168.1.50:10000, 192.168.1.51:10000, 192.168.1.52:10000</pre>
+</div>
+<p>In this example replication is performed over port 10000.</p>
+<p>In order to see replication in action, perform:</p>
+<div class="highlight-python"><pre>http://&lt;ip-address-of-master-node&gt;:8080/set?testkey,testvalue</pre>
+</div>
+<p>repeatedly and check the master&#8217;s HTTP status at:</p>
+<div class="highlight-python"><pre>http://&lt;ip-address-of-master-node&gt;:8080</pre>
+</div>
+<p>You will see the <tt class="docutils literal"><span class="pre">I</span> <span class="pre">am</span> <span class="pre">in</span> <span class="pre">replication</span> <span class="pre">round</span> <span class="pre">x</span></tt> message change to <tt class="docutils literal"><span class="pre">x+1</span></tt> and so on.</p>
+</div>
+<div class="section" id="master-leases">
+<h2>5.2. Master leases<a class="headerlink" href="#master-leases" title="Permalink to this headline">¶</a></h2>
+<p>Keyspace is a dynamic master-based replicated database. This means that the nodes elect a master, and that master manages client&#8217;s write commands. Only the master serves so-called safe read commands, while all nodes serve dirty read commands.</p>
+<p>In order to become master, a node much acquire the <em>master lease</em>. In Keyspace, the master lease lasts for 7 seconds. The master then extends its lease before it expires; this way a master can hold on to the lease for long periods of time.</p>
+<p>Keyspace uses the <em>PaxosLease</em> algorithm for master leases. Like Paxos, PaxosLease is a majority vote based algorithm, hence a majority of the nodes have to be up for there to be a master. The PaxosLease algorithm is run over TCP, and uses the port specified in the configuration file&#8217;s <tt class="docutils literal"><span class="pre">paxos.endpoints</span></tt> line <em>plus one</em>. In the example above, PaxosLease runs over port 10001.</p>
+<p>When the master node goes down or becomes disconnected from the rest, its lease expires and another node will be elected master. If the old master rejoins the cluster, its lease will have expired and it will participate as a non-master node.</p>
+<p>A node that is lagging behind in the replication rounds can never become the master. This is not a limitation but a feature, because if a majority of nodes are available at least one is always up-to-date!</p>
+<p>To see master election in action, find the master node and shut it down using <tt class="docutils literal"><span class="pre">Control+C</span></tt>. While doing so, keep refreshing another node&#8217;s HTTP status. You wil see the <tt class="docutils literal"><span class="pre">Master</span> <span class="pre">is</span> <span class="pre">node</span> <span class="pre">x</span></tt> message change to <tt class="docutils literal"><span class="pre">Master</span> <span class="pre">is</span> <span class="pre">node</span> <span class="pre">-1</span> <span class="pre">(unknown)</span></tt> and then a few tenth of a second later to <tt class="docutils literal"><span class="pre">Master</span> <span class="pre">is</span> <span class="pre">node</span> <span class="pre">y</span></tt> after the new node is elected.</p>
+</div>
+<div class="section" id="catchup">
+<h2>5.3. Catchup<a class="headerlink" href="#catchup" title="Permalink to this headline">¶</a></h2>
+<p>Keyspace stores 100.000 replication rounds on disk by default. This can be changed using the <tt class="docutils literal"><span class="pre">rlog.cacheSize</span></tt> line of the configuration file. This cache is used to help lagging nodes catch up. For example, if a node goes down at round 1000, the clients issue some write commands and the cluster proceeds to replication round 2000, and then the node rejoins the cluster, the master node will send it rounds 1000-2000 and the node will be up-to-date again. This is called <em>Paxos-based catchup</em>.</p>
+<p>If a node is out for a longer period of time, and the rest of the cluster performs more than 100.000 replication rounds in the meantime, Paxos-based catchup will not work. In this case, the lagging node will delete its local database and copy over the entire, up-to-date database from the master node. This is called <em>database-catchup</em>. When this happens, the node will print:</p>
+<div class="highlight-python"><pre>Catchup started from node &lt;id-of-master-node&gt;</pre>
+</div>
+<p>to its log and:</p>
+<div class="highlight-python"><pre>Catchup complete</pre>
+</div>
+<p>once catchup is complete. If the master node goes down or loses its mastership while a node is catching up the process will fail with the message:</p>
+<div class="highlight-python"><pre>Catchup failed</pre>
+</div>
+<p>You should configure <tt class="docutils literal"><span class="pre">rlog.cacheSize</span></tt> to be large enough (depending on your workload) so database-catchup very rarely if ever happens, as it involves copying over the entire database!</p>
+</div>
+<div class="section" id="dirty-read-commands">
+<h2>5.4. Dirty read commands<a class="headerlink" href="#dirty-read-commands" title="Permalink to this headline">¶</a></h2>
+<p>Keyspace differentiates <em>safe</em> and <em>dirty</em> read commands. Safe commands are only served by the master, while all nodes will always serve dirty read commands. This is because only the master node can guarantee that is has seen all previous write operations, hence only the master can guarantee that the data returned by the read command is not stale. There are no guarantees regarding dirty reads, and since all nodes serve dirty reads the client library can spread them out over the entire cluster, thus resulting in linear speedup.</p>
+</div>
+<div class="section" id="key-expiry-commands">
+<h2>5.5. Key expiry commands<a class="headerlink" href="#key-expiry-commands" title="Permalink to this headline">¶</a></h2>
+<p>Starting with version 1.8 Keyspace supports key expiry commands. This enables Keyspace to be used instead of popular cache servers like Memcached. Unlike Memcached, Keyspace stores key expiries safely on disk, so keys are expired even if servers restart.</p>
+<p>In Keyspace, the key expiry commands are implemented as an overlay feature. This means that when you set an expiry on a key, Keyspace does not check whether the key exists, it
+just remembers that it should expire (delete) thay key at the given time. You can create the key at a later time, overwrite it, rename it, delete it, re-create it, all these operations do not affect the expiry.</p>
+<p>There are three key expiry commands in Keyspace:</p>
+<blockquote>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">set_expiry(k,</span> <span class="pre">t)</span></tt>: set the key-value pair <tt class="docutils literal"><span class="pre">k</span> <span class="pre">=&gt;</span> <span class="pre">v</span></tt> to expire in <tt class="docutils literal"><span class="pre">t</span></tt> seconds</li>
+<li><tt class="docutils literal"><span class="pre">remove_expiry(k)</span></tt>: remove any outstanding expiries on the the key-value pair <tt class="docutils literal"><span class="pre">k</span> <span class="pre">=&gt;</span> <span class="pre">v</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">clear_expiries()</span></tt>: remove all outstanding expiries in the database</li>
+</ul>
+</blockquote>
+<p>Key expiry is implemented as an overlay feature to enable developers to mix and match these commands with the regular Keyspace commands to match their desired semantics. For example, if a developer thinks that <tt class="docutils literal"><span class="pre">set</span></tt> -ting (changing) a key-value pair should automatically remove any expiries, he can create a wrapper library which issues  <tt class="docutils literal"><span class="pre">remove_expiry(k)</span></tt> command before issuing <tt class="docutils literal"><span class="pre">set(k,</span> <span class="pre">v)</span></tt>.</p>
+<p>When using key expiry commands in replicated mode, you should use NTP (Network Time Protocol) to synchronize the server&#8217;s clock. Note that other than key expiries, Keyspace does not require or assume clock synchrony. When the Keyspace master receives a <tt class="docutils literal"><span class="pre">set_expiry(k,</span> <span class="pre">t)</span></tt> command, it adds <tt class="docutils literal"><span class="pre">t</span></tt> seconds to the current timestamp and replicates that timestamp. Key expiry will occur at that time by the actual master&#8217;s system clock. If the master fails and another node becomes the master, key expiry will still occur at that time, but by the new master&#8217;s system clock.</p>
+</div>
+<div class="section" id="additional-reading">
+<h2>5.6. Additional reading<a class="headerlink" href="#additional-reading" title="Permalink to this headline">¶</a></h2>
+<p>For more details see the Keyspace and PaxosLease whitepapers available at <a class="reference external" href="http://scalien.com/whitepapers">http://scalien.com/whitepapers</a>.</p>
+<p>Paxos is explained in Leslie Lamport&#8217;s paper <a class="reference external" href="http://www.google.com/search?client=opera&amp;rls=en&amp;q=paxos+made+simple&amp;sourceid=opera&amp;ie=utf-8&amp;oe=utf-8">Paxos made simple</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">5. Understanding Keyspace</a><ul>
+<li><a class="reference external" href="#replication">5.1. Replication</a></li>
+<li><a class="reference external" href="#master-leases">5.2. Master leases</a></li>
+<li><a class="reference external" href="#catchup">5.3. Catchup</a></li>
+<li><a class="reference external" href="#dirty-read-commands">5.4. Dirty read commands</a></li>
+<li><a class="reference external" href="#key-expiry-commands">5.5. Key expiry commands</a></li>
+<li><a class="reference external" href="#additional-reading">5.6. Additional reading</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="running.html"
+                                  title="previous chapter">4. Running Keyspace for the first time</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="http_api.html"
+                                  title="next chapter">6. HTTP API</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="http_api.html" title="6. HTTP API"
+             >next</a></li>
+        <li class="right" >
+          <a href="running.html" title="4. Running Keyspace for the first time"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>
+
+</div>
+
+<div class="whoarewe"><div class="rbtop"><div></div></div><div class="rbcontent">
+<b>Who are we?</b>
+<br/><br/>
+<div style="border-bottom: 1px dotted #B0B0B0"></div>
+<br/>
+Scalien is a startup developing open-source,
+cutting-edge distributed systems.<br/>
+<a href="/about">More</a>
+<br/><br/>
+<a href="mailto:info@scalien.com">info@scalien.com</a>
+<br/><br/>
+<a href="http://twitter.com/scalien">Follow us on Twitter</a>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="copyright">
+Copyright &copy; Scalien, 2009-2010. All rights reserved --- Icons courtesy of <a href="http://dryicons.com" style="color: gray; text-decoration: none;">dryicons.com</a>
+</div>
+
+</div>
+
+  </body>
+</html>

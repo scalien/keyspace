@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. Running Keyspace for the first time</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.6',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="Keyspace documentation" href="index.html" />
+    <link rel="next" title="5. Understanding Keyspace" href="understanding.html" />
+    <link rel="prev" title="3. Configuration" href="configuration.html" /> 
+
+<link rel="stylesheet" type="text/css" href="http://scalien.com/inside.css" />
+<link rel="shortcut icon" href="http://scalien.com/favicon.ico">
+
+  </head>
+  <body>
+
+<body onload="document.getElementById('container').style.display='block';">
+
+<div id="container" class="container" style="display:none">
+
+<div class="topbar">
+<div class="logopic"><a href="http://scalien.com"><img src="http://scalien.com/images/blocks_small.png" /></a></div>
+<div class="logotxt"><a href="http://scalien.com"><img src="http://scalien.com/images/scalien_logo.png" /></a></div>
+</div>
+
+<div class="separator"><!-- --></div>
+
+<div class="menu"><div class="rbtop"><div></div></div><div class="rbcontent">
+<ol class="menulist">
+<li style="padding-top:0px;"><a href="http://scalien.com">Home</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="http://blog.scalien.com">Blog</a></li>
+<li><a href="/keyspace">Keyspace</a></li>
+<ol class="innermenulist">
+<li><a href="/documentation">Documentation</a></li>
+<li><a href="/whitepapers">Whitepapers</a></li>
+<li><a href="/downloads">Downloads</a></li>
+<li><a href="/license">License</a></li>
+<li><a href="/help">Help</a></li>
+<li><a href="/faq">FAQ</a></li>
+</ol>
+</ol>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="main">
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="understanding.html" title="5. Understanding Keyspace"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="configuration.html" title="3. Configuration"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="running-keyspace-for-the-first-time">
+<span id="running"></span><h1>4. Running Keyspace for the first time<a class="headerlink" href="#running-keyspace-for-the-first-time" title="Permalink to this headline">¶</a></h1>
+<p>Keyspace takes one command argument: the configuration file. Note that all paths in the configuration file such as <tt class="docutils literal"><span class="pre">database.dir</span></tt> must either be absolute or relative to the working directory. So, if the Keyspace executable is in <tt class="docutils literal"><span class="pre">/home/joe/keyspace/bin</span></tt>, the configuration file is in <tt class="docutils literal"><span class="pre">/home/joe/keyspace/0/keyspace.conf</span></tt> and the configuration file specifies <tt class="docutils literal"><span class="pre">database.dir</span> <span class="pre">=</span> <span class="pre">0</span></tt>, then you should probably launch Keyspace from <tt class="docutils literal"><span class="pre">/home/joe/keyspace</span></tt> using:</p>
+<div class="highlight-python"><pre>$ bin/keyspace 0/keyspace.conf</pre>
+</div>
+<p>You should see something like this:</p>
+<div class="highlight-python"><pre>Keyspace v1.5.1 r1231 started
+Opening database...
+Database opened
+Database is empty
+Node 0 is the master</pre>
+</div>
+<p>Note that for master election to be successful a majority of nodes have to be up and running.</p>
+<div class="section" id="verifying-the-installation">
+<h2>4.1. Verifying the installation<a class="headerlink" href="#verifying-the-installation" title="Permalink to this headline">¶</a></h2>
+<p>At this point, it&#8217;s a good idea to examine the HTTP status of the nodes. Assuming the default configuration, where Keyspace&#8217;s built-in web server is running on port 8080, direct your browser to <tt class="docutils literal"><span class="pre">http://&lt;ip-address-of-a-node&gt;:8080</span></tt>. You should see something like this:</p>
+<div class="highlight-python"><pre>Keyspace v1.5.1 r1231
+
+Running in replicated mode with 3 nodes
+
+I am node 0
+
+Master is node 0
+
+I am in replication round 1
+
+Last replication round was 0 bytes, took 0 msec, thruput was 1 KB/sec</pre>
+</div>
+<p>Be sure to examine all <tt class="docutils literal"><span class="pre">n</span></tt> nodes.</p>
+</div>
+<div class="section" id="verifying-the-cluster-takes-writes">
+<h2>4.2. Verifying the cluster takes writes<a class="headerlink" href="#verifying-the-cluster-takes-writes" title="Permalink to this headline">¶</a></h2>
+<p>Using the HTTP output from above, find the master node. Next, send a <tt class="docutils literal"><span class="pre">SET</span></tt> command to the master using the HTTP API, by typing the following into your browser:</p>
+<div class="highlight-python"><pre>http://&lt;ip-address-of-master-node&gt;:8080/set?testkey,testvalue</pre>
+</div>
+<p>If everything is working, it replies with <tt class="docutils literal"><span class="pre">OK</span></tt>. Now make sure the value was stored properly:</p>
+<div class="highlight-python"><pre>http://&lt;ip-address-of-master-node&gt;:8080/get?testkey</pre>
+</div>
+<p>It should print <tt class="docutils literal"><span class="pre">testvalue</span></tt>. Next, make sure the command was replicated to the other <tt class="docutils literal"><span class="pre">n-1</span></tt> nodes. Non-master nodes do not serve <tt class="docutils literal"><span class="pre">GET</span></tt> request (only the master), but they do serve <tt class="docutils literal"><span class="pre">DIRTYGET</span></tt> request:</p>
+<div class="highlight-python"><pre>http://&lt;ip-address-of-non-master-node&gt;:8080/dirtyget?testkey</pre>
+</div>
+<p>It should print <tt class="docutils literal"><span class="pre">testvalue</span></tt>. For a complete command reference, see the next section.</p>
+</div>
+<div class="section" id="verifying-the-cluster-recovers-from-failures">
+<h2>4.3. Verifying the cluster recovers from failures<a class="headerlink" href="#verifying-the-cluster-recovers-from-failures" title="Permalink to this headline">¶</a></h2>
+<p>Next, shut down one of the nodes (eg. using <tt class="docutils literal"><span class="pre">Control+C</span></tt>). Verify that the node is not up by looking at its HTTP port. Next, issue a <tt class="docutils literal"><span class="pre">SET</span></tt> to the remaining nodes:</p>
+<div class="highlight-python"><pre>http://&lt;ip-address-of-master-node&gt;:8080/set?testkey2,testvalue2</pre>
+</div>
+<p>Launch the node again, and after 7 seconds, once it reports the master, make sure it has caught up to the rest of the cluster by querying <tt class="docutils literal"><span class="pre">testkey2</span></tt> from it:</p>
+<div class="highlight-python"><pre>http://&lt;ip-address-of-non-master-node&gt;:8080/dirtyget?testkey2</pre>
+</div>
+<p>It should print <tt class="docutils literal"><span class="pre">testvalue2</span></tt>.</p>
+<p>You can think of any number of such tests. To fully understand how Keyspace handles failures, how it catches up nodes, please read the section Understanding Keyspace.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">4. Running Keyspace for the first time</a><ul>
+<li><a class="reference external" href="#verifying-the-installation">4.1. Verifying the installation</a></li>
+<li><a class="reference external" href="#verifying-the-cluster-takes-writes">4.2. Verifying the cluster takes writes</a></li>
+<li><a class="reference external" href="#verifying-the-cluster-recovers-from-failures">4.3. Verifying the cluster recovers from failures</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="configuration.html"
+                                  title="previous chapter">3. Configuration</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="understanding.html"
+                                  title="next chapter">5. Understanding Keyspace</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="understanding.html" title="5. Understanding Keyspace"
+             >next</a></li>
+        <li class="right" >
+          <a href="configuration.html" title="3. Configuration"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>
+
+</div>
+
+<div class="whoarewe"><div class="rbtop"><div></div></div><div class="rbcontent">
+<b>Who are we?</b>
+<br/><br/>
+<div style="border-bottom: 1px dotted #B0B0B0"></div>
+<br/>
+Scalien is a startup developing open-source,
+cutting-edge distributed systems.<br/>
+<a href="/about">More</a>
+<br/><br/>
+<a href="mailto:info@scalien.com">info@scalien.com</a>
+<br/><br/>
+<a href="http://twitter.com/scalien">Follow us on Twitter</a>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="copyright">
+Copyright &copy; Scalien, 2009-2010. All rights reserved --- Icons courtesy of <a href="http://dryicons.com" style="color: gray; text-decoration: none;">dryicons.com</a>
+</div>
+
+</div>
+
+  </body>
+</html>

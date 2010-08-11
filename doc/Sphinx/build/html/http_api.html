@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6. HTTP API</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.6',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="Keyspace documentation" href="index.html" />
+    <link rel="next" title="7. Python API" href="python_api.html" />
+    <link rel="prev" title="5. Understanding Keyspace" href="understanding.html" /> 
+
+<link rel="stylesheet" type="text/css" href="http://scalien.com/inside.css" />
+<link rel="shortcut icon" href="http://scalien.com/favicon.ico">
+
+  </head>
+  <body>
+
+<body onload="document.getElementById('container').style.display='block';">
+
+<div id="container" class="container" style="display:none">
+
+<div class="topbar">
+<div class="logopic"><a href="http://scalien.com"><img src="http://scalien.com/images/blocks_small.png" /></a></div>
+<div class="logotxt"><a href="http://scalien.com"><img src="http://scalien.com/images/scalien_logo.png" /></a></div>
+</div>
+
+<div class="separator"><!-- --></div>
+
+<div class="menu"><div class="rbtop"><div></div></div><div class="rbcontent">
+<ol class="menulist">
+<li style="padding-top:0px;"><a href="http://scalien.com">Home</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="http://blog.scalien.com">Blog</a></li>
+<li><a href="/keyspace">Keyspace</a></li>
+<ol class="innermenulist">
+<li><a href="/documentation">Documentation</a></li>
+<li><a href="/whitepapers">Whitepapers</a></li>
+<li><a href="/downloads">Downloads</a></li>
+<li><a href="/license">License</a></li>
+<li><a href="/help">Help</a></li>
+<li><a href="/faq">FAQ</a></li>
+</ol>
+</ol>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="main">
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="python_api.html" title="7. Python API"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="understanding.html" title="5. Understanding Keyspace"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="http-api">
+<span id="id1"></span><h1>6. HTTP API<a class="headerlink" href="#http-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="configuring-the-http-server">
+<h2>6.1. Configuring the HTTP server<a class="headerlink" href="#configuring-the-http-server" title="Permalink to this headline">¶</a></h2>
+<p>Keyspace includes a HTTP server, running on port 8080 by default. To change the port, set <tt class="docutils literal"><span class="pre">http.port</span></tt> in the configuration file.</p>
+<p>Please note that the HTTP server is intended to be used for testing, debugging and examining small amounts of data. Don&#8217;t wrap the HTTP API in client libraries, as performance will be much lower than possible and you&#8217;ll miss out on some features, such as batched commands or non-null terminated key-values. If you want to write a client library for a new language, wrap the fully featured C/C++ client (which also handles master failover) libraries using <a class="reference external" href="http://www.swig.org">SWIG</a>.</p>
+</div>
+<div class="section" id="http-modes">
+<h2>6.2. HTTP modes<a class="headerlink" href="#http-modes" title="Permalink to this headline">¶</a></h2>
+<p>The Keyspace HTTP server can return data in:</p>
+<ul class="simple">
+<li>plain-text</li>
+<li>nicely formatted HTML helpful when examining the output of list operations, or</li>
+<li>JSON data.</li>
+</ul>
+<p>The default is plain-text. To see HTML formatted output prefix the path with <tt class="docutils literal"><span class="pre">/html</span></tt>, to get JSON prefix the path with <tt class="docutils literal"><span class="pre">/json</span></tt>.</p>
+<p>The following section assumes that Keyspace server is running on <tt class="docutils literal"><span class="pre">localhost</span></tt> port 8080.</p>
+<p>All commands use the following format:</p>
+<blockquote>
+<a class="reference external" href="http://localhost:8080/optional-mode/command?param1=param1-value&amp;param2=param2-value">http://localhost:8080/optional-mode/command?param1=param1-value&amp;param2=param2-value</a>...</blockquote>
+<p>For example:</p>
+<blockquote>
+<a class="reference external" href="http://localhost:8080/set?key=foo&amp;value=bar">http://localhost:8080/set?key=foo&amp;value=bar</a></blockquote>
+<p>or</p>
+<blockquote>
+<a class="reference external" href="http://localhost:8080/get?key=foo">http://localhost:8080/get?key=foo</a></blockquote>
+<p>or</p>
+<blockquote>
+<a class="reference external" href="http://localhost:8080/html/listkeyvalues?prefix=/users/">http://localhost:8080/html/listkeyvalues?prefix=/users/</a></blockquote>
+</div>
+<div class="section" id="issuing-single-write-commands">
+<h2>6.3. Issuing single write commands<a class="headerlink" href="#issuing-single-write-commands" title="Permalink to this headline">¶</a></h2>
+<p>The Keyspace write commands are: <tt class="docutils literal"><span class="pre">set</span></tt>, <tt class="docutils literal"><span class="pre">testandset</span></tt>, <tt class="docutils literal"><span class="pre">rename</span></tt>, <tt class="docutils literal"><span class="pre">add</span></tt>, <tt class="docutils literal"><span class="pre">delete</span></tt>, <tt class="docutils literal"><span class="pre">remove</span></tt>, <tt class="docutils literal"><span class="pre">prune</span></tt> and key expiry commands.</p>
+<div class="section" id="set-command">
+<h3>6.3.1. <tt class="docutils literal"><span class="pre">set</span></tt> command<a class="headerlink" href="#set-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">set</span></tt> command sets a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair, creating a new pair if <tt class="docutils literal"><span class="pre">key</span></tt> did not previously exist, overwriting the old value if it did:</p>
+<div class="highlight-python"><pre>http://localhost:8080/set?key=kdata&amp;value=vdata</pre>
+</div>
+</div>
+<div class="section" id="testandset-command">
+<h3>6.3.2. <tt class="docutils literal"><span class="pre">testandset</span></tt> command<a class="headerlink" href="#testandset-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">testandset</span></tt> command conditionally and atomically sets a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair, but only if the current <tt class="docutils literal"><span class="pre">value</span></tt> matches the user specified value <tt class="docutils literal"><span class="pre">test</span></tt>:</p>
+<div class="highlight-python"><pre>http://localhost:8080/testandset?key=kdata&amp;test=tdata&amp;value=vdata</pre>
+</div>
+</div>
+<div class="section" id="rename-command">
+<h3>6.3.3. <tt class="docutils literal"><span class="pre">rename</span></tt> command<a class="headerlink" href="#rename-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">rename</span></tt> command atomically renames a <tt class="docutils literal"><span class="pre">key</span></tt>, leaving its <tt class="docutils literal"><span class="pre">value</span></tt> alone:</p>
+<div class="highlight-python"><pre>http://localhost:8080/rename?from=fdata&amp;to=tdata</pre>
+</div>
+<p>If the database looked like <tt class="docutils literal"><span class="pre">fdata</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> at the beginning, then it changed to <tt class="docutils literal"><span class="pre">tdata</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> after the successfull <tt class="docutils literal"><span class="pre">rename</span></tt> operation.</p>
+</div>
+<div class="section" id="add-command">
+<h3>6.3.4. <tt class="docutils literal"><span class="pre">add</span></tt> command<a class="headerlink" href="#add-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">add</span></tt> command takes the value of the key, parses it as a number and atomically increments it by the given offset:</p>
+<div class="highlight-python"><pre>http://localhost:8080/set?key=i&amp;value=10
+http://localhost:8080/add?key=i&amp;num=3</pre>
+</div>
+<p>If the database looked like <tt class="docutils literal"><span class="pre">i</span> <span class="pre">=&gt;</span> <span class="pre">10</span></tt> at the beginning, then it changed to <tt class="docutils literal"><span class="pre">i</span> <span class="pre">=&gt;</span> <span class="pre">13</span></tt> after the successfull <tt class="docutils literal"><span class="pre">add</span></tt> operation.</p>
+</div>
+<div class="section" id="delete-command">
+<h3>6.3.5. <tt class="docutils literal"><span class="pre">delete</span></tt> command<a class="headerlink" href="#delete-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">delete</span></tt> command deletes a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair by its <tt class="docutils literal"><span class="pre">key</span></tt>:</p>
+<div class="highlight-python"><pre>http://localhost:8080/delete?key=kdata</pre>
+</div>
+</div>
+<div class="section" id="remove-command">
+<h3>6.3.6. <tt class="docutils literal"><span class="pre">remove</span></tt> command<a class="headerlink" href="#remove-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">delete</span></tt> command deletes a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair by its <tt class="docutils literal"><span class="pre">key</span></tt> and returns the old <tt class="docutils literal"><span class="pre">value</span></tt>:</p>
+<div class="highlight-python"><pre>http://localhost:8080/set?key=kdata&amp;value=vdata
+http://localhost:8080/remove?key=kdata</pre>
+</div>
+</div>
+<div class="section" id="prune-command">
+<h3>6.3.7. <tt class="docutils literal"><span class="pre">prune</span></tt> command<a class="headerlink" href="#prune-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">prune</span></tt> command deletes all <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pairs where the <tt class="docutils literal"><span class="pre">key</span></tt> starts with the given prefix:</p>
+<div class="highlight-python"><pre>http://localhost:8080/prune?prefix=pdata</pre>
+</div>
+<p>For example:</p>
+<div class="highlight-python"><pre>http://localhost:8080/set?key=john&amp;value=john_data
+http://localhost:8080/set?key=jane&amp;value=jane_data
+http://localhost:8080/set?key=mark&amp;value=mark_data
+http://localhost:8080/prune?prefix=j</pre>
+</div>
+<p>to delete <tt class="docutils literal"><span class="pre">john</span></tt> and <tt class="docutils literal"><span class="pre">jane</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="issuing-key-expiry-commands">
+<h2>6.4. Issuing key expiry commands<a class="headerlink" href="#issuing-key-expiry-commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setexpiry-command">
+<h3>6.4.1. <tt class="docutils literal"><span class="pre">setexpiry</span></tt> command<a class="headerlink" href="#setexpiry-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">setexpiry</span></tt> sets an expiry on the key <tt class="docutils literal"><span class="pre">key</span></tt> to occur in <tt class="docutils literal"><span class="pre">t</span></tt> seconds. The command will succeed and set the expiry irrespective of whether the key exists. If the key is created in the meantime, it will be expired when the timeout occurs. The command replaces any active expiry on the key:</p>
+<div class="highlight-python"><pre>http://localhost:8080/setexpiry?key=key&amp;time=60</pre>
+</div>
+<p>Key will be deleted in 60 seconds.</p>
+</div>
+<div class="section" id="removeexpiry-command">
+<h3>6.4.2. <tt class="docutils literal"><span class="pre">removeexpiry</span></tt> command<a class="headerlink" href="#removeexpiry-command" title="Permalink to this headline">¶</a></h3>
+<p>Removes any outstanding expiry on the key. The command will succeed irrespective of whether an expiry is set for the key:</p>
+<div class="highlight-python"><pre>http://localhost:8080/removeexpiry?key=key</pre>
+</div>
+</div>
+<div class="section" id="clearexpiries-command">
+<h3>6.4.3. <tt class="docutils literal"><span class="pre">clearexpiries</span></tt> command<a class="headerlink" href="#clearexpiries-command" title="Permalink to this headline">¶</a></h3>
+<p>Clears all expiries in the database:</p>
+<div class="highlight-python"><pre>http://localhost:8080/clearexpiries?</pre>
+</div>
+</div>
+</div>
+<div class="section" id="issuing-single-read-commands">
+<h2>6.5. Issuing single read commands<a class="headerlink" href="#issuing-single-read-commands" title="Permalink to this headline">¶</a></h2>
+<p>The only Keyspace single read command is <tt class="docutils literal"><span class="pre">get</span></tt>.</p>
+<div class="section" id="get-command">
+<h3>6.5.1. <tt class="docutils literal"><span class="pre">get</span></tt> command<a class="headerlink" href="#get-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">get</span></tt> command retrieves a single value from the Keyspace cluster:</p>
+<div class="highlight-python"><pre>http://localhost:8080/set?key=kdata&amp;value=vdata
+http://localhost:8080/get?key=kdata</pre>
+</div>
+<p>You can also issue the identical <tt class="docutils literal"><span class="pre">dirtyget</span></tt> command, which will be serviced by all nodes, not just the master:</p>
+<div class="highlight-python"><pre>http://localhost:8080/dirtyget?key=kdata</pre>
+</div>
+</div>
+</div>
+<div class="section" id="issuing-list-commands">
+<h2>6.6. Issuing list commands<a class="headerlink" href="#issuing-list-commands" title="Permalink to this headline">¶</a></h2>
+<p>There are two list commands: <tt class="docutils literal"><span class="pre">listkeys</span></tt> and <tt class="docutils literal"><span class="pre">listkeyvalues</span></tt> and one <tt class="docutils literal"><span class="pre">count</span></tt> command, all have the same set of parameters.</p>
+<div class="section" id="listkeys-command">
+<h3>6.6.1. <tt class="docutils literal"><span class="pre">listkeys</span></tt> command<a class="headerlink" href="#listkeys-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">listkeys</span></tt> command retrieves all keys from the Keyspace cluster which start with a given <tt class="docutils literal"><span class="pre">prefix</span></tt>. Optionally:</p>
+<ul class="simple">
+<li>listing can start at a specified <tt class="docutils literal"><span class="pre">start</span></tt> key</li>
+<li>the maximum number of keys to return can be specified with the <tt class="docutils literal"><span class="pre">count</span></tt> parameter</li>
+<li>listing can proceed forward or backward using the <tt class="docutils literal"><span class="pre">direction</span></tt> parameter; listing proceeds forward unless <tt class="docutils literal"><span class="pre">direction=b</span></tt></li>
+<li>listing can skip the first key using the <tt class="docutils literal"><span class="pre">offset=1</span></tt> parameter</li>
+</ul>
+<p>For example:</p>
+<blockquote>
+<a class="reference external" href="http://localhost:8080/html/listkeys?prefix=test2&amp;start=test25&amp;direction=b&amp;count=10">http://localhost:8080/html/listkeys?prefix=test2&amp;start=test25&amp;direction=b&amp;count=10</a></blockquote>
+<p>You can also issue the identical <tt class="docutils literal"><span class="pre">dirtylistkeys</span></tt> command, which will be serviced by all nodes, not just the master.</p>
+</div>
+<div class="section" id="listkeyvalues-command">
+<h3>6.6.2. <tt class="docutils literal"><span class="pre">listkeyvalues</span></tt> command<a class="headerlink" href="#listkeyvalues-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">listkeyvalues</span></tt> command in nearly identical to <tt class="docutils literal"><span class="pre">listkeys</span></tt>, except it also returns the values.</p>
+<p>The <tt class="docutils literal"><span class="pre">listkeyvalues</span></tt> command retrieves all keys and values from the Keyspace cluster which start with a given <tt class="docutils literal"><span class="pre">prefix</span></tt>. Optionally:</p>
+<ul class="simple">
+<li>listing can start at a specified <tt class="docutils literal"><span class="pre">start</span></tt> key</li>
+<li>the maximum number of keys to return can be specified with the <tt class="docutils literal"><span class="pre">count</span></tt> parameter</li>
+<li>listing can proceed forward or backward using the <tt class="docutils literal"><span class="pre">direction</span></tt> parameter; listing proceeds forward unless <tt class="docutils literal"><span class="pre">direction=b</span></tt></li>
+<li>listing can skip the first key using the <tt class="docutils literal"><span class="pre">offset=1</span></tt> parameter</li>
+</ul>
+<p>For example:</p>
+<blockquote>
+<a class="reference external" href="http://localhost:8080/html/listkeyvalues?prefix=test2&amp;start=test25&amp;direction=b&amp;count=10">http://localhost:8080/html/listkeyvalues?prefix=test2&amp;start=test25&amp;direction=b&amp;count=10</a></blockquote>
+<p>You can also issue the identical <tt class="docutils literal"><span class="pre">dirtylistkeyvalues</span></tt> command, which will be serviced by all nodes, not just the master.</p>
+</div>
+<div class="section" id="count-command">
+<h3>6.6.3. <tt class="docutils literal"><span class="pre">count</span></tt> command<a class="headerlink" href="#count-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">count</span></tt> command has the same parameters as <tt class="docutils literal"><span class="pre">listkeys</span></tt> or <tt class="docutils literal"><span class="pre">listkeyvalues</span></tt>, but returns the number of keys (or key-value pairs) that they would return.</p>
+<p>For example:</p>
+<blockquote>
+<a class="reference external" href="http://localhost:8080/html/count?prefix=test2&amp;start=test25&amp;direction=b&amp;count=10">http://localhost:8080/html/count?prefix=test2&amp;start=test25&amp;direction=b&amp;count=10</a></blockquote>
+<p>You can also issue the identical <tt class="docutils literal"><span class="pre">dirtycount</span></tt> command, which will be serviced by all nodes, not just the master.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">6. HTTP API</a><ul>
+<li><a class="reference external" href="#configuring-the-http-server">6.1. Configuring the HTTP server</a></li>
+<li><a class="reference external" href="#http-modes">6.2. HTTP modes</a></li>
+<li><a class="reference external" href="#issuing-single-write-commands">6.3. Issuing single write commands</a><ul>
+<li><a class="reference external" href="#set-command">6.3.1. <tt class="docutils literal"><span class="pre">set</span></tt> command</a></li>
+<li><a class="reference external" href="#testandset-command">6.3.2. <tt class="docutils literal"><span class="pre">testandset</span></tt> command</a></li>
+<li><a class="reference external" href="#rename-command">6.3.3. <tt class="docutils literal"><span class="pre">rename</span></tt> command</a></li>
+<li><a class="reference external" href="#add-command">6.3.4. <tt class="docutils literal"><span class="pre">add</span></tt> command</a></li>
+<li><a class="reference external" href="#delete-command">6.3.5. <tt class="docutils literal"><span class="pre">delete</span></tt> command</a></li>
+<li><a class="reference external" href="#remove-command">6.3.6. <tt class="docutils literal"><span class="pre">remove</span></tt> command</a></li>
+<li><a class="reference external" href="#prune-command">6.3.7. <tt class="docutils literal"><span class="pre">prune</span></tt> command</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#issuing-key-expiry-commands">6.4. Issuing key expiry commands</a><ul>
+<li><a class="reference external" href="#setexpiry-command">6.4.1. <tt class="docutils literal"><span class="pre">setexpiry</span></tt> command</a></li>
+<li><a class="reference external" href="#removeexpiry-command">6.4.2. <tt class="docutils literal"><span class="pre">removeexpiry</span></tt> command</a></li>
+<li><a class="reference external" href="#clearexpiries-command">6.4.3. <tt class="docutils literal"><span class="pre">clearexpiries</span></tt> command</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#issuing-single-read-commands">6.5. Issuing single read commands</a><ul>
+<li><a class="reference external" href="#get-command">6.5.1. <tt class="docutils literal"><span class="pre">get</span></tt> command</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#issuing-list-commands">6.6. Issuing list commands</a><ul>
+<li><a class="reference external" href="#listkeys-command">6.6.1. <tt class="docutils literal"><span class="pre">listkeys</span></tt> command</a></li>
+<li><a class="reference external" href="#listkeyvalues-command">6.6.2. <tt class="docutils literal"><span class="pre">listkeyvalues</span></tt> command</a></li>
+<li><a class="reference external" href="#count-command">6.6.3. <tt class="docutils literal"><span class="pre">count</span></tt> command</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="understanding.html"
+                                  title="previous chapter">5. Understanding Keyspace</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="python_api.html"
+                                  title="next chapter">7. Python API</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="python_api.html" title="7. Python API"
+             >next</a></li>
+        <li class="right" >
+          <a href="understanding.html" title="5. Understanding Keyspace"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>
+
+</div>
+
+<div class="whoarewe"><div class="rbtop"><div></div></div><div class="rbcontent">
+<b>Who are we?</b>
+<br/><br/>
+<div style="border-bottom: 1px dotted #B0B0B0"></div>
+<br/>
+Scalien is a startup developing open-source,
+cutting-edge distributed systems.<br/>
+<a href="/about">More</a>
+<br/><br/>
+<a href="mailto:info@scalien.com">info@scalien.com</a>
+<br/><br/>
+<a href="http://twitter.com/scalien">Follow us on Twitter</a>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="copyright">
+Copyright &copy; Scalien, 2009-2010. All rights reserved --- Icons courtesy of <a href="http://dryicons.com" style="color: gray; text-decoration: none;">dryicons.com</a>
+</div>
+
+</div>
+
+  </body>
+</html>

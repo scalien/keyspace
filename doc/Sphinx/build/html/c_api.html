@@ -1,0 +1,713 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>10. C API</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.6',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="Keyspace documentation" href="index.html" />
+    <link rel="next" title="11. PHP API" href="php_api.html" />
+    <link rel="prev" title="9. C# API" href="csharp_api.html" /> 
+
+<link rel="stylesheet" type="text/css" href="http://scalien.com/inside.css" />
+<link rel="shortcut icon" href="http://scalien.com/favicon.ico">
+
+  </head>
+  <body>
+
+<body onload="document.getElementById('container').style.display='block';">
+
+<div id="container" class="container" style="display:none">
+
+<div class="topbar">
+<div class="logopic"><a href="http://scalien.com"><img src="http://scalien.com/images/blocks_small.png" /></a></div>
+<div class="logotxt"><a href="http://scalien.com"><img src="http://scalien.com/images/scalien_logo.png" /></a></div>
+</div>
+
+<div class="separator"><!-- --></div>
+
+<div class="menu"><div class="rbtop"><div></div></div><div class="rbcontent">
+<ol class="menulist">
+<li style="padding-top:0px;"><a href="http://scalien.com">Home</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="http://blog.scalien.com">Blog</a></li>
+<li><a href="/keyspace">Keyspace</a></li>
+<ol class="innermenulist">
+<li><a href="/documentation">Documentation</a></li>
+<li><a href="/whitepapers">Whitepapers</a></li>
+<li><a href="/downloads">Downloads</a></li>
+<li><a href="/license">License</a></li>
+<li><a href="/help">Help</a></li>
+<li><a href="/faq">FAQ</a></li>
+</ol>
+</ol>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="main">
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="php_api.html" title="11. PHP API"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="csharp_api.html" title="9. C# API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="c-api">
+<span id="id1"></span><h1>10. C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-from-source-on-linux-and-other-unix-platforms">
+<h2>10.1. Installing from source on Linux and other UNIX platforms<a class="headerlink" href="#installing-from-source-on-linux-and-other-unix-platforms" title="Permalink to this headline">¶</a></h2>
+<p>In order to use the Keyspace C libraries, you need to first build it. The standard <tt class="docutils literal"><span class="pre">make</span></tt> command also builds the client libraries, or use:</p>
+<div class="highlight-python"><pre>$ make clientlibs</pre>
+</div>
+<p>in the Keyspace folder to explicitly build it. This will place the static library <tt class="docutils literal"><span class="pre">libkeyspaceclient.a</span></tt> and the dynamic library <tt class="docutils literal"><span class="pre">libkeyspaceclient.so</span></tt> (<tt class="docutils literal"><span class="pre">.dylib</span></tt> under Darwin) in the <tt class="docutils literal"><span class="pre">bin</span></tt> folder. The header file <tt class="docutils literal"><span class="pre">keyspace_client.h</span></tt> is located in <tt class="docutils literal"><span class="pre">src/Application/Keyspace/Client</span></tt>.</p>
+</div>
+<div class="section" id="installing-from-source-on-windows">
+<h2>10.2. Installing from source on Windows<a class="headerlink" href="#installing-from-source-on-windows" title="Permalink to this headline">¶</a></h2>
+<p>In order to use the Keyspace C libraries, you need to first build it. We have supplied a Visual C++ 2008 Express Edition project file located in the <tt class="docutils literal"><span class="pre">Keyspace.vcproj</span></tt> directory. Open the solution file <tt class="docutils literal"><span class="pre">Keyspace.sln</span></tt> and build the KeyspaceClientLib project. This will generate the static library <tt class="docutils literal"><span class="pre">keyspace_client{d}.lib</span></tt> in the <tt class="docutils literal"><span class="pre">bin</span></tt> folder. The header file <tt class="docutils literal"><span class="pre">keyspace_client.h</span></tt> is located in <tt class="docutils literal"><span class="pre">src/Application/Keyspace/Client</span></tt>.</p>
+</div>
+<div class="section" id="connecting-to-the-keyspace-cluster">
+<h2>10.3. Connecting to the Keyspace cluster<a class="headerlink" href="#connecting-to-the-keyspace-cluster" title="Permalink to this headline">¶</a></h2>
+<p>First create a <tt class="docutils literal"><span class="pre">keyspace_client_t</span> <span class="pre">object</span></tt>:</p>
+<div class="highlight-python"><pre>#include &lt;stdio.h&gt;
+#include "keyspace_client.h"
+
+int main()
+{
+  keyspace_client_t client = keyspace_client_create();
+  if (client == NULL)
+  {
+    fprintf(stderr, "Failed to create Keyspace client");
+    return 1;
+  }
+  ...
+  keyspace_client_destroy(client);
+}</pre>
+</div>
+<p>Next, connect to a Keyspace cluster:</p>
+<div class="highlight-python"><pre>const char* nodes = { "192.168.1.50:7080",
+                      "192.168.1.51:7080",
+                      "192.168.1.52:7080" };
+int status = keyspace_client_init(client, 3, nodes);
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "Failed to initialize Keyspace client");
+  keyspace_client_destroy(client);
+  return 1;
+}</pre>
+</div>
+</div>
+<div class="section" id="setting-timeout-values">
+<h2>10.4. Setting timeout values<a class="headerlink" href="#setting-timeout-values" title="Permalink to this headline">¶</a></h2>
+<p>Next, if you would like to, change the global timeout. The global timeout specifies the maximum time, in msec, that a Keyspace client call will block your application. The default is 120 seconds:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">keyspace_client_set_global_timeout</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="mi">120</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Next, if you would like to, change the master timeout. The master timeout specifies the maximum time, in msec, that the library will spend trying to find the master node. The default is 21 seconds:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">keyspace_client_set_master_timeout</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="mi">21</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>At this point, you are ready to start issuing commands.</p>
+</div>
+<div class="section" id="issuing-single-write-commands">
+<h2>10.5. Issuing single write commands<a class="headerlink" href="#issuing-single-write-commands" title="Permalink to this headline">¶</a></h2>
+<p>The Keyspace write commands are: <tt class="docutils literal"><span class="pre">set</span></tt>, <tt class="docutils literal"><span class="pre">test_and_set</span></tt>, <tt class="docutils literal"><span class="pre">rename</span></tt>, <tt class="docutils literal"><span class="pre">add</span></tt>, <tt class="docutils literal"><span class="pre">delete</span></tt>, <tt class="docutils literal"><span class="pre">remove</span></tt>, <tt class="docutils literal"><span class="pre">prune</span></tt> and key expiry commands. Note that all Keyspace commands take and return pointers and a length parameter which specifies the length in bytes; the client libraries <strong>do not assume NULL-terminated strings</strong>.</p>
+<div class="section" id="set-command">
+<h3>10.5.1. <tt class="docutils literal"><span class="pre">set</span></tt> command<a class="headerlink" href="#set-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">set</span></tt> command sets a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair, creating a new pair if <tt class="docutils literal"><span class="pre">key</span></tt> did not previously exist, overwriting the old value if it did:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_set(client, "key", strlen("key"),
+                                         "value", strlen("value"));
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "set failed");
+  ...
+}</pre>
+</div>
+</div>
+<div class="section" id="test-and-set-command">
+<h3>10.5.2. <tt class="docutils literal"><span class="pre">test_and_set</span></tt> command<a class="headerlink" href="#test-and-set-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">test_and_set</span></tt> command conditionally and atomically sets a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair, but only if the current <tt class="docutils literal"><span class="pre">value</span></tt> matches the user specified value <tt class="docutils literal"><span class="pre">test</span></tt>:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_test_and_set(client, "key", strlen("key"),
+                                                  "test", strlen("test"),
+                                                  "value" strlen("value"));
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "test_and_set failed");
+  ...
+}</pre>
+</div>
+</div>
+<div class="section" id="rename-command">
+<h3>10.5.3. <tt class="docutils literal"><span class="pre">rename</span></tt> command<a class="headerlink" href="#rename-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">rename</span></tt> command atomically renames a <tt class="docutils literal"><span class="pre">key</span></tt>, leaving its <tt class="docutils literal"><span class="pre">value</span></tt> alone:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_rename(client, "from", strlen("from"),
+                                             "to", strlen("to"));
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "rename failed");
+  ...
+}</pre>
+</div>
+<p>If the database looked like <tt class="docutils literal"><span class="pre">from</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> at the beginning, then it changed to <tt class="docutils literal"><span class="pre">to</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> after the successfull <tt class="docutils literal"><span class="pre">rename</span></tt> operation.</p>
+</div>
+<div class="section" id="add-command">
+<h3>10.5.4. <tt class="docutils literal"><span class="pre">add</span></tt> command<a class="headerlink" href="#add-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">add</span></tt> command takes the value of the key, parses it as a number and atomically increments it by the given offset:</p>
+<div class="highlight-python"><pre>int64_t result;
+int status = keyspace_client_add(client, "key", strlen("key"), 3, &amp;result);
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "add failed");
+  ...
+}</pre>
+</div>
+<p>If the database looked like <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">10</span></tt> at the beginning, then it changed to <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">13</span></tt> after the successfull <tt class="docutils literal"><span class="pre">add</span></tt> operation and the variable <tt class="docutils literal"><span class="pre">result</span></tt> holds the value 13.</p>
+</div>
+<div class="section" id="delete-command">
+<h3>10.5.5. <tt class="docutils literal"><span class="pre">delete</span></tt> command<a class="headerlink" href="#delete-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">delete</span></tt> command deletes a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair by its <tt class="docutils literal"><span class="pre">key</span></tt>:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_delete(client, "key", strlen("key"));
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "delete failed");
+  ...
+}</pre>
+</div>
+</div>
+<div class="section" id="remove-command">
+<h3>10.5.6. <tt class="docutils literal"><span class="pre">remove</span></tt> command<a class="headerlink" href="#remove-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">delete</span></tt> command deletes a <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pair by its <tt class="docutils literal"><span class="pre">key</span></tt> and returns the old <tt class="docutils literal"><span class="pre">value</span></tt>:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_remove(client, "key", strlen("key"));
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "remove failed");
+  ...
+}
+
+// now get the old value
+keyspace_result_t result = keyspace_client_result(client);
+if (result == KEYSPACE_INVALID_RESULT)
+{
+  fprintf(stderr, "remove failed");
+  ...
+}
+keyspace_result_begin(result);
+char* val;
+unsigned len;
+if (keyspace_result_value(result, (const void**) &amp;val, &amp;len)
+    != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "remove failed");
+  ...
+}
+// val and len now hold the old value
+...
+keyspace_result_close(result);</pre>
+</div>
+</div>
+<div class="section" id="prune-command">
+<h3>10.5.7. <tt class="docutils literal"><span class="pre">prune</span></tt> command<a class="headerlink" href="#prune-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">prune</span></tt> command deletes all <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=&gt;</span> <span class="pre">value</span></tt> pairs where the <tt class="docutils literal"><span class="pre">key</span></tt> starts with the given prefix:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_prune(client, "prefix", strlen("prefix"));
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "prune failed");
+  ...
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="issuing-key-expiry-commands">
+<h2>10.6. Issuing key expiry commands<a class="headerlink" href="#issuing-key-expiry-commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="set-expiry-command">
+<h3>10.6.1. <tt class="docutils literal"><span class="pre">set_expiry</span></tt> command<a class="headerlink" href="#set-expiry-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">set_expiry</span></tt> sets an expiry on the key <tt class="docutils literal"><span class="pre">key</span></tt> to occur in <tt class="docutils literal"><span class="pre">t</span></tt> seconds. The command will succeed and set the expiry irrespective of whether the key exists. If the key is created in the meantime, it will be expired when the timeout occurs. The command replaces any active expiry on the key:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_set_expiry(client, "key", strlen("key"), 60);
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "set_expiry failed");
+  ...
+}</pre>
+</div>
+<p>Key will be deleted in 60 seconds.</p>
+</div>
+<div class="section" id="remove-expiry-command">
+<h3>10.6.2. <tt class="docutils literal"><span class="pre">remove_expiry</span></tt> command<a class="headerlink" href="#remove-expiry-command" title="Permalink to this headline">¶</a></h3>
+<p>Removes any outstanding expiry on the key. The command will succeed irrespective of whether an expiry is set for the key:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_remove_expiry(client, "key", strlen("key"));
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "remove_expiry failed");
+  ...
+}</pre>
+</div>
+</div>
+<div class="section" id="clear-expiries-command">
+<h3>10.6.3. <tt class="docutils literal"><span class="pre">clear_expiries</span></tt> command<a class="headerlink" href="#clear-expiries-command" title="Permalink to this headline">¶</a></h3>
+<p>Clears all expiries in the database:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_clear_expiries(client);
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "clear_expiries failed");
+  ...
+}</pre>
+</div>
+</div>
+</div>
+<div class="section" id="issuing-single-read-commands">
+<h2>10.7. Issuing single read commands<a class="headerlink" href="#issuing-single-read-commands" title="Permalink to this headline">¶</a></h2>
+<p>The only Keyspace single read command is <tt class="docutils literal"><span class="pre">get_simple</span></tt>.</p>
+<div class="section" id="get-simple-command">
+<h3>10.7.1. <tt class="docutils literal"><span class="pre">get_simple</span></tt> command<a class="headerlink" href="#get-simple-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">get_simple</span></tt> command retrieves a single value from the Keyspace cluster. Unlike all other operations, it only works if the returned value is NULL-terminated or its length is otherwise known. The last parameter specifies whether the command is dirty (<tt class="docutils literal"><span class="pre">0</span></tt> for safe, <tt class="docutils literal"><span class="pre">1</span></tt> for dirty):</p>
+<div class="highlight-python"><pre>char buf[1024];
+int vallen = keyspace_client_get_simple(client, "key", strlen("key"),
+                                        buf, 1024, 0); // safe
+if (vallen &lt; 0)
+{
+  fprintf(stderr, "get_simple failed");
+  ...
+}
+// buf now holds the value of length vallen</pre>
+</div>
+</div>
+</div>
+<div class="section" id="issuing-list-commands">
+<h2>10.8. Issuing list commands<a class="headerlink" href="#issuing-list-commands" title="Permalink to this headline">¶</a></h2>
+<p>There are two list commands: <tt class="docutils literal"><span class="pre">list_keys</span></tt> and <tt class="docutils literal"><span class="pre">list_keyvalues</span></tt> and one <tt class="docutils literal"><span class="pre">count</span></tt> command, all have the same set of parameters.</p>
+<div class="section" id="list-keys-command">
+<h3>10.8.1. <tt class="docutils literal"><span class="pre">list_keys</span></tt> command<a class="headerlink" href="#list-keys-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">list_keys</span></tt> command retrieves all keys from the Keyspace cluster which start with a given <tt class="docutils literal"><span class="pre">prefix</span></tt>. Optionally:</p>
+<ul class="simple">
+<li>listing can start at a specified <tt class="docutils literal"><span class="pre">start_key</span></tt></li>
+<li>the maximum number of keys to return can be specified with the <tt class="docutils literal"><span class="pre">count</span></tt> parameter</li>
+<li>listing can proceed forward or backward</li>
+<li>listing can skip the first key</li>
+<li>the last parameter specifies whether the command is dirty (<tt class="docutils literal"><span class="pre">0</span></tt> for safe, <tt class="docutils literal"><span class="pre">1</span></tt> for dirty)</li>
+</ul>
+<p>The signature of the function is:</p>
+<div class="highlight-python"><pre>int keyspace_client_list_keys(keyspace_client_t kc,
+              const void *prefix, unsigned prefixlen,
+              const void *start_key, unsigned sklen,
+              uint64_t count,
+              int backward,
+              int skip,
+              int dirty);</pre>
+</div>
+<p>Since the <tt class="docutils literal"><span class="pre">list_keys</span></tt> command may return many keys, the result object must be fetched and iterated after the command completed, as shown in the following sample code:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_list_keys(client, "prefix", strlen("prefix"),
+                      "", 0,  // start_key
+                      100,    // count
+                      0,      // forward list
+                      0,      // don't skip the first key
+                      0);     // safe
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "list_keys failed");
+  ...
+}
+
+// fetch result
+keyspace_result_t result = keyspace_client_result(client);
+if (result == KEYSPACE_INVALID_RESULT)
+{
+  fprintf(stderr, "list_keys failed");
+  ...
+}
+for (keyspace_result_begin(result);
+     !keyspace_result_is_end(result);
+     keyspace_result_next(result))
+{
+  char* key;
+  unsigned keylen;
+  if (keyspace_result_value(result, (const void**) &amp;key,
+      &amp;keylen) != KEYSPACE_SUCCESS)
+  {
+    fprintf(stderr, "list_keys failed");
+        ...
+      }
+  // key and keylen now hold a key
+  ...
+}
+keyspace_result_close(result);</pre>
+</div>
+</div>
+<div class="section" id="list-keyvalues-command">
+<h3>10.8.2. <tt class="docutils literal"><span class="pre">list_keyvalues</span></tt> command<a class="headerlink" href="#list-keyvalues-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">list_keyvalues</span></tt> command in nearly identical to <tt class="docutils literal"><span class="pre">list_keys</span></tt>, except it also returns the values. Hence in the result iteration, <tt class="docutils literal"><span class="pre">keyspace_result_key</span></tt> and <tt class="docutils literal"><span class="pre">keyspace_result_value</span></tt> may be called.</p>
+<p>The <tt class="docutils literal"><span class="pre">list_keyvalues</span></tt> command retrieves all keys and values from the Keyspace cluster which start with a given <tt class="docutils literal"><span class="pre">prefix</span></tt>. Optionally:</p>
+<ul class="simple">
+<li>listing can start at a specified <tt class="docutils literal"><span class="pre">start_key</span></tt></li>
+<li>the maximum number of keys to return can be specified with the <tt class="docutils literal"><span class="pre">count</span></tt> parameter</li>
+<li>listing can proceed forward or backward</li>
+<li>listing can skip the first key</li>
+<li>the last parameter specifies whether the command is dirty (<tt class="docutils literal"><span class="pre">0</span></tt> for safe, <tt class="docutils literal"><span class="pre">1</span></tt> for dirty)</li>
+</ul>
+<p>The signature of the function is:</p>
+<div class="highlight-python"><pre>int keyspace_client_list_keyvalues(keyspace_client_t kc,
+              const void *prefix, unsigned prefixlen,
+              const void *start_key, unsigned sklen,
+              uint64_t count,
+              int backward,
+              int skip,
+              int dirty);</pre>
+</div>
+<p>Since the <tt class="docutils literal"><span class="pre">list_keyvalues</span></tt> command may return many key-value pairs, the result object must be fetched and iterated after the command completed, as shown in the following sample code:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_list_keyvalues(client, "prefix", strlen("prefix"),
+                      "", 0,  // start_key
+                      100,    // count
+                      0,      // forward list
+                      0,      // don't skip the first key
+                      0);     // safe
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "list_keyvalues failed");
+  ...
+}
+
+// fetch result
+keyspace_result_t result = keyspace_client_result(client);
+if (result == KEYSPACE_INVALID_RESULT)
+{
+  fprintf(stderr, "list_keyvalues failed");
+  ...
+}
+for (keyspace_result_begin(result);
+     !keyspace_result_is_end(result);
+     keyspace_result_next(result))
+{
+  char* key;
+      char* val;
+  unsigned keylen, vallen;
+  if (keyspace_result_key(result, (const void**) &amp;key,
+                          &amp;keylen) != KEYSPACE_SUCCESS ||
+      keyspace_result_value(result, (const void**) &amp;val,
+                            &amp;vallen) != KEYSPACE_SUCCESS)
+  {
+    fprintf(stderr, "list_keyvalues failed");
+        ...
+      }
+  // key, keylen and val, vallen now hold a key-value pair
+  ...
+}
+keyspace_result_close(result);</pre>
+</div>
+</div>
+<div class="section" id="count-command">
+<h3>10.8.3. <tt class="docutils literal"><span class="pre">count</span></tt> command<a class="headerlink" href="#count-command" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">count</span></tt> command has the same parameters as <tt class="docutils literal"><span class="pre">list_keys</span></tt> or <tt class="docutils literal"><span class="pre">list_keyvalues</span></tt>, but returns the number of keys (or key-value pairs) that they would return. The signature of the function is:</p>
+<div class="highlight-python"><pre>int keyspace_client_count(keyspace_client_t kc,
+              uint64_t *res,
+              const void *prefix, unsigned prefixlen,
+              const void *start_key, unsigned sklen,
+              uint64_t count,
+              int backward,
+              int skip,
+              int dirty);</pre>
+</div>
+<p>The second <tt class="docutils literal"><span class="pre">res</span></tt> parameter will hold the number of rows:</p>
+<div class="highlight-python"><pre>uint64_t num;
+int status = keyspace_client_count(client, "prefix", strlen("prefix"),
+                      &amp;num,
+                      "", 0,  // start_key
+                      100,    // count
+                      0,      // forward list
+                      0,      // don't skip the first key
+                      0);     // safe
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "list_keyvalues failed");
+  ...
+}
+// num holds the number of keys</pre>
+</div>
+</div>
+</div>
+<div class="section" id="issuing-batched-write-commands">
+<h2>10.9. Issuing batched write commands<a class="headerlink" href="#issuing-batched-write-commands" title="Permalink to this headline">¶</a></h2>
+<p>For maximum thruput performance, it is possible to issue many write commands together; this is called batched writing. It will be faster then issuing single write commands because</p>
+<ol class="arabic simple">
+<li>The Keyspace cluster will replicate them together</li>
+<li>The client library will not wait for the previous&#8217; write commands response before send the next write command (saves rount-trip times).</li>
+</ol>
+<p>In practice batched <tt class="docutils literal"><span class="pre">set</span></tt> can achieve 5-10x higher throughput than single <tt class="docutils literal"><span class="pre">set</span></tt>.</p>
+<p>To send batched write commands, first call <tt class="docutils literal"><span class="pre">keyspace_client_begin()</span></tt> function, then issue the write commands, and finally call <tt class="docutils literal"><span class="pre">keyspace_client_submit()</span></tt>. The commands are sent on <tt class="docutils literal"><span class="pre">keyspace_client_submit()</span></tt>. After the commands complete, the result object must be fetched and iterated to retrieve the individual return values:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_begin(client);
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "begin failed");
+  ...
+}
+
+// perform write commands such as set, test_and_set, etc. here
+
+status = keyspace_client_submit(client);
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "submit failed");
+
+  // see which command error'd
+  // fetch result
+  keyspace_result_t result = keyspace_client_result(client);
+  if (result == KEYSPACE_INVALID_RESULT)
+  {
+    fprintf(stderr, "result failed");
+    ...
+  }
+  for (keyspace_result_begin(result);
+      !keyspace_result_is_end(result);
+      keyspace_result_next(result))
+  {
+    status = keyspace_result_command_status(result);
+    // status now holds the status of the ith command
+    ...
+  }
+  keyspace_result_close(result);
+}</pre>
+</div>
+</div>
+<div class="section" id="issuing-batched-read-commands">
+<h2>10.10. Issuing batched read commands<a class="headerlink" href="#issuing-batched-read-commands" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to issue <tt class="docutils literal"><span class="pre">get</span></tt> read commands in a batched fashion. Since <tt class="docutils literal"><span class="pre">get</span></tt> commands are not replicated, only the round-trip time is saved. Nevertheless, batched <tt class="docutils literal"><span class="pre">get</span></tt> can achieve 3-5x higher throughput than single <tt class="docutils literal"><span class="pre">get</span></tt>.</p>
+<p>To send batched <tt class="docutils literal"><span class="pre">get</span></tt> commands, first call <tt class="docutils literal"><span class="pre">keyspace_client_begin()</span></tt> function, then issue the <tt class="docutils literal"><span class="pre">get</span></tt> commands, and finally call <tt class="docutils literal"><span class="pre">keyspace_client_submit()</span></tt>. The commands are sent on <tt class="docutils literal"><span class="pre">keyspace_client_submit()</span></tt>. After the commands complete, the result object must be fetched and iterated to retrieve the individual key-value pairs:</p>
+<div class="highlight-python"><pre>int status = keyspace_client_begin(client);
+if (status != KEYSPACE_SUCCESS)
+{
+  fprintf(stderr, "begin failed");
+  ...
+}
+
+// perform gets here
+
+keyspace_client_submit(client);
+// fetch result
+keyspace_result_t result = keyspace_client_result(client);
+if (result == KEYSPACE_INVALID_RESULT)
+{
+  fprintf(stderr, "result failed");
+  ...
+}
+for (keyspace_result_begin(result);
+    !keyspace_result_is_end(result);
+    keyspace_result_next(result))
+{
+  char* key;
+  char* val;
+  unsigned keylen, vallen;
+  if (keyspace_result_key(result, (const void**) &amp;key,
+                          &amp;keylen) != KEYSPACE_SUCCESS ||
+      keyspace_result_value(result, (const void**) &amp;val,
+                            &amp;vallen) != KEYSPACE_SUCCESS)
+  {
+    fprintf(stderr, "result failed");
+        ...
+      }
+  // key, keylen and val, vallen now hold a key-value pair
+  ...
+}
+keyspace_result_close(result);</pre>
+</div>
+</div>
+<div class="section" id="understanding-keyspace-status-codes">
+<h2>10.11. Understanding Keyspace status codes<a class="headerlink" href="#understanding-keyspace-status-codes" title="Permalink to this headline">¶</a></h2>
+<p>Keyspace exposes a rich set of status codes through the client library. These are especially useful for batched operations. After issuing command(s), there are four types of status codes which give information about the state of the Keyspace cluster.</p>
+<div class="section" id="transport-status-code">
+<h3>10.11.1. <tt class="docutils literal"><span class="pre">transport_status</span></tt> code<a class="headerlink" href="#transport-status-code" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">transport_status</span></tt> tells the application the portion of commands that were sent to the Keyspace cluster:</p>
+<div class="highlight-python"><pre>KEYSPACE_SUCCESS: all commands were sent
+KEYSPACE_PARTIAL: only a portion of the commands
+                  could be sent before a timeout occured
+KEYSPACE_FAILURE: no commands could be sent</pre>
+</div>
+<p>To retrieve the <tt class="docutils literal"><span class="pre">transport_status</span></tt>, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">status</span> <span class="o">=</span> <span class="n">keyspace_client_transport_status</span><span class="p">(</span><span class="n">client</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connectivity-status-code">
+<h3>10.11.2. <tt class="docutils literal"><span class="pre">connectivity_status</span></tt> code<a class="headerlink" href="#connectivity-status-code" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">connectivity_status</span></tt> tells the application the network conditions between the client and the Keyspace cluster:</p>
+<div class="highlight-python"><pre>KEYSPACE_SUCCESS:      the master could be found
+KEYSPACE_NOMASTER:     some nodes were reachable,
+                       but there was no master or it went down
+KEYSPACE_NOCONNECTION: the entire grid was unreachable within timeouts</pre>
+</div>
+<p>To retrieve the <tt class="docutils literal"><span class="pre">connectivity_status</span></tt>, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">status</span> <span class="o">=</span> <span class="n">keyspace_client_connectivity_status</span><span class="p">(</span><span class="n">client</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="timeout-status-code">
+<h3>10.11.3. <tt class="docutils literal"><span class="pre">timeout_status</span></tt> code<a class="headerlink" href="#timeout-status-code" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">timeout_status</span></tt> tells the application what timeouts occured, if any:</p>
+<div class="highlight-python"><pre>KEYSPACE_SUCCESS:        no timeout occured, everything went fine
+KEYSPACE_MASTER_TIMEOUT: a master could not be found
+                         within the master timeout
+KEYSPACE_GLOBAL_TIMEOUT: the blocking client library call
+                         returned because the global timeout
+                         has expired</pre>
+</div>
+<p>To retrieve the <tt class="docutils literal"><span class="pre">timeout_status</span></tt>, use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">status</span> <span class="o">=</span> <span class="n">keyspace_client_timeout_status</span><span class="p">(</span><span class="n">client</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="command-status-code">
+<h3>10.11.4. <tt class="docutils literal"><span class="pre">command_status</span></tt> code<a class="headerlink" href="#command-status-code" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">command_status</span></tt> is the actual return value of a command:</p>
+<div class="highlight-python"><pre>KEYSPACE_SUCCESS:   command succeeded
+KEYSPACE_FAILED:    the command was executed, but
+                    its return value was FAILED;
+                    eg. can happen for test_and_set if the test value
+                    does not match or for get if the key does not exist
+KEYSPACE_NOSERVICE: the command was not executed</pre>
+</div>
+<p>When using single commands, retrieve the <tt class="docutils literal"><span class="pre">command_status</span></tt> like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">status</span> <span class="o">=</span> <span class="n">keyspace_client_command_status</span><span class="p">(</span><span class="n">client</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>When using batched commands, use:</p>
+<div class="highlight-python"><pre>// inside the result iteration
+status = keyspace_result_command_status(result);</pre>
+</div>
+<p>Note that single operations return the <tt class="docutils literal"><span class="pre">command_status</span></tt>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">10. C API</a><ul>
+<li><a class="reference external" href="#installing-from-source-on-linux-and-other-unix-platforms">10.1. Installing from source on Linux and other UNIX platforms</a></li>
+<li><a class="reference external" href="#installing-from-source-on-windows">10.2. Installing from source on Windows</a></li>
+<li><a class="reference external" href="#connecting-to-the-keyspace-cluster">10.3. Connecting to the Keyspace cluster</a></li>
+<li><a class="reference external" href="#setting-timeout-values">10.4. Setting timeout values</a></li>
+<li><a class="reference external" href="#issuing-single-write-commands">10.5. Issuing single write commands</a><ul>
+<li><a class="reference external" href="#set-command">10.5.1. <tt class="docutils literal"><span class="pre">set</span></tt> command</a></li>
+<li><a class="reference external" href="#test-and-set-command">10.5.2. <tt class="docutils literal"><span class="pre">test_and_set</span></tt> command</a></li>
+<li><a class="reference external" href="#rename-command">10.5.3. <tt class="docutils literal"><span class="pre">rename</span></tt> command</a></li>
+<li><a class="reference external" href="#add-command">10.5.4. <tt class="docutils literal"><span class="pre">add</span></tt> command</a></li>
+<li><a class="reference external" href="#delete-command">10.5.5. <tt class="docutils literal"><span class="pre">delete</span></tt> command</a></li>
+<li><a class="reference external" href="#remove-command">10.5.6. <tt class="docutils literal"><span class="pre">remove</span></tt> command</a></li>
+<li><a class="reference external" href="#prune-command">10.5.7. <tt class="docutils literal"><span class="pre">prune</span></tt> command</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#issuing-key-expiry-commands">10.6. Issuing key expiry commands</a><ul>
+<li><a class="reference external" href="#set-expiry-command">10.6.1. <tt class="docutils literal"><span class="pre">set_expiry</span></tt> command</a></li>
+<li><a class="reference external" href="#remove-expiry-command">10.6.2. <tt class="docutils literal"><span class="pre">remove_expiry</span></tt> command</a></li>
+<li><a class="reference external" href="#clear-expiries-command">10.6.3. <tt class="docutils literal"><span class="pre">clear_expiries</span></tt> command</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#issuing-single-read-commands">10.7. Issuing single read commands</a><ul>
+<li><a class="reference external" href="#get-simple-command">10.7.1. <tt class="docutils literal"><span class="pre">get_simple</span></tt> command</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#issuing-list-commands">10.8. Issuing list commands</a><ul>
+<li><a class="reference external" href="#list-keys-command">10.8.1. <tt class="docutils literal"><span class="pre">list_keys</span></tt> command</a></li>
+<li><a class="reference external" href="#list-keyvalues-command">10.8.2. <tt class="docutils literal"><span class="pre">list_keyvalues</span></tt> command</a></li>
+<li><a class="reference external" href="#count-command">10.8.3. <tt class="docutils literal"><span class="pre">count</span></tt> command</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#issuing-batched-write-commands">10.9. Issuing batched write commands</a></li>
+<li><a class="reference external" href="#issuing-batched-read-commands">10.10. Issuing batched read commands</a></li>
+<li><a class="reference external" href="#understanding-keyspace-status-codes">10.11. Understanding Keyspace status codes</a><ul>
+<li><a class="reference external" href="#transport-status-code">10.11.1. <tt class="docutils literal"><span class="pre">transport_status</span></tt> code</a></li>
+<li><a class="reference external" href="#connectivity-status-code">10.11.2. <tt class="docutils literal"><span class="pre">connectivity_status</span></tt> code</a></li>
+<li><a class="reference external" href="#timeout-status-code">10.11.3. <tt class="docutils literal"><span class="pre">timeout_status</span></tt> code</a></li>
+<li><a class="reference external" href="#command-status-code">10.11.4. <tt class="docutils literal"><span class="pre">command_status</span></tt> code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="csharp_api.html"
+                                  title="previous chapter">9. C# API</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="php_api.html"
+                                  title="next chapter">11. PHP API</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="php_api.html" title="11. PHP API"
+             >next</a></li>
+        <li class="right" >
+          <a href="csharp_api.html" title="9. C# API"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a> &raquo;</li> 
+      </ul>
+    </div>
+
+</div>
+
+<div class="whoarewe"><div class="rbtop"><div></div></div><div class="rbcontent">
+<b>Who are we?</b>
+<br/><br/>
+<div style="border-bottom: 1px dotted #B0B0B0"></div>
+<br/>
+Scalien is a startup developing open-source,
+cutting-edge distributed systems.<br/>
+<a href="/about">More</a>
+<br/><br/>
+<a href="mailto:info@scalien.com">info@scalien.com</a>
+<br/><br/>
+<a href="http://twitter.com/scalien">Follow us on Twitter</a>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="copyright">
+Copyright &copy; Scalien, 2009-2010. All rights reserved --- Icons courtesy of <a href="http://dryicons.com" style="color: gray; text-decoration: none;">dryicons.com</a>
+</div>
+
+</div>
+
+  </body>
+</html>

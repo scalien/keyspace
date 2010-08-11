@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Keyspace documentation</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.6',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="Keyspace documentation" href="#" />
+    <link rel="next" title="1. About Keyspace" href="about.html" /> 
+
+<link rel="stylesheet" type="text/css" href="http://scalien.com/inside.css" />
+<link rel="shortcut icon" href="http://scalien.com/favicon.ico">
+
+  </head>
+  <body>
+
+<body onload="document.getElementById('container').style.display='block';">
+
+<div id="container" class="container" style="display:none">
+
+<div class="topbar">
+<div class="logopic"><a href="http://scalien.com"><img src="http://scalien.com/images/blocks_small.png" /></a></div>
+<div class="logotxt"><a href="http://scalien.com"><img src="http://scalien.com/images/scalien_logo.png" /></a></div>
+</div>
+
+<div class="separator"><!-- --></div>
+
+<div class="menu"><div class="rbtop"><div></div></div><div class="rbcontent">
+<ol class="menulist">
+<li style="padding-top:0px;"><a href="http://scalien.com">Home</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="http://blog.scalien.com">Blog</a></li>
+<li><a href="/keyspace">Keyspace</a></li>
+<ol class="innermenulist">
+<li><a href="/documentation">Documentation</a></li>
+<li><a href="/whitepapers">Whitepapers</a></li>
+<li><a href="/downloads">Downloads</a></li>
+<li><a href="/license">License</a></li>
+<li><a href="/help">Help</a></li>
+<li><a href="/faq">FAQ</a></li>
+</ol>
+</ol>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="main">
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="about.html" title="1. About Keyspace"
+             accesskey="N">next</a></li>
+        <li><a href="#">home</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="keyspace-documentation">
+<h1>Keyspace documentation<a class="headerlink" href="#keyspace-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="about.html">1. About Keyspace</a><ul>
+<li class="toctree-l2"><a class="reference external" href="about.html#more-help">1.1. More help</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="installation.html">2. Installation</a><ul>
+<li class="toctree-l2"><a class="reference external" href="installation.html#installing-on-debian-linux">2.1. Installing on Debian Linux</a></li>
+<li class="toctree-l2"><a class="reference external" href="installation.html#installing-from-source-on-linux-and-other-unix-platforms">2.2. Installing from source on Linux and other UNIX platforms</a></li>
+<li class="toctree-l2"><a class="reference external" href="installation.html#installing-on-windows">2.3. Installing on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="installation.html#installing-from-source-on-windows">2.4. Installing from source on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="configuration.html">3. Configuration</a><ul>
+<li class="toctree-l2"><a class="reference external" href="configuration.html#keyspace-config-shell-script">3.1. keyspace-config shell script</a></li>
+<li class="toctree-l2"><a class="reference external" href="configuration.html#required-lines">3.2. Required lines</a></li>
+<li class="toctree-l2"><a class="reference external" href="configuration.html#optional-lines">3.3. Optional lines</a></li>
+<li class="toctree-l2"><a class="reference external" href="configuration.html#comments">3.4. Comments</a></li>
+<li class="toctree-l2"><a class="reference external" href="configuration.html#client-configuration">3.5. Client configuration</a></li>
+<li class="toctree-l2"><a class="reference external" href="configuration.html#tuning">3.6. Tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="running.html">4. Running Keyspace for the first time</a><ul>
+<li class="toctree-l2"><a class="reference external" href="running.html#verifying-the-installation">4.1. Verifying the installation</a></li>
+<li class="toctree-l2"><a class="reference external" href="running.html#verifying-the-cluster-takes-writes">4.2. Verifying the cluster takes writes</a></li>
+<li class="toctree-l2"><a class="reference external" href="running.html#verifying-the-cluster-recovers-from-failures">4.3. Verifying the cluster recovers from failures</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="understanding.html">5. Understanding Keyspace</a><ul>
+<li class="toctree-l2"><a class="reference external" href="understanding.html#replication">5.1. Replication</a></li>
+<li class="toctree-l2"><a class="reference external" href="understanding.html#master-leases">5.2. Master leases</a></li>
+<li class="toctree-l2"><a class="reference external" href="understanding.html#catchup">5.3. Catchup</a></li>
+<li class="toctree-l2"><a class="reference external" href="understanding.html#dirty-read-commands">5.4. Dirty read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="understanding.html#key-expiry-commands">5.5. Key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="understanding.html#additional-reading">5.6. Additional reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="http_api.html">6. HTTP API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="http_api.html#configuring-the-http-server">6.1. Configuring the HTTP server</a></li>
+<li class="toctree-l2"><a class="reference external" href="http_api.html#http-modes">6.2. HTTP modes</a></li>
+<li class="toctree-l2"><a class="reference external" href="http_api.html#issuing-single-write-commands">6.3. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="http_api.html#issuing-key-expiry-commands">6.4. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="http_api.html#issuing-single-read-commands">6.5. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="http_api.html#issuing-list-commands">6.6. Issuing list commands</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="python_api.html">7. Python API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#installing-from-source-on-linux-and-other-unix-platforms">7.1. Installing from source on Linux and other UNIX platforms</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#installing-from-source-on-windows">7.2. Installing from source on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#connecting-to-the-keyspace-cluster">7.3. Connecting to the Keyspace cluster</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#return-values">7.4. Return values</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#setting-timeout-values">7.5. Setting timeout values</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#issuing-single-write-commands">7.6. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#issuing-key-expiry-commands">7.7. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#issuing-single-read-commands">7.8. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#issuing-list-commands">7.9. Issuing list commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#issuing-batched-write-commands">7.10. Issuing batched write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#issuing-batched-read-commands">7.11. Issuing batched read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#understanding-keyspace-status-codes">7.12. Understanding Keyspace status codes</a></li>
+<li class="toctree-l2"><a class="reference external" href="python_api.html#header-files">7.13. Header files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="java_api.html">8. Java API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#installing-from-source-on-linux-and-other-unix-platforms">8.1. Installing from source on Linux and other UNIX platforms</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#installing-from-source-on-windows">8.2. Installing from source on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#connecting-to-the-keyspace-cluster">8.3. Connecting to the Keyspace cluster</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#exceptions">8.4. Exceptions</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#setting-timeout-values">8.5. Setting timeout values</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#issuing-single-write-commands">8.6. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#issuing-key-expiry-commands">8.7. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#issuing-single-read-commands">8.8. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#issuing-list-commands">8.9. Issuing list commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#issuing-batched-write-commands">8.10. Issuing batched write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#issuing-batched-read-commands">8.11. Issuing batched read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#understanding-keyspace-status-codes">8.12. Understanding Keyspace status codes</a></li>
+<li class="toctree-l2"><a class="reference external" href="java_api.html#header-files">8.13. Header files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="csharp_api.html">9. C# API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#installing-from-binaries-on-windows">9.1. Installing from binaries on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#installing-from-source-on-windows">9.2. Installing from source on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#connecting-to-the-keyspace-cluster">9.3. Connecting to the Keyspace cluster</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#exceptions">9.4. Exceptions</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#setting-timeout-values">9.5. Setting timeout values</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#issuing-single-write-commands">9.6. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#issuing-key-expiry-commands">9.7. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#issuing-single-read-commands">9.8. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#issuing-list-commands">9.9. Issuing list commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#issuing-batched-write-commands">9.10. Issuing batched write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#issuing-batched-read-commands">9.11. Issuing batched read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#understanding-keyspace-status-codes">9.12. Understanding Keyspace status codes</a></li>
+<li class="toctree-l2"><a class="reference external" href="csharp_api.html#header-files">9.13. Header files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="c_api.html">10. C API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#installing-from-source-on-linux-and-other-unix-platforms">10.1. Installing from source on Linux and other UNIX platforms</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#installing-from-source-on-windows">10.2. Installing from source on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#connecting-to-the-keyspace-cluster">10.3. Connecting to the Keyspace cluster</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#setting-timeout-values">10.4. Setting timeout values</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#issuing-single-write-commands">10.5. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#issuing-key-expiry-commands">10.6. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#issuing-single-read-commands">10.7. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#issuing-list-commands">10.8. Issuing list commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#issuing-batched-write-commands">10.9. Issuing batched write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#issuing-batched-read-commands">10.10. Issuing batched read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="c_api.html#understanding-keyspace-status-codes">10.11. Understanding Keyspace status codes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="php_api.html">11. PHP API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#installing-from-source-on-linux-and-other-unix-platforms">11.1. Installing from source on Linux and other UNIX platforms</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#installing-from-source-on-windows">11.2. Installing from source on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#return-values">11.3. Return values</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#connecting-to-the-keyspace-cluster">11.4. Connecting to the Keyspace cluster</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#setting-timeout-values">11.5. Setting timeout values</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#issuing-single-write-commands">11.6. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#issuing-key-expiry-commands">11.7. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#issuing-single-read-commands">11.8. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#issuing-list-commands">11.9. Issuing list commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#issuing-batched-write-commands">11.10. Issuing batched write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#issuing-batched-read-commands">11.11. Issuing batched read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#understanding-keyspace-status-codes">11.12. Understanding Keyspace status codes</a></li>
+<li class="toctree-l2"><a class="reference external" href="php_api.html#header-files">11.13. Header files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="ruby_api.html">12. Ruby API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#installing-from-source-on-linux-and-other-unix-platforms">12.1. Installing from source on Linux and other UNIX platforms</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#installing-from-source-on-windows">12.2. Installing from source on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#connecting-to-the-keyspace-cluster">12.3. Connecting to the Keyspace cluster</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#return-values">12.4. Return values</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#setting-timeout-values">12.5. Setting timeout values</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#issuing-single-write-commands">12.6. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#issuing-key-expiry-commands">12.7. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#issuing-single-read-commands">12.8. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#issuing-list-commands">12.9. Issuing list commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#issuing-batched-write-commands">12.10. Issuing batched write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#issuing-batched-read-commands">12.11. Issuing batched read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#understanding-keyspace-status-codes">12.12. Understanding Keyspace status codes</a></li>
+<li class="toctree-l2"><a class="reference external" href="ruby_api.html#header-files">12.13. Header files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="perl_api.html">13. Perl API</a><ul>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#installing-from-source-on-linux-and-other-unix-platforms">13.1. Installing from source on Linux and other UNIX platforms</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#installing-from-source-on-windows">13.2. Installing from source on Windows</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#return-values">13.3. Return values</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#connecting-to-the-keyspace-cluster">13.4. Connecting to the Keyspace cluster</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#setting-timeout-values">13.5. Setting timeout values</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#issuing-single-write-commands">13.6. Issuing single write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#issuing-key-expiry-commands">13.7. Issuing key expiry commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#issuing-single-read-commands">13.8. Issuing single read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#issuing-list-commands">13.9. Issuing list commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#issuing-batched-write-commands">13.10. Issuing batched write commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#issuing-batched-read-commands">13.11. Issuing batched read commands</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#understanding-keyspace-status-codes">13.12. Understanding Keyspace status codes</a></li>
+<li class="toctree-l2"><a class="reference external" href="perl_api.html#header-files">13.13. Header files</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Next topic</h4>
+            <p class="topless"><a href="about.html"
+                                  title="next chapter">1. About Keyspace</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="about.html" title="1. About Keyspace"
+             >next</a></li>
+        <li><a href="#">home</a> &raquo;</li> 
+      </ul>
+    </div>
+
+</div>
+
+<div class="whoarewe"><div class="rbtop"><div></div></div><div class="rbcontent">
+<b>Who are we?</b>
+<br/><br/>
+<div style="border-bottom: 1px dotted #B0B0B0"></div>
+<br/>
+Scalien is a startup developing open-source,
+cutting-edge distributed systems.<br/>
+<a href="/about">More</a>
+<br/><br/>
+<a href="mailto:info@scalien.com">info@scalien.com</a>
+<br/><br/>
+<a href="http://twitter.com/scalien">Follow us on Twitter</a>
+</div><div class="rbbot"><div></div></div></div>
+
+<div class="copyright">
+Copyright &copy; Scalien, 2009-2010. All rights reserved --- Icons courtesy of <a href="http://dryicons.com" style="color: gray; text-decoration: none;">dryicons.com</a>
+</div>
+
+</div>
+
+  </body>
+</html>
