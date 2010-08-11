@@ -223,6 +223,15 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 		op->status = true;
 		op->service->OnComplete(op);
 	}
+	else if (op->type == KeyspaceOp::CLEAR_EXPIRIES)
+	{
+		Log_Trace("Clearing all expiries");
+		kdata.Writef("!!");
+		table->Prune(&transaction, kdata, true);
+		InitExpiryTimer();
+		op->status = true;
+		op->service->OnComplete(op);		
+	}
 	else
 		ASSERT_FAIL();
 

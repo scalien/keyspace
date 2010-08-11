@@ -37,7 +37,7 @@ public:
 	bool		Set(Transaction* tx, const ByteString &key, uint64_t value);
 	
 	bool		Delete(Transaction* tx, const ByteString &key);
-	bool		Prune(Transaction* tx, const ByteString &prefix);
+	bool		Prune(Transaction* tx, const ByteString &prefix, bool pruneExpiries = false);
 	bool		Truncate(Transaction* tx = NULL);
 	
 	bool		Visit(TableVisitor &tv);

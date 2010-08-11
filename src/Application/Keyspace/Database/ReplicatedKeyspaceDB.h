@@ -93,6 +93,7 @@ private:
 	
 	Func			onExpiryTimer;
 	Timer			expiryTimer;
+	bool			expiryAdded;
 };
 
 #endif

@@ -96,6 +96,8 @@ KeyspaceOp* HttpKeyspaceSession::ProcessDBCommand(const char* cmd, unsigned cmdl
 		return ProcessSetExpiry(params);
 	if (MatchString(cmd, cmdlen, STR_AND_LEN("removeexpiry")))
 		return ProcessRemoveExpiry(params);
+	if (MatchString(cmd, cmdlen, STR_AND_LEN("clearexpiries")))
+		return ProcessClearExpiries(params);
 	if (MatchString(cmd, cmdlen, STR_AND_LEN("listkeys")))
 		return ProcessList(params, false, false);
 	if (MatchString(cmd, cmdlen, STR_AND_LEN("dirtylistkeys")))
@@ -512,6 +514,17 @@ KeyspaceOp* HttpKeyspaceSession::ProcessRemoveExpiry(const UrlParam& params)
 	return op;
 }
 
+KeyspaceOp* HttpKeyspaceSession::ProcessClearExpiries(const UrlParam&)
+{
+	ByteString key;
+	KeyspaceOp* op;
+	
+	op = new KeyspaceOp;
+	op->type = KeyspaceOp::CLEAR_EXPIRIES;
+	
+	return op;
+}
+
 void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 {
 	if (op->type == KeyspaceOp::GET ||
@@ -564,7 +577,8 @@ void HttpKeyspaceSession::OnComplete(KeyspaceOp* op, bool final)
 	}
 	else if (op->type == KeyspaceOp::SET ||
 			 op->type == KeyspaceOp::SET_EXPIRY ||
-			 op->type == KeyspaceOp::REMOVE_EXPIRY)
+			 op->type == KeyspaceOp::REMOVE_EXPIRY ||
+			 op->type == KeyspaceOp::CLEAR_EXPIRIES)
 	{
 		if (op->status)
 			if (type == JSON)

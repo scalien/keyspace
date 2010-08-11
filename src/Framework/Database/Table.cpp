@@ -221,7 +221,7 @@ bool Table::Delete(Transaction* tx, const ByteString &key)
 	return true;
 }
 
-bool Table::Prune(Transaction* tx, const ByteString &prefix)
+bool Table::Prune(Transaction* tx, const ByteString &prefix, bool pruneExpiries)
 {
 	Dbc* cursor = NULL;
 	u_int32_t flags = DB_NEXT;
@@ -251,14 +251,20 @@ bool Table::Prune(Transaction* tx, const ByteString &prefix)
 		
 		if (strncmp(prefix.buffer, (char*)key.get_data(), prefix.length) != 0)
 			break;
-		
-		// don't delete keys starting with @@
-		if (!(key.get_size() >= 2 &&
-		 ((char*)key.get_data())[0] == '@' &&
-		 ((char*)key.get_data())[1] == '@'))
-			cursor->del(0);
 
 		flags = DB_NEXT;
+		
+		// don't delete keys starting with @@
+		if (key.get_size() >= 2 &&
+			((char*)key.get_data())[0] == '@' && ((char*)key.get_data())[1] == '@')
+				continue;
+		
+		// don't delete keys starting with !!
+		if (!pruneExpiries && key.get_size() >= 2 &&
+			((char*)key.get_data())[0] == '!' && ((char*)key.get_data())[1] == '!')
+				continue;
+
+		cursor->del(0);
 	}
 	
 	if (cursor)

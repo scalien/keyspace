@@ -85,6 +85,10 @@ bool KeyspaceClientReq::Read(const ByteString& data)
 			read = snreadf(data.buffer, data.length, "%c:%U:%N",
 						   &type, &cmdID, &key);
 			break;
+		case KEYSPACECLIENT_CLEAR_EXPIRIES:
+			read = snreadf(data.buffer, data.length, "%c:%U",
+						   &type, &cmdID);
+			break;
 		case KEYSPACECLIENT_SUBMIT:
 			read = snreadf(data.buffer, data.length, "%c", &type);
 			break;
@@ -181,6 +185,9 @@ bool KeyspaceClientReq::ToKeyspaceOp(KeyspaceOp* op)
 			break;
 		case KEYSPACECLIENT_REMOVE_EXPIRY:
 			op->type = KeyspaceOp::REMOVE_EXPIRY;
+			break;
+		case KEYSPACECLIENT_CLEAR_EXPIRIES:
+			op->type = KeyspaceOp::CLEAR_EXPIRIES;
 			break;
 		default:
 			return false;

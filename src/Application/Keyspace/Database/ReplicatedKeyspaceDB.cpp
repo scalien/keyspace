@@ -17,6 +17,7 @@ ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
 	asyncAppender = ThreadPool::Create(1);
 	catchingUp = false;
 	transaction = NULL;
+	expiryAdded = false;
 }
 
 ReplicatedKeyspaceDB::~ReplicatedKeyspaceDB()
@@ -133,6 +134,9 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	// only handle writes if I'm the master
 	if (!RLOG->IsMaster())
 		return false;
+	
+	if (op->IsExpiry())
+		expiryAdded = true;
 	
 	ops.Append(op);
 
@@ -361,8 +365,6 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		// write !!k:<key> => <expiryTime>
 		WriteExpiryKey(kdata, msg.key);
 		table->Set(transaction, kdata, msg.nextExpiryTime);
-		if (RLOG->IsSafeDB())
-			InitExpiryTimer();
 		ret = true;
 		break;
 
@@ -376,8 +378,7 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		table->Delete(transaction, kdata);
 		// delete actual key
 		table->Delete(transaction, msg.key); // (*)
-		if (RLOG->IsSafeDB())
-			InitExpiryTimer();
+		expiryAdded = false;
 		ret = true;
 		break;
 
@@ -390,8 +391,13 @@ Transaction* transaction, uint64_t paxosID, uint64_t commandID)
 		// delete !!t:<expirytime>:<key> => NULL
 		WriteExpiryTime(kdata, msg.prevExpiryTime, msg.key);
 		table->Delete(transaction, kdata);
-		if (RLOG->IsSafeDB())
-			InitExpiryTimer();
+		ret = true;
+		break;
+
+	case KEYSPACE_CLEAR_EXPIRIES:
+		Log_Trace("Clearing all expiries");
+		kdata.Writef("!!");
+		table->Prune(transaction, kdata, true);
 		ret = true;
 		break;
 
@@ -431,7 +437,9 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 		Log_Trace("not my append");
 
 	asyncAppenderActive = false;
-	
+	if (RLOG->IsSafeDB())
+		InitExpiryTimer();
+
 	if (!RLOG->IsMaster())
 		FailKeyspaceOps();
 
@@ -464,9 +472,7 @@ void ReplicatedKeyspaceDB::Append()
 		if (op->appended)
 			ASSERT_FAIL();
 		
-		if (op->type == KeyspaceOp::SET_EXPIRY ||
-			op->type == KeyspaceOp::EXPIRE ||
-			op->type == KeyspaceOp::REMOVE_EXPIRY)
+		if (op->IsExpiry())
 		{
 			// at this point we have up-to-date info on the expiry time
 			expiryTime = GetExpiryTime(op->key);
@@ -481,6 +487,13 @@ void ReplicatedKeyspaceDB::Append()
 			bs.Advance(bs.length);
 			op->appended = true;
 			numAppended++;
+			if (op->type == KeyspaceOp::SET_EXPIRY ||
+				op->type == KeyspaceOp::EXPIRE ||
+				op->type == KeyspaceOp::REMOVE_EXPIRY)
+			{
+				// one expiry command per paxos round
+				break;
+			}
 		}
 		else
 			break;
@@ -516,19 +529,14 @@ void ReplicatedKeyspaceDB::FailKeyspaceOps()
 		}
 	}
 
+	expiryAdded = false;
+
 	if (ops.Length() > 0)
 		ASSERT_FAIL();
 }
 
 void ReplicatedKeyspaceDB::OnMasterLease()
 {
-//	Log_Trace("ops.size() = %d", ops.Length());
-//
-//	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
-//		Append();
-//
-//	Log_Trace("ops.size() = %d", ops.Length());
-	
 	InitExpiryTimer();
 }
 
@@ -610,6 +618,9 @@ void ReplicatedKeyspaceDB::OnExpiryTimer()
 	KeyspaceOp*	op;
 
 	Log_Trace();
+	
+	if (expiryAdded)
+		return;
 	
 	transaction = RLOG->GetTransaction();
 	if (!transaction->IsActive())
@@ -695,6 +706,5 @@ uint64_t ReplicatedKeyspaceDB::GetExpiryTime(ByteString key)
 	}
 	else
 		return 0;
-
 }
 

@@ -58,7 +58,8 @@ public:
 		PRUNE,
 		SET_EXPIRY,
 		EXPIRE,
-		REMOVE_EXPIRY
+		REMOVE_EXPIRY,
+		CLEAR_EXPIRIES
 	};
 	
 	bool					appended;
@@ -114,9 +115,7 @@ public:
 				type == KeyspaceOp::ADD ||
 				type == KeyspaceOp::RENAME ||
 				type == KeyspaceOp::PRUNE ||
-				type == KeyspaceOp::SET_EXPIRY ||
-				type == KeyspaceOp::EXPIRE ||
-				type == KeyspaceOp::REMOVE_EXPIRY);
+				IsExpiry());
 	}
 
 	bool IsRead()
@@ -159,6 +158,14 @@ public:
 				type == DIRTY_LISTP ||
 				type == DIRTY_COUNT
 				);
+	}
+	
+	bool IsExpiry()
+	{
+		return (type == KeyspaceOp::SET_EXPIRY ||
+			    type == KeyspaceOp::EXPIRE ||
+			    type == KeyspaceOp::REMOVE_EXPIRY ||
+				type == KeyspaceOp::CLEAR_EXPIRIES);
 	}
 	
 	bool MasterOnly()
