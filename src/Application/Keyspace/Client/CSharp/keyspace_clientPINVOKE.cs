@@ -394,6 +394,15 @@ class keyspace_clientPINVOKE {
   [DllImport("keyspace_client", EntryPoint="CSharp_Keyspace_Prune")]
   public static extern int Keyspace_Prune(HandleRef jarg1, string jarg2);
 
+  [DllImport("keyspace_client", EntryPoint="CSharp_Keyspace_SetExpiry")]
+  public static extern int Keyspace_SetExpiry(HandleRef jarg1, string jarg2, int jarg3);
+
+  [DllImport("keyspace_client", EntryPoint="CSharp_Keyspace_RemoveExpiry")]
+  public static extern int Keyspace_RemoveExpiry(HandleRef jarg1, string jarg2);
+
+  [DllImport("keyspace_client", EntryPoint="CSharp_Keyspace_ClearExpiries")]
+  public static extern int Keyspace_ClearExpiries(HandleRef jarg1);
+
   [DllImport("keyspace_client", EntryPoint="CSharp_Keyspace_Begin")]
   public static extern int Keyspace_Begin(HandleRef jarg1);
 

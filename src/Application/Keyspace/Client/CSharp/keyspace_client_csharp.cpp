@@ -1475,6 +1475,58 @@ SWIGEXPORT int SWIGSTDCALL CSharp_Keyspace_Prune(void * jarg1, char * jarg2) {
 }
 
 
+SWIGEXPORT int SWIGSTDCALL CSharp_Keyspace_SetExpiry(void * jarg1, char * jarg2, int jarg3) {
+  int jresult ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int arg3 ;
+  int result;
+  
+  arg1 = (ClientObj)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (int)jarg3; 
+  result = (int)Keyspace_SetExpiry(arg1,(std::string const &)*arg2,arg3);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_Keyspace_RemoveExpiry(void * jarg1, char * jarg2) {
+  int jresult ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  std::string *arg2 = 0 ;
+  int result;
+  
+  arg1 = (ClientObj)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  result = (int)Keyspace_RemoveExpiry(arg1,(std::string const &)*arg2);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_Keyspace_ClearExpiries(void * jarg1) {
+  int jresult ;
+  ClientObj arg1 = (ClientObj) 0 ;
+  int result;
+  
+  arg1 = (ClientObj)jarg1; 
+  result = (int)Keyspace_ClearExpiries(arg1);
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT int SWIGSTDCALL CSharp_Keyspace_Begin(void * jarg1) {
   int jresult ;
   ClientObj arg1 = (ClientObj) 0 ;

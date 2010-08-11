@@ -259,6 +259,23 @@ public class keyspace_client {
     return ret;
   }
 
+  public static int Keyspace_SetExpiry(SWIGTYPE_p_void client, string key, int exptime) {
+    int ret = keyspace_clientPINVOKE.Keyspace_SetExpiry(SWIGTYPE_p_void.getCPtr(client), key, exptime);
+    if (keyspace_clientPINVOKE.SWIGPendingException.Pending) throw keyspace_clientPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public static int Keyspace_RemoveExpiry(SWIGTYPE_p_void client, string key) {
+    int ret = keyspace_clientPINVOKE.Keyspace_RemoveExpiry(SWIGTYPE_p_void.getCPtr(client), key);
+    if (keyspace_clientPINVOKE.SWIGPendingException.Pending) throw keyspace_clientPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public static int Keyspace_ClearExpiries(SWIGTYPE_p_void client) {
+    int ret = keyspace_clientPINVOKE.Keyspace_ClearExpiries(SWIGTYPE_p_void.getCPtr(client));
+    return ret;
+  }
+
   public static int Keyspace_Begin(SWIGTYPE_p_void client) {
     int ret = keyspace_clientPINVOKE.Keyspace_Begin(SWIGTYPE_p_void.getCPtr(client));
     return ret;

@@ -2,6 +2,7 @@
 #include "ReplicatedLog.h"
 #include "System/Config.h"
 #include "Framework/Database/Transaction.h"
+#include "Framework/Database/Table.h"
 #include "System/Platform.h"
 
 
