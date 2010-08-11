@@ -431,6 +431,19 @@ sub remove_expiry {
 	$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
 }
 
+sub clear_expiries {
+	my $self = $_[0];
+	my $status = keyspace_client::Keyspace_ClearExpiries($self->{cptr});
+	if ($status < 0) {
+		$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
+		return undef;
+	}
+	if (keyspace_client::Keyspace_IsBatched($self->{cptr})) {
+		return undef;
+	}
+	$self->{result} = new Keyspace::Result(keyspace_client::Keyspace_GetResult($self->{cptr}));
+}
+
 sub begin {
 	my $self = $_[0];
 	return keyspace_client::Keyspace_Begin($self->{cptr});

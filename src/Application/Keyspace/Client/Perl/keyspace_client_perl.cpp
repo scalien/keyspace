@@ -4734,11 +4734,11 @@ XS(_wrap_Keyspace_SetExpiry) {
   {
     ClientObj arg1 = (ClientObj) 0 ;
     std::string *arg2 = 0 ;
-    int arg3 ;
+    uint64_t arg3 ;
     int result;
     int res1 ;
     int res2 = SWIG_OLDOBJ ;
-    int val3 ;
+    unsigned long long val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -4761,11 +4761,11 @@ XS(_wrap_Keyspace_SetExpiry) {
       }
       arg2 = ptr;
     }
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_unsigned_SS_long_SS_long SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyspace_SetExpiry" "', argument " "3"" of type '" "int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyspace_SetExpiry" "', argument " "3"" of type '" "uint64_t""'");
     } 
-    arg3 = static_cast< int >(val3);
+    arg3 = static_cast< uint64_t >(val3);
     result = (int)Keyspace_SetExpiry(arg1,(std::string const &)*arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(result)); argvi++ ;
     
@@ -4817,6 +4817,32 @@ XS(_wrap_Keyspace_RemoveExpiry) {
   fail:
     
     if (SWIG_IsNewObj(res2)) delete arg2;
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_Keyspace_ClearExpiries) {
+  {
+    ClientObj arg1 = (ClientObj) 0 ;
+    int result;
+    int res1 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: Keyspace_ClearExpiries(client);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0),SWIG_as_voidptrptr(&arg1), 0, 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ClearExpiries" "', argument " "1"" of type '" "ClientObj""'"); 
+    }
+    result = (int)Keyspace_ClearExpiries(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
     SWIG_croak_null();
   }
 }
@@ -5093,6 +5119,7 @@ static swig_command_info swig_commands[] = {
 {"keyspace_clientc::Keyspace_Prune", _wrap_Keyspace_Prune},
 {"keyspace_clientc::Keyspace_SetExpiry", _wrap_Keyspace_SetExpiry},
 {"keyspace_clientc::Keyspace_RemoveExpiry", _wrap_Keyspace_RemoveExpiry},
+{"keyspace_clientc::Keyspace_ClearExpiries", _wrap_Keyspace_ClearExpiries},
 {"keyspace_clientc::Keyspace_Begin", _wrap_Keyspace_Begin},
 {"keyspace_clientc::Keyspace_Submit", _wrap_Keyspace_Submit},
 {"keyspace_clientc::Keyspace_Cancel", _wrap_Keyspace_Cancel},

@@ -371,6 +371,16 @@ class KeyspaceClient
 		@result = Result.new(Keyspace_client.Keyspace_GetResult(@cptr))
 	end
 
+	def clear_expiries(key)
+		status = Keyspace_client.Keyspace_ClearExpiries(@cptr)
+		if status < 0
+			@result = Result.new(Keyspace_client.Keyspace_GetResult(@cptr))
+			return nil
+		end
+		return nil if is_batched?
+		@result = Result.new(Keyspace_client.Keyspace_GetResult(@cptr))
+	end
+
 	def begin
 		return Keyspace_client.Keyspace_Begin(@cptr)
 	end

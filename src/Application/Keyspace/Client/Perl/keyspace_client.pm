@@ -97,6 +97,7 @@ package keyspace_client;
 *Keyspace_Prune = *keyspace_clientc::Keyspace_Prune;
 *Keyspace_SetExpiry = *keyspace_clientc::Keyspace_SetExpiry;
 *Keyspace_RemoveExpiry = *keyspace_clientc::Keyspace_RemoveExpiry;
+*Keyspace_ClearExpiries = *keyspace_clientc::Keyspace_ClearExpiries;
 *Keyspace_Begin = *keyspace_clientc::Keyspace_Begin;
 *Keyspace_Submit = *keyspace_clientc::Keyspace_Submit;
 *Keyspace_Cancel = *keyspace_clientc::Keyspace_Cancel;

@@ -292,6 +292,20 @@ public class Client
 		return status;
 	}
 
+	public int clearExpiries() throws KeyspaceException {
+		int status = keyspace_client.Keyspace_ClearExpiries(cptr);
+		if (status < 0) {
+			result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+			throw new KeyspaceException(Status.toString(status));
+		}
+		
+		if (isBatched())
+			return status;
+		
+		result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+		return status;
+	}
+
 	public int begin() {
 		return keyspace_client.Keyspace_Begin(cptr);
 	}

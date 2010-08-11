@@ -394,6 +394,17 @@ class KeyspaceClient {
 		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
 	}	
 
+	public function clearExpiries() {
+		$status = keyspace_client::Keyspace_ClearExpiries($this->co);
+		if ($status < 0) {
+			$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
+			return NULL;
+		}
+		if ($this->isBatched())
+			return NULL;
+		$this->result = new Result(keyspace_client::Keyspace_GetResult($this->co));
+	}	
+
 	public function begin() {
 		return keyspace_client::Keyspace_Begin($this->co);
 	}

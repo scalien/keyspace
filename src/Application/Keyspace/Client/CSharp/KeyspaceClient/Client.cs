@@ -372,6 +372,22 @@ namespace Keyspace
             return status;
 	}
 
+	public int ClearExpiries()
+	{
+            int status = keyspace_client.Keyspace_ClearExpiries(cptr);
+            if (status < 0)
+            {
+                result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+                throw new Exception(Status.ToString(status));
+            }
+
+            if (IsBatched())
+                return status;
+
+            result = new Result(keyspace_client.Keyspace_GetResult(cptr));
+            return status;
+	}
+
         public int Begin()
         {
             return keyspace_client.Keyspace_Begin(cptr);

@@ -4416,6 +4416,28 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_Keyspace_ClearExpiries(int argc, VALUE *argv, VALUE self) {
+  ClientObj arg1 = (ClientObj) 0 ;
+  int result;
+  int res1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0],SWIG_as_voidptrptr(&arg1), 0, 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyspace_ClearExpiries" "', argument " "1"" of type '" "ClientObj""'"); 
+  }
+  result = (int)Keyspace_ClearExpiries(arg1);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_Keyspace_Begin(int argc, VALUE *argv, VALUE self) {
   ClientObj arg1 = (ClientObj) 0 ;
   int result;
@@ -4910,6 +4932,7 @@ SWIGEXPORT void Init_keyspace_client(void) {
   rb_define_module_function(mKeyspace_client, "Keyspace_Prune", VALUEFUNC(_wrap_Keyspace_Prune), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_SetExpiry", VALUEFUNC(_wrap_Keyspace_SetExpiry), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_RemoveExpiry", VALUEFUNC(_wrap_Keyspace_RemoveExpiry), -1);
+  rb_define_module_function(mKeyspace_client, "Keyspace_ClearExpiries", VALUEFUNC(_wrap_Keyspace_ClearExpiries), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Begin", VALUEFUNC(_wrap_Keyspace_Begin), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Submit", VALUEFUNC(_wrap_Keyspace_Submit), -1);
   rb_define_module_function(mKeyspace_client, "Keyspace_Cancel", VALUEFUNC(_wrap_Keyspace_Cancel), -1);
