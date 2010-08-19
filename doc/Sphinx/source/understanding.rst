@@ -22,7 +22,7 @@ In this example replication is performed over port 10000.
 
 In order to see replication in action, perform::
 
-  http://<ip-address-of-master-node>:8080/set?testkey,testvalue
+  http://<ip-address-of-master-node>:8080/set?key=testkey&value=testvalue
 
 repeatedly and check the master's HTTP status at::
 

@@ -43,15 +43,15 @@ Verifying the cluster takes writes
 
 Using the HTTP output from above, find the master node. Next, send a ``SET`` command to the master using the HTTP API, by typing the following into your browser::
 
-  http://<ip-address-of-master-node>:8080/set?testkey,testvalue
+  http://<ip-address-of-master-node>:8080/set?key=testkey&value=testvalue
 
 If everything is working, it replies with ``OK``. Now make sure the value was stored properly::
 
-  http://<ip-address-of-master-node>:8080/get?testkey
+  http://<ip-address-of-master-node>:8080/get?key=testkey
 
 It should print ``testvalue``. Next, make sure the command was replicated to the other ``n-1`` nodes. Non-master nodes do not serve ``GET`` request (only the master), but they do serve ``DIRTYGET`` request::
 
-  http://<ip-address-of-non-master-node>:8080/dirtyget?testkey
+  http://<ip-address-of-non-master-node>:8080/dirtyget?key=testkey
 
 It should print ``testvalue``. For a complete command reference, see the next section.
 
@@ -60,11 +60,11 @@ Verifying the cluster recovers from failures
 
 Next, shut down one of the nodes (eg. using ``Control+C``). Verify that the node is not up by looking at its HTTP port. Next, issue a ``SET`` to the remaining nodes::
 
-  http://<ip-address-of-master-node>:8080/set?testkey2,testvalue2
+  http://<ip-address-of-master-node>:8080/set?key=testkey2&value=testvalue2
 
 Launch the node again, and after 7 seconds, once it reports the master, make sure it has caught up to the rest of the cluster by querying ``testkey2`` from it::
 
-  http://<ip-address-of-non-master-node>:8080/dirtyget?testkey2
+  http://<ip-address-of-non-master-node>:8080/dirtyget?key=testkey2
 
 It should print ``testvalue2``.
 
