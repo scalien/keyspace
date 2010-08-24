@@ -59,7 +59,7 @@ At this point, you are ready to start issuing commands.
 Issuing single write commands
 =============================
 
-The Keyspace write commands are: ``Set``, ``TestAndSet``, ``Rename``, ``Add``, ``Delete``, ``Remove`` and ``Prune``. Note that all Keyspace keys and values do not have to be NULL-terminated strings (eg. you can set a value to be a binary file).
+The Keyspace write commands are: ``Set``, ``TestAndSet``, ``Rename``, ``Add``, ``Delete``, ``Remove``, ``Prune`` and key expiry commands. Note that all Keyspace keys and values do not have to be NULL-terminated strings (eg. you can set a value to be a binary file).
 
 ``Set`` command
 ---------------
@@ -122,6 +122,32 @@ For example::
   client.Set("jane", "jane_data");
   client.Set("mark", "mark_data");
   client.Prune("j"); // deletes "john" => "john_data" and "jane" => "jane_data"
+
+Issuing key expiry commands
+===========================
+
+``SetExpiry`` command
+----------------------
+
+The ``SetExpiry`` sets an expiry on the key ``key`` to occur in ``t`` seconds. The command will succeed and set the expiry irrespective of whether the key exists. If the key is created in the meantime, it will be expired when the timeout occurs. The command replaces any active expiry on the key::
+
+  client.SetExpiry("key", 60);
+
+Key will be deleted in 60 seconds.
+
+``RemoveExpiry`` command
+-------------------------
+
+Removes any outstanding expiry on the key. The command will succeed irrespective of whether an expiry is set for the key::
+
+  client.RemoveExpiry("key")
+
+``ClearExpiries`` command
+--------------------------
+
+Clears all expiries in the database::
+
+  client.ClearExpiries()
 
 Issuing single read commands
 ============================

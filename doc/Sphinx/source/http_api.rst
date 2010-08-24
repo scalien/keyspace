@@ -44,7 +44,7 @@ or
 Issuing single write commands
 =============================
 
-The Keyspace write commands are: ``set``, ``testandset``, ``rename``, ``add``, ``delete``, ``remove`` and ``prune``.
+The Keyspace write commands are: ``set``, ``testandset``, ``rename``, ``add``, ``delete``, ``remove``, ``prune`` and key expiry commands.
 
 ``set`` command
 ---------------
@@ -109,6 +109,33 @@ For example::
   http://localhost:8080/prune?prefix=j
 
 to delete ``john`` and ``jane``.
+
+Issuing key expiry commands
+===========================
+
+``setexpiry`` command
+----------------------
+
+The ``setexpiry`` sets an expiry on the key ``key`` to occur in ``t`` seconds. The command will succeed and set the expiry irrespective of whether the key exists. If the key is created in the meantime, it will be expired when the timeout occurs. The command replaces any active expiry on the key::
+
+  http://localhost:8080/setexpiry?key=key&time=60
+
+Key will be deleted in 60 seconds.
+
+``removeexpiry`` command
+-------------------------
+
+Removes any outstanding expiry on the key. The command will succeed irrespective of whether an expiry is set for the key::
+
+  http://localhost:8080/removeexpiry?key=key
+
+``clearexpiries`` command
+--------------------------
+
+Clears all expiries in the database::
+
+  http://localhost:8080/clearexpiries?
+
 
 Issuing single read commands
 ============================

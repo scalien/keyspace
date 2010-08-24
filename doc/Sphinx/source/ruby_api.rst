@@ -123,6 +123,33 @@ For example::
   client.set("mark", "mark_data")
   client.prune("j") # deletes "john" => "john_data" and "jane" => "jane_data"
 
+Issuing key expiry commands
+===========================
+
+``set_expiry`` command
+----------------------
+
+The ``set_expiry`` sets an expiry on the key ``key`` to occur in ``t`` seconds. The command will succeed and set the expiry irrespective of whether the key exists. If the key is created in the meantime, it will be expired when the timeout occurs. The command replaces any active expiry on the key::
+
+  client.set_expiry("key", 60);
+
+Key will be deleted in 60 seconds.
+
+``remove_expiry`` command
+-------------------------
+
+Removes any outstanding expiry on the key. The command will succeed irrespective of whether an expiry is set for the key::
+
+  client.remove_expiry("key")
+
+``clear_expiries`` command
+--------------------------
+
+Clears all expiries in the database::
+
+  client.clear_expiries()
+
+
 Issuing single read commands
 ============================
 

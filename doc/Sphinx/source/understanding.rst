@@ -8,7 +8,7 @@ Understanding Keyspace
 Replication
 ===========
 
-In Keyspace all write commands (``set``, ``test_and_set``, ``add``, ``rename``, ``delete``, ``remove``, ``prune``) are appended into a *replicated log*. To guarantee that all nodes end up with the same database, all nodes have to execute the commands in the same order. In other words, the local copies of the replicated log have to be identical. This is called **consistent replication**.
+In Keyspace all write commands (``set``, ``test_and_set``, ``add``, ``rename``, ``delete``, ``remove``, ``prune``, ``set_expiry``, ``remove_expiry``, ``clear_expiries``) are appended into a *replicated log*. To guarantee that all nodes end up with the same database, all nodes have to execute the commands in the same order. In other words, the local copies of the replicated log have to be identical. This is called **consistent replication**.
 
 The replicated log is made up of replication rounds. Each round is no more than 500KB in size and can contain several write commands. Keyspace uses a distributed algorithm called *Paxos* in each replication round. For increased performance, several commands, possibly from different clients are batched and replicated together.
 
@@ -22,7 +22,7 @@ In this example replication is performed over port 10000.
 
 In order to see replication in action, perform::
 
-  http://<ip-address-of-master-node>:8080/set?testkey,testvalue
+  http://<ip-address-of-master-node>:8080/set?key=testkey&value=testvalue
 
 repeatedly and check the master's HTTP status at::
 
@@ -68,6 +68,24 @@ Dirty read commands
 ===================
 
 Keyspace differentiates *safe* and *dirty* read commands. Safe commands are only served by the master, while all nodes will always serve dirty read commands. This is because only the master node can guarantee that is has seen all previous write operations, hence only the master can guarantee that the data returned by the read command is not stale. There are no guarantees regarding dirty reads, and since all nodes serve dirty reads the client library can spread them out over the entire cluster, thus resulting in linear speedup.
+
+Key expiry commands
+===================
+
+Starting with version 1.8 Keyspace supports key expiry commands. This enables Keyspace to be used instead of popular cache servers like Memcached. Unlike Memcached, Keyspace stores key expiries safely on disk, so keys are expired even if servers restart.
+
+In Keyspace, the key expiry commands are implemented as an overlay feature. This means that when you set an expiry on a key, Keyspace does not check whether the key exists, it
+just remembers that it should expire (delete) thay key at the given time. You can create the key at a later time, overwrite it, rename it, delete it, re-create it, all these operations do not affect the expiry.
+
+There are three key expiry commands in Keyspace:
+
+  * ``set_expiry(k, t)``: set the key-value pair ``k => v`` to expire in ``t`` seconds
+  * ``remove_expiry(k)``: remove any outstanding expiries on the the key-value pair ``k => v``
+  * ``clear_expiries()``: remove all outstanding expiries in the database
+
+Key expiry is implemented as an overlay feature to enable developers to mix and match these commands with the regular Keyspace commands to match their desired semantics. For example, if a developer thinks that ``set`` -ting (changing) a key-value pair should automatically remove any expiries, he can create a wrapper library which issues  ``remove_expiry(k)`` command before issuing ``set(k, v)``.
+
+When using key expiry commands in replicated mode, you should use NTP (Network Time Protocol) to synchronize the server's clock. Note that other than key expiries, Keyspace does not require or assume clock synchrony. When the Keyspace master receives a ``set_expiry(k, t)`` command, it adds ``t`` seconds to the current timestamp and replicates that timestamp. Key expiry will occur at that time by the actual master's system clock. If the master fails and another node becomes the master, key expiry will still occur at that time, but by the new master's system clock.
 
 Additional reading
 ==================

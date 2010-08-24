@@ -68,7 +68,7 @@ At this point, you are ready to start issuing commands.
 Issuing single write commands
 =============================
 
-The Keyspace write commands are: ``set``, ``test_and_set``, ``rename``, ``add``, ``delete``, ``remove`` and ``prune``. Note that all Keyspace commands take and return pointers and a length parameter which specifies the length in bytes; the client libraries **do not assume NULL-terminated strings**.
+The Keyspace write commands are: ``set``, ``test_and_set``, ``rename``, ``add``, ``delete``, ``remove``, ``prune`` and key expiry commands. Note that all Keyspace commands take and return pointers and a length parameter which specifies the length in bytes; the client libraries **do not assume NULL-terminated strings**.
 
 ``set`` command
 ---------------
@@ -180,6 +180,47 @@ The ``prune`` command deletes all ``key => value`` pairs where the ``key`` start
   if (status != KEYSPACE_SUCCESS)
   {
     fprintf(stderr, "prune failed");
+    ...
+  }
+
+Issuing key expiry commands
+===========================
+
+``set_expiry`` command
+----------------------
+
+The ``set_expiry`` sets an expiry on the key ``key`` to occur in ``t`` seconds. The command will succeed and set the expiry irrespective of whether the key exists. If the key is created in the meantime, it will be expired when the timeout occurs. The command replaces any active expiry on the key::
+
+  int status = keyspace_client_set_expiry(client, "key", strlen("key"), 60);
+  if (status != KEYSPACE_SUCCESS)
+  {
+    fprintf(stderr, "set_expiry failed");
+    ...
+  }
+
+Key will be deleted in 60 seconds.
+
+``remove_expiry`` command
+-------------------------
+
+Removes any outstanding expiry on the key. The command will succeed irrespective of whether an expiry is set for the key::
+
+  int status = keyspace_client_remove_expiry(client, "key", strlen("key"));
+  if (status != KEYSPACE_SUCCESS)
+  {
+    fprintf(stderr, "remove_expiry failed");
+    ...
+  }
+
+``clear_expiries`` command
+--------------------------
+
+Clears all expiries in the database::
+
+  int status = keyspace_client_clear_expiries(client);
+  if (status != KEYSPACE_SUCCESS)
+  {
+    fprintf(stderr, "clear_expiries failed");
     ...
   }
 

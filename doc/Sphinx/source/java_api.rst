@@ -69,7 +69,7 @@ At this point, you are ready to start issuing commands.
 Issuing single write commands
 =============================
 
-The Keyspace write commands are: ``set``, ``testAndSet``, ``rename``, ``add``, ``delete``, ``remove`` and ``prune``. Note that all Keyspace keys and values do not have to be NULL-terminated strings (eg. you can set a value to be a binary file).
+The Keyspace write commands are: ``set``, ``testAndSet``, ``rename``, ``add``, ``delete``, ``remove``, ``prune`` and key expiry commands. Note that all Keyspace keys and values do not have to be NULL-terminated strings (eg. you can set a value to be a binary file).
 
 ``set`` command
 ---------------
@@ -132,6 +132,32 @@ For example::
   client.set("jane", "jane_data");
   client.set("mark", "mark_data");
   client.prune("j"); // deletes "john" => "john_data" and "jane" => "jane_data"
+
+Issuing key expiry commands
+===========================
+
+``setExpiry`` command
+----------------------
+
+The ``setExpiry`` sets an expiry on the key ``key`` to occur in ``t`` seconds. The command will succeed and set the expiry irrespective of whether the key exists. If the key is created in the meantime, it will be expired when the timeout occurs. The command replaces any active expiry on the key::
+
+  client.setExpiry("key", 60);
+
+Key will be deleted in 60 seconds.
+
+``removeExpiry`` command
+-------------------------
+
+Removes any outstanding expiry on the key. The command will succeed irrespective of whether an expiry is set for the key::
+
+  client.removeExpiry("key")
+
+``clearExpiries`` command
+--------------------------
+
+Clears all expiries in the database::
+
+  client.clearExpiries()
 
 Issuing single read commands
 ============================
