@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 
 	run:
 	{
-		if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024)))
+		if (!IOProcessor::Init(Config::GetIntValue("io.maxfd", 1024), true))
 			STOP_FAIL("Cannot initalize IOProcessor!", 1);
 
 		// after io is initialized, drop root rights

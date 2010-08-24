@@ -68,22 +68,6 @@ bool Table::Iterate(Transaction* tx, Cursor& cursor)
 		return false;
 }
 
-/*bool Table::IterateBulk(Transaction* tx, CursorBulk& cursor)
-{
-	DbTxn* txn = NULL;
-	u_int32_t flags;
-
-	flags = DB_CURSOR_BULK;
-
-	if (tx)
-		txn = tx->txn;
-	
-	if (db->cursor(txn, &cursor.cursor, flags) == 0)
-		return true;
-	else
-		return false;
-}*/
-
 bool Table::Get(Transaction* tx,
 				const ByteString &key,
 				ByteString &value)

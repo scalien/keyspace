@@ -47,7 +47,7 @@ int Client::Init(int nodec, const char* nodev[])
 	if (nodec <= 0 || nodev == NULL)
 		return KEYSPACE_API_ERROR;
 
-	if (!IOProcessor::Init(nodec + 64))
+	if (!IOProcessor::Init(nodec + 64, false))
 		return KEYSPACE_API_ERROR;
 
 	masterTimeout.SetDelay(3 * MAX_LEASE_TIME);

@@ -117,9 +117,6 @@ SYSTEM_OBJECTS = \
 	$(BUILD_DIR)/System/Log.o \
 	$(BUILD_DIR)/System/Common.o \
 
-FRAMEWORK_OBJECTS = \
-	$(BUILD_DIR)/Framework/Transport/TransportUDPReader.o \
-
 OBJECTS = \
 	$(ALL_OBJECTS) \
 	$(BUILD_DIR)/Main.o
