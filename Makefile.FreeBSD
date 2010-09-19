@@ -1,0 +1,17 @@
+#
+# Scalien Makefile for Darwin (OSX)
+#
+
+INCLUDE = \
+	-I$(KEYSPACE_DIR)/src \
+	-I/usr/local/include/db43 \
+
+LDPATH = \
+
+BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_DARWIN -D__STDC_FORMAT_MACROS
+BASE_CXXFLAGS = $(BASE_CFLAGS)
+BASE_LDFLAGS = -L/usr/local/lib/db43 -lpthread -ldb_cxx $(LDPATH)
+SOLINK = -shared -fPIC -Wl,-soname,$(SONAME)
+SOEXT = so
+SWIG_LDFLAGS = -shared -fPIC 
+BUNDLEEXT = so

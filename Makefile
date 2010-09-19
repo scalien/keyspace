@@ -47,7 +47,7 @@ ifeq ($(shell uname),Darwin)
 PLATFORM=Darwin
 else
 ifeq ($(shell uname),FreeBSD)
-PLATFORM=Darwin
+PLATFORM=FreeBSD
 else
 ifeq ($(shell uname),OpenBSD)
 PLATFORM=Darwin 
@@ -108,7 +108,7 @@ include Makefile.objects
 include Makefile.clientlib
 
 KEYSPACE_LIBS =
-	
+
 SYSTEM_OBJECTS = \
 	$(BUILD_DIR)/System/Events/Scheduler.o \
 	$(BUILD_DIR)/System/IO/Endpoint.o \
@@ -135,7 +135,7 @@ CLIENT_WRAPPER_FILES = \
 	$(SRC_DIR)/$(CLIENT_DIR)/keyspace_client.i \
 	$(SRC_DIR)/$(CLIENT_DIR)/KeyspaceClientWrap.h \
 	$(SRC_DIR)/$(CLIENT_DIR)/KeyspaceClientWrap.cpp
-	
+
 CLIENTLIBS = \
 	$(BIN_DIR)/$(ALIB) \
 	$(BIN_DIR)/$(SOLIB)
@@ -144,7 +144,7 @@ CLIENTLIBS = \
 EXECUTABLES = \
 	$(BIN_DIR)/keyspaced \
 	$(BIN_DIR)/clienttest
-	
+
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
@@ -220,7 +220,7 @@ $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_JAR_FILE): $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
 	-mkdir -p $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
 	-cp -rf $(SRC_DIR)/$(JAVA_CLIENT_DIR)/*.java $(BIN_DIR)/$(JAVA_DIR)/$(JAVA_PACKAGE_DIR)
 	-cd $(BIN_DIR)/$(JAVA_DIR) && javac $(JAVA_PACKAGE_DIR)/Client.java && jar cf $(JAVA_JAR_FILE) $(JAVA_PACKAGE_DIR)/*.class && rm -rf com
-	
+
 
 # php wrapper
 PHP_DIR = php
@@ -360,11 +360,11 @@ clean: clean-debug clean-release clean-libs clean-executables
 clean-debug:
 	-rm -f $(BASE_DIR)/keyspace
 	-rm -r -f $(BUILD_DEBUG_DIR)
-	
+
 clean-release:
 	-rm -f $(BASE_DIR)/keyspace
 	-rm -r -f $(BUILD_RELEASE_DIR)
-	
+
 clean-libs: clean-pythonlib clean-phplib clean-javalib clean-rubylib clean-perllib
 	-rm $(CLIENTLIBS)
 
@@ -389,7 +389,7 @@ clean-perllib:
 
 clean-pythonlib-swig:
 	-rm $(SRC_DIR)/$(PYTHON_CLIENT_WRAPPER).cpp
-	
+
 clean-javalib-swig:
 	-rm $(SRC_DIR)/$(JAVA_CLIENT_WRAPPER).cpp
 
