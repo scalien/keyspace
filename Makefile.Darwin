@@ -4,16 +4,30 @@
 
 INCLUDE = \
 	-I$(KEYSPACE_DIR)/src \
-	-I/opt/local/include/db46 \
 	-I/usr/local/include/db4 \
+	-I/usr/local/include/db42 \
 	-I/usr/local/include/db43 \
-	-I/usr/local/include \
+	-I/usr/local/include/db44 \
+	-I/usr/local/include/db45 \
+	-I/usr/local/include/db46 \
+	-I/usr/local/include/db47 \
+	-I/usr/local/include/db48 \
+	-I/opt/local/include/db46 \
 
 LDPATH = \
+	-L/usr/local/lib/db4 \
+	-L/usr/local/lib/db42 \
+	-L/usr/local/lib/db43 \
+	-L/usr/local/lib/db44 \
+	-L/usr/local/lib/db45 \
+	-L/usr/local/lib/db46 \
+	-L/usr/local/lib/db47 \
+	-L/usr/local/lib/db48 \
+	-L/opt/local/lib/db46 \
 
 BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE) -D__STDC_FORMAT_MACROS
 BASE_CXXFLAGS = $(BASE_CFLAGS)
-BASE_LDFLAGS = -L/opt/local/lib/db46 -L/usr/local/lib/db4 -L/usr/local/lib/db43 -lpthread -ldb_cxx $(LDPATH)
+BASE_LDFLAGS = -lpthread -ldb_cxx $(LDPATH)
 SOLINK = -Xlinker -x -fPIC -dylib -undefined dynamic_lookup -bundle
 SOEXT = dylib
 SWIG_LDFLAGS = -bundle -flat_namespace -undefined suppress

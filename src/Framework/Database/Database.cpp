@@ -52,9 +52,13 @@ bool Database::Init(const DatabaseConfig& config_)
 	int ret;
 
 	env = new DbEnv(DB_CXX_NO_EXCEPTIONS);
-	
+
+#if DB_VERSION_MAJOR > 4
+#if DB_VERSION_MINOR > 6	
 	env->set_errcall(DatabaseError);
 	env->set_msgcall(DatabaseTrace);
+#endif
+#endif
 	
 	config = config_;
 	
