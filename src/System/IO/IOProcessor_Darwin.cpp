@@ -9,6 +9,7 @@
 #include <math.h>
 #include <errno.h>
 #include <signal.h>
+#include <pthread.h>
 
 #include "IOProcessor.h"
 #include "System/Containers/List.h"

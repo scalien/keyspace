@@ -28,7 +28,15 @@ LDPATH = \
 BASE_CFLAGS = -Wall $(INCLUDE) -DPLATFORM_$(PLATFORM_UCASE) -D__STDC_FORMAT_MACROS
 BASE_CXXFLAGS = $(BASE_CFLAGS)
 BASE_LDFLAGS = -lpthread -ldb_cxx $(LDPATH)
+
+ifeq ($(shell uname),Darwin)
 SOLINK = -Xlinker -x -fPIC -dylib -undefined dynamic_lookup -bundle
 SOEXT = dylib
 SWIG_LDFLAGS = -bundle -flat_namespace -undefined suppress
 BUNDLEEXT = bundle
+else
+SOLINK = -shared -fPIC -Wl,-soname,$(SONAME)
+SOEXT = so
+SWIG_LDFLAGS = -shared -fPIC 
+BUNDLEEXT = so
+endif
