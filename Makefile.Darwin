@@ -7,6 +7,7 @@ INCLUDE = \
 	-I/opt/local/include/db46 \
 	-I/usr/local/include/db4 \
 	-I/usr/local/include/db43 \
+	-I/usr/local/include \
 
 LDPATH = \
 
