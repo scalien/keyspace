@@ -79,7 +79,6 @@ bool Database::Init(const DatabaseConfig& config_)
 		
 	if (config.verbose)
 	{
-		env->set_msgcall(DatabaseTrace);
 #ifdef DB_VERB_FILEOPS
 		env->set_verbose(DB_VERB_FILEOPS, 1);
 #endif
