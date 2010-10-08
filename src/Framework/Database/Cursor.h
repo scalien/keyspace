@@ -12,6 +12,7 @@ friend class Table;
 
 public:
 	bool	Start(ByteString &key);
+	bool	Start(ByteString &key, ByteString &value);
 	bool	Delete();
 
 	bool	Next(ByteString &key, ByteString &value);

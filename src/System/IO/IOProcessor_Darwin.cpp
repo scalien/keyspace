@@ -372,8 +372,7 @@ void ProcessTCPRead(struct kevent* ev)
 					IOProcessor::Add(tcpread);
 			}
 		}
-		
-		if (ev->flags & EV_EOF)
+		else if (ev->flags & EV_EOF)
 			Call(tcpread->onClose);
 	}
 }

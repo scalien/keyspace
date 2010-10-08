@@ -16,11 +16,11 @@ void CatchupWriter::Init(CatchupServer* server_)
 	
 	server = server_;
 	table = database.GetTable("keyspace");
-	table->Iterate(NULL, cursor);
 
 	if (!table->Get(NULL, "@@paxosID", paxosID))
 		ASSERT_FAIL();
 	
+    key.Clear();
 	WriteNext();
 }
 
@@ -49,20 +49,24 @@ void CatchupWriter::OnClose()
 {
 	Log_Trace();
 
-	cursor.Close();
-
 	Close();
 	server->DeleteConn(this);
 }
 
 void CatchupWriter::WriteNext()
 {
-	bool kv;
+	bool    kv;
+    bool    first;
 
-	kv = false;
+	table->Iterate(NULL, cursor);
+    first = (key.length == 0);
+    kv = cursor.Start(key, value);
 	while(true)
 	{
-		kv = cursor.Next(key, value);
+        if (!first)
+            kv = cursor.Next(key, value);
+        else
+            first = false;
 		if (!kv)
 		{
 			Log_Trace("Sending commit!");
@@ -90,5 +94,6 @@ void CatchupWriter::WriteNext()
 		else
 			break;
 	}
-	WritePending();	
+    cursor.Close();
+	WritePending();
 }
