@@ -297,7 +297,7 @@ Since the ``list_keys`` command may return many keys, the result object must be 
   {
     char* key;
     unsigned keylen;
-    if (keyspace_result_value(result, (const void**) &key,
+    if (keyspace_result_key(result, (const void**) &key,
         &keylen) != KEYSPACE_SUCCESS)
     {
       fprintf(stderr, "list_keys failed");
