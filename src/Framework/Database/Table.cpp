@@ -5,6 +5,10 @@
 #include "System/Buffer.h"
 #include "Transaction.h"
 
+#ifndef DB_READ_UNCOMMITTED
+#error Minimum BerkeleyDB version 4.6 is required for DB_READ_UNCOMMITTED!
+#endif
+
 Table::Table(Database* database, const char *name, int pageSize) :
 database(database)
 {
@@ -13,11 +17,7 @@ database(database)
 	const char *dbname = NULL;
 	DBTYPE type = DB_BTREE;
 	u_int32_t flags = DB_CREATE | DB_AUTO_COMMIT |
-	DB_NOMMAP | DB_THREAD
-#ifdef DB_READ_UNCOMMITTED
-	| DB_READ_UNCOMMITTED
-#endif
-	;
+	DB_NOMMAP | DB_THREAD | DB_READ_UNCOMMITTED;
 
 	int mode = 0;
 	

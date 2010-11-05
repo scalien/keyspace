@@ -298,7 +298,8 @@ keyspace_client_get_simple(keyspace_client_t kc,
 	const ByteString key(keylen, keylen, key_);
 	ByteString val(vallen, 0, val_);
 	
-	return client->Get(key, val, dirty ? true : false);
+	client->Get(key, val, dirty ? true : false);
+    return val.length;
 }
 
 int
