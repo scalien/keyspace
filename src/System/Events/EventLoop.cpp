@@ -6,14 +6,20 @@ static bool		running;
 
 long EventLoop::RunTimers()
 {
-	Timer** it;
-	Timer* timer;
+	Timer**     it;
+	Timer*      timer;
+	uint64_t    now;
 	
-	for (it = timers.Head(); it != NULL; it = timers.Head())
+    UpdateTime();
+
+    now = ::now;
+    
+    for (it = timers.Head(); it != NULL; it = timers.Head())
 	{
 		timer = *it;
 		
-		UpdateTime();
+        UpdateTime();
+
 		if (timer->When() <= now)
 		{
 			Remove(timer);

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		540C06C61284639300D9CDD4 /* SyncListVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 540C06C51284639300D9CDD4 /* SyncListVisitor.cpp */; };
 		5421D00F0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D00E0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp */; };
 		5421D14A0F5C5ED9004BBDB4 /* PaxosProposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D1490F5C5ED9004BBDB4 /* PaxosProposer.cpp */; };
 		5421D14E0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5421D14D0F5C5F1B004BBDB4 /* PaxosAcceptor.cpp */; };
@@ -129,6 +130,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		540C06C41284639300D9CDD4 /* SyncListVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncListVisitor.h; sourceTree = "<group>"; };
+		540C06C51284639300D9CDD4 /* SyncListVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SyncListVisitor.cpp; sourceTree = "<group>"; };
 		540C92FB100DDDC9008B94C0 /* DatabaseConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseConfig.h; sourceTree = "<group>"; };
 		5421D00E0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReplicatedKeyspaceDB.cpp; sourceTree = "<group>"; };
 		5421D1480F5C5ED9004BBDB4 /* PaxosProposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaxosProposer.h; sourceTree = "<group>"; };
@@ -481,6 +484,8 @@
 				5421D00E0F573DD7004BBDB4 /* ReplicatedKeyspaceDB.cpp */,
 				5430A5960FC0513400AA8EC9 /* AsyncListVisitor.h */,
 				5430A5970FC0513400AA8EC9 /* AsyncListVisitor.cpp */,
+				540C06C41284639300D9CDD4 /* SyncListVisitor.h */,
+				540C06C51284639300D9CDD4 /* SyncListVisitor.cpp */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -888,7 +893,6 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Keyspace" */;
 			compatibilityVersion = "Xcode 3.0";
-			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -979,6 +983,7 @@
 				9A928EA311A4895F00659A30 /* HttpApiHandler.cpp in Sources */,
 				9A928EA411A4895F00659A30 /* HttpKeyspaceHandler.cpp in Sources */,
 				9A928EA511A4895F00659A30 /* HttpKeyspaceSession.cpp in Sources */,
+				540C06C61284639300D9CDD4 /* SyncListVisitor.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1043,6 +1048,12 @@
 					/opt/local/lib/db46,
 				);
 				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DPLATFORM_DARWIN",
+					"-D__STDC_FORMAT_MACROS",
+					"-DSUBMIT_HACK",
+					"-DDEBUG",
+				);
 				PRODUCT_NAME = Keyspace;
 				ZERO_LINK = YES;
 			};
@@ -1070,6 +1081,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

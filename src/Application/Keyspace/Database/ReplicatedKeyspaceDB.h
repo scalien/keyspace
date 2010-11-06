@@ -64,10 +64,22 @@ private:
 	void			FailKeyspaceOps();
 	void			InitExpiryTimer();
 	uint64_t		GetExpiryTime(ByteString key);
+
+    void            ExecuteReadOps();
+    void            ExecuteGetOps();
+    void            ExecuteListWorkers();
+    void            ExecuteListWorker(KeyspaceOp** it);
+    void            FailReadOps();
+    void            FailWriteOps();
+    Func            onListWorkerTimeout;
+    void            OnListWorkerTimeout();
 	
 	bool			asyncAppenderActive;
 	bool			catchingUp;
-	OpList			ops;
+	OpList			writeOps;
+	OpList			getOps;
+	OpList			listOps;
+
 	Table*			table;
 	KeyspaceMsg		msg;
 	KeyspaceMsg		tmp;
@@ -90,7 +102,7 @@ private:
 	ServerList		pservers;
 	unsigned		estimatedLength;
 	bool			deleteDB;
-	
+    CdownTimer      listTimer;	
 	Func			onExpiryTimer;
 	Timer			expiryTimer;
 	bool			expiryAdded;

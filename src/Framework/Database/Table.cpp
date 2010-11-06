@@ -59,7 +59,7 @@ bool Table::Iterate(Transaction* tx, Cursor& cursor)
 	if (tx)
 		txn = tx->txn;
 	
-	if (db->cursor(txn, &cursor.cursor, DB_READ_UNCOMMITTED) == 0)
+	if (db->cursor(txn, &cursor.cursor, 0) == 0)
 		return true;
 	else
 		return false;
@@ -86,7 +86,7 @@ bool Table::Get(Transaction* tx,
 	dbtValue.set_data(value.buffer);
 	dbtValue.set_ulen(value.size);
 	
-	ret = db->get(txn, &dbtKey, &dbtValue, DB_READ_UNCOMMITTED);
+	ret = db->get(txn, &dbtKey, &dbtValue, 0);
 
 	// DB_PAGE_NOTFOUND can occur with parallel PRUNE and GET operations
 	// probably because we have DB_READ_UNCOMMITED turned on
@@ -214,7 +214,7 @@ bool Table::Prune(Transaction* tx, const ByteString &prefix, bool pruneExpiries)
 	else
 		txn = tx->txn;
 
-	if (db->cursor(txn, &cursor, DB_READ_UNCOMMITTED) != 0)
+	if (db->cursor(txn, &cursor, 0) != 0)
 		return false;
 	
 	Dbt key, value;
@@ -281,7 +281,7 @@ bool Table::Visit(TableVisitor &tv)
 	u_int32_t flags = DB_NEXT;
 
 	// TODO call tv.OnComplete() or error handling
-	if (db->cursor(NULL, &cursor, DB_READ_UNCOMMITTED) != 0)
+	if (db->cursor(NULL, &cursor, 0) != 0)
 		return false;
 	
 	Dbt key, value;
@@ -292,7 +292,7 @@ bool Table::Visit(TableVisitor &tv)
 		flags = DB_SET_RANGE;		
 	}
 	
-	while (cursor->get(&key, &value, flags | DB_READ_UNCOMMITTED) == 0)
+	while (cursor->get(&key, &value, flags | 0) == 0)
 	{
 		bsKey.size = key.get_size();
 		bsKey.length = key.get_size();
@@ -336,7 +336,7 @@ bool Table::VisitBackward(TableVisitor &tv)
 	u_int32_t flags = DB_PREV;
 
 	// TODO call tv.OnComplete() or error handling
-	if (db->cursor(NULL, &cursor, DB_READ_UNCOMMITTED) != 0)
+	if (db->cursor(NULL, &cursor, 0) != 0)
 		return false;
 	
 	Dbt key, value;
@@ -349,11 +349,11 @@ bool Table::VisitBackward(TableVisitor &tv)
 		// as DB_SET_RANGE finds the smallest key greater than or equal to the
 		// specified key, in order to visit the database backwards, move to the
 		// first matching elem, then move backwards
-		if (cursor->get(&key, &value, flags | DB_READ_UNCOMMITTED) != 0)
+		if (cursor->get(&key, &value, flags | 0) != 0)
 		{
 			// end of database
 			cursor->close();
-			if (db->cursor(NULL, &cursor, DB_READ_UNCOMMITTED) != 0)
+			if (db->cursor(NULL, &cursor, 0) != 0)
 				return false;
 		}
 		else
@@ -377,7 +377,7 @@ bool Table::VisitBackward(TableVisitor &tv)
 	}
 		
 	flags = DB_PREV;
-	while (ret && cursor->get(&key, &value, flags | DB_READ_UNCOMMITTED) == 0)
+	while (ret && cursor->get(&key, &value, flags | 0) == 0)
 	{
 		bsKey.size = key.get_size();
 		bsKey.length = key.get_size();
