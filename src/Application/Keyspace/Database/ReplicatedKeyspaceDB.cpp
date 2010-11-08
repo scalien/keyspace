@@ -109,7 +109,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 			return false;
 
         // avoid concurrent read/writes
-        if (asyncAppenderActive)
+        if (asyncAppenderActive || RLOG->IsWriting())
         {
             getOps.Append(op);
             return true;
@@ -138,7 +138,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
         listOps.Append(op);
 
         // avoid concurrent read/writes
-        if (asyncAppenderActive)
+        if (asyncAppenderActive || RLOG->IsWriting())
             return true;
             
         OnListWorkerTimeout();
@@ -842,8 +842,9 @@ void ReplicatedKeyspaceDB::OnListWorkerTimeout()
 {
     Log_Trace();
     
-    ExecuteListWorkers();
+    if (!asyncAppenderActive && !RLOG->IsWriting())
+        ExecuteReadOps();
     
-    if (listOps.length > 0)
+    if (getOps.length > 0 || listOps.length > 0)
         EventLoop::Reset(&listTimer);
 }

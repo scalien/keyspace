@@ -8,7 +8,7 @@ client = keyspace.Client(["127.0.0.1:7080",
 
 random.seed()
 
-common.set_print_granularity(1000)
+common.set_print_granularity(100)
 
 while True:
 	common.loop_count()

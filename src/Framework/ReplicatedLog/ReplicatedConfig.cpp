@@ -36,7 +36,7 @@ bool ReplicatedConfig::Init()
 		}
 	}
 	
-	if (numNodes > 1)
+	if (strcmp("replicated", Config::GetValue("mode", "")) == 0)
 		InitRestartCounter();
 	
 	return true;
