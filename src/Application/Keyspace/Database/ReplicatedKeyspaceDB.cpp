@@ -141,7 +141,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
         if (asyncAppenderActive)
             return true;
             
-        ExecuteListWorker(listOps.Tail());
+        OnListWorkerTimeout();
         return true;
 	}
 	
@@ -844,5 +844,6 @@ void ReplicatedKeyspaceDB::OnListWorkerTimeout()
     
     ExecuteListWorkers();
     
-    EventLoop::Add(&listTimer);
+    if (listOps.length > 0)
+        EventLoop::Reset(&listTimer);
 }

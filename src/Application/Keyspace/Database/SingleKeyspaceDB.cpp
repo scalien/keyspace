@@ -92,8 +92,8 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	{
         // always append list-type ops
         listOps.Append(op);
-            
-        ExecuteListWorker(listOps.Tail());
+        
+        OnListWorkerTimeout();
         return true;    
 	}
 	else if (op->type == KeyspaceOp::SET)
@@ -363,5 +363,6 @@ void SingleKeyspaceDB::OnListWorkerTimeout()
     
     ExecuteListWorkers();
     
-    EventLoop::Add(&listTimer);
+    if (listOps.length > 0)
+        EventLoop::Reset(&listTimer);
 }
