@@ -770,7 +770,7 @@ void ReplicatedKeyspaceDB::ExecuteGetOps()
 	{
         op = *it;
         
-        assert(op->type == KeyspaceOp::GET);
+        assert(op->IsGet());
         // only handle GETs if I'm the master and
 		// it's safe to do so (I have NOPed)
 		if (!RLOG->IsMaster() || !RLOG->IsSafeDB())
