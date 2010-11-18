@@ -4,6 +4,8 @@
 #include "KeyspaceConsts.h"
 #include "../Protocol/ProtocolServer.h"
 
+#define LISTWORKER_TIMEOUT      1
+
 class KeyspaceOp;
 
 class KeyspaceDB

@@ -85,6 +85,11 @@ public:
 	{
 		appended = false;
 		status = false;
+        num = 0;
+        count = 0;
+        offset = 0;
+        prevExpiryTime = 0;
+        nextExpiryTime = 0;
 	}
 	
 	~KeyspaceOp()

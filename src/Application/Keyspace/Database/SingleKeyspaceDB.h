@@ -10,6 +10,7 @@ class SingleKeyspaceDB : public KeyspaceDB
 typedef ByteArray<KEYSPACE_KEY_META_SIZE>	KBuffer;
 typedef ByteArray<KEYSPACE_VAL_META_SIZE>	VBuffer;
 typedef MFunc<SingleKeyspaceDB>				Func;
+typedef List<KeyspaceOp*>					OpList;
 
 public:
 	SingleKeyspaceDB();
@@ -37,6 +38,13 @@ private:
 	Transaction			transaction;
 	Func				onExpiryTimer;
 	Timer				expiryTimer;
+	OpList              listOps;
+    CdownTimer          listTimer;
+    Func                onListWorkerTimeout;
+
+    void                ExecuteListWorkers();
+    void                ExecuteListWorker(KeyspaceOp** it);
+    void                OnListWorkerTimeout();
 };
 
 #endif

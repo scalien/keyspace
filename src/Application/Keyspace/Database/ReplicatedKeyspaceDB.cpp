@@ -1,18 +1,21 @@
-#include "Framework/AsyncDatabase/AsyncDatabase.h"
+//#include "Framework/AsyncDatabase/AsyncDatabase.h"
 #include "ReplicatedKeyspaceDB.h"
 #include "KeyspaceService.h"
 #include <assert.h>
 #include <stdlib.h>
 #include "System/Log.h"
 #include "System/Common.h"
-#include "AsyncListVisitor.h"
+//#include "AsyncListVisitor.h"
+#include "SyncListVisitor.h"
 #include "System/Stopwatch.h"
 
 ReplicatedKeyspaceDB::ReplicatedKeyspaceDB()
 :	asyncOnAppend(this, &ReplicatedKeyspaceDB::AsyncOnAppend),
 	onAppendComplete(this, &ReplicatedKeyspaceDB::OnAppendComplete),
 	onExpiryTimer(this, &ReplicatedKeyspaceDB::OnExpiryTimer),
-	expiryTimer(&onExpiryTimer)
+	expiryTimer(&onExpiryTimer),
+    onListWorkerTimeout(this, &ReplicatedKeyspaceDB::OnListWorkerTimeout),
+    listTimer(LISTWORKER_TIMEOUT, &onListWorkerTimeout)
 {
 	asyncAppender = ThreadPool::Create(1);
 	catchingUp = false;
@@ -104,7 +107,14 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 		if (op->type == KeyspaceOp::GET &&
 		   (!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
-				
+
+        // avoid concurrent read/writes
+        if (asyncAppenderActive || RLOG->IsWriting())
+        {
+            getOps.Append(op);
+            return true;
+        }
+
 		op->value.Allocate(KEYSPACE_VAL_SIZE);
 		op->status = table->Get(NULL, op->key, rdata);
 		if (op->status)
@@ -124,11 +134,15 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 		(!RLOG->IsMaster() || !RLOG->IsSafeDB()))
 			return false;
 
-		AsyncListVisitor *alv = new AsyncListVisitor(op);
-		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
-		mdbop->Visit(table, *alv);
-		dbReader.Add(mdbop);
-		return true;
+        // always append list-type ops
+        listOps.Append(op);
+
+        // avoid concurrent read/writes
+        if (asyncAppenderActive || RLOG->IsWriting())
+            return true;
+            
+        OnListWorkerTimeout();
+        return true;
 	}
 	
 	// only handle writes if I'm the master
@@ -138,7 +152,7 @@ bool ReplicatedKeyspaceDB::Add(KeyspaceOp* op)
 	if (op->IsExpiry())
 		expiryAdded = true;
 	
-	ops.Append(op);
+	writeOps.Append(op);
 
 	// TODO: huge hack
 	if (estimatedLength < PAXOS_SIZE)
@@ -166,9 +180,9 @@ bool ReplicatedKeyspaceDB::Submit()
 		RLOG->IsMaster() &&
 		!asyncAppenderActive)
 	{
-		Log_Trace("ops.size() = %d", ops.Length());	
+		Log_Trace("writeOps.size() = %d", writeOps.Length());	
 		Append();
-		Log_Trace("ops.size() = %d", ops.Length());
+		Log_Trace("writeOps.size() = %d", writeOps.Length());
 	}
 	
 	return true;
@@ -209,7 +223,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	
 	numOps = 0;
 	if (ownAppend)
-		it = ops.Head();
+		it = writeOps.Head();
 	else
 		it = NULL;
 	
@@ -236,7 +250,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 					 op->type == KeyspaceOp::REMOVE) && ret)
 						op->value.Set(wdata);
 				op->status = ret;
-				it = ops.Next(it);
+				it = writeOps.Next(it);
 			}
 			
 			if (value.length == 0)
@@ -252,7 +266,7 @@ void ReplicatedKeyspaceDB::AsyncOnAppend()
 	}
 	
 	Log_Trace("time spent in Execute(): %ld", sw.elapsed);
-	Log_Trace("numOps = %u", numOps);
+	Log_Trace("ops = %u", numOps);
 	Log_Trace("ops/sec = %f", (double)1000*numOps/sw.elapsed);
 	
 	IOProcessor::Complete(&onAppendComplete);
@@ -421,9 +435,9 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 		Log_Trace("my append");
 		for (i = 0; i < numOps; i++)
 		{
-			it = ops.Head();
+			it = writeOps.Head();
 			op = *it;
-			ops.Remove(op);
+			writeOps.Remove(op);
 			if (op->service)
 				op->service->OnComplete(op);
 			else
@@ -442,9 +456,11 @@ void ReplicatedKeyspaceDB::OnAppendComplete()
 
 	if (!RLOG->IsMaster())
 		FailKeyspaceOps();
+    else
+        ExecuteReadOps();
 
 	RLOG->ContinuePaxos();
-	if (!RLOG->IsAppending() && RLOG->IsMaster() && ops.Length() > 0)
+	if (!RLOG->IsAppending() && RLOG->IsMaster() && writeOps.Length() > 0)
 		Append();
 }
 
@@ -457,7 +473,7 @@ void ReplicatedKeyspaceDB::Append()
 
 	Log_Trace();
 	
-	if (ops.Length() == 0)
+	if (writeOps.Length() == 0)
 		return;
 	
 	pvalue.length = 0;
@@ -465,7 +481,7 @@ void ReplicatedKeyspaceDB::Append()
 
 	unsigned numAppended = 0;
 	
-	for (it = ops.Head(); it != NULL; it = ops.Next(it))
+	for (it = writeOps.Head(); it != NULL; it = writeOps.Next(it))
 	{
 		op = *it;
 		
@@ -502,21 +518,48 @@ void ReplicatedKeyspaceDB::Append()
 		estimatedLength -= pvalue.length;
 		if (estimatedLength < 0) estimatedLength = 0;
 		RLOG->Append(pvalue);
-		Log_Trace("appending %d ops (length: %d)", numAppended, pvalue.length);
+		Log_Trace("appending %d writeOps (length: %d)", numAppended, pvalue.length);
 	}
 }
 
 void ReplicatedKeyspaceDB::FailKeyspaceOps()
 {
+    FailReadOps();
+    FailWriteOps();
+}
+
+void ReplicatedKeyspaceDB::FailReadOps()
+{
 	Log_Trace();
 
 	KeyspaceOp	**it;
 	KeyspaceOp	*op;
-	for (it = ops.Head(); it != NULL; /* advanded in body */)
+
+	for (it = getOps.Head(); it != NULL; /* advanded in body */)
 	{
 		op = *it;
 		
-		it = ops.Remove(it);
+		it = getOps.Remove(it);
+		op->status = false;
+		if (op->service)
+			op->service->OnComplete(op);
+    }
+    
+    // TODO: fail LIST ops
+}
+
+void ReplicatedKeyspaceDB::FailWriteOps()
+{
+	Log_Trace();
+
+	KeyspaceOp	**it;
+	KeyspaceOp	*op;
+
+	for (it = writeOps.Head(); it != NULL; /* advanded in body */)
+	{
+		op = *it;
+		
+		it = writeOps.Remove(it);
 		op->status = false;
 		if (op->service)
 			op->service->OnComplete(op);
@@ -529,7 +572,7 @@ void ReplicatedKeyspaceDB::FailKeyspaceOps()
 
 	expiryAdded = false;
 
-	if (ops.Length() > 0)
+	if (writeOps.Length() > 0)
 		ASSERT_FAIL();
 }
 
@@ -540,12 +583,12 @@ void ReplicatedKeyspaceDB::OnMasterLease()
 
 void ReplicatedKeyspaceDB::OnMasterLeaseExpired()
 {
-	Log_Trace("ops.size() = %d", ops.Length());
+	Log_Trace("writeOps.size() = %d", writeOps.Length());
 	
 	if (!RLOG->IsMaster() && !asyncAppenderActive)
 		FailKeyspaceOps();
 		
-	Log_Trace("ops.size() = %d", ops.Length());
+	Log_Trace("writeOps.size() = %d", writeOps.Length());
 	
 	EventLoop::Remove(&expiryTimer);
 }
@@ -706,3 +749,102 @@ uint64_t ReplicatedKeyspaceDB::GetExpiryTime(ByteString key)
 		return 0;
 }
 
+void ReplicatedKeyspaceDB::ExecuteReadOps()
+{
+    Log_Trace();
+    
+    ExecuteGetOps();
+    ExecuteListWorkers();
+}
+
+void ReplicatedKeyspaceDB::ExecuteGetOps()
+{
+    Log_Trace();
+    
+	uint64_t        storedPaxosID, storedCommandID;
+	ByteString      userValue;
+    KeyspaceOp**    it;
+    KeyspaceOp*     op;
+    
+	for (it = getOps.Head(); it != NULL; /* advanced in body */)
+	{
+        op = *it;
+        
+        assert(op->IsGet());
+        // only handle GETs if I'm the master and
+		// it's safe to do so (I have NOPed)
+		if (!RLOG->IsMaster() || !RLOG->IsSafeDB())
+        {
+            // we lost mastership in the meantime
+            op->status = false;
+        }
+        else
+        {
+            op->value.Allocate(KEYSPACE_VAL_SIZE);
+            op->status = table->Get(NULL, op->key, rdata);
+            if (op->status)
+            {
+                ReadValue(rdata, storedPaxosID, storedCommandID, userValue);
+                op->value.Set(userValue);
+            }
+        }
+
+        it = getOps.Remove(it);
+		op->service->OnComplete(op);
+    }
+}
+
+void ReplicatedKeyspaceDB::ExecuteListWorkers()
+{
+    Log_Trace();
+    
+    KeyspaceOp**    it;
+    KeyspaceOp**    next;
+
+	for (it = listOps.Head(); it != NULL; it = next)
+	{
+        next = listOps.Next(it);
+
+        ExecuteListWorker(it); // may delete from list
+    }
+}
+
+void ReplicatedKeyspaceDB::ExecuteListWorker(KeyspaceOp** it)
+{
+    Log_Trace();
+    
+    KeyspaceOp*         op;
+    SyncListVisitor     lv(*it);
+    
+    op = *it;
+    
+    table->Visit(lv);
+    
+    op->num += lv.num;
+    
+    if (!lv.completed)
+    {
+        op->offset = 1;
+        op->count -= lv.num;
+        if (op->count != 0)
+            return;
+    }
+    
+    listOps.Remove(it);
+    if (op->IsCount())
+        op->value.Writef("%I", op->num);
+    op->status = true;
+    op->key.length = 0;
+    op->service->OnComplete(op, true);
+}
+
+void ReplicatedKeyspaceDB::OnListWorkerTimeout()
+{
+    Log_Trace();
+    
+    if (!asyncAppenderActive && !RLOG->IsWriting())
+        ExecuteReadOps();
+    
+    if (getOps.length > 0 || listOps.length > 0)
+        EventLoop::Reset(&listTimer);
+}

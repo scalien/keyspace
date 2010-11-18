@@ -24,6 +24,7 @@ void PaxosAcceptor::Init(Writers writers_)
 
 	paxosID = 0;
 	state.Init();
+    isWriting = false;
 
 	if (!ReadState())
 		Log_Message("Database is empty");
@@ -176,6 +177,8 @@ bool PaxosAcceptor::WriteState()
 	if (!ret)
 		return false;
 	
+    isWriting = true;
+    
 	mdbop.SetTransaction(&transaction);
 	
 	dbWriter.Add(&mdbop);
@@ -273,6 +276,8 @@ void PaxosAcceptor::OnProposeRequest(PaxosMsg& msg_)
 void PaxosAcceptor::OnDBComplete()
 {
 	Log_Trace();
+
+    isWriting = false;
 
 	RLOG->ContinuePaxos();
 

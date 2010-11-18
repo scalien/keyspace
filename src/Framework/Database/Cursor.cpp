@@ -7,7 +7,7 @@ bool Cursor::Start(ByteString &key)
 	dbkey.set_data(key.buffer);
 	dbkey.set_size(key.length);
 	
-	if (cursor->get(&dbkey, &dbvalue, DB_SET | DB_READ_UNCOMMITTED) == 0)
+	if (cursor->get(&dbkey, &dbvalue, DB_SET) == 0)
 	{
 		if (key.Set((char*)dbkey.get_data(), dbkey.get_size()))
 				return true;
@@ -24,7 +24,7 @@ bool Cursor::Start(ByteString &key, ByteString &value)
 	dbkey.set_data(key.buffer);
 	dbkey.set_size(key.length);
 	
-	if (cursor->get(&dbkey, &dbvalue, DB_SET_RANGE | DB_READ_UNCOMMITTED) == 0)
+	if (cursor->get(&dbkey, &dbvalue, DB_SET_RANGE) == 0)
 	{
 		if (key.Set((char*)dbkey.get_data(), dbkey.get_size()) &&
 			value.Set((char*)dbvalue.get_data(), dbvalue.get_size()))
@@ -44,7 +44,7 @@ bool Cursor::Next(ByteString &key, ByteString &value)
 {
 	Dbt dbkey, dbvalue;
 	
-	if (cursor->get(&dbkey, &dbvalue, DB_NEXT | DB_READ_UNCOMMITTED) == 0)
+	if (cursor->get(&dbkey, &dbvalue, DB_NEXT) == 0)
 	{
 		if (key.Set((char*)dbkey.get_data(), dbkey.get_size()) &&
 			value.Set((char*)dbvalue.get_data(), dbvalue.get_size()))
@@ -60,7 +60,7 @@ bool Cursor::Prev(ByteString &key, ByteString &value)
 {
 	Dbt dbkey, dbvalue;
 	
-	if (cursor->get(&dbkey, &dbvalue, DB_PREV | DB_READ_UNCOMMITTED) == 0)
+	if (cursor->get(&dbkey, &dbvalue, DB_PREV) == 0)
 	{
 		if (key.Set((char*)dbkey.get_data(), dbkey.get_size()) &&
 			value.Set((char*)dbvalue.get_data(), dbvalue.get_size()))

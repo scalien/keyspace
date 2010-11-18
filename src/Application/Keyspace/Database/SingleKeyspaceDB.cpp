@@ -5,12 +5,14 @@
 #include "System/Log.h"
 #include "System/Common.h"
 #include "System/Events/EventLoop.h"
-#include "Framework/AsyncDatabase/AsyncDatabase.h"
-#include "AsyncListVisitor.h"
+//#include "Framework/AsyncDatabase/AsyncDatabase.h"
+#include "SyncListVisitor.h"
 
 SingleKeyspaceDB::SingleKeyspaceDB() :
 	onExpiryTimer(this, &SingleKeyspaceDB::OnExpiryTimer),
-	expiryTimer(&onExpiryTimer)
+	expiryTimer(&onExpiryTimer),
+    onListWorkerTimeout(this, &SingleKeyspaceDB::OnListWorkerTimeout),
+    listTimer(LISTWORKER_TIMEOUT, &onListWorkerTimeout)
 {
 }
 
@@ -88,10 +90,11 @@ bool SingleKeyspaceDB::Add(KeyspaceOp* op)
 	}
 	else if (op->IsList() || op->IsCount())
 	{
-		AsyncListVisitor *alv = new AsyncListVisitor(op);
-		MultiDatabaseOp* mdbop = new AsyncMultiDatabaseOp();
-		mdbop->Visit(table, *alv);
-		dbReader.Add(mdbop);
+        // always append list-type ops
+        listOps.Append(op);
+        
+        OnListWorkerTimeout();
+        return true;    
 	}
 	else if (op->type == KeyspaceOp::SET)
 	{
@@ -306,4 +309,60 @@ void SingleKeyspaceDB::OnExpiryTimer()
 	Log_Trace("Expiring key: %.*s", key.length, key.buffer);
 
 	InitExpiryTimer();
+}
+
+
+
+void SingleKeyspaceDB::ExecuteListWorkers()
+{
+    Log_Trace();
+    
+    KeyspaceOp**    it;
+    KeyspaceOp**    next;
+
+	for (it = listOps.Head(); it != NULL; it = next)
+	{
+        next = listOps.Next(it);
+
+        ExecuteListWorker(it); // may delete from list
+    }
+}
+
+void SingleKeyspaceDB::ExecuteListWorker(KeyspaceOp** it)
+{
+    Log_Trace();
+    
+    KeyspaceOp*         op;
+    SyncListVisitor     lv(*it);
+    
+    op = *it;
+    
+    table->Visit(lv);
+    
+    op->num += lv.num;
+
+    if (!lv.completed)
+    {
+        op->offset = 1;
+        op->count -= lv.num;
+        if (op->count != 0)
+            return;
+    }
+    
+    listOps.Remove(it);
+    if (op->IsCount())
+        op->value.Writef("%I", op->num);
+    op->status = true;
+    op->key.length = 0;
+    op->service->OnComplete(op, true);
+}
+
+void SingleKeyspaceDB::OnListWorkerTimeout()
+{
+    Log_Trace();
+    
+    ExecuteListWorkers();
+    
+    if (listOps.length > 0)
+        EventLoop::Reset(&listTimer);
 }

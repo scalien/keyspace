@@ -20,8 +20,8 @@ public:
 	void			Init(Writers writer_);
 	void			Shutdown();
 	bool			Persist(Transaction* transaction);
-	bool			IsWriting() { return mdbop.IsActive(); }
-	
+	bool			IsWriting() { return isWriting; }
+
 protected:
 	bool			WriteState();
 	bool			ReadState();
@@ -42,6 +42,7 @@ protected:
 	ByteArray<128>	buffers[4];
 	uint64_t		writtenPaxosID;
 	Func			onDBComplete;
+    bool            isWriting;
 };
 
 #endif

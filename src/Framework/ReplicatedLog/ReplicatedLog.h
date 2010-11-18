@@ -48,6 +48,7 @@ public:
 	bool				IsMasterLeaseActive();
 	bool				IsAppending();
 	bool				IsSafeDB();
+    bool                IsWriting() { return acceptor.IsWriting(); }
 	void				OnPaxosLeaseMsg(uint64_t paxosID, unsigned nodeID);
 	uint64_t			GetLastRound_Length();
 	uint64_t			GetLastRound_Time();
