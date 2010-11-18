@@ -12,7 +12,7 @@ ALL_OBJECTS = \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupReader.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupServer.o \
 	$(BUILD_DIR)/Application/Keyspace/Catchup/CatchupWriter.o \
-	$(BUILD_DIR)/Application/Keyspace/Database/AsyncListVisitor.o \
+	$(BUILD_DIR)/Application/Keyspace/Database/SyncListVisitor.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/SingleKeyspaceDB.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/ReplicatedKeyspaceDB.o \
 	$(BUILD_DIR)/Application/Keyspace/Database/KeyspaceMsg.o \
