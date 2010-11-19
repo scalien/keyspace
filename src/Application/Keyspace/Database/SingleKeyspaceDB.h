@@ -39,8 +39,8 @@ private:
 	Func				onExpiryTimer;
 	Timer				expiryTimer;
 	OpList              listOps;
-    CdownTimer          listTimer;
     Func                onListWorkerTimeout;
+    CdownTimer          listTimer;
 
     void                ExecuteListWorkers();
     void                ExecuteListWorker(KeyspaceOp** it);

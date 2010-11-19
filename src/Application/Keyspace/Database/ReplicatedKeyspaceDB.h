@@ -71,7 +71,6 @@ private:
     void            ExecuteListWorker(KeyspaceOp** it);
     void            FailReadOps();
     void            FailWriteOps();
-    Func            onListWorkerTimeout;
     void            OnListWorkerTimeout();
 	
 	bool			asyncAppenderActive;
@@ -102,10 +101,11 @@ private:
 	ServerList		pservers;
 	unsigned		estimatedLength;
 	bool			deleteDB;
-    CdownTimer      listTimer;	
 	Func			onExpiryTimer;
 	Timer			expiryTimer;
 	bool			expiryAdded;
+    Func            onListWorkerTimeout;
+    CdownTimer      listTimer;	
 };
 
 #endif
