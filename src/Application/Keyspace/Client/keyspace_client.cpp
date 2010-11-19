@@ -294,11 +294,18 @@ keyspace_client_get_simple(keyspace_client_t kc,
 		void *val_, unsigned vallen, 
 		int dirty)
 {
+    unsigned    copylen;
+	ByteString  val;
+
 	Client *client = (Client *) kc;
 	const ByteString key(keylen, keylen, key_);
-	ByteString val(vallen, 0, val_);
-	
+
 	client->Get(key, val, dirty ? true : false);
+
+    copylen = MIN(vallen, val.length);
+
+    memcpy(val_, val.buffer, copylen);
+
     return val.length;
 }
 
