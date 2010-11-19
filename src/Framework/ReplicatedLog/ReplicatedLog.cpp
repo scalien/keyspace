@@ -290,6 +290,7 @@ void ReplicatedLog::OnLearnChosen()
 
 	uint64_t	paxosID;
 	bool		ownAppend, clientAppend, commit;
+    ByteString* bs;
 
 	if (pmsg.paxosID > learner.paxosID)
 	{
@@ -338,7 +339,8 @@ void ReplicatedLog::OnLearnChosen()
 	 && rmsg.leaseEpoch == masterLease.GetLeaseEpoch()
 	 && IsMaster())
 	{
-		logQueue.Pop(); // we just appended this
+		bs = logQueue.Pop(); // we just appended this
+        delete bs;
 		proposer.state.leader = true;
 		ownAppend = true;
 		Log_Trace("Multi paxos enabled");
