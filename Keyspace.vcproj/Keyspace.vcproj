@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="Keyspace"
 	ProjectGUID="{71C21FF8-1C74-4835-BBEC-45E40EF9C561}"
 	Keyword="Win32Proj"
@@ -273,6 +273,14 @@
 						</File>
 						<File
 							RelativePath="..\src\Application\Keyspace\Database\SingleKeyspaceDB.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Database\SyncListVisitor.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\Application\Keyspace\Database\SyncListVisitor.h"
 							>
 						</File>
 					</Filter>
